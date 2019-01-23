@@ -14,14 +14,13 @@ implementation
 {$R mvmapviewer_icons.res}
 
 uses
-  mvGeoNames, mvMapViewer;
+  mvTypes, mvGeoNames, mvMapViewer, mvDLEFpc;
 
 procedure Register;
-const
-  PALETTE = 'Misc';
 begin
-  RegisterComponents(PALETTE, [TMapView]);
-  RegisterComponents(PALETTE, [TMvGeoNames]);
+  RegisterComponents(PALETTE_PAGE, [TMapView]);
+  RegisterComponents(PALETTE_PAGE, [TMvGeoNames]);
+  RegisterComponents(PALETTE_PAGE, [TMvDEFpc]);
 end;
 
 end.

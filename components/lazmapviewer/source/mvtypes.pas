@@ -29,6 +29,7 @@ uses
 
 const
   TILE_SIZE = 256;
+  PALETTE_PAGE = 'Misc';
 
 Type
     { TArea }

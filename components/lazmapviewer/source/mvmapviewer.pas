@@ -46,6 +46,7 @@ Type
   TMapView = class(TCustomControl)
     private
       FDownloadEngine: TMvCustomDownloadEngine;
+      FBuiltinDownloadEngine: TMvCustomDownloadEngine;
       FEngine: TMapViewerEngine;
      {$IFDEF USE_RGBGRAPHICS}
       Buffer: TRGB32Bitmap;
@@ -67,6 +68,7 @@ Type
       function GetCacheOnDisk: boolean;
       function GetCachePath: String;
       function GetCenter: TRealPoint;
+      function GetDownloadEngine: TMvCustomDownloadEngine;
       function GetMapProvider: String;
       function GetOnCenterMove: TNotifyEvent;
       function GetOnChange: TNotifyEvent;
@@ -77,6 +79,7 @@ Type
       procedure SetCacheOnDisk(AValue: boolean);
       procedure SetCachePath(AValue: String);
       procedure SetCenter(AValue: TRealPoint);
+      procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
       procedure SetInactiveColor(AValue: TColor);
       procedure SetMapProvider(AValue: String);
       procedure SetOnCenterMove(AValue: TNotifyEvent);
@@ -115,7 +118,6 @@ Type
       procedure ZoomOnObj(obj: TGPSObj);
       procedure WaitEndOfRendering;
       property Center: TRealPoint read GetCenter write SetCenter;
-      property DownloadEngine: TMvCustomDownloadEngine read FDownloadEngine;
       property Engine: TMapViewerEngine read FEngine;
       property GPSItems: TGPSObjectList read FGPSItems;
     published
@@ -123,6 +125,7 @@ Type
       property Align;
       property CacheOnDisk: boolean read GetCacheOnDisk write SetCacheOnDisk;
       property CachePath: String read GetCachePath write SetCachePath;
+      property DownloadEngine: TMvCustomDownloadEngine read FDownloadEngine write FDownloadEngine;
       property Height default 150;
       property InactiveColor: TColor read FInactiveColor write SetInactiveColor;
       property MapProvider: String read GetMapProvider write SetMapProvider;
@@ -335,6 +338,14 @@ begin
   Result := Engine.Center;
 end;
 
+function TMapView.GetDownloadEngine: TMvCustomDownloadEngine;
+begin
+  if FDownloadEngine = nil then
+    Result := FBuiltinDownloadEngine
+  else
+    Result := FDownloadEngine;
+end;
+
 function TMapView.GetMapProvider: String;
 begin
   result := Engine.MapProvider;
@@ -378,6 +389,12 @@ end;
 procedure TMapView.SetCenter(AValue: TRealPoint);
 begin
   Engine.Center := AValue;
+end;
+
+procedure TMapView.SetDownloadEngine(AValue: TMvCustomDownloadEngine);
+begin
+  FDownloadEngine := AValue;
+  FEngine.DownloadEngine := GetDownloadEngine;
 end;
 
 procedure TMapView.SetInactiveColor(AValue: TColor);
@@ -736,7 +753,7 @@ begin
   FGPSItems.OnModified := @OnGPSItemsModified;
   FInactiveColor := clWhite;
   FEngine := TMapViewerEngine.Create(self);
-  FdownloadEngine := TMvDEFpc.Create(self);
+  FBuiltinDownloadEngine := TMvDEFpc.Create(self);
   {$IFDEF USE_RGBGRAPHICS}
   Buffer := TRGB32Bitmap.Create(Width,Height);
   {$ENDIF}
@@ -747,7 +764,7 @@ begin
   Engine.CacheOnDisk := true;
   Engine.OnDrawTile := @DoDrawTile;
   Engine.DrawTitleInGuiThread := false;
-  Engine.DownloadEngine := FDownloadengine;
+  Engine.DownloadEngine := FBuiltinDownloadEngine;
   inherited Create(AOwner);
   Width := 150;
   Height := 150;

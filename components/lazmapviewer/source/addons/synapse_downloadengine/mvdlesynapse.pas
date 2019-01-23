@@ -14,7 +14,7 @@
 
   You should have received a copy of the GNU Library General Public License
   along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+  Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1335, USA.
 }
 unit mvDLESynapse;
 
@@ -23,13 +23,13 @@ unit mvDLESynapse;
 interface
 
 uses
-  mvDownloadEngine,SysUtils, Classes, httpsend;
+  mvDownloadEngine, SysUtils, Classes, httpsend;
 
 type
 
   { TMVDESynapse }
 
-  TMVDESynapse = class(TCustomDownloadEngine)
+  TMVDESynapse = class(TMvCustomDownloadEngine)
   private
     FProxyHost: string;
     FProxyPassword: string;
@@ -40,14 +40,25 @@ type
     procedure DownloadFile(const Url: string; str: TStream); override;
 
   published
-    property UseProxy: Boolean read FUseProxy write FUseProxy;
+    property UseProxy: Boolean read FUseProxy write FUseProxy default false;
     property ProxyHost: string read FProxyHost write FProxyHost;
-    property ProxyPort: Integer read FProxyPort write FProxyPort;
+    property ProxyPort: Integer read FProxyPort write FProxyPort default 0;
     property ProxyUsername: string read FProxyUsername write FProxyUsername;
     property ProxyPassword: string read FProxyPassword write FProxyPassword;
   end;
 
+procedure Register;
+
 implementation
+
+uses
+  mvTypes;
+
+procedure Register;
+begin
+  RegisterComponents(PALETTE_PAGE, [TMVDESynapse]);
+end;
+
 
 { TMVDESynapse }
 

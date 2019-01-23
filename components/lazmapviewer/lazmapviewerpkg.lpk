@@ -25,7 +25,7 @@ This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/c
       </Item2>
       <Item3>
         <Filename Value="source/mvdragobj.pas"/>
-        <UnitName Value="mvdragobj"/>
+        <UnitName Value="mvDragObj"/>
       </Item3>
       <Item4>
         <Filename Value="source/mvengine.pas"/>
@@ -37,7 +37,7 @@ This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/c
       </Item5>
       <Item6>
         <Filename Value="source/mvgpsobj.pas"/>
-        <UnitName Value="mvgpsobj"/>
+        <UnitName Value="mvGpsObj"/>
       </Item6>
       <Item7>
         <Filename Value="source/mvjobqueue.pas"/>
@@ -53,15 +53,15 @@ This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/c
       </Item9>
       <Item10>
         <Filename Value="source/mvtypes.pas"/>
-        <UnitName Value="mvtypes"/>
+        <UnitName Value="mvTypes"/>
       </Item10>
       <Item11>
         <Filename Value="source/mvmapviewer.pas"/>
-        <UnitName Value="mvmapviewer"/>
+        <UnitName Value="mvMapViewer"/>
       </Item11>
       <Item12>
         <Filename Value="source/mvextradata.pas"/>
-        <UnitName Value="mvextradata"/>
+        <UnitName Value="mvExtraData"/>
       </Item12>
       <Item13>
         <Filename Value="source/mvdlefpc.pas"/>
@@ -73,13 +73,10 @@ This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/c
         <UnitName Value="mvMapViewerReg"/>
       </Item14>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="LCLBase"/>
       </Item1>
-      <Item2>
-        <PackageName Value="FCL"/>
-      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
