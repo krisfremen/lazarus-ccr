@@ -8,12 +8,13 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <OtherUnitFiles Value="source\addons\synapse_downloadengine"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Files Count="1">
       <Item1>
-        <Filename Value="mvdlesynapse.pas"/>
+        <Filename Value="source\addons\synapse_downloadengine\mvdlesynapse.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="mvDLESynapse"/>
       </Item1>
