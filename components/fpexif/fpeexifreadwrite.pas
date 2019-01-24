@@ -297,7 +297,6 @@ end;
 // Reads the image file directory (IFD) starting at the current stream position
 // and adds the found tags to the specified group
 //------------------------------------------------------------------------------
-//procedure TBasicExifReader.ReadIFD(AStream: TStream; AGroup: TTagGroup);
 procedure TBasicExifReader.ReadIFD(AStream: TStream; AParent: TTagID);
 var
   numRecords: Word;

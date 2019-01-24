@@ -16,9 +16,12 @@ type
   TMainForm = class(TForm)
     BtnChangeDate: TButton;
     CbDecodeMakerNotes: TCheckBox;
+    CbShowTagIDs: TCheckBox;
+    CbShowParentTagID: TCheckBox;
     EdChangeDate: TEdit;
     FilenameInfo: TLabel;
     Image: TImage;
+    Label1: TLabel;
     LblChangeDate: TLabel;
     Messages: TMemo;
     PageControl1: TPageControl;
@@ -26,6 +29,7 @@ type
     Panel2: TPanel;
     Panel3: TPanel;
     DateTimePanel: TPanel;
+    Panel4: TPanel;
     PreviewImage: TImage;
     ImageList: TImageList;
     Splitter3: TSplitter;
@@ -39,6 +43,7 @@ type
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     procedure BtnChangeDateClick(Sender: TObject);
+    procedure CbShowTagIDsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
@@ -74,6 +79,8 @@ uses
   IniFiles, Math, StrUtils, DateUtils,
   fpeGlobal, fpeTags, fpeExifData, fpeIptcData;
 
+const
+  TAG_ID_CAPTION = 'Tag ID';
 
 function CalcIniName: String;
 begin
@@ -124,6 +131,26 @@ begin
   FImgInfo.SaveToFile(fn);
 end;
 
+procedure TMainForm.CbShowTagIDsChange(Sender: TObject);
+var
+  c: TListColumn;
+  i: Integer;
+begin
+  TagListView.BeginUpdate;
+  try
+    c := nil;
+    for i:=0 to TagListView.Columns.Count-1 do
+      if TagListView.Columns[i].Caption = TAG_ID_CAPTION then begin
+        c := TagListView.Columns[i];
+        break;
+      end;
+    if c <> nil then
+      c.Visible := CbShowTagIDs.Checked;;
+  finally
+    TagListView.EndUpdate;
+  end;
+end;
+
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   try
@@ -169,6 +196,10 @@ begin
           item := TagListView.Items.Add;
           item.Data := lTag;
           item.Caption := 'EXIF.' + NiceGroupNames[lTag.Group];
+          if CbShowParentTagID.Checked then
+            item.SubItems.Add(Format('$%.04x:$%.04x', [lTag.TagIDRec.Parent, lTag.TagIDRec.Tag]))
+          else
+            Item.SubItems.Add(Format('$%.04x', [lTag.TagIDRec.Tag]));
           item.SubItems.Add(lTag.Description);
           item.SubItems.Add(lTag.AsString);
         end;
@@ -233,6 +264,7 @@ var
   i, W, H, L, T: Integer;
   rct: TRect;
   s: String;
+  b: Boolean;
 begin
   ini := TIniFile.Create(CalcIniName);
   try
@@ -263,6 +295,16 @@ begin
       if w <> 0 then
         TagListView.Columns[i].Width := w;
     end;
+
+    b := ini.ReadBool('TagList', 'ShowTagIDs', true);
+    for i:=0 to TagListView.Columns.Count-1 do
+      if TagListView.Columns[i].Caption = TAG_ID_CAPTION then
+        TagListView.Columns[2].Visible := b;
+    CbShowTagIDs.Checked := b;
+
+    b := ini.ReadBool('TagList', 'ShowParentTagID', false);
+    CbShowParentTagID.Checked := b;
+
   finally
     ini.Free;
   end;
@@ -295,6 +337,9 @@ begin
     ini.WriteString('MainForm', 'Path', ShellTreeView.Path);
     ini.WriteInteger('MainForm', 'LeftPanelWidth', ShellPanel.Width);
     ini.WriteInteger('MainForm', 'TreeHeight', ShellTreeView.Height);
+
+    ini.WriteBool('TagList', 'ShowTagIDs', CbShowTagIDs.Checked);
+    ini.WriteBool('TagList', 'ShowParentTagID', CbShowParentTagID.Checked);
     for i:=0 to TagListView.Columns.Count-1 do
       ini.WriteInteger('TagList', 'ColWidth'+IntToStr(i), TagListView.Columns[i].Width);
   finally

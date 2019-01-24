@@ -8,6 +8,7 @@ object MainForm: TMainForm
   ClientWidth = 926
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  ShowHint = True
   LCLVersion = '2.1.0.0'
   object ShellPanel: TPanel
     Left = 0
@@ -22,6 +23,7 @@ object MainForm: TMainForm
     object ShellTreeView: TShellTreeView
       Left = 0
       Height = 269
+      Hint = 'Navigate to the folder with your images.'
       Top = 0
       Width = 274
       Align = alTop
@@ -47,7 +49,8 @@ object MainForm: TMainForm
     end
     object ShellListView: TShellListView
       Left = 0
-      Height = 273
+      Height = 250
+      Hint = 'Select the image for which you want to see the metadata'
       Top = 274
       Width = 274
       Align = alClient
@@ -65,12 +68,39 @@ object MainForm: TMainForm
     object PreviewImage: TImage
       Left = 0
       Height = 144
+      Hint = 'Thumbnail image embedded in the image file'
       Top = 547
       Width = 274
       Align = alBottom
       Center = True
       Proportional = True
       Stretch = True
+    end
+    object Panel4: TPanel
+      Left = 0
+      Height = 23
+      Top = 524
+      Width = 274
+      Align = alBottom
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 23
+      ClientWidth = 274
+      TabOrder = 3
+      object Label1: TLabel
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Panel4
+        AnchorSideTop.Side = asrCenter
+        Left = 8
+        Height = 15
+        Top = 4
+        Width = 94
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 4
+        Caption = 'Thumbnail image'
+        ParentColor = False
+      end
     end
   end
   object Splitter2: TSplitter
@@ -137,6 +167,10 @@ object MainForm: TMainForm
               Width = 120
             end          
             item
+              Caption = 'Tag ID'
+              Width = 60
+            end          
+            item
               Caption = 'Property'
               Width = 220
             end          
@@ -172,12 +206,44 @@ object MainForm: TMainForm
             AnchorSideTop.Side = asrCenter
             Left = 0
             Height = 19
+            Hint = 'Try to decode information in the MakerNote tag if possible'
             Top = 1
             Width = 127
             Caption = 'Decode MakerNotes'
             Checked = True
             State = cbChecked
             TabOrder = 0
+          end
+          object CbShowTagIDs: TCheckBox
+            AnchorSideLeft.Control = CbDecodeMakerNotes
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = CbDecodeMakerNotes
+            AnchorSideTop.Side = asrCenter
+            Left = 135
+            Height = 19
+            Hint = 'Show the numerical ID of every tag'
+            Top = 1
+            Width = 88
+            BorderSpacing.Left = 8
+            Caption = 'Show tag IDs'
+            Checked = True
+            OnChange = CbShowTagIDsChange
+            State = cbChecked
+            TabOrder = 1
+          end
+          object CbShowParentTagID: TCheckBox
+            AnchorSideLeft.Control = CbShowTagIDs
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = CbDecodeMakerNotes
+            AnchorSideTop.Side = asrCenter
+            Left = 231
+            Height = 19
+            Hint = 'Show the ID of the parent tag.'#13#10'List will be updated when the next file is loaded.'
+            Top = 1
+            Width = 94
+            BorderSpacing.Left = 8
+            Caption = 'with parent ID'
+            TabOrder = 2
           end
         end
       end
@@ -247,6 +313,7 @@ object MainForm: TMainForm
         AnchorSideTop.Side = asrCenter
         Left = 144
         Height = 23
+        Hint = 'New date to be assigned to the selected image'
         Top = 6
         Width = 152
         BorderSpacing.Left = 5
@@ -260,6 +327,7 @@ object MainForm: TMainForm
         AnchorSideTop.Side = asrCenter
         Left = 304
         Height = 25
+        Hint = 'Replaces the image date.'
         Top = 5
         Width = 66
         AutoSize = True
