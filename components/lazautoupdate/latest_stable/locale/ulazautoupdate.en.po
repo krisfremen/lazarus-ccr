@@ -40,7 +40,9 @@ msgid "Download failed with error code "
 msgstr "Download failed with error code "
 
 #: ulazautoupdate.c_downloading
-msgid "Please wait.  Downloading new version... "
+#, fuzzy
+#| msgid "Please wait.  Contacting server.. "
+msgid "Please wait.  Downloading.. "
 msgstr "Please wait.  Downloading new version... "
 
 #: ulazautoupdate.c_downloadisempty

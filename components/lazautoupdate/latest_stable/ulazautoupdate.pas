@@ -58,6 +58,10 @@ interface
 
 
 uses
+  {$IFDEF UNIX}{$IFDEF UseCThreads}
+  cthreads,
+  cmem, // the c memory manager is on some systems much faster for multi-threading
+  {$ENDIF}{$ENDIF}
   Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils, PropEdits,
   LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
   Buttons, DateUtils,{$IFDEF LINUX}process, asyncprocess,{$ENDIF}zipper, LResources,
@@ -147,7 +151,7 @@ const
  V0.3.7.2: Unix: SetExecutePermissions on installed app
  V0.3.8: Shortcut Menu items now created/deleted
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.8';
+  C_TLazAutoUpdateComponentVersion = '0.3.9.0';
   C_TThreadedDownloadComponentVersion = '0.0.3.0';
 {
  V0.0.1: Initial alpha
@@ -193,7 +197,7 @@ resourcestring
   C_TempVersionsININame = 'new%s'; // [C_OnlineVersionsININame]
   C_Checking = 'Checking for updates...';
   C_NoSFTypes = 'Sorry only ProjectType = auSourceForge is supported in this version';
-  C_Downloading = 'Please wait.  Downloading new version... ';
+  C_Downloading = 'Please wait.  Downloading.. ';
   C_ConsoleTitle = 'Updating %s'; //[fAppFileName]
   C_TakingTooLong =
     'Check is taking too long (bad/slow internet connection?). Try again later?';
@@ -257,9 +261,13 @@ type
   end;
 
   TWorkingMode = (lauUpdate, lauInstall);
-
-  TThreadedDownload = class; // Forward declaration
+  TOnPercent = procedure(Sender: TObject; Percent: integer) of object;
+  TDownloadWrapper = class; // Forward declaration
   TShortCutClass = class; // Forward declaration
+  TDownloadThreadClass = class;  // Forward declaration
+  TDataEvent = procedure(Sender: TObject;
+    const ContentLength, CurrentPos: int64) of object;
+
   {TLAZAUTOUPDATE}
   // Event declarations
   TOnNewVersionAvailable = procedure(Sender: TObject; Newer: boolean;
@@ -280,7 +288,7 @@ type
     fApplicationVersionQuad: TVersionQuad;
     fGuiQuad: TVersionQuad;
     fProjectType: TProjectType;
-    fThreadDownload: TThreadedDownload;
+    fDownloadWrapper: TDownloadWrapper;
     fAppFileName: string;
     fComponentVersion: string;
     fShowUpdateInCaption: boolean;
@@ -320,6 +328,8 @@ type
     fProgVersion: TProgramVersion;
     objFileVerInfo: TFileVersionInfo;
     fUpdateExe, fUpdateSilentExe: string;
+    flauOnFileWrite: TOnPercent;
+    flauOnProgress: TOnPercent;
     procedure SetProjectType(AValue: TProjectType);
     // projectype=auOther property Sets
     procedure SetauOtherSourceFilename(AValue: string);
@@ -352,7 +362,7 @@ type
     // Put in form.activate. Shows <whatsnew.txt> only if in ProgramDirectory then deletes it. Exits otherwise
     procedure ShowWhatsNewIfAvailable;
     // Checks for new version then shows dialogs to update
-    Function AutoUpdate:Boolean;
+    function AutoUpdate: boolean;
     // No dialogs - what it says on the tin.
     function SilentUpdate: boolean;
     // Used in SilentUpdate. Shells to local lauupdate(.exe)
@@ -417,10 +427,11 @@ type
     property OnDownloaded: TOnDownloaded read fOnDownloaded write fOnDownloaded;
     property OnDebugEvent: TOnDebugEvent read fOnDebugEvent write fOnDebugEvent;
     property OnUpdated: TOnUpdated read fOnUpdated write fOnUpdated;
-
+    property OnFileWriteProgress: TOnPercent read flauOnFileWrite write flauOnFileWrite;
+    property OnDownloadProgress: TOnPercent read flauOnProgress write flauOnProgress;
     // Embedded class
-    property ThreadDownload: TThreadedDownload
-      read fThreadDownload write fThreadDownload;
+    property ThreadDownload: TDownloadWrapper
+      read fDownloadWrapper write fDownloadWrapper;
     // Set this property before using methods
     property SFProjectName: string read fSourceForgeProjectName
       write SetSourceForgeProjectName;
@@ -500,8 +511,8 @@ type
       write SetShortCutCategoryString;
   end;
 
-  {TThreadedDownload }
-  TThreadedDownload = class(TPersistent)
+  {TDownloadWrapper }
+  TDownloadWrapper = class(TPersistent)
   private
     fURL: string;
     fFileName: string;
@@ -511,12 +522,17 @@ type
     fUnzipAfter: boolean;
     fComponentVersion: string;
     fApplicationVersionString: string;
-    fIsSourceForge: boolean;
+    fIsCodeRepository: boolean;
   public
+    fDownloadWrapperPercent: integer;
+    fWrapperOnFileWrite: TOnPercent;
+    fDownLoad: TDownloadThreadClass;
     fDebugMode: boolean;
     fShowDialogs: boolean;
     fLastError: string;  // Propagated to TLazAutoUpdate
     constructor Create;
+    destructor Destroy; override;
+    //function GetDownloadWrapperPercent:Integer;
     // Starts the thread
     function ThreadDownloadHTTP: boolean;
     // Called when the thread is done
@@ -537,31 +553,62 @@ type
     // From TLazAutoUpdate
     property UnzipAfter: boolean read fUnzipAfter;
     // From TLazAutoUpdate
-    property IsSourceForge: boolean read fIsSourceForge;
+    property IsSourceForge: boolean read fIsCodeRepository;
+    property OnDownloadWrapperFileWriteProgress: TOnPercent
+      read fWrapperOnFileWrite write fWrapperOnFileWrite;
+    property DownloadWrapperPercent: integer
+      read fDownloadWrapperPercent write fDownloadWrapperPercent;
   published
     // Version of the underlying thread class
     property ThreadDownloadVersion: string read fComponentVersion;
   end;
 
+  { TStreamAdapter }
+  TStreamAdapter = class(TStream)
+  strict private
+    fOnProgress: TOnPercent;
+    fPercent: integer;
+    fStream: TStream;
+  public
+    constructor Create(AStream: TStream; ASize: int64);
+    destructor Destroy; override;
+    function Read(var Buffer; Count: longint): longint; override;
+    function Write(const Buffer; Count: longint): longint; override;
+    function Seek(Offset: longint; Origin: word): longint; override;
+    procedure DoProgress(Writing: boolean); virtual;
+  published
+    property OnFileWriteProgress: TOnPercent read FOnProgress write FOnProgress;
+  end;
+
   {TDownloadThreadClass }
   TDownloadThreadClass = class(TThread)
   private
-    fURL: string;
-    fFileName: string;
+    fdtcOnFileWrite: TOnPercent;
+    fThreadDataEvent: TDataEvent;
+    fPercent: integer;
   public
-    fIsSourceForge: boolean; // Propagated from TLazAutoUpdate
+    fHTTPClient: TFPHTTPClient;
+    fIsRepositoryURL: boolean; // Propagated from TLazAutoUpdate
     fDebugMode: boolean; // propagated from TLazAutoUpdate
     fShowDialogs: boolean; // propagated from TLazAutoUpdate
-    fDownloadSize: integer; // propagated to TThreadedDownload
-    fReturnCode: integer; // Propagated to TThreadedDownload
-    fLastError: string;  // Propagated to TThreadedDownload
-    constructor Create(URL, FileName: string);
+    fDownloadSize: integer; // propagated to TDownloadWrapper
+    fReturnCode: integer; // Propagated to TDownloadWrapper
+    fLastError: string;  // Propagated to TDownloadWrapper
+    fURL: string;
+    fFileName: string;
+    constructor Create(CreateSuspended: boolean);
+    destructor Destroy; override;
     procedure Execute; override; // Starts thread
-    // Todo:
-    {
-    procedure GetDownloadSize;
-    procedure ShowProgress;
-    }
+    function GetPercent: integer;
+    procedure SetPercent(AValue: integer);
+    function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
+      bIsRepositoryURL, DebugMode: boolean): boolean;
+    procedure DoPercent(Sender: TObject; const ContentLength, CurrentPos: int64);
+    function GetDownloadFileSize(URL: string; bIsRepositoryURL: boolean): int64;
+    property Percent: integer read fPercent write fPercent;
+    property OnThreadFileWriteProgress: TOnPercent
+      read fdtcOnFileWrite write fdtcOnFileWrite;
+    property OnThreadDataEvent: TDataEvent read fThreadDataEvent write fThreadDataEvent;
   end;
 
   // For the TShortCutClass filename properties (needs propedits unit)
@@ -575,8 +622,7 @@ type
 
 
 // Non-threaded function
-function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
-  bIsSourceForge, fDebugMode: boolean): boolean;
+// Function GetDownloadFileSize(URL:String;bIsRepositoryURL:Boolean):Int64;
 
 procedure Register;
 
@@ -792,9 +838,10 @@ begin
   end;
 
   // Freed in Destroy
-  fThreadDownload := TThreadedDownload.Create();
-
+  fDownloadWrapper := TDownloadWrapper.Create;
+  // Freed in Destroy
   fShortCutClass := TShortCutClass.Create();
+
   fShortCutClass.ShortcutName := 'MyShortcutName';
   fShortCutClass.TargetArguments := '';
   fShortCutClass.Category := scDevelopment;
@@ -824,7 +871,7 @@ begin
       sz := rsSImportantMe;
       raise Exception.Createfmt(sz, [LineEnding, LineEnding,
         LineEnding, LineEnding, LineEnding]);
-      FreeAndNil(fThreadDownload);
+      FreeAndNil(fDownloadWrapper);
       FreeAndNil(fShortCutClass);
       Application.Terminate;
       // Eat other Exceptions?
@@ -849,14 +896,13 @@ begin
   fSilentMode := False;
 
   // Propagate down
-  fThreadDownload.fDebugmode := fDebugMode;
+  fDownloadWrapper.fDebugmode := fDebugMode;
   if ((fProjectType = auSourceForge) or (fProjectType = auGitHubReleaseZip)) then
-    fThreadDownload.fIsSourceForge := True
+    fDownloadWrapper.fIsCodeRepository := True
   else
-    fThreadDownload.fIsSourceForge := False;
+    fDownloadWrapper.fIsCodeRepository := False;
 
   fApplicationVersionQuad := StrToVersionQuad(fApplicationVersionString);
-
   fLastError := C_OK;
 
   fVersionCountLimit := 1000000; // default
@@ -907,7 +953,7 @@ end;
 
 destructor TLazAutoUpdate.Destroy;
 begin
-  FreeAndNil(fThreadDownload);
+  FreeAndNil(fDownloadWrapper);
   FreeAndNil(fShortCutClass);
   inherited Destroy;
 end;
@@ -946,8 +992,8 @@ end;
 procedure TLazAutoUpdate.SetShowDialogs(AValue: boolean);
 begin
   fShowDialogs := AValue;
-  if fThreadDownload <> nil then
-    fThreadDownload.fShowDialogs := AValue;
+  if fDownloadWrapper <> nil then
+    fDownloadWrapper.fShowDialogs := AValue;
 end;
 
 procedure TLazAutoUpdate.SetDebugMode(AValue: boolean);
@@ -956,8 +1002,8 @@ begin
   // Fire the OnDebugEvent event handler?
   if Assigned(fOndebugEvent) then
     fFireDebugEvent := fDebugMode;
-  if fThreadDownload <> nil then
-    fThreadDownload.fDebugMode := AValue;
+  if fDownloadWrapper <> nil then
+    fDownloadWrapper.fDebugMode := AValue;
 end;
 
 procedure TLazAutoUpdate.SetauOtherSourceURL(AValue: string);
@@ -1184,12 +1230,12 @@ begin
   end;
 end;
 
-Function TLazAutoUpdate.AutoUpdate:Boolean;
-// Do-all proc that user can drop into a menu
+function TLazAutoUpdate.AutoUpdate: boolean;
+  // Do-all proc that user can drop into a menu
 begin
   if Assigned(fOndebugEvent) then
     fFireDebugEvent := True;
-  Result:=False;
+  Result := False;
   if fFireDebugEvent then
     fOndebugEvent(Self, 'AutoUpdate', 'Calling NewVersionAvailable');
   if NewVersionAvailable then
@@ -1231,12 +1277,12 @@ begin
         mtInformation, [mbOK], 0);
   end
   else
-    begin
+  begin
     MessageDlg(fParentApplication.Title,
       rsThisApplicat,
       mtInformation, [mbOK], 0);
-    Result:=TRUE;
-    end;
+    Result := True;
+  end;
 end;
 
 function TLazAutoUpdate.IsOnlineVersionNewer(const sznewINIPath: string): boolean;
@@ -1363,7 +1409,7 @@ begin
         Format('Failed to delete old file %s', [szTargetPath]));
     // No error if the delete can't be done
   end;
-  with fThreadDownload do
+  with fDownloadWrapper do
   begin
     URL := szURL;
     Filename := szTargetPath;
@@ -1469,6 +1515,9 @@ begin
   // read the VMT once
   if Assigned(fOndebugEvent) then
     fFireDebugEvent := True;
+
+  // **************
+  // **************
   iDownloadedSize := 0;
   if fZipFileName = '' then
   begin
@@ -1570,8 +1619,16 @@ begin
 
   fDownloadInprogress := True;
   CheckForOpenSSL;
+
+  if Assigned(OnFileWriteProgress) then
+  begin
+    fDownloadWrapper.OnDownloadWrapperFileWriteProgress := OnFileWriteProgress;
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'DownloadNewVersion', 'OnProgess assigned OK');
+  end;
+
   // Do the download
-  with fThreadDownload do
+  with fDownloadWrapper do
   begin
     // Initialise fields
     URL := szURL;
@@ -1594,30 +1651,42 @@ begin
       try
         while (ThreadFinished = False) do
         begin
-          Inc(cCount);
-          Sleep(1);
-          fParentApplication.ProcessMessages;
-        {$IFDEF WINDOWS}
-          if fShowUpdateInCaption then
-            fParentForm.Caption := Format(C_Downloading + ' %d', [cCount])
-          else
-            sleep(10);
-          fParentApplication.ProcessMessages; // Keep GUI responsive
-
-          if (cCount > fDownloadCountLimit) then // Download taking too long?
-          begin
-            fDownloadInprogress := False;
-            if not fSilentMode then
-              fParentForm.Caption := szOldCaption;
-            if fFireDebugEvent then
-              fOndebugEvent(Self, 'DownloadNewVersion', C_TakingTooLong);
-            ThreadFinished := True;
-            fDownloadSize := 0;
-            Exit;
-          end;
+          try
+            // fDownloadWrapper.fDownLoad.Synchronize(fDownloadWrapper.fDownLoad.GetPercent);
+            cCount := fDownloadWrapper.fDownLoad.Percent;
+            //threadswitch;
+            //fParentApplication.QueueAsyncCall(@fDownloadWrapper.fDownLoad.GetPercent,0);
+            // Inc(cCount);
+            //CheckSynchronize();
+            Sleep(1);
+            fParentApplication.ProcessMessages;
+          {$IFDEF WINDOWS}
+            if fShowUpdateInCaption then
+            begin
+              fParentForm.Caption := Format(C_Downloading + ' %d', [cCount]);
+              fParentApplication.ProcessMessages;
+            end
+            else
+              sleep(10);
+            fParentApplication.ProcessMessages; // Keep GUI responsive
+            if (cCount > fDownloadCountLimit) then // Download taking too long?
+            begin
+              fDownloadInprogress := False;
+              if not fSilentMode then
+                fParentForm.Caption := szOldCaption;
+              if fFireDebugEvent then
+                fOndebugEvent(Self, 'DownloadNewVersion', C_TakingTooLong);
+              ThreadFinished := True;
+              fDownloadSize := 0;
+              Exit;
+            end;
         {$ENDIF}
+
+          finally
+          end;
         end;
         iDownloadedSize := fDownloadSize;
+
       except
         if fFireDebugEvent then
           fOndebugEvent(Self, 'DownloadNewVersion', C_ThreadDownloadHTTPCrash);
@@ -1690,7 +1759,8 @@ begin
     fFireDebugEvent := True;
   if fFireDebugEvent then
     fOndebugEvent(Self, 'CreateLocalLauImportFile', 'CreateLocalLauImportFile called');
-  if FileExistsUTF8(ProgramDirectory + C_LAUTRayINI) then
+  //
+  if (ProgramDirectory + C_LAUTRayINI <> '') then
   begin
     RelocateLauImportFile;
     Result := True;
@@ -1759,7 +1829,7 @@ begin
     fOndebugEvent(Self, 'RelocateLauImportFile',
       Format('Looking for %s.', [szSourceLAUTrayPath]));
 
-  if FileExistsUTF8(szSourceLAUTrayPath) then
+  if FileExists(szSourceLAUTrayPath) then
   begin
     if fFireDebugEvent then
       fOndebugEvent(Self, 'RelocateLauImportFile',
@@ -1803,7 +1873,7 @@ begin
   end;
 
   // Don't copy over an existing file
-  if not FileExistsUTF8(szDestLAUTrayPath + C_LAUTRayINI) then
+  if not FileExists(szDestLAUTrayPath + C_LAUTRayINI) then
   begin
     // Move C_LAUTRayINI from app folder to local <AppData> folder
     if FileUtil.CopyFile(szSourceLAUTrayPath, szDestLAUTrayPath +
@@ -1811,8 +1881,8 @@ begin
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RelocateLauImportFile',
-          Format('Relocated %s from %s to %s',
-          [C_LAUTRayINI, szSourceLAUTrayPath, szDestLAUTrayPath]));
+          Format('Relocated %s from %s to %s', [C_LAUTRayINI,
+          szSourceLAUTrayPath, szDestLAUTrayPath]));
       SysUtils.DeleteFile(szSourceLAUTrayPath);
     end
     else
@@ -1833,7 +1903,7 @@ var
   INI: TINIFile;
   SectionStringList: TStrings;
   szTempUpdatesFolder: string;
-  ErrMsg:String;
+  ErrMsg: string;
 begin
   // fWorkingMode=lauInstall or lauUpdate
   Result := False;
@@ -1851,7 +1921,7 @@ begin
 
   if fWorkingMode = lauUpdate then
   begin
-    if not FileExistsUTF8(fAppFilename) then
+    if not FileExists(fAppFilename) then
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'DoSilentUpdate',
@@ -1946,7 +2016,7 @@ begin
   end;
 
   if (fWorkingMode = lauInstall) then
-    if FileExistsUTF8(C_UPDATEHMNAME) then
+    if FileExists(C_UPDATEHMNAME) then
     begin
       if FileUtil.CopyFile(C_UPDATEHMNAME, szAppFolder + C_UPDATEHMNAME) then
       begin
@@ -1986,7 +2056,7 @@ begin
     fOndebugEvent(Self, 'DoSilentUpdate', 'About to process ' +
       szTempUpdatesFolder + C_LAUTRayINI);
 
-  if FileExistsUTF8(szTempUpdatesFolder + C_LAUTRayINI) then
+  if FileExists(szTempUpdatesFolder + C_LAUTRayINI) then
   begin
     szLAUTrayAppPath := GetAppConfigDirUTF8(False, True); // Create it if necessary
     if fFireDebugEvent then
@@ -2020,7 +2090,7 @@ begin
           Format('Successfully copied %s to %s ',
           [C_LAUTRayINI, szLAUTrayAppPath]));
 
-      if FileExistsUTF8(szLAUTrayAppPath + C_LAUTRayINI) then
+      if FileExists(szLAUTrayAppPath + C_LAUTRayINI) then
       begin
         INI := TINIFile.Create(szLAUTrayAppPath + C_LAUTRayINI);
         SectionStringList := TStringList.Create;
@@ -2112,7 +2182,7 @@ begin
   else
   begin
     cCount := 0;
-    if not FileExistsUTF8(ProgramDirectory + C_LAUUPDATENAME) then
+    if not FileExists(ProgramDirectory + C_LAUUPDATENAME) then
     begin
       if fShowDialogs then
         ShowMessageFmt(C_UpdaterMissing, [ProgramDirectory + C_LAUUPDATENAME]);
@@ -2184,7 +2254,7 @@ begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
           Format('Waiting for %s', [szAppDir + C_WhatsNewFilename]));
-      while not FileExistsUTF8(szAppDir + C_WhatsNewFilename) do
+      while not FileExists(szAppDir + C_WhatsNewFilename) do
       begin
         fParentApplication.ProcessMessages;
         Inc(CCount);
@@ -2311,7 +2381,7 @@ begin
   begin
     // Start Regular update
     cCount := 0;
-    if not FileExistsUTF8(szAppDir + C_UPDATEHMNAME) then
+    if not FileExists(szAppDir + C_UPDATEHMNAME) then
     begin
       if fShowDialogs then
         ShowMessageFmt(C_UpdaterMissing, [szAppDir + C_UPDATEHMNAME]);
@@ -2418,7 +2488,7 @@ begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
           Format('Waiting for %s', [szAppDir + C_WhatsNewFilename]));
-      while not FileExistsUTF8(szAppDir + C_WhatsNewFilename) do
+      while not FileExists(szAppDir + C_WhatsNewFilename) do
       begin
         fParentApplication.ProcessMessages;
         Inc(CCount);
@@ -2508,7 +2578,7 @@ function TLazAutoUpdate.GetThreadDownloadReturnCode: integer;
 begin
   Result := 0;
   if ThreadDownload.ThreadFinished then
-    Result := fThreadDownload.fReturnCode;
+    Result := fDownloadWrapper.fReturnCode;
 end;
 
 procedure TLazAutoUpdate.SetProjectType(AValue: TProjectType);
@@ -2564,7 +2634,7 @@ begin
   // Set a default value?
   if (fDownloadZipName = '') then
     fDownloadZipName := ChangeFileExt(ExtractFilename(fAppFilename), '.zip');
-  fThreadDownload.Filename := fUpdatesFolder + PathDelim + fDownloadZipName;
+  fDownloadWrapper.Filename := fUpdatesFolder + PathDelim + fDownloadZipName;
 end;
 
 procedure TLazAutoUpdate.SetApplicationVersionString(Avalue: string);
@@ -2578,9 +2648,9 @@ end;
 // Threaded version
 // ================
 // Var bDownloadIsPresent:Boolean;
-//     MyTheadDownload:TThreadedDownload;
+//     MyTheadDownload:TDownloadWrapper;
 // Begin
-// MyTheadDownload:=TThreadedDownload.Create(sourceforgedownloadURL,Localfilepath);
+// MyTheadDownload:=TDownloadWrapper.Create(sourceforgedownloadURL,Localfilepath);
 // {
 //  Note the Localfilepath MUST be specified, and can be a different filename and path
 //  than the filename specified in the sourceforgedownloadURL
@@ -2600,64 +2670,97 @@ end;
 
 { TDownloadThreadClass }
 
-constructor TDownloadThreadClass.Create(URL, FileName: string);
+constructor TDownloadThreadClass.Create(CreateSuspended: boolean);
 begin
-  inherited Create(True);
-  fURL := URL;
-  fFileName := FileName;
+  inherited Create(CreateSuspended);
   fReturnCode := 0; // Failure code
   fDownloadSize := 0;
   FreeOnTerminate := True;
   fLastError := C_OK;
 end;
 
-procedure TDownloadThreadClass.Execute;
+destructor TDownloadThreadClass.Destroy;
 begin
-  // Start the download procedure
-  DownloadHTTP(fURL, fFileName, fReturnCode, fDownloadSize, fIsSourceForge, fDebugMode);
+  FreeAndNil(fHTTPClient);
+  inherited Destroy;
 end;
 
-//constructor TThreadedDownload.Create(URL, FileName: string);
-constructor TThreadedDownload.Create();
+procedure TDownloadThreadClass.DoPercent(Sender: TObject;
+  const ContentLength, CurrentPos: int64);
+begin
+  fPercent := integer((Trunc((CurrentPos / ContentLength) * 100)));
+end;
+
+procedure TDownloadThreadClass.Execute;
+begin
+  fHTTPClient := TFPHTTPClient.Create(nil);
+  // OnThreadDataEvent:=fHTTPClient.OnDataReceived;
+  // fHTTPClient.OnDataReceived:=@DoPercent;
+  // Start the download procedure
+  fDownloadSize := GetDownloadFileSize(fURL, fIsRepositoryURL);
+  if (fDownloadSize > 0) then
+  begin
+    fDownloadSize := 0;
+    DownloadHTTP(fURL, fFileName, fReturnCode, fDownloadSize,
+      fIsRepositoryURL, fDebugMode);
+  end
+  else
+    fLastError := 'Zero Size';
+
+end;
+
+constructor TDownloadWrapper.Create();
+  // Called from LazAutoUpdate.Create
 begin
   inherited Create;
   fThreadFinished := False;
   fAppLicationVersionString := '0.0.1';
   fComponentVersion := C_TThreadedDownloadComponentVersion;
   fLastError := C_OK;
+  // Create the thread (suspended)
+  fdownload := TDownloadThreadClass.Create(True);
+  fdownload.FreeOnTerminate := True;
+  fdownload.OnTerminate := @DownloadTerminiated;
 end;
 
-{ TThreadedDownload }
+destructor TDownloadWrapper.Destroy;
+begin
+  inherited Destroy;
+end;
 
-function TThreadedDownload.ThreadDownloadHTTP: boolean;
-var
-  download: TDownloadThreadClass;
+{ TDownloadWrapper }
+
+function TDownloadWrapper.ThreadDownloadHTTP: boolean;
 begin
   if (CompareFileExt(ExtractFilename(fFileName), 'zip', False) = 0) then
     fUnzipAfter := True
   else
     fUnzipAfter := False;
-
-  download := TDownloadThreadClass.Create(fURL, fFileName);
-  download.OnTerminate := @DownloadTerminiated;
-  download.fIsSourceForge := fIsSourceForge;
-  download.fDebugMode := fDebugMode;
-  download.fLastError := fLastError;
-  download.FreeOnTerminate := True;
-  download.start;
+  if Assigned(OnDownloadWrapperFileWriteProgress) then
+    fdownload.OnThreadFileWriteProgress := OnDownloadWrapperFileWriteProgress;
+  fdownload.fIsRepositoryURL := fIsCodeRepository;
+  fdownload.fDebugMode := fDebugMode;
+  fdownload.fLastError := fLastError;
+  fdownload.fURL := URL;
+  fdownload.fFileName := FileName;
+  fdownload.fDownloadSize := 0;
+  fdownload.start;
   Result := True;
 end;
 
-procedure TThreadedDownload.DownloadTerminiated(Sender: TObject);
+procedure TDownloadWrapper.DownloadTerminiated(Sender: TObject);
 // Unzips all files ready for updatehmxxx to copy them over
 var
   UnZipper: TUnZipper;
 begin
-  fReturnCode := (Sender as TDownloadThreadClass).fReturnCode;
-  fDownloadSize := (Sender as TDownloadThreadClass).fDownloadSize;
-  fLastError := (Sender as TDownloadThreadClass).fLastError;
+  FreeAndNil(fDownload.fHTTPClient);
+  fReturnCode := fdownload.fReturnCode;
+  fDownloadSize := fdownload.fDownloadSize;
+  fLastError := fdownload.fLastError;
   fThreadFinished := True;
-  if (FileExistsUTF8(fFileName) = True) and
+  if fReturnCode = 401 then
+    Exit;
+  if (FileExists(fFileName) = True) and
     (CompareFileExt(fFileName, '.zip', False) = 0) then
     if fUnzipAfter then
     begin
@@ -2667,7 +2770,8 @@ begin
         UnZipper.OutputPath := ExtractFileDir(fFileName);
         UnZipper.Examine;
         UnZipper.UnZipAllFiles;
-        SysUtils.DeleteFile(fFileName);
+        if FileExists(fFileName) then
+          SysUtils.DeleteFile(fFileName);
       finally
         UnZipper.Free;
       end;
@@ -2675,35 +2779,131 @@ begin
 end;
 
 { End of class members}
-function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
-  bIsSourceForge, fDebugmode: boolean): boolean;
+
+function TDownloadThreadClass.GetPercent: integer;
+begin
+  Result := fPercent;
+end;
+
+procedure TDownloadThreadClass.SetPercent(AValue: integer);
+begin
+  fPercent := AValue;
+end;
+
+function TDownloadThreadClass.GetDownloadFileSize(URL: string;
+  bIsRepositoryURL: boolean): int64;
+var
+  VSize: int64 = 0;
+  I: integer;
+  S: string;
+begin
+  try
+    if bIsRepositoryURL then
+      fHTTPClient.AllowRedirect := True;
+    try
+      fHTTPClient.HTTPMethod('HEAD', URL, nil, [200]);
+    except
+      Result := 0;
+    end;
+    for I := 0 to pred(fHTTPClient.ResponseHeaders.Count) do
+    begin
+      S := UpperCase(fHTTPClient.ResponseHeaders[I]);
+      if Pos('CONTENT-LENGTH:', S) > 0 then
+      begin
+        VSize := StrToIntDef(Copy(S, Pos(':', S) + 1, Length(S)), 0);
+        Result := VSize;
+        Break;
+      end;
+    end;
+  except
+    Result := 0;
+  end;
+end;
+
+function TDownloadThreadClass.DownloadHTTP(URL, TargetFile: string;
+  var ReturnCode, DownloadSize: integer; bIsRepositoryURL, Debugmode: boolean): boolean;
   // Download file; retry if necessary.
   // Deals with https download links
 var
-  HTTPClient: TFPHTTPClient;
+  // HTTPClient: TFPHTTPClient;
+  vStream: TStreamAdapter;
+  vSize: int64;
 begin
   Result := False;
-  HTTPClient := TFPHTTPClient.Create(nil);
-  if bIsSourceForge then
+  vSize := GetDownloadFileSize(URL, bIsRepositoryURL);
+  if (vSize = 0) then
+    Exit;
+  if bIsRepositoryURL then
   begin
-    HTTPClient.AllowRedirect := True;
+    fHTTPClient.AllowRedirect := True;
   end;
   // ReturnCode may not be useful, but it's provided here
   try
     try
       // Try to get the file
-      HTTPClient.Get(URL, TargetFile);
-      ReturnCode := HTTPClient.ResponseStatusCode;
+      // HTTPClient.Get(URL, TargetFile);
+      vStream := TStreamAdapter.Create(TFileStream.Create(TargetFile, fmCreate), VSize);
+      if Assigned(OnThreadFileWriteProgress) then
+        vStream.OnFileWriteProgress := OnThreadFileWriteProgress;
+      fHTTPClient.OnDataReceived := @DoPercent;
+
+      fHTTPClient.HTTPMethod('GET', Url, vStream, [200]);
+      ReturnCode := fHTTPClient.ResponseStatusCode;
       DownloadSize := Filesize(TargetFile);
       Result := True;
     except
       // We don't care for the reason for this error; the download failed.
+      if FileExists(TargetFile) then
+        SysUtils.DeleteFile(TargetFile);
+      ReturnCode := 401;
+      DownloadSize := 0;
       Result := False;
     end;
   finally
-    HTTPClient.Free;
+    vStream.Free;
   end;
 
+end;
+
+constructor TStreamAdapter.Create(AStream: TStream; ASize: int64);
+begin
+  inherited Create;
+  FStream := AStream;
+  fStream.Size := ASize;
+  fStream.Position := 0;
+end;
+
+destructor TStreamAdapter.Destroy;
+begin
+  FStream.Free;
+  inherited Destroy;
+end;
+
+function TStreamAdapter.Read(var Buffer; Count: longint): longint;
+begin
+  Result := FStream.Read(Buffer, Count);
+  DoProgress(False);
+end;
+
+function TStreamAdapter.Write(const Buffer; Count: longint): longint;
+begin
+  Result := FStream.Write(Buffer, Count);
+  DoProgress(True);
+end;
+
+function TStreamAdapter.Seek(Offset: longint; Origin: word): longint;
+begin
+  Result := FStream.Seek(Offset, Origin);
+end;
+
+procedure TStreamAdapter.DoProgress(Writing: boolean);
+begin
+  fPercent := Trunc((FStream.Position) / (FStream.Size) * 100);
+  //WriteLn(FStream.Size);
+  if Assigned(OnFileWriteProgress) then
+  begin
+    OnFileWriteProgress(self, FPercent);
+  end;
 end;
 
 

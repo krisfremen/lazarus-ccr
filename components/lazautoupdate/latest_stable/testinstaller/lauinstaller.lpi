@@ -20,7 +20,7 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <RevisionNr Value="2"/>
+      <RevisionNr Value="3"/>
       <StringTable Comments="Installer/Updater using LazAutoUpdate" CompanyName="minesadorada" FileDescription="Universal Installer and Updater using component LazAutoUpdate" InternalName="lauinstaller" LegalCopyright="(c)2017 minesadorada@charcodelvalle.com" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="5">

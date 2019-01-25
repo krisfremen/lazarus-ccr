@@ -233,7 +233,7 @@ OUT:
    Use function GetShortCutDebugString to get errors as a string
 }
 var
-  XdgDesktopStringList: TStringListUTF8;
+  XdgDesktopStringList: TStringList;
   XdgDesktopFile: string;
   Aprocess: TProcess;
   sPathToShare: string;
@@ -293,7 +293,7 @@ begin
   AddToDebugString('Success: sPathToShare = ' + sPathToShare);
 
   // Make up the desktop file
-  XdgDesktopStringList := TStringListUTF8.Create;
+  XdgDesktopStringList := TStringList.Create;
   try
     XdgDesktopStringList.Add('[Desktop Entry]');
     XdgDesktopStringList.Add('Encoding=UTF-8');

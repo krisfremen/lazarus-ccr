@@ -29,6 +29,7 @@
       </Linking>
       <Other>
         <CustomOptions Value="$(IDEBuildOptions)
+-dUseCThreads
 -FcUTF8"/>
       </Other>
     </CompilerOptions>
@@ -66,7 +67,7 @@ More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Minor="3" Release="8"/>
+    <Version Minor="3" Release="9"/>
     <Files Count="7">
       <Item1>
         <Filename Value="ulazautoupdate.pas"/>

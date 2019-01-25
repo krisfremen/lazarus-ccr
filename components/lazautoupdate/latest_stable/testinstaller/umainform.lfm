@@ -13,7 +13,6 @@ object mainform: Tmainform
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poWorkAreaCenter
   LCLVersion = '1.7'
   Scaled = True
@@ -119,11 +118,14 @@ object mainform: Tmainform
     About.Authorname = 'Gordon Bamber'
     About.Organisation = 'Public Domain'
     About.AuthorEmail = 'minesadorada@charcodelvalle.com'
-    About.ComponentName = 'Laz Auto-update v0.3.4.0'
+    About.ComponentName = 'Laz Auto-update v0.3.9.0'
     About.LicenseType = abModifiedGPL
     OnDebugEvent = LazAutoUpdate1DebugEvent
+    OnFileWriteProgress = LazAutoUpdate1FileWriteProgress
+    OnDownloadProgress = LazAutoUpdate1DownloadProgress
     auOtherSourceURL = '<not applicable>/'
     auOtherSourceFilename = '<not applicable>'
+    CopyTree = False
     UpdatesFolder = 'updates'
     VersionsININame = 'versions.ini'
     ShowUpdateInCaption = True

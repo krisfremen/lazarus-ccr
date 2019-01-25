@@ -57,7 +57,7 @@ Implementation
 
 Uses
   resource, versiontypes, versionresource, InterfaceBase
-  {$IF (lcl_major > 0) and (lcl_minor > 6)}, LCLPlatformDef {$ENDIF};
+  , LCLPlatformDef;
 
 Type
   TVersionInfo = Class

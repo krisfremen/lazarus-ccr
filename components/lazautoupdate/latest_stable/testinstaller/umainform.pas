@@ -62,10 +62,14 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure grp_ApplicationSelectionChanged(Sender: TObject);
     procedure LazAutoUpdate1DebugEvent(Sender: TObject;
       lauMethodName, lauMessage: string);
+    procedure LazAutoUpdate1DownloadProgress(Sender: TObject; Percent: integer);
+    procedure LazAutoUpdate1DownloadWrapperDownloadWrapperFileWriteProgress(
+      Sender: TObject; Percent: integer);
+    procedure LazAutoUpdate1FileWriteProgress(Sender: TObject; Percent: integer
+      );
     procedure mnu_fileExitClick(Sender: TObject);
     procedure mnu_helpCheckForUpdatesClick(Sender: TObject);
   private
@@ -93,17 +97,11 @@ begin
   Icon := Application.Icon;
   sDirectoryToInstallTo := ProgramDirectory + 'installed';
   LazAutoUpdate1.DebugMode := True;
-  LazAutoUpdate1.ShowUpdateInCaption := True;
   ConfigureLazAutoUpdate(2); // Default is TestApp
   Logger := TEventLog.Create(nil);
   Logger.LogType := ltFile;
   Logger.FileName := Application.Title + '.log';
   Logger.Active := True; // Logging uses OnDebugEvent of LazAutoUpdate
-end;
-
-procedure Tmainform.FormShow(Sender: TObject);
-begin
-
 end;
 
 procedure Tmainform.cmd_InstallClick(Sender: TObject);
@@ -208,6 +206,23 @@ begin
   Logger.Log(lauMethodName + ' - ' + lauMessage);
 end;
 
+procedure Tmainform.LazAutoUpdate1DownloadProgress(Sender: TObject;
+  Percent: integer);
+begin
+  Caption:=Format('Downloading file.. %d %',[Percent]);
+end;
+
+procedure Tmainform.LazAutoUpdate1DownloadWrapperDownloadWrapperFileWriteProgress
+  (Sender: TObject; Percent: integer);
+begin
+end;
+
+procedure Tmainform.LazAutoUpdate1FileWriteProgress(Sender: TObject;
+  Percent: integer);
+begin
+    Caption:=Format('Writing file.. %d %',[Percent]);
+end;
+
 procedure Tmainform.mnu_fileExitClick(Sender: TObject);
 begin
   Close;
@@ -218,6 +233,7 @@ var
   OldItemIndex: integer;
 begin
   OldItemIndex := grp_Application.ItemIndex;
+  LazAutoUpdate1.ResetAppVersion;
   LazAutoUpdate1.ProjectType := auSourceForge; // can be auGitHubReleaseZip or auOther
   LazAutoUpdate1.SFProjectname := 'lazautoupdate';  // Or GitHub properties
   LazAutoUpdate1.UpdatesFolder := 'updates'; // Subfolder in repository
@@ -226,7 +242,6 @@ begin
   LazAutoUpdate1.AppFileWithPath := Application.Exename;
   If NOT LazAutoUpdate1.AutoUpdate then
      ConfigureLazAutoUpdate(OldItemIndex); // Restore properties
-
 end;
 
 procedure Tmainform.ConfigureLazAutoUpdate(const AItemIndex: integer);
