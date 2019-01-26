@@ -311,12 +311,10 @@ type
 
 const
   DefaultTagClasses: array[TTagType] of TTagClass = (
-    TIntegerTag, TIntegerTag, TIntegerTag, TFloatTag,  // UInt8, UInt16, UInt32, URational
-    TIntegerTag, TIntegerTag, TIntegerTag, TFloatTag,  // SInt8, SInt16, SInt32, SRational
-    TStringTag,                                        // String
-    TBinaryTag,                                        // Binary
-    TFloatTag, TFloatTag,                              // Single, Double
-    TSubIFDTag                                         // IFD
+    TIntegerTag, TStringTag, tIntegerTag, TIntegerTag, TFloatTag, // UInt8, String, UInt16, UInt32, URational
+    TIntegerTag, TBinaryTag, TIntegerTag, TIntegerTag, TFloatTag, // SInt8, Binary, SInt16, SInt32, SRational
+    TFloatTag, TFloatTag,                                         // Single, Double
+    TSubIFDTag                                                    // IFD
   );
 
 function SameIntegerFunc(AKey1, AKey2: String): Boolean;
@@ -333,7 +331,7 @@ implementation
 uses
   Math, StrUtils,
   fpeUtils;
-          (*
+(*
 type
   TGroupRecord = record
     TagID: TTagID;

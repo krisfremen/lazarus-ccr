@@ -1,4 +1,4 @@
-unit fpemakernotesanyo;
+unit fpeMakerNoteSanyo;
 
 {$mode objfpc}{$H+}
 

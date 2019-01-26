@@ -9,12 +9,24 @@ uses
   fpeGlobal, fpeTags, fpeExifReadWrite;
 
 type
+
+  { TOlympusMakerNoteReader }
+
   TOlympusMakerNoteReader = class(TMakerNoteReader)
+  private
   protected
     FVersion: Integer;
+    function AddTag(AStream: TStream; const AIFDRecord: TIFDRecord;
+      const AData: TBytes; AParent: TTagID): Integer; override;
     procedure GetTagDefs({%H-}AStream: TStream); override;
     function Prepare(AStream: TStream): Boolean; override;
   end;
+
+  TOlympusFlashModeTag = class(TIntegerTag)
+  public
+    function GetAsString: String; override;
+  end;
+
 
 implementation
 
@@ -23,19 +35,132 @@ uses
 
 resourcestring
   // Olympus
+  rsOlympusAELock = 'Auto-exposure lock';
+  rsOlympusAFSearch = 'AF search';
+  rsOlympusAFSearchLkUp = '0:Not ready,1:Ready';
+  rsOlympusAFAreas = 'AF areas';
+  rsOlympusAFFineTune = 'AF fine tune';
+  rsOlympusAFFineTuneAdj = 'AF fine tune adj';
+  rsOlympusAFPointSelected = 'AF point selected';
+  rsOlympusArtFilter = 'Art filter';
+  rsOlympusArtFilterLkUp = '0:Off,1:Soft Focus,2:Pop Art,3:Pale & Light Color,'+
+    '4:Light Tone,5:Pin Hole,6:Grainy Film,9:Diorama,10:Cross Process,12:Fish Eye,'+
+    '13:Drawing,14:Gentle Sepia,15:Pale & Light Color II,16:Pop Art II,'+
+    '17:Pin Hole II,18:Pin Hole III,19:Grainy Film II,20:Dramatic Tone,21:Punk,'+
+    '22:Soft Focus 2,23:Sparkle,24:Watercolor,25:Key Line,26:Key Line II,27:Miniature,'+
+    '28:Reflection,29:Fragmented,31:Cross Process II,32:Dramatic Tone II,'+
+    '33:Watercolor I,34:Watercolor II,35:Diorama II,36:Vintage,37:Vintage II,'+
+    '38:Vintage III,39:Partial Color,40:Partial Color II,41:Partial Color III';
+  rsOlympusArtFilterEffect = 'ArtFilterEffect';
+  rsOlympusArtFilterEffect0LkUp = '0:Off,1:Soft Focus,2:Pop Art,'+
+    '3:Pale & Light Color,4:Light Tone,5:Pin Hole,6:Grainy Film,9:Diorama,'+
+    '10:Cross Process,$c:Fish Eye,$d:Drawing,$e:Gentle Sepia,$f:Pale & Light Color II,'+
+    '$10:Pop Art II,$11:Pin Hole II,$12:Pin Hole III,$13:Grainy Film II,'+
+    '$14:Dramatic Tone,$15:Punk,$16:Soft Focus 2,$17:Sparkle,$18: Watercolor,'+
+    '$19:Key Line,$1a:Key Line II,$1b:Miniature,$1c:Reflection,$1d:Fragmented,'+
+    '$1f:Cross Process II,$20:Dramatic Tone II,$21:Watercolor I,$22:Watercolor II,'+
+    '$23:Diorama II,$24:Vintage,$25:Vintage II,$26:Vintage III,$27:Partial Color,'+
+    '$28:Partial Color II,$29:Partial Color III';
+  rsOlympusArtFilterEffect4LkUp = '$0000:No Effect,$8010:Star Light,'+
+    '$8020:Pin Hole,$8030:Frame,$8040:Soft Focus,$8050:White Edge,$8060 = B&W,'+
+    '$8080:Blur Top and Bottom,$8081:Blur Left and Right';
+  rsOlympusArtFiltereffect6LkUp = '0:No color filter,1:Yellow color filter,'+
+    '2:Orange color filter,3:Red color rilter,4:Green color filter';
+  rsOlympusExposureShift= 'Exposure shift';
   rsOlympusCCDScanModeLkup = '0:Interlaced,1:Progressive';
+  rsOlympusColorCreatorEffect = 'Color creator effect';
+  rsOlympusColorProfileSettings = 'Color profile settings';
+  rsOlympusColorSpace = 'Color space';
+  rsOlympusColorSpaceLkUp = '0:sRGB,1:Adobe RGB,2:Pro Photo RGB';
+  rsOlympusCompressionFactor = 'Compression factor';
   rsOlympusContrastLkup = '0:High,1:Normal,2:Low';
+  rsOlympusContrastSetting = 'Contrast setting (value, min, max)';
+  rsOlympusCustomSaturation = 'Custom saturation';
+  rsOlympusDistortionCorrection = 'Distortion correction';
+  rsOlympusDriveMode = 'Drive mode';
+  rsOlympusExposureMode = 'Exposure mode';
+  rsOlympusExposureModeLkUp = '1:Manual,2:Program,3:Aperture-priority AE,'+
+    '4:Shutter speed priority AE,5:Program-shift';
+  rsOlympusExtendedWBDetect = 'Extended WB detect';
+  rsOlympusFilmGrainEffect = 'Film grain effect';
+  rsOlympusFilmGrainEffectLkUp = '0:Off,1:Low,2:Medium,3:High';
+  rsOlympusFlashControlMode = 'Flash control mode';
+  rsOlympusFlashControlModeLkUp = '0:Off,3:TTL,4:Auto,5:Manual';
   rsOlympusFlashDevLkup = '0:None,1:Internal,4:External,5:Internal + External';
+  rsOlympusFlashExposureComp = 'Flash exposure comp';
+  rsOlympusFlashIntensity = 'Flash intensity';
+  rsOlympusFlashMode = 'Flash mode';
   rsOlympusFlashModeLkup = '2:On,3;Off';
   rsOlympusFlashModelLkup = '0:None,1:FL-20,2:FL-50,3:RF-11,4:TF-22,5:FL-36,'+
     '6:FL-50R,7:FL-36R,9:FL-14,11:FL-600R';
+  rsOlympusFlashRemoteControl = 'Flash remote control';
+  rsOlympusFlashRemoteControlLkUp = '0:Off,1:Channel 1 Low,2:Channel 2 Low,'+
+    '3:Channel 3 Low,4:Channel 4 Low,9:Channel 1 Mid,$A:Channel 2 Mid,'+
+    '$B:Channel 3 Mid,$C:Channel 4 Mid,$11:Channel 1 High,'+
+    '$12:Channel 2 High,$13:Channel 3 High,$14:Channel 4 High';
   rsOlympusFlashTypeLkup = '0:None,2:Simple E-System,3:E-System';
+  rsOlympusFocusMode = 'Focus mode';
+  rsOlympusFocusModeLkUp0 = '0:Single AF,1:Sequential shooting AF,'+
+    '2:Continuous AF,3:Multi AF,4:Face detect,10:MF';
+  rsOlympusFocusProcess = 'Focus process';
+  rsOlympusFocusProcessLkUp0 = '0:AF not used,1:AF used';
+  rsOlympusGradation = 'Gradation';
+  rsOlympusImageQuality = 'Image quality';
+  rsOlympusImageQualityLkUp = '1:SQ,2:HQ,3:SHQ,4:RAW,5:SQ (5)';
+  rsOlympusImageStabilization = 'Image stabilization';
+  rsOlympusImageStabilizationLkUp = '0:Off,1:On (Mode 1),2:On (Mode 2),'+
+    '3:On (Mode 3),4:On (Mode 4)';
   rsOlympusJpegQualLkup = '1:SQ,2:HQ,3:SHQ,4:Raw';
   rsOlympusMacroLkup = '0:Off,1:On,2:Super Macro';
+  rsOlympusMacroMode = 'Macro mode';
+  rsOlympusMacroModeLkUp = '0:Off,1:On,2:Super Macro';
+  rsOlympusMagicFilter = 'Magic filter';
+  rsOlympusMagicFilterLkUp = '0:Off,1:Soft Focus,2:Pop Art,3:Pale & Light Color,'+
+    '4:Light Tone,5:Pin Hole,6:Grainy Film,9:Diorama,10:Cross Process,12:Fish Eye,'+
+    '13:Drawing,14:Gentle Sepia,15:Pale & Light Color II,16:Pop Art II,'+
+    '17:Pin Hole II,18:Pin Hole III,19:Grainy Film II,20:Dramatic Tone,21:Punk,'+
+    '22:Soft Focus 2,23:Sparkle,24:Watercolor,25:Key Line,26:Key Line II,'+
+    '27:Miniature,28:Reflection,29:Fragmented,31:Cross Process II,'+
+    '32:Dramatic Tone II,33:Watercolor I,34:Watercolor II,35:Diorama II,'+
+    '36:Vintage,37:Vintage II,38:Vintage III,39:Partial Color,40:Partial Color II,'+
+    '41:Partial Color III';
+  rsOlympusManometerPressure = 'Manometer pressure';
+  rsOlympusManometerReading = 'Manometer reading';
+  rsOlympusManualFlashStrength = 'Manual flash strength';
+  rsOlympusMeteringModeLkUp = '2:Center-weighted average,3:Spot,5:ESP,'+
+    '261:Pattern+AF,515:Spot+Highlight control,1027:Spot+Shadow control';
+  rsOlympusModifiedSaturation = 'Modified saturation';
+  rsOlympusModifiedSaturationLkUp = '0:Off,1:CM1 (Red Enhance),2:CM2 (Green Enhance),'+
+    '3:CM3 (Blue Enhance),4:CM4 (Skin Tones)';
+  rsOlympusMonochromeColor = 'Monochrome color';
+  rsOlympusMonochromeColorLkUp = '0:(none),1:Normal,2:Sepia,3:Blue,4:Purple,5:Green';
+  rsOlympusMonochromeProfileSettings = 'Monochrome profile settings';
+  rsOlympusMonochromeProfileSettingsLkUp = '0:No filter,1:Yellow filter,'+
+    '2:Orange filter,3:Red filter,4:Magenta filter,5:Blue filter,'+
+    '6:Cyan filter,7:Green filter,8:Yellow-green filter';
+  rsOlympusMonochromeVignetting = 'Monochrome vignetting';
+  rsOlympusNoiseFilter = 'Noise filter';
+  rsOlympusNoiseReduction = 'Noise reduction';
+  rsOlympusPanoramaMode = 'Panorama mode';
+  rsOlympusPictureMode = 'Picture mode';
+  rsOlympusPictureModeLkUp = '1:Vivid,2:Natural,3:Muted,4:Portrait,5:i-Enhance,'+
+    '6:e-Portrait,7:Color Creator,9:Color Profile 1,10:Color Profile 2,'+
+    '11:Color Profile 3,12:Monochrome Profile 1,13:Monochrome Profile 2,'+
+    '14:Monochrome Profile 3,256:Monotone,512:Sepia';
+  rsOlympusPictureModeBWFilter = 'Picture mode BW filter';
+  rsOlympusPictureModeBWFilterLkUp = '0:n/a,1:Neutral,2:Yellow,3:Orange,4:Red,5:Green';
+  rsOlympusPictureModeContrast = 'Picture mode contrast (value, min, max)';
+  rsOlympusPictureModeEffect = 'Picture mode effect';
+  rsOlympusPictureModeHue = 'Picture mode hue';
+  rsOlympusPictureModeSaturation = 'Picture mode saturation (value, min, max)';
+  rsOlympusPictureModeSharpness = 'Picture mode sharpness (value, min, max)';
+  rsOlympusPictureModeTone = 'Picture mode tone';
+  rsOlympusPictureModeToneLkUp = '0:n/a,1:Neutral,2:Sepia,3:Blue,4:Purple,5:Green';
   rsOlympusPreviewImgLength = 'Preview image length';
   rsOlympusPreviewImgStart = 'Preview image start';
   rsOlympusPreviewImgValid = 'Preview image valid';
   rsOlympusSharpnessLkup = '0:Normal,1:Hard,2:Soft';
+  rsOlympusSceneMode = 'Scene mode';
   rsOlympusSceneModeLkup = '0:Normal,1:Standard,2:Auto,3:Intelligent Auto,' +
     '4:Portrait,5:Landscape+Portrait,6:Landscape,7:Night Scene,8:Night+Portrait' +
     '9:Sport,10:Self Portrait,11:Indoor,12:Beach & Snow,13:Beach,14:Snow,' +
@@ -45,13 +170,40 @@ resourcestring
     '30:Underwater Wide2,31:Digital Image Stabilization,32:Face Portrait,33:Pet,'+
     '34:Smile Shot,35:Quick Shutter,43:Hand-held Starlight,100:Panorama,'+
     '101:Magic Filter,103:HDR';
+  rsOlympusSceneModeLkUp2 = '0:Standard,6:Auto,7:Sport,8:Portrait,9:Landscape+Portrait,'+
+    '10:Landscape,11:Night Scene,12:Self Portrait,13:Panorama,14:2 in 1,'+
+    '15:Movie,16:Landscape+Portrait,17:Night+Portrait,18:Indoor,19:Fireworks,'+
+    '20:Sunset,21:Beauty Skin,22:Macro,23:Super Macro,24:Food,25:Documents,'+
+    '26:Museum,27:Shoot & Select,28:Beach & Snow,29:Self Protrait+Timer,'+
+    '30:Candle,31:Available Light,32:Behind Glass,33:My Mode,34:Pet.35:Underwater Wide1,'+
+    '36:Underwater Macro,37:Shoot & Select1,38:Shoot & Select2,39:High Key,'+
+    '40:Digital Image Stabilization,41:Auction,42:Beach,43:Snow,44:Underwater Wide2,'+
+    '45:Low Key,46:Children,47:Vivid,48:Nature Macro,49:Underwater Snapshot,'+
+    '50:Shooting Guide,54:Face Portrait,57:Bulb,59:Smile Shot,60:Quick Shutter,'+
+    '63:Slow Shutter,64:Bird Watching,65:Multiple Exposure,66:e-Portrait,'+
+    '67:Soft Background Shot,142:Hand-held Starlight,154:HDR';
+  rsOlympusShadingCompression = 'Shading compression';
+  rsOlympusSharpnessSetting = 'Sharpness setting (value, min, max)';
+  rsOlympusStackedImage = 'Stacked image';
+  rsOlympusToneLevel = 'Tone level';
+  rsOlympusWhiteBalance = 'White balance';
+  rsOlympusWhiteBalance2LkUp = '0:Auto,1:Auto (Keep Warm Color Off),'+
+    '16:7500K (Fine Weather with Shade),17:6000K (Cloudy),18:5300K (Fine Weather),'+
+    '20:3000K (Tungsten light),21:3600K (Tungsten light-like),22:Auto Setup,'+
+    '23:5500K (Flash),33:6600K (Daylight fluorescent),'+
+    '34:4500K (Neutral white fluorescent),35:4000K (Cool white fluorescent),'+
+    '36:White Fluorescent,48:3600K (Tungsten light-like),67:Underwater,'+
+    '256:One Touch WB 1,257:One Touch WB 2,258:One Touch WB 3,259:One Touch WB 4,'+
+    '512:Custom WB 1,513:Custom WB 2,514:Custom WB 3,515:Custom WB 4';
+  rsOlympusWhiteBalanceBracket = 'White balance bracket';
+  rsOlympusWhiteBalanceTemperature = 'White balance temperature';
 
 
 // Most from https://sno.phy.queensu.ca/~phil/exiftool/TagNames/Olympus.html
 // some from dExif
 const
    E = $2010 shl 16;  // Equipment version
-   C = $2011 shl 16;  // Camera settings
+   C = $2020 shl 16;  // Camera settings
 
 procedure BuildOlympusTagDefs(AList: TTagDefList);
 const
@@ -134,7 +286,7 @@ begin
     AddSRationalTag(M+$103D, 'LightValueCenter');
     AddSRationalTag(M+$103E, 'LightValuePeriphery');
     AddIFDTag      (M+$2010, 'Equipment',        '', TSubIFDTag);
-    AddIFDTag      (M+$2011, 'CameraSettings',   '', TSubIFDTag);
+    AddIFDTag      (M+$2020, 'CameraSettings',   '', TSubIFDTag);
 
     // Olympus Equipment Tags
     AddBinaryTag   (E+$0000, 'EquipmentVersion', 4, '', '', '', TVersionTag);
@@ -168,7 +320,68 @@ begin
     AddULongTag    (C+$0100, 'PreviewImageValid', 1, rsOlympusPreviewImgValid, rsOffOn);
     AddULongTag    (C+$0101, 'PreviewImageStart', 1, rsOlympusPreviewImgStart);
     AddULongTag    (C+$0102, 'PreviewImageLength', 1, rsOlympusPreviewImgLength);
-
+    AddUShortTag   (C+$0200, 'ExposureMode', 1, rsOlympusExposureMode, rsOlympusExposureModeLkUp);
+    AddUShortTag   (C+$0201, 'AELock', 1, rsOlympusAELock, rsOffOn);
+    AddUShortTag   (C+$0202, 'MeteringMode', 1, '', rsOlympusMeteringModeLkUp);
+    AddSRationalTag(C+$0203, 'ExposureShift', 1, rsOlympusExposureShift);
+    AddUShortTag   (C+$0204, 'NDFilter', 1, '', rsOffOn);
+    AddUShortTag   (C+$0300, 'MacroMode', 1, rsOlympusMacroMode, rsOlympusMacroModeLkUp);
+    AddUShortTag   (C+$0301, 'FocusMode', 2, rsOlympusFocusMode, rsOlympusFocusModeLkUp0);
+    AddUShortTag   (C+$0302, 'FocusProcess', 2, rsOlympusFocusProcess, rsOlympusFocusProcessLkUp0);
+    AddUShortTag   (C+$0303, 'AFSearch', 1, rsOlympusAFSearch, rsOlympusAFSearchLkUp);
+    AddULongTag    (C+$0304, 'AFAreas', 64, rsOlympusAFAreas);
+    AddSRationalTag(C+$0305, 'AFPointSelected', 5, rsOlympusAFPointSelected);
+    AddByteTag     (C+$0306, 'AFFineTune', 1, rsOlympusAFFineTune, rsOffOn);
+    AddSShortTag   (C+$0307, 'AFFineTuneAdj', 3, rsOlympusAFFineTuneAdj);
+    AddUShortTag   (C+$0400, 'FlashMode', 1, rsOlympusFlashMode, '', '', TOlympusFlashModeTag);
+    AddSRationalTag(C+$0401, 'FlashExposureComp', 1, rsOlympusFlashExposureComp);
+    AddULongTag    (C+$0403, 'FlashRemoteControl', 1, rsOlympusFlashRemoteControl, rsOlympusFlashRemoteControlLkUp);
+    AddULongTag    (C+$0404, 'FlashControlMode', 4, rsOlympusFlashControlMode, rsOlympusFlashControlModeLkUp);
+    AddSRationalTag(C+$0405, 'FlashIntensity', 4, rsOlympusFlashIntensity);
+    AddSRationalTag(C+$0406, 'ManualFlashStrength', 4, rsOlympusManualFlashStrength);
+    AddSShortTag   (C+$0500, 'WhiteBalance2', 1, rsOlympusWhiteBalance, rsOlympusWhiteBalance2LkUp);
+    AddUShortTag   (C+$0501, 'WhiteBalanceTemperature', 1, rsOlympusWhiteBalanceTemperature);
+    AddSShortTag   (C+$0502, 'WhiteBalanceBracket', 1, rsOlympusWhiteBalanceBracket);
+    AddUShortTag   (C+$0503, 'CustomSaturation', 3, rsOlympusCustomSaturation);
+    AddUShortTag   (C+$0504, 'ModifiedSaturation', 1, rsOlympusModifiedSaturation, rsOlympusModifiedSaturationLkUp);
+    AddSShortTag   (C+$0505, 'ContrastSetting', 3, rsOlympusContrastSetting);
+    AddSShortTag   (C+$0506, 'SharpnessSetting', 3, rsOlympusSharpnessSetting);
+    AddUShortTag   (C+$0507, 'ColorSpace', 1, rsOlympusColorSpace, rsOlympusColorSpaceLkUp);
+    AddUShortTag   (C+$0509, 'SceneMode', 1, rsOlympusSceneMode, rsOlympusSceneModeLkUp2);
+    AddUShortTag   (C+$050A, 'NoiseReduction', 1, rsOlympusNoiseReduction);
+    AddUShortTag   (C+$050B, 'DistortionCorrection', 1, rsOlympusDistortionCorrection, rsOffOn);
+    AddUShortTag   (C+$050C, 'ShadingCompression', 1, rsOlympusShadingCompression, rsOffOn);
+    AddURationalTag(C+$050D, 'CompressionFactor', 1, rsOlympusCompressionFactor);
+    AddSShortTag   (C+$050F, 'Gradation', 1, rsOlympusGradation);
+    AddUShortTag   (C+$0520, 'PictureMode', 2, rsOlympusPictureMode, rsOlympusPictureModeLkUp);
+    AddSShortTag   (C+$0521, 'PictureModeSaturation', 3, rsOlympusPictureModeSaturation);
+    AddSShortTag   (C+$0522, 'PictureModeHue', 1, rsOlympusPictureModeHue);
+    AddSShortTag   (C+$0523, 'PictureModeContrast', 3, rsOlympusPictureModeContrast);
+    AddSShortTag   (C+$0524, 'PictureModeSharpness', 3, rsOlympusPictureModeSharpness);
+    AddSShortTag   (C+$0525, 'PictureModeBWFilter', 1, rsOlympusPictureModeBWFilter, rsOlympusPictureModeBWFilterLkUp);
+    AddSShortTag   (C+$0526, 'PictureModeTone', 1, rsOlympusPictureModeTone, rsOlympusPictureModeToneLkUp);
+    AddSShortTag   (C+$0527, 'NoiseFilter', 3, rsOlympusNoiseFilter);
+    AddUShortTag   (C+$0529, 'ArtFilter', 4, rsOlympusArtFilter, rsOlympusArtFilterLkUp);
+    AddUShortTag   (C+$052C, 'MagicFilter', 4, rsOlympusMagicFilter, rsOlympusMagicFilterLkUp);
+    AddSShortTag   (C+$052D, 'PictureModeEffect', 3, rsOlympusPictureModeEffect);
+    AddSShortTag   (C+$052E, 'ToneLevel', 1, rsOlympusToneLevel);
+    AddSShortTag   (C+$0532, 'ColorCreatorEffect', 6, rsOlympusColorCreatorEffect);
+    AddSShortTag   (C+$0537, 'MonochromeProfileSettings', 6, rsOlympusMonochromeProfileSettings, rsOlympusMonochromeProfileSettingsLkUp);
+    AddSShortTag   (C+$0538, 'FilmGrainEffect', 1, rsOlympusFilmGrainEffect, rsOlympusFilmGrainEffectLkUp);
+    AddSShortTag   (C+$0539, 'ColorProfileSettings', 14, rsOlympusColorProfileSettings);
+    AddSShortTag   (C+$053A, 'MonochromeVignetting', 1, rsOlympusMonochromeVignetting);
+    AddSShortTag   (C+$053B, 'MonochromeColor', 1, rsOlympusMonochromeColor, rsOlympusMonochromeColorLkUp);
+    AddUShortTag   (C+$0600, 'DriveMode', 5, rsOlympusDriveMode);
+    AddUShortTag   (C+$0601, 'PanoramaMode', 2, rsOlympusPanoramaMode);
+    AddUShortTag   (C+$0603, 'ImageQuality', 1, rsOlympusImageQuality, rsOlympusImageQualityLkUp);
+    AddULongTag    (C+$0604, 'ImageStabilization', 1, rsOlympusImageStabilization, rsOlympusImageStabilizationLkUp);
+    AddULongTag    (C+$0804, 'StackedImage', 2, rsOlympusStackedImage);
+    AddUShortTag   (C+$0900, 'ManometerPressure', 1, rsOlympusManometerPressure);
+    AddSLongTag    (C+$0901, 'ManometerReading', 2, rsOlympusManometerReading);
+    AddUShortTag   (C+$0902, 'ExtendedWBDetect', 1, rsOlympusExtendedWBDetect, rsOffOn);
+    AddSShortTag   (C+$0903, 'RollAngle', 2);
+    AddSShortTag   (C+$0904, 'PitchAngle', 2);
+    AddStringTag   (C+$0908, 'DateTimeUTC');
   end;
 end;
 
@@ -177,19 +390,65 @@ end;
 //                        TOlympusMakerNoteReader
 //==============================================================================
 
+function TOlympusMakerNoteReader.AddTag(AStream: TStream;
+  const AIFDRecord: TIFDRecord; const AData: TBytes; AParent: TTagID): Integer;
+var
+  tagDef: TTagDef;
+  p: PByte;
+  t: TTagID;
+  w: Word;
+begin
+  Result := -1;
+
+  tagDef := FindTagDef(AIFDRecord.TagID or AParent);
+  if (tagDef = nil) then
+    exit;
+
+  Result := inherited AddTag(AStream, AIFDRecord, AData, AParent);
+  t := tagDef.TagID;
+  case tagDef.TagID of
+    C+$052F:  // Camera settings / Art filter effect
+      if Length(AData) > 7*2 then
+        with FImgInfo.ExifData do begin
+          w := FixEndian16(PWord(@AData[0])^);
+          AddMakerNoteTag(0, t, rsOlympusArtFilterEffect, w, rsOlympusArtFilterEffect0LkUp);
+          w := FixEndian16(PWord(@AData[4*2])^);
+          AddMakerNoteTag(4, t, rsOlympusArtFilterEffect, w, rsOlympusArtFilterEffect4LkUp);
+          w := FixEndian16(PWord(@AData[6*2])^);
+          AddMakerNoteTag(6, t, rsOlympusArtFilterEffect, w, rsOlympusArtFilterEffect6LkUp);
+        end;
+    {
+    C+$0301:        // Camera settings / Focus mode
+      with FImgInfo.ExifData do begin
+        w := FixEndian16(PWord(@AData[0])^);
+        AddMakerNoteTag(0, t, rsOlympusFocusModeAF, w, rsOlympusFocusModeAFLkUp);
+        // to do: decode 2nd field which is a bit field
+      end;
+    }
+    {
+    C+$0302:        // Camera settings / Focus process
+      with FImgInfo.ExifData do begin
+        w := FixEndian16(PWord(@AData[0])^);
+        AddMakerNoteTag(0, t, rsOlympusFocusProcessAF, w, rsOlympusFocusProcessAFLkUp);
+      end;
+    }
+
+  end;
+end;
+
 procedure TOlympusMakerNoteReader.GetTagDefs(AStream: TStream);
 const
   SIGNATURE_V1 = 'OLYMP'#00#01#00;
   SIGNATURE_V2 = 'OLYMP'#00#02#00;
-  SIGNATURE_V3I = 'OLYMPUS'#00'II'#3;
-  SIGNATURE_V3M = 'OLYMPUS'#00'MM'#3;
+  SIGNATURE_V3I = 'OLYMPUS'#00'II'#03#00;
+  SIGNATURE_V3M = 'OLYMPUS'#00'MM'#03#00;
 var
   hdr: array of byte;
   p: Int64;
 begin
   p := AStream.Position;
-  SetLength(hdr, 11);
-  AStream.Read(hdr[0], 11);
+  SetLength(hdr, 12);
+  AStream.Read(hdr[0], 12);
   AStream.Position := p;
 
   if (PosInBytes(SIGNATURE_V1, hdr) <> 0) and
@@ -251,10 +510,43 @@ begin
     else  exit;
   end;
 
-  BuildOlympusTagDefs(FTagDefs);
   Result := true;
 end;
 
+
+//==============================================================================
+//                        Special Olympus tags
+//==============================================================================
+
+function TOlympusFlashModeTag.GetAsString: String;
+var
+  intVal: Integer;
+begin
+  if (toDecodeValue in FOptions) then begin
+    intVal := AsInteger;
+    if intVal = 0 then
+      Result := 'Off'
+    else begin
+      Result := '';
+      if intVal and 1 <> 0 then Result := Result + 'On, ';
+      if intVal and 2 <> 0 then Result := Result + 'Fill-in, ';
+      if intVal and 4 <> 0 then Result := Result + 'Red-eye, ';
+      if intVal and 8 <> 0 then Result := Result + 'Slow-sync, ';
+      if intval and 16 <> 0 then Result := Result + 'Forced on, ';
+      if intVal and 32 <> 0 then Result := Result + '2nd curtain, ';
+      if Result <> '' then
+        SetLength(Result, Length(Result)-2)
+      else
+        Result := inherited;
+    end;
+  end else
+    Result := inherited;
+end;
+
+
+//==============================================================================
+//                         initialization
+//==============================================================================
 
 initialization
   RegisterMakerNoteReader(TOlympusMakerNoteReader, 'Olympus', '');

@@ -257,12 +257,6 @@ end;
 
 function TNikonMakerNoteReader.AddTag(AStream: TStream;
   const AIFDRecord: TIFDRecord; const AData: TBytes; AParent: TTagID): Integer;
-type
-  TVRInfoRecord = record
-    Version: DWord;
-    VibrationReduction: byte;
-    VRMode: byte;
-  end;
 var
   tagDef: TTagDef;
   p: PByte;

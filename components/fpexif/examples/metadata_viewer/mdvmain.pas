@@ -195,7 +195,6 @@ begin
         for i := 0 to FImgInfo.ExifData.TagCount-1 do begin
           lTag := FImgInfo.ExifData.TagByIndex[i];
 
-
           if lTag is TMakerNoteStringTag then
             suffix := ':' + IntToStr(TMakerNoteStringTag(lTag).Index)
           else if lTag is TMakerNoteIntegerTag then
@@ -204,7 +203,6 @@ begin
             suffix := ':' + IntToStr(TMakerNoteFloatTag(lTag).Index)
           else
             suffix := '';
-
 
           if lTag is TVersionTag then
             TVersionTag(lTag).Separator := '.';

@@ -337,6 +337,7 @@ begin
     AddUShortTag   (P+$012D, 'TransferFunction',        768, rsTransferFunction);
     AddStringTag   (P+$0131, 'Software',                  1, rsSoftware);
     AddStringTag   (P+$0132, 'DateTime',                  1, rsDateTime, '', TDateTimeTag);
+    AddStringTag   (T+$0132, 'DateTime',                  1, rsDateTime, '', TDateTimeTag);
     AddStringTag   (P+$013B, 'Artist',                    1, rsArtist);
     AddStringTag   (P+$013C, 'HostComputer',              1, rsHostComputer);
     AddUShortTag   (P+$013D, 'Predictor',                 1, rsPredictor, rsPredictorLkup);
@@ -623,9 +624,14 @@ begin
         break;
       // Find definition of the sub-ifd tag
       parentTagDef := FindExifTagDefWithoutParent(parentID);
-      // ... create tag for it
+      // ... Could not be found, tag not defined. We cannot handle this case.
+      if parentTagDef = nil then begin
+        ATag.Free;
+        Result := -1;   // This will signal the calling procedure to destroy ATag.
+        exit;
+      end;
+      // ... create tag for it and add it to the list.
       parentTag := TSubIFDTag.Create(parentTagDef, FBigEndian);
-      // ... and add it to the list (recursively, i.e. it will check for parents again)
       AddOrReplaceTag(parentTag);
     until false;
   end;

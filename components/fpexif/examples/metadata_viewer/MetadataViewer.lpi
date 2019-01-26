@@ -47,7 +47,6 @@
       <Unit2>
         <Filename Value="..\..\fpemakernotesanyo.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="fpeMakerNoteSanyo"/>
       </Unit2>
     </Units>
   </ProjectOptions>
@@ -65,11 +64,6 @@
       <Debugging>
         <UseExternalDbgSyms Value="True"/>
       </Debugging>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
     </Linking>
   </CompilerOptions>
   <Debugging>
