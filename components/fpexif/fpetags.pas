@@ -319,7 +319,10 @@ const
     TSubIFDTag                                         // IFD
   );
 
-  (*
+function SameIntegerFunc(AKey1, AKey2: String): Boolean;
+function SameStringFunc(AKey1, AKey2: String): Boolean;
+
+(*
 { TTagGroups }
 
 function GetGroupFromGeneratingTagID(ATagID: TTagID): TTagGroup;

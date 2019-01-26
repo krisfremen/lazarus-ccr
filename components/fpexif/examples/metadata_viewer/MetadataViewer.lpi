@@ -31,7 +31,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="3">
       <Unit0>
         <Filename Value="MetadataViewer.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -44,6 +44,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="mdvMain"/>
       </Unit1>
+      <Unit2>
+        <Filename Value="..\..\fpemakernotesanyo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="fpeMakerNoteSanyo"/>
+      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

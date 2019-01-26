@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ShellCtrls,
   ExtCtrls, ComCtrls, StdCtrls,
-  fpeMetadata;
+  fpeMetadata, fpeMakerNote;
 
 type
 
@@ -166,6 +166,7 @@ var
   item: TListItem;
   i: Integer;
   ms: TMemoryStream;
+  suffix: String;
 begin
   FImageLoaded := false;
   Image.Picture.Clear;
@@ -193,11 +194,26 @@ begin
         FImgInfo.ExifData.ExportOptions := FImgInfo.ExifData.ExportOptions + [eoTruncateBinary];
         for i := 0 to FImgInfo.ExifData.TagCount-1 do begin
           lTag := FImgInfo.ExifData.TagByIndex[i];
+
+
+          if lTag is TMakerNoteStringTag then
+            suffix := ':' + IntToStr(TMakerNoteStringTag(lTag).Index)
+          else if lTag is TMakerNoteIntegerTag then
+            suffix := ':' + IntToStr(TMakerNoteIntegerTag(lTag).Index)
+          else if lTag is TMakerNoteFloatTag then
+            suffix := ':' + IntToStr(TMakerNoteFloatTag(lTag).Index)
+          else
+            suffix := '';
+
+
+          if lTag is TVersionTag then
+            TVersionTag(lTag).Separator := '.';
           item := TagListView.Items.Add;
           item.Data := lTag;
           item.Caption := 'EXIF.' + NiceGroupNames[lTag.Group];
           if CbShowParentTagID.Checked then
-            item.SubItems.Add(Format('$%.04x:$%.04x', [lTag.TagIDRec.Parent, lTag.TagIDRec.Tag]))
+            item.SubItems.Add(Format('$%.04x:$%.04x%s', [
+              lTag.TagIDRec.Parent, lTag.TagIDRec.Tag, suffix]))
           else
             Item.SubItems.Add(Format('$%.04x', [lTag.TagIDRec.Tag]));
           item.SubItems.Add(lTag.Description);

@@ -4,11 +4,14 @@
 
 unit fpexif_pkg;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
   fpeGlobal, fpeTags, fpeUtils, fpeMetadata, fpeExifReadWrite, 
-  fpeIptcReadWrite, fpeExifData, fpeIptcData, fpeStrConsts, fpeMakerNote;
+  fpeIptcReadWrite, fpeExifData, fpeIptcData, fpeStrConsts, fpeMakerNote, 
+  fpeMakerNoteNikon, fpeMakerNoteCanonCasio, fpeMakerNoteMinolta, 
+  fpeMakerNoteOlympus, fpeMakerNoteEpson, fpeMakerNoteFuji, fpemakernotesanyo;
 
 implementation
 

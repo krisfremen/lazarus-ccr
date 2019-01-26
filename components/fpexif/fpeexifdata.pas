@@ -75,12 +75,20 @@ type
     constructor Create(ABigEndian: Boolean);
     destructor Destroy; override;
 
+    {
+    function AddMakerNoteTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
+      AData: TBytes; ACount: Integer; ALkUpTbl: String = '';
+      AFormatStr: String = ''; ATagType: TTagType = ttUInt8): Integer; overload;
+      }
     function AddMakerNoteTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
       ADataValue: Integer; ALkupTbl: String = ''; AFormatStr: String = '';
       ATagType: TTagType = ttUInt16): Integer; overload;
     function AddMakerNoteTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
       ADataValue: Double; AFormatStr: String = '';
       ATagType: TTagType = ttURational): Integer; overload;
+    function AddMakerNoteStringTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
+      AData: TBytes; ACount: Integer; ALkupTbl: String = ''): Integer;
+
     function AddOrReplaceTag(ATag: TTag): Integer;
     function AddTag(ATag: TTag): Integer;
     function AddTagByID(ATagID: TTagID): TTag;
@@ -174,16 +182,31 @@ type
     procedure SetAsString(const AValue: String); override;
   end;
 
-  TMakerNoteIntegerTag = class(TIntegerTag)
+  TMakerNoteStringTag = class(TStringTag)
+  private
+    FIndex: Integer;
   public
-    constructor Create(ATagID, {%H-}AIndex: Integer; AName: String; AValue: Integer;
+    constructor Create(ATagID, AIndex: Integer; AName: String; AData: TBytes;
+      ACount: Integer; ALkupTbl: String; AOptions: TTagOptions); reintroduce;
+    property Index: Integer read FIndex;
+  end;
+
+  TMakerNoteIntegerTag = class(TIntegerTag)
+  private
+    FIndex: Integer;
+  public
+    constructor Create(ATagID, AIndex: Integer; AName: String; AValue: Integer;
       ALkupTbl, AFormatStr: String; ATagType: TTagType; AOptions: TTagOptions); reintroduce;
+    property Index: Integer read FIndex;
   end;
 
   TMakerNoteFloatTag = class(TFloatTag)
+  private
+    FIndex: Integer;
   public
-    constructor Create(ATagID, {%H-}AIndex: Integer; AName: String; AValue: Double;
+    constructor Create(ATagID, AIndex: Integer; AName: String; AValue: Double;
       AFormatStr: String; ATagType: TTagType; AOptions: TTagOptions); reintroduce;
+    property Index: Integer read FIndex;
   end;
 
   TExposureTimeTag = class(TFloatTag)
@@ -227,6 +250,14 @@ type
     function GetAsString: String; override;
   end;
 
+  (*
+  TSingleTag = class(TBinaryTag)
+  protected
+    function GetAsString: String; override;
+    function GetAsFloat: Double; override;
+    procedure SetAsFloat(const AValue: Double); override;
+  end;
+  *)
 
 procedure BuildExifTagDefs;
 procedure FreeExifTagDefs;
@@ -511,6 +542,27 @@ destructor TExifData.Destroy;
 begin
   FTagList.Free;
   inherited;
+end;
+   {
+function TExifData.AddMakerNoteTag(AIndex: Integer; ATagID: TTagID;
+  ATagName: String; AData: TBytes; ACount: Integer; ALkupTbl: String = '';
+  AFormatStr: String = ''; ATagType: TTagType = ttUInt8): Integer;
+var
+  tag: TTag;
+begin
+  tag := TMakerNoteByteTag.Create(ATagID, AIndex, ATagName, AData, ACount,
+    ALkupTbl, AFormatStr, ATagType, ExportOptionsToTagOptions);
+  Result := FTagList.Add(tag);
+end;
+  }
+function TExifData.AddMakerNoteStringTag(AIndex: Integer; ATagID: TTagID;
+  ATagName: String; AData: TBytes; ACount: Integer; ALkupTbl: String = ''): Integer;
+var
+  tag: TTag;
+begin
+  tag := TMakerNoteStringTag.Create(ATagID, AIndex, ATagName, AData, ACount,
+    ALkupTbl, ExportOptionsToTagOptions);
+  Result := FTagList.Add(tag);
 end;
 
 function TExifData.AddMakerNoteTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
@@ -1374,7 +1426,8 @@ begin
   if not (ATagType in [ttUInt8, ttUInt16, ttUInt32, ttSInt8, ttSInt16, ttSInt32]) then
     raise EFpExif.Create('Tag type not allowed for TMakerNoteIntegerTag');
 
-  FTagID := ATagID; //AIndex;
+  FIndex := AIndex;
+  FTagID := ATagID;
   FGroup := tgExifMakerNote;
   FName := AName;
   FDesc := '';
@@ -1394,7 +1447,8 @@ begin
   if not (ATagType in [ttURational, ttSRational]) then
     raise EFpExif.Create('Tag type not allowed for TMakerNoteFloatTag');
 
-  FTagID := ATagID; //AIndex;
+  FIndex := AIndex;
+  FTagID := ATagID;
   FGroup := tgExifMakerNote;
   FName := AName;
   FDesc := '';
@@ -1403,6 +1457,23 @@ begin
   FOptions := [toReadOnly, toVolatile] + AOptions;
 
   AsFloat := AValue;
+end;
+
+constructor TMakerNoteStringTag.Create(ATagID, AIndex: Integer; AName: String;
+  AData: TBytes; ACount: Integer; ALkupTbl: String;
+  AOptions: TTagOptions);
+begin
+  FIndex := AIndex;
+  FTagID := ATagID;
+  FGroup := tgExifMakerNote;
+  FName := AName;
+  FDesc := '';
+  FType := ttString;
+  FLkupTbl := ALkUpTbl;
+  FOptions := [toReadOnly, toVolatile] + AOptions;
+  FCount := ACount;
+  SetLength(FRawData, FCount * TagElementSize[ord(FType)]);
+  Move(AData[0], FRawData[0], Length(FRawData));
 end;
 
 
@@ -1656,6 +1727,44 @@ begin
   Result := UTF8Encode(ws);
 end;
 
+              (*
+//==============================================================================
+//                              TSingleTag
+//
+// Binary tag of size 4 which is interpreted as a single value
+//==============================================================================
+
+function TSingleTag.GetAsString: String;
+var
+  sng: Single;
+  dw: DWord absolute sng;
+begin
+  Move(FRawData[0], dw, 4);
+  if BigEndian then dw := BEToN(dw) else dw := LEToN(dw);
+  Result := FloatToStr(sng);
+end;
+
+function TSingleTag.GetAsFloat: Double;
+var
+  sng: Single;
+  dw: DWord absolute sng;
+begin
+  Move(FRawData[0], dw, 4);
+  if BigEndian then dw := BEToN(dw) else dw := LEToN(dw);
+  Result := sng;
+end;
+
+procedure TSingleTag.SetAsFloat(const AValue: Double);
+var
+  sng: Single;
+  dw: DWord absolute sng;
+begin
+  sng := AValue;
+  if BigEndian then dw := NToBE(dw) else dw := NToLE(dw);
+  SetLength(FRawData, 4);
+  Move(dw, FRawData[0], 4);
+end;
+                *)
 
 initialization
 

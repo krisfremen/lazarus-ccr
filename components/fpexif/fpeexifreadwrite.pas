@@ -68,16 +68,15 @@ type
   end;
 
   TMakerNoteReader = class(TBasicExifReader)
-  private
-    FExifVersion: string;
   protected
+    FExifVersion: string;
     FMake: String;
     FModel: String;
     FTagDefs: TTagDefList;
     FDataStartPosition: Int64;
+    procedure GetTagDefs({%H-}AStream: TStream); virtual;
     procedure Error(const AMsg: String); override;
     function FindTagDef(ATagID: TTagID): TTagDef; override;
-    procedure GetTagDefs(AStream: TStream; AImgFormat: TImgFormat); virtual;
     function Prepare(AStream: TStream): Boolean; virtual;
   public
     constructor Create(AImgInfo: TImgInfo; AStartPos: Int64;
@@ -117,8 +116,8 @@ function GetMakerNoteReaderClass(AMake, AModel: String): TMakerNoteReaderClass;
 implementation
 
 uses
-  Math, Contnrs,
-  fpeStrConsts, fpeMakerNote, fpeIptcReadWrite;
+  Contnrs,
+  fpeStrConsts, fpeIptcReadWrite;
 
 const
   EXIF_SIGNATURE: array[0..5] of AnsiChar = ('E', 'x', 'i', 'f', #0, #0);
@@ -146,10 +145,12 @@ begin
   begin
     Makes := TStringList.Create;
     try
+      Makes.StrictDelimiter := true;
+      Makes.Delimiter := ';';
       ucMake := Uppercase(AMake);
       for Result:=0 to RegisteredReaders.Count-1 do begin
         item := TReaderItem(RegisteredReaders[Result]);
-        Makes.Text := item.Make;
+        Makes.DelimitedText := item.Make;
         for j := 0 to Makes.Count-1 do begin
           if pos(Uppercase(Makes[j]), ucMake) <> 0 then
             if (item.Model = '') or (AModel = '') or SameText(item.Model, AModel) then
@@ -596,6 +597,11 @@ begin
   inherited;
 end;
 
+procedure TMakerNoteReader.GetTagDefs(AStream: TStream);
+begin
+  // to be overridden by descendants
+end;
+
 { Since the MakerNotes are not well-defined we don't want to abort reading of
   the entire file by an incorrectly interpreted MakeNote tag.
   IMPORTANT: All methods calling Error() must be exited afterwards because
@@ -620,19 +626,25 @@ begin
   Result := nil;
 end;
 
+(*
 procedure TMakerNoteReader.GetTagDefs(AStream: TStream; AImgFormat: TImgFormat);
 var
   UCMake, {%H-}UCModel: String;
   tmp, tmp2: String;
+  b: TBytes;
   p: Integer;
   streamPos: Int64;
+  tiffHdrPos: Int64;
+  ok: Boolean;
+  dw: DWord;
 begin
   UCMake := Uppercase(FMake);
   UCModel := Uppercase(FModel);
-
+  {
   if UCMake = 'CANON' then
     BuildCanonTagDefs(FTagDefs)
   else
+  }
   if UCMake = 'SEIKO' then
     BuildEpsonTagDefs(FTagDefs)
   else
@@ -646,42 +658,49 @@ begin
     FBigEndian := false;
     BuildFujiTagDefs(FTagDefs)
   end else
-  (*
+  {
   if pos('OLYMP', UCMake) = 1 then
     //BuildOlympusTagDefs(FTagDefs)  -- is done by specific Olympus reader
   else
-  if UCMake = 'CASIO' then
-    {
+//  if UCMake = 'CASIO' then
+   // streamPos := AStream.Position;
+   // if PosInStream('QVC', AStream, streamPos) <> -1 then begin
+   //   FTagDefs := @Casio1Table;
+   //   FNumTagDefs := Length(Casio1Table);
+   // end else begin
+   //   FTagDefs := @Casio12Table;
+   //   FNumTagDefs := Length(Casio2Table);
+   // end;
+   // }
+   // BuildCasio1TagDefs(FTagDefs)
+  //else
+  if UCMake = 'NIKON CORPORATION' then begin
+    SetLength(b, 20);
     streamPos := AStream.Position;
-    if PosInStream('QVC', AStream, streamPos) <> -1 then begin
-      FTagDefs := @Casio1Table;
-      FNumTagDefs := Length(Casio1Table);
-    end else begin
-      FTagDefs := @Casio12Table;
-      FNumTagDefs := Length(Casio2Table);
-    end;
-    }
-    BuildCasio1TagDefs(FTagDefs)
-  else
-  *)
-  if UCMake = 'NIKON' then begin
-    SetLength(tmp, 5);
-    streamPos := AStream.Position;
-    AStream.Read(tmp[1], 5);
+    AStream.Read(b[0], 20);
     AStream.Position := streamPos;
-    p := Max(0, Pos(' ', FModel));
-    tmp2 := FModel[p+1];
-    if (FExifVersion > '0210') or
-       ((FExifVersion = '') and (tmp2 = 'D') and (AImgFormat = ifTiff))
+    SetLength(tmp, 6);
+    Move(b[0], tmp[1], 6);
+    if (PosInBytes('Nikon'#00#02#16#00#00'MM'#00#42#00#00#00#08, b) > -1) or
+       (PosInBytes('Nikon'#00#02#16#00#00'II'#42#00#08#00#00#00, b) > -1)
     then
-      BuildNikon2TagDefs(FTagDefs)
-    else
-    if (tmp = 'Nikon') then
-      BuildNikon1TagDefs(FTagDefs)
-    else
-      BuildNikon2TagDefs(FTagDefs);
+      BuildNikon3TagDefs(FTagDefs)
+    else begin
+      p := Max(0, Pos(' ', FModel));
+      tmp2 := FModel[p+1];
+      if (FExifVersion > '0210') or
+         ((FExifVersion = '') and (tmp2 = 'D') and (AImgFormat = ifTiff))
+      then
+        BuildNikon2TagDefs(FTagDefs)
+      else
+      if (tmp = 'Nikon') then
+        BuildNikon1TagDefs(FTagDefs)
+      else
+        BuildNikon2TagDefs(FTagDefs);
+    end;
   end;
 end;
+*)
 
 function TMakerNoteReader.Prepare(AStream: TStream): Boolean;
 begin
@@ -694,7 +713,7 @@ begin
   if FDataStartPosition = -1 then
     FDataStartPosition := AStream.Position;
   FImgFormat := AImgFormat;
-  GetTagDefs(AStream, AImgFormat);
+  GetTagDefs(AStream);
   if FTagDefs.Count = 0 then
     exit;
   AStream.Position := FDataStartPosition;

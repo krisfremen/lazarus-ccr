@@ -5,7 +5,7 @@ unit frMain;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids, ShellCtrls,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ShellCtrls,
   ExtCtrls, StdCtrls, ComCtrls;
 
 type
