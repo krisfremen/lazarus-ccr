@@ -919,19 +919,41 @@ var
   intVal: Integer;
   i: Integer;
   s: String;
+  fmtStr: TStringArray;
+  lkup: TStringArray;
 begin
   Result := '';
+
+  { Extract format string for each value. A simple format string is applied to
+    all values. Inidividual format strings can be separated by '|'. }
+  if FFormatStr = '' then begin
+    SetLength(fmtStr, FCount);
+    for i:=0 to FCount-1 do fmtStr[i] := '';
+  end else begin
+    fmtStr := Split(FFormatStr, '|');
+    for i := Length(fmtStr) to FCount-1 do fmtStr[i] := '';
+  end;
+
+  { Extract lookup tables for each value. A single lookup string is applied to
+    all values. Individual lkup tables can be separated by '|'. }
+  if FLkUpTbl = '' then begin
+    SetLength(lkup, FCount);
+    for i:=0 to FCount-1 do lkup[i] := '';
+  end else begin
+    lkup := Split(FLkUpTbl, '|');
+    for i:=Length(lkup) to FCount-1 do lkup[i] := '';
+  end;
 
   for i:=0 to FCount-1 do begin
     if not GetInteger(i, intVal) then begin
       Result := '';
       exit;
     end;
-    if FFormatStr <> '' then
-      s := Format(FFormatStr, [intVal])
+    if fmtStr[i] <> '' then
+      s := Format(fmtStr[i], [intVal])
     else
-    if (FLkupTbl <> '') and (toDecodeValue in FOptions) then
-      s := Lookup(IntToStr(intVal), FLkupTbl, @SameIntegerFunc)
+    if lkup[i] <> '' then
+      s := Lookup(IntToStr(intVal), lkup[i], @SameIntegerFunc)
     else
       s := IntToStr(intVal);
     Result := IfThen(i = 0, s, Result + FListSeparator + s);
@@ -1196,7 +1218,18 @@ var
   i: Integer;
   s: String;
   fval: Double;
+  fmtStr: TStringArray;
 begin
+  { Extract format string for each value. A simple format string is applied to
+    all values. Inidividual format strings can be separated by '|'. }
+  if FFormatStr = '' then begin
+    SetLength(fmtStr, FCount);
+    for i:=0 to FCount-1 do fmtStr[i] := '';
+  end else begin
+    fmtStr := Split(FFormatStr, '|');
+    for i := Length(fmtStr) to FCount-1 do fmtStr[i] := '';
+  end;
+
   for i:=0 to Count-1 do begin
     if (not GetRational(i, r)) or (r.Denominator = 0) then begin
       Result := 'undef';
@@ -1207,8 +1240,8 @@ begin
     if IsInt(fval) then
       fVal := Round(fVal);
 
-    if FFormatStr <> '' then
-      s := Format(FFormatStr, [r.Numerator, r.Denominator, fval], fpExifFmtSettings)
+    if fmtStr[i] <> '' then
+      s := Format(fmtStr[i], [r.Numerator, r.Denominator, fval], fpExifFmtSettings)
       // NOTE: FFormatStr must contain an index to the parameter,
       //       e.g. '%0:d/%1:d = %2:f sec'  --> '1/100 = 0.01 sec'
     else

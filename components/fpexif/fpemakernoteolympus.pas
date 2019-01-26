@@ -5,7 +5,7 @@ unit fpeMakerNoteOlympus;
 interface
 
 uses
-  Classes,
+  SysUtils, Classes,
   fpeGlobal, fpeTags, fpeExifReadWrite;
 
 type
@@ -27,6 +27,15 @@ type
     function GetAsString: String; override;
   end;
 
+  TOlympusGradationTag = class(TIntegerTag)
+  public
+    function GetAsString: String; override;
+  end;
+
+  TOlympusFocusModeTag = class(TIntegerTag)
+  public
+    function GetAsString: String; override;
+  end;
 
 implementation
 
@@ -50,7 +59,7 @@ resourcestring
     '22:Soft Focus 2,23:Sparkle,24:Watercolor,25:Key Line,26:Key Line II,27:Miniature,'+
     '28:Reflection,29:Fragmented,31:Cross Process II,32:Dramatic Tone II,'+
     '33:Watercolor I,34:Watercolor II,35:Diorama II,36:Vintage,37:Vintage II,'+
-    '38:Vintage III,39:Partial Color,40:Partial Color II,41:Partial Color III';
+    '38:Vintage III,39:Partial Color,40:Partial Color II,41:Partial Color III|';
   rsOlympusArtFilterEffect = 'ArtFilterEffect';
   rsOlympusArtFilterEffect0LkUp = '0:Off,1:Soft Focus,2:Pop Art,'+
     '3:Pale & Light Color,4:Light Tone,5:Pin Hole,6:Grainy Film,9:Diorama,'+
@@ -85,7 +94,7 @@ resourcestring
   rsOlympusFilmGrainEffect = 'Film grain effect';
   rsOlympusFilmGrainEffectLkUp = '0:Off,1:Low,2:Medium,3:High';
   rsOlympusFlashControlMode = 'Flash control mode';
-  rsOlympusFlashControlModeLkUp = '0:Off,3:TTL,4:Auto,5:Manual';
+  rsOlympusFlashControlModeLkUp = '0:Off,3:TTL,4:Auto,5:Manual|';     // | --> only for 1st value
   rsOlympusFlashDevLkup = '0:None,1:Internal,4:External,5:Internal + External';
   rsOlympusFlashExposureComp = 'Flash exposure comp';
   rsOlympusFlashIntensity = 'Flash intensity';
@@ -100,11 +109,15 @@ resourcestring
     '$12:Channel 2 High,$13:Channel 3 High,$14:Channel 4 High';
   rsOlympusFlashTypeLkup = '0:None,2:Simple E-System,3:E-System';
   rsOlympusFocusMode = 'Focus mode';
-  rsOlympusFocusModeLkUp0 = '0:Single AF,1:Sequential shooting AF,'+
-    '2:Continuous AF,3:Multi AF,4:Face detect,10:MF';
+  rsOlympusFocusModeLkUp = '0:Single AF,1:Sequential shooting AF,'+
+    '2:Continuous AF,3:Multi AF,4:Face detect,10:MF' + '|' +        // | --> two items!
+    '0:(none),1:S-AF,2:C-AF,16:MF,32:Face detect,64:Imager AF,'+
+    '128:Live View Magnification Frame,256:AF sensor';
   rsOlympusFocusProcess = 'Focus process';
   rsOlympusFocusProcessLkUp0 = '0:AF not used,1:AF used';
   rsOlympusGradation = 'Gradation';
+  rsOlympusGradationLkUp = '0:Low-key,1:Normal,2:n/a,3:High-key|'+  // | --> two items!
+    '0:user-selected,1:auto-override';
   rsOlympusImageQuality = 'Image quality';
   rsOlympusImageQualityLkUp = '1:SQ,2:HQ,3:SHQ,4:RAW,5:SQ (5)';
   rsOlympusImageStabilization = 'Image stabilization';
@@ -123,7 +136,7 @@ resourcestring
     '27:Miniature,28:Reflection,29:Fragmented,31:Cross Process II,'+
     '32:Dramatic Tone II,33:Watercolor I,34:Watercolor II,35:Diorama II,'+
     '36:Vintage,37:Vintage II,38:Vintage III,39:Partial Color,40:Partial Color II,'+
-    '41:Partial Color III';
+    '41:Partial Color III|';
   rsOlympusManometerPressure = 'Manometer pressure';
   rsOlympusManometerReading = 'Manometer reading';
   rsOlympusManualFlashStrength = 'Manual flash strength';
@@ -137,7 +150,7 @@ resourcestring
   rsOlympusMonochromeProfileSettings = 'Monochrome profile settings';
   rsOlympusMonochromeProfileSettingsLkUp = '0:No filter,1:Yellow filter,'+
     '2:Orange filter,3:Red filter,4:Magenta filter,5:Blue filter,'+
-    '6:Cyan filter,7:Green filter,8:Yellow-green filter';
+    '6:Cyan filter,7:Green filter,8:Yellow-green filter|';
   rsOlympusMonochromeVignetting = 'Monochrome vignetting';
   rsOlympusNoiseFilter = 'Noise filter';
   rsOlympusNoiseReduction = 'Noise reduction';
@@ -146,7 +159,7 @@ resourcestring
   rsOlympusPictureModeLkUp = '1:Vivid,2:Natural,3:Muted,4:Portrait,5:i-Enhance,'+
     '6:e-Portrait,7:Color Creator,9:Color Profile 1,10:Color Profile 2,'+
     '11:Color Profile 3,12:Monochrome Profile 1,13:Monochrome Profile 2,'+
-    '14:Monochrome Profile 3,256:Monotone,512:Sepia';
+    '14:Monochrome Profile 3,256:Monotone,512:Sepia|';
   rsOlympusPictureModeBWFilter = 'Picture mode BW filter';
   rsOlympusPictureModeBWFilterLkUp = '0:n/a,1:Neutral,2:Yellow,3:Orange,4:Red,5:Green';
   rsOlympusPictureModeContrast = 'Picture mode contrast (value, min, max)';
@@ -326,7 +339,7 @@ begin
     AddSRationalTag(C+$0203, 'ExposureShift', 1, rsOlympusExposureShift);
     AddUShortTag   (C+$0204, 'NDFilter', 1, '', rsOffOn);
     AddUShortTag   (C+$0300, 'MacroMode', 1, rsOlympusMacroMode, rsOlympusMacroModeLkUp);
-    AddUShortTag   (C+$0301, 'FocusMode', 2, rsOlympusFocusMode, rsOlympusFocusModeLkUp0);
+    AddUShortTag   (C+$0301, 'FocusMode', 2, rsOlympusFocusMode, rsOlympusFocusModeLkUp, '', TOlympusFocusModeTag);
     AddUShortTag   (C+$0302, 'FocusProcess', 2, rsOlympusFocusProcess, rsOlympusFocusProcessLkUp0);
     AddUShortTag   (C+$0303, 'AFSearch', 1, rsOlympusAFSearch, rsOlympusAFSearchLkUp);
     AddULongTag    (C+$0304, 'AFAreas', 64, rsOlympusAFAreas);
@@ -352,7 +365,7 @@ begin
     AddUShortTag   (C+$050B, 'DistortionCorrection', 1, rsOlympusDistortionCorrection, rsOffOn);
     AddUShortTag   (C+$050C, 'ShadingCompression', 1, rsOlympusShadingCompression, rsOffOn);
     AddURationalTag(C+$050D, 'CompressionFactor', 1, rsOlympusCompressionFactor);
-    AddSShortTag   (C+$050F, 'Gradation', 1, rsOlympusGradation);
+    AddSShortTag   (C+$050F, 'Gradation', 1, rsOlympusGradation, rsOlympusGradationLkUp, '', TOlympusGradationTag);
     AddUShortTag   (C+$0520, 'PictureMode', 2, rsOlympusPictureMode, rsOlympusPictureModeLkUp);
     AddSShortTag   (C+$0521, 'PictureModeSaturation', 3, rsOlympusPictureModeSaturation);
     AddSShortTag   (C+$0522, 'PictureModeHue', 1, rsOlympusPictureModeHue);
@@ -540,6 +553,81 @@ begin
         Result := inherited;
     end;
   end else
+    Result := inherited;
+end;
+
+function TOlympusGradationTag.GetAsString: String;
+var
+  intVal: TExifIntegerArray;
+  s: String;
+  lkup: TStringArray;
+  val1: Integer = -1;
+  val2: Integer = -1;
+begin
+  Result := '';
+  if (toDecodeValue in FOptions) then begin
+    intVal := GetAsIntegerArray;
+    if Length(intVal) >= 3 then begin
+      if (intVal[0] = -1) and (intVal[1] = -1) and (intVal[2] = 1) then
+        val1 := 0
+      else if (intVal[0] = 0) and (intVal[1] = -1) and (intVal[2] = 1) then
+        val1 := 1
+      else if (intVal[0] = 0) and (intVal[1] = 0) and (intVal[2] = 0) then
+        val1 := 2
+      else if (intVal[0] = 1) and (intVal[1] = -1) and (intVal[2] = 1) then
+        val1 := 3
+      else
+        val1 := -1;
+      if Length(intVal) >= 4 then
+        val2 := intVal[3];
+
+      lkup := Split(FLkUpTbl, '|');
+      if Length(lkup) > 0 then begin
+        if (val1 > -1) then
+          Result := Lookup(IntToStr(val1), lkup[0], @SameIntegerFunc);
+        if (val2 > -1) and (Length(lkup) > 1) then begin
+          s := Lookup(IntToStr(val2), lkup[1], @SameIntegerFunc);
+          if s <> '' then Result := Result + ', ' + s;
+        end;
+      end;
+    end;
+  end;
+  if Result = '' then
+    Result := inherited;
+end;
+
+function TOlympusFocusModeTag.GetAsString: String;
+var
+  intVal: TExifIntegerArray;
+  lkup: TStringArray;
+  s, tmp, found: String;
+  i: Integer;
+begin
+  Result := '';
+  if (toDecodeValue in FOptions) then begin
+    intVal := GetAsIntegerArray;
+    if FLkUpTbl <> '' then begin
+      lkup := Split(FLkUpTbl, '|');
+      if (Length(intVal) > 0) and (lkUp[0] <> '') then
+        Result := Lookup(IntToStr(intval[0]), lkup[0], @SameIntegerFunc);
+      if (Length(intVal) > 1) and (lkup[1] <> '') then begin
+        if intVal[1] = 0 then
+          s := Lookup(IntToStr(intVal[1]), lkup[1], @SameIntegerFunc)
+        else begin
+          // the second part of the lookup table is a bitmask
+          s := '';
+          for i := 0 to 8 do begin
+            tmp := IntToStr(1 shl i);
+            found := Lookup(tmp, lkup[1], @SameIntegerFunc);
+            if (found <> '') and (found <> tmp) then
+              if s <> '' then s := s + ', ' + found else s := found;
+          end;
+          if s <> '' then Result := Result + '; ' + s;
+        end;
+      end;
+    end;
+  end;
+  if Result = '' then
     Result := inherited;
 end;
 
