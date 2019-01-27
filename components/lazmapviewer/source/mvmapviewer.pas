@@ -125,7 +125,7 @@ Type
       property Align;
       property CacheOnDisk: boolean read GetCacheOnDisk write SetCacheOnDisk;
       property CachePath: String read GetCachePath write SetCachePath;
-      property DownloadEngine: TMvCustomDownloadEngine read FDownloadEngine write FDownloadEngine;
+      property DownloadEngine: TMvCustomDownloadEngine read GetDownloadEngine write SetDownloadEngine;
       property Height default 150;
       property InactiveColor: TColor read FInactiveColor write SetInactiveColor;
       property MapProvider: String read GetMapProvider write SetMapProvider;

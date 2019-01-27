@@ -117,6 +117,7 @@ begin
   //CbFoundLocations.Text := CbFoundLocations.Items[0];
   UpdateDropdownWidth(CbFoundLocations);
   UpdateLocationHistory(CbLocations.Text);
+  if CbFoundLocations.Items.Count > 0 then CbFoundLocations.ItemIndex := 0;
 end;
 
 procedure TMainForm.Button1Click(Sender: TObject);
