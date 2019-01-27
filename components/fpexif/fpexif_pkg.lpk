@@ -12,7 +12,7 @@
     <Description Value="Library for displaying and editing of meta data (EXIF, IPTC) in images."/>
     <License Value="LGPL with linking exception (like Lazarus)"/>
     <Version Minor="1"/>
-    <Files Count="19">
+    <Files Count="20">
       <Item1>
         <Filename Value="fpeglobal.pas"/>
         <UnitName Value="fpeGlobal"/>
@@ -66,29 +66,33 @@
         <UnitName Value="fpeMakerNoteNikon"/>
       </Item13>
       <Item14>
-        <Filename Value="fpemakernotecanoncasio.pas"/>
-        <UnitName Value="fpeMakerNoteCanonCasio"/>
-      </Item14>
-      <Item15>
         <Filename Value="fpemakernoteminolta.pas"/>
         <UnitName Value="fpeMakerNoteMinolta"/>
-      </Item15>
-      <Item16>
+      </Item14>
+      <Item15>
         <Filename Value="fpemakernoteolympus.pas"/>
         <UnitName Value="fpeMakerNoteOlympus"/>
-      </Item16>
-      <Item17>
+      </Item15>
+      <Item16>
         <Filename Value="fpemakernoteepson.pas"/>
         <UnitName Value="fpeMakerNoteEpson"/>
-      </Item17>
-      <Item18>
+      </Item16>
+      <Item17>
         <Filename Value="fpemakernotefuji.pas"/>
         <UnitName Value="fpeMakerNoteFuji"/>
-      </Item18>
-      <Item19>
+      </Item17>
+      <Item18>
         <Filename Value="fpemakernotesanyo.pas"/>
         <UnitName Value="fpemakernotesanyo"/>
+      </Item18>
+      <Item19>
+        <Filename Value="fpemakernotecasio.pas"/>
+        <UnitName Value="fpemakernotecasio"/>
       </Item19>
+      <Item20>
+        <Filename Value="fpemakernotecanon.pas"/>
+        <UnitName Value="fpeMakerNoteCanon"/>
+      </Item20>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>

@@ -10,8 +10,9 @@ interface
 uses
   fpeGlobal, fpeTags, fpeUtils, fpeMetadata, fpeExifReadWrite, 
   fpeIptcReadWrite, fpeExifData, fpeIptcData, fpeStrConsts, fpeMakerNote, 
-  fpeMakerNoteNikon, fpeMakerNoteCanonCasio, fpeMakerNoteMinolta, 
-  fpeMakerNoteOlympus, fpeMakerNoteEpson, fpeMakerNoteFuji, fpemakernotesanyo;
+  fpeMakerNoteNikon, fpeMakerNoteMinolta, fpeMakerNoteOlympus, 
+  fpeMakerNoteEpson, fpeMakerNoteFuji, fpeMakerNoteSanyo, fpeMakerNoteCasio, 
+  fpeMakerNoteCanon;
 
 implementation
 

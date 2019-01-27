@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 579
+  Left = 430
   Height = 714
-  Top = 200
+  Top = 141
   Width = 926
   Caption = 'Metadata viewer'
   ClientHeight = 714

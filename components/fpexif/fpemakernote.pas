@@ -6,7 +6,7 @@ unit fpeMakerNote;
 interface
 
 uses
-  fpeMakerNoteCanonCasio, fpeMakerNoteEpson, fpeMakerNoteFuji,
+  fpeMakerNoteCanon, fpeMakerNoteCasio, fpeMakerNoteEpson, fpeMakerNoteFuji,
   fpeMakerNoteMinolta, fpeMakerNoteNikon, fpeMakerNoteOlympus,
   fpeMakerNoteSanyo;
 
