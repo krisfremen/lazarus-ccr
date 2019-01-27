@@ -97,19 +97,23 @@ Type
      {$ENDIF}
       procedure DblClick; override;
       Procedure DoDrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
-      function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
+      function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+        MousePos: TPoint): Boolean; override;
       procedure DoOnResize; override;
-      Function IsActive : Boolean;
-      procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y:Integer); override;
-      procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+      function IsActive: Boolean;
+      procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+        X, Y: Integer); override;
+      procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+        X, Y: Integer); override;
       procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
       procedure Paint; override;
-      procedure OnGPSItemsModified(Sender: TObject; objs: TGPSObjList;Adding : boolean);
+      procedure OnGPSItemsModified(Sender: TObject; objs: TGPSObjList;
+        Adding: boolean);
     public
       constructor Create(AOwner: TComponent); override;
       destructor Destroy; override;
       procedure ClearBuffer;
-      procedure GetMapProviders(lstProviders : TStrings);
+      procedure GetMapProviders(lstProviders: TStrings);
       function GetVisibleArea: TRealArea;
       function LonLatToScreen(aPt: TRealPoint): TPoint;
       function ScreenToLonLat(aPt: TPoint): TRealPoint;
@@ -134,9 +138,9 @@ Type
       property UseThreads: boolean read GetUseThreads write SetUseThreads;
       property Width default 150;
       property Zoom: integer read GetZoom write SetZoom;
-      property OnCenterMove: TNotifyEvent  read GetOnCenterMove write SetOnCenterMove;
-      property OnZoomChange: TNotifyEvent  read GetOnZoomChange write SetOnZoomChange;
-      property OnChange: TNotifyEvent Read GetOnChange write SetOnChange;
+      property OnCenterMove: TNotifyEvent read GetOnCenterMove write SetOnCenterMove;
+      property OnZoomChange: TNotifyEvent read GetOnZoomChange write SetOnZoomChange;
+      property OnChange: TNotifyEvent read GetOnChange write SetOnChange;
       property OnDrawGpsPoint: TDrawGpsPointEvent read FOnDrawGpsPoint write FOnDrawGpsPoint;
       property OnMouseDown;
       property OnMouseEnter;
@@ -144,6 +148,7 @@ Type
       property OnMouseMove;
       property OnMouseUp;
   end;
+
 
 implementation
 
@@ -212,24 +217,24 @@ Type
 
   { TDrawObjJob }
 
-  TDrawObjJob = Class(TJob)
+  TDrawObjJob = class(TJob)
   private
-    AllRun : boolean;
-    Viewer : TMapView;
-    FRunning : boolean;
-    FLst : TGPSObjList;
-    FStates : Array of integer;
-    FArea : TRealArea;
+    AllRun: boolean;
+    Viewer: TMapView;
+    FRunning: boolean;
+    FLst: TGPSObjList;
+    FStates: Array of integer;
+    FArea: TRealArea;
   protected
-    function pGetTask: integer;override;
-    procedure pTaskStarted(aTask: integer);override;
-    procedure pTaskEnded(aTask: integer; aExcept: Exception);override;
+    function pGetTask: integer; override;
+    procedure pTaskStarted(aTask: integer); override;
+    procedure pTaskEnded(aTask: integer; aExcept: Exception); override;
   public
-    procedure ExecuteTask(aTask: integer; FromWaiting: boolean);override;
-    function Running : boolean;override;
+    procedure ExecuteTask(aTask: integer; FromWaiting: boolean); override;
+    function Running: boolean;override;
   public
-    Constructor Create(aViewer: TMapView; aLst: TGPSObjList; const aArea: TRealArea);
-    destructor Destroy;override;
+    constructor Create(aViewer: TMapView; aLst: TGPSObjList; const aArea: TRealArea);
+    destructor Destroy; override;
   end;
 
 { TDrawObjJob }
@@ -240,51 +245,49 @@ var
 begin
   if not(AllRun) and not(Cancelled) then
   begin
-    For i:=low(FStates) to high(FStates) do
-        if FStates[i]=0 then
-        Begin
-          result:=i+1;
-          Exit;
-        end;
+    for i := Low(FStates) to High(FStates) do
+      if FStates[i]=0 then
+      begin
+        result := i+1;
+        Exit;
+      end;
     AllRun:=True;
   end;
-  Result:=ALL_TASK_COMPLETED;
-  for i:=low(FStates) to high(FStates) do
-      if FStates[i]=1 then
-      begin
-          Result:=NO_MORE_TASK;
-          Exit;
-      end;
+
+  Result := ALL_TASK_COMPLETED;
+  for i := Low(FStates) to High(FStates) do
+    if FStates[i]=1 then
+    begin
+      Result := NO_MORE_TASK;
+      Exit;
+    end;
 end;
 
 procedure TDrawObjJob.pTaskStarted(aTask: integer);
 begin
-  FRunning:=True;
-  FStates[aTask-1]:=1;
+  FRunning := True;
+  FStates[aTask-1] := 1;
 end;
 
 procedure TDrawObjJob.pTaskEnded(aTask: integer; aExcept: Exception);
 begin
   if Assigned(aExcept) then
-    FStates[aTask-1]:=3
+    FStates[aTask-1] := 3
   else
-    FStates[aTask-1]:=2;
+    FStates[aTask-1] := 2;
 end;
 
 procedure TDrawObjJob.ExecuteTask(aTask: integer; FromWaiting: boolean);
-var iObj : integer;
-    Obj : TGpsObj;
+var
+  iObj: integer;
+  Obj: TGpsObj;
 begin
-    iObj:=aTask-1;
-    Obj:=FLst[iObj];
-    if Obj.InheritsFrom(TGPSTrack) then
-    begin
-      Viewer.DrawTrack(FArea,TGPSTrack(Obj));
-    end;
-    if Obj.InheritsFrom(TGPSPoint) then
-    begin
-      Viewer.DrawPt(FArea,TGPSPoint(Obj));
-    end;
+  iObj := aTask-1;
+  Obj := FLst[iObj];
+  if Obj.InheritsFrom(TGPSTrack) then
+    Viewer.DrawTrack(FArea, TGPSTrack(Obj));
+  if Obj.InheritsFrom(TGPSPoint) then
+    Viewer.DrawPt(FArea, TGPSPoint(Obj));
 end;
 
 function TDrawObjJob.Running: boolean;
@@ -451,8 +454,8 @@ begin
     Engine.MouseWheel(self,Shift,WheelDelta,MousePos,Result);
 end;
 
-procedure TMapView.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
+procedure TMapView.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
   if IsActive then
@@ -521,9 +524,9 @@ begin
   end
   else
   begin
-    Canvas.Brush.Color:=InactiveColor;
-    Canvas.Brush.Style:=bsSolid;
-    Canvas.FillRect(0,0,ClientWidth,ClientHeight);
+    Canvas.Brush.Color := InactiveColor;
+    Canvas.Brush.Style := bsSolid;
+    Canvas.FillRect(0, 0, ClientWidth, ClientHeight);
   end;
 end;
 
@@ -532,14 +535,14 @@ procedure TMapView.OnGPSItemsModified(Sender: TObject; objs: TGPSObjList;
 var
   Area,ObjArea,vArea: TRealArea;
 begin
-  if Adding and assigned(Objs) then
+  if Adding and Assigned(Objs) then
   begin
     ObjArea := GetAreaOf(Objs);
     vArea := GetVisibleArea;
     if hasIntersectArea(ObjArea,vArea) then
     begin
-      Area:=IntersectArea(ObjArea,vArea);
-      Engine.Jobqueue.AddJob(TDrawObjJob.Create(self,Objs,Area),Engine);
+      Area := IntersectArea(ObjArea, vArea);
+      Engine.Jobqueue.AddJob(TDrawObjJob.Create(self, Objs, Area), Engine);
     end
     else
       objs.Free;
@@ -551,53 +554,54 @@ begin
   end;
 end;
 
-procedure TMapView.DrawTrack(const Area : TRealArea;trk : TGPSTrack);
-var Old,New : TPoint;
-    i : integer;
-    aPt : TRealPoint;
-    LastInside,IsInside : boolean;
-    trkColor : TColor;
-Begin
-     if trk.Points.Count>0 then
-     Begin
-       trkColor:=clRed;
-       if trk.ExtraData<>nil then
-       Begin
-         if trk.ExtraData.inheritsFrom(TDrawingExtraData) then
-           trkColor:=TDrawingExtraData(trk.ExtraData).Color;
-       end;
-       LastInside:=false;
-       For i:=0 to pred(trk.Points.Count) do
-       Begin
-           aPt:=trk.Points[i].RealPoint;
-           IsInside:=PtInsideArea(aPt,Area);
-           if IsInside or LastInside then
-           Begin
-             New:=Engine.LonLatToScreen(aPt);
-             if i>0 then
-             Begin
-               if not(LastInside) then
-                 Old:=Engine.LonLatToScreen(trk.Points[pred(i)].RealPoint);
-               {$IFDEF USE_RGBGRAPHICS}
-               Buffer.Canvas.OutlineColor := trkColor;
-               Buffer.Canvas.Line(Old.X, Old.y, New.X, New.Y);
-               {$ENDIF}
-               {$IFDEF USE_LAZINTFIMAGE}
-               BufferCanvas.Pen.FPColor := TColorToFPColor(trkColor);
-               BufferCanvas.Line(Old.X, Old.Y, New.X, New.Y);
-               {$ENDIF}
-             end;
-             Old := New;
-             LastInside := IsInside;
-           end;
-       end;
-     end;
+procedure TMapView.DrawTrack(const Area: TRealArea; trk: TGPSTrack);
+var
+  Old,New: TPoint;
+  i: integer;
+  aPt: TRealPoint;
+  LastInside, IsInside: boolean;
+  trkColor: TColor;
+begin
+  if trk.Points.Count>0 then
+  begin
+    trkColor := clRed;
+    if trk.ExtraData <> nil then
+    begin
+      if trk.ExtraData.InheritsFrom(TDrawingExtraData) then
+        trkColor := TDrawingExtraData(trk.ExtraData).Color;
+    end;
+    LastInside := false;
+    for i:=0 to pred(trk.Points.Count) do
+    begin
+      aPt := trk.Points[i].RealPoint;
+      IsInside := PtInsideArea(aPt,Area);
+      if IsInside or LastInside then
+      begin
+        New := Engine.LonLatToScreen(aPt);
+        if i > 0 then
+        begin
+          if not LastInside then
+            Old := Engine.LonLatToScreen(trk.Points[pred(i)].RealPoint);
+          {$IFDEF USE_RGBGRAPHICS}
+          Buffer.Canvas.OutlineColor := trkColor;
+          Buffer.Canvas.Line(Old.X, Old.y, New.X, New.Y);
+          {$ENDIF}
+          {$IFDEF USE_LAZINTFIMAGE}
+          BufferCanvas.Pen.FPColor := TColorToFPColor(trkColor);
+          BufferCanvas.Line(Old.X, Old.Y, New.X, New.Y);
+          {$ENDIF}
+        end;
+        Old := New;
+        LastInside := IsInside;
+      end;
+    end;
+  end;
 end;
 
 procedure TMapView.DrawPt(const Area: TRealArea; aPOI: TGPSPoint);
 var
-  PT : TPoint;
-  PtColor : TColor;
+  PT: TPoint;
+  PtColor: TColor;
 begin
   if Assigned(FOnDrawGpsPoint) then begin
     {$IFDEF USE_RGBGRAPHICS}
@@ -609,17 +613,17 @@ begin
     exit;
   end;
 
-  Pt:=Engine.LonLatToScreen(aPOI.RealPoint);
-  PtColor:=clRed;
-  if aPOI.ExtraData<>nil then
-  Begin
-     if aPOI.ExtraData.inheritsFrom(TDrawingExtraData) then
-       PtColor:=TDrawingExtraData(aPOI.ExtraData).Color;
+  Pt := Engine.LonLatToScreen(aPOI.RealPoint);
+  PtColor := clRed;
+  if aPOI.ExtraData <> nil then
+  begin
+    if aPOI.ExtraData.inheritsFrom(TDrawingExtraData) then
+      PtColor := TDrawingExtraData(aPOI.ExtraData).Color;
   end;
   {$IFDEF USE_RGBGRAPHICS}
-  Buffer.canvas.OutlineColor:=ptColor;
-  Buffer.canvas.Line(Pt.X,Pt.y-5,Pt.X,Pt.Y+5);
-  Buffer.canvas.Line(Pt.X-5,Pt.y,Pt.X+5,Pt.Y);
+  Buffer.Canvas.OutlineColor := ptColor;
+  Buffer.Canvas.Line(Pt.X, Pt.y-5, Pt.X, Pt.Y+5);
+  Buffer.Canvas.Line(Pt.X-5, Pt.y, Pt.X+5, Pt.Y);
   {$ENDIF}
   {$IFDEF USE_LAZINTFIMAGE}
   BufferCanvas.Pen.FPColor := TColorToFPColor(ptColor);
@@ -633,29 +637,30 @@ end;
 procedure TMapView.CallAsyncInvalidate;
 Begin
   if not(AsyncInvalidate) then
-  Begin
-    AsyncInvalidate:=true;
-    Engine.Jobqueue.QueueAsyncCall(@DoAsyncInvalidate,0);
+  begin
+    AsyncInvalidate := true;
+    Engine.Jobqueue.QueueAsyncCall(@DoAsyncInvalidate, 0);
   end;
 end;
 
-procedure TMapView.DrawObjects(const TileId: TTileId; aLeft, aTop,aRight,aBottom: integer);
+procedure TMapView.DrawObjects(const TileId: TTileId;
+  aLeft, aTop,aRight,aBottom: integer);
 var
   aPt: TPoint;
   Area: TRealArea;
   lst: TGPSObjList;
 begin
-  aPt.X:=aLeft;
-  aPt.Y:=aTop;
-  Area.TopLeft:=Engine.ScreenToLonLat(aPt);
-  aPt.X:=aRight;
-  aPt.Y:=aBottom;
-  Area.BottomRight:=Engine.ScreenToLonLat(aPt);
-  if GPSItems.count>0 then
+  aPt.X := aLeft;
+  aPt.Y := aTop;
+  Area.TopLeft := Engine.ScreenToLonLat(aPt);
+  aPt.X := aRight;
+  aPt.Y := aBottom;
+  Area.BottomRight := Engine.ScreenToLonLat(aPt);
+  if GPSItems.Count > 0 then
   begin
-    lst:=GPSItems.GetObjectsInArea(Area);
-    if lst.Count>0 then
-      Engine.Jobqueue.AddJob(TDrawObjJob.Create(self,lst,Area),Engine)
+    lst := GPSItems.GetObjectsInArea(Area);
+    if lst.Count > 0 then
+      Engine.Jobqueue.AddJob(TDrawObjJob.Create(self, lst, Area), Engine)
     else
     begin
       FreeAndNil(Lst);
@@ -669,31 +674,31 @@ end;
 procedure TMapView.DoAsyncInvalidate(Data: PtrInt);
 Begin
   Invalidate;
-  AsyncInvalidate:=false;
+  AsyncInvalidate := false;
 end;
 
 procedure TMapView.DoDrawTile(const TileId: TTileId; X, Y: integer;
   TileImg: TLazIntfImage);
 {$IFDEF USE_RGBGRAPHICS}
 var
-  temp : TRGB32Bitmap;
-  ri : TRawImage;
-  BuffLaz : TLazIntfImage;
+  temp: TRGB32Bitmap;
+  ri: TRawImage;
+  BuffLaz: TLazIntfImage;
 {$ENDIF}
 begin
   if Assigned(Buffer) then
   begin
     if Assigned(TileImg) then
-    Begin
+    begin
      {$IFDEF USE_RGBGRAPHICS}
-      if (X>=0) and (Y>=0) then //http://mantis.freepascal.org/view.php?id=27144
+      if (X >= 0) and (Y >= 0) then //http://mantis.freepascal.org/view.php?id=27144
       begin
         ri.Init;
         ri.Description.Init_BPP32_R8G8B8A8_BIO_TTB(Buffer.Width,Buffer.Height);
-        ri.Data:=Buffer.Pixels;
-        BuffLaz := TLazIntfImage.Create(ri,false);
+        ri.Data := Buffer.Pixels;
+        BuffLaz := TLazIntfImage.Create(ri, false);
         try
-          BuffLaz.CopyPixels(TileImg,X,y);
+          BuffLaz.CopyPixels(TileImg, X, Y);
           ri.Init;
         finally
           FreeandNil(BuffLaz);
@@ -702,11 +707,11 @@ begin
       else
       begin
         //i think it take more memory then the previous method but work in all case
-        temp:=TRGB32Bitmap.CreateFromLazIntfImage(TileImg);
+        temp := TRGB32Bitmap.CreateFromLazIntfImage(TileImg);
         try
-          Buffer.Draw(X,Y,temp);
+          Buffer.Draw(X, Y, temp);
         finally
-          FreeAndNil(Temp);
+          FreeAndNil(temp);
         end;
       end;
      {$ENDIF}
@@ -721,24 +726,24 @@ begin
     end
     else
     {$IFDEF USE_RGBGRAPHICS}
-      Buffer.Canvas.FillRect(X,Y,X+TILE_SIZE,Y+TILE_SIZE);
+      Buffer.Canvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
     {$ENDIF}
     {$IFDEF USE_LAZINTFIMAGE}
-     begin
-       BufferCanvas.Brush.FPColor := ColWhite;
-       BufferCanvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
-     end;
+    begin
+      BufferCanvas.Brush.FPColor := ColWhite;
+      BufferCanvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
+    end;
     {$ENDIF}
   end;
-  DrawObjects(TileId,X,Y,X+TILE_SIZE,Y+TILE_SIZE);
+  DrawObjects(TileId, X, Y, X + TILE_SIZE, Y + TILE_SIZE);
 end;
 
 function TMapView.IsActive: Boolean;
 begin
   if not(csDesigning in ComponentState) then
-    Result:=FActive
+    Result := FActive
   else
-    Result:=false;
+    Result := false;
 end;
 
 constructor TMapView.Create(AOwner: TComponent);
@@ -750,7 +755,7 @@ begin
   FEngine := TMapViewerEngine.Create(self);
   FBuiltinDownloadEngine := TMvDEFpc.Create(self);
   {$IFDEF USE_RGBGRAPHICS}
-  Buffer := TRGB32Bitmap.Create(Width,Height);
+  Buffer := TRGB32Bitmap.Create(Width, Height);
   {$ENDIF}
   {$IFDEF USE_LAZINTFIMAGE}
   CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, Width, Height);
@@ -812,17 +817,19 @@ begin
 end;
 
 procedure TMapView.CenterOnObj(obj: TGPSObj);
-var Area : TRealArea;
-    Pt : TRealPoint;
+var
+  Area: TRealArea;
+  Pt: TRealPoint;
 begin
   obj.GetArea(Area);
-  Pt.Lon:=(Area.TopLeft.Lon+Area.BottomRight.Lon) /2;
-  Pt.Lat:=(Area.TopLeft.Lat+Area.BottomRight.Lat) /2;
-  Center:=Pt;
+  Pt.Lon := (Area.TopLeft.Lon + Area.BottomRight.Lon) /2;
+  Pt.Lat := (Area.TopLeft.Lat + Area.BottomRight.Lat) /2;
+  Center := Pt;
 end;
 
 procedure TMapView.ZoomOnObj(obj: TGPSObj);
-var Area : TRealArea;
+var
+  Area: TRealArea;
 begin
   obj.GetArea(Area);
   Engine.ZoomOnArea(Area);
@@ -834,14 +841,15 @@ begin
 end;
 
 function TMapView.GetVisibleArea: TRealArea;
-var aPt : TPoint;
+var
+  aPt: TPoint;
 begin
-  aPt.X:=0;
-  aPt.Y:=0;
-  Result.TopLeft:=Engine.ScreenToLonLat(aPt);
-  aPt.X:=Width;
-  aPt.Y:=Height;
-  Result.BottomRight:=Engine.ScreenToLonLat(aPt);;
+  aPt.X := 0;
+  aPt.Y := 0;
+  Result.TopLeft := Engine.ScreenToLonLat(aPt);
+  aPt.X := Width;
+  aPt.Y := Height;
+  Result.BottomRight := Engine.ScreenToLonLat(aPt);;
 end;
 
 procedure TMapView.ClearBuffer;

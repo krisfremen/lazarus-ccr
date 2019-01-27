@@ -105,10 +105,12 @@ begin
       Result := NO_MORE_TASK
   end
   else
+  begin
     if FEnded then
       Result := ALL_TASK_COMPLETED
     else
       Result := 1;
+  end;
 end;
 
 procedure TSimpleJob.pTaskStarted(aTask: integer);

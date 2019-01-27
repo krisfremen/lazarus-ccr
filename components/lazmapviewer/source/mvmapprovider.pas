@@ -78,17 +78,17 @@ end;
 
 procedure TMapProvider.SetLayer(AValue: integer);
 begin
-  if FLayer=AValue then Exit;
-  if (aValue<low(FUrl)) and (aValue>high(FUrl)) then
+  if FLayer = AValue then Exit;
+  if (aValue < Low(FUrl)) and (aValue > High(FUrl)) then
   Begin
-    Raise Exception.create('bad Layer');
+    Raise Exception.Create('bad Layer');
   end;
   FLayer:=AValue;
 end;
 
 constructor TMapProvider.Create(aName: String);
 begin
-  FName:=aName;
+  FName := aName;
 end;
 
 destructor TMapProvider.Destroy;
@@ -107,31 +107,31 @@ begin
 end;
 
 procedure TMapProvider.AddURL(Url: String; NbSvr: integer;
-  aMinZoom : integer;aMaxZoom :  integer;
-  GetSvrStr: TGetSvrStr; GetXStr: TGetValStr; GetYStr: TGetValStr;
-  GetZStr: TGetValStr);
-var nb : integer;
+  aMinZoom: integer; aMaxZoom: integer; GetSvrStr: TGetSvrStr;
+  GetXStr: TGetValStr; GetYStr: TGetValStr; GetZStr: TGetValStr);
+var
+  nb: integer;
 begin
-  nb:=length(FUrl)+1;
-  SetLength(IdServer,nb);
-  SetLength(FUrl,nb);
-  SetLength(FNbSvr,nb);
-  SetLength(FGetSvrStr,nb);
-  SetLength(FGetXStr,nb);
-  SetLength(FGetYStr,nb);
-  SetLength(FGetZStr,nb);
-  SetLength(FMinZoom,nb);
-  SetLength(FMaxZoom,nb);
-  nb:=high(FUrl);
-  FUrl[nb]:=Url;
-  FNbSvr[nb]:=NbSvr;
-  FMinZoom[nb]:=aMinZoom;
-  FMaxZoom[nb]:=aMaxZoom;
-  FGetSvrStr[nb]:=GetSvrStr;
-  FGetXStr[nb]:=GetXStr;
-  FGetYStr[nb]:=GetYStr;
-  FGetZStr[nb]:=GetZStr;
-  FLayer:=low(FUrl);
+  nb := Length(FUrl)+1;
+  SetLength(IdServer, nb);
+  SetLength(FUrl, nb);
+  SetLength(FNbSvr, nb);
+  SetLength(FGetSvrStr, nb);
+  SetLength(FGetXStr, nb);
+  SetLength(FGetYStr, nb);
+  SetLength(FGetZStr, nb);
+  SetLength(FMinZoom, nb);
+  SetLength(FMaxZoom, nb);
+  nb := High(FUrl);
+  FUrl[nb] := Url;
+  FNbSvr[nb] := NbSvr;
+  FMinZoom[nb] := aMinZoom;
+  FMaxZoom[nb] := aMaxZoom;
+  FGetSvrStr[nb] := GetSvrStr;
+  FGetXStr[nb] := GetXStr;
+  FGetYStr[nb] := GetYStr;
+  FGetZStr[nb] := GetZStr;
+  FLayer := Low(FUrl);
 end;
 
 procedure TMapProvider.GetZoomInfos(out AZoomMin, AZoomMax: integer);

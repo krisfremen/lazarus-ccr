@@ -62,7 +62,7 @@ type
       ADownloadEngine: TMvCustomDownloadEngine): TRealPoint;
   published
     property LocationName: string read FLocationName;
-    property OnNameFound : TNameFoundEvent read FOnNameFound write FOnNameFound;
+    property OnNameFound: TNameFoundEvent read FOnNameFound write FOnNameFound;
   end;
 
 
@@ -195,51 +195,13 @@ begin
     parser.Free;
   end;
 end;
-  (*
-function TMVGeoNames.RemoveTag(Const str : String) : TStringArray;
-var iStart,iEnd,i : Integer;
-    tmp : String;
-    lst : TStringList;
-Begin
-  SetLength(Result,0);
-  tmp := StringReplace(str,'<br>',#13,[rfReplaceall]);
-  tmp := StringReplace(tmp,'&nbsp;',' ',[rfReplaceall]);
-  tmp := StringReplace(tmp,'  ',' ',[rfReplaceall]);
-  repeat
-    iEnd:=-1;
-    iStart:=pos('<',tmp);
-    if iStart>0 then
-    Begin
-      iEnd:=posEx('>',tmp,iStart);
-      if iEnd>0 then
-      Begin
-        tmp:=copy(tmp,1,iStart-1)+copy(tmp,iEnd+1,length(tmp));
-      end;
-    end;
-  until iEnd<=0;
-  lst:=TStringList.Create;
-  try
-    lst.Text:=tmp;
-    SetLEngth(Result,lst.Count);
-    For i:=0 to pred(lst.Count) do
-      Result[i]:=trim(lst[i]);
-  finally
-    freeAndNil(lst);
-  end;
 
-end;
-       *)
 function TMVGeoNames.Search(ALocationName: String;
   ADownloadEngine: TMvCustomDownloadEngine): TRealPoint;
-{
-const
-  LAT_ID = '<span class="latitude">';
-  LONG_ID = '<span class="longitude">';
-  }
 var
   s: string;
 
-  function gs(id: string;Start : integer): string;
+  function gs(id: string; Start: integer): string;
   var
     i: Integer;
     ln: Integer;
@@ -260,12 +222,6 @@ var
 var
   ms: TMemoryStream;
   url: String;
-  {
-  iRes,i : integer;
-  lstRes : Array  of TResRec;
-  iStartDescr : integer;
-  lst : TStringArray;
-  }
 begin
   FLocationName := ALocationName;
   ms := TMemoryStream.Create;
@@ -280,46 +236,6 @@ begin
   end;
 
   Result := Parse(PChar(s));
-  {
-  Result.Lon := 0;
-  Result.Lat := 0;
-  SetLength(lstRes, 0);
-  iRes := Pos('<span class="geo"',s);
-  while (iRes>0) do
-  begin
-    SetLength(lstRes,length(lstRes)+1);
-    lstRes[high(lstRes)].Loc.Lon := StrToFloat(gs(LONG_ID,iRes));
-    lstRes[high(lstRes)].Loc.Lat := StrToFloat(gs(LAT_ID,iRes));
-    iStartDescr := RPosex('<td>',s,iRes);
-    if iStartDescr>0 then
-    begin
-      lst:=RemoveTag(Copy(s,iStartDescr,iRes-iStartDescr));
-      if length(lst)>0 then
-        lstRes[high(lstRes)].Name:=lst[0];
-      lstRes[high(lstRes)].Descr:='';
-      for i:=1 to high(lst) do
-        lstRes[high(lstRes)].Descr+=lst[i];
-    end;
-
-    Result.Lon += lstRes[high(lstRes)].Loc.Lon;
-    Result.Lat += lstRes[high(lstRes)].Loc.Lat;
-    iRes := PosEx('<span class="geo"',s,iRes+17);
-  end;
-
-  if Length(lstRes) > 0 then
-  begin
-    if Length(lstRes) > 1 then
-    begin
-      Result.Lon := Result.Lon/length(lstRes);
-      Result.Lat := Result.Lat/length(lstRes);
-    end;
-    if Assigned(FOnNameFound) then
-      for iRes:=low(lstRes) to high(lstRes) do
-      begin
-        FOnNameFound(lstRes[iRes].Name, lstRes[iRes].Descr, lstRes[iRes].Loc);
-      end;
-  end;
-  }
 end;
 
 end.

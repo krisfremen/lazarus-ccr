@@ -39,7 +39,8 @@ const
 
 
 Type
-  TDrawTileEvent = Procedure (const TileId : TTileId;X,Y : integer;TileImg : TLazIntfImage) of object;
+  TDrawTileEvent = Procedure (const TileId: TTileId; X,Y: integer;
+    TileImg: TLazIntfImage) of object;
 
   TTileIdArray = Array of TTileId;
 
@@ -49,7 +50,7 @@ Type
     MapProvider: TMapProvider;
     X: Int64;
     Y: Int64;
-    Center : TRealPoint;
+    Center: TRealPoint;
     Zoom: integer;
     Height: integer;
     Width: integer;
@@ -100,21 +101,21 @@ Type
       function IsCurrentWin(const aWin: TMapWindow) : boolean;
     protected
       procedure ConstraintZoom(var aWin: TMapWindow);
-      function GetTileName(const Id: TTileId) : String;
-      procedure evDownload(Data: TObject;Job : TJob);
+      function GetTileName(const Id: TTileId): String;
+      procedure evDownload(Data: TObject; Job: TJob);
       procedure TileDownloaded(Data: PtrInt);
       Procedure RegisterProviders;
-      Procedure DrawTile(const TileId : TTileId;X,Y : integer;TileImg : TLazIntfImage);
+      Procedure DrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
 
       function GetLetterSvr(id: integer): String;
       function GetYahooSvr(id: integer): String;
-      function GetYahooY(const Tile : TTileId): string;
-      function GetYahooZ(const Tile : TTileId): string;
-      function GetQuadKey(const Tile : TTileId): string;
+      function GetYahooY(const Tile: TTileId): string;
+      function GetYahooZ(const Tile: TTileId): string;
+      function GetQuadKey(const Tile: TTileId): string;
 
-      Procedure DoDrag(Sender : TDragObj);
+      Procedure DoDrag(Sender: TDragObj);
     public
-      constructor Create(aOwner : TComponent);override;
+      constructor Create(aOwner: TComponent); override;
       destructor Destroy; override;
 
       function AddMapProvider(OpeName: String; Url: String;
@@ -133,11 +134,12 @@ Type
       procedure DblClick(Sender: TObject);
       procedure MouseDown(Sender: TObject; Button: TMouseButton;
         {%H-}Shift: TShiftState; X, Y: Integer);
-      procedure MouseMove(Sender: TObject; {%H-}Shift: TShiftState; X, Y: Integer);
+      procedure MouseMove(Sender: TObject; {%H-}Shift: TShiftState;
+        X, Y: Integer);
       procedure MouseUp(Sender: TObject; Button: TMouseButton;
         {%H-}Shift: TShiftState; X, Y: Integer);
-      procedure MouseWheel(Sender: TObject; {%H-}Shift: TShiftState; WheelDelta: Integer;
-        {%H-}MousePos: TPoint; var Handled: Boolean);
+      procedure MouseWheel(Sender: TObject; {%H-}Shift: TShiftState;
+        WheelDelta: Integer; {%H-}MousePos: TPoint; var Handled: Boolean);
       procedure ZoomOnArea(const aArea: TRealArea);
 
       property Center: TRealPoint read GetCenter write SetCenter;
@@ -146,8 +148,10 @@ Type
       property Active: Boolean read FActive write SetActive default false;
       property CacheOnDisk: Boolean read GetCacheOnDisk write SetCacheOnDisk;
       property CachePath: String read GetCachePath write SetCachePath;
-      property DownloadEngine: TMvCustomDownloadEngine read FDownloadEngine write SetDownloadEngine;
-      property DrawTitleInGuiThread: boolean read FDrawTitleInGuiThread write FDrawTitleInGuiThread;
+      property DownloadEngine: TMvCustomDownloadEngine
+        read FDownloadEngine write SetDownloadEngine;
+      property DrawTitleInGuiThread: boolean
+        read FDrawTitleInGuiThread write FDrawTitleInGuiThread;
       property Height: integer read GetHeight write SetHeight;
       property JobQueue: TJobQueue read Queue;
       property MapProvider: String read GetMapProvider write SetMapProvider;
@@ -161,6 +165,7 @@ Type
       property OnZoomChange: TNotifyEvent read FOnZoomChange write FOnZoomChange;
   end;
 
+
 implementation
 
 uses
@@ -171,7 +176,7 @@ type
 
   { TLaunchDownloadJob }
 
-  TLaunchDownloadJob = Class(TJob)
+  TLaunchDownloadJob = class(TJob)
   private
     AllRun: boolean;
     Win: TMapWindow;
@@ -180,14 +185,15 @@ type
     FTiles: TTileIdArray;
     FStates: Array of integer;
   protected
-    function pGetTask: integer;override;
-    procedure pTaskStarted(aTask: integer);override;
-    procedure pTaskEnded(aTask: integer; aExcept: Exception);override;
+    function pGetTask: integer; override;
+    procedure pTaskStarted(aTask: integer); override;
+    procedure pTaskEnded(aTask: integer; aExcept: Exception); override;
   public
-    procedure ExecuteTask(aTask: integer; FromWaiting: boolean);override;
-    function Running: boolean;override;
+    procedure ExecuteTask(aTask: integer; FromWaiting: boolean); override;
+    function Running: boolean; override;
   public
-    Constructor Create(Eng: TMapViewerEngine; const Tiles: TTileIdArray; const aWin: TMapWindow);
+    constructor Create(Eng: TMapViewerEngine; const Tiles: TTileIdArray;
+      const aWin: TMapWindow);
   end;
 
 
@@ -295,7 +301,7 @@ end;
 
 { TEnvTile }
 
-constructor TEnvTile.Create(const aTile : TTileId;Const aWin : TMapWindow);
+constructor TEnvTile.Create(const aTile: TTileId; const aWin: TMapWindow);
 begin
   Tile := aTile;
   Win := aWin;
@@ -336,7 +342,7 @@ end;
 
 function TMapViewerEngine.AddMapProvider(OpeName: String; Url: String;
   MinZoom, MaxZoom, NbSvr: integer; GetSvrStr: TGetSvrStr; GetXStr: TGetValStr;
-  GetYStr: TGetValStr; GetZStr: TGetValStr) : TMapProvider;
+  GetYStr: TGetValStr; GetZStr: TGetValStr): TMapProvider;
 var
   idx :integer;
 Begin
@@ -357,8 +363,8 @@ var
 begin
   MaxX := (Int64(aWin.Width) div TILE_SIZE) + 1;
   MaxY := (Int64(aWin.Height) div TILE_SIZE) + 1;
-  startX := (-(aWin.X)) div TILE_SIZE;
-  startY := (-(aWin.Y)) div TILE_SIZE;
+  startX := -aWin.X div TILE_SIZE;
+  startY := -aWin.Y div TILE_SIZE;
   Result.Left := startX;
   Result.Right := startX + MaxX;
   Result.Top := startY;
@@ -712,10 +718,8 @@ var
   nCenter: TRealPoint;
   aPt: TPoint;
 Begin
-  if Sender.LnkObj=nil then
-  begin
+  if Sender.LnkObj = nil then
     Sender.LnkObj := TMemObj.Create(MapWin);
-  end;
   old := TMemObj(Sender.LnkObj);
   aPt.X := old.FWin.Width DIV 2-Sender.OfsX;
   aPt.Y := old.FWin.Height DIV 2-Sender.OfsY;
@@ -757,7 +761,7 @@ end;
 
 procedure TMapViewerEngine.RegisterProviders;
 begin
- AddMapProvider('Aucun','',0,30, 0);
+  AddMapProvider('Aucun','',0,30, 0);
  {
   AddMapProvider('Google Satellite','http://khm%d.google.com/kh/v=82&x=%x%&y=%y%&z=%z%&s=Ga',4);
   AddMapProvider('Google Hybrid','http://khm%d.google.com/kh/v=82&x=%x%&y=%y%&z=%z%&s=Ga',4);
@@ -771,7 +775,7 @@ begin
   //AddMapProvider('Yahoo Hybrid','http://maps%serv%.yimg.com/ae/ximg?v=1.9&t=a&s=256&.intl=en&x=%x%&y=%y%&z=%z%&r=1', 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
   //AddMapProvider('Yahoo Hybrid','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&t=h&.intl=en&x=%x%&y=%y%&z=%z%&r=1'    , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
 
-                                       // opeName, Url, MinZoom, MaxZoom, NbSvr, GetSvrStr, GetXStr, GetYStr, GetZStr
+  // opeName, Url, MinZoom, MaxZoom, NbSvr, GetSvrStr, GetXStr, GetYStr, GetZStr
   MapWin.MapProvider := AddMapProvider('OpenStreetMap Mapnik',
     'http://%serv%.tile.openstreetmap.org/%z%/%x%/%y%.png',
     0, 19, 3, @GetLetterSvr);
@@ -877,7 +881,7 @@ var
 begin
   idx := lstProvider.IndexOf(aValue);
   if not ((aValue = '') or (idx <> -1)) then
-    raise Exception.Create('Unknow Provider : ' + aValue);
+    raise Exception.Create('Unknow Provider: ' + aValue);
   if Assigned(MapWin.MapProvider) and (MapWin.MapProvider.Name = AValue) then Exit;
   if idx <> -1 then
   begin

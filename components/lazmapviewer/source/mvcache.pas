@@ -22,7 +22,8 @@ unit mvCache;
 interface
 
 uses
-  Classes, SysUtils,mvmapprovider,IntfGraphics,syncObjs,mvtypes;
+  Classes, SysUtils, IntfGraphics, syncObjs,
+  mvMapProvider, mvTypes;
 
 Type
 
@@ -45,7 +46,7 @@ Type
      Function MapProvider2FileName(MapProvider: TMapProvider): String;
      Function DiskCached(const aFileName: String): Boolean;
      procedure LoadFromDisk(const aFileName: String; out img: TLazIntfImage);
-     Function GetFileName(MapProvider: TMapProvider;const TileId: TTileId): String;
+     Function GetFileName(MapProvider: TMapProvider; const TileId: TTileId): String;
    public
      Procedure CheckCacheSize(Sender: TObject);
      constructor Create(aOwner: TComponent); override;
