@@ -61,10 +61,10 @@ Type
       FPOIImage: TBitmap;
       FOnDrawGpsPoint: TDrawGpsPointEvent;
       procedure CallAsyncInvalidate;
-      procedure DoAsyncInvalidate(Data: PtrInt);
-      procedure DrawObjects(const TileId: TTileId; aLeft, aTop, aRight,aBottom: integer);
-      procedure DrawPt(const Area: TRealArea;aPOI: TGPSPoint);
-      procedure DrawTrk(const Area: TRealArea;trk: TGPSTrack);
+      procedure DoAsyncInvalidate({%H-}Data: PtrInt);
+      procedure DrawObjects(const {%H-}TileId: TTileId; aLeft, aTop, aRight,aBottom: integer);
+      procedure DrawPt(const {%H-}Area: TRealArea;aPOI: TGPSPoint);
+      procedure DrawTrack(const Area: TRealArea;trk: TGPSTrack);
       function GetCacheOnDisk: boolean;
       function GetCachePath: String;
       function GetCenter: TRealPoint;
@@ -77,7 +77,7 @@ Type
       function GetZoom: integer;
       procedure SetActive(AValue: boolean);
       procedure SetCacheOnDisk(AValue: boolean);
-      procedure SetCachePath(AValue: String);
+      procedure SetCachePath({%H-}AValue: String);
       procedure SetCenter(AValue: TRealPoint);
       procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
       procedure SetInactiveColor(AValue: TColor);
@@ -221,24 +221,25 @@ Type
     FStates : Array of integer;
     FArea : TRealArea;
   protected
-    function pGetTask : integer;override;
+    function pGetTask: integer;override;
     procedure pTaskStarted(aTask: integer);override;
-    procedure pTaskEnded(aTask : integer;aExcept : Exception);override;
+    procedure pTaskEnded(aTask: integer; aExcept: Exception);override;
   public
-    procedure ExecuteTask(aTask : integer;FromWaiting : boolean);override;
+    procedure ExecuteTask(aTask: integer; FromWaiting: boolean);override;
     function Running : boolean;override;
   public
-    Constructor Create(aViewer : TMapView;aLst : TGPSObjList;const aArea : TRealArea);
+    Constructor Create(aViewer: TMapView; aLst: TGPSObjList; const aArea: TRealArea);
     destructor Destroy;override;
   end;
 
 { TDrawObjJob }
 
 function TDrawObjJob.pGetTask: integer;
-var i : integer;
+var
+  i: integer;
 begin
   if not(AllRun) and not(Cancelled) then
-  Begin
+  begin
     For i:=low(FStates) to high(FStates) do
         if FStates[i]=0 then
         Begin
@@ -248,9 +249,9 @@ begin
     AllRun:=True;
   end;
   Result:=ALL_TASK_COMPLETED;
-  For i:=low(FStates) to high(FStates) do
+  for i:=low(FStates) to high(FStates) do
       if FStates[i]=1 then
-      Begin
+      begin
           Result:=NO_MORE_TASK;
           Exit;
       end;
@@ -266,7 +267,7 @@ procedure TDrawObjJob.pTaskEnded(aTask: integer; aExcept: Exception);
 begin
   if Assigned(aExcept) then
     FStates[aTask-1]:=3
-  Else
+  else
     FStates[aTask-1]:=2;
 end;
 
@@ -277,11 +278,11 @@ begin
     iObj:=aTask-1;
     Obj:=FLst[iObj];
     if Obj.InheritsFrom(TGPSTrack) then
-    Begin
-      Viewer.DrawTrk(FArea,TGPSTrack(Obj));
-    End;
+    begin
+      Viewer.DrawTrack(FArea,TGPSTrack(Obj));
+    end;
     if Obj.InheritsFrom(TGPSPoint) then
-    Begin
+    begin
       Viewer.DrawPt(FArea,TGPSPoint(Obj));
     end;
 end;
@@ -467,8 +468,6 @@ begin
 end;
 
 procedure TMapView.MouseMove(Shift: TShiftState; X, Y: Integer);
-var
-  aPt: TPoint;
 begin
   inherited MouseMove(Shift, X, Y);
   if IsActive then
@@ -552,7 +551,7 @@ begin
   end;
 end;
 
-procedure TMapView.DrawTrk(const Area : TRealArea;trk : TGPSTrack);
+procedure TMapView.DrawTrack(const Area : TRealArea;trk : TGPSTrack);
 var Old,New : TPoint;
     i : integer;
     aPt : TRealPoint;
@@ -641,11 +640,10 @@ Begin
 end;
 
 procedure TMapView.DrawObjects(const TileId: TTileId; aLeft, aTop,aRight,aBottom: integer);
-var aPt : TPoint;
-    Area : TRealArea;
-    lst  : TGPSObjList;
-    i : integer;
-    trk : TGPSTrack;
+var
+  aPt: TPoint;
+  Area: TRealArea;
+  lst: TGPSObjList;
 begin
   aPt.X:=aLeft;
   aPt.Y:=aTop;
@@ -660,11 +658,11 @@ begin
       Engine.Jobqueue.AddJob(TDrawObjJob.Create(self,lst,Area),Engine)
     else
     begin
-        freeAndNil(Lst);
-        CallAsyncInvalidate;
+      FreeAndNil(Lst);
+      CallAsyncInvalidate;
     end;
   end
-  Else
+  else
     CallAsyncInvalidate;
 end;
 
@@ -676,15 +674,12 @@ end;
 
 procedure TMapView.DoDrawTile(const TileId: TTileId; X, Y: integer;
   TileImg: TLazIntfImage);
+{$IFDEF USE_RGBGRAPHICS}
 var
-  {$IFDEF USE_RGBGRAPHICS}
   temp : TRGB32Bitmap;
   ri : TRawImage;
   BuffLaz : TLazIntfImage;
-  {$ENDIF}
-  {$IFDEF USE_LAZINTFIMAGE}
-  temp: TBitmap;
-  {$ENDIF}
+{$ENDIF}
 begin
   if Assigned(Buffer) then
   begin

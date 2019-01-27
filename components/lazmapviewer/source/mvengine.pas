@@ -132,12 +132,12 @@ Type
 
       procedure DblClick(Sender: TObject);
       procedure MouseDown(Sender: TObject; Button: TMouseButton;
-        Shift: TShiftState; X, Y: Integer);
-      procedure MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+        {%H-}Shift: TShiftState; X, Y: Integer);
+      procedure MouseMove(Sender: TObject; {%H-}Shift: TShiftState; X, Y: Integer);
       procedure MouseUp(Sender: TObject; Button: TMouseButton;
-        Shift: TShiftState; X, Y: Integer);
-      procedure MouseWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer;
-        MousePos: TPoint; var Handled: Boolean);
+        {%H-}Shift: TShiftState; X, Y: Integer);
+      procedure MouseWheel(Sender: TObject; {%H-}Shift: TShiftState; WheelDelta: Integer;
+        {%H-}MousePos: TPoint; var Handled: Boolean);
       procedure ZoomOnArea(const aArea: TRealArea);
 
       property Center: TRealPoint read GetCenter write SetCenter;
@@ -355,8 +355,8 @@ function TMapViewerEngine.CalculateVisibleTiles(const aWin: TMapWindow): TArea;
 var
   MaxX, MaxY, startX, startY: int64;
 begin
-  MaxX := (aWin.Width div TILE_SIZE) + 1;
-  MaxY := (aWin.Height div TILE_SIZE) + 1;
+  MaxX := (Int64(aWin.Width) div TILE_SIZE) + 1;
+  MaxY := (Int64(aWin.Height) div TILE_SIZE) + 1;
   startX := (-(aWin.X)) div TILE_SIZE;
   startY := (-(aWin.Y)) div TILE_SIZE;
   Result.Left := startX;
@@ -589,7 +589,6 @@ function TMapViewerEngine.LonLatToMapWin(const aWin: TMapWindow;
 var
   tiles: Int64;
   circumference: Int64;
-  lat: Extended;
   res: Extended;
   tmpX,tmpY : Double;
 begin
@@ -711,7 +710,6 @@ procedure TMapViewerEngine.MoveMapCenter(Sender: TDragObj);
 var
   old: TMemObj;
   nCenter: TRealPoint;
-  Job: TJob;
   aPt: TPoint;
 Begin
   if Sender.LnkObj=nil then
@@ -876,7 +874,6 @@ end;
 procedure TMapViewerEngine.SetMapProvider(AValue: String);
 var
   idx: integer;
-  zMin, zMax: integer;
 begin
   idx := lstProvider.IndexOf(aValue);
   if not ((aValue = '') or (idx <> -1)) then

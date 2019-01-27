@@ -53,7 +53,7 @@ type
     FFirstLocation: TResRec;
     FFoundLocation: TResRec;
     FOnNameFound: TNameFoundEvent;
-    procedure FoundTagHandler(NoCaseTag, ActualTag: string);
+    procedure FoundTagHandler(NoCaseTag, {%H-}ActualTag: string);
     procedure FoundTextHandler(AText: String);
     function Parse(AStr: PChar): TRealPoint;
 //    function RemoveTag(const str: String): TStringArray;
@@ -231,9 +231,11 @@ end;
        *)
 function TMVGeoNames.Search(ALocationName: String;
   ADownloadEngine: TMvCustomDownloadEngine): TRealPoint;
+{
 const
   LAT_ID = '<span class="latitude">';
   LONG_ID = '<span class="longitude">';
+  }
 var
   s: string;
 
@@ -257,11 +259,13 @@ var
 
 var
   ms: TMemoryStream;
+  url: String;
+  {
   iRes,i : integer;
   lstRes : Array  of TResRec;
   iStartDescr : integer;
   lst : TStringArray;
-  url: String;
+  }
 begin
   FLocationName := ALocationName;
   ms := TMemoryStream.Create;
@@ -276,7 +280,7 @@ begin
   end;
 
   Result := Parse(PChar(s));
-  (*
+  {
   Result.Lon := 0;
   Result.Lat := 0;
   SetLength(lstRes, 0);
@@ -315,7 +319,7 @@ begin
         FOnNameFound(lstRes[iRes].Name, lstRes[iRes].Descr, lstRes[iRes].Loc);
       end;
   end;
-  *)
+  }
 end;
 
 end.

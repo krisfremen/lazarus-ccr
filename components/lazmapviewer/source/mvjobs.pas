@@ -35,7 +35,7 @@ type
   protected
     function pGetTask: integer; override;
     procedure pTaskStarted(aTask: integer); override;
-    procedure pTaskEnded(aTask: integer; aExcept: Exception); override;
+    procedure pTaskEnded(aTask: integer; {%H-}aExcept: Exception); override;
   public
     function Running: boolean; override;
   end;
@@ -53,7 +53,7 @@ type
     constructor Create(aEvent: TJobProc; Data: TObject; OwnData: Boolean;
       JobName: String = ''); virtual;
     destructor Destroy; override;
-    procedure ExecuteTask(aTask: integer; FromWaiting: boolean); override;
+    procedure ExecuteTask(aTask: integer; {%H-}FromWaiting: boolean); override;
   end;
 
 

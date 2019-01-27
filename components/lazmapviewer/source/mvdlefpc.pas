@@ -36,7 +36,7 @@ type
   { TMVDEFPC }
 
   TMVDEFPC = class(TMvCustomDownloadEngine)
-  protected
+  public
     procedure DownloadFile(const Url: string; AStream: TStream); override;
   {$IF FPC_FullVersion >= 30101}
   published

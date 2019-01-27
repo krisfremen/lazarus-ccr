@@ -120,14 +120,14 @@ type
         FItems: TGPSObjList;
         function Getcount: integer;
       protected
-        Procedure _Delete(Idx : Integer;out DelLst : TGPSObjList);
+        Procedure _Delete(Idx: Integer; var DelLst: TGPSObjList);
         Procedure FreePending;
         Procedure DecRef;
         procedure Lock;
         procedure UnLock;
-        procedure CallModified(lst : TGPSObjList;Adding : boolean);
+        procedure CallModified(lst: TGPSObjList; Adding: boolean);
         property Items : TGPSObjList read FItems;
-        procedure IdsToObj(const Ids : TIdArray;out objs : TGPSObjArray;IdOwner : integer);
+        procedure IdsToObj(const Ids : TIdArray; out objs: TGPSObjArray;IdOwner : integer);
       public
         Procedure GetArea(out Area : TRealArea);override;
         function GetObjectsInArea(const Area: TRealArea): TGPSObjList;
@@ -267,8 +267,9 @@ begin
   Result:=FItems.Count
 end;
 
-procedure TGPSObjectList._Delete(Idx: Integer; out DelLst: TGPSObjList);
-var Item : TGpsObj;
+procedure TGPSObjectList._Delete(Idx: Integer; var DelLst: TGPSObjList);   // wp: was "out"
+var
+  Item: TGpsObj;
 begin
     Lock;
     Try
@@ -330,19 +331,21 @@ end;
 
 procedure TGPSObjectList.IdsToObj(const Ids: TIdArray; out objs: TGPSObjArray;IdOwner : integer);
 
-function ToSelect(aId : integer) : boolean;
-var i : integer;
-begin
-  result:=false;
-  for i:=low(Ids) to high(Ids) do
-    if Ids[i]=aId then
-    begin
-       result:=true;
-       break;
-    end;
-end;
+  function ToSelect(aId: integer): boolean;
+  var
+    i: integer;
+  begin
+    result:=false;
+    for i:=low(Ids) to high(Ids) do
+      if Ids[i]=aId then
+      begin
+         result:=true;
+         break;
+      end;
+  end;
 
-var i,nb : integer;
+var
+  i,nb : integer;
 begin
   SetLength(objs,length(Ids));
   nb:=0;
@@ -550,34 +553,39 @@ begin
 end;
 
 procedure TGPSObjectList.DeleteById(const Ids: array of integer);
-function ToDelete(const AId : integer) : Boolean;
-var i : integer;
-begin
-  result:=false;
-  For i:=low(Ids) to high(Ids) do
-    if Ids[i]=AId then
-    Begin
-      result:=true;
-      exit;
-    end;
-end;
 
-var Extr : TDrawingExtraData;
-    i : integer;
-    DelLst : TGPSObjList;
+  function ToDelete(const AId : integer) : Boolean;
+  var
+    i: integer;
+  begin
+    result:=false;
+    For i:=low(Ids) to high(Ids) do
+      if Ids[i]=AId then
+      Begin
+        result:=true;
+        exit;
+      end;
+  end;
+
+var
+  Extr: TDrawingExtraData;
+  i: integer;
+  DelLst: TGPSObjList;
 begin
   DelLst:=nil;
   Lock;
   try
-    For i:=Pred(Items.Count) downto 0 do
-    Begin
+    for i:=Pred(Items.Count) downto 0 do
+    begin
       if Assigned(Items[i].ExtraData) then
-      Begin
+      begin
         if Items[i].ExtraData.InheritsFrom(TDrawingExtraData) then
-        Begin
+        begin
           Extr := TDrawingExtraData(Items[i]);
+          // !!! wp: There is a warning that TGPSObj and TDrawingExtraData are not related !!!
           if ToDelete(Extr.Id) then
             _Delete(i,DelLst);
+          // !!! wp: DelLst is a local var and created by _Delete but not destroyed anywhere here !!!
         end;
       end;
     end;
@@ -602,6 +610,7 @@ begin
       CallModified(nil,true);
   end;
 end;
+
 
 { TGPSTrack }
 

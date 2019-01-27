@@ -31,7 +31,7 @@ type
 
   TMvCustomDownloadEngine = class(TComponent)
   public
-    procedure DownloadFile(const Url: string; AStream: TStream); virtual;
+    procedure DownloadFile(const {%H-}Url: string; {%H-}AStream: TStream); virtual;
   end;
 
 
