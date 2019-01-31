@@ -35,7 +35,7 @@ interface
 uses
   SysUtils, Classes,
   Controls, Forms, ExtCtrls,
-  JvHtControls, JvTypes;
+  JvTypes;
 
 type
   TJvHintWindow = class(THintWindow)
@@ -70,13 +70,9 @@ type
   end;
 
   TJvHTHintWindow = class(THintWindow)
-  private
-    HtLabel: TJvHTLabel;
-  protected
   public
-    constructor Create(AOwner: TComponent); override;
     function CalcHintRect({%H-}MaxWidth: Integer;
-      const AHint: THintString; AData: Pointer): TRect; override;
+      const AHint: THintString; {%H-}AData: Pointer): TRect; override;
     procedure Paint; override;
   end;
 
@@ -85,8 +81,8 @@ procedure RegisterHtHints;
 implementation
 
 uses
-  Math, LCLIntf, LCLType,
-  JvResources;
+  Graphics, Math, LCLIntf, LCLType,
+  JvResources, JvHTControls;
 
 //=== { TJvHint } ============================================================
 
@@ -221,31 +217,38 @@ begin
   HintWindow.Caption := '';
 end;
 
+
 //=== { TJvHTHintWindow } ====================================================
-
-constructor TJvHTHintWindow.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
-  HtLabel := TJvHTLabel.Create(Self);
-  HtLabel.Parent := Self;
-  HtLabel.SetBounds(2, 2, 0, 0);
-end;
-
-procedure TJvHTHintWindow.Paint;
-begin
-end;
 
 function TJvHTHintWindow.CalcHintRect(MaxWidth: Integer;
   const AHint: THintString; AData: Pointer): TRect;
+var
+  W, H: Integer;
 begin
-  HtLabel.Caption := AHint;
-  Result := Bounds(0, 0, HtLabel.Width + 6, HtLabel.Height + 2);
+  H := ItemHTHeight(Canvas, AHint, DefaultSuperSubScriptRatio);
+  W := ItemHTWidth(Canvas, Bounds(0, 0, 0, 0), [], AHint, DefaultSuperSubScriptRatio);
+  Result := Bounds(0, 0, W + 6, H + 6);
   if Application.HintHidePause > 0 then
     Application.HintHidePause :=
       Max(2500, // default
       Length(ItemHtPlain(AHint)) *
-      (1000 div 20)); // 20 symbols per second
+      1000 div 20  // 20 symbols per second
+    );
 end;
+
+procedure TJvHTHintWindow.Paint;
+var
+  R: TRect;
+begin
+  R := ClientRect;
+  Canvas.Pen.Color := clActiveBorder;
+  Canvas.Frame(R);
+  InflateRect(R, -3, -3);
+  ItemHTDrawHL(Canvas, R, [], Caption, -1, -1, DefaultSuperSubScriptRatio);
+end;
+
+
+//==============================================================================
 
 procedure RegisterHtHints;
 begin
