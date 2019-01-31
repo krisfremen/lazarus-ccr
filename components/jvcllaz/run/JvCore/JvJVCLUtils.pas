@@ -754,7 +754,7 @@ function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
   const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 function HTMLTextHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 function HTMLPrepareText(const Text: string): string;
-function HTMLStringToColor(AText: String): TColor;
+function HTMLStringToColor(AText: String; ADefColor: TColor = clBlack): TColor;
 
 (*************
 
@@ -830,11 +830,13 @@ IMAGE FORMATS:
    The graphic class to be used must implement LoadFromStream and SaveToStream
    methods in order to work properly.
 }
+ ********************)
 
 type
   TJvGetGraphicClassEvent = procedure(Sender: TObject; AStream: TMemoryStream;
     var GraphicClass: TGraphicClass) of object;
 
+(*********************** NOT CONVERTED
 procedure RegisterGraphicSignature(const ASignature: string; AOffset: Integer;
   AGraphicClass: TGraphicClass); overload;
 procedure RegisterGraphicSignature(const ASignature: array of Byte; AOffset: Integer;
@@ -7095,7 +7097,7 @@ begin
   Result := StringReplace(Result, cHR, cHR + sLineBreak, [rfReplaceAll, rfIgnoreCase]); // fixed <HR><BR>
 end;
 
-function HTMLStringToColor(AText: String): TColor;
+function HTMLStringToColor(AText: String; ADefColor: TColor = clBlack): TColor;
 type
   TRGBA = packed record
     R, G, B, A: byte;
@@ -7103,6 +7105,11 @@ type
 var
   c: Int32;
 begin
+  if AText = '' then begin
+    Result := ADefColor;
+    exit;
+  end;
+
   if AText[1] = '#' then AText[1] := '$';
   if TryStrToInt(AText, c) then begin
     TRgba(Result).R := TRgba(c).B;
@@ -7110,7 +7117,9 @@ begin
     TRgba(Result).B := TRgba(c).R;
     TRgba(Result).A := 0;
   end else begin
-    Result := StringToColor('cl'+AText);
+    if Lowercase(Copy(AText, 1,2)) <> 'cl' then
+      AText := 'cl' + AText;
+    Result := StringToColorDef(AText, ADefColor);
   end;
 end;
 
