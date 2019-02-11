@@ -1,4 +1,4 @@
-unit usjis;
+unit lbc_sjis;
 
 {$mode objfpc}{$H+}
 

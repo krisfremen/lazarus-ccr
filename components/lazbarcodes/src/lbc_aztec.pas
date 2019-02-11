@@ -1,11 +1,12 @@
-unit uaztec;
+unit lbc_aztec;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils,uhelper,zint,ureedsolomon;
+  Classes, SysUtils, 
+  lbc_helper, lbc_reedsolomon, zint;
 
 function aztec(symbol: PointerTo_zint_symbol; source: PBYTE; length: integer): Integer;
 function aztec_runes(symbol: PointerTo_zint_symbol; source: PBYTE; length: integer): Integer;
@@ -1400,8 +1401,8 @@ begin
   {INITCODE} comp_loop := 4;
   SetLength(local_source,length+1);
 
-  FillByte (binary_string[0],20000,0);
-  FillByte (adjusted_string[0],20000,0);
+  FillByte ({%H-}binary_string[0],20000,0);
+  FillByte ({%H-}adjusted_string[0],20000,0);
   if symbol^.input_mode = GS1_MODE then
   begin
     gs1 := 1;
@@ -2277,7 +2278,7 @@ begin
         rs_free;
       end;
   end;
-  FillChar (bit_pattern[0], 20045,'0');
+  FillChar ({%H-}bit_pattern[0], 20045,'0');
   total_bits := (data_blocks + ecc_blocks) * codeword_size;
   i := 0;
   while i < total_bits do
@@ -2285,9 +2286,9 @@ begin
     bit_pattern[i] := adjusted_string[total_bits - i - 1];
     Inc (i);
   end;
-  FillByte (desc_data, 4, 0);
-  FillByte (desc_ecc, 6, 0);
-  FillByte (descriptor, 42, 0);
+  FillByte (desc_data{%H-}, 4, 0);
+  FillByte (desc_ecc{%H-}, 6, 0);
+  FillByte (descriptor{%H-}, 42, 0);
   if IsTrue(compact) then
   begin
     if IsTrue((layers - 1) and $02) then
@@ -2654,7 +2655,7 @@ begin
     strcpy (symbol^.errtxt, 'Input too large');
     exit (ERROR_INVALID_DATA);
   end;
-  strcpy (binary_string, '');
+  strcpy (binary_string{%H-}, '');
   if IsTrue(input_value and $80) then
   begin
     concat (binary_string, '1');

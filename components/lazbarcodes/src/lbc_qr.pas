@@ -1,10 +1,12 @@
-unit uqr;
+unit lbc_qr;
 
 {$mode objfpc}{$H+}
 
 interface
 
-uses sysutils,ureedsolomon,uhelper,zint,usjis;
+uses 
+  sysutils,
+  lbc_helper, lbc_reedsolomon, lbc_sjis, zint;
 
 function  qr_code(symbol: PointerTo_zint_symbol; source: PBYTE; length: Integer): Integer;
 function  microqr(symbol: PointerTo_zint_symbol; source: PBYTE; length: Integer): Integer;

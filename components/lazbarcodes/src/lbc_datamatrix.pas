@@ -1,14 +1,15 @@
-unit udatamatrix;
+unit lbc_datamatrix;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils,uhelper,ureedsolomon,zint;
+  Classes, SysUtils, 
+  lbc_helper, lbc_reedsolomon, zint;
 
 const
-  MAXBARCODE=3116;
+  MAXBARCODE = 3116;
 
 function dmatrix(symbol: PointerTo_zint_symbol; source: PBYTE; length: Integer): Integer;
 

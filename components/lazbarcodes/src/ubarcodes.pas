@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Controls, LResources, Graphics,
-  ubasic,uqr,zint,urender,uaztec,udatamatrix;
+  lbc_basic, lbc_datamatrix, lbc_render, lbc_qr, lbc_aztec, zint;
 
 type
 

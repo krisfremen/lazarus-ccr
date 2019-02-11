@@ -14,7 +14,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Provides barcode 1D and 2D generation based in the 'C' zint library."/>
-    <Version Major="1" Release="2"/>
+    <Version Major="1" Release="3"/>
     <Files Count="1">
       <Item1>
         <Filename Value="..\src\ubarcodes.pas"/>
@@ -22,17 +22,11 @@
         <UnitName Value="ubarcodes"/>
       </Item1>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="lazbarcodes_runtimeonly"/>
         <MinVersion Major="1" Valid="True"/>
       </Item1>
-      <Item2>
-        <PackageName Value="LCLBase"/>
-      </Item2>
-      <Item3>
-        <PackageName Value="FCL"/>
-      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -1,4 +1,4 @@
-unit uhelper;
+unit lbc_helper;
 
 {$mode objfpc}{$H+}
 

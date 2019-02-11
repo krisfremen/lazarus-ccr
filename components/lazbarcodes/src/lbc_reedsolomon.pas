@@ -1,4 +1,4 @@
-unit ureedsolomon;
+unit lbc_reedsolomon;
 
 {$mode objfpc}{$H+}
 

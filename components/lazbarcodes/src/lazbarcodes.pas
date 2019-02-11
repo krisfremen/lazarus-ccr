@@ -7,8 +7,8 @@ unit lazbarcodes;
 interface
 
 uses
-  zint, uaztec, ubasic, udatamatrix, uhelper, uqr, ureedsolomon, urender, 
-  usjis, ubarcodes, LazarusPackageIntf;
+  zint, lbc_aztec, lbc_basic, lbc_datamatrix, lbc_helper, lbc_qr, lbc_reedsolomon, 
+  lbc_render, lbc_sjis, ubarcodes, LazarusPackageIntf;
 
 implementation
 
@@ -18,5 +18,5 @@ begin
 end; 
 
 initialization
-  RegisterPackage('lazbarcodes', @Register); 
+  RegisterPackage('LazBarCodes', @Register); 
 end.

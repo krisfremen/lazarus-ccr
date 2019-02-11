@@ -1,11 +1,12 @@
-unit urender; 
+unit lbc_render; 
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils,zint,uhelper;
+  Classes, SysUtils,
+  zint, lbc_helper;
 
 function render_plot_create_line(x: Single; y: Single; width: Single; length: Single): PointerTo_zint_render_line;
 function render_plot_add_line(symbol: PointerTo_zint_symbol; line: PointerTo_zint_render_line; last_line: PointerTo_PointerTo_zint_render_line): Integer;

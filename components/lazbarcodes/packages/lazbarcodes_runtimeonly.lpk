@@ -28,52 +28,49 @@ Change to BSD-license is done for backend and therefore for ZINT shared library 
 the frontends and Qt4-backend the GPL is still valid. Since BSD-license is GPL-compatible
 this gives the possibility to include ZINT library in own products or link against it from
 own software."/>
-    <Version Major="1" Release="2"/>
+    <Version Major="1" Release="3"/>
     <Files Count="9">
       <Item1>
         <Filename Value="..\src\zint.pp"/>
         <UnitName Value="zint"/>
       </Item1>
       <Item2>
-        <Filename Value="..\src\uaztec.pas"/>
-        <UnitName Value="uaztec"/>
+        <Filename Value="..\src\lbc_aztec.pas"/>
+        <UnitName Value="lbc_aztec"/>
       </Item2>
       <Item3>
-        <Filename Value="..\src\ubasic.pas"/>
-        <UnitName Value="ubasic"/>
+        <Filename Value="..\src\lbc_basic.pas"/>
+        <UnitName Value="lbc_basic"/>
       </Item3>
       <Item4>
-        <Filename Value="..\src\udatamatrix.pas"/>
-        <UnitName Value="udatamatrix"/>
+        <Filename Value="..\src\lbc_datamatrix.pas"/>
+        <UnitName Value="lbc_datamatrix"/>
       </Item4>
       <Item5>
-        <Filename Value="..\src\uhelper.pas"/>
-        <UnitName Value="uhelper"/>
+        <Filename Value="..\src\lbc_helper.pas"/>
+        <UnitName Value="lbc_helper"/>
       </Item5>
       <Item6>
-        <Filename Value="..\src\uqr.pas"/>
-        <UnitName Value="uqr"/>
+        <Filename Value="..\src\lbc_qr.pas"/>
+        <UnitName Value="lbc_qr"/>
       </Item6>
       <Item7>
-        <Filename Value="..\src\ureedsolomon.pas"/>
-        <UnitName Value="ureedsolomon"/>
+        <Filename Value="..\src\lbc_reedsolomon.pas"/>
+        <UnitName Value="lbc_reedsolomon"/>
       </Item7>
       <Item8>
-        <Filename Value="..\src\urender.pas"/>
-        <UnitName Value="urender"/>
+        <Filename Value="..\src\lbc_render.pas"/>
+        <UnitName Value="lbc_render"/>
       </Item8>
       <Item9>
-        <Filename Value="..\src\usjis.pas"/>
-        <UnitName Value="usjis"/>
+        <Filename Value="..\src\lbc_sjis.pas"/>
+        <UnitName Value="lbc_sjis"/>
       </Item9>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="LCLBase"/>
       </Item1>
-      <Item2>
-        <PackageName Value="FCL"/>
-      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

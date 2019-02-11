@@ -8,7 +8,7 @@ unit lazbarcodes_runtimeonly;
 interface
 
 uses
-  zint, uaztec, ubasic, udatamatrix, uhelper, uqr, ureedsolomon, urender, usjis;
+  zint, lbc_aztec, lbc_basic, lbc_datamatrix, lbc_helper, lbc_qr, lbc_reedsolomon, lbc_render, lbc_sjis;
 
 implementation
 
