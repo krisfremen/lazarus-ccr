@@ -33,7 +33,6 @@ object MainForm: TMainForm
       Width = 788
       AutoCalc = True
       EditorLineMode = elmMultiLine
-      FixedColWidth = 57
       FrozenCols = 0
       FrozenRows = 0
       ReadFormulas = True
