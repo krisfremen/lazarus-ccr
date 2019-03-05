@@ -23,7 +23,7 @@ unit mvDLESynapse;
 interface
 
 uses
-  mvDownloadEngine, SysUtils, Classes, httpsend;
+  mvDownloadEngine, SysUtils, Classes, ssl_openssl, httpsend;
 
 type
 
@@ -65,6 +65,8 @@ end;
 procedure TMVDESynapse.DownloadFile(const Url: string; str: TStream);
 var
   FHttp: THTTPSend;
+  realURL: String;
+  i: Integer;
 begin
   inherited DownloadFile(Url, str);
   FHttp := THTTPSend.Create;
@@ -79,9 +81,26 @@ begin
 
     if FHTTP.HTTPMethod('GET', Url) then
     begin
-      str.Seek(0, soFromBeginning);
-      str.CopyFrom(FHTTP.Document, 0);
-      str.Position := 0;
+      // If its a 301 or 302 we need to do more processing
+      if (FHTTP.ResultCode = 301) or (FHTTP.ResultCode = 302) then
+      begin
+        // Check the headers for the Location header
+        for i := 0 to FHTTP.Headers.Count -1 do
+        begin
+          // Extract the URL
+          if Copy(FHTTP.Headers[i], 1, 8) = 'Location' then
+            realURL := copy(FHTTP.Headers[i], 11, Length(FHTTP.Headers[i]) - 10); //11);
+        end;
+        // If we have a URL, run it through the same function
+        if Length(realURL) > 1 then
+          DownloadFile(realURL, str);
+      end
+      else
+      begin
+        str.Seek(0, soFromBeginning);
+        str.CopyFrom(FHTTP.Document, 0);
+        str.Position := 0;
+      end;
     end;
   finally
     FHttp.Free;
