@@ -86,7 +86,7 @@ type
 implementation
 
 uses
-  fpeStrConsts;
+  lConvEncoding, fpeStrConsts;
 
 type
   // http://search.cpan.org/dist/Image-MetaData-JPEG/lib/Image/MetaData/JPEG/Structures.pod#Structure_of_an_IPTC_data_block
@@ -161,6 +161,7 @@ begin
          {$IFDEF FPC}
           SetLength(s, len);
           Move(ABuffer[AStart], s[1], len);
+          s := ConvertEncoding(s, GuessEncoding(s), encodingUTF8);
          {$ELSE}
           SetLength(sa,len);
           Move(ABuffer[AStart], sa[1], len);

@@ -75,11 +75,6 @@ type
     constructor Create(ABigEndian: Boolean);
     destructor Destroy; override;
 
-    {
-    function AddMakerNoteTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
-      AData: TBytes; ACount: Integer; ALkUpTbl: String = '';
-      AFormatStr: String = ''; ATagType: TTagType = ttUInt8): Integer; overload;
-      }
     function AddMakerNoteTag(AIndex: Integer; ATagID: TTagID; ATagName: String;
       ADataValue: Integer; ALkupTbl: String = ''; AFormatStr: String = '';
       ATagType: TTagType = ttUInt16): Integer; overload;
