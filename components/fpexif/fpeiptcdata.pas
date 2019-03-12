@@ -245,6 +245,9 @@ function TIptcData.AddTag(ATag: TTag): Integer;
 var
   idx: Integer;
 begin
+  if ATag = nil then
+    exit(-1);
+
   idx := IndexOfTagID(ATag.TagID);
   if idx <> -1 then begin
     // Replace existing tag
