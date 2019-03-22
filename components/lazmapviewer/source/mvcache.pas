@@ -288,7 +288,7 @@ begin
   FileName := GetFileName(MapProvider, TileId);
   EnterCrit;
   try
-    idx := Cache.IndexOF(FileName);
+    idx := Cache.IndexOf(FileName);
     if idx <> -1 then
       Cache.Objects[idx].Free
     else
@@ -304,7 +304,7 @@ begin
 
   if UseDisk then
   begin
-    if assigned(img) then
+    if Assigned(img) then
     begin
       lFile := TFileStream.Create(BasePath + FileName, fmCreate);
       try
