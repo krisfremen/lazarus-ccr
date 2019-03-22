@@ -36,16 +36,24 @@ type
   { TMVDEFPC }
 
   TMVDEFPC = class(TMvCustomDownloadEngine)
+  {$IF FPC_FullVersion >= 30101}
+  private
+    FUseProxy: Boolean;
+    FProxyHost: string;
+    FProxyPort: Word;
+    FProxyUserName: String;
+    FProxyPassWord: String;
+  {$IFEND}
   public
     procedure DownloadFile(const Url: string; AStream: TStream); override;
   {$IF FPC_FullVersion >= 30101}
   published
-    property UseProxy;
-    property ProxyHost;
-    property ProxyPort;
-    property ProxyUsername;
-    property ProxyPassword;
-  {$ENDIF}
+    property UseProxy: Boolean read FUseProxy write FUseProxy default false;
+    property ProxyHost: String read FProxyHost write FProxyHost;
+    property ProxyPort: Word read FProxyPort write FProxyPort;
+    property ProxyUsername: String read FProxyUserName write FProxyUserName;
+    property ProxyPassword: String read FProxyPassword write FProxyPassword;
+  {$IFEND}
   end;
 
 
@@ -63,14 +71,16 @@ begin
   inherited;
   http := TFpHttpClient.Create(nil);
   try
+   {$IF FPC_FullVersion >= 30000}
     http.AllowRedirect := true;
+   {$IFEND}
     http.AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb)');
    {$IF FPC_FullVersion >= 30101}
     if UseProxy then begin
-      http.Proxy.Host := ProxyHost;
-      http.Proxy.Port := ProxyPort;
-      http.Proxy.UserName := ProxyUserName;
-      http.Proxy.Password := ProxyPassword;
+      http.Proxy.Host := FProxyHost;
+      http.Proxy.Port := FProxyPort;
+      http.Proxy.UserName := FProxyUserName;
+      http.Proxy.Password := FProxyPassword;
     end;
    {$ENDIF}
     http.Get(Url, AStream);

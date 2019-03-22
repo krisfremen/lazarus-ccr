@@ -387,6 +387,7 @@ object MainForm: TMainForm
     Align = alClient
     CacheOnDisk = True
     CachePath = 'cache/'
+    DownloadEngine = MapView.BuiltIn
     InactiveColor = clWhite
     MapProvider = 'OpenStreetMap Mapnik'
     UseThreads = True
