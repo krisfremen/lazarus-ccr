@@ -605,7 +605,7 @@ var
 begin
   if Assigned(FOnDrawGpsPoint) then begin
     {$IFDEF USE_RGBGRAPHICS}
-    FOnDrawGpsPoint(Self, Buffer, aPOI)
+    FOnDrawGpsPoint(Self, Buffer, aPOI);
     {$ENDIF}
     {$IFDEF USE_LAZINTFIMAGE}
     FOnDrawGpsPoint(Self, BufferCanvas, aPOI);
@@ -754,6 +754,7 @@ begin
   FInactiveColor := clWhite;
   FEngine := TMapViewerEngine.Create(self);
   FBuiltinDownloadEngine := TMvDEFpc.Create(self);
+  FBuiltinDownLoadEngine.Name := 'BuiltIn';
   {$IFDEF USE_RGBGRAPHICS}
   Buffer := TRGB32Bitmap.Create(Width, Height);
   {$ENDIF}
