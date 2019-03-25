@@ -788,7 +788,8 @@ var
   rawImg: TRawImage;
 begin
   rawImg.Init;
-  rawImg.Description.Init_BPP24_B8G8R8_BIO_TTB(AWidth, AHeight);
+  //rawImg.Description.Init_BPP24_B8G8R8_BIO_TTB(AWidth, AHeight);
+  rawImg.Description.Init_BPP32_B8G8R8_BIO_TTB(AWidth, AHeight);
   rawImg.CreateData(True);
   ABuffer := TLazIntfImage.Create(rawImg, true);
   ACanvas := TFPImageCanvas.Create(ABuffer);
