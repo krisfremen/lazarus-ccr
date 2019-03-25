@@ -16,7 +16,7 @@ type
   TMainForm = class(TForm)
     BtnSearch: TButton;
     BtnGoTo: TButton;
-    Button1: TButton;
+    BtnGPSPoints: TButton;
     CbDoubleBuffer: TCheckBox;
     CbFoundLocations: TComboBox;
     CbLocations: TComboBox;
@@ -26,7 +26,7 @@ type
     GbCenterCoords: TGroupBox;
     InfoCenterLatitude: TLabel;
     InfoCenterLongitude: TLabel;
-    Label1: TLabel;
+    InfoBtnGPSPoints: TLabel;
     GPSPointInfo: TLabel;
     Label8: TLabel;
     LblCenterLatitude: TLabel;
@@ -43,7 +43,7 @@ type
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure BtnGPSPointsClick(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -120,7 +120,7 @@ begin
   if CbFoundLocations.Items.Count > 0 then CbFoundLocations.ItemIndex := 0;
 end;
 
-procedure TMainForm.Button1Click(Sender: TObject);
+procedure TMainForm.BtnGPSPointsClick(Sender: TObject);
 var
   F: TGpsListViewer;
 begin

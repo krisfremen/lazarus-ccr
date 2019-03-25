@@ -32,6 +32,8 @@ object GPSListViewer: TGPSListViewer
         Caption = 'Longitude'
         Width = 150
       end>
+    ReadOnly = True
+    RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
   end

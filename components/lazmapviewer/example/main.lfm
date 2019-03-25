@@ -346,31 +346,47 @@ object MainForm: TMainForm
       OnClick = BtnGoToClick
       TabOrder = 9
     end
-    object Label1: TLabel
+    object InfoBtnGPSPoints: TLabel
+      AnchorSideLeft.Control = BtnGPSPoints
+      AnchorSideTop.Control = BtnGPSPoints
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = BtnGoTo
+      AnchorSideRight.Side = asrBottom
       Left = 8
-      Height = 48
-      Top = 400
-      Width = 219
+      Height = 52
+      Top = 380
+      Width = 220
+      Anchors = [akTop, akLeft, akRight]
       AutoSize = False
+      BorderSpacing.Top = 8
       Caption = 'Click with right mouse button to add a GPS point.'
       ParentColor = False
       WordWrap = True
     end
-    object Button1: TButton
+    object BtnGPSPoints: TButton
+      AnchorSideTop.Control = CbFoundLocations
+      AnchorSideTop.Side = asrBottom
       Left = 8
       Height = 25
-      Top = 368
+      Top = 347
       Width = 92
       AutoSize = True
+      BorderSpacing.Top = 8
       Caption = 'GPS points...'
-      OnClick = Button1Click
+      OnClick = BtnGPSPointsClick
       TabOrder = 10
     end
     object GPSPointInfo: TLabel
+      AnchorSideLeft.Control = InfoBtnGPSPoints
+      AnchorSideTop.Control = InfoBtnGPSPoints
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = InfoBtnGPSPoints
+      AnchorSideRight.Side = asrBottom
       Left = 8
       Height = 80
-      Top = 456
-      Width = 222
+      Top = 432
+      Width = 220
+      Anchors = [akTop, akLeft, akRight]
       AutoSize = False
       Caption = 'GPSPointInfo'
       ParentColor = False
