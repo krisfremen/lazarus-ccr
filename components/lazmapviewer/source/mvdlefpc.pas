@@ -68,7 +68,6 @@ procedure TMVDEFPC.DownloadFile(const Url: string; AStream: TStream);
 var
   http: TFpHttpClient;
 begin
-  inherited;
   http := TFpHttpClient.Create(nil);
   try
    {$IF FPC_FullVersion >= 30000}

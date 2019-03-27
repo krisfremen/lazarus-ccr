@@ -761,14 +761,25 @@ end;
 
 procedure TMapViewerEngine.RegisterProviders;
 begin
-  AddMapProvider('Aucun','',0,30, 0);
- {
-  AddMapProvider('Google Satellite','http://khm%d.google.com/kh/v=82&x=%x%&y=%y%&z=%z%&s=Ga',4);
+//  AddMapProvider('Aucun','',0,30, 0);  ???
+
+  AddMapProvider('Google Normal',
+    'http://mt%serv%.google.com/vt/lyrs=m@145&v=w2.104&x=%x%&y=%y%&z=%z%',
+    0, 19, 4, nil);
+  AddMapProvider('Google Hybrid',
+    'http://mt%serv%.google.com/vt/lyrs=h@145&v=w2.104&x=%x%&y=%y%&z=%z%',
+    0, 19, 4, nil);
+  AddMapProvider('Google Physical',
+    'http://mt%serv%.google.com/vt/lyrs=t@145&v=w2.104&x=%x%&y=%y%&z=%z%',
+    0, 19, 4, nil);
+
+  {
   AddMapProvider('Google Hybrid','http://khm%d.google.com/kh/v=82&x=%x%&y=%y%&z=%z%&s=Ga',4);
   AddMapProvider('Google Hybrid','http://mt%d.google.com/vt/lyrs=h@145&v=w2.104&x=%d&y=%d&z=%z%',4);
   AddMapProvider('Google physical','http://mt%d.google.com/vt/lyrs=t@145&v=w2.104&x=%d&y=%d&z=%z%',4);
   AddMapProvider('Google Physical Hybrid','http://mt%d.google.com/vt/lyrs=t@145&v=w2.104&x=%x%&y=%y%&z=%z%',4);
-  AddMapProvider('Google Physical Hybrid','http://mt%d.google.com/vt/lyrs=h@145&v=w2.104&x=%x%&y=%y%&z=%z%',4);}
+  AddMapProvider('Google Physical Hybrid','http://mt%d.google.com/vt/lyrs=h@145&v=w2.104&x=%x%&y=%y%&z=%z%',4);
+  }
   //AddMapProvider('OpenStreetMap Osmarender','http://%serv%.tah.openstreetmap.org/Tiles/tile/%z%/%x%/%y%.png',0,20,3, @getLetterSvr); // [Char(Ord('a')+Random(3)), Z, X, Y]));
   //AddMapProvider('Yahoo Normal','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&.intl=en&x=%x%&y=%y%d&z=%d&r=1'        , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //(Z+1]));
   //AddMapProvider('Yahoo Satellite','http://maps%serv%.yimg.com/ae/ximg?v=1.9&t=a&s=256&.intl=en&x=%d&y=%d&z=%d&r=1', 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //[Random(3)+1, X, YahooY(Y), Z+1]));
@@ -806,8 +817,6 @@ begin
   AddMapProvider('Ovi Physical',
     'http://%serv%.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/terrain.day/%z%/%x%/%y%/256/png8',
     0, 20, 5, @GetLetterSvr);
-//  AddMapProvider('Google Normal', 'http://mt%d.google.com/vt/lyrs=m@145&v=w2.104&x=%d&y=%d&z=%d', [Random(4), X, Y, Z]));
-
 
   {
   AddMapProvider('Yahoo Normal','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&.intl=en&x=%x%&y=%y%d&z=%d&r=1'        , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //(Z+1]));

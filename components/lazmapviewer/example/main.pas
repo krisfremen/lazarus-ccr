@@ -259,6 +259,9 @@ var
   bmp: TBitmap;
   img: TLazIntfImage;
 begin
+  if not (ACanvas is TFPCustomCanvas) then
+    exit;
+
   // Screen coordinates of the GPS point
   P := TMapView(Sender).LonLatToScreen(APoint.RealPoint);
 
@@ -273,7 +276,7 @@ begin
   txt := APoint.Name;
   bmp := TBitmap.Create;
   try
-    bmp.PixelFormat := pf32Bit;
+//    bmp.PixelFormat := pf32Bit;
     w := bmp.Canvas.TextWidth(txt);
     h := bmp.Canvas.TextHeight(txt);
     bmp.SetSize(w, h);

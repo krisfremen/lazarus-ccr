@@ -68,7 +68,6 @@ var
   realURL: String;
   i: Integer;
 begin
-  inherited DownloadFile(Url, str);
   FHttp := THTTPSend.Create;
   try
     if FUseProxy then
