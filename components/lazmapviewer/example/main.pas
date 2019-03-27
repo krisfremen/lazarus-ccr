@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, StdCtrls, ComCtrls,
+  ExtCtrls, StdCtrls, ComCtrls, Buttons,
   mvGeoNames, mvMapViewer, mvTypes, mvGpsObj;
 
 type
@@ -40,6 +40,8 @@ type
     MapView: TMapView;
     GeoNames: TMVGeoNames;
     ControlPanel: TPanel;
+    BtnLoadMapProviders: TSpeedButton;
+    BtnSaveMapProviders: TSpeedButton;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
@@ -60,6 +62,8 @@ type
     procedure MapViewMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MapViewZoomChange(Sender: TObject);
+    procedure BtnLoadMapProvidersClick(Sender: TObject);
+    procedure BtnSaveMapProvidersClick(Sender: TObject);
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
@@ -94,6 +98,7 @@ type
 const
   MAX_LOCATIONS_HISTORY = 50;
   HOMEDIR = '';
+  MAP_PROVIDER_FILENAME = 'map-providers.xml';
 
 var
   PointFormatSettings: TFormatsettings;
@@ -106,15 +111,31 @@ end;
 
 { TMainForm }
 
+procedure TMainForm.BtnLoadMapProvidersClick(Sender: TObject);
+var
+  fn: String;
+  msg: String;
+begin
+  fn := Application.Location + MAP_PROVIDER_FILENAME;
+  if FileExists(fn) then begin
+    if MapView.Engine.ReadProvidersFromXML(fn, msg) then begin
+      MapView.GetMapProviders(CbProviders.Items);
+      CbProviders.ItemIndex := 0;
+      MapView.MapProvider := CbProviders.Text;
+    end else
+      ShowMessage(msg);
+  end;
+end;
+
+procedure TMainForm.BtnSaveMapProvidersClick(Sender: TObject);
+begin
+  MapView.Engine.WriteProvidersToXML(Application.Location + MAP_PROVIDER_FILENAME);
+end;
+
 procedure TMainForm.BtnSearchClick(Sender: TObject);
 begin
-//  MapView.Center := GeoNames.Search(CbLocations.Text, MapView.DownloadEngine);
-
   ClearFoundLocations;
-//  GeoNames.LocationName := CbLocations.Text;
   GeoNames.Search(CbLocations.Text, MapView.DownloadEngine);
-//  GeoNames.ListLocations(MapView.DownloadEngine);
-  //CbFoundLocations.Text := CbFoundLocations.Items[0];
   UpdateDropdownWidth(CbFoundLocations);
   UpdateLocationHistory(CbLocations.Text);
   if CbFoundLocations.Items.Count > 0 then CbFoundLocations.ItemIndex := 0;
@@ -276,7 +297,7 @@ begin
   txt := APoint.Name;
   bmp := TBitmap.Create;
   try
-//    bmp.PixelFormat := pf32Bit;
+//    bmp.PixelFormat := pf32Bit;    // crashes Linux!
     w := bmp.Canvas.TextWidth(txt);
     h := bmp.Canvas.TextHeight(txt);
     bmp.SetSize(w, h);

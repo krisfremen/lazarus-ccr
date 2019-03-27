@@ -106,13 +106,6 @@ Type
       procedure TileDownloaded(Data: PtrInt);
       Procedure RegisterProviders;
       Procedure DrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
-
-      function GetLetterSvr(id: integer): String;
-      function GetYahooSvr(id: integer): String;
-      function GetYahooY(const Tile: TTileId): string;
-      function GetYahooZ(const Tile: TTileId): string;
-      function GetQuadKey(const Tile: TTileId): string;
-
       Procedure DoDrag(Sender: TDragObj);
     public
       constructor Create(aOwner: TComponent); override;
@@ -123,13 +116,16 @@ Type
         GetXStr: TGetValStr = nil; GetYStr: TGetValStr = nil;
         GetZStr: TGetValStr = nil): TMapProvider;
       procedure CancelCurrentDrawing;
+      procedure ClearMapProviders;
       procedure GetMapProviders(AList: TStrings);
       function LonLatToScreen(aPt: TRealPoint): TPoint;
       function LonLatToWorldScreen(aPt: TRealPoint): TPoint;
+      function ReadProvidersFromXML(AFileName: String; out AMsg: String): Boolean;
       procedure Redraw;
       function ScreenToLonLat(aPt: TPoint): TRealPoint;
       procedure SetSize(aWidth, aHeight: integer);
       function WorldScreenToLonLat(aPt: TPoint): TRealPoint;
+      procedure WriteProvidersToXML(AFileName: String);
 
       procedure DblClick(Sender: TObject);
       procedure MouseDown(Sender: TObject; Button: TMouseButton;
@@ -169,7 +165,7 @@ Type
 implementation
 
 uses
-  Math, Forms,
+  Math, Forms, laz2_xmlread, laz2_xmlwrite, laz2_dom,
   mvJobs, mvGpsObj;
 
 type
@@ -328,12 +324,9 @@ begin
 end;
 
 destructor TMapViewerEngine.Destroy;
-var
-  i: Integer;
 begin
+  ClearMapProviders;
   FreeAndNil(DragObj);
-  for i:=0 to lstProvider.Count-1 do
-    TObject(lstProvider.Objects[i]).Free;
   FreeAndNil(lstProvider);
   FreeAndNil(Cache);
   FreeAndNil(Queue);
@@ -395,6 +388,15 @@ var
 begin
   Jobs := Queue.CancelAllJob(self);
   Queue.WaitForTerminate(Jobs);
+end;
+
+procedure TMapViewerEngine.ClearMapProviders;
+var
+  i: Integer;
+begin
+  for i:=0 to lstProvider.Count-1 do
+    TObject(lstProvider.Objects[i]).Free;
+  lstProvider.Clear;
 end;
 
 procedure TMapViewerEngine.ConstraintZoom(var aWin: TMapWindow);
@@ -505,35 +507,9 @@ begin
     Result := '';
 end;
 
-function TMapViewerEngine.GetLetterSvr(id: integer): String;
-begin
-  Result := Char(Ord('a') + id);
-end;
-
 procedure TMapViewerEngine.GetMapProviders(AList: TStrings);
 begin
   AList.Assign(lstProvider);
-end;
-
-function TMapViewerEngine.GetQuadKey(const Tile : TTileId): string;
-var
-  i, d, m: Longword;
-begin
-  {
-    Bing Maps Tile System
-    http://msdn.microsoft.com/en-us/library/bb259689.aspx
-  }
-  Result := '';
-  for i := Tile.Z downto 1 do
-  begin
-    d := 0;
-    m := 1 shl (i - 1);
-    if (Tile.x and m) <> 0 then
-      Inc(d, 1);
-    if (Tile.y and m) <> 0 then
-      Inc(d, 2);
-    Result := Result + IntToStr(d);
-  end;
 end;
 
 function TMapViewerEngine.GetTileName(const Id: TTileId): String;
@@ -549,21 +525,6 @@ end;
 function TMapViewerEngine.GetWidth: integer;
 begin
   Result := MapWin.Width;
-end;
-
-function TMapViewerEngine.GetYahooSvr(id: integer): String;
-Begin
-  Result := IntToStr(id + 1);
-end;
-
-function TMapViewerEngine.GetYahooY(const Tile : TTileId): string;
-begin
-  Result := IntToStr( -(Tile.Y - (1 shl Tile.Z) div 2) - 1);
-end;
-
-function TMapViewerEngine.GetYahooZ(const Tile : TTileId): string;
-Begin
-  result := IntToStr(Tile.Z + 1);
 end;
 
 function TMapViewerEngine.GetZoom: integer;
@@ -725,6 +686,114 @@ Begin
   aPt.Y := old.FWin.Height DIV 2-Sender.OfsY;
   nCenter := MapWinToLonLat(old.FWin,aPt);
   SetCenter(nCenter);
+end;
+
+function TMapViewerEngine.ReadProvidersFromXML(AFileName: String;
+  out AMsg: String): Boolean;
+
+  function GetSvrStr(AName: String): TGetSvrStr;
+  var
+    lcName: String;
+  begin
+    lcName := LowerCase(AName);
+    case lcName of
+      'letter': Result := @GetLetterSvr;
+      'yahoo': Result := @GetYahooSvr;
+      else Result := nil;
+    end;
+  end;
+
+  function GetValStr(AName: String): TGetValStr;
+  var
+    lcName: String;
+  begin
+    lcName := Lowercase(AName);
+    case lcName of
+      'quadkey': Result := @GetQuadKey;
+      'yahooy': Result := @GetYahooY;
+      'yahooz': Result := @GetYahooZ;
+      else Result := nil;
+    end;
+  end;
+
+  function GetAttrValue(ANode: TDOMNode; AttrName: String): String;
+  var
+    node: TDOMNode;
+  begin
+    Result := '';
+    if ANode.HasAttributes then begin
+      node := ANode.Attributes.GetNamedItem(AttrName);
+      if Assigned(node) then Result := node.NodeValue;
+    end;
+  end;
+
+var
+  stream: TFileStream;
+  doc: TXMLDocument = nil;
+  node, layerNode: TDOMNode;
+  attr: TDOMNamedNodeMap;
+  providerName: String;
+  url: String;
+  minZoom: Integer;
+  maxZoom: Integer;
+  svrCount: Integer;
+  s: String;
+  svrProc: String;
+  xProc: String;
+  yProc: String;
+  zProc: String;
+  first: Boolean;
+begin
+  Result := false;
+  AMsg := '';
+  stream := TFileStream.Create(AFileName, fmOpenread or fmShareDenyWrite);
+  try
+    ReadXMLFile(doc, stream, [xrfAllowSpecialCharsInAttributeValue, xrfAllowLowerThanInAttributeValue]);
+    node := doc.FindNode('map_providers');
+    if node = nil then begin
+      AMsg := 'No map providers in file.';
+      exit;
+    end;
+
+    first := true;
+    node := node.FirstChild;
+    while node <> nil do begin
+      providerName := GetAttrValue(node, 'name');
+      layerNode := node.FirstChild;
+      while layerNode <> nil do begin
+        url := GetAttrValue(layerNode, 'url');
+        if url = '' then
+          continue;
+        s := GetAttrValue(layerNode, 'minZom');
+        if s = '' then minZoom := 0
+          else minZoom := StrToInt(s);
+        s := GetAttrValue(layerNode, 'maxZoom');
+        if s = '' then maxzoom := 9
+          else maxZoom := StrToInt(s);
+        s := GetAttrValue(layerNode, 'serverCount');
+        if s = '' then svrCount := 1
+          else svrCount := StrToInt(s);
+        svrProc := GetAttrValue(layerNode, 'serverProc');
+        xProc := GetAttrValue(layerNode, 'xProc');
+        yProc := GetAttrValue(layerNode, 'yProc');
+        zProc := GetAttrValue(layerNode, 'zProc');
+        layerNode := layerNode.NextSibling;
+      end;
+      if first then begin
+        ClearMapProviders;
+        first := false;
+      end;
+      AddMapProvider(providerName,
+        url, minZoom, maxZoom, svrCount,
+        GetSvrStr(svrProc), GetValStr(xProc), GetValStr(yProc), GetValStr(zProc)
+      );
+      node := node.NextSibling;
+    end;
+    Result := true;
+  finally
+    stream.Free;
+    doc.Free;
+  end;
 end;
 
 procedure TMapViewerEngine.Redraw;
@@ -968,6 +1037,27 @@ begin
   aPt.X := aPt.X - MapWin.X;
   aPt.Y := aPt.Y - MapWin.Y;
   Result := ScreenToLonLat(aPt);
+end;
+
+procedure TMapViewerEngine.WriteProvidersToXML(AFileName: String);
+var
+  doc: TXMLDocument;
+  root: TDOMNode;
+  i: Integer;
+  prov: TMapProvider;
+begin
+  doc := TXMLDocument.Create;
+  try
+    root := doc.CreateElement('map_providers');
+    doc.AppendChild(root);
+    for i := 0 to lstProvider.Count - 1 do begin
+      prov := TMapProvider(lstProvider.Objects[i]);
+      prov.ToXML(doc, root);
+    end;
+    WriteXMLFile(doc, AFileName);
+  finally
+    doc.Free;
+  end;
 end;
 
 procedure TMapViewerEngine.ZoomOnArea(const aArea: TRealArea);

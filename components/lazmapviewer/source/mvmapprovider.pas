@@ -22,22 +22,23 @@ unit mvMapProvider;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, laz2_xmlwrite, laz2_dom;
 
 type
+
   { TTileId }
+
   TTileId = record
     X, Y: int64;
     Z: integer;
   end;
 
-
-  TGetSvrStr = function (id: integer): string of object;
-  TGetValStr = function (const Tile: TTileId): String of object;
+  TGetSvrStr = function (id: integer): string;
+  TGetValStr = function (const Tile: TTileId): String;
 
   { TMapProvider }
 
-  TMapProvider = Class
+  TMapProvider = class
     private
       FLayer: integer;
       idServer: Array of Integer;
@@ -60,14 +61,62 @@ type
         GetSvrStr: TGetSvrStr; GetXStr: TGetValStr; GetYStr: TGetValStr;
         GetZStr: TGetValStr);
       procedure GetZoomInfos(out AZoomMin, AZoomMax: integer);
-      Function GetUrlForTile(id: TTileId): String;
+      function GetUrlForTile(id: TTileId): String;
+      procedure ToXML(ADoc: TXMLDocument; AParentNode: TDOMNode);
       property Name: String read FName;
       property LayerCount: integer read GetLayerCount;
       property Layer: integer read FLayer write SetLayer;
   end;
 
 
+function GetLetterSvr(id: integer): String;
+function GetYahooSvr(id: integer): String;
+function GetYahooY(const Tile: TTileId): string;
+function GetYahooZ(const Tile: TTileId): string;
+function GetQuadKey(const Tile: TTileId): string;
+
+
 implementation
+
+function GetLetterSvr(id: integer): String;
+begin
+  Result := Char(Ord('a') + id);
+end;
+
+function GetQuadKey(const Tile: TTileId): string;
+var
+  i, d, m: Longword;
+begin
+  { Bing Maps Tile System
+    http://msdn.microsoft.com/en-us/library/bb259689.aspx }
+  Result := '';
+  for i := Tile.Z downto 1 do
+  begin
+    d := 0;
+    m := 1 shl (i - 1);
+    if (Tile.x and m) <> 0 then
+      Inc(d, 1);
+    if (Tile.y and m) <> 0 then
+      Inc(d, 2);
+    Result := Result + IntToStr(d);
+  end;
+end;
+
+function GetYahooSvr(id: integer): String;
+Begin
+  Result := IntToStr(id + 1);
+end;
+
+function GetYahooY(const Tile : TTileId): string;
+begin
+  Result := IntToStr( -(Tile.Y - (1 shl Tile.Z) div 2) - 1);
+end;
+
+function GetYahooZ(const Tile : TTileId): string;
+Begin
+  result := IntToStr(Tile.Z + 1);
+end;
+
 
 { TMapProvider }
 
@@ -170,6 +219,49 @@ begin
   Result := StringReplace(Result, '%x%', XVal, [rfreplaceall]);
   Result := StringReplace(Result, '%y%', YVal, [rfreplaceall]);
   Result := StringReplace(Result, '%z%', ZVal, [rfreplaceall]);
+end;
+
+procedure TMapProvider.ToXML(ADoc: TXMLDocument; AParentNode: TDOMNode);
+var
+  i: Integer;
+  node: TDOMElement;
+  layerNode: TDOMElement;
+  s: String;
+begin
+  node := ADoc.CreateElement('map_provider');
+  node.SetAttribute('name', FName);
+  AParentNode.AppendChild(node);
+  for i:=0 to LayerCount-1 do begin
+    layerNode := ADoc.CreateElement('layer');
+    node.AppendChild(layernode);
+    layerNode.SetAttribute('url', FUrl[i]);
+    layerNode.SetAttribute('minZoom', IntToStr(FMinZoom[i]));
+    layerNode.SetAttribute('maxZoom', IntToStr(FMaxZoom[i]));
+    layerNode.SetAttribute('serverCount', IntToStr(FNbSvr[i]));
+
+    if FGetSvrStr[i] = @getLetterSvr then s := 'Letter'
+      else if FGetSvrStr[i] = @GetYahooSvr then s := 'Yahoo'
+      else if FGetSvrstr[i] <> nil then s := 'unknown'
+      else s := '';
+    if s <> '' then layerNode.SetAttribute('serverProc', s);
+
+    if FGetXStr[i] = @GetQuadKey then s := 'QuadKey'
+      else if FGetXStr[i] <> nil then s := '(unknown)'
+      else s := '';
+    if s <> '' then layerNode.SetAttribute('xProc', s);
+
+    if FGetYStr[i] = @GetQuadKey then s := 'QuadKey'
+      else if FGetYStr[i] = @GetYahooY then s := 'YahooY'
+      else if FGetYStr[i] <> nil then s := '(unknown)'
+      else s := '';
+    if s <> '' then layerNode.SetAttribute('yProc', s);
+
+    if FGetZStr[i] = @GetQuadKey then s := 'QuadKey'
+      else if FGetZStr[i] = @GetYahooZ then s := 'YahooZ'
+      else if FGetZStr[i] <> nil then s := '(unknown)'
+      else s := '';
+    if s <> '' then layerNode.SetAttribute('zProc', s);
+  end;
 end;
 
 end.
