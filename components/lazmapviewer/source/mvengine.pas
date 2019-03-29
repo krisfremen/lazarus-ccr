@@ -862,6 +862,9 @@ begin
   AddMapProvider('Open Cycle Map',
     'http://%serv%.tile.opencyclemap.org/cycle/%z%/%x%/%y%.png',
     0, 18, 3, @getLetterSvr);
+  AddMapProvider('Open Topo Map',
+    'http://%serv%.tile.opentopomap.org/%z%/%x%/%y%.png',
+    0, 19, 3, @getLetterSvr);
   AddMapProvider('Virtual Earth Bing',
     'http://ecn.t%serv%.tiles.virtualearth.net/tiles/r%x%?g=671&mkt=en-us&lbl=l1&stl=h&shading=hill',
     1, 19, 8, nil, @GetQuadKey);
