@@ -493,7 +493,7 @@ begin
               FreeAndNil(FIptcData);
               raise;
             end;
-          except
+          finally
             reader.Free;
           end;
         end;
