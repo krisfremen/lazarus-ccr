@@ -259,7 +259,6 @@ function TNikonMakerNoteReader.AddTag(AStream: TStream;
   const AIFDRecord: TIFDRecord; const AData: TBytes; AParent: TTagID): Integer;
 var
   tagDef: TTagDef;
-  p: PByte;
   t: TTagID;
   idx: Integer;
   b: Byte;
@@ -327,7 +326,7 @@ begin
           idx := 0;
           AddMakerNoteStringTag(idx, t, 'BarometerInfoVersion', AData, 6);
           inc(idx, 6);
-          Move(AData[idx], r, SizeOf(r));
+          Move(AData[idx], r{%H-}, SizeOf(r));
           r.Numerator := FixEndian32(r.Numerator);
           r.Denominator := FixEndian32(r.Denominator);
           AddMakerNoteTag(idx, t, 'Altitude', r.Numerator/r.Denominator, '', ttSRational);

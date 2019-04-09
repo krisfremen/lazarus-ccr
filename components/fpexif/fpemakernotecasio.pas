@@ -20,7 +20,7 @@ type
 implementation
 
 uses
-  fpeStrConsts, fpeUtils, fpeExifData;
+  fpeStrConsts, fpeExifData;
 
 resourcestring
   rsCasioAFMode2Lkup = '0:Off,1:Spot,2:Multi,3:Face detection,4:Tracking,5:Intelligent';
@@ -57,8 +57,10 @@ resourcestring
   rsCasioFlashModeLkup = '1:Auto,2:On,3:Off,4:Red-eye reduction';
   rsCasioFocusingModeLkup = '2:Macro,3:Auto focus,4:Manual focus,5:Infinity';
   rsCasioFocusMode2Lkup = '0:Normal,1:Macro';
+  {
   rsCasioFocusMode22Lkup = '0:Manual,1:Focus lock,2:Macro,3:Single-area auto focus,'+
     '5:Infinity,6:Multi-area auto focus,8:Super macro';
+  }
   rsCasioImageSize2Lkup = '0:640 x 480,4:1600 x 1200,5:2048 x 1536,'+
     '20:2288 x 1712,21:2592 x 1944,22:2304 x 1728,36:3008 x 2008';
   rsCasioImageStabilization2Lkup = '0:Off,1:On,2:Best shot,3:Movie anti-shake';

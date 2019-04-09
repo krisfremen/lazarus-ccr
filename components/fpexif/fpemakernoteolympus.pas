@@ -407,7 +407,6 @@ function TOlympusMakerNoteReader.AddTag(AStream: TStream;
   const AIFDRecord: TIFDRecord; const AData: TBytes; AParent: TTagID): Integer;
 var
   tagDef: TTagDef;
-  p: PByte;
   t: TTagID;
   w: Word;
 begin

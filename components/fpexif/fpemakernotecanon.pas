@@ -67,8 +67,10 @@ resourcestring
     '4:Single,5:Continuous,6:Manual focus,16:Pan focus,256:AF+MF,'+
     '512:Movie snap focus,519:Movie servo AF';
   rsCanonGenLkup = '65535:Low,0:Normal,1:High';
+  {
   rsCanonImgStabLkup = '0:Off,1:On,2:Shoot only,3:Panning,4:Dynamic,256:Off,'+
     '257:On,258:Shoot only,259:Panning,260:Dynamic';
+  }
   rsCanonISOLkup = '0:Not used,15:auto,16:50,17:100,18:200,19:400';
   rsCanonMacroLkup = '1:Macro,2:Normal';
   rsCanonMeterLkup = '0:Default,1:Spot,2:Average,3:Evaluative,4:Partial,'+
