@@ -1,0 +1,218 @@
+object Form1: TForm1
+  Left = 326
+  Height = 396
+  Top = 127
+  Width = 528
+  Caption = 'Form1'
+  ClientHeight = 396
+  ClientWidth = 528
+  OnCreate = FormCreate
+  LCLVersion = '2.1.0.0'
+  object cbVertical: TCheckBox
+    Left = 110
+    Height = 19
+    Top = 154
+    Width = 59
+    Caption = 'Vertical'
+    OnChange = cbVerticalChange
+    TabOrder = 0
+  end
+  object cbAutoRotate: TCheckBox
+    Left = 110
+    Height = 19
+    Top = 177
+    Width = 80
+    Caption = 'AutoRotate'
+    Checked = True
+    OnChange = cbAutoRotateChange
+    State = cbChecked
+    TabOrder = 1
+  end
+  object Label1: TLabel
+    Left = 104
+    Height = 15
+    Top = 64
+    Width = 47
+    Caption = 'Min = 20'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 176
+    Height = 15
+    Top = 64
+    Width = 54
+    Caption = 'Value = 50'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 252
+    Height = 15
+    Top = 64
+    Width = 48
+    Caption = 'Max = 80'
+    ParentColor = False
+  end
+  object cbColorBelow: TColorButton
+    Left = 104
+    Height = 25
+    Top = 82
+    Width = 56
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    OnColorChanged = cbColorBelowColorChanged
+  end
+  object cbColorBetween: TColorButton
+    Left = 174
+    Height = 25
+    Top = 82
+    Width = 56
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    OnColorChanged = cbColorBetweenColorChanged
+  end
+  object cbColorAbove: TColorButton
+    Left = 248
+    Height = 25
+    Top = 82
+    Width = 56
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    OnColorChanged = cbColorAboveColorChanged
+  end
+  object cbFormColor: TColorButton
+    Left = 328
+    Height = 25
+    Top = 82
+    Width = 120
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    Caption = 'Form'
+    OnColorChanged = cbFormColorColorChanged
+  end
+  object cmbThumbStyle: TComboBox
+    Left = 110
+    Height = 23
+    Top = 203
+    Width = 132
+    ItemHeight = 15
+    ItemIndex = 0
+    Items.Strings = (
+      'Grip'
+      'Circle'
+      'Rectangle'
+      'Rounded Rectangle'
+      'Triangles'
+      'Triangles (on other side)'
+    )
+    OnChange = cmbThumbStyleChange
+    Style = csDropDownList
+    TabOrder = 2
+    Text = 'Grip'
+  end
+  object cbColorThumb: TColorButton
+    Left = 328
+    Height = 25
+    Top = 112
+    Width = 120
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    Caption = 'Thumb'
+    OnColorChanged = cbColorThumbColorChanged
+  end
+  object cbFlat: TCheckBox
+    Left = 200
+    Height = 19
+    Top = 154
+    Width = 39
+    Caption = 'Flat'
+    OnChange = cbFlatChange
+    TabOrder = 3
+  end
+  object seTrackThickness: TSpinEdit
+    Left = 280
+    Height = 23
+    Top = 203
+    Width = 82
+    OnChange = seTrackThicknessChange
+    TabOrder = 4
+  end
+  object Label4: TLabel
+    Left = 280
+    Height = 15
+    Top = 181
+    Width = 80
+    Caption = 'Track thickness'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 376
+    Height = 15
+    Top = 181
+    Width = 60
+    Caption = 'Default size'
+    ParentColor = False
+  end
+  object seDefaultSize: TSpinEdit
+    Left = 376
+    Height = 23
+    Top = 203
+    Width = 82
+    OnChange = seDefaultSizeChange
+    TabOrder = 5
+  end
+  object cbEnabled: TCheckBox
+    Left = 110
+    Height = 19
+    Top = 128
+    Width = 62
+    Caption = 'Enabled'
+    Checked = True
+    OnChange = cbEnabledChange
+    State = cbChecked
+    TabOrder = 6
+  end
+  object cbSliderColor: TColorButton
+    Left = 328
+    Height = 25
+    Top = 140
+    Width = 120
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    Caption = 'Control'
+    OnColorChanged = cbSliderColorColorChanged
+  end
+  object cbTransparent: TCheckBox
+    Left = 200
+    Height = 19
+    Top = 128
+    Width = 83
+    Caption = 'Transparent'
+    Checked = True
+    OnChange = cbTransparentChange
+    State = cbChecked
+    TabOrder = 7
+  end
+  object cmbSliderMode: TComboBox
+    Left = 110
+    Height = 23
+    Top = 235
+    Width = 132
+    ItemHeight = 15
+    ItemIndex = 0
+    Items.Strings = (
+      'single'
+      'min ... max'
+      'min ... value ... max'
+    )
+    OnChange = cmbSliderModeChange
+    Style = csDropDownList
+    TabOrder = 8
+    Text = 'single'
+  end
+end

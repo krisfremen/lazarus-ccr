@@ -13,3 +13,6 @@ tmknob_200.png
 tonoffswitch.png
 tonoffswitch_150.png
 tonoffswitch_200.png
+tmultislider.png
+tmultislider_150.png
+tmultislider_200.png

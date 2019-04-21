@@ -52,7 +52,7 @@ uses
   Controls, Forms, Dialogs, ComCtrls;
 
 const
-  DEFAULT_KNOB_FACE_COLOR = clSilver;  //$00B5CCBD;
+  DEFAULT_KNOB_FACE_COLOR = clSilver;
   DEFAULT_KNOB_MARK_SIZE = 6;
 
 type

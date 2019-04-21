@@ -33,10 +33,11 @@
 - analog gauges
 - thermometer-like gauge
 - knob
-- on/off switch"/>
+- on/off switch
+- multislider"/>
     <License Value="MPL  + GPL + modified LGPL (see unit headers)."/>
-    <Version Minor="3"/>
-    <Files Count="13">
+    <Version Minor="4"/>
+    <Files Count="14">
       <Item1>
         <Filename Value="source\indled.pas"/>
         <UnitName Value="IndLed"/>
@@ -90,7 +91,12 @@
         <Filename Value="source\switches.pas"/>
         <UnitName Value="switches"/>
       </Item13>
+      <Item14>
+        <Filename Value="source\indsliders.pas"/>
+        <UnitName Value="indsliders"/>
+      </Item14>
     </Files>
+    <LazDoc Paths="D:\Prog_Lazarus\svn\lazarus-ccr\components\industrialstuff\fpdoc"/>
     <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="IDEIntf"/>
