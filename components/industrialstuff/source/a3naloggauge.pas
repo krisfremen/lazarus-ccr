@@ -32,6 +32,11 @@ const
     foShowMainTicks, foShowSubTicks, foShowIndicatorMax,
     foShowValues, foShowCenter, foShowFrame, foShow3D, foShowCaption
   ];
+  DEFAULT_CENTER_RADIUS = 8;
+  DEFAULT_CIRCLE_RADIUS = 3;
+  DEFAULT_LENGTH_MAINTICKS = 15;
+  DEFAULT_LENGTH_SUBTICKS = 8;
+  DEFAULT_MARGIN = 10;
 
 type
   TA3nalogGauge = class(TCustomControl)
@@ -85,6 +90,11 @@ type
     FOnFrames: TNotifyEvent;
    {$ENDIF}
     // set properties
+    function IsCenterRadiusStored: Boolean;
+    function IsCircleRadiusStored: Boolean;
+    function IsLengthMainTicksStored: Boolean;
+    function IsLengthSubTicksStored: Boolean;
+    function IsMarginStored: Boolean;
     procedure SetFrameColor(C: TColor);
     procedure SetMinColor(C: TColor);
     procedure SetMidColor(C: TColor);
@@ -118,8 +128,10 @@ type
 
   protected
     procedure CaptionFontChanged(Sender: TObject);
-    procedure DrawScale(Bitmap: TBitmap; K: Integer);
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     procedure DrawArrow(Bitmap: TBitmap; K: Integer);
+    procedure DrawScale(Bitmap: TBitmap; K: Integer);
     procedure FastAntiAliasPicture;
     procedure Loaded; override;
     procedure RedrawArrow;
@@ -134,6 +146,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
 
   published
     property Angle: Integer
@@ -153,11 +166,11 @@ type
     property CenterColor: TColor
       read FCenterColor write SetCenterColor default clDkGray;
     property CenterRadius: Integer
-      read FCenterRadius write SetCenterRadius default 8;
+      read FCenterRadius write SetCenterRadius stored IsCenterRadiusStored;
     property CircleColor: TColor
       read FCircleColor write SetCircleColor default clBlue;
     property CircleRadius: Integer
-      read FCircleRadius write SetCircleRadius default 3;
+      read FCircleRadius write SetCircleRadius stored IsCircleRadiusStored;
     property FaceColor: TColor
       read FFaceColor write SetFaceColor default clBtnFace;
     property FaceOptions: TFaceOptions
@@ -169,11 +182,11 @@ type
     property IndMinimum: Integer
       read FMinimum write SetMinimum default 20;
     property LengthMainTicks: Integer
-      read FLengthMainTicks write SetLengthMainTicks default 15;
+      read FLengthMainTicks write SetLengthMainTicks stored IsLengthMainTicksStored;
     property LengthSubTicks: Integer
-      read FLengthSubTicks write SetLengthSubTicks default 8;
+      read FLengthSubTicks write SetLengthSubTicks stored IsLengthSubTicksStored;
     property Margin: Integer
-      read FMargin write SetMargin default 10;
+      read FMargin write SetMargin stored IsMarginStored;
     property MarginColor: TColor
       read FMarginColor write SetMarginColor default clSilver;
     property MaxColor: TColor
@@ -246,7 +259,7 @@ begin
   FValueColor := clBlack;
   FCaptionColor := clBlack;
   FArrowColor := clBlack;
-  FMarginColor := clSilver; //Black;
+  FMarginColor := clSilver;
   FCenterColor := clDkGray;
   FCircleColor := clBlue;
   FMinColor := clGreen;
@@ -254,17 +267,17 @@ begin
   FMaxColor := clRed;
   FArrowWidth := 1;
   FPosition := 0;
-  FMargin := 10;
+  FMargin := Scale96ToFont(DEFAULT_MARGIN);
   FStyle := agsCenterStyle;
   FScaleValue := 100;
   FMaximum := 80;
   FMinimum := 20;
   FScaleAngle := 120;
-  FCircleRadius := 3;
-  FCenterRadius := 8;
+  FCircleRadius := Scale96ToFont(DEFAULT_CIRCLE_RADIUS);
+  FCenterRadius := Scale96ToFont(DEFAULT_CENTER_RADIUS);
   FNumMainTicks := 5;
-  FLengthMainTicks := 15;
-  FLengthSubTicks := 8;
+  FLengthMainTicks := Scale96ToFont(DEFAULT_LENGTH_MAINTICKS);
+  FLengthSubTicks := Scale96ToFont(DEFAULT_LENGTH_SUBTICKS);
   FCaption := '';
   FFaceOptions := DEFAULT_FACE_OPTIONS;
   FAntiAliased := aaNone;
@@ -300,6 +313,31 @@ begin
   RedrawScale;
 end;
 
+procedure TA3nalogGauge.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    DisableAutosizing;
+    try
+      if IsCenterRadiusStored then
+        FCenterRadius := Round(FCenterRadius * AXProportion);
+      if IsCircleRadiusStored then
+        FCircleRadius := Round(FCircleRadius * AXProportion);
+      if IsLengthMainTicksStored then
+        FLengthMainTicks := Round(FLengthMainTicks * AXProportion);
+      if IsLengthSubTicksStored then
+        FLengthSubTicks := Round(FLengthSubTicks * AXProportion);
+      if IsMarginStored then
+        FMargin := Round(FMargin * AXProportion);
+    finally
+      EnableAutoSizing;
+    end;
+  end;
+end;
+
 procedure TA3nalogGauge.DrawScale(Bitmap: TBitmap; K: Integer);
 var
   I, J, X, Y, N, M, W, H, R: Integer;
@@ -312,15 +350,16 @@ var
   pt: TPoint;
   txt: String;
   txtDist: Integer;
+  apw: Integer;  // pen width of arc
 begin
   W := Bitmap.Width;
   H := Bitmap.Height;
   Max := FMaximum;
   Min := FMinimum;
-  N := FNumMainTicks*5;
+  N := FNumMainTicks * 5;
   M := FMargin * K;
   R := FCircleRadius * K;
-  txtDist := 10;
+  txtDist := Scale96ToFont(10);
 
   with Bitmap do begin
     Canvas.Brush.Color := FFaceColor;
@@ -412,8 +451,9 @@ begin
     end;
 
     { Draw min/max indicator arcs }
+    apw := Scale96ToFont(4 * K);
     if (foShowIndicatorMax in FFaceOptions) then begin
-      SetPenStyles(Canvas.Pen, 4 * K, FMaxColor);
+      SetPenStyles(Canvas.Pen, apw, FMaxColor);
       SinCos(DegToRad(A + FScaleAngle), sinA, cosA);
       SinCos(DegToRad(A + Max*FScaleAngle/FScaleValue), sinB, cosB);
       Canvas.Arc(X - J, Y - J, X + J, Y + J,
@@ -424,7 +464,7 @@ begin
       );
     end;
     if (foShowIndicatorMid in FFaceOptions) and (FMinimum < FMaximum) then begin
-      SetPenStyles(Canvas.Pen, 4 * K, FMidColor);
+      SetPenStyles(Canvas.Pen, apw, FMidColor);
       SinCos(DegToRad(A + Max*FScaleAngle/FScaleValue), sinA, cosA);
       SinCos(DegToRad(A + Min*FScaleAngle/FScaleValue), sinB, cosB);
       Canvas.Arc(X - J, Y - J, X + J, Y + J,
@@ -435,9 +475,9 @@ begin
       );
     end;
     if (foShowIndicatorMin in FFaceOptions) then begin
+      SetPenStyles(Canvas.Pen, apw, FMinColor);
       SinCos(DegToRad(A + Min*FScaleAngle/FScaleValue), sinA, cosA);
       SinCos(DegToRad(A), sinB, cosB);
-      SetPenStyles(Canvas.Pen, 4 * K, FMinColor);
       Canvas.Arc(X - J, Y - J, X + J, Y + J,
         Round(C - J * cosA),
         Round(Y - J * sinA),
@@ -757,6 +797,31 @@ begin
 end;
 }
 
+function TA3nalogGauge.IsCenterRadiusStored: Boolean;
+begin
+  Result := FCenterRadius <> Scale96ToFont(DEFAULT_CENTER_RADIUS);
+end;
+
+function TA3nalogGauge.IsCircleRadiusStored: Boolean;
+begin
+  Result := FCircleRadius <> Scale96ToFont(DEFAULT_CIRCLE_RADIUS);
+end;
+
+function TA3nalogGauge.IsLengthMainTicksStored: Boolean;
+begin
+  Result := FLengthMainTicks <> Scale96ToFont(DEFAULT_LENGTH_MAINTICKS);
+end;
+
+function TA3nalogGauge.IsLengthSubTicksStored: Boolean;
+begin
+  Result := FLengthSubTicks <> Scale96ToFont(DEFAULT_LENGTH_SUBTICKS);
+end;
+
+function TA3nalogGauge.IsMarginStored: Boolean;
+begin
+  Result := FMargin <> Scale96ToFont(DEFAULT_MARGIN);
+end;
+
 procedure TA3nalogGauge.Loaded;
 begin
   inherited;
@@ -811,6 +876,13 @@ begin
   end;
   FBitmapsValid := false;
   inherited;
+end;
+
+procedure TA3nalogGauge.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FCaptionFont, AToPPI, AProportion);
 end;
 
 procedure TA3nalogGauge.SetCaptionFont(AValue: TFont);

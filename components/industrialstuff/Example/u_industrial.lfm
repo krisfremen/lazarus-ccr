@@ -94,22 +94,16 @@ object Form1: TForm1
     Width = 120
     Caption = 'Voltage'
     Value = 50
-    Color = clPurple
     ParentColor = False
-    ColorFore = clRed
-    ColorBack = clInactiveCaption
     SignalUnit = 'mV'
     ValueMin = 0
     ValueMax = 100
     Digits = 0
     Increment = 10
-    ShowIncrements = True
-    Transparent = True
     GapTop = 10
     GapBottom = 5
     BarThickness = 6
     MarkerColor = clBlue
-    ShowMarker = True
   end
   object Arrow1: TArrow
     Left = 48
@@ -150,12 +144,14 @@ object Form1: TForm1
     Height = 35
     Top = 180
     Width = 504
-    ColorBetween = 16481536
-    ColorThumb = 10768896
+    ColorAbove = clRed
+    ColorBelow = clYellow
+    ColorBetween = clGreen
+    ColorThumb = clBlack
     MaxPosition = 75
     MinPosition = 25
     SliderMode = smMinValueMax
-    ThumbStyle = tsTriangle
+    ThumbStyle = tsTriangleOtherSide
     OnPositionChange = MultiSlider1PositionChange
   end
   object ComboBox1: TComboBox

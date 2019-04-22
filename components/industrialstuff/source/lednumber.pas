@@ -311,8 +311,8 @@ var
   I     : Integer;
 begin
   for I := 0 to MAX_POINTS do begin
-    Points[i].X := DigitPoints[i].X * (FSize - 1);
-    Points[i].Y := DigitPoints[i].Y * (FSize - 1);
+    Points[i].X := Scale96ToFont(DigitPoints[i].X * (FSize - 1));
+    Points[i].Y := Scale96ToFont(DigitPoints[i].Y * (FSize - 1));
   end;
 end;
 {=====}
@@ -320,9 +320,9 @@ end;
 function TCustomLEDNumber.NewOffset(xOry: char; OldOffset: Integer): Integer;
 begin
   if (xOry = 'x')then
-    newOffset := oldOffset + 17 * (FSize - 1)
+    newOffset := oldOffset + Scale96ToFont(17 * (FSize - 1))
   else
-    newOffset := oldOffset + 30 * (FSize -1)
+    newOffset := oldOffset + Scale96ToFont(30 * (FSize -1))
 end;
 {=====}
 

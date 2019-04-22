@@ -137,14 +137,9 @@ begin
   with FlblShowText do
   begin
     Alignment := taCenter;
-    AutoSize := False;
-    Font := Self.Font;
-    Height := 17;
-    Left := 5;
-    Top := 57;
-    Width := 160;
-    Parent := Self;
     Align := alBottom;
+    Font := Self.Font;
+    Parent := Self;
   end;
 
   FShowLevel := True;
@@ -325,8 +320,8 @@ var
 begin
   X := Scale96ToFont(20);
   Y := Scale96ToFont(23);
-  W := ClientWidth - 2*X;
-  H := ClientHeight - 2*Y;
+  W := ClientWidth - 2*X; //130;
+  H := ClientHeight - 2*Y; //33;
   if (W < 1) or (H < 1) then Exit;
 
   with Canvas do
@@ -366,9 +361,8 @@ begin
 end;
 
 procedure TAnalogSensor.PaintAsHorizontal;
-var
-  MiddleX: Integer;
-  X, Y, W, H: Integer;
+var MiddleX: Integer;
+    X, Y, W, H: Integer;
 begin
   X := Scale96ToFont(20);
   Y := Scale96ToFont(23);
@@ -408,9 +402,8 @@ begin
 end;
 
 procedure TAnalogSensor.PaintAsVertical;
-var
-  MiddleY: Integer;
-  X, Y, W, H: Integer;
+var MiddleY: Integer;
+    X, Y, W, H: Integer;
 begin
   X := Scale96ToFont(20);
   Y := Scale96ToFont(23);

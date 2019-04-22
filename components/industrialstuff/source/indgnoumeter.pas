@@ -106,15 +106,15 @@ type
     property Color;
     property Font;
     property ParentColor;
-    property ColorFore: Tcolor read fColorFore write SetColorFore;
-    property ColorBack: Tcolor read fColorBack write SetColorBack;
+    property ColorFore: Tcolor read fColorFore write SetColorFore default clRed;
+    property ColorBack: Tcolor read fColorBack write SetColorBack default clBtnFace;
     property SignalUnit: ShortString read fSignalUnit write SetSignalUnit;
     property ValueMin: Double read fValueMin write SetValueMin;
     property ValueMax: Double read fValueMax write SetValueMax;
     property Digits: Byte read fDigits write SetDigits;
     property Increment: Double read fIncrement write SetIncrement;
-    property ShowIncrements: Boolean read fShowIncrements write SetShowIncrements;
-    property Transparent: Boolean read GetTransparent write SetTransparent;
+    property ShowIncrements: Boolean read fShowIncrements write SetShowIncrements default true;
+    property Transparent: Boolean read GetTransparent write SetTransparent default true;
     property GapTop: Word
       read fGapTop write SetGapTop stored IsGapTopStored;
     property GapBottom: Word
@@ -126,7 +126,7 @@ type
       read fMarkerDist write SetMarkerDist stored IsMarkerDistStored;
     property MarkerSize: Integer
       read fMarkerSize write SetMarkerSize stored IsMarkerSizeStored;
-    property ShowMarker: Boolean read fShowMarker write SetShowMarker;
+    property ShowMarker: Boolean read fShowMarker write SetShowMarker default true;
   end;
 
 
@@ -462,9 +462,9 @@ begin
   with Canvas do
   begin
     TheRect := ClientRect;
-    TheRect.Left := LeftMeter + BarThickness + 10;
+    TheRect.Left := LeftMeter + BarThickness + Scale96ToFont(10);
     TheRect.Top := TopTextHeight;
-    TheRect.Bottom := Height - fGapBottom + 6;
+    TheRect.Bottom := Height - fGapBottom + Scale96ToFont(6);
     Brush.Style := bsClear;
     DrawStyle := DT_SINGLELINE + DT_NOPREFIX + DT_LEFT + DT_BOTTOM;
     DisplayValue := FloatToStrF(ValueMin, ffFixed, 8, fDigits) + ' ' + fSignalUnit;
@@ -478,8 +478,8 @@ begin
   with Canvas do
   begin
     TheRect := ClientRect;
-    TheRect.Left := LeftMeter + BarThickness + 10;
-    TheRect.Top := TopTextHeight - 6;
+    TheRect.Left := LeftMeter + BarThickness + Scale96ToFont(10);
+    TheRect.Top := TopTextHeight - Scale96ToFont(6);
     Brush.Style := bsClear;
     DrawStyle := DT_SINGLELINE + DT_NOPREFIX + DT_LEFT + DT_TOP;
     DisplayValue := FloatToStrF(ValueMax, ffFixed, 8, fDigits) + ' ' + fSignalUnit;
@@ -523,7 +523,6 @@ begin
       MoveTo(LeftMeter + 1, ValueToPixels(fValue) - 1);
       LineTo(LeftMeter + fBarThickness, ValueToPixels(fValue) - 1);
     end;
-
   end;
 end;
 
@@ -541,7 +540,7 @@ end;
 
 procedure TindGnouMeter.Paint;
 begin
-  LeftMeter := (Width div 2) - 10 - fBarThickness;
+  LeftMeter := (Width div 2) - Scale96ToFont(10) - fBarThickness;
   with Canvas do
   begin
     if not Transparent then
