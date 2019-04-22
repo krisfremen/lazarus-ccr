@@ -17,12 +17,12 @@ uses
   Classes, PropEdits, ComponentEditors,
   JvDsgnConsts,
   JvStringHolder, JvSpellChecker,
-  JvStrHolderEditor;
+  JvStrHolderEditor, JvProfilerForm;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvStrHolder, TJvMultiStringHolder,
+    TJvStrHolder, TJvMultiStringHolder, TJvProfiler,
     TJvSpellChecker
   ]);
   RegisterComponentEditor(TJvStrHolder, TJvStrHolderEditor);
