@@ -318,14 +318,15 @@ begin
 end;
 
 procedure TAnalogSensor.PaintAsNeedle;
-var MiddleX: Integer;
-    Angle: Double;
-    X, Y, W, H: Integer;
+var
+  MiddleX: Integer;
+  Angle: Double;
+  X, Y, W, H: Integer;
 begin
-  X := 20;
-  Y := 23;
-  W := ClientWidth - 2*20; //130;
-  H := ClientHeight - 2*23; //33;
+  X := Scale96ToFont(20);
+  Y := Scale96ToFont(23);
+  W := ClientWidth - 2*X;
+  H := ClientHeight - 2*Y;
   if (W < 1) or (H < 1) then Exit;
 
   with Canvas do
@@ -365,13 +366,14 @@ begin
 end;
 
 procedure TAnalogSensor.PaintAsHorizontal;
-var MiddleX: Integer;
-    X, Y, W, H: Integer;
+var
+  MiddleX: Integer;
+  X, Y, W, H: Integer;
 begin
-  X := 20;
-  Y := 23;
-  W := ClientWidth - 2*20; //130;
-  H := ClientHeight - 2*23; //33;
+  X := Scale96ToFont(20);
+  Y := Scale96ToFont(23);
+  W := ClientWidth - 2*X;
+  H := ClientHeight - 2*Y;
   if (W < 1) or (H < 1) then Exit;
 
   with Canvas do
@@ -406,13 +408,14 @@ begin
 end;
 
 procedure TAnalogSensor.PaintAsVertical;
-var MiddleY: Integer;
-    X, Y, W, H: Integer;
+var
+  MiddleY: Integer;
+  X, Y, W, H: Integer;
 begin
-  X := 20;
-  Y := 23;
-  W := ClientWidth - 2*20; //130;
-  H := ClientHeight - 2*23; //33;
+  X := Scale96ToFont(20);
+  Y := Scale96ToFont(23);
+  W := ClientWidth - 2*X;
+  H := ClientHeight - 2*Y;
   if (W < 1) or (H < 1) then Exit;
 
   with Canvas do
