@@ -59,7 +59,7 @@ type
     procedure Loaded; override;
     procedure SetEnabled(Value: Boolean); override;
     procedure CMButtonPressed(var Message: TLMessage); message CM_BUTTONPRESSED;  // Called in UpdateExclusive procedure ...
-    function  TransparentColorAtPos(Point: TPoint): boolean; virtual;
+    function  TransparentColorAtPos({%H-}Point: TPoint): boolean; virtual;
     procedure LedStatusChanged; virtual;
     procedure SetInternalLedValue(Value: Boolean);
     function  GetLedStatus: TLedStatus; virtual;
@@ -113,11 +113,12 @@ end;
 
 function TcyBaseLed.TransparentColorAtPos(Point: TPoint): boolean;
 begin
-  RESULT := false;
+  Result := false;
 end;
 
 procedure TcyBaseLed.Click;
-var aPt: TPoint;
+var
+  aPt: TPoint = (x:0; y:0);
 begin
   if not FReadOnly
   then begin

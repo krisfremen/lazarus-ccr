@@ -44,8 +44,8 @@ interface
 
 // We need to put jpeg to the uses for avoid run-time not handled jpeg image ...
 uses
-  LCLIntf, LCLType, Types, Classes, Forms, Graphics, Math, Buttons, Controls,
-  ExtCtrls, SysUtils, indcyTypes;
+  LCLIntf, LCLType, Types, Classes, Forms, Graphics, Buttons, Controls,
+  ExtCtrls, SysUtils;
 
 // Objects painting functions :
 procedure cyFrame3D(Canvas: TCanvas; var Rect: TRect; TopLeftColor, BottomRightColor: TColor; Width: Integer;

@@ -57,14 +57,14 @@ type
     FSize      : TSegmentSize;
     lbDrawBmp  : TBitmap;
     procedure CMTextChanged(var Message: TLMessage); message CM_TEXTCHANGED;
-    procedure Initialize(var Points: array of TPoint);
+    procedure Initialize(out Points: array of TPoint);
     function  NewOffset(xOry: char; OldOffset: Integer): Integer;
     procedure ProcessCaption(Points: array of TPoint);
     procedure PaintSegment(Segment: Integer; TheColor: TColor;
                            Points: array of TPoint; OffsetX, OffsetY: Integer);
     procedure ResizeControl(Row, Col, Size: Integer);
     function  GetAbout: string;
-    procedure SetAbout(const Value: string);
+    procedure SetAbout(const {%H-}Value: string);
     procedure SetSize(Value: TSegmentSize);
     procedure SetOnColor(Value: TColor);
     procedure SetOffColor(Value: TColor);
@@ -306,7 +306,7 @@ begin
 end;
 {=====}
 
-procedure TCustomLEDNumber.Initialize(var Points: array of TPoint);
+procedure TCustomLEDNumber.Initialize(out Points: array of TPoint);
 var
   I     : Integer;
 begin

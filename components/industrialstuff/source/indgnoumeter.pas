@@ -23,8 +23,15 @@ unit indGnouMeter;
 interface
 
 uses
-  Classes, Controls, Graphics, SysUtils, //Messages,
+  Classes, Controls, Graphics, SysUtils,
   LMessages, Types, LCLType, LCLIntf;
+
+const
+  DEFAULT_BAR_THICKNESS = 5;
+  DEFAULT_GAP_TOP = 20;
+  DEFAULT_GAP_BOTTOM = 10;
+  DEFAULT_MARKER_DIST = 4;
+  DEFAULT_MARKER_SIZE = 6;
 
 type
   TindGnouMeter = class(TGraphicControl)
@@ -42,14 +49,21 @@ type
     fGapBottom: Word;
     fBarThickness: Word;
     fMarkerColor: TColor;
+    fMarkerDist: Integer;
+    fMarkerSize: Integer;
     fShowMarker: Boolean;
     //Variables used internally
     TopTextHeight: Word;
-    LeftMeter: Word;
+    LeftMeter: Integer;
     DisplayValue: String;
     DrawStyle: integer;
     TheRect: TRect;
     //End of variables used internally
+    function IsBarThicknessStored: Boolean;
+    function IsGapBottomStored: Boolean;
+    function IsGapTopStored: Boolean;
+    function IsMarkerDistStored: Boolean;
+    function IsMarkerSizeStored: Boolean;
     procedure SetValue(val: Double);
     procedure SetColorBack(val: TColor);
     procedure SetColorFore(val: TColor);
@@ -65,6 +79,8 @@ type
     procedure SetGapBottom(val: Word);
     procedure SetBarThickness(val: Word);
     procedure SetMarkerColor(val: TColor);
+    procedure SetMarkerDist(val: Integer);
+    procedure SetMarkerSize(val: Integer);
     procedure SetShowMarker(val: Boolean);
     procedure DrawTopText;
     procedure DrawMeterBar;
@@ -74,8 +90,10 @@ type
     procedure DrawValueMin;
     procedure DrawMarker;
   protected
+    procedure CMTextChanged(var {%H-}Message: TLMessage); message CM_TEXTCHANGED;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     procedure Paint; override;
-    procedure CMTextChanged(var Message: TLMessage); message CM_TEXTCHANGED;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -97,10 +115,17 @@ type
     property Increment: Double read fIncrement write SetIncrement;
     property ShowIncrements: Boolean read fShowIncrements write SetShowIncrements;
     property Transparent: Boolean read GetTransparent write SetTransparent;
-    property GapTop: Word read fGapTop write SetGapTop;
-    property GapBottom: Word read fGapBottom write SetGapBottom;
-    property BarThickness: Word read fBarThickness write SetBarThickness;
+    property GapTop: Word
+      read fGapTop write SetGapTop stored IsGapTopStored;
+    property GapBottom: Word
+      read fGapBottom write SetGapBottom stored IsGapBottomStored;
+    property BarThickness: Word
+      read fBarThickness write SetBarThickness stored IsBarThicknessStored;
     property MarkerColor: TColor read fMarkerColor write SetMarkerColor;
+    property MarkerDist: Integer
+      read fMarkerDist write SetMarkerDist stored IsMarkerDistStored;
+    property MarkerSize: Integer
+      read fMarkerSize write SetMarkerSize stored IsMarkerSizeStored;
     property ShowMarker: Boolean read fShowMarker write SetShowMarker;
   end;
 
@@ -122,9 +147,11 @@ begin
   fShowIncrements := True;
   fShowMarker := True;
   fValue := 0;
-  fGapTop := 20;
-  fGapBottom := 10;
-  fBarThickness := 5;
+  fGapTop := Scale96ToFont(DEFAULT_GAP_TOP);
+  fGapBottom := Scale96ToFont(DEFAULT_GAP_BOTTOM);
+  fBarThickness := Scale96ToFont(DEFAULT_BAR_THICKNESS);
+  fMarkerDist := Scale96ToFont(DEFAULT_MARKER_DIST);
+  fMarkerSize := Scale96ToFont(DEFAULT_MARKER_SIZE);
   fSignalUnit := 'Units';
 end;
 
@@ -136,6 +163,56 @@ end;
 procedure TindGnouMeter.CMTextChanged(var Message: TLMessage);
 begin
   Invalidate;
+end;
+
+procedure TindGnouMeter.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    DisableAutosizing;
+    try
+      if IsBarThicknessStored then
+        FBarThickness := Round(FBarThickness * AXProportion);
+      if IsGapBottomStored then
+        FGapBottom := Round(FGapBottom * AYProportion);
+      if IsGapTopStored then
+        FGapTop := Round(FGapTop * AYProportion);
+      if IsMarkerDistStored then
+        FMarkerDist := Round(FMarkerDist * AXProportion);
+      if IsMarkerSizeStored then
+        FMarkerSize := Round(FMarkerSize * AXProportion);
+    finally
+      EnableAutoSizing;
+    end;
+  end;
+end;
+
+function TindGnouMeter.IsBarThicknessStored: Boolean;
+begin
+  Result := FBarThickness <> Scale96ToFont(DEFAULT_BAR_THICKNESS);
+end;
+
+function TindGnouMeter.IsGapBottomStored: Boolean;
+begin
+  Result := FGapBottom <> Scale96ToFont(DEFAULT_GAP_BOTTOM);
+end;
+
+function TindGnouMeter.IsGapTopStored: Boolean;
+begin
+  Result := FGapTop <> Scale96ToFont(DEFAULT_GAP_TOP);
+end;
+
+function TindGnouMeter.IsMarkerDistStored: Boolean;
+begin
+  Result := FMarkerDist <> Scale96ToFont(DEFAULT_MARKER_DIST);
+end;
+
+function TindGnouMeter.IsMarkerSizeStored: Boolean;
+begin
+  Result := FMarkerSize <> Scale96ToFont(DEFAULT_MARKER_SIZE);
 end;
 
 procedure TindGnouMeter.SetValue(val: Double);
@@ -272,6 +349,24 @@ begin
   end;
 end;
 
+procedure TindGnouMeter.SetMarkerDist(val: Integer);
+begin
+  if (val <> fMarkerDist) then
+  begin
+    fMarkerDist := val;
+    Invalidate;
+  end;
+end;
+
+procedure TindGnouMeter.SetMarkerSize(val: Integer);
+begin
+  if (val <> fMarkerSize) then
+  begin
+    fMarkerSize := val;
+    Invalidate;
+  end;
+end;
+
 procedure TindGnouMeter.SetShowMarker(val: Boolean);
 begin
   if (val <> fShowMarker) then
@@ -307,26 +402,36 @@ begin
 end;
 
 procedure TindGnouMeter.DrawMarker;
+var
+  v: Integer;
+  dx, dy: Integer;
 begin
   if fShowMarker then
   begin
+    v := ValueToPixels(fValue);
     with Canvas do
     begin
-      pen.color := clWhite;
-      Brush.Style := bsClear;
-      MoveTo(LeftMeter - 2, ValueToPixels(fValue));
-      LineTo(LeftMeter - 6, ValueToPixels(fValue) - 4);
-      LineTo(LeftMeter - 6, ValueToPixels(fValue) + 4);
-      pen.color := clGray;
-      LineTo(LeftMeter - 2, ValueToPixels(fValue));
+      dx := FMarkerSize;
+      dy := round(FMarkerSize * sin(pi/6));
 
-      pen.color := fMarkerColor;
-      Brush.color := fMarkerColor;
+      // 3D edges
+      Pen.Color := clWhite;
+      Brush.Style := bsClear;
+      MoveTo(LeftMeter - FMarkerDist + 1, v);
+      LineTo(LeftMeter - FMarkerDist - dx - 1, v - dy - 1);
+      LineTo(LeftMeter - FMarkerDist - dx - 1, v + dy + 1);
+      Pen.Color := clGray;
+      LineTo(LeftMeter - FMarkerDist + 1, v);
+
+      // Triangle
+      Pen.Color := fMarkerColor;
+      Brush.Color := fMarkerColor;
       Brush.Style := bsSolid;
-      Polygon([Point(LeftMeter - 3, ValueToPixels(fValue)),
-        Point(LeftMeter - 5, ValueToPixels(fValue) - 2),
-        Point(LeftMeter - 5, ValueToPixels(fValue) + 2),
-        Point(LeftMeter - 3, ValueToPixels(fValue))]);
+      Polygon([
+        Point(LeftMeter - FMarkerDist, v),
+        Point(LeftMeter - FMarkerDist - dx, v - dy),
+        Point(LeftMeter - FMarkerDist - dx, v + dy)
+      ]);
     end;
   end;
 end;
@@ -387,34 +492,34 @@ procedure TindGnouMeter.DrawMeterBar;
 begin
   with Canvas do
   begin
-    pen.Color := fColorBack;
+    Pen.Color := fColorBack;
     Brush.Color := fColorBack;
     Brush.Style := bsSolid;
     Rectangle(LeftMeter, ValueToPixels(fValueMax), LeftMeter +
       fBarThickness, ValueToPixels(fValueMin));
 
-    pen.Color := fColorFore;
+    Pen.Color := fColorFore;
     Brush.Color := fColorFore;
     Brush.Style := bsSolid;
     Rectangle(LeftMeter + 1, ValueToPixels(fValue), LeftMeter +
       fBarThickness, ValueToPixels(fValueMin));
 
-    pen.color := clWhite;
+    Pen.color := clWhite;
     Brush.Style := bsClear;
     MoveTo(LeftMeter + fBarThickness - 1, ValueToPixels(fValueMax));
     LineTo(LeftMeter, ValueToPixels(fValueMax));
     LineTo(LeftMeter, ValueToPixels(fValueMin) - 1);
 
-    pen.color := clGray;
+    Pen.color := clGray;
     LineTo(LeftMeter + fBarThickness, ValueToPixels(fValueMin) - 1);
     LineTo(LeftMeter + fBarThickness, ValueToPixels(fValueMax));
 
     if (fValue > fValueMin) and (fValue < fValueMax) then
     begin
-      pen.color := clWhite;
+      Pen.color := clWhite;
       MoveTo(LeftMeter + 1, ValueToPixels(fValue));
       LineTo(LeftMeter + fBarThickness, ValueToPixels(fValue));
-      pen.color := clGray;
+      Pen.color := clGray;
       MoveTo(LeftMeter + 1, ValueToPixels(fValue) - 1);
       LineTo(LeftMeter + fBarThickness, ValueToPixels(fValue) - 1);
     end;

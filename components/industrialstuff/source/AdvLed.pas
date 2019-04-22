@@ -47,7 +47,7 @@ type
     procedure SetGlyph(const Index: Integer; const Value: TLedBitmap);
     procedure SetBlinkDuration(const Value: Integer);
     procedure SetBlink(const Value: Boolean);
-    function StoredGlyph(const Index: Integer): Boolean;
+    function StoredGlyph(const {%H-}Index: Integer): Boolean;
     procedure SelectLedBitmap(const LedKind: TLedKind);
     function BitmapToDraw: TLedBitmap;
     procedure BitmapNeeded;
