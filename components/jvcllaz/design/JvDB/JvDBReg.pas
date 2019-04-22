@@ -16,7 +16,7 @@ implementation
 
 uses
   Classes, JvDsgnConsts, //JvDBSearchCombobox,
-  JvDBSearchEdit, JvDBTreeView, JvDBControls, JvDBHTLabel;
+  JvDBSearchEdit, JvDBTreeView, JvDBControls, JvDBHTLabel, JvDBLookup;
 
 procedure Register;
 const
@@ -42,7 +42,8 @@ begin
     TJvDBSearchEdit,
 //    TJvDBSearchCombobox,
     TJvDBTreeView,
-    TJvDBHTLabel
+    TJvDBHTLabel,
+    TJvDBLookupList, TJvDBLookupCombo
   ]);
                 
   RegisterPropertyEditor(TypeInfo(string), TJvDBTreeView, cItemField, TFieldProperty); //TJvDataFieldProperty);

@@ -339,6 +339,7 @@ type
   {**** string handling routines}
   TSetOfChar = TSysCharSet;
   TCharSet = TSysCharSet;
+  ***********)
 
   TDateOrder = (doMDY, doDMY, doYMD);
   TDayOfWeekName = (Sun, Mon, Tue, Wed, Thu, Fri, Sat);
@@ -350,6 +351,7 @@ const
   CenturyOffset: Byte = 60;
   NullDate: TDateTime = 0; {-693594}
 
+(*********** NOT CONVERTED
 type
   // JvDriveCtrls / JvLookOut
   TJvImageSize = (isSmall, isLarge);
