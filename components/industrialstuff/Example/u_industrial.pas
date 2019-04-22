@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, IndLed, Sensors, LedNumber, IndGnouMeter, AdvLed,
-  A3nalogGauge, Forms, Controls, Graphics, Dialogs, Arrow, ComCtrls;
+  A3nalogGauge, indSliders, Forms, Controls, Graphics, Dialogs, Arrow, ComCtrls,
+  StdCtrls;
 
 type
 
@@ -17,12 +18,15 @@ type
     AdvLed1: TAdvLed;
     AnalogSensor1: TAnalogSensor;
     Arrow1: TArrow;
+    ComboBox1: TComboBox;
     indGnouMeter1: TindGnouMeter;
     indLed1: TindLed;
     LEDNumber1: TLEDNumber;
+    MultiSlider1: TMultiSlider;
     StopLightSensor1: TStopLightSensor;
-    TrackBar1: TTrackBar;
-    procedure TrackBar1Change(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure MultiSlider1PositionChange(Sender: TObject; AKind: TThumbKind;
+      AValue: Integer);
   private
 
   public
@@ -38,11 +42,32 @@ implementation
 
 { TForm1 }
 
-procedure TForm1.TrackBar1Change(Sender: TObject);
+procedure TForm1.MultiSlider1PositionChange(Sender: TObject; AKind: TThumbKind;
+  AValue: Integer);
 begin
-  A3nalogGauge1.Position := Trackbar1.Position;
-  indGnouMeter1.Value := Trackbar1.Position;
-  AnalogSensor1.Value := Trackbar1.Position;
+  case AKind of
+    tkValue:
+      begin
+        A3nalogGauge1.Position := MultiSlider1.Position;
+        indGnouMeter1.Value := MultiSlider1.Position;
+        AnalogSensor1.Value := MultiSlider1.Position;
+      end;
+    tkMin:
+      begin
+        A3nalogGauge1.IndMinimum := MultiSlider1.MinPosition;
+        AnalogSensor1.ValueRed := MultiSlider1.MinPosition;
+      end;
+    tkMax:
+      begin
+        A3nalogGauge1.IndMaximum := MultiSlider1.MaxPosition;
+        AnalogSensor1.ValueYellow := MultiSlider1.MaxPosition;
+      end;
+  end;
+end;
+
+procedure TForm1.ComboBox1Change(Sender: TObject);
+begin
+  AnalogSensor1.AnalogKind := TAnalogKind(ComboBox1.ItemIndex);
 end;
 
 end.

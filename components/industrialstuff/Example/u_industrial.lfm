@@ -6,7 +6,7 @@ object Form1: TForm1
   Caption = 'IndustrialStuff Example'
   ClientHeight = 223
   ClientWidth = 824
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object indLed1: TindLed
     Left = 200
     Height = 35
@@ -61,16 +61,16 @@ object Form1: TForm1
     Caption = 'Lazarus'
   end
   object AnalogSensor1: TAnalogSensor
-    Left = 256
-    Height = 152
+    Left = 241
+    Height = 120
     Top = 8
-    Width = 153
+    Width = 184
     BevelOuter = bvNone
     BorderWidth = 2
     BorderStyle = bsSingle
-    Caption = 'level : '
-    ClientHeight = 148
-    ClientWidth = 149
+    Caption = 'level: '
+    ClientHeight = 116
+    ClientWidth = 180
     Font.Height = -16
     Font.Name = 'Arial'
     ParentColor = False
@@ -80,33 +80,33 @@ object Form1: TForm1
     ShowLevel = True
     ColorRed = clYellow
     ColorYellow = clRed
-    Value = 70
+    Value = 50
     ValueMin = 0
     ValueMax = 100
-    ValueRed = 30
-    ValueYellow = 60
+    ValueRed = 25
+    ValueYellow = 75
     AnalogKind = akVertical
   end
   object indGnouMeter1: TindGnouMeter
-    Left = 424
-    Height = 143
-    Top = 17
+    Left = 440
+    Height = 155
+    Top = 13
     Width = 120
-    Caption = 'indGnouMeter1'
-    Value = 70
+    Caption = 'Voltage'
+    Value = 50
     Color = clPurple
     ParentColor = False
     ColorFore = clRed
     ColorBack = clInactiveCaption
-    SignalUnit = 'Units'
+    SignalUnit = 'mV'
     ValueMin = 0
     ValueMax = 100
     Digits = 0
     Increment = 10
     ShowIncrements = True
     Transparent = True
-    GapTop = 20
-    GapBottom = 10
+    GapTop = 10
+    GapBottom = 5
     BarThickness = 6
     MarkerColor = clBlue
     ShowMarker = True
@@ -130,8 +130,8 @@ object Form1: TForm1
   end
   object A3nalogGauge1: TA3nalogGauge
     Left = 568
-    Height = 192
-    Top = 16
+    Height = 207
+    Top = 8
     Width = 241
     ArrowWidth = 2
     Caption = 'mV'
@@ -139,19 +139,40 @@ object Form1: TForm1
     CaptionFont.Style = [fsBold]
     CenterColor = clSilver
     FaceOptions = [foShowMainTicks, foShowSubTicks, foShowIndicatorMin, foShowIndicatorMid, foShowIndicatorMax, foShowValues, foShowCenter, foShowFrame, foShowCaption]
-    IndMaximum = 60
-    IndMinimum = 30
-    Position = 70
+    IndMaximum = 75
+    IndMinimum = 25
+    MidColor = clGreen
+    MinColor = clYellow
+    Position = 50
   end
-  object TrackBar1: TTrackBar
-    Left = 32
-    Height = 25
-    Top = 184
+  object MultiSlider1: TMultiSlider
+    Left = 25
+    Height = 35
+    Top = 180
     Width = 504
-    Frequency = 10
-    Max = 100
-    OnChange = TrackBar1Change
-    Position = 70
-    TabOrder = 2
+    ColorBetween = 16481536
+    ColorThumb = 10768896
+    MaxPosition = 75
+    MinPosition = 25
+    SliderMode = smMinValueMax
+    ThumbStyle = tsTriangle
+    OnPositionChange = MultiSlider1PositionChange
+  end
+  object ComboBox1: TComboBox
+    Left = 255
+    Height = 23
+    Top = 138
+    Width = 153
+    ItemHeight = 15
+    ItemIndex = 2
+    Items.Strings = (
+      'akAnalog'
+      'akHorizontal'
+      'akVertical'
+    )
+    OnChange = ComboBox1Change
+    Style = csDropDownList
+    TabOrder = 3
+    Text = 'akVertical'
   end
 end
