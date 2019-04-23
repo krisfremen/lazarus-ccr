@@ -20,7 +20,7 @@ uses
   JvGradientHeaderPanel, JvSpecialProgress,
   JvFullColorSpaces, JvFullColorCtrls, JvFullColorEditors, JvFullColorSpacesEditors,
   JvFullColorDialogs,
-  JvAnimatedImage, JvBmpAnimator;
+  JvAnimatedImage, JvBmpAnimator, JvPicClip;
 
 procedure Register;
 begin
@@ -28,6 +28,7 @@ begin
     TJvId3v1, TJvId3v2,
     TJvAnimatedImage,
     TJvBmpAnimator,
+	TjvPicClip,
     TJvGradient, TJvGradientHeaderPanel,
     TJvSpecialProgress,
     TJvFullColorPanel, TJvFullColorTrackBar, TJvFullColorGroup, TJvFullColorLabel,

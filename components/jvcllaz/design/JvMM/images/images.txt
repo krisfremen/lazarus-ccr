@@ -14,3 +14,4 @@ tjvfullcolorlabel.bmp
 tjvfullcolorpanel.bmp
 tjvfullcolorspacecombo.bmp
 tjvfullcolortrackbar.bmp
+tjvpicclip.bmp

@@ -120,9 +120,9 @@ function CreateDisabledBitmapEx(FOriginal: TBitmap; OutlineColor, BackColor,
   HighLightColor, ShadowColor: TColor; DrawHighlight: Boolean): TBitmap;
 function CreateDisabledBitmap(FOriginal: TBitmap; OutlineColor: TColor):
   TBitmap;
-(******************** NOT CONVERTED
 procedure AssignBitmapCell(Source: TGraphic; Dest: TBitmap; Cols, Rows,
   Index: Integer);
+(******************** NOT CONVERTED
 function ChangeBitmapColor(Bitmap: TBitmap; Color, NewColor: TColor): TBitmap;
 ******************** NOT CONVERTED *)
 procedure ImageListDrawDisabled(Images: TCustomImageList; Canvas: TCanvas;
@@ -1630,10 +1630,8 @@ begin
       ControlState := ControlState - [csPaintCopy];
   end;
 end;
+
 (******************** NOT CONVERTED
-
-
-
 {$IFNDEF CLR}
 function MakeModuleBitmap(Module: THandle; ResID: PChar): TBitmap;
 begin
@@ -1668,6 +1666,7 @@ begin
   Result := MakeModuleBitmap(HInstance, MakeIntResource(ResID));
 end;
 {$ENDIF !CLR}
+******************** NOT CONVERTED *)
 
 procedure AssignBitmapCell(Source: TGraphic; Dest: TBitmap;
   Cols, Rows, Index: Integer);
@@ -1706,7 +1705,6 @@ begin
     Dest.Transparent := Source.Transparent;
   end;
 end;
-******************** NOT CONVERTED *)
 
 
 { Transparent bitmap }
@@ -2275,6 +2273,7 @@ begin
   end;
 end;
 ******************** NOT CONVERTED *)
+
 function PaletteColor(Color: TColor): Longint;
 begin
   Result := ColorToRGB(Color) or PaletteMask;
