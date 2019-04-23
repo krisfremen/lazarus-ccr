@@ -17,6 +17,7 @@ type
     BtnSearch: TButton;
     BtnGoTo: TButton;
     BtnGPSPoints: TButton;
+    BtnSaveToFile: TButton;
     CbDoubleBuffer: TCheckBox;
     CbFoundLocations: TComboBox;
     CbLocations: TComboBox;
@@ -46,6 +47,7 @@ type
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
     procedure BtnGPSPointsClick(Sender: TObject);
+    procedure BtnSaveToFileClick(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -173,6 +175,12 @@ begin
   MapView.Zoom := 12;
   MapView.Center := P.Loc;
   MapView.Invalidate;
+end;
+
+procedure TMainForm.BtnSaveToFileClick(Sender: TObject);
+begin
+  MapView.SaveToFile(TPortableNetworkGraphic, 'mapview.png');
+  ShowMessage('Map saved to "mapview.png".');
 end;
 
 procedure TMainForm.CbDoubleBufferChange(Sender: TObject);

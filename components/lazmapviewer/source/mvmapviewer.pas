@@ -116,6 +116,9 @@ Type
       procedure GetMapProviders(lstProviders: TStrings);
       function GetVisibleArea: TRealArea;
       function LonLatToScreen(aPt: TRealPoint): TPoint;
+      procedure SaveToFile(AClass: TRasterImageClass; const AFileName: String);
+      function SaveToImage(AClass: TRasterImageClass): TRasterImage;
+      procedure SaveToStream(AClass: TRasterImageClass; AStream: TStream);
       function ScreenToLonLat(aPt: TPoint): TRealPoint;
       procedure CenterOnObj(obj: TGPSObj);
       procedure ZoomOnArea(const aArea: TRealArea);
@@ -797,6 +800,44 @@ begin
   ACanvas.FillRect(0, 0, AWidth, AHeight);
 end;
 {$ENDIF}
+
+procedure TMapView.SaveToFile(AClass: TRasterImageClass; const AFileName: String);
+var
+  stream: TFileStream;
+begin
+  stream := TFileStream.Create(AFileName, fmCreate + fmShareDenyNone);
+  try
+    SaveToStream(AClass, stream);
+  finally
+    stream.Free;
+  end;
+end;
+
+function TMapView.SaveToImage(AClass: TRasterImageClass): TRasterImage;
+begin
+  Result := AClass.Create;
+  Result.Width := Width;
+  Result.Height := Height;
+  Result.Canvas.FillRect(0, 0, Width, Height);
+  {$IFDEF USE_RGBGRAPHICS}
+  Buffer.Canvas.DrawTo(Result.Canvas,0,0);
+  {$ENDIF}
+  {$IFDEF USE_LAZINTFIMAGE}
+  Result.LoadFromIntfImage(Buffer);
+  {$ENDIF}
+end;
+
+procedure TMapView.SaveToStream(AClass: TRasterImageClass; AStream: TStream);
+var
+  img: TRasterImage;
+begin
+  img := SaveToImage(AClass);
+  try
+    img.SaveToStream(AStream);
+  finally
+    img.Free;
+  end;
+end;
 
 function TMapView.ScreenToLonLat(aPt: TPoint): TRealPoint;
 begin

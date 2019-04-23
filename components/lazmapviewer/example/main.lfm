@@ -492,6 +492,20 @@ object MainForm: TMainForm
       }
       OnClick = BtnSaveMapProvidersClick
     end
+    object BtnSaveToFile: TButton
+      AnchorSideLeft.Control = BtnGPSPoints
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BtnGPSPoints
+      Left = 108
+      Height = 25
+      Top = 347
+      Width = 110
+      AutoSize = True
+      BorderSpacing.Left = 8
+      Caption = 'Save map to file'
+      OnClick = BtnSaveToFileClick
+      TabOrder = 11
+    end
   end
   object MapView: TMapView
     Left = 0
