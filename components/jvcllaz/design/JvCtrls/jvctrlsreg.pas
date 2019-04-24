@@ -16,14 +16,14 @@ implementation
 uses
   Classes, ActnList, JvDsgnConsts,
   JvMovableBevel, JvRuler, JvGroupHeader, JvRollOut,
-  JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm,
+  JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm, JvComboListBox,
   PropEdits, Controls;
 
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
     TJvMovableBevel, TJvMovablePanel, TJvRuler, TJvGroupHeader, TJvRollOut,
-    TJvHint, TJvHTLabel, TJvHTListbox, TJvHTCombobox
+    TJvHint, TJvHTLabel, TJvHTListbox, TJvHTCombobox, TJvComboListBox
   ]);
   RegisterPropertyEditor(TypeInfo(TCaption), TJvHTLabel, 'Caption', TJvHintProperty);
   RegisterActions(RsJVCLActionsCategory, [TJvRollOutAction], nil);
