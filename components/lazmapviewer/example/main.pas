@@ -24,13 +24,19 @@ type
     CbProviders: TComboBox;
     CbUseThreads: TCheckBox;
     CbMouseCoords: TGroupBox;
+    CbDistanceUnits: TComboBox;
     GbCenterCoords: TGroupBox;
+    GbScreenSize: TGroupBox;
     InfoCenterLatitude: TLabel;
+    InfoViewportHeight: TLabel;
     InfoCenterLongitude: TLabel;
     InfoBtnGPSPoints: TLabel;
     GPSPointInfo: TLabel;
+    InfoViewportWidth: TLabel;
     Label8: TLabel;
     LblCenterLatitude: TLabel;
+    LblViewportHeight: TLabel;
+    LblViewportWidth: TLabel;
     LblPositionLongitude: TLabel;
     LblPositionLatitude: TLabel;
     InfoPositionLongitude: TLabel;
@@ -53,11 +59,13 @@ type
       ARect: TRect; State: TOwnerDrawState);
     procedure CbProvidersChange(Sender: TObject);
     procedure CbUseThreadsChange(Sender: TObject);
+    procedure CbDistanceUnitsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure GeoNamesNameFound(const AName: string; const ADescr: String;
       const ALoc: TRealPoint);
+    procedure MapViewChange(Sender: TObject);
     procedure MapViewDrawGpsPoint(Sender, ACanvas: TObject; APoint: TGpsPoint);
     procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -72,6 +80,7 @@ type
     procedure ClearFoundLocations;
     procedure UpdateDropdownWidth(ACombobox: TCombobox);
     procedure UpdateLocationHistory(ALocation: String);
+    procedure UpdateViewportSize;
 
   public
     procedure ReadFromIni;
@@ -88,7 +97,7 @@ implementation
 
 uses
   LCLType, IniFiles, Math, FPCanvas, FPImage, IntfGraphics,
-  mvExtraData,
+  mvEngine, mvExtraData,
   gpslistform;
 
 type
@@ -227,6 +236,11 @@ begin
   MapView.UseThreads := CbUseThreads.Checked;
 end;
 
+procedure TMainForm.CbDistanceUnitsChange(Sender: TObject);
+begin
+  UpdateViewPortSize;
+end;
+
 procedure TMainForm.ClearFoundLocations;
 var
   i: Integer;
@@ -274,6 +288,11 @@ begin
   P.Descr := ADescr;
   P.Loc := ALoc;
   CbFoundLocations.Items.AddObject(AName, P);
+end;
+
+procedure TMainForm.MapViewChange(Sender: TObject);
+begin
+  UpdateViewportSize;
 end;
 
 procedure TMainForm.MapViewDrawGpsPoint(Sender, ACanvas: TObject;
@@ -332,12 +351,20 @@ var
   i: Integer;
 begin
   rPt := MapView.Center;
+  InfoCenterLongitude.Caption := Format('%.6f° = %s', [rPt.Lon, GPSToDMS(rPt.Lon)]);
+  InfoCenterLatitude.Caption := Format('%.6f° = %s', [rPt.Lat, GPSToDMS(rPt.Lat)]);
+  {
   InfoCenterLongitude.Caption := Format('%.6f°', [rPt.Lon]);
   InfoCenterLatitude.Caption := Format('%.6f°', [rPt.Lat]);
+  }
 
   rPt := MapView.ScreenToLonLat(Point(X, Y));
+  InfoPositionLongitude.Caption := Format('%.6f° = %s', [rPt.Lon, GPSToDMS(rPt.Lon)]);
+  InfoPositionLatitude.Caption := Format('%.6f° = %s', [rPt.Lat, GPSToDMS(rPt.Lat)]);
+  {
   InfoPositionLongitude.Caption := Format('%.6f°', [rPt.Lon]);
   InfoPositionLatitude.Caption  := Format('%.6f°', [rPt.Lat]);
+  }
 
   rArea.TopLeft := MapView.ScreenToLonLat(Point(X-DELTA, Y-DELTA));
   rArea.BottomRight := MapView.ScreenToLonLat(Point(X+DELTA, Y+DELTA));
@@ -349,7 +376,11 @@ begin
         for i:=0 to gpsList.Count-1 do
           if gpsList[i] is TGpsPoint then
             with TGpsPoint(gpsList[i]) do
-              L.Add(Format('%s' + Lineending + '  (lat=%.6f°, lon=%.6f°)', [Name, Lat, Lon]));
+              L.Add(Format('%s' + Lineending + '  (lat=%.6f°=%s, lon=%.6f°=%s°)', [
+                Name, Lat, GPSToDMS(Lat), Lon, GPSToDMS(Lon)
+              ]));
+              //L.Add(Format('%s' + Lineending + '  (lat=%.6f°, lon=%.6f°)', [Name, Lat, Lon]));
+
         GPSPointInfo.Caption := L.Text;
       finally
         L.Free;
@@ -468,6 +499,30 @@ begin
   while CbLocations.Items.Count > MAX_LOCATIONS_HISTORY do
     CbLocations.Items.Delete(Cblocations.items.Count-1);
   CbLocations.Text := ALocation;
+end;
+
+procedure TMainForm.UpdateViewportSize;
+begin
+  InfoViewportWidth.Caption := Format('%.2n %s', [
+    CalcGeoDistance(
+      MapView.GetVisibleArea.TopLeft.Lat,
+      MapView.GetVisibleArea.TopLeft.Lon,
+      MapView.GetVisibleArea.TopLeft.Lat,
+      MapView.GetVisibleArea.BottomRight.Lon,
+      TDistanceUnits(cbDistanceUnits.ItemIndex)
+    ),
+    cbDistanceUnits.Items[cbDistanceUnits.ItemIndex]
+  ]);
+  InfoViewportHeight.Caption := Format('%.2n %s', [
+    CalcGeoDistance(
+      MapView.GetVisibleArea.TopLeft.Lat,
+      MapView.GetVisibleArea.TopLeft.Lon,
+      MapView.GetVisibleArea.BottomRight.Lat,
+      MapView.GetVisibleArea.TopLeft.Lon,
+      TDistanceUnits(cbDistanceUnits.ItemIndex)
+    ),
+    cbDistanceUnits.Items[cbDistanceUnits.ItemIndex]
+  ]);
 end;
 
 procedure TMainForm.WriteToIni;

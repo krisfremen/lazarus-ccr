@@ -44,6 +44,8 @@ Type
 
   TTileIdArray = Array of TTileId;
 
+  TDistanceUnits = (duMeters, duKilometers, duMiles);
+
   { TMapWindow }
 
   TMapWindow = Record
@@ -160,6 +162,13 @@ Type
       property OnDrawTile: TDrawTileEvent read FOnDrawTile write FOnDrawTile;
       property OnZoomChange: TNotifyEvent read FOnZoomChange write FOnZoomChange;
   end;
+
+function CalcGeoDistance(Lat1, Lon1, Lat2, Lon2: double;
+  AUnits: TDistanceUnits = duKilometers): double;
+
+function GPSToDMS(Angle: Double): string;
+
+procedure SplitGps(AValue: Double; out ADegs, AMins, ASecs: Double);
 
 
 implementation
@@ -1089,6 +1098,66 @@ begin
   Redraw(MapWin);
 end;
 
+
+//------------------------------------------------------------------------------
+
+procedure SplitGps(AValue: Double; out ADegs, AMins: Double);
+begin
+  AValue := abs(AValue);
+  AMins := frac(AValue) * 60;
+  ADegs := trunc(AValue);
+end;
+
+procedure SplitGps(AValue: Double; out ADegs, AMins, ASecs: Double);
+begin
+  SplitGps(AValue, ADegs, AMins);
+  ASecs := frac(AMins) * 60;
+  AMins := trunc(AMins);
+end;
+
+function GPSToDMS(Angle: Double): string;
+var
+  deg, min, sec: Double;
+begin
+  SplitGPS(Angle, deg, min, sec);
+  Result := Format('%.0f° %.0f'' %.1f"', [deg, min, sec]);
+end;
+
+{ Returns the direct distance (air-line) between two geo coordinates
+ If latitude NOT between -90°..+90° and longitude NOT between -180°..+180°
+ the function returns -1.
+ Usage: FindDistance(51.53323, -2.90130, 51.29442, -2.27275, duKilometers);
+}
+function CalcGeoDistance(Lat1, Lon1, Lat2, Lon2: double;
+  AUnits: TDistanceUnits = duKilometers): double;
+const
+  raduis_km: double = 6371.0; // generalized radius of earth
+var
+  d_radians: double; // distance in radians
+  lat1r, lon1r, lat2r, lon2r: double;
+begin
+  // Validate
+  if (Lat1 < -90.0) or (Lat1 > 90.0) then exit(-1);
+  if (Lon1 < -180.0) or (Lon1 > 180.0) then exit(-1);
+  if (Lat2 < -90.0) or (Lat2 > 90.0) then exit(-1);
+  if (Lon2 < -180.0) or (Lon2 > 180.0) then exit(-1);
+
+  // Turn lat and lon into radian measures
+  lat1r := (PI / 180.0) * Lat1;
+  lon1r := (PI / 180.0) * Lon1;
+  lat2r := (PI / 180.0) * Lat2;
+  lon2r := (PI / 180.0) * Lon2;
+
+  // calc
+  d_radians := arccos(Sin(lat1r) * sin(lat2r) + cos(lat1r) * cos(lat2r) * cos(lon1r - lon2r));
+  Result := EARTH_RADIUS * d_radians;
+
+  case AUnits of
+    duMeters: ;
+    duKilometers: Result := Result * 1E-3;
+    duMiles: Result := Result * 0.62137E-3;
+  end;
+end;
 
 end.
 

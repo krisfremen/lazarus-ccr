@@ -1,10 +1,10 @@
 object MainForm: TMainForm
   Left = 345
-  Height = 545
+  Height = 581
   Top = 121
   Width = 869
   Caption = 'MainForm'
-  ClientHeight = 545
+  ClientHeight = 581
   ClientWidth = 869
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -13,11 +13,11 @@ object MainForm: TMainForm
   LCLVersion = '2.1.0.0'
   object ControlPanel: TPanel
     Left = 592
-    Height = 545
+    Height = 581
     Top = 0
     Width = 277
     Align = alRight
-    ClientHeight = 545
+    ClientHeight = 581
     ClientWidth = 277
     TabOrder = 1
     object CbProviders: TComboBox
@@ -145,11 +145,11 @@ object MainForm: TMainForm
         Left = 16
         Height = 15
         Top = 23
-        Width = 46
+        Width = 43
         BorderSpacing.Left = 16
         BorderSpacing.Top = 4
         BorderSpacing.Bottom = 8
-        Caption = 'Latitude:'
+        Caption = 'Latitude'
         ParentColor = False
       end
       object InfoPositionLongitude: TLabel
@@ -195,11 +195,11 @@ object MainForm: TMainForm
       AnchorSideRight.Side = asrBottom
       Left = 9
       Height = 66
-      Top = 185
+      Top = 181
       Width = 259
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
-      BorderSpacing.Top = 12
+      BorderSpacing.Top = 8
       Caption = 'Center'
       ClientHeight = 46
       ClientWidth = 255
@@ -223,11 +223,11 @@ object MainForm: TMainForm
         Left = 16
         Height = 15
         Top = 23
-        Width = 46
+        Width = 43
         BorderSpacing.Left = 16
         BorderSpacing.Top = 4
         BorderSpacing.Bottom = 8
-        Caption = 'Latitude:'
+        Caption = 'Latitude'
         ParentColor = False
       end
       object InfoCenterLongitude: TLabel
@@ -272,7 +272,7 @@ object MainForm: TMainForm
       AnchorSideRight.Control = BtnSearch
       Left = 9
       Height = 23
-      Top = 264
+      Top = 334
       Width = 190
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Right = 8
@@ -283,13 +283,13 @@ object MainForm: TMainForm
       Text = 'New York'
     end
     object BtnSearch: TButton
-      AnchorSideTop.Control = GbCenterCoords
+      AnchorSideTop.Control = GbScreenSize
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = GbCenterCoords
       AnchorSideRight.Side = asrBottom
       Left = 207
       Height = 25
-      Top = 263
+      Top = 333
       Width = 61
       Anchors = [akTop, akRight]
       AutoSize = True
@@ -305,7 +305,7 @@ object MainForm: TMainForm
       AnchorSideRight.Control = BtnGoTo
       Left = 9
       Height = 21
-      Top = 318
+      Top = 388
       Width = 196
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
@@ -325,7 +325,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrBottom
       Left = 9
       Height = 15
-      Top = 299
+      Top = 369
       Width = 177
       BorderSpacing.Top = 12
       Caption = 'Select one of the found locations:'
@@ -338,7 +338,7 @@ object MainForm: TMainForm
       AnchorSideRight.Side = asrBottom
       Left = 213
       Height = 25
-      Top = 316
+      Top = 386
       Width = 55
       Anchors = [akTop, akRight]
       AutoSize = True
@@ -354,7 +354,7 @@ object MainForm: TMainForm
       AnchorSideRight.Side = asrBottom
       Left = 8
       Height = 52
-      Top = 380
+      Top = 450
       Width = 260
       Anchors = [akTop, akLeft, akRight]
       AutoSize = False
@@ -368,7 +368,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrBottom
       Left = 8
       Height = 25
-      Top = 347
+      Top = 417
       Width = 92
       AutoSize = True
       BorderSpacing.Top = 8
@@ -383,8 +383,8 @@ object MainForm: TMainForm
       AnchorSideRight.Control = InfoBtnGPSPoints
       AnchorSideRight.Side = asrBottom
       Left = 8
-      Height = 80
-      Top = 432
+      Height = 64
+      Top = 502
       Width = 260
       Anchors = [akTop, akLeft, akRight]
       AutoSize = False
@@ -498,7 +498,7 @@ object MainForm: TMainForm
       AnchorSideTop.Control = BtnGPSPoints
       Left = 108
       Height = 25
-      Top = 347
+      Top = 417
       Width = 110
       AutoSize = True
       BorderSpacing.Left = 8
@@ -506,10 +506,110 @@ object MainForm: TMainForm
       OnClick = BtnSaveToFileClick
       TabOrder = 11
     end
+    object GbScreenSize: TGroupBox
+      AnchorSideLeft.Control = GbCenterCoords
+      AnchorSideTop.Control = GbCenterCoords
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GbCenterCoords
+      AnchorSideRight.Side = asrBottom
+      Left = 9
+      Height = 66
+      Top = 255
+      Width = 259
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      Caption = 'Viewport size'
+      ClientHeight = 46
+      ClientWidth = 255
+      TabOrder = 12
+      object LblViewportWidth: TLabel
+        AnchorSideLeft.Control = GbScreenSize
+        AnchorSideTop.Control = GbScreenSize
+        Left = 16
+        Height = 15
+        Top = 4
+        Width = 32
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        Caption = 'Width'
+        ParentColor = False
+      end
+      object LblViewportHeight: TLabel
+        AnchorSideLeft.Control = GbScreenSize
+        AnchorSideTop.Control = LblViewportWidth
+        AnchorSideTop.Side = asrBottom
+        Left = 16
+        Height = 15
+        Top = 23
+        Width = 36
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 8
+        Caption = 'Height'
+        ParentColor = False
+      end
+      object InfoViewportWidth: TLabel
+        AnchorSideTop.Control = GbScreenSize
+        AnchorSideRight.Control = GbScreenSize
+        AnchorSideRight.Side = asrBottom
+        Left = 205
+        Height = 15
+        Top = 4
+        Width = 34
+        Alignment = taRightJustify
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 16
+        Caption = 'Label2'
+        ParentColor = False
+      end
+      object InfoViewportHeight: TLabel
+        AnchorSideTop.Control = InfoViewportWidth
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = GbScreenSize
+        AnchorSideRight.Side = asrBottom
+        Left = 205
+        Height = 15
+        Top = 23
+        Width = 34
+        Alignment = taRightJustify
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 16
+        BorderSpacing.Bottom = 8
+        Caption = 'Label2'
+        ParentColor = False
+      end
+    end
+    object CbDistanceUnits: TComboBox
+      AnchorSideTop.Control = GbCenterCoords
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GbCenterCoords
+      AnchorSideRight.Side = asrBottom
+      Left = 176
+      Height = 23
+      Top = 253
+      Width = 76
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 16
+      ItemHeight = 15
+      ItemIndex = 1
+      Items.Strings = (
+        'm'
+        'km'
+        'miles'
+      )
+      OnChange = CbDistanceUnitsChange
+      Style = csDropDownList
+      TabOrder = 13
+      Text = 'km'
+    end
   end
   object MapView: TMapView
     Left = 0
-    Height = 545
+    Height = 581
     Hint = 'Displays the map'
     Top = 0
     Width = 592
@@ -523,6 +623,7 @@ object MainForm: TMainForm
     UseThreads = True
     Zoom = 0
     OnZoomChange = MapViewZoomChange
+    OnChange = MapViewChange
     OnDrawGpsPoint = MapViewDrawGpsPoint
     OnMouseMove = MapViewMouseMove
     OnMouseUp = MapViewMouseUp

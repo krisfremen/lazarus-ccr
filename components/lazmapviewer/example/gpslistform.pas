@@ -56,7 +56,7 @@ end;
 
 procedure TGPSListViewer.Populate;
 const
-  GPS_FORMAT = '0.000000';
+  GPS_FORMAT = '0.00000°';
 var
   i: Integer;
   item: TListItem;
