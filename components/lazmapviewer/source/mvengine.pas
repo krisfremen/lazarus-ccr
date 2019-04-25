@@ -1131,16 +1131,17 @@ end;
 function CalcGeoDistance(Lat1, Lon1, Lat2, Lon2: double;
   AUnits: TDistanceUnits = duKilometers): double;
 const
-  raduis_km: double = 6371.0; // generalized radius of earth
+  EPS = 1E-12;
 var
   d_radians: double; // distance in radians
   lat1r, lon1r, lat2r, lon2r: double;
+  arg: Double;
 begin
   // Validate
-  if (Lat1 < -90.0) or (Lat1 > 90.0) then exit(-1);
-  if (Lon1 < -180.0) or (Lon1 > 180.0) then exit(-1);
-  if (Lat2 < -90.0) or (Lat2 > 90.0) then exit(-1);
-  if (Lon2 < -180.0) or (Lon2 > 180.0) then exit(-1);
+  if (Lat1 < -90.0) or (Lat1 > 90.0) then exit(NaN);
+//  if (Lon1 < -180.0) or (Lon1 > 180.0) then exit(NaN);
+  if (Lat2 < -90.0) or (Lat2 > 90.0) then exit(NaN);
+//  if (Lon2 < -180.0) or (Lon2 > 180.0) then exit(NaN);
 
   // Turn lat and lon into radian measures
   lat1r := (PI / 180.0) * Lat1;
@@ -1149,7 +1150,13 @@ begin
   lon2r := (PI / 180.0) * Lon2;
 
   // calc
-  d_radians := arccos(Sin(lat1r) * sin(lat2r) + cos(lat1r) * cos(lat2r) * cos(lon1r - lon2r));
+  arg := sin(lat1r) * sin(lat2r) + cos(lat1r) * cos(lat2r) * cos(lon1r - lon2r);
+  if (arg < -1) or (arg > +1) then
+    exit(NaN);
+  if SameValue(abs(Lon1-Lon2), 360, EPS) and SameValue(abs(arg), 1.0, EPS) then
+    d_radians := PI * 2.0
+  else
+    d_radians := arccos(arg);
   Result := EARTH_RADIUS * d_radians;
 
   case AUnits of
