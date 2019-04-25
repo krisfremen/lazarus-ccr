@@ -46,7 +46,7 @@ implementation
 {$R *.lfm}
 
 uses
-  mvTypes;
+  mvTypes, mvEngine;
 
 destructor TGPSListViewer.Destroy;
 begin
@@ -55,8 +55,6 @@ begin
 end;
 
 procedure TGPSListViewer.Populate;
-const
-  GPS_FORMAT = '0.00000°';
 var
   i: Integer;
   item: TListItem;
@@ -80,8 +78,8 @@ begin
 //      item.Caption := IntToStr(gpsObj.ID);
       if gpsObj is TGpsPoint then begin
         item.SubItems.Add(gpsObj.Name);
-        item.Subitems.Add(FormatFloat(GPS_FORMAT, TGpsPoint(gpsObj).Lat));
-        item.Subitems.Add(FormatFloat(GPS_FORMAT, TGpsPoint(gpsObj).Lon));
+        item.Subitems.Add(LatToStr(TGpsPoint(gpsObj).Lat, true));
+        item.Subitems.Add(LonToStr(TGpsPoint(gpsObj).Lon, true));
       end;
     end;
   finally

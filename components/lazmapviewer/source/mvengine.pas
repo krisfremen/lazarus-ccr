@@ -168,6 +168,9 @@ function CalcGeoDistance(Lat1, Lon1, Lat2, Lon2: double;
 
 function GPSToDMS(Angle: Double): string;
 
+function LatToStr(ALatitude: Double; DMS: Boolean): String;
+function LonToStr(ALongitude: Double; DMS: Boolean): String;
+
 procedure SplitGps(AValue: Double; out ADegs, AMins, ASecs: Double);
 
 
@@ -1121,6 +1124,31 @@ var
 begin
   SplitGPS(Angle, deg, min, sec);
   Result := Format('%.0f° %.0f'' %.1f"', [deg, min, sec]);
+end;
+
+function LatToStr(ALatitude: Double; DMS: Boolean): String;
+begin
+  if DMS then
+    Result := GPSToDMS(abs(ALatitude))
+  else
+    Result := Format('%.6f°',[abs(ALatitude)]);
+  if ALatitude > 0 then
+    Result := Result + ' N'
+  else
+  if ALatitude < 0 then
+    Result := Result + 'E';
+end;
+
+function LonToStr(ALongitude: Double; DMS: Boolean): String;
+begin
+  if DMS then
+    Result := GPSToDMS(abs(ALongitude))
+  else
+    Result := Format('%.6f°', [abs(ALongitude)]);
+  if ALongitude > 0 then
+    Result := Result + ' E'
+  else if ALongitude < 0 then
+    Result := Result + ' W';
 end;
 
 { Returns the direct distance (air-line) between two geo coordinates

@@ -625,6 +625,7 @@ object MainForm: TMainForm
     OnZoomChange = MapViewZoomChange
     OnChange = MapViewChange
     OnDrawGpsPoint = MapViewDrawGpsPoint
+    OnMouseLeave = MapViewMouseLeave
     OnMouseMove = MapViewMouseMove
     OnMouseUp = MapViewMouseUp
   end

@@ -67,8 +67,8 @@ type
       const ALoc: TRealPoint);
     procedure MapViewChange(Sender: TObject);
     procedure MapViewDrawGpsPoint(Sender, ACanvas: TObject; APoint: TGpsPoint);
-    procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure MapViewMouseLeave(Sender: TObject);
+    procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure MapViewMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MapViewZoomChange(Sender: TObject);
@@ -78,6 +78,7 @@ type
 
   private
     procedure ClearFoundLocations;
+    procedure UpdateCoords(X, Y: Integer);
     procedure UpdateDropdownWidth(ACombobox: TCombobox);
     procedure UpdateLocationHistory(ALocation: String);
     procedure UpdateViewportSize;
@@ -110,9 +111,11 @@ const
   MAX_LOCATIONS_HISTORY = 50;
   HOMEDIR = '';
   MAP_PROVIDER_FILENAME = 'map-providers.xml';
+  USE_DMS = true;
 
 var
   PointFormatSettings: TFormatsettings;
+
 
 function CalcIniName: String;
 begin
@@ -339,32 +342,22 @@ begin
   end;
 end;
 
+procedure TMainForm.MapViewMouseLeave(Sender: TObject);
+begin
+  UpdateCoords(MaxInt, MaxInt);
+end;
+
 procedure TMainForm.MapViewMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 const
   DELTA = 3;
 var
-  rPt: TRealPoint;
   rArea: TRealArea;
   gpsList: TGpsObjList;
   L: TStrings;
   i: Integer;
 begin
-  rPt := MapView.Center;
-  InfoCenterLongitude.Caption := Format('%.6f° = %s', [rPt.Lon, GPSToDMS(rPt.Lon)]);
-  InfoCenterLatitude.Caption := Format('%.6f° = %s', [rPt.Lat, GPSToDMS(rPt.Lat)]);
-  {
-  InfoCenterLongitude.Caption := Format('%.6f°', [rPt.Lon]);
-  InfoCenterLatitude.Caption := Format('%.6f°', [rPt.Lat]);
-  }
-
-  rPt := MapView.ScreenToLonLat(Point(X, Y));
-  InfoPositionLongitude.Caption := Format('%.6f° = %s', [rPt.Lon, GPSToDMS(rPt.Lon)]);
-  InfoPositionLatitude.Caption := Format('%.6f° = %s', [rPt.Lat, GPSToDMS(rPt.Lat)]);
-  {
-  InfoPositionLongitude.Caption := Format('%.6f°', [rPt.Lon]);
-  InfoPositionLatitude.Caption  := Format('%.6f°', [rPt.Lat]);
-  }
+  UpdateCoords(X, Y);
 
   rArea.TopLeft := MapView.ScreenToLonLat(Point(X-DELTA, Y-DELTA));
   rArea.BottomRight := MapView.ScreenToLonLat(Point(X+DELTA, Y+DELTA));
@@ -376,11 +369,9 @@ begin
         for i:=0 to gpsList.Count-1 do
           if gpsList[i] is TGpsPoint then
             with TGpsPoint(gpsList[i]) do
-              L.Add(Format('%s' + Lineending + '  (lat=%.6f°=%s, lon=%.6f°=%s°)', [
-                Name, Lat, GPSToDMS(Lat), Lon, GPSToDMS(Lon)
+              L.Add(Format('%s (%s / %s)', [
+                Name, LatToStr(Lat, USE_DMS), LonToStr(Lon, USE_DMS)
               ]));
-              //L.Add(Format('%s' + Lineending + '  (lat=%.6f°, lon=%.6f°)', [Name, Lat, Lon]));
-
         GPSPointInfo.Caption := L.Text;
       finally
         L.Free;
@@ -458,6 +449,24 @@ begin
 
   finally
     ini.Free;
+  end;
+end;
+
+procedure TMainForm.UpdateCoords(X, Y: Integer);
+var
+  rPt: TRealPoint;
+begin
+  rPt := MapView.Center;
+  InfoCenterLongitude.Caption := LonToStr(rPt.Lon, USE_DMS);
+  InfoCenterLatitude.Caption := LatToStr(rPt.Lat, USE_DMS);
+
+  if (X <> MaxInt) and (Y <> MaxInt) then begin
+    rPt := MapView.ScreenToLonLat(Point(X, Y));
+    InfoPositionLongitude.Caption := LonToStr(rPt.Lon, USE_DMS);
+    InfoPositionLatitude.Caption := LatToStr(rPt.Lat, USE_DMS);
+  end else begin
+    InfoPositionLongitude.Caption := '-';
+    InfoPositionLatitude.Caption := '-';
   end;
 end;
 

@@ -73,7 +73,7 @@ begin
    {$IF FPC_FullVersion >= 30000}
     http.AllowRedirect := true;
    {$IFEND}
-    http.AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb)');
+    http.AddHeader('User-Agent', 'Mozilla/5.0 (compatible; fpweb)');
    {$IF FPC_FullVersion >= 30101}
     if UseProxy then begin
       http.Proxy.Host := FProxyHost;
