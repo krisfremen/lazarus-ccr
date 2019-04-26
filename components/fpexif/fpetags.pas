@@ -1501,6 +1501,8 @@ begin
 
   SetLength(sa, Length(FRawData));
   Move(FRawData[0], sa[1], Length(FRawData));
+
+  // Remove NULL byte
   while (sa <> '') and (sa[Length(sa)] = #0) do
     Delete(sa, Length(sa), 1);
 
@@ -1520,9 +1522,10 @@ begin
   end else
   begin
     sa := ansistring(AValue);
-    FCount := Length(sa);
+    FCount := Length(sa) + 1;   // +1 for NULL byte required by EXIF specification
     SetLength(FRawData, FCount);
     Move(sa[1], FRawData[0], FCount);
+    FRawData[FCount-1] := 0;   // Write NULL byte required by EXIF specification
   end;
 end;
 
