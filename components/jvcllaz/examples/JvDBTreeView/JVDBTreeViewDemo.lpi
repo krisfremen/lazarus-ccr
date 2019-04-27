@@ -30,7 +30,7 @@
         <PackageName Value="DBFLaz"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvDBLazR"/>
+        <PackageName Value="jvdblazr"/>
       </Item2>
       <Item3>
         <PackageName Value="FCL"/>
