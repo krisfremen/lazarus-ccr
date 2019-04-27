@@ -47,7 +47,7 @@ type
   TJvDataLink = class(TDataLink)
   protected
     procedure FocusControl(Field: TFieldRef); overload; override;
-    procedure FocusControl(const Field: TField); reintroduce; overload; virtual;
+    procedure FocusControl(const {%H-}Field: TField); reintroduce; overload; virtual;
   end;
 
   TCommit = (ctNone, ctStep, ctAll);
@@ -57,10 +57,7 @@ type
   private
     FErrPos: Integer;
   public
-    // The dummy parameter is only there for BCB compatibility so that
-    // when the hpp file gets generated, this constructor generates
-    // a C++ constructor that doesn't already exist
-    constructor Create(const AMessage: string; AErrPos: Integer; DummyForBCB: Integer = 0); overload;
+    constructor Create(const AMessage: string; AErrPos: Integer); overload;
     property ErrPos: Integer read FErrPos;
   end;
 
@@ -76,7 +73,7 @@ type
     procedure SetDataSet(Value: TDataSet);
   protected
     function MatchesLookup(Field: TField): Boolean;
-    procedure CheckFieldType(Field: TField); virtual;
+    procedure CheckFieldType({%H-}Field: TField); virtual;
     procedure ActiveChanged; virtual;
     function LocateFilter: Boolean; virtual;
     function LocateKey: Boolean; virtual;
@@ -219,7 +216,7 @@ begin
   DatabaseError(Msg);
 end;
 
-constructor EJvScriptError.Create(const AMessage: string; AErrPos: Integer; DummyForBCB: Integer);
+constructor EJvScriptError.Create(const AMessage: string; AErrPos: Integer);
 begin
   inherited Create(AMessage);
   FErrPos := AErrPos;
@@ -347,7 +344,7 @@ begin
     if not FLookupExact then
       Include(Options, loPartialKey);
     if FLookupValue = '' then
-      VarClear(Value)
+      VarClear(Value{%H-})
     else
       Value := FLookupValue;
     Result := DataSet.Locate(FLookupField.FieldName, Value, Options);

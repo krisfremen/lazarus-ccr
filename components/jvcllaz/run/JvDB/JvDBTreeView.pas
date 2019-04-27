@@ -144,7 +144,7 @@ type
     procedure DataChanged; dynamic;
     procedure DataScrolled; dynamic;
     procedure Change2(Node: TTreeNode); dynamic;
-    procedure RecordChanged(Field: TField); dynamic;
+    procedure RecordChanged({%H-}Field: TField); dynamic;
 
     function CanExpand(Node: TTreeNode): Boolean; override;
     procedure Collapse(Node: TTreeNode); override;
@@ -200,7 +200,7 @@ type
     procedure ActiveChanged; override;
     procedure RecordChanged(Field: TField); override;
     procedure DataSetChanged; override;
-    procedure DataSetScrolled(Distance: Integer); override;
+    procedure DataSetScrolled({%H-}Distance: Integer); override;
   public
     constructor Create(ATreeView: TJvCustomDBTreeView);
   end;
@@ -1180,7 +1180,7 @@ begin
           FDataLink.DataSet.FieldByName(FItemField).Text := Item.pszText;
         try
           FDataLink.DataSet.Post;
-          Change2(Self.Selected); {?}
+          Change2(Self.Selected); // ?
         except
           on E: Exception do
           begin
@@ -1548,8 +1548,8 @@ procedure TJvCustomDBTreeView.CreateWnd;
 var
   Node: TTreeNode;
   temp: string;
-  strLength: Integer;
-  HasChildren: Byte;
+  strLength: Integer = 0;
+  HasChildren: Byte = 0;
 begin
   inherited CreateWnd;
   // tree is restored. Now we must restore information about Master Values

@@ -76,7 +76,7 @@ type
     procedure ActiveChanged; override;
     procedure LayoutChanged; override;
     procedure DataSetChanged; override;
-    procedure DataSetScrolled(Distance: Integer); override;
+    procedure DataSetScrolled({%H-}Distance: Integer); override;
   end;
 
   { TJvLookupControl }
@@ -181,9 +181,9 @@ type
     procedure ListLinkDataChanged; virtual;
     procedure ListLinkDataSetChanged; virtual;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function GetPicture(Current, Empty: Boolean; var TextMargin: Integer): TGraphic; virtual;
-    function GetImageIndex(Current, Empty: Boolean; var TextMargin: Integer): Integer; virtual;
-    procedure UpdateDisplayEmpty(const Value: string); virtual;
+    function GetPicture({%H-}Current, Empty: Boolean; var TextMargin: Integer): TGraphic; virtual;
+    function GetImageIndex({%H-}Current, Empty: Boolean; var TextMargin: Integer): Integer; virtual;
+    procedure UpdateDisplayEmpty(const {%H-}Value: string); virtual;
     function SearchText(var AValue: string): Boolean;
     function GetWindowWidth: Integer;
     property DataField: string read FDataFieldName write SetDataFieldName;
@@ -245,7 +245,7 @@ type
     function GetKeyIndex: Integer;
     procedure ListDataChanged;
     procedure SelectCurrent;
-    procedure SelectItemAt(X, Y: Integer);
+    procedure SelectItemAt({%H-}X, Y: Integer);
     procedure SetRowCount(AValue: Integer);
     procedure StopTimer;
     procedure StopTracking;
@@ -254,7 +254,7 @@ type
     procedure UpdateBufferCount(Rows: Integer);
     procedure WMCancelMode(var Msg: TLMessage); message LM_CANCELMODE;
     procedure WMNCHitTest(var Msg: TLMNCHitTest); message LM_NCHITTEST;
-    procedure WMTimer(var Msg: TLMessage); message LM_TIMER;
+    procedure WMTimer(var {%H-}Msg: TLMessage); message LM_TIMER;
     procedure WMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
   protected
     procedure FontChanged(Sender: TObject); override;
@@ -284,7 +284,7 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
     procedure DrawItemText(ACanvas: TCanvas; Rect: TRect;
-      Selected, IsEmpty: Boolean); virtual;
+      {%H-}Selected, IsEmpty: Boolean); virtual;
     property RowCount: Integer read FRowCount write SetRowCount stored False;
     property DisplayValue;
     property Value;
@@ -413,7 +413,7 @@ type
     FMouseOverButton: Boolean;
     FMouseOver: Boolean;
     FWhenClosed: Int64;
-    procedure ListMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure ListMouseUp(Sender: TObject; Button: TMouseButton; {%H-}Shift: TShiftState; X, Y: Integer);
     procedure StopTracking;
     procedure TrackButton(X, Y: Integer);
     function GetMinHeight: Integer;
@@ -1917,7 +1917,6 @@ begin
   R := Rect;
   R.Right := R.Left;
   S := '';
-  //if Selected then
   Canvas.FillRect(Rect);
   ATop := (R.Bottom + R.Top - CanvasMaxTextHeight(ACanvas)) div 2;
   if FListStyle = lsFixed then
@@ -1984,7 +1983,8 @@ end;
 
 procedure TJvDBLookupList.Paint;
 var
-  I, J, TextHeight, TextMargin: Integer;
+  I, J, TextHeight: Integer;
+  TextMargin: Integer = 0;
   Image: TGraphic;
   R, ImageRect: TRect;
   Selected: Boolean;
@@ -2892,9 +2892,9 @@ var
   R: TRect;
 begin
   if BiDiMode = bdRightToLeft then
-    SetRect(R, FButtonWidth + 1, 1, ClientWidth - 1, ClientHeight - 1)
+    R := Rect(FButtonWidth + 1, 1, ClientWidth - 1, ClientHeight - 1)
   else
-    SetRect(R, 1, 1, ClientWidth - FButtonWidth - 1, ClientHeight - 1);
+    R := Rect(1, 1, ClientWidth - FButtonWidth - 1, ClientHeight - 1);
   InvalidateRect(Self.Handle, @R, False);
   UpdateWindow(Self.Handle);
 end;
@@ -3454,7 +3454,7 @@ begin
 
   if W > 4 then
   begin
-    SetRect(R, 1, 1, W - 1, ClientHeight - 1);
+    R := Rect(1, 1, W - 1, ClientHeight - 1);
     if TextMargin > 0 then
       Inc(TextMargin);
     X := 4 + TextMargin;
@@ -3664,7 +3664,7 @@ end;
 
 procedure TJvDBLookupCombo.WMSetCursor(var Msg: TLMSetCursor);
 var
-  Pt: TPoint;
+  Pt: TPoint = (X:0; Y:0);
   R: TRect;
 begin
   GetCursorPos(Pt);

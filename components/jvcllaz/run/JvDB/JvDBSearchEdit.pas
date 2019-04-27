@@ -51,7 +51,7 @@ type
     procedure SetDataSource(Value: TDataSource);
     procedure SetDataField(const Value: string);
     procedure SetSearchOptions(const Value: TLocateOptions);
-    procedure CMChanged(var Msg: TLMessage); message CM_CHANGED;
+    procedure CMChanged(var {%H-}Msg: TLMessage); message CM_CHANGED;
   protected
     procedure DoEnter; override;
     procedure DoExit; override;

@@ -359,7 +359,7 @@ type
     procedure SetOnCustomDraw(const Value: TTVCustomDrawEvent);
     procedure SetOnCustomDrawItem(const Value: TTVCustomDrawItemEvent);
   protected
-    procedure FocusSet(PrevWnd: THandle); override;
+    procedure FocusSet({%H-}PrevWnd: THandle); override;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure ListLinkActiveChanged; override;
   public
@@ -573,8 +573,8 @@ var
   Params: TCreateParams;
   R: TRect;
 begin
-  CreateParams(Params);
-  SetRect(R, 0, 0, 0, 0);
+  CreateParams(Params{%H-});
+  R := Rect(0, 0, 0, 0);
   AdjustWindowRectEx(R, Params.Style, False, Params.ExStyle);
   Result := R.Bottom - R.Top;
 end;
@@ -1463,10 +1463,11 @@ end;
 
 type
   TJvDBLookupTreeViewTree = class(TJvDBTreeView)
-  private
+  protected
     procedure DataScrolled; override;
     procedure DataChanged; override;
     procedure Change2(Node: TTreeNode); override;
+  public
     procedure DefaultHandler(var Message); override;
   end;
 
