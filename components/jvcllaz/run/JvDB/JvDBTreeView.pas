@@ -1581,7 +1581,9 @@ var
   strLength: Integer;
   HasChildren: Byte;
 begin
-  if Items.Count > 0 then
+  // wp: not clear if this still works correctly: had to add "Assigned(Items)"
+  // to prevent crash when destroying
+  if Assigned(Items) and (Items.Count > 0) then
   begin
     // save master values into stream
     FMastersStream := TMemoryStream.Create;
