@@ -3,3 +3,6 @@ tjvdbhtlabel.bmp
 tjvdbsearchcombobox.bmp
 tjvdbsearchedit.bmp
 tjvdbtreeview.bmp
+tjvdblookuptreeview.bmp
+tjvdblookuplist.bmp
+tjvdblookupcombo.bmp

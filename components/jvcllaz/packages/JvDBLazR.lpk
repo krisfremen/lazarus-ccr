@@ -19,7 +19,7 @@
 "/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
-    <Files Count="6">
+    <Files Count="8">
       <Item1>
         <Filename Value="..\run\JvDB\JvDBHTLabel.pas"/>
         <UnitName Value="JvDBHTLabel"/>
@@ -44,6 +44,14 @@
         <Filename Value="..\run\JvDB\jvdbutils.pas"/>
         <UnitName Value="JvDBUtils"/>
       </Item6>
+      <Item7>
+        <Filename Value="..\run\JvDB\jvdblookuptreeview.pas"/>
+        <UnitName Value="JvDBLookupTreeView"/>
+      </Item7>
+      <Item8>
+        <Filename Value="..\run\JvDB\jvdbconst.pas"/>
+        <UnitName Value="jvdbconst"/>
+      </Item8>
     </Files>
     <RequiredPkgs Count="4">
       <Item1>

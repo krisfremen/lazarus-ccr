@@ -67,6 +67,14 @@ begin
   JvDBTreeView1.FullCollapse;
 end;
 
+{ Assignment of table fields to tree
+
+   Table                 Tree
+   ID         -->    Tree.MasterField
+   ParentID   -->    Tree.DetailField
+   Name       -->    Tree.itemField
+   Icon       -->    Tree.IconField
+}
 procedure TForm1.FormCreate(Sender: TObject);
 
   procedure AddRecord(ID, ParentID: Integer; AName: String; AIcon: Integer = -1);

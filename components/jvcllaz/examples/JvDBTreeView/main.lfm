@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 509
   ClientWidth = 758
   OnCreate = FormCreate
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object DBGrid1: TDBGrid
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

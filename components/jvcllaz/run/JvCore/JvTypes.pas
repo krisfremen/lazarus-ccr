@@ -307,6 +307,7 @@ type
     ckID: TJvFourCC;
     ckSize: Longint;
   end;
+****************************)
 
   TJvAniHeader = packed record
     dwSizeof: Longint;
@@ -322,7 +323,6 @@ type
 
   TJvChangeColorEvent = procedure(Sender: TObject; Foreground, Background: TColor) of object;
 
-***********)
   TJvLayout = (lTop, lCenter, lBottom);
   TJvBevelStyle = (bsShape, bsLowered, bsRaised);
 

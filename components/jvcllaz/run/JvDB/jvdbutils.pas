@@ -132,6 +132,9 @@ procedure CheckRequiredField(Field: TField);
 procedure CheckRequiredFields(const Fields: array of TField);
 procedure GotoBookmarkEx(DataSet: TDataSet; const Bookmark: TBookmark; Mode: TResyncMode = [rmExact, rmCenter]; ForceScrollEvents: Boolean = False);
 
+function GetFieldProperty(ADataSet: TDataSet; AControl: TComponent;
+  const AFieldName: string): TField;
+
 { SQL expressions }
 
 function DateToSQL(Value: TDateTime): string;
@@ -263,6 +266,15 @@ begin
   except
   end;
 end;
+
+function GetFieldProperty(ADataSet: TDataSet; AControl: TComponent;
+  const AFieldName: string): TField;
+begin
+  Result := ADataSet.FindField(AFieldName);
+  if Result = nil then
+    DatabaseErrorFmt(SFieldNotFound, [AFieldName], AControl);
+end;
+
 
 { Refresh Query procedure }
 

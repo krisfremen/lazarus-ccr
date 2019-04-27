@@ -48,6 +48,19 @@ Usage:
   - The text to be displayed as node text is taken from field "ItemField"
   - Optionally, there can ba an "IconField" from which the icon index into the
     ImageList is taken.
+
+From http://wiki.delphi-jedi.org/wiki/JVCL_Help:TJvDBTreeView:
+  - MasterField: is equivalent to the absoluteIndex of the TreeView, a unique
+                 ID for each TreeNode or record in the table.
+  - DetailField: is the hierachical link to the parent item, a foreing key
+                 to the master filed in a self relation table
+  - ItemField:   is the field that contain the display name or the caption of
+                 a treeNode.
+  - IconField:   is a integer field that point to a image index on a TImageList
+                 object that contains the icons for the treeView.
+  - StartMasterValue: is the begining level to start build the TreeView,
+                 0 = start from the root itens, 1 = start from the second level,
+                 and so on.
 -----------------------------------------------------------------------------}
 // $Id$
 
@@ -201,9 +214,6 @@ type
     property MasterValue: Variant read FMasterValue;
   end;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvDBTreeView = class(TJvCustomDBTreeView)
   published
     property DataSource;

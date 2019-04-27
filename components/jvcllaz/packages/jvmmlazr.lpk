@@ -39,7 +39,7 @@
       </Item5>
       <Item6>
         <Filename Value="..\run\JvMM\jvid3v2base.pas"/>
-        <UnitName Value="JvID3v2Base"/>
+        <UnitName Value="JvId3v2Base"/>
       </Item6>
       <Item7>
         <Filename Value="..\run\JvMM\jvid3v2.pas"/>

@@ -336,6 +336,11 @@ function StrToBool(const S: string): Boolean;
 function Var2Type(V: Variant; const DestVarType: Integer): Variant;
 function VarToInt(V: Variant): Integer;
 function VarToFloat(V: Variant): Double;
+*************)
+
+function VarIsNullEmpty(const V: Variant): Boolean;
+
+(****************************** NOT CONVERTED ****
 
 { following functions are not documented
   because they do not work properly sometimes, so do not use them }
@@ -1255,7 +1260,7 @@ function FindUnusedFileName(FileName: string; const FileExt: string; NumberPrefi
 implementation
 
 uses
-  Math, LazFileUtils, LclStrConsts,
+  Math, Variants, LazFileUtils, LclStrConsts,
   JvConsts;
 
 (******************** NOT CONVERTED
@@ -2959,6 +2964,14 @@ function VarToFloat(V: Variant): Double;
 begin
   Result := Var2Type(V, varDouble);
 end;
+*********)
+
+function VarIsNullEmpty(const V: Variant): Boolean;
+begin
+  Result := VarIsNull(V) or VarIsEmpty(V);
+end;
+
+(************************** NOT CONVERTED ***
 
 function CopyDir(const SourceDir, DestDir: TFileName): Boolean;
 var
