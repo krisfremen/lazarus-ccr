@@ -22,14 +22,14 @@
     <Version Major="1" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvDB\JvDBReg.pas"/>
+        <Filename Value="..\design\JvDB\jvdbreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvDBReg"/>
       </Item1>
     </Files>
     <RequiredPkgs Count="5">
       <Item1>
-        <PackageName Value="JvStdCtrlsLazR"/>
+        <PackageName Value="jvstdctrlslazr"/>
       </Item1>
       <Item2>
         <PackageName Value="IDEIntf"/>
@@ -38,7 +38,7 @@
         <PackageName Value="JvCoreLazD"/>
       </Item3>
       <Item4>
-        <PackageName Value="JvDBLazR"/>
+        <PackageName Value="jvdblazr"/>
       </Item4>
       <Item5>
         <PackageName Value="FCL"/>

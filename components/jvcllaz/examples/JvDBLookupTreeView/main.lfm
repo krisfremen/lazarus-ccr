@@ -84,9 +84,10 @@ object Form1: TForm1
     Top = 0
     Width = 594
     Align = alTop
+    BevelOuter = bvNone
     Caption = '(Some) persons in the novel "The Grapes of Wrath" by John Steinbeck'
-    Color = clBackground
-    Font.Color = clHighlightText
+    Color = clBlack
+    Font.Color = clWhite
     Font.Height = -16
     Font.Style = [fsBold]
     ParentColor = False

@@ -90,7 +90,7 @@ type
     FSearchText: string;
     FLookupMode: Boolean;
     FListActive: Boolean;
-    FFocused: Boolean;
+//    FFocused: Boolean;
     FSearchTickCount: Integer;
     FOnKeyValueChange: TNotifyEvent;
     function CanModify: Boolean;
@@ -120,8 +120,10 @@ type
     procedure SetReadOnly(Value: Boolean);
     procedure CMGetDataLink(var Msg: TLMessage); message CM_GETDATALINK;
   protected
+    {
     procedure FocusKilled(NextWnd: THandle); override;
     procedure FocusSet(PrevWnd: THandle); override;
+    }
     procedure GetDlgCode(var Code: TDlgCodes); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     property DataField: string read FDataFieldName write SetDataFieldName;
@@ -359,7 +361,9 @@ type
     procedure SetOnCustomDraw(const Value: TTVCustomDrawEvent);
     procedure SetOnCustomDrawItem(const Value: TTVCustomDrawItemEvent);
   protected
+    {
     procedure FocusSet({%H-}PrevWnd: THandle); override;
+    }
     procedure CreateParams(var Params: TCreateParams); override;
     procedure ListLinkActiveChanged; override;
   public
@@ -438,7 +442,7 @@ implementation
 
 uses
   Variants,
-  CommCtrl, Graphics, DBConst,
+  Graphics, DBConst,
   JvJclUtils, JvDBConst, JvDBUtils, JvThemes;
 
 //=== { TJvLookupDataSourceLink } ============================================
@@ -835,6 +839,7 @@ begin
   Code := [dcWantArrows, dcWantChars];
 end;
 
+{
 procedure TJvDBLookupControl.FocusKilled(NextWnd: THandle);
 begin
   FFocused := False;
@@ -848,7 +853,7 @@ begin
   inherited FocusSet(PrevWnd);
   Invalidate;
 end;
-
+}
 procedure TJvDBLookupControl.CMGetDataLink(var Msg: TLMessage);
 begin
   Msg.Result := LRESULT(FDataLink);
@@ -1569,10 +1574,12 @@ begin
   end;
 end;
 
+{
 procedure TJvDBLookupTreeView.FocusSet(PrevWnd: THandle);
 begin
   FTree.SetFocus;
 end;
+}
 
 function TJvDBLookupTreeView.GetShowButtons: Boolean;
 begin

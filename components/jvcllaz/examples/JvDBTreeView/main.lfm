@@ -12,10 +12,9 @@ object Form1: TForm1
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Bevel1
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
+    AnchorSideBottom.Control = StatusBar1
     Left = 0
-    Height = 509
+    Height = 486
     Top = 0
     Width = 378
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -86,6 +85,8 @@ object Form1: TForm1
     TabOrder = 3
     object Button1: TButton
       AnchorSideLeft.Control = Panel1
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
       Left = 4
       Height = 25
       Top = 4

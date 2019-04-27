@@ -55,10 +55,10 @@
     </Files>
     <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="JvStdCtrlsLazR"/>
+        <PackageName Value="jvstdctrlslazr"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvCtrlsLazR"/>
+        <PackageName Value="jvctrlslazr"/>
       </Item2>
       <Item3>
         <PackageName Value="JvCoreLazR"/>
