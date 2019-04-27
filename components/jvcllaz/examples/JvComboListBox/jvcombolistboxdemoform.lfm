@@ -43,6 +43,7 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       ParentColor = False
     end
     object Label2: TLabel
+      AnchorSideTop.Control = Memo1
       Left = 416
       Height = 15
       Top = 32
@@ -52,36 +53,48 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       ParentColor = False
     end
     object Label3: TLabel
+      AnchorSideTop.Control = btnCopyText
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 15
-      Top = 200
+      Top = 197
       Width = 58
+      BorderSpacing.Top = 4
       Caption = 'Draw &Type:'
       ParentColor = False
     end
     object Label4: TLabel
+      AnchorSideTop.Control = edItemHeight
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 15
-      Top = 72
+      Top = 74
       Width = 74
+      BorderSpacing.Top = 4
       Caption = 'Button &Width:'
       FocusControl = edButtonWidth
       ParentColor = False
     end
     object Label5: TLabel
+      AnchorSideTop.Control = cbPopupAlign
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 15
-      Top = 280
+      Top = 281
       Width = 51
+      BorderSpacing.Top = 4
       Caption = 'Col&umns:'
       FocusControl = edColumns
       ParentColor = False
     end
     object Label6: TLabel
+      AnchorSideTop.Control = cbDrawStyle
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 15
-      Top = 240
+      Top = 239
       Width = 90
+      BorderSpacing.Top = 4
       Caption = 'Dro&pdown Align:'
       FocusControl = cbPopupAlign
       ParentColor = False
@@ -1659,36 +1672,47 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       end
     end
     object btnLoadImage: TButton
+      AnchorSideTop.Control = chkInsert
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 25
-      Top = 372
+      Top = 365
       Width = 87
+      BorderSpacing.Top = 4
       Caption = 'L&oad image...'
       OnClick = btnLoadImageClick
       TabOrder = 15
     end
     object btnCopyImage: TButton
+      AnchorSideTop.Control = btnLoadImage
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 25
-      Top = 400
+      Top = 394
       Width = 87
+      BorderSpacing.Top = 4
       Caption = 'Cop&y Image'
       OnClick = btnCopyImageClick
       TabOrder = 16
     end
     object btnCopyText: TButton
+      AnchorSideTop.Control = btnLoadText
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 25
       Top = 168
       Width = 87
+      BorderSpacing.Top = 4
       Caption = '&Copy text'
       OnClick = btnCopyTextClick
       TabOrder = 7
     end
     object edItemHeight: TEdit
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 23
-      Top = 48
+      Top = 47
       Width = 96
       TabOrder = 1
       Text = '48'
@@ -1696,7 +1720,7 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
     object udItemHeight: TUpDown
       Left = 512
       Height = 23
-      Top = 48
+      Top = 47
       Width = 15
       Associate = edItemHeight
       Max = 32767
@@ -1706,9 +1730,11 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       TabOrder = 2
     end
     object cbDrawStyle: TComboBox
+      AnchorSideTop.Control = Label3
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 23
-      Top = 216
+      Top = 212
       Width = 110
       ItemHeight = 15
       Items.Strings = (
@@ -1721,9 +1747,11 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       TabOrder = 9
     end
     object edButtonWidth: TEdit
+      AnchorSideTop.Control = Label4
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 23
-      Top = 88
+      Top = 89
       Width = 96
       TabOrder = 3
       Text = '26'
@@ -1731,7 +1759,7 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
     object udButtonWidth: TUpDown
       Left = 512
       Height = 23
-      Top = 88
+      Top = 89
       Width = 15
       Associate = edButtonWidth
       Max = 32767
@@ -1741,24 +1769,32 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       TabOrder = 4
     end
     object btnLoadText: TButton
+      AnchorSideTop.Control = chkCustomDrop
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 25
-      Top = 140
+      Top = 139
       Width = 87
+      BorderSpacing.Top = 4
       Caption = '&Load text...'
       OnClick = btnLoadTextClick
       TabOrder = 6
     end
     object chkHotTrackCombo: TCheckBox
+      AnchorSideTop.Control = edColumns
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 19
-      Top = 328
+      Top = 323
       Width = 109
+      BorderSpacing.Top = 4
       Caption = 'Hot&TrackCombo'
       OnClick = chkHotTrackComboClick
       TabOrder = 13
     end
     object edColumns: TEdit
+      AnchorSideTop.Control = Label5
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 23
       Top = 296
@@ -1779,18 +1815,22 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       TabOrder = 12
     end
     object chkInsert: TCheckBox
+      AnchorSideTop.Control = chkHotTrackCombo
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 19
-      Top = 344
+      Top = 342
       Width = 83
       Caption = 'Ins&ert at top'
       OnClick = chkHotTrackComboClick
       TabOrder = 14
     end
     object cbPopupAlign: TComboBox
+      AnchorSideTop.Control = Label6
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 23
-      Top = 256
+      Top = 254
       Width = 110
       DropDownCount = 100
       ItemHeight = 15
@@ -1804,10 +1844,13 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
       TabOrder = 10
     end
     object chkCustomDrop: TCheckBox
+      AnchorSideTop.Control = edButtonWidth
+      AnchorSideTop.Side = asrBottom
       Left = 416
       Height = 19
-      Top = 120
+      Top = 116
       Width = 91
+      BorderSpacing.Top = 4
       Caption = 'Custom &Drop'
       TabOrder = 5
     end

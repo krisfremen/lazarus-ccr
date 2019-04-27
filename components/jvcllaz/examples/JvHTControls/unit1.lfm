@@ -109,11 +109,13 @@ object Form1: TForm1
         Width = 5
       end
       object Memo2: TMemo
-        Left = 160
+        AnchorSideLeft.Control = Splitter2
+        AnchorSideLeft.Side = asrBottom
+        Left = 157
         Height = 90
         Hint = '<b>New item content</b><br><i>Enter new item contnent</i>'
         Top = 8
-        Width = 406
+        Width = 409
         Anchors = [akTop, akLeft, akRight]
         Lines.Strings = (
           'new item...'
@@ -123,7 +125,9 @@ object Form1: TForm1
         TabOrder = 2
       end
       object Button1: TButton
-        Left = 160
+        AnchorSideLeft.Control = Splitter2
+        AnchorSideLeft.Side = asrBottom
+        Left = 157
         Height = 25
         Hint = '<b>Add item</b><br>'#13#10'<i>Add item to ListBox and ComboBox</i>'
         Top = 112
@@ -136,7 +140,9 @@ object Form1: TForm1
         TabOrder = 3
       end
       object JvHTComboBox1: TJvHTComboBox
-        Left = 160
+        AnchorSideLeft.Control = Splitter2
+        AnchorSideLeft.Side = asrBottom
+        Left = 157
         Height = 24
         Hint = '<b>TJvHTComboBox</b><br>'#13#10'<i>ComboBox with HT items</i>'
         Top = 160
@@ -164,11 +170,14 @@ object Form1: TForm1
         TabOrder = 4
       end
       object Button2: TButton
-        Left = 264
+        AnchorSideLeft.Control = Button1
+        AnchorSideLeft.Side = asrBottom
+        Left = 256
         Height = 25
         Top = 112
         Width = 53
         AutoSize = True
+        BorderSpacing.Left = 24
         Caption = 'Clear'
         OnClick = Button2Click
         TabOrder = 5

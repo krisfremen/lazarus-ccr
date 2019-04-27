@@ -196,6 +196,7 @@ begin
   if Memo1.SelLength = 0 then
     Memo1.SelectAll;
   Memo1.CopyToClipboard;
+  UpdateFromClipboardText;
 end;
 
 procedure TJvComboListBoxDemoFrm.btnCopyImageClick(Sender: TObject);

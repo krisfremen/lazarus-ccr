@@ -112,3 +112,6 @@ end;
 
 end.
 
+
+// Text on tab 3:
+//Numeric field: <b><field="Num"></b><br>Field 1: <b><font color="clRed"><field="fld1"></font></b><br><i>Field 2:</i> <b><font color="clGreen"><field="fld2"></font></b><br>And some link: <a href="url"><field="Fld1"></a><br><a href="qwe">#<field="num"></a> - <b><field="fld1"> <field="fld2"></b>
