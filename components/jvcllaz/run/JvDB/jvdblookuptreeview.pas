@@ -36,6 +36,19 @@ History:
     - support for BiDi mode
      (thanks to Oussama Al-Rifai);
 
+Usage:
+  - Attach main table to "DataSource"
+  - Attach lookup table to "ListSource"
+  - Assign ID field of the main table to "DataField"; this is a unique ID of
+    the current record in the dataset.
+  - Assign ID field of the lookup dataset which matches the ID field of the
+    main table to the "KeyField"
+  - Assign the field of the lookup table with the lookup text to "ListField"
+  - MasterField and DetailField establish the links for the tree:
+    - "MasterField" is the ID of a record in the lookup table (usually the
+      same as "Keyfield")
+    - "DetailField" is the ID of the parent record for the current record
+
 Known Issues:
 -----------------------------------------------------------------------------}
 // $Id$
@@ -1225,7 +1238,8 @@ begin
       if PtInRect(FDataList.ClientRect, ListPos) then
       begin
         StopTracking;
-        MousePos := PointToSmallPoint(ListPos);
+        MousePos.X := ListPos.X;
+        MousePos.Y := ListPos.Y;
         SendMessage(FDataList.FTree.Handle, WM_LBUTTONDOWN, 0, {$IFDEF RTL230_UP}PointToLParam{$ELSE}LPARAM{$ENDIF RTL230_UP}(MousePos));
         Exit;
       end;

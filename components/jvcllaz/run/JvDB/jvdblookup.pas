@@ -3176,11 +3176,8 @@ begin
       if PtInRect(FDataListForm.FList.ClientRect, ListPos) then
       begin
         StopTracking;
-        {$IFDEF CPU64}
-        MousePos := ListPos;
-        {$ELSE}
-        MousePos := PointToSmallPoint(ListPos);
-        {$ENDIF}
+        MousePos.X := ListPos.X;
+        MousePos.Y := ListPos.Y;
         SendMessage(FDataListForm.FList.Handle, LM_LBUTTONDOWN, 0, LPARAM(MousePos));
         Exit;
       end;
