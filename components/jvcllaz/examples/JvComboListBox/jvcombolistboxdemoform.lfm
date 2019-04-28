@@ -10,8 +10,6 @@ object JvComboListBoxDemoFrm: TJvComboListBoxDemoFrm
   Constraints.MinHeight = 480
   Constraints.MinWidth = 500
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Shell Dlg 2'
   OnCreate = FormCreate
   LCLVersion = '2.1.0.0'
   object Splitter1: TSplitter

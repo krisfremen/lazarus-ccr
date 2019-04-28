@@ -102,6 +102,7 @@ type
     FOnGetText: TJvListBoxDataEvent;
     procedure SetDrawStyle(const Value: TJvComboListBoxDrawStyle);
     function DestRect(Picture: TPicture; ARect: TRect): TRect;
+    procedure FixItemRect(var ARect: TRect);
     function GetOffset(OrigRect, ImageRect: TRect): TRect;
     procedure SetButtonWidth(const Value: Integer);
     procedure SetDropdownMenu(const Value: TPopupMenu);
@@ -203,7 +204,7 @@ type
 implementation
 
 uses
-  Math, Themes, JvJVCLUtils;
+  Types, Math, Themes, LCLPlatformDef, InterfaceBase, JvJVCLUtils;
 
 constructor TJvComboListBox.Create(AOwner: TComponent);
 begin
@@ -362,9 +363,9 @@ var
   uState: Cardinal;
   details: TThemedElementDetails;
 begin
-  if ThemeServices.ThemesEnabled then begin
+  if ThemeServices.ThemesEnabled and (WidgetSet.LclPlatform <> lpQT) then begin
     details := ThemeServices.GetElementDetails(DROPDOWN_DETAILS[Highlight, Pushed]);
-    ThemeServices.DrawElement(ACanvas.Handle, details, R, nil)
+    ThemeServices.DrawElement(ACanvas.Handle, details, R, nil);
   end else
   begin
     uState := DFCS_SCROLLDOWN;
@@ -389,6 +390,7 @@ var
 begin
   if (Index < 0) or (Index >= Items.Count) or Assigned(OnDrawItem) then
     Exit;
+  FixItemRect(ARect);
   Canvas.Lock;
   try
     if State * [odSelected, odFocused] <> [] then
@@ -486,6 +488,15 @@ begin
   end;
 end;
 
+procedure TJvComboListBox.FixItemRect(var ARect: TRect);
+var
+  w: Integer;
+begin
+  if Columns = 0 then w := ClientWidth else w := ClientWidth div Columns;
+  if ARect.Right - ARect.Left > w then
+    ARect.Right := ARect.Left + w;
+end;
+
 function TJvComboListBox.GetOffset(OrigRect, ImageRect: TRect): TRect;
 var
   W, H, W2, H2: Integer;
@@ -517,19 +528,20 @@ end;
 
 procedure TJvComboListBox.InvalidateItem(Index: Integer);
 var
-  R, R2: TRect;
+  R: TRect;
 begin
   if Index < 0 then
     Index := ItemIndex;
   R := ItemRect(Index);
-  R2 := R;
+//  R2 := R;
   // we only want to redraw the combo button
   if not IsRectEmpty(R) then
   begin
+    FixItemRect(R);
     R.Right := R.Right - ButtonWidth;
     // don't redraw content, just button
     ExcludeClipRect(Canvas.Handle, R.Left, R.Top, R.Right, R.Bottom);
-    InvalidateRect(Handle, @R2, False);
+    InvalidateRect(Handle, @R, False);
   end;
 end;
 
@@ -547,6 +559,7 @@ begin
     P := Point(X, Y);
     I := ItemAtPos(P, True);
     R := ItemRect(I);
+    FixItemRect(R);
     if (I = ItemIndex) and (X >= R.Right - ButtonWidth) and (X <= R.Right) then
     begin
       FMouseOver := True;
@@ -588,6 +601,7 @@ begin
     P := Point(X, Y);
     I := ItemAtPos(P, True);
     R := ItemRect(I);
+    FixItemRect(R);
     if HotTrackCombo and (I <> FLastHotTrack) then
     begin
       if FLastHotTrack > -1 then
