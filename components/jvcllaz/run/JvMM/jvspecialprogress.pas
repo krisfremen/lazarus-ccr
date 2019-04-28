@@ -661,7 +661,7 @@ begin
   PaintText;
   PaintRectangle;
 
-  Repaint;
+  Invalidate;
 end;
 
 procedure TJvSpecialProgress.UpdateBlock;

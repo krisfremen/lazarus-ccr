@@ -97,7 +97,7 @@ var
   Index: Integer;
   LSearchRec: TSearchRec;
 begin
-  ImgDir := IncludeTrailingPathDelimiter(GetCurrentDir) + '..\..\design\JvCtrls\images\';
+  ImgDir := IncludeTrailingPathDelimiter(GetCurrentDir) + '../../design/JvCtrls/images/';
   if FindFirst(ImgDir + '*.png', faAnyFile, LSearchRec) = 0 then
     repeat
       ComboBoxFileName.Items.Add(LSearchRec.Name);

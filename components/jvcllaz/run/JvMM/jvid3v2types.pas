@@ -231,7 +231,7 @@ function ID3_StringToFrameID(const S: AnsiString): TJvID3FrameID;
 function ID3_FrameIDToString(const ID: TJvID3FrameID; const Size: Integer = 4): AnsiString;
 
 { Genre procedures }
-function ID3_GenreToID(const AGenre: string; const InclWinampGenres: Boolean = True): Integer;
+function ID3_GenreToID(const AGenre: string; const {%H-}InclWinampGenres: Boolean = True): Integer;
 { searches for a genre that is a prefix for AGenreLong }
 function ID3_LongGenreToID(const ALongGenre: string; const InclWinampGenres: Boolean = True): Integer;
 function ID3_IDToGenre(const ID: Integer; const InclWinampGenres: Boolean = True): string;
@@ -258,7 +258,6 @@ uses
   AnsiStrings,
   {$ENDIF HAS_UNIT_ANSISTRINGS}
   *)
-  JvJCLUtils,
   JvConsts, JvResources, JvTypes;
 
 type

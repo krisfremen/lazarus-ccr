@@ -373,7 +373,7 @@ end;
 
 procedure TJvID3FramesEditor.NewFrameClick(Sender: TObject);
 var
-  Selection: TStringList;
+  //Selection: TStringList;
   Frame: TJvID3Frame;
 begin
   Frame := DoNewFrame;
@@ -478,8 +478,8 @@ end;
 
 procedure TJvID3FramesEditor.UpdateFrameList;
 var
-  ItemIndex, TopIndex: Integer;
-  Selection: TStringList;
+  //ItemIndex, TopIndex: Integer;
+  //Selection: TStringList;
   EnableList: Boolean;
   I: Integer;
   Frame: TJvID3Frame;

@@ -87,13 +87,11 @@ end;
 
 procedure TForm1.CreateCombinedImage(ABitmap: TBitmap;
   out ANumCols, ANumRows: Integer);
-const
-  W = 24;
-  H = 24;
 var
   pic: TPicture;
   c, r, i: Integer;
   L: TStrings;
+  W, H: Integer;
 begin
   L := TStringList.Create;
   try
@@ -132,6 +130,16 @@ begin
     L.Add('../design/JvCustomControls/images/tjvvalidateedit.png');    // 32
     ANumCols := 8;
     ANumRows := 4;
+
+    pic := TPicture.Create;
+    try
+      pic.LoadFromFile(L[0]);
+      W := pic.Width;
+      H := pic.Height;
+    finally
+      pic.Free;
+    end;
+
     ABitmap.SetSize(ANumCols * W, ANumRows * H);
     ABitmap.Canvas.Brush.Color := clWhite;
     Abitmap.Canvas.FillRect(0, 0, ABitmap.Width, ABitmap.Height);

@@ -79,7 +79,7 @@ type
     procedure SetWantDrawBuffer(Value: Boolean);
   protected
     procedure Paint; override;
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure KeyDown(var Key: Word; {%H-}Shift: TShiftState); override;
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -88,12 +88,12 @@ type
     procedure DrawFocus;
     procedure DrawFrame(X, Y: Integer);
     procedure SetFullColor(const Value: TJvFullColor); virtual;
-    procedure MouseColor(Shift: TShiftState; X, Y: Integer); virtual;
+    procedure MouseColor({%H-}Shift: TShiftState; X, Y: Integer); virtual;
     procedure AxisConfigChange; virtual;
     procedure DrawBuffer; virtual;
     procedure ColorSpaceChange; virtual;
     procedure CalcSize; virtual;
-    procedure KeyMove(KeyCode: TJvKeyCode; MoveCount: Integer); virtual;
+    procedure KeyMove({%H-}KeyCode: TJvKeyCode; {%H-}MoveCount: Integer); virtual;
     procedure InvalidateCursor; virtual; abstract;
     property WantDrawBuffer: Boolean read FWantDrawBuffer write SetWantDrawBuffer;
     property MouseDragging: Boolean read FMouseDragging;
@@ -241,7 +241,7 @@ type
       X, Y: Integer); override;
     procedure MouseColor(Shift: TShiftState;
       X, Y: Integer); override;
-    procedure KeyMove(KeyCode: TJvKeyCode; MoveCount: Integer); override;
+    procedure KeyMove({%H-}KeyCode: TJvKeyCode; {%H-}MoveCount: Integer); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure TrackBarColorChange(Sender: TObject); override;
   public
@@ -669,7 +669,7 @@ type
     procedure SetSelected(const Value: TJvFullColor);
     procedure SetSelectedIndex(const Value: Integer);
     procedure SetBrush(const Value: TBrush);
-    procedure MouseLeave(var Msg: TLMMouse); message LM_MOUSELEAVE;
+//    procedure MouseLeave(var Msg: TLMMouse); message LM_MOUSELEAVE;
     procedure CMHintShow(var Msg: TLMessage); message CM_HINTSHOW;
   protected
     procedure Paint; override;
@@ -765,7 +765,7 @@ function AxisConfigToString(AxisConfig: TJvFullColorAxisConfig;
   ItemFormat: TJvFullColorAxisConfigFormat; AColorSpace: TJvColorSpace): string;
 var
   Str: string;
-  AxisConfigs: TJvFullColorAxisConfigs;
+  //AxisConfigs: TJvFullColorAxisConfigs;
 begin
   Str := GetEnumName(TypeInfo(TJvFullColorAxisConfig), Ord(AxisConfig));
   case ItemFormat of
@@ -774,7 +774,7 @@ begin
     afIndent:
       Result := Str;
   else
-    AxisConfigs := TabAxisConfigs[AxisConfig];
+    //AxisConfigs := TabAxisConfigs[AxisConfig];
     Result := Format('[%s] = %s ; [%s] = %s ; [%s] = %s',
       [Str[3], AColorSpace.AxisName[axIndex0], Str[4],
       AColorSpace.AxisName[axIndex1], Str[5], AColorSpace.AxisName[axIndex2]]);
@@ -1175,6 +1175,7 @@ begin
             // Delphi TColor is (MSB) 00BBGGRR (LSB)
 //            Line^[IndexX] := RGBToBGR(ConvertToColor(TempColor));
             P^ := RGBToBGR(ConvertToColor(TempColor));
+            PColorRGBA(P)^.a := 255;
             inc(P);
           end;
         end;
@@ -1592,7 +1593,7 @@ begin
           end;
           // (outchy) don't remove, Bitmap colors are stocked as (MSB) 00RRGGBB (LSB)
           // Delphi TColor is (MSB) 00BBGGRR (LSB)
-          Line^[X] := RGBToBGR(ConvertToColor(Magic1 or (Magic2 shl 8) or (Magic3 shl 16)));
+          Line^[X] := RGBToBGR(ConvertToColor(Magic1 or (Magic2 shl 8) or (Magic3 shl 16))) + $FF000000;
 //          P^ := RGBToBGR(ConvertToColor(Magic1 or (Magic2 shl 8) or (Magic3 shl 16)));
 //          inc(P);
         end
@@ -2843,6 +2844,7 @@ begin
       spLeft:
         begin
           ShapeTop := (h - FShapeHeight) div 2;
+          ShapeLeft := 0;
           TextLeft := FShapeWidth + FSpacing;
           TextTop := (h - TextHeight(FCaption)) div 2;
         end;
@@ -3495,13 +3497,14 @@ begin
   end;
 end;
 
+{
 procedure TJvFullColorGroup.MouseLeave(var Msg: TLMMouse);
 begin
   FMouseIndex := -1;
   Msg.Result := 1;
   Refresh;
 end;
-
+  }
 {$IFDEF RTL200_UP}
 // for D2009 "Use Controls.PHintInfo" warning
 type
@@ -3518,7 +3521,7 @@ var
   AColorID: TJvFullColorSpaceID;
   AColorSpace: TJvColorSpace;
 begin
-  AHintInfo := PHintInfo(Msg.LParam);
+  AHintInfo := {%H-}PHintInfo(PtrInt(Msg.LParam));
   ColorIndex := -1;
 
   CalcRects(XPos, YPos, XInc, YInc);
@@ -3691,7 +3694,7 @@ var
   XOffset, YOffset, XInc, YInc: Integer;
   X, Y: Integer;
   lEdge: TJvFullColorEdge;
-  ClipRect: TRect;
+  lClipRect: TRect;
 
   procedure BevelRect(const R: TRect; Style: TJvFullColorEdge;
     FillStyle: TBrushStyle; FillColor: TColor);
@@ -3738,7 +3741,7 @@ begin
 
   Y := YOffset;
   X := XOffset;
-  ClipRect := Canvas.ClipRect;
+  lClipRect := Canvas.ClipRect;
 
   Index := 0;
   while Index < Items.Count do
@@ -3772,9 +3775,9 @@ begin
     for IndexY := 0 to RowCount do
     begin
       Rectangle(
-        Max(ClipRect.Left, 1),
+        Max(lClipRect.Left, 1),
         Max(Y - YInc + 1, 1),
-        Min(ClipRect.Right, Self.Width - 2),
+        Min(lClipRect.Right, Self.Width - 2),
         Min(Y, Self.Height - 2)
       );
       X := XOffset;

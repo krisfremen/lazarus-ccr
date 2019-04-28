@@ -120,7 +120,7 @@ type
 implementation
 
 uses
-  JvResources;
+  Math, JvResources;
 
 {$R *.lfm}
 
@@ -155,8 +155,15 @@ begin
 end;
 
 procedure TJvFullColorFrm.FormShow(Sender: TObject);
+var
+  i, w: Integer;
 begin
   Position := poScreenCenter;
+  w := 0;
+  for i := 0 to JvColorAxisConfigCombo.Items.Count-1 do
+    w := Max(w, JvColorAxisConfigCombo.Canvas.TextWidth(JvColorAxisConfigCombo.Items[i]));
+  JvColorAxisConfigCombo.Constraints.MinWidth := w + 40;;
+  AutoSize := true;
 end;
 
 procedure TJvFullColorFrm.Loaded;

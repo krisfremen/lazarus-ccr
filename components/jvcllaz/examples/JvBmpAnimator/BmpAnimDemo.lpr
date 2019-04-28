@@ -5,7 +5,7 @@ uses
   Forms,
   BmpAnimMainFormU in 'BmpAnimMainFormU.pas' {BmpAnimMainForm};
 
-{$R *.RES}
+{$R *.res}
 
 begin
   Application.Initialize;

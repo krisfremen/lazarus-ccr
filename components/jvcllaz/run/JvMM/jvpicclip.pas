@@ -232,14 +232,14 @@ end;
 
 procedure TJvPicClip.CheckIndex(Index: Integer);
 begin
-  if (Index >= Cols * Rows) or (Index < 0) then
+  if (Index >= Integer(Cols) * Rows) or (Index < 0) then
     raise EListError.CreateResFmt(@SListIndexError, [Index]);
 end;
 
 function TJvPicClip.GetIndex(Col, Row: Cardinal): Integer;
 begin
   Result := Col + (Row * Cols);
-  if (Result >= Cols * Rows) or IsEmpty then
+  if (Result >= Integer(Cols) * Rows) or IsEmpty then
     Result := -1;
 end;
 

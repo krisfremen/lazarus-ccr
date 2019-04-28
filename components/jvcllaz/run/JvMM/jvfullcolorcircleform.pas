@@ -192,8 +192,7 @@ implementation
 uses
   TypInfo,
   Math,  // JclMath,  // for EnsureRange
-  JvResources,
-  JvJCLUtils;   // for TryStrToInt
+  JvResources;
 
 {$R *.lfm}
 

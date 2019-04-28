@@ -12,11 +12,11 @@ object JvID3v2EditForm: TJvID3v2EditForm
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '2.1.0.0'
   object lsbNavigator: TListBox
     Left = 4
-    Height = 483
-    Top = 40
+    Height = 479
+    Top = 44
     Width = 121
     Align = alLeft
     BorderSpacing.Left = 4
@@ -33,10 +33,11 @@ object JvID3v2EditForm: TJvID3v2EditForm
   end
   object ToolBar1: TToolBar
     Left = 0
-    Height = 40
+    Height = 44
     Top = 0
     Width = 599
-    ButtonHeight = 36
+    AutoSize = True
+    ButtonHeight = 42
     ButtonWidth = 72
     Caption = 'ToolBar1'
     Images = iml16
@@ -70,10 +71,10 @@ object JvID3v2EditForm: TJvID3v2EditForm
   end
   object Notebook1: TNotebook
     Left = 125
-    Height = 487
-    Top = 40
+    Height = 483
+    Top = 44
     Width = 474
-    PageIndex = 1
+    PageIndex = 0
     Align = alClient
     TabOrder = 2
     object PgWinAmpTags: TPage

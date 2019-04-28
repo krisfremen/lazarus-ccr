@@ -102,10 +102,10 @@ type
   private
     FID: TJvFullColorSpaceID;
   protected
-    function GetAxisName(Index: TJvAxisIndex): string; virtual;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; virtual;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; virtual;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; virtual;
+    function GetAxisName({%H-}Index: TJvAxisIndex): string; virtual;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; virtual;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; virtual;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; virtual;
     function GetName: string; virtual;
     function GetShortName: string; virtual;
     function GetNumberOfColors: Cardinal; virtual;
@@ -148,11 +148,11 @@ type
   TJvRGBColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -161,11 +161,11 @@ type
   TJvHLSColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -174,11 +174,11 @@ type
   TJvCMYColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -187,11 +187,11 @@ type
   TJvYUVColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -200,7 +200,7 @@ type
   TJvHSVColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
     function GetAxisMax(Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
@@ -213,11 +213,11 @@ type
   TJvYIQColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -226,11 +226,11 @@ type
   TJvYCCColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -239,11 +239,11 @@ type
   TJvXYZColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -252,11 +252,11 @@ type
   TJvLABColorSpace = class(TJvColorSpace)
   protected
     function GetAxisName(Index: TJvAxisIndex): string; override;
-    function GetAxisMin(Index: TJvAxisIndex): Byte; override;
-    function GetAxisMax(Index: TJvAxisIndex): Byte; override;
+    function GetAxisMin({%H-}Index: TJvAxisIndex): Byte; override;
+    function GetAxisMax({%H-}Index: TJvAxisIndex): Byte; override;
     function GetName: string; override;
     function GetShortName: string; override;
-    function GetAxisDefault(Index: TJvAxisIndex): Byte; override;
+    function GetAxisDefault({%H-}Index: TJvAxisIndex): Byte; override;
   public
     function ConvertFromColor(AColor: TColor): TJvFullColor; override;
     function ConvertToColor(AColor: TJvFullColor): TColor; override;
@@ -314,7 +314,7 @@ function ColorSpaceManager: TJvColorSpaceManager;
 function GetAxisValue(AColor: TJvFullColor; AAxis: TJvAxisIndex): Byte;
 function SetAxisValue(AColor: TJvFullColor; AAxis: TJvAxisIndex; NewValue: Byte): TJvFullColor;
 
-procedure SplitColorParts(AColor: TJvFullColor; var Part1, Part2, Part3: Integer);
+procedure SplitColorParts(AColor: TJvFullColor; out Part1, Part2, Part3: Integer);
 function JoinColorParts(const Part1, Part2, Part3: Integer): TJvFullColor;
 
 function ColorToPrettyName(Value: TColor): String;
@@ -385,7 +385,7 @@ begin
   end;
 end;
 
-procedure SplitColorParts(AColor: TJvFullColor; var Part1, Part2, Part3: Integer);
+procedure SplitColorParts(AColor: TJvFullColor; out Part1, Part2, Part3: Integer);
 begin
   Part1 :=  AColor         and $000000FF;
   Part2 := (AColor shr 8)  and $000000FF;
@@ -460,7 +460,7 @@ end;
 
 function TJvColorSpace.ConvertFromColor(AColor: TColor): TJvFullColor;
 begin
-  Result := (AColor and $00FFFFFF) or (ID shl 24);
+  Result := (Cardinal(AColor) and $00FFFFFF) or (ID shl 24);
 end;
 
 function TJvColorSpace.ConvertToColor(AColor: TJvFullColor): TColor;

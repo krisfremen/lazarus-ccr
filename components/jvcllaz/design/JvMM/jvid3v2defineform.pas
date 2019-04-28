@@ -32,7 +32,7 @@ interface
 uses
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls,
   //DesignEditors, DesignIntf, DesignMenus, DesignWindows,
-  JvId3v2Base, JvId3v2Types, JvComponent;
+  JvId3v2Base, JvId3v2Types;
 
 type
 

@@ -7,7 +7,7 @@ object MainForm: TMainForm
   ClientHeight = 358
   ClientWidth = 459
   OnCreate = FormCreate
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object Bevel1: TBevel
     Left = 20
     Height = 44
@@ -15,9 +15,11 @@ object MainForm: TMainForm
     Width = 176
   end
   object JvSpecialProgress1: TJvSpecialProgress
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrCenter
     Left = 32
     Height = 15
-    Top = 24
+    Top = 27
     Width = 150
     Caption = 'JvSpecialProgress1'
     Position = 50

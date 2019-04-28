@@ -89,8 +89,6 @@ procedure RotateBitmap(SourceBitmap, DestBitmap: TBitmap; AColorDelta: TJvColorD
 
 implementation
 
-uses
-  JvTypes;
 
 function RotateColor(AColor: TJvFullColor; AColorDelta: TJvColorDelta): TJvFullColor;
 var
@@ -175,7 +173,7 @@ end;
 procedure RotateBitmap(SourceBitmap, DestBitmap: TBitmap; AColorDelta: TJvColorDelta);
 type
   TFullColorValue = array [TJvAxisIndex] of SmallInt;
-  PFullColorValue = ^TFullColorValue;
+//  PFullColorValue = ^TFullColorValue;
 var
   OriginalPixelFormat: TPixelFormat;
   Colors: array [TJvAxisIndex,Byte] of TFullColorValue;
@@ -275,7 +273,7 @@ begin
           if ColorFusion[axIndex2] < 0 then
             ColorFusion[axIndex2] := 0;
           DestLine^ :=            // Bitmap Color Format is (MSB)0RGB(LSB)
-              (ColorFusion[axIndex0] shl 16) or (ColorFusion[axIndex1] shl 8) or (ColorFusion[axIndex2]);
+              (ColorFusion[axIndex0] shl 16) or (ColorFusion[axIndex1] shl 8) or (ColorFusion[axIndex2]); // or $FF000000;
           Inc(SourceLine);
           Inc(DestLine);
         end;

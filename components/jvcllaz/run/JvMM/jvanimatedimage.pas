@@ -110,7 +110,6 @@ type
   protected
     function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
     function GetPalette: HPALETTE; override;
-    procedure AdjustSize; override;
     procedure BufferedPaint; override;
     procedure DefineProperties(Filer: TFiler); override;
     procedure DoPaintImage; override;
@@ -121,6 +120,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure AdjustSize; override;
   published
     property Align;
     property Anchors;
@@ -306,9 +306,11 @@ begin
 end;
 
 function TJvImageControl.DoPaletteChange: Boolean;
+{
 var
   ParentForm: TCustomForm;
   Tmp: TGraphic;
+  }
 begin
   Result := False;
   (*************** NOT CONVERTED ***

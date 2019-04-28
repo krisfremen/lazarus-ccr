@@ -164,7 +164,6 @@ type
 implementation
 
 uses
-  JvResources,
   Controls, SysUtils, JvFullColorForm, JvFullColorCircleForm;
 
 //=== { TJvFullColorDialog } =================================================

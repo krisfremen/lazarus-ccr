@@ -30,7 +30,7 @@ unit JvGradientHeaderPanel;
 interface
 
 uses
-  LMessages, Types,
+  LMessages,
   SysUtils, Classes, Graphics, Controls, StdCtrls,
   JvGradient, JvTypes, JvComponent;
 

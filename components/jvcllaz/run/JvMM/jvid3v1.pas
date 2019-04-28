@@ -125,7 +125,7 @@ begin
         Exit;
 
       Seek(-CTagSize, soFromEnd);
-      Result := (Read(TagID, CTagIDSize) = CTagIDSize) and (TagID = CID3v1Tag);
+      Result := (Read(TagID{%H-}, CTagIDSize) = CTagIDSize) and (TagID = CID3v1Tag);
     finally
       Free;
     end;
@@ -157,7 +157,7 @@ begin
   try
     Seek(-CTagSize, soFromEnd);
 
-    if (Read(TagID, CTagIDSize) = CTagIDSize) and (TagID = CID3v1Tag) then
+    if (Read(TagID{%H-}, CTagIDSize) = CTagIDSize) and (TagID = CID3v1Tag) then
       Size := Size - CTagSize;
   finally
     Free;
@@ -179,7 +179,7 @@ begin
       if Size >= CTagSize then
       begin
         Seek(-CTagSize, soFromEnd);
-        if (Read(TagID, CTagIDSize) = CTagIDSize) and (TagID = CID3v1Tag) then
+        if (Read(TagID{%H-}, CTagIDSize) = CTagIDSize) and (TagID = CID3v1Tag) then
           Seek(-CTagIDSize, soFromCurrent)
         else
           Seek(0, soFromEnd);
@@ -248,7 +248,7 @@ begin
 
   FNeedUpdateHasTag := True;
 
-  FillChar(lTag, CTagSize, #0);
+  FillChar(lTag{%H-}, CTagSize, #0);
 
   // Set new Tag
   Move(CID3v1Tag[0], lTag.Identifier[0], 3);
@@ -318,7 +318,7 @@ var
 begin
   CheckActive;
 
-  Result := ReadID3v1Tag(FileName, lTag);
+  Result := ReadID3v1Tag(FileName, lTag{%H-});
 
   FNeedUpdateHasTag := False;
   FHasTag := Result;
