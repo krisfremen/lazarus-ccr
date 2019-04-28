@@ -517,6 +517,7 @@ begin
     {$IFDEF USE_LAZINTFIMAGE}
     bmp := TBitmap.Create;
     try
+      bmp.PixelFormat := pf32Bit;
       bmp.SetSize(Buffer.Width, Buffer.Height);
       bmp.LoadFromIntfImage(Buffer);
       Canvas.Draw(0, 0, bmp);
