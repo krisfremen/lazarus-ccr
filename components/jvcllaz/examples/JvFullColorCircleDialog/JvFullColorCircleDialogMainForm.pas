@@ -46,6 +46,7 @@ type
     LabelImage: TLabel;
     ComboBoxFileName: TComboBox;
     JvFullColorCircleDialog: TJvFullColorCircleDialog;
+    procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MemoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -89,12 +90,6 @@ var
 
 procedure TJvFullColorCircleDlgMainFrm.FormCreate(Sender: TObject);
 var
-  X, Y: Integer;
-  PitchX, PitchY: Integer;
-  LImage: TImage;
-  LMemo: TMemo;
-  LBevel: TBevel;
-  Index: Integer;
   LSearchRec: TSearchRec;
 begin
   ImgDir := IncludeTrailingPathDelimiter(GetCurrentDir) + '../../design/JvCtrls/images/';
@@ -103,7 +98,17 @@ begin
       ComboBoxFileName.Items.Add(LSearchRec.Name);
     until FindNext(LSearchRec) <> 0;
   FindClose(LSearchRec);
-  
+end;
+
+procedure TJvFullColorCircleDlgMainFrm.FormActivate(Sender: TObject);
+var
+  X, Y: Integer;
+  PitchX, PitchY: Integer;
+  LImage: TImage;
+  LMemo: TMemo;
+  LBevel: TBevel;
+  Index: Integer;
+begin
   PitchX := Memo.Width + 32;
   PitchY := Memo.Top + Memo.Height - Image.Top + 31;
   Index := 0;
@@ -135,7 +140,7 @@ begin
           LImage.OnDblClick := @CustomizeDblClick;
           LMemo.OnDblClick := @CustomizeDblClick;
           ClientWidth := LMemo.Left+LMemo.Width-1+Memo.Left;
-          ClientHeight := LMemo.Top+LMemo.Height-1+Image.Top;
+          ClientHeight := LMemo.Top+LMemo.Height-1+ComboboxFileName.Top;
         end;
         Memos[Index] := LMemo;
         Images[Index] := LImage;

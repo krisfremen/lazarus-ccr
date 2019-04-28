@@ -714,7 +714,7 @@ begin
   w := 0;
   for i := 0 to JvColorSpaceCombo.Items.Count-1 do
     w := Max(w, JvColorSpaceCombo.Canvas.TextWidth(JvColorSpaceCombo.Items[i]));
-  JvColorSpaceCombo.Width := w + 24;
+  JvColorSpaceCombo.Width := w + 32;
 
   Bevel1.Shape := bsSpacer;
   Bevel10.Shape := bsSpacer;

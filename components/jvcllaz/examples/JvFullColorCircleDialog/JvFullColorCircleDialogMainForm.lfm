@@ -1,15 +1,16 @@
 object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
   Left = 836
-  Height = 394
+  Height = 315
   Top = 214
-  Width = 343
+  Width = 274
   BorderStyle = bsDialog
   Caption = 'JvFullColorCircleDlgMainFrm'
-  ClientHeight = 394
-  ClientWidth = 343
+  ClientHeight = 315
+  ClientWidth = 274
   Color = clBtnFace
   Font.Color = clWindowText
   KeyPreview = True
+  OnActivate = FormActivate
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '2.1.0.0'
@@ -18,12 +19,12 @@ object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = ComboBoxFileName
     AnchorSideTop.Side = asrBottom
-    Left = 30
-    Height = 108
-    Top = 39
-    Width = 108
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
+    Left = 33
+    Height = 86
+    Top = 35
+    Width = 86
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
     Style = bsRaised
   end
   object Image: TImage
@@ -31,24 +32,26 @@ object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Bevel
     AnchorSideTop.Side = asrCenter
-    Left = 34
-    Height = 100
-    Top = 43
-    Width = 100
+    Left = 36
+    Height = 80
+    Top = 38
+    Width = 80
     Center = True
   end
   object LabelImage: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = ComboBoxFileName
     AnchorSideTop.Side = asrCenter
-    Left = 8
+    Left = 6
     Height = 15
-    Top = 12
+    Top = 10
     Width = 39
-    BorderSpacing.Left = 8
+    BorderSpacing.Left = 6
     Caption = 'Image :'
+    Font.Color = clWindowText
     Layout = tlCenter
     ParentColor = False
+    ParentFont = False
   end
   object Memo: TMemo
     AnchorSideLeft.Control = Owner
@@ -56,20 +59,22 @@ object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Bevel
     AnchorSideRight.Side = asrBottom
-    Left = 8
-    Height = 72
-    Top = 155
-    Width = 152
+    Left = 6
+    Height = 70
+    Top = 127
+    Width = 141
     Alignment = taCenter
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
     BorderStyle = bsNone
+    Font.Color = clWindowText
     Lines.Strings = (
       'Original image'
     )
     OnKeyDown = MemoKeyDown
     OnKeyPress = MemoKeyPress
     ParentColor = True
+    ParentFont = False
     TabOrder = 0
   end
   object ComboBoxFileName: TComboBox
@@ -77,17 +82,19 @@ object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 55
+    Left = 51
     Height = 23
-    Top = 8
-    Width = 225
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
+    Top = 6
+    Width = 206
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
     DropDownCount = 24
+    Font.Color = clWindowText
     ItemHeight = 15
     OnClick = ComboBoxFileNameSelect
     OnSelect = ComboBoxFileNameSelect
+    ParentFont = False
     Style = csDropDownList
     TabOrder = 1
   end

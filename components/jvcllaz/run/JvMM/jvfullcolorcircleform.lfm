@@ -1,13 +1,13 @@
 object JvFullColorCircleFrm: TJvFullColorCircleFrm
   Left = 274
-  Height = 573
+  Height = 574
   Top = 219
-  Width = 997
+  Width = 1010
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Color circle configurations'
-  ClientHeight = 573
-  ClientWidth = 997
+  ClientHeight = 574
+  ClientWidth = 1010
   Color = clBtnFace
   Font.Color = clWindowText
   KeyPreview = True
@@ -24,7 +24,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Width = 22
     BorderSpacing.Top = 8
     Caption = 'Old:'
+    Font.Color = clWindowText
     ParentColor = False
+    ParentFont = False
   end
   object LabelNew: TLabel
     AnchorSideLeft.Control = PanelImageNew
@@ -34,7 +36,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Top = 58
     Width = 27
     Caption = 'New:'
+    Font.Color = clWindowText
     ParentColor = False
+    ParentFont = False
   end
   object LabelColorSpace: TLabel
     AnchorSideLeft.Control = JvColorSpaceCombo
@@ -45,7 +49,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Width = 66
     BorderSpacing.Top = 8
     Caption = '&Color Space:'
+    Font.Color = clWindowText
     ParentColor = False
+    ParentFont = False
   end
   object PanelGraphics: TPanel
     AnchorSideLeft.Control = PanelCommonSettings
@@ -58,26 +64,30 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Left = 412
     Height = 550
     Top = 8
-    Width = 577
+    Width = 590
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     BevelInner = bvRaised
     BevelOuter = bvLowered
     Caption = 'PanelGraphics'
     ClientHeight = 550
-    ClientWidth = 577
+    ClientWidth = 590
+    Font.Color = clWindowText
+    ParentFont = False
     TabOrder = 5
     object LabelAxisSettings: TLabel
       AnchorSideLeft.Control = JvColorAxisConfigCombo
       AnchorSideTop.Control = PanelGraphics
-      Left = 201
+      Left = 208
       Height = 15
       Top = 10
       Width = 69
       BorderSpacing.Top = 8
       Caption = 'A&xis Settings:'
       FocusControl = JvColorAxisConfigCombo
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object JvColorCircle: TJvFullColorCircle
       AnchorSideLeft.Control = Bevel10
@@ -91,7 +101,7 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Left = 100
       Height = 480
       Top = 60
-      Width = 459
+      Width = 472
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 8
@@ -196,13 +206,15 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = LabelAxisSettings
       AnchorSideTop.Side = asrBottom
-      Left = 201
+      Left = 208
       Height = 23
       Top = 29
       Width = 257
       Selected = acXYZ
       BorderSpacing.Top = 4
+      Font.Color = clWindowText
       ItemHeight = 15
+      ParentFont = False
       TabOrder = 0
       OnChange = JvColorAxisConfigComboChange
     end
@@ -232,6 +244,8 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BevelOuter = bvLowered
     ClientHeight = 95
     ClientWidth = 380
+    Font.Color = clWindowText
+    ParentFont = False
     TabOrder = 2
     object LabelComAxis0: TLabel
       AnchorSideLeft.Control = SpinEditComAxis0
@@ -242,7 +256,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 81
       BorderSpacing.Top = 14
       Caption = 'LabelComAxis0'
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelComAxis1: TLabel
       AnchorSideLeft.Control = SpinEditComAxis1
@@ -252,7 +268,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 16
       Width = 81
       Caption = 'LabelComAxis1'
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelComAxis2: TLabel
       AnchorSideLeft.Control = SpinEditComAxis2
@@ -262,7 +280,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 16
       Width = 81
       Caption = 'LabelComAxis2'
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelCommon: TLabel
       AnchorSideTop.Control = SpinEditComAxis0
@@ -278,7 +298,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       BorderSpacing.Right = 8
       Caption = 'C&ommon:'
       FocusControl = SpinEditComAxis0
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object SpinEditComAxis0: TSpinEdit
       Tag = 48
@@ -292,7 +314,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 57
       BorderSpacing.Top = 4
       Enabled = False
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 0
     end
     object SpinEditComAxis1: TSpinEdit
@@ -306,7 +330,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 35
       Width = 57
       BorderSpacing.Top = 4
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 1
     end
     object SpinEditComAxis2: TSpinEdit
@@ -320,7 +346,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 35
       Width = 57
       BorderSpacing.Top = 4
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 2
     end
     object CheckBoxCom0: TCheckBox
@@ -334,7 +362,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 104
       BorderSpacing.Top = 4
       Caption = 'CheckBoxCom0'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 3
     end
     object CheckBoxCom1: TCheckBox
@@ -346,7 +376,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 62
       Width = 104
       Caption = 'CheckBoxCom1'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 4
     end
     object CheckBoxCom2: TCheckBox
@@ -358,7 +390,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 62
       Width = 104
       Caption = 'CheckBoxCom2'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 5
     end
     object Bevel2: TBevel
@@ -424,6 +458,8 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BevelOuter = bvLowered
     ClientHeight = 203
     ClientWidth = 380
+    Font.Color = clWindowText
+    ParentFont = False
     TabOrder = 4
     object LabelAxis0: TLabel
       AnchorSideLeft.Control = SpinEditRedAxis0
@@ -434,7 +470,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 55
       BorderSpacing.Top = 14
       Caption = 'LabelAxis0'
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelAxis1: TLabel
       AnchorSideLeft.Control = SpinEditRedAxis1
@@ -444,7 +482,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 16
       Width = 55
       Caption = 'LabelAxis1'
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelAxis2: TLabel
       AnchorSideLeft.Control = SpinEditRedAxis2
@@ -454,7 +494,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 16
       Width = 55
       Caption = 'LabelAxis2'
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelRed: TLabel
       AnchorSideTop.Control = SpinEditRedAxis0
@@ -469,8 +511,10 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       BorderSpacing.Right = 8
       Caption = '&Red:'
       FocusControl = SpinEditRedAxis0
+      Font.Color = clWindowText
       ParentBidiMode = False
       ParentColor = False
+      ParentFont = False
     end
     object LabelGreen: TLabel
       AnchorSideTop.Control = SpinEditGreenAxis0
@@ -485,7 +529,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       BorderSpacing.Right = 8
       Caption = '&Green:'
       FocusControl = SpinEditGreenAxis0
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object LabelBlue: TLabel
       AnchorSideTop.Control = SpinEditBlueAxis0
@@ -500,7 +546,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       BorderSpacing.Right = 8
       Caption = '&Blue:'
       FocusControl = SpinEditBlueAxis0
+      Font.Color = clWindowText
       ParentColor = False
+      ParentFont = False
     end
     object SpinEditRedAxis0: TSpinEdit
       AnchorSideLeft.Control = Bevel6
@@ -512,7 +560,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 35
       Width = 57
       BorderSpacing.Top = 4
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 0
     end
     object SpinEditGreenAxis0: TSpinEdit
@@ -526,7 +576,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 89
       Width = 57
       BorderSpacing.Top = 8
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 6
     end
     object SpinEditBlueAxis0: TSpinEdit
@@ -540,7 +592,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 143
       Width = 57
       BorderSpacing.Top = 8
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 12
     end
     object SpinEditRedAxis1: TSpinEdit
@@ -554,7 +608,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 35
       Width = 57
       BorderSpacing.Top = 4
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 1
     end
     object SpinEditRedAxis2: TSpinEdit
@@ -568,7 +624,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 35
       Width = 57
       BorderSpacing.Top = 4
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 2
     end
     object SpinEditGreenAxis1: TSpinEdit
@@ -582,7 +640,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 89
       Width = 57
       BorderSpacing.Top = 8
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 7
     end
     object SpinEditGreenAxis2: TSpinEdit
@@ -596,7 +656,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 89
       Width = 57
       BorderSpacing.Top = 8
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 8
     end
     object SpinEditBlueAxis1: TSpinEdit
@@ -610,7 +672,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 143
       Width = 57
       BorderSpacing.Top = 8
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 13
     end
     object SpinEditBlueAxis2: TSpinEdit
@@ -624,7 +688,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Top = 143
       Width = 57
       BorderSpacing.Top = 8
+      Font.Color = clWindowText
       OnChange = SpinEditSettingsValueChange
+      ParentFont = False
       TabOrder = 14
     end
     object CheckBoxRed0: TCheckBox
@@ -637,7 +703,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 98
       BorderSpacing.Top = 4
       Caption = 'CheckBoxRed0'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 3
     end
     object CheckBoxRed1: TCheckBox
@@ -651,7 +719,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 98
       BorderSpacing.Top = 4
       Caption = 'CheckBoxRed1'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 4
     end
     object CheckBoxRed2: TCheckBox
@@ -665,7 +735,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 98
       BorderSpacing.Top = 4
       Caption = 'CheckBoxRed2'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 5
     end
     object CheckBoxGreen0: TCheckBox
@@ -679,7 +751,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 109
       BorderSpacing.Top = 4
       Caption = 'CheckBoxGreen0'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 9
     end
     object CheckBoxGreen1: TCheckBox
@@ -693,7 +767,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 109
       BorderSpacing.Top = 4
       Caption = 'CheckBoxGreen1'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 10
     end
     object CheckBoxGreen2: TCheckBox
@@ -707,7 +783,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 109
       BorderSpacing.Top = 4
       Caption = 'CheckBoxGreen2'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 11
     end
     object CheckBoxBlue0: TCheckBox
@@ -721,7 +799,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 101
       BorderSpacing.Top = 4
       Caption = 'CheckBoxBlue0'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 15
     end
     object CheckBoxBlue1: TCheckBox
@@ -735,7 +815,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 101
       BorderSpacing.Top = 4
       Caption = 'CheckBoxBlue1'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 16
     end
     object CheckBoxBlue2: TCheckBox
@@ -749,7 +831,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Width = 101
       BorderSpacing.Top = 4
       Caption = 'CheckBoxBlue2'
+      Font.Color = clWindowText
       OnClick = CheckBoxSettingsClick
+      ParentFont = False
       TabOrder = 17
     end
     object Bevel6: TBevel
@@ -815,7 +899,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     Caption = 'Co&mmon Settings:'
+    Font.Color = clWindowText
     OnClick = RadioButtonAxisClick
+    ParentFont = False
     TabOrder = 1
   end
   object RadioButtonAxisSettings: TRadioButton
@@ -829,7 +915,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     Caption = '&Axis Settings:'
+    Font.Color = clWindowText
     OnClick = RadioButtonAxisClick
+    ParentFont = False
     TabOrder = 3
   end
   object ButtonGraphics: TButton
@@ -847,7 +935,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BorderSpacing.Top = 1
     Caption = 'ButtonGraphics'
     Constraints.MinWidth = 75
+    Font.Color = clWindowText
     OnClick = ButtonGraphicsClick
+    ParentFont = False
     TabOrder = 9
   end
   object ButtonCancel: TButton
@@ -864,7 +954,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Cancel = True
     Caption = 'Ca&ncel'
     Constraints.MinWidth = 75
+    Font.Color = clWindowText
     ModalResult = 2
+    ParentFont = False
     TabOrder = 7
   end
   object ButtonOK: TButton
@@ -881,7 +973,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Caption = '&OK'
     Constraints.MinWidth = 75
     Default = True
+    Font.Color = clWindowText
     ModalResult = 1
+    ParentFont = False
     TabOrder = 6
   end
   object ButtonApply: TButton
@@ -891,11 +985,14 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Left = 182
     Height = 25
     Top = 534
-    Width = 75
+    Width = 57
+    AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 1
     Caption = '&Apply'
+    Font.Color = clWindowText
     OnClick = ButtonApplyClick
+    ParentFont = False
     TabOrder = 8
   end
   object JvColorSpaceCombo: TJvFullColorSpaceCombo
@@ -909,7 +1006,9 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Width = 206
     AllowVariable = False
     BorderSpacing.Top = 4
+    Font.Color = clWindowText
     ItemHeight = 15
+    ParentFont = False
     TabOrder = 0
     OnChange = JvColorSpaceComboChange
   end
@@ -935,6 +1034,8 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BevelOuter = bvLowered
     ClientHeight = 118
     ClientWidth = 124
+    Font.Color = clWindowText
+    ParentFont = False
     TabOrder = 10
     object ImageOld: TImage
       Left = 3
@@ -959,6 +1060,8 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     BevelOuter = bvLowered
     ClientHeight = 118
     ClientWidth = 124
+    Font.Color = clWindowText
+    ParentFont = False
     TabOrder = 11
     object ImageNew: TImage
       Left = 3

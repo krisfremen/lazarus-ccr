@@ -162,7 +162,8 @@ begin
   w := 0;
   for i := 0 to JvColorAxisConfigCombo.Items.Count-1 do
     w := Max(w, JvColorAxisConfigCombo.Canvas.TextWidth(JvColorAxisConfigCombo.Items[i]));
-  JvColorAxisConfigCombo.Constraints.MinWidth := w + 40;;
+  JvColorAxisConfigCombo.Constraints.MinWidth := w + 40;
+  JvColorPanel.Constraints.MinWidth := JvColorPanel.Height;
   AutoSize := true;
 end;
 

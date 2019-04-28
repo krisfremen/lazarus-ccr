@@ -273,7 +273,10 @@ begin
           if ColorFusion[axIndex2] < 0 then
             ColorFusion[axIndex2] := 0;
           DestLine^ :=            // Bitmap Color Format is (MSB)0RGB(LSB)
-              (ColorFusion[axIndex0] shl 16) or (ColorFusion[axIndex1] shl 8) or (ColorFusion[axIndex2]); // or $FF000000;
+              (ColorFusion[axIndex0] shl 16) or
+              (ColorFusion[axIndex1] shl 8) or
+              (ColorFusion[axIndex2]) or
+              $FF000000;      // otherwise the bitmap would be fully transparent
           Inc(SourceLine);
           Inc(DestLine);
         end;
