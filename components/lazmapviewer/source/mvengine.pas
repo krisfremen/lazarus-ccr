@@ -170,6 +170,7 @@ function GPSToDMS(Angle: Double): string;
 
 function LatToStr(ALatitude: Double; DMS: Boolean): String;
 function LonToStr(ALongitude: Double; DMS: Boolean): String;
+function TryStrToGps(const AValue: String; out ADeg: Double): Boolean;
 
 procedure SplitGps(AValue: Double; out ADegs, AMins, ASecs: Double);
 
@@ -1149,6 +1150,126 @@ begin
     Result := Result + ' E'
   else if ALongitude < 0 then
     Result := Result + ' W';
+end;
+
+{ Combines up to three parts of a GPS coordinate string (degrees, minutes, seconds)
+  to a floating-point degree value. The parts are separated by non-numeric
+  characters:
+
+  three parts ---> d m s ---> d and m must be integer, s can be float
+  two parts   ---> d m   ---> d must be integer, s can be float
+  one part    ---> d     ---> d can be float
+
+  Each part can exhibit a unit identifier, such as °, ', or ". BUT: they are
+  ignored. This means that an input string 50°30" results in the output value 50.5
+  although the second part is marked as seconds, not minutes! 
+  
+  Hemisphere suffixes ('N', 'S', 'E', 'W') are supported at the end of the input string.
+}
+function TryStrToGps(const AValue: String; out ADeg: Double): Boolean;
+const
+  NUMERIC_CHARS = ['0'..'9', '.', ',', '-', '+'];
+var
+  mins, secs: Double;
+  i, j, len: Integer;
+  n: Integer;
+  s: String;
+  res: Integer;
+  sgn: Double;
+begin
+  Result := false;
+
+  ADeg := NaN;
+  mins := 0;
+  secs := 0;
+
+  if AValue = '' then
+    exit;
+
+  len := Length(AValue);
+  i := len;
+  while (i >= 1) and (AValue[i] = ' ') do dec(i);
+  sgn := 1.0;
+  if (AValue[i] in ['S', 's', 'W', 'w']) then sgn := -1;
+
+  // skip leading non-numeric characters
+  i := 1;
+  while (i <= len) and not (AValue[i] in NUMERIC_CHARS) do
+    inc(i);
+
+  // extract first value: degrees
+  SetLength(s, len);
+  j := 1;
+  n := 0;
+  while (i <= len) and (AValue[i] in NUMERIC_CHARS) do begin
+    if AValue[i] = ',' then s[j] := '.' else s[j] := AValue[i];
+    inc(i);
+    inc(j);
+    inc(n);
+  end;
+  if n > 0 then begin
+    SetLength(s, n);
+    val(s, ADeg, res);
+    if res <> 0 then
+      exit;
+  end;
+
+  // skip non-numeric characters between degrees and minutes
+  while (i <= len) and not (AValue[i] in NUMERIC_CHARS) do
+    inc(i);
+
+  // extract second value: minutes
+  SetLength(s, len);
+  j := 1;
+  n := 0;
+  while (i <= len) and (AValue[i] in NUMERIC_CHARS) do begin
+    if AValue[i] = ',' then s[j] := '.' else s[j] := AValue[i];
+    inc(i);
+    inc(j);
+    inc(n);
+  end;
+  if n > 0 then begin
+    SetLength(s, n);
+    val(s, mins, res);
+    if (res <> 0) or (mins < 0) then
+      exit;
+  end;
+
+  // skip non-numeric characters between minutes and seconds
+  while (i <= len) and not (AValue[i] in NUMERIC_CHARS) do
+    inc(i);
+
+  // extract third value: seconds
+  SetLength(s, len);
+  j := 1;
+  n := 0;
+  while (i <= len) and (AValue[i] in NUMERIC_CHARS) do begin
+    if AValue[i] = ',' then s[j] := '.' else s[j] := AValue[i];
+    inc(i);
+    inc(j);
+    inc(n);
+  end;
+  if n > 0 then begin
+    SetLength(s, n);
+    val(s, secs, res);
+    if (res <> 0) or (secs < 0) then
+      exit;
+  end;
+
+  // If the string contains seconds then minutes and deegrees must be integers
+  if (secs <> 0) and ((frac(ADeg) > 0) or (frac(mins) > 0)) then
+    exit;
+  // If the string does not contain seconds then degrees must be integer.
+  if (secs = 0) and (mins <> 0) and (frac(ADeg) > 0) then
+    exit;
+
+  // If the string contains minutes, but no seconds, then the degrees must be integer.
+  Result := (mins >= 0) and (mins < 60) and (secs >= 0) and (secs < 60);
+
+  // A similar check should be made for the degrees range, but since this is
+  // different for latitude and longitude the check is skipped here.
+  if Result then
+    ADeg := sgn * (abs(ADeg) + mins / 60 + secs / 3600);
 end;
 
 { Returns the direct distance (air-line) between two geo coordinates

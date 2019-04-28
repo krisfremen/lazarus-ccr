@@ -159,11 +159,12 @@ begin
     FViewer.GpsItems.Clear(_CLICKED_POINTS_);
     for i:=0 to ListView.Items.Count-1 do begin
       item := ListView.Items[i];
-      rPt.Lon := StrToFloat(item.SubItems[2]);
-      rPt.Lat := StrToFloat(item.SubItems[1]);
-      gpsObj := TGpsPoint.CreateFrom(rPt);
-      gpsObj.Name := item.SubItems[0];
-      FViewer.GPSItems.Add(gpsObj, _CLICKED_POINTS_);
+      if TryStrToGps(item.SubItems[2], rPt.Lon) and TryStrToGps(item.SubItems[1], rPt.Lat) then
+      begin
+        gpsObj := TGpsPoint.CreateFrom(rPt);
+        gpsObj.Name := item.SubItems[0];
+        FViewer.GPSItems.Add(gpsObj, _CLICKED_POINTS_);
+      end;
     end;
   end;
 end;
