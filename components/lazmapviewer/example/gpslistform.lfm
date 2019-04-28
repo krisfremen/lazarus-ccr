@@ -2,20 +2,21 @@ object GPSListViewer: TGPSListViewer
   Left = 282
   Height = 352
   Top = 135
-  Width = 483
+  Width = 557
   Caption = 'GPS points'
   ClientHeight = 352
-  ClientWidth = 483
+  ClientWidth = 557
   LCLVersion = '2.1.0.0'
   object ListView: TListView
     Left = 6
     Height = 308
     Top = 6
-    Width = 471
+    Width = 545
     Align = alClient
     BorderSpacing.Left = 6
     BorderSpacing.Top = 6
     BorderSpacing.Right = 6
+    Checkboxes = True
     Columns = <    
       item
         Caption = 'ID'
@@ -41,12 +42,12 @@ object GPSListViewer: TGPSListViewer
     Left = 0
     Height = 38
     Top = 314
-    Width = 483
+    Width = 557
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 38
-    ClientWidth = 483
+    ClientWidth = 557
     TabOrder = 1
     object BtnDeletePoint: TBitBtn
       AnchorSideLeft.Control = BtnGoToPoint
@@ -151,7 +152,7 @@ object GPSListViewer: TGPSListViewer
       AnchorSideTop.Control = Panel1
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
-      Left = 402
+      Left = 476
       Height = 26
       Top = 6
       Width = 75
@@ -197,6 +198,20 @@ object GPSListViewer: TGPSListViewer
       }
       OnClick = BtnCloseClick
       TabOrder = 2
+    end
+    object BtnCalcDistance: TButton
+      AnchorSideLeft.Control = BtnDeletePoint
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 234
+      Height = 25
+      Top = 6
+      Width = 203
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Calc distance between two points'
+      OnClick = BtnCalcDistanceClick
+      TabOrder = 3
     end
   end
 end

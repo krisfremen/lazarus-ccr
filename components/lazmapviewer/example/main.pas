@@ -99,7 +99,7 @@ implementation
 uses
   LCLType, IniFiles, Math, FPCanvas, FPImage, IntfGraphics,
   mvEngine, mvExtraData,
-  gpslistform;
+  globals, gpslistform;
 
 type
   TLocationParam = class
@@ -241,6 +241,7 @@ end;
 
 procedure TMainForm.CbDistanceUnitsChange(Sender: TObject);
 begin
+  DistanceUnit := TDistanceUnits(CbDistanceUnits.ItemIndex);
   UpdateViewPortSize;
 end;
 
@@ -414,6 +415,7 @@ var
   i: Integer;
   s: String;
   pt: TRealPoint;
+  du: TDistanceUnits;
 begin
   ini := TMemIniFile.Create(CalcIniName);
   try
@@ -434,6 +436,16 @@ begin
     pt.Lon := StrToFloatDef(ini.ReadString('MapView', 'Center.Longitude', ''), 0.0, PointFormatSettings);
     pt.Lat := StrToFloatDef(ini.ReadString('MapView', 'Center.Latitude', ''), 0.0, PointFormatSettings);
     MapView.Center := pt;
+
+    s := ini.ReadString('MapView', 'DistanceUnits', '');
+    if s <> '' then begin
+      for du in TDistanceUnits do
+        if DistanceUnit_Names[du] = s then begin
+          DistanceUnit := du;
+          CbDistanceUnits.ItemIndex := ord(du);
+          break;
+        end;
+    end;
 
     List := TStringList.Create;
     try
@@ -518,9 +530,9 @@ begin
       MapView.GetVisibleArea.TopLeft.Lon,
       MapView.GetVisibleArea.TopLeft.Lat,
       MapView.GetVisibleArea.BottomRight.Lon,
-      TDistanceUnits(cbDistanceUnits.ItemIndex)
+      DistanceUnit
     ),
-    cbDistanceUnits.Items[cbDistanceUnits.ItemIndex]
+    DistanceUnit_Names[DistanceUnit]
   ]);
   InfoViewportHeight.Caption := Format('%.2n %s', [
     CalcGeoDistance(
@@ -528,9 +540,9 @@ begin
       MapView.GetVisibleArea.TopLeft.Lon,
       MapView.GetVisibleArea.BottomRight.Lat,
       MapView.GetVisibleArea.TopLeft.Lon,
-      TDistanceUnits(cbDistanceUnits.ItemIndex)
+      DistanceUnit
     ),
-    cbDistanceUnits.Items[cbDistanceUnits.ItemIndex]
+    DistanceUnit_Names[DistanceUnit]
   ]);
 end;
 
@@ -551,6 +563,8 @@ begin
     ini.WriteInteger('MapView', 'Zoom', MapView.Zoom);
     ini.WriteString('MapView', 'Center.Longitude', FloatToStr(MapView.Center.Lon, PointFormatSettings));
     ini.WriteString('MapView', 'Center.Latitude', FloatToStr(MapView.Center.Lat, PointFormatSettings));
+
+    ini.WriteString('MapView', 'DistanceUnits', DistanceUnit_Names[DistanceUnit]);
 
     ini.EraseSection('Locations');
     for i := 0 to CbLocations.Items.Count-1 do

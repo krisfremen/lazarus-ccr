@@ -5,7 +5,7 @@ program MapViewer_Demo;
 uses
   {$IFDEF UNIX}cthreads,{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, Main, gpslistform
+  Forms, Main, gpslistform, globals
   { you can add units after this };
 
 {$R *.res}

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ComCtrls,
-  ExtCtrls, Buttons, mvGpsObj, mvMapViewer;
+  ExtCtrls, Buttons, StdCtrls, mvGpsObj, mvMapViewer;
 
 const
   // IDs of GPS items
@@ -20,8 +20,10 @@ type
     BtnDeletePoint: TBitBtn;
     BtnGoToPoint: TBitBtn;
     BtnClose: TBitBtn;
+    BtnCalcDistance: TButton;
     ListView: TListView;
     Panel1: TPanel;
+    procedure BtnCalcDistanceClick(Sender: TObject);
     procedure BtnCloseClick(Sender: TObject);
     procedure BtnDeletePointClick(Sender: TObject);
     procedure BtnGoToPointClick(Sender: TObject);
@@ -46,7 +48,8 @@ implementation
 {$R *.lfm}
 
 uses
-  mvTypes, mvEngine;
+  mvTypes, mvEngine,
+  globals;
 
 destructor TGPSListViewer.Destroy;
 begin
@@ -90,6 +93,57 @@ end;
 procedure TGPSListViewer.BtnCloseClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TGPSListViewer.BtnCalcDistanceClick(Sender: TObject);
+type
+  TCoorRec = record
+    Lon: Double;
+    Lat: Double;
+    Name: String;
+  end;
+var
+  i, iChecked: Integer;
+  gpsObj: TGpsObj;
+  gpsPt: TGpsPoint;
+  TCoorArr: array[0..1] of TCoorRec;
+begin
+  // count checked items
+  iChecked := 0;
+  for i:=0 to ListView.Items.Count - 1 do begin
+    if ListView.Items.Item[i].Checked then Inc(iChecked);
+  end;
+  //
+  if iChecked <> 2 then begin
+    ShowMessage('Please select 2 items to calculate the distance.');
+  end
+  else begin
+    iChecked := 0;
+    for i:=0 to ListView.Items.Count - 1 do begin
+      if ListView.Items.Item[i].Checked then begin
+        gpsObj := FList.Items[i];
+        if gpsObj is TGpsPoint then begin
+          gpsPt := TGpsPoint(gpsObj);
+          TCoorArr[iChecked].Lat := gpsPt.Lat;
+          TCoorArr[iChecked].Lon := gpsPt.Lon;
+          TCoorArr[iChecked].Name:= gpsPt.Name;
+          Inc(iChecked);
+        end;
+      end;
+    end;
+    // show distance between selected items
+    ShowMessage('Distance between ' + TCoorArr[0].Name + ' and ' + TCoorArr[1].Name + ' is: ' +
+    Format('%.2n %s.', [
+      CalcGeoDistance(
+        TCoorArr[0].Lat,
+        TCoorArr[0].Lon,
+        TCoorArr[1].Lat,
+        TCoorArr[1].Lon,
+        DistanceUnit
+      ),
+      DistanceUnit_Names[DistanceUnit]
+      ]));
+  end;
 end;
 
 procedure TGPSListViewer.BtnDeletePointClick(Sender: TObject);
