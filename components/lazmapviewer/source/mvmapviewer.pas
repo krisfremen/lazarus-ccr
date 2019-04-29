@@ -792,10 +792,10 @@ var
   rawImg: TRawImage;
 begin
   rawImg.Init;
-  {$IFDEF WINDOWS}
-  rawImg.Description.Init_BPP32_B8G8R8_BIO_TTB(AWidth, AHeight);
-  {$ELSE}
+  {$IFDEF DARWIN}
   rawImg.Description.Init_BPP32_A8R8G8B8_BIO_TTB(AWidth, AHeight);
+  {$ELSE}
+  rawImg.Description.Init_BPP32_B8G8R8_BIO_TTB(AWidth, AHeight);
   {$ENDIF}
   rawImg.CreateData(True);
   ABuffer := TLazIntfImage.Create(rawImg, true);
