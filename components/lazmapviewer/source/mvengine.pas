@@ -890,6 +890,9 @@ begin
   AddMapProvider('Virtual Earth Hybrid',
     'http://h%serv%.ortho.tiles.virtualearth.net/tiles/h%x%.jpg?g=72&shading=hill',
     1, 19, 4, nil, @GetQuadKey);
+
+  { The Ovi Maps (former Nokia maps) are no longer available.
+
   AddMapProvider('Ovi Normal',
     'http://%serv%.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.day/%z%/%x%/%y%/256/png8',
     0, 20, 5, @GetLetterSvr);
@@ -902,6 +905,7 @@ begin
   AddMapProvider('Ovi Physical',
     'http://%serv%.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/terrain.day/%z%/%x%/%y%/256/png8',
     0, 20, 5, @GetLetterSvr);
+  }
 
   {
   AddMapProvider('Yahoo Normal','http://maps%serv%.yimg.com/hx/tl?b=1&v=4.3&.intl=en&x=%x%&y=%y%d&z=%d&r=1'        , 0,20,3,@GetYahooSvr, nil, @getYahooY, @GetYahooZ); //(Z+1]));
