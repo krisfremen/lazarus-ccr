@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons,
-  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDLESynapse;
 
 type
 
@@ -49,6 +49,7 @@ type
     ControlPanel: TPanel;
     BtnLoadMapProviders: TSpeedButton;
     BtnSaveMapProviders: TSpeedButton;
+    MVDESynapse1: TMVDESynapse;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
@@ -419,6 +420,14 @@ var
 begin
   ini := TMemIniFile.Create(CalcIniName);
   try
+    HERE_AppID := ini.ReadString('HERE', 'APP_ID', '');
+    HERE_AppCode := ini.ReadString('HERE', 'APP_CODE', '');
+    if (HERE_AppID <> '') and (HERE_AppCode <> '') then begin
+      MapView.Engine.ClearMapProviders;
+      MapView.Engine.RegisterProviders;
+      MapView.GetMapProviders(CbProviders.Items);
+    end;
+
     R := Screen.DesktopRect;
     L := ini.ReadInteger('MainForm', 'Left', Left);
     T := ini.ReadInteger('MainForm', 'Top', Top);
@@ -430,8 +439,14 @@ begin
     if T < R.Top then T := R.Top;
     SetBounds(L, T, W, H);
 
-    MapView.MapProvider := ini.ReadString('MapView', 'Provider', MapView.MapProvider);
+    s := ini.ReadString('MapView', 'Provider', MapView.MapProvider);
+    if CbProviders.Items.IndexOf(s) = -1 then begin
+      MessageDlg('Map provider "' + s + '" not found.', mtError, [mbOK], 0);
+      s := CbProviders.Items[0];
+    end;
+    MapView.MapProvider := s;
     CbProviders.Text := MapView.MapProvider;
+
     MapView.Zoom := ini.ReadInteger('MapView', 'Zoom', MapView.Zoom);
     pt.Lon := StrToFloatDef(ini.ReadString('MapView', 'Center.Longitude', ''), 0.0, PointFormatSettings);
     pt.Lat := StrToFloatDef(ini.ReadString('MapView', 'Center.Latitude', ''), 0.0, PointFormatSettings);
@@ -565,6 +580,11 @@ begin
     ini.WriteString('MapView', 'Center.Latitude', FloatToStr(MapView.Center.Lat, PointFormatSettings));
 
     ini.WriteString('MapView', 'DistanceUnits', DistanceUnit_Names[DistanceUnit]);
+
+    if HERE_AppID <> '' then
+      ini.WriteString('HERE', 'APP_ID', HERE_AppID);
+    if HERE_AppCode <> '' then
+      ini.WriteString('HERE', 'APP_CODE', HERE_AppCode);
 
     ini.EraseSection('Locations');
     for i := 0 to CbLocations.Items.Count-1 do

@@ -89,7 +89,7 @@ object MainForm: TMainForm
       Height = 40
       Top = 59
       Width = 207
-      Max = 17
+      Max = 19
       Min = 1
       OnChange = ZoomTrackBarChange
       Position = 1
@@ -617,7 +617,7 @@ object MainForm: TMainForm
     Align = alClient
     CacheOnDisk = True
     CachePath = 'cache/'
-    DownloadEngine = MapView.BuiltIn
+    DownloadEngine = MVDESynapse1
     InactiveColor = clWhite
     MapProvider = 'OpenStreetMap Mapnik'
     UseThreads = True
@@ -633,5 +633,9 @@ object MainForm: TMainForm
     OnNameFound = GeoNamesNameFound
     left = 328
     top = 224
+  end
+  object MVDESynapse1: TMVDESynapse
+    left = 347
+    top = 131
   end
 end

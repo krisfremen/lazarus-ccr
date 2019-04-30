@@ -25,6 +25,8 @@ unit mvDLEFpc;
 
 {$mode objfpc}{$H+}
 
+{.$DEFINE LOG_URL}
+
 interface
 
 uses
@@ -60,7 +62,10 @@ type
 implementation
 
 uses
-  fphttpclient;
+  {$IFDEF LOG_URL}
+  lazlogger,
+  {$ENDIF}
+  fphttpclient, openssl;
 
 { TMVDEFPC }
 
@@ -68,6 +73,10 @@ procedure TMVDEFPC.DownloadFile(const Url: string; AStream: TStream);
 var
   http: TFpHttpClient;
 begin
+  {$IFDEF LOG_URL}
+  DebugLn(Url);
+  {$ENDIF}
+  InitSSLInterface;
   http := TFpHttpClient.Create(nil);
   try
    {$IF FPC_FullVersion >= 30000}
@@ -82,7 +91,10 @@ begin
       http.Proxy.Password := FProxyPassword;
     end;
    {$ENDIF}
-    http.Get(Url, AStream);
+    try
+      http.Get(Url, AStream);
+    except
+    end;
     AStream.Position := 0;
   finally
     http.Free;

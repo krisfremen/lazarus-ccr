@@ -106,7 +106,6 @@ Type
       function GetTileName(const Id: TTileId): String;
       procedure evDownload(Data: TObject; Job: TJob);
       procedure TileDownloaded(Data: PtrInt);
-      Procedure RegisterProviders;
       Procedure DrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
       Procedure DoDrag(Sender: TDragObj);
     public
@@ -124,6 +123,7 @@ Type
       function LonLatToWorldScreen(aPt: TRealPoint): TPoint;
       function ReadProvidersFromXML(AFileName: String; out AMsg: String): Boolean;
       procedure Redraw;
+      Procedure RegisterProviders;
       function ScreenToLonLat(aPt: TPoint): TRealPoint;
       procedure SetSize(aWidth, aHeight: integer);
       function WorldScreenToLonLat(aPt: TPoint): TRealPoint;
@@ -173,6 +173,10 @@ function LonToStr(ALongitude: Double; DMS: Boolean): String;
 function TryStrToGps(const AValue: String; out ADeg: Double): Boolean;
 
 procedure SplitGps(AValue: Double; out ADegs, AMins, ASecs: Double);
+
+var
+  HERE_AppID: String = '';
+  HERE_AppCode: String = '';
 
 
 implementation
@@ -888,8 +892,45 @@ begin
     'http://a%serv%.ortho.tiles.virtualearth.net/tiles/a%x%.jpg?g=72&shading=hill',
     1, 19, 4, nil, @GetQuadKey);
   AddMapProvider('Virtual Earth Hybrid',
-    'http://h%serv%.ortho.tiles.virtualearth.net/tiles/h%x%.jpg?g=72&shading=hill',
+    'https://h%serv%.ortho.tiles.virtualearth.net/tiles/h%x%.jpg?g=72&shading=hill',
     1, 19, 4, nil, @GetQuadKey);
+
+  if (HERE_AppID <> '') and (HERE_AppCode <> '') then begin
+    // Registration required to access HERE maps:
+    //   https://developer.here.com/?create=Freemium-Basic&keepState=true&step=account
+    // Store the APP_ID and APP_CODE obtained after registration in the
+    // ini file of the demo under key [HERE] as items APP_ID and APP_CODE and
+    // restart the demo.
+    AddMapProvider('Here Maps',
+      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/%z%/%x%/%y%/256/png8' +
+        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
+      1, 19, 4, nil);
+    AddMapProvider('Here Maps Grey',
+      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day.grey/%z%/%x%/%y%/256/png8' +
+        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
+      1, 19, 4, nil);
+    AddMapProvider('Here Maps Reduced',
+      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/reduced.day/%z%/%x%/%y%/256/png8' +
+        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
+      1, 19, 4, nil);
+    AddMapProvider('Here Maps Transit',
+      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day.transit/%z%/%x%/%y%/256/png8' +
+        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
+      1, 19, 4, nil);
+    AddMapProvider('Here POI Maps',
+      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/%z%/%x%/%y%/256/png8' +
+        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode + '&pois',
+      1, 19, 4, nil);
+    AddMapProvider('Here Pedestrian Maps',
+      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/pedestrian.day/%z%/%x%/%y%/256/png8'+
+        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
+      1, 19, 4, nil);
+{    AddMapProvider('Here DreamWorks Maps', Format(url, ['normal.day']) + '&style=dreamworks',
+      1, 19, 4, nil);
+    AddMapProvider('Here Pedestrian Maps', Format(url, ['pededrian.day']),
+      1, 19, 4, nil);
+      }
+  end;
 
   { The Ovi Maps (former Nokia maps) are no longer available.
 
