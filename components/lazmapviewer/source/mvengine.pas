@@ -846,6 +846,8 @@ begin
 end;
 
 procedure TMapViewerEngine.RegisterProviders;
+var
+  HERE1, HERE2: String;
 begin
 //  AddMapProvider('Aucun','',0,30, 0);  ???
 
@@ -892,7 +894,7 @@ begin
     'http://a%serv%.ortho.tiles.virtualearth.net/tiles/a%x%.jpg?g=72&shading=hill',
     1, 19, 4, nil, @GetQuadKey);
   AddMapProvider('Virtual Earth Hybrid',
-    'https://h%serv%.ortho.tiles.virtualearth.net/tiles/h%x%.jpg?g=72&shading=hill',
+    'http://h%serv%.ortho.tiles.virtualearth.net/tiles/h%x%.jpg?g=72&shading=hill',
     1, 19, 4, nil, @GetQuadKey);
 
   if (HERE_AppID <> '') and (HERE_AppCode <> '') then begin
@@ -901,35 +903,22 @@ begin
     // Store the APP_ID and APP_CODE obtained after registration in the
     // ini file of the demo under key [HERE] as items APP_ID and APP_CODE and
     // restart the demo.
-    AddMapProvider('Here Maps',
-      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/%z%/%x%/%y%/256/png8' +
-        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
-      1, 19, 4, nil);
-    AddMapProvider('Here Maps Grey',
-      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day.grey/%z%/%x%/%y%/256/png8' +
-        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
-      1, 19, 4, nil);
-    AddMapProvider('Here Maps Reduced',
-      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/reduced.day/%z%/%x%/%y%/256/png8' +
-        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
-      1, 19, 4, nil);
-    AddMapProvider('Here Maps Transit',
-      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day.transit/%z%/%x%/%y%/256/png8' +
-        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
-      1, 19, 4, nil);
-    AddMapProvider('Here POI Maps',
-      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/%z%/%x%/%y%/256/png8' +
-        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode + '&pois',
-      1, 19, 4, nil);
-    AddMapProvider('Here Pedestrian Maps',
-      'https://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/pedestrian.day/%z%/%x%/%y%/256/png8'+
-        '?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode,
-      1, 19, 4, nil);
-{    AddMapProvider('Here DreamWorks Maps', Format(url, ['normal.day']) + '&style=dreamworks',
-      1, 19, 4, nil);
-    AddMapProvider('Here Pedestrian Maps', Format(url, ['pededrian.day']),
-      1, 19, 4, nil);
-      }
+    HERE1 := 'http://%serv%.base.maps.api.here.com/maptile/2.1/maptile/newest/';
+    HERE2 := '/%z%/%x%/%y%/256/png8?app_id=' + HERE_AppID + '&app_code=' + HERE_AppCode;
+    AddMapProvider('Here Maps', HERE1 + 'normal.day' + HERE2,
+      1, 19, 4, @GetYahooSvr);
+    AddMapProvider('Here Maps Grey', HERE1 + 'normal.day.grey' + HERE2,
+      1, 19, 4, @GetYahooSvr);
+    AddMapProvider('Here Maps Reduced', HERE1 + 'reduced.day' + HERE2,
+      1, 19, 4, @GetYahooSvr);
+    AddMapProvider('Here Maps Transit', HERE1 + 'normal.day.transit' + HERE2,
+      1, 19, 4, @GetYahooSvr);
+    AddMapProvider('Here POI Maps', HERE1 + 'normal.day' + HERE2 + '&pois',
+      1, 19, 4, @GetYahooSvr);
+    AddMapProvider('Here Pedestrian Maps', HERE1 + 'pedestrian.day' + HERE2,
+      1, 19, 4, @GetYahooSvr);
+    AddMapProvider('Here DreamWorks Maps', HERE1 + 'normal.day' + HERE2 + '&style=dreamworks',
+      1, 19, 4, @GetYahooSvr);
   end;
 
   { The Ovi Maps (former Nokia maps) are no longer available.

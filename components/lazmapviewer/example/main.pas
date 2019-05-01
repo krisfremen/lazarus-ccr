@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons,
-  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDLESynapse;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj;
 
 type
 
@@ -49,7 +49,6 @@ type
     ControlPanel: TPanel;
     BtnLoadMapProviders: TSpeedButton;
     BtnSaveMapProviders: TSpeedButton;
-    MVDESynapse1: TMVDESynapse;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);

@@ -617,7 +617,7 @@ object MainForm: TMainForm
     Align = alClient
     CacheOnDisk = True
     CachePath = 'cache/'
-    DownloadEngine = MVDESynapse1
+    DownloadEngine = MapView.BuiltIn
     InactiveColor = clWhite
     MapProvider = 'OpenStreetMap Mapnik'
     UseThreads = True
@@ -633,9 +633,5 @@ object MainForm: TMainForm
     OnNameFound = GeoNamesNameFound
     left = 328
     top = 224
-  end
-  object MVDESynapse1: TMVDESynapse
-    left = 347
-    top = 131
   end
 end
