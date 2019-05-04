@@ -5,7 +5,7 @@ unit JvCoreReg;
 interface
 
 uses
-  Classes, SysUtils;
+  SysUtils;
 
 implementation
 

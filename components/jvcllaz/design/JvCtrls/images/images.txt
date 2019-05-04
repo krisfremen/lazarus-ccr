@@ -26,3 +26,4 @@ tjvrollout.png
 tjvrollout_150.png
 tjvrollout_200.png
 tjvcombolistbox.bmp
+tjvlookupautocomplete.bmp

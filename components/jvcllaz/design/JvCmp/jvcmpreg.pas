@@ -22,7 +22,8 @@ uses
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvStrHolder, TJvMultiStringHolder, TJvProfiler,
+    TJvStrHolder, TJvMultiStringHolder,
+    TJvProfiler,
     TJvSpellChecker
   ]);
   RegisterComponentEditor(TJvStrHolder, TJvStrHolderEditor);
