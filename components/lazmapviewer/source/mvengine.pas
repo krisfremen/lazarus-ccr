@@ -177,6 +177,7 @@ procedure SplitGps(AValue: Double; out ADegs, AMins, ASecs: Double);
 var
   HERE_AppID: String = '';
   HERE_AppCode: String = '';
+  OpenWeatherMap_ApiKey: String = '';
 
 
 implementation
@@ -919,6 +920,28 @@ begin
       1, 19, 4, @GetYahooSvr);
     AddMapProvider('Here DreamWorks Maps', HERE1 + 'normal.day' + HERE2 + '&style=dreamworks',
       1, 19, 4, @GetYahooSvr);
+  end;
+
+  if (OpenWeatherMap_ApiKey <> '') then begin
+    // Registration required to access OpenWeatherMaps
+    //   https://home.openweathermap.org/users/sign_up
+    // Store the API key found on the website in the ini file of the demo under
+    // key [OpenWeatherMap] and API_Key and restart the demo
+    AddMapProvider('OpenWeatherMap Clouds',
+      'https://tile.openweathermap.org/map/clouds_new/%z%/%x%/%y%.png?appid=' + OpenWeatherMap_ApiKey,
+      1, 19, 1, nil);
+    AddMapProvider('OpenWeatherMap Precipitation',
+      'https://tile.openweathermap.org/map/precipitation_new/%z%/%x%/%y%.png?appid=' + OpenWeatherMap_ApiKey,
+      1, 19, 1, nil);
+    AddMapProvider('OpenWeatherMap Pressure',
+      'https://tile.openweathermap.org/map/pressure_new/%z%/%x%/%y%.png?appid=' + OpenWeatherMap_ApiKey,
+      1, 19, 1, nil);
+    AddMapProvider('OpenWeatherMap Temperature',
+      'https://tile.openweathermap.org/map/temp_new/%z%/%x%/%y%.png?appid=' + OpenWeatherMap_ApiKey,
+      1, 19, 1, nil);
+    AddMapProvider('OpenWeatherMap Wind',
+      'https://tile.openweathermap.org/map/wind_new/%z%/%x%/%y%.png?appid=' + OpenWeatherMap_ApiKey,
+      1, 19, 1, nil);
   end;
 
   { The Ovi Maps (former Nokia maps) are no longer available.

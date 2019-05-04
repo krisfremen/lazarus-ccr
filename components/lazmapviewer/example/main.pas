@@ -421,7 +421,11 @@ begin
   try
     HERE_AppID := ini.ReadString('HERE', 'APP_ID', '');
     HERE_AppCode := ini.ReadString('HERE', 'APP_CODE', '');
-    if (HERE_AppID <> '') and (HERE_AppCode <> '') then begin
+    OpenWeatherMap_ApiKey := ini.ReadString('OpenWeatherMap', 'API_Key', '');
+
+    if ((HERE_AppID <> '') and (HERE_AppCode <> '')) or
+       (OpenWeatherMap_ApiKey <> '') then
+    begin
       MapView.Engine.ClearMapProviders;
       MapView.Engine.RegisterProviders;
       MapView.GetMapProviders(CbProviders.Items);
@@ -584,6 +588,9 @@ begin
       ini.WriteString('HERE', 'APP_ID', HERE_AppID);
     if HERE_AppCode <> '' then
       ini.WriteString('HERE', 'APP_CODE', HERE_AppCode);
+
+    if OpenWeatherMap_ApiKey <> '' then
+      ini.WriteString('OpenWeatherMap', 'API_Key', OpenWeatherMap_ApiKey);
 
     ini.EraseSection('Locations');
     for i := 0 to CbLocations.Items.Count-1 do
