@@ -14,6 +14,8 @@ procedure Register;
 
 implementation
 
+{$R pdx_icons.res}
+
 type
 
   TParadoxFileNamePropertyEditor=class(TFileNamePropertyEditor)

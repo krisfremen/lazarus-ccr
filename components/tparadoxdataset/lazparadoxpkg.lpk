@@ -2,9 +2,8 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="lazparadox"/>
+    <Name Value="lazparadoxpkg"/>
     <Type Value="RunAndDesignTime"/>
-    <AddToProjectUsesSection Value="True"/>
     <Author Value="Christian Ulrich"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -18,11 +17,11 @@
         </SyntaxOptions>
       </Parsing>
     </CompilerOptions>
-    <Description Value="Paradox DataSet
-
-NOTE: THIS PACKAGE IS DEPRECATED. PLEASE USE lazparadoxpkg.lpk INSTEAD!"/>
+    <Description Value="Dataset for Paradox Database files
+Read-only
+Tested on Windows and Linux, 32- and 64-bit"/>
     <License Value="LGPL"/>
-    <Version Minor="1"/>
+    <Version Minor="2"/>
     <Files Count="2">
       <Item1>
         <Filename Value="paradoxreg.pas"/>
