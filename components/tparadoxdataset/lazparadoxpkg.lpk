@@ -17,9 +17,9 @@
         </SyntaxOptions>
       </Parsing>
     </CompilerOptions>
-    <Description Value="Dataset for Paradox Database files
+    <Description Value="Dataset for Paradox database files
 Read-only
-Tested on Windows and Linux, 32- and 64-bit"/>
+Tested on Windows (32/64 bit) and Linux (32bit)"/>
     <License Value="LGPL"/>
     <Version Minor="2"/>
     <Files Count="2">
