@@ -1,0 +1,165 @@
+object MainForm: TMainForm
+  Left = 326
+  Height = 413
+  Top = 128
+  Width = 734
+  Caption = 'Paradox demo'
+  ClientHeight = 413
+  ClientWidth = 734
+  OnShow = btnOpenClick
+  LCLVersion = '2.1.0.0'
+  object edFileName: TFileNameEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = btnOpen
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = btnOpen
+    Left = 8
+    Height = 23
+    Top = 9
+    Width = 529
+    FileName = 'customer.db'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    MaxLength = 0
+    TabOrder = 0
+    Text = 'customer.db'
+  end
+  object btnOpen: TButton
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = DBNavigator
+    Left = 545
+    Height = 25
+    Top = 8
+    Width = 55
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Open'
+    OnClick = btnOpenClick
+    TabOrder = 1
+  end
+  object DBNavigator: TDBNavigator
+    AnchorSideLeft.Control = btnOpen
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btnOpen
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 608
+    Height = 25
+    Top = 8
+    Width = 118
+    Anchors = [akTop, akRight]
+    BevelOuter = bvNone
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 8
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 100
+    ClientHeight = 25
+    ClientWidth = 118
+    DataSource = DataSource1
+    Options = []
+    TabOrder = 2
+    VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
+  end
+  object Grid: TDBGrid
+    AnchorSideLeft.Control = edFileName
+    AnchorSideTop.Control = btnOpen
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = DBNavigator
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 364
+    Top = 41
+    Width = 718
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    TabOrder = 3
+  end
+  object Paradox: TParadoxDataSet
+    TableName = 'D:\Prog_Lazarus\tests\_database\paradox_samplefiles\examples\CUSTOMER.DB'
+    FieldDefs = <    
+      item
+        Name = 'CustNo'
+        DataType = ftAutoInc
+        Precision = -1
+        Size = 4
+      end    
+      item
+        Name = 'FirstName'
+        DataType = ftString
+        Precision = -1
+        Size = 51
+      end    
+      item
+        Name = 'LastName'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'EMail'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'Street'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'City'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'State/Prov'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'Zip/Postal Code'
+        DataType = ftString
+        Precision = -1
+        Size = 10
+      end    
+      item
+        Name = 'Comments'
+        DataType = ftMemo
+        Precision = -1
+        Size = 110
+      end    
+      item
+        Name = 'DateEntered'
+        DataType = ftDate
+        Precision = -1
+      end>
+    left = 184
+    top = 80
+  end
+  object DataSource1: TDataSource
+    DataSet = Paradox
+    left = 272
+    top = 80
+  end
+end
