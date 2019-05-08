@@ -79,7 +79,7 @@ type
     changeCount2            :  byte;
     unknown2F               :  byte;
     tableNamePtrPtr         :  longint;  // must be cast to ^pchar
-    fldInfoPtr              :  longint;  // must be cast to PFldInfoRec
+    fldInfo                 :  longint;  // use FFieldInfoPtr instead
     writeProtected          :  byte;
     fileVersionID           :  byte;
     maxBlocks               :  word;
@@ -153,6 +153,7 @@ type
     FaBlockIdx: word;
     FBlockReaded: Boolean;
     FBookmarkOfs: LongWord;
+    FFieldInfoPtr: PFldInfoRec;
 
     procedure SetFileName(const AValue: TFileName);
     function GetEncrypted: Boolean;
@@ -189,8 +190,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor  Destroy; override;
+    function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
     property Encrypted : Boolean read GetEncrypted;
-    function  GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
   published
     property TableName : TFileName read FFileName write SetFileName;
     property TableLevel : real read GetVersion;
@@ -312,11 +313,9 @@ begin
   if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 4)) then
     DatabaseError('No valid Paradox file !');
   if (FHeader^.fileVersionID <= 4) or not (FHeader^.FileType in [0,2,3,5]) then
-//     FHeader^.fldInfoPtr := addr(FHeader^.fieldInfo35)
-     FHeader^.fldInfoPtr := LongInt(PtrInt(@FHeader^.fieldInfo35))
+    FFieldInfoPtr := @FHeader^.FieldInfo35
    else
-//    FHeader^.fldInfoPtr := addr(FHeader^.fieldInfo);
-    FHeader^.fldInfoPtr := longint(PtrInt(@FHeader^.fieldInfo));
+     FFieldInfoPtr := @FHeader^.FieldInfo;
   if Encrypted then exit;
   FaBlock := AllocMem(FHeader^.maxTableSize * $0400);
   BookmarkSize := SizeOf(longword);
@@ -340,21 +339,21 @@ end;
 
 procedure TParadoxDataSet.InternalInitFieldDefs;
 var
-  i    : integer;
-  F    : PFldInfoRec;
-  FNamesStart : PChar;
+  i: integer;
+  F: PFldInfoRec;
+  FNamesStart: PChar;
   fname: String;
 begin
   FieldDefs.Clear;
-  F := PFldInfoRec(PtrInt(FHeader^.fldInfoPtr));  { begin with the first field identifier }
+  F := FFieldInfoPtr;                  { begin with the first field identifier }
   FNamesStart := Pointer(F);
   inc(FNamesStart, sizeof(F^)*(FHeader^.numFields));      //Jump over Fielddefs
-  inc(FNamesStart, sizeof(LongInt));                      //over Tablenameptr
-  inc(FNamesStart, sizeof(LongInt)*(FHeader^.numFields)); //over Fieldnamepointers
+  inc(FNamesStart, sizeof(LongInt));                      //over TableName pointer
+  inc(FNamesStart, sizeof(LongInt)*(FHeader^.numFields)); //over FieldName pointers
   inc(FNamesStart, Strlen(FNamesStart)+1);                //over Tablename
-  while FnamesStart^ = char(0) do
+  while FNamesStart^ = char(0) do
     inc(FNamesStart);                                     //over Padding
-  For i := 1 to FHeader^.numFields do
+  for i := 1 to FHeader^.NumFields do
   begin
     fname := StrPas(FNamesStart);
     case F^.fType of
@@ -579,7 +578,7 @@ var
 begin
   Result := False;
 //  F := FHeader^.fldInfoPtr;  { begin with the first field identifier }
-  F := PFldInfoRec(PtrInt(FHeader^.fldInfoPtr));  { begin with the first field identifier }
+  F := FFieldInfoPtr;  { begin with the first field identifier }
   p := ActiveBuffer;
   For i := 1 to FHeader^.numFields do
     begin
