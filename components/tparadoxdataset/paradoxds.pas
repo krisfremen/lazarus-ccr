@@ -154,6 +154,7 @@ type
     FBlockReaded: Boolean;
     FBookmarkOfs: LongWord;
     FFieldInfoPtr: PFldInfoRec;
+    FTableNameLen: Integer;
 
     procedure SetFileName(const AValue: TFileName);
     function GetEncrypted: Boolean;
@@ -304,19 +305,35 @@ begin
 end;
 
 procedure TParadoxDataSet.InternalOpen;
+var
+  hdrSize: Word;
 begin
   FStream := TFileStream.Create(FFilename,fmOpenRead or fmShareDenyNone);
-  FHeader := AllocMem($800);
+  FStream.Position := 2;
+  hdrSize := FStream.ReadWord;
+  FHeader := AllocMem(hdrSize);
   FStream.Position := 0;
-  if not FStream.Read(FHeader^, $800) = sizeof(FHeader^) then
+  if not FStream.Read(FHeader^, hdrSize) = hdrSize then
     DatabaseError('No valid Paradox file !');
+  {
   if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 4)) then
     DatabaseError('No valid Paradox file !');
+    }
+  if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 32)) then
+    DatabaseError('No valid Paradox file !');
+
+  if (FHeader^.fileVersionID = 12) then
+    FTableNameLen := 261
+  else
+    FTableNameLen := 79;
+
   if (FHeader^.fileVersionID <= 4) or not (FHeader^.FileType in [0,2,3,5]) then
     FFieldInfoPtr := @FHeader^.FieldInfo35
    else
      FFieldInfoPtr := @FHeader^.FieldInfo;
+
   if Encrypted then exit;
+
   FaBlock := AllocMem(FHeader^.maxTableSize * $0400);
   BookmarkSize := SizeOf(longword);
   InternalFirst;
@@ -347,33 +364,31 @@ begin
   FieldDefs.Clear;
   F := FFieldInfoPtr;                  { begin with the first field identifier }
   FNamesStart := Pointer(F);
-  inc(FNamesStart, sizeof(F^)*(FHeader^.numFields));      //Jump over Fielddefs
-  inc(FNamesStart, sizeof(LongInt));                      //over TableName pointer
-  inc(FNamesStart, sizeof(LongInt)*(FHeader^.numFields)); //over FieldName pointers
-  inc(FNamesStart, Strlen(FNamesStart)+1);                //over Tablename
-  while FNamesStart^ = char(0) do
-    inc(FNamesStart);                                     //over Padding
+  inc(FNamesStart, SizeOf(F^)*(FHeader^.numFields));      //Jump over Fielddefs
+  inc(FNamesStart, SizeOf(LongInt));                      //over TableName pointer
+  inc(FNamesStart, SizeOf(LongInt)*(FHeader^.numFields)); //over FieldName pointers
+  inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
   for i := 1 to FHeader^.NumFields do
   begin
     fname := StrPas(FNamesStart);
     case F^.fType of
-      pxfAlpha:       Fielddefs.Add(fname, ftString, F^.fSize);
-      pxfDate:        Fielddefs.Add(fname, ftDate, 0);
-      pxfShort:       Fielddefs.Add(fname, ftSmallInt, F^.fSize);
-      pxfLong:        Fielddefs.Add(fname, ftInteger, F^.fSize);
-      pxfCurrency:    Fielddefs.Add(fname, ftFloat, F^.fSize);
-      pxfNumber:      Fielddefs.Add(fname, ftFloat, F^.fSize);
-      pxfLogical:     Fielddefs.Add(fname, ftBoolean, F^.fSize);
-      pxfMemoBLOb:    Fielddefs.Add(fname, ftMemo, F^.fSize);
-      pxfBLOb:        Fielddefs.Add(fname, ftBlob, F^.fSize);
-      pxfFmtMemoBLOb: Fielddefs.Add(fname, ftMemo, F^.fSize);
-      pxfOLE:         Fielddefs.Add(fname, ftBlob, F^.fSize);
-      pxfGraphic:     Fielddefs.Add(fname, ftBlob, F^.fSize);
-      pxfTime:        Fielddefs.Add(fname, ftTime, F^.fSize);
-      pxfTimestamp:   Fielddefs.Add(fname, ftDateTime, 0);
-      pxfAutoInc:     Fielddefs.Add(fname, ftAutoInc, F^.fSize);
-      pxfBCD:         Fielddefs.Add(fname, ftBCD, F^.fSize);
-      pxfBytes:       Fielddefs.Add(fname, ftString, F^.fSize);
+      pxfAlpha:       FieldDefs.Add(fname, ftString, F^.fSize);
+      pxfDate:        FieldDefs.Add(fname, ftDate, 0);
+      pxfShort:       FieldDefs.Add(fname, ftSmallInt, F^.fSize);
+      pxfLong:        FieldDefs.Add(fname, ftInteger, F^.fSize);
+      pxfCurrency:    FieldDefs.Add(fname, ftCurrency, F^.fSize);
+      pxfNumber:      FieldDefs.Add(fname, ftFloat, F^.fSize);
+      pxfLogical:     FieldDefs.Add(fname, ftBoolean, 0); //F^.fSize);
+      pxfMemoBLOb:    FieldDefs.Add(fname, ftMemo, F^.fSize);
+      pxfBLOb:        FieldDefs.Add(fname, ftBlob, F^.fSize);
+      pxfFmtMemoBLOb: FieldDefs.Add(fname, ftMemo, F^.fSize);
+      pxfOLE:         FieldDefs.Add(fname, ftBlob, F^.fSize);
+      pxfGraphic:     FieldDefs.Add(fname, ftBlob, F^.fSize);
+      pxfTime:        FieldDefs.Add(fname, ftTime, 0); //F^.fSize);
+      pxfTimestamp:   FieldDefs.Add(fname, ftDateTime, 0);
+      pxfAutoInc:     FieldDefs.Add(fname, ftAutoInc, F^.fSize);
+      pxfBCD:         FieldDefs.Add(fname, ftBCD, F^.fSize);
+      pxfBytes:       FieldDefs.Add(fname, ftString, F^.fSize);
     end;
     inc(FNamesStart, Length(fname)+1);
     inc(F);
@@ -396,8 +411,10 @@ end;
 
 function TParadoxDataSet.GetRecordCount: Integer;
 begin
-  if not Assigned(Fheader) then exit;
-  Result := FHeader^.numRecords;
+  if Assigned(FHeader) then
+    Result := FHeader^.numRecords
+  else
+    Result := 0;
 end;
 
 function TParadoxDataSet.IsCursorOpen: Boolean;
@@ -566,8 +583,8 @@ function TParadoxDataSet.GetFieldData(Field: TField; Buffer: Pointer): Boolean;
 type
   TNRec= array[0..16] of byte;
 var
-  b : Boolean;
-  F    : PFldInfoRec;
+  b: WordBool;
+  F: PFldInfoRec;
   i: Integer;
   size: Integer;
   p: PChar;
@@ -577,25 +594,21 @@ var
   d:   Double   absolute s;
 begin
   Result := False;
-//  F := FHeader^.fldInfoPtr;  { begin with the first field identifier }
   F := FFieldInfoPtr;  { begin with the first field identifier }
   p := ActiveBuffer;
-  For i := 1 to FHeader^.numFields do
-    begin
-      if i = Field.FieldNo then
-        break;
-      If F^.fType = pxfBCD then { BCD field size value not used for field size }
-         //Inc(ptrrec(p).ofs, 17)
-         Inc(p, 17)
-       else
-         //Inc(ptrrec(p).ofs, F^.fSize);
-        Inc(p, F^.fSize);
-      //Inc(ptrrec(F).ofs, sizeof(F^));
-      Inc(F);
-    end;
-  If F^.fType = pxfBCD then { BCD field size value not used for field size }
+  for i := 1 to FHeader^.numFields do
+  begin
+    if i = Field.FieldNo then
+      break;
+    if F^.fType = pxfBCD then { BCD field size value not used for field size }
+       Inc(p, 17)
+     else
+      Inc(p, F^.fSize);
+    Inc(F);
+  end;
+  if F^.fType = pxfBCD then { BCD field size value not used for field size }
     size := 17
-   else
+  else
     size := F^.fSize;
   if F^.fType in [pxfDate..pxfNumber, pxfTime..pxfAutoInc] then
     begin
@@ -638,12 +651,12 @@ begin
       Move(d,Buffer^,sizeof(d));
       Result := True;
     end;
-  
   pxfLogical:
     begin
-//      b := (p^ = #80);
-//      Move(b,Buffer^,sizeof(Boolean));
-//      Result := True;
+      b := not ((p^ = #$80) or (p^ = #0));
+      if Assigned(Buffer) then
+        Move(b, Buffer^, Sizeof(b));
+      Result := true;
     end;
   pxfTime:
     begin
@@ -651,8 +664,10 @@ begin
       Move(i,Buffer^,sizeof(Integer));
       Result := True;
     end;
-  pxfTimestamp:
+  pxfTimeStamp:
     begin
+      Move(s[0], Buffer^, 8);
+      Result := true;
     end;
   end;
 end;
