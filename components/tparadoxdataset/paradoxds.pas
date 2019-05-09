@@ -45,15 +45,15 @@ type
   PLongWord = ^Longword;
 
   { field information record used in TPxHeader below }
-  PFldInfoRec         = ^TFldInfoRec;
-  TFldInfoRec         = packed RECORD
-    fType   : byte;
-    fSize   : byte;
+  PFldInfoRec = ^TFldInfoRec;
+  TFldInfoRec = packed record
+    fType: byte;
+    fSize: byte;
   end;
 
 
-  PPxHeader           = ^TPxHeader;
-  TPxHeader           =  packed RECORD
+  PPxHeader = ^TPxHeader;
+  TPxHeader =  packed record
     recordSize              :  word;
     headerSize              :  word;
     fileType                :  byte;
@@ -143,13 +143,13 @@ type
 
   TParadoxDataSet = class(TDataSet)
   private
-    FActive  : Boolean;
-    FStream  : TFileStream;
+    FActive: Boolean;
+    FStream: TFileStream;
     FFileName: TFileName;
-    FHeader  : PPxHeader;
-    FaRecord : Longword;
-    FaBlockstart : LongInt;
-    FaBlock : PDataBlock;
+    FHeader: PPxHeader;
+    FaRecord: Longword;
+    FaBlockstart: LongInt;
+    FaBlock: PDataBlock;
     FaBlockIdx: word;
     FBlockReaded: Boolean;
     FBookmarkOfs: LongWord;
@@ -348,8 +348,9 @@ begin
   BindFields(FALSE);
   if DefaultFields then // Destroy the TField
     DestroyFields;
-  Freemem(FHeader);
-  Freemem(FaBlock);
+  FreeMem(FHeader);
+  FreeMem(FaBlock);
+  FreeAndNil(FStream);
   FHeader := nil;
   FActive := False;
 end;
