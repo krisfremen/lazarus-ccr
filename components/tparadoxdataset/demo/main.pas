@@ -20,6 +20,7 @@ type
     edFileName: TFileNameEdit;
     Paradox: TParadoxDataSet;
     procedure btnOpenClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
 
   public
@@ -40,6 +41,12 @@ begin
   Paradox.Close;
   Paradox.TableName := edFileName.Filename;
   Paradox.Open;
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  if ParamCount > 0 then
+    edFileName.FileName := ParamStr(1);
 end;
 
 end.

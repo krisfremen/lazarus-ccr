@@ -6,6 +6,7 @@ object MainForm: TMainForm
   Caption = 'Paradox demo'
   ClientHeight = 413
   ClientWidth = 734
+  OnCreate = FormCreate
   OnShow = btnOpenClick
   LCLVersion = '2.1.0.0'
   object edFileName: TFileNameEdit
@@ -93,7 +94,6 @@ object MainForm: TMainForm
     TabOrder = 3
   end
   object Paradox: TParadoxDataSet
-    TableName = 'D:\Prog_Lazarus\tests\_database\paradox_samplefiles\examples\CUSTOMER.DB'
     FieldDefs = <    
       item
         Name = 'CustNo'
