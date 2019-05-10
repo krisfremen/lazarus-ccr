@@ -552,6 +552,7 @@ end;
 
 procedure TParadoxDataset.InternalClose;
 begin
+  FInputEncoding := '';
   BindFields(FALSE);
   if DefaultFields then // Destroy the TField
     DestroyFields;
@@ -678,7 +679,7 @@ begin
    else begin
      FFieldInfoPtr := @FHeader^.FieldInfo;
      cp := FHeader^.DosCodePage;
-     FInputEncoding := 'cp' + IntToStr(cp);
+     FInputEncoding := 'CP' + IntToStr(cp);
    end;
 
   if Encrypted then
