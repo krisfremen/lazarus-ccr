@@ -16,6 +16,11 @@
           <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
+      <Linking>
+        <Debugging>
+          <UseHeaptrc Value="True"/>
+        </Debugging>
+      </Linking>
     </CompilerOptions>
     <Description Value="Dataset for Paradox database files
 Read-only

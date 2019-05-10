@@ -10,7 +10,7 @@ unit paradoxds;
 interface
 
 uses                               
-  Classes, SysUtils, db, Forms, Objects, LclProc;
+  Classes, SysUtils, db;
 
 
 const
@@ -50,7 +50,6 @@ type
     fType: byte;
     fSize: byte;
   end;
-
 
   PPxHeader = ^TPxHeader;
   TPxHeader =  packed record
@@ -133,18 +132,28 @@ type
   end;}
 
   {10-byte Blob Info Block}
-  APdoxBlob = packed record
-    Offset,
+  TPxBlobInfo = packed record
+    FileLoc: LongWord;
     Length: LongWord;
-    ModNum: Word;
+    ModCount: Word;
   end;
+
+  {Blob Pointer Array Entry}
+  TPxBlobIndex = packed record
+    Offset: Byte;
+    Len16: Byte;
+    ModCount: Word;
+    Len: Byte;
+  end;
+
 
   { TParadoxDataSet }
 
   TParadoxDataSet = class(TDataSet)
   private
     FActive: Boolean;
-    FStream: TFileStream;
+    FStream: TStream;
+    FBlobStream: TStream;
     FFileName: TFileName;
     FHeader: PPxHeader;
     FaRecord: Longword;
@@ -184,14 +193,15 @@ type
     procedure SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag); override;
     function  GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
     function  GetRecordSize: Word; override;
-    procedure SetFieldData(Field: TField; Buffer: Pointer); override;
     function  GetCanModify: Boolean;override;
     procedure SetRecNo(Value: Integer); override;
     function  GetRecNo: Integer; override;
   public
     constructor Create(AOwner: TComponent); override;
-    destructor  Destroy; override;
+    destructor Destroy; override;
+    function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
     function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
+    procedure SetFieldData(Field: TField; Buffer: Pointer); override;
     property Encrypted : Boolean read GetEncrypted;
   published
     property TableName : TFileName read FFileName write SetFileName;
@@ -228,6 +238,8 @@ type
 
 implementation
 
+uses
+  Forms;
 
 { TParadoxDataSet }
 
@@ -307,7 +319,13 @@ end;
 procedure TParadoxDataSet.InternalOpen;
 var
   hdrSize: Word;
+  blobfn: String;
 begin
+  if FFileName = '' then
+    DatabaseError('Tablename is not set');
+  if not FileExists(FFileName) then
+    DatabaseError(Format('Paradox file "%" does not exist.', [FFileName]));
+
   FStream := TFileStream.Create(FFilename,fmOpenRead or fmShareDenyNone);
   FStream.Position := 2;
   hdrSize := FStream.ReadWord;
@@ -315,14 +333,10 @@ begin
   FStream.Position := 0;
   if not FStream.Read(FHeader^, hdrSize) = hdrSize then
     DatabaseError('No valid Paradox file !');
-  {
-  if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 4)) then
-    DatabaseError('No valid Paradox file !');
-    }
   if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 32)) then
     DatabaseError('No valid Paradox file !');
 
-  if (FHeader^.fileVersionID = 12) then
+  if (FHeader^.fileVersionID >= 12) then
     FTableNameLen := 261
   else
     FTableNameLen := 79;
@@ -332,7 +346,18 @@ begin
    else
      FFieldInfoPtr := @FHeader^.FieldInfo;
 
-  if Encrypted then exit;
+  if Encrypted then
+    exit;
+
+  FBlobStream := nil;
+  blobfn := ChangeFileExt(FFileName, '.mb');
+  if FileExists(blobfn) then
+    FBlobStream := TFileStream.Create(blobfn, fmOpenRead + fmShareDenyNone)
+  else begin
+    blobfn := ChangeFileExt(FFileName, '.MB');
+    if FileExists(blobfn) then
+      FBlobStream := TFileStream.Create(blobfn, fmOpenRead + fmShareDenyNone);
+  end;
 
   FaBlock := AllocMem(FHeader^.maxTableSize * $0400);
   BookmarkSize := SizeOf(longword);
@@ -350,6 +375,7 @@ begin
     DestroyFields;
   FreeMem(FHeader);
   FreeMem(FaBlock);
+  FreeAndNil(FBlobStream);
   FreeAndNil(FStream);
   FHeader := nil;
   FActive := False;
@@ -384,7 +410,7 @@ begin
       pxfBLOb:        FieldDefs.Add(fname, ftBlob, F^.fSize);
       pxfFmtMemoBLOb: FieldDefs.Add(fname, ftMemo, F^.fSize);
       pxfOLE:         FieldDefs.Add(fname, ftBlob, F^.fSize);
-      pxfGraphic:     FieldDefs.Add(fname, ftBlob, F^.fSize);
+      pxfGraphic:     FieldDefs.Add(fname, ftGraphic, F^.fSize);  // was: ftBlob
       pxfTime:        FieldDefs.Add(fname, ftTime, 0); //F^.fSize);
       pxfTimestamp:   FieldDefs.Add(fname, ftDateTime, 0);
       pxfAutoInc:     FieldDefs.Add(fname, ftAutoInc, F^.fSize);
@@ -607,10 +633,12 @@ begin
       Inc(p, F^.fSize);
     Inc(F);
   end;
+
   if F^.fType = pxfBCD then { BCD field size value not used for field size }
     size := 17
   else
     size := F^.fSize;
+
   if F^.fType in [pxfDate..pxfNumber, pxfTime..pxfAutoInc] then
     begin
       for i := 0 to pred(size) do
@@ -621,7 +649,7 @@ begin
     end;
 
   case F^.fType of
-  pxfAlpha,pxfMemoBLOb,pxfFmtMemoBLOb:
+  pxfAlpha: //, pxfMemoBLOb, pxfFmtMemoBLOb:
     begin
       if (Buffer <> nil) then
         StrLCopy(Buffer, p, Field.Size)
@@ -641,13 +669,13 @@ begin
       Move(i,Buffer^,sizeof(Integer));
       Result := True;
     end;
-  pxfLong,pxfAutoInc:
+  pxfLong, pxfAutoInc:
     begin
       i := int;
       Move(i,Buffer^,sizeof(Integer));
       Result := True;
     end;
-  pxfCurrency,pxfNumber:
+  pxfCurrency, pxfNumber:
     begin
       Move(d,Buffer^,sizeof(d));
       Result := True;
@@ -670,6 +698,10 @@ begin
       Move(s[0], Buffer^, 8);
       Result := true;
     end;
+  pxfGraphic:
+    begin
+      Result := ActiveBuffer <> nil;
+    end;
   end;
 end;
 
@@ -683,6 +715,92 @@ destructor TParadoxDataSet.Destroy;
 begin
   inherited Destroy;
 end;
+
+function TParadoxDataset.CreateBlobStream(Field: TField;
+  Mode: TBlobStreamMode): TStream;
+var
+  memStream: TMemoryStream;
+  F: PFldInfoRec;
+  p: PChar;
+  header: PAnsiChar;
+  idx: Byte;
+  loc: Integer;
+  s: String;
+  blobInfo: TPxBlobInfo;
+  blobIndex: TPxBlobIndex;
+  i: Integer;
+begin
+  memStream := TMemoryStream.Create;
+  Result := memStream;
+
+  if (Mode <> bmRead) then
+    exit;
+
+  F := FFieldInfoPtr;  { begin with the first field identifier }
+  p := ActiveBuffer;
+  for i := 1 to FHeader^.numFields do
+  begin
+    if i = Field.FieldNo then
+      break;
+    if F^.fType = pxfBCD then { BCD field size value not used for field size }
+       Inc(p, 17)
+     else
+      Inc(p, F^.fSize);
+    Inc(F);
+  end;
+
+  header := p + Field.Size - SizeOf(TPxBlobInfo);
+  Move(header^, blobInfo{%H-}, SizeOf(blobInfo));
+  if blobInfo.Length = 0 then
+    exit;
+
+  if blobInfo.Length > Field.Size - SizeOf(TPxBlobInfo) then
+  begin
+    if Assigned(FBlobStream) then begin
+      idx := blobInfo.FileLoc and $FF;
+      loc := blobInfo.FileLoc and $FFFFFF00;
+      if idx = $FF then begin
+        // Read from a single blob block
+        FBlobStream.Seek(loc + 9, soFromBeginning);
+        if Field.DataType = ftMemo then begin
+          SetLength(s, blobInfo.Length);
+          FBlobStream.Read(s[1], blobInfo.Length);
+          // if EncodingMemo then s := EncodingField(s, field);
+          memStream.Write(s[1], Length(s));
+        end else
+        begin
+          if Field.DataType = ftGraphic then begin
+            memstream.WriteAnsiString('bmp');
+            FBlobStream.Position := FBlobStream.Position + 8;
+          end;
+          memStream.CopyFrom(FBlobStream, blobInfo.Length);
+        end;
+      end else begin
+        // Read from a suballocated block
+        FBlobStream.Seek(loc + 12 + 5*idx, soFromBeginning);
+        FBlobStream.Read(blobIndex{%H-}, SizeOf(TPxBlobIndex));
+        FBlobStream.Seek(loc + 16*blobIndex.Offset, soFromBeginning);
+        if Field.DataType = ftMemo then begin
+          SetLength(s, blobInfo.Length);
+          FBlobStream.Read(s[1], blobInfo.Length);
+          //if EncodingMemo then s := EncodingField(s, Field);
+          memStream.Write(s[1], Length(s));
+        end else
+          memStream.CopyFrom(FBlobStream, blobInfo.Length);
+      end;
+    end;
+  end else
+  if Field.DataType = ftMemo then begin
+    SetLength(s, blobInfo.Length);
+    Move(p^, s[1], blobInfo.Length);
+    //if EncodingMemo then s := EncodingField(s, Field);
+    memStream.Write(s[1], Length(s));
+  end else
+    memStream.Write(p, blobInfo.Length);
+
+  memStream.Position := 0;
+end;
+
 
 end.
 
