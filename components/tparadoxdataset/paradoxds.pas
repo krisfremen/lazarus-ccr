@@ -169,11 +169,13 @@ type
 
     procedure SetFileName(const AValue: TFileName);
     function GetEncrypted: Boolean;
+    function GetInputEncoding: String; inline;
+    function GetTargetEncoding: String; inline;
     function GetVersion: real;
+    function IsStoredTargetEncoding: Boolean;
     procedure ReadBlock;
     procedure ReadNextBlockHeader;
     procedure ReadPrevBlockHeader;
-    procedure SetInputEncoding(AValue: String);
     procedure SetTargetEncoding(AValue: String);
   protected
     procedure InternalOpen; override;
@@ -210,8 +212,8 @@ type
   published
     property TableName: TFileName read FFileName write SetFileName;
     property TableLevel: real read GetVersion;
-    property InputEncoding: string read FInputEncoding write SetInputEncoding;
-    property TargetEncoding: string read FTargetEncoding write SetTargetEncoding;
+    property InputEncoding: String read GetInputEncoding;
+    property TargetEncoding: string read FTargetEncoding write SetTargetEncoding stored IsStoredTargetEncoding;
     property FieldDefs;
     property Active;
     property AutoCalcFields;
@@ -263,6 +265,27 @@ begin
     Result := (FHeader^.encryption1 <> 0)
   else
     Result := (FHeader^.encryption2 <> 0)
+end;
+
+function TParadoxDataset.GetInputEncoding: String;
+begin
+  if FInputEncoding = '' then
+    Result := GetDefaultTextEncoding
+  else
+    Result := FInputEncoding;
+end;
+
+function TParadoxDataset.GetTargetEncoding: String;
+begin
+  if (FTargetEncoding = '') or SameText(FTargetEncoding, 'utf-8') then
+    Result := EncodingUTF8
+  else
+    Result := FTargetEncoding;
+end;
+
+function TParadoxDataset.IsStoredTargetEncoding: Boolean;
+begin
+  Result := not SameText(FTargetEncoding, EncodingUTF8);
 end;
 
 procedure TParadoxDataSet.ReadBlock;
@@ -322,23 +345,10 @@ begin
   end;
 end;
 
-procedure TParadoxDataset.SetInputEncoding(AValue: String);
-begin
-  if AValue = FInputEncoding then
-    exit;
-  if AValue = '' then
-    FInputEncoding := GetDefaultTextEncoding
-  else
-    FInputEncoding := AValue;
-end;
-
 procedure TParadoxDataset.SetTargetEncoding(AValue: String);
 begin
   if AValue = FTargetEncoding then exit;
-  if AValue = '' then
-    FTargetEncoding := EncodingUTF8
-  else
-    FTargetEncoding := AValue;
+  FTargetEncoding := Uppercase(AValue);
 end;
 
 procedure TParadoxDataSet.InternalOpen;
@@ -425,7 +435,7 @@ begin
   inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
   for i := 1 to FHeader^.NumFields do
   begin
-    fname := ConvertEncoding(StrPas(FNamesStart), FInputEncoding, FTargetEncoding);
+    fname := ConvertEncoding(StrPas(FNamesStart), GetInputEncoding, GetTargetEncoding);
     case F^.fType of
       pxfAlpha:       FieldDefs.Add(fname, ftString, F^.fSize);
       pxfDate:        FieldDefs.Add(fname, ftDate, 0);
@@ -669,19 +679,17 @@ begin
   else
     size := F^.fSize;
 
-  if F^.fType in [pxfDate..pxfNumber, pxfTime..pxfAutoInc] then
-    begin
-      for i := 0 to pred(size) do
-        begin
-          s[pred(size-i)] := byte(p[i]);
-        end;
-      s[pred(size)] := s[pred(size)] xor $80;
-    end;
+  // These numeric fields are stored as big endian
+  if F^.fType in [pxfDate..pxfNumber, pxfTime..pxfAutoInc] then begin
+    for i := 0 to pred(size) do
+       s[pred(size-i)] := byte(p[i]);
+    s[pred(size)] := s[pred(size)] xor $80;
+  end;
 
   case F^.fType of
   pxfAlpha:
     if (Buffer <> nil) then begin
-      str := ConvertEncoding(StrPas(p), FInputEncoding, FTargetEncoding);
+      str := ConvertEncoding(StrPas(p), GetInputEncoding, GetTargetEncoding);
       if str <> '' then begin
         StrLCopy(Buffer, PChar(str), Length(str));
         Result := true;
@@ -695,8 +703,10 @@ begin
   pxfDate:
     begin
       i := int;
-      Move(i,Buffer^,sizeof(Integer));
-      Result := True;
+      if i <> $FFFFFFFF80000000 then begin     // This transforms to Dec/12/9999 and probably is NULL
+        Move(i,Buffer^,sizeof(Integer));
+        Result := True;
+      end;
     end;
   pxfShort:
     begin
@@ -744,8 +754,8 @@ constructor TParadoxDataSet.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FHeader := nil;
-  FTargetEncoding := EncodingUTF8;
-  FInputEncoding := GetDefaultTextEncoding;
+  FTargetEncoding := Uppercase(EncodingUTF8);
+  FInputEncoding := '';
 end;
 
 destructor TParadoxDataSet.Destroy;
@@ -802,7 +812,7 @@ begin
         if Field.DataType = ftMemo then begin
           SetLength(s, blobInfo.Length);
           FBlobStream.Read(s[1], blobInfo.Length);
-          s := ConvertEncoding(s, FInputEncoding, FTargetEncoding);
+          s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
           memStream.Write(s[1], Length(s));
         end else
         begin
@@ -820,7 +830,7 @@ begin
         if Field.DataType = ftMemo then begin
           SetLength(s, blobInfo.Length);
           FBlobStream.Read(s[1], blobInfo.Length);
-          s := ConvertEncoding(s, FInputEncoding, FTargetEncoding);
+          s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
           memStream.Write(s[1], Length(s));
         end else
           memStream.CopyFrom(FBlobStream, blobInfo.Length);
@@ -830,7 +840,7 @@ begin
   if Field.DataType = ftMemo then begin
     SetLength(s, blobInfo.Length);
     Move(p^, s[1], blobInfo.Length);
-    s := ConvertEncoding(s, FInputEncoding, FTargetEncoding);
+    s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
     memStream.Write(s[1], Length(s));
   end else
     memStream.Write(p, blobInfo.Length);
