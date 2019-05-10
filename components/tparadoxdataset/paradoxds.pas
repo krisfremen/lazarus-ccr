@@ -406,7 +406,6 @@ begin
   FreeMem(FaBlock);
   FreeAndNil(FBlobStream);
   FreeAndNil(FStream);
-  FHeader := nil;
   FActive := False;
 end;
 
@@ -444,7 +443,7 @@ begin
       pxfTimestamp:   FieldDefs.Add(fname, ftDateTime, 0);
       pxfAutoInc:     FieldDefs.Add(fname, ftAutoInc, F^.fSize);
       pxfBCD:         FieldDefs.Add(fname, ftBCD, F^.fSize);
-      pxfBytes:       FieldDefs.Add(fname, ftString, F^.fSize);
+      pxfBytes:       FieldDefs.Add(fname, ftBytes, F^.fSize);  // was: ftString
     end;
     inc(FNamesStart, Length(fname)+1);
     inc(F);
@@ -636,8 +635,6 @@ begin
 end;
 
 function TParadoxDataSet.GetFieldData(Field: TField; Buffer: Pointer): Boolean;
-type
-  TNRec= array[0..16] of byte;
 var
   b: WordBool;
   F: PFldInfoRec;
@@ -651,6 +648,9 @@ var
   str: String;
 begin
   Result := False;
+  if (RecordCount = 0) then
+    exit;
+
   F := FFieldInfoPtr;  { begin with the first field identifier }
   p := ActiveBuffer;
   for i := 1 to FHeader^.numFields do
@@ -682,8 +682,14 @@ begin
   pxfAlpha:
     if (Buffer <> nil) then begin
       str := ConvertEncoding(StrPas(p), FInputEncoding, FTargetEncoding);
-      StrLCopy(Buffer, PChar(str), Length(str));
-//        StrLCopy(Buffer, p, Field.Size);
+      if str <> '' then begin
+        StrLCopy(Buffer, PChar(str), Length(str));
+        Result := true;
+      end;
+    end;
+  pxfBytes:
+    if Buffer <> nil then begin
+      StrLCopy(Buffer, PAnsiChar(p), F^.fSize);
       Result := true;
     end;
   pxfDate:
