@@ -125,11 +125,11 @@ type
     { fileData size varies according to maxTableSize }
   end;
 
-{  APdoxBlk = packed record
-    Next,
-    Prev,
-    Last: Word;
-  end;}
+  TPxField = record
+    Info: PFldInfoRec;
+    Offset: LongInt;
+    Name: String;
+  end;
 
   {10-byte Blob Info Block}
   TPxBlobInfo = packed record
@@ -166,6 +166,7 @@ type
     FTableNameLen: Integer;
     FInputEncoding: String;
     FTargetEncoding: String;
+    FPxFields: Array of TPxField;
 
     procedure SetFileName(const AValue: TFileName);
     function GetEncrypted: Boolean;
@@ -207,7 +208,7 @@ type
     destructor Destroy; override;
     function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
     function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
-    procedure SetFieldData(Field: TField; Buffer: Pointer); override;
+    procedure SetFieldData({%H-}Field: TField; {%H-}Buffer: Pointer); override;
     property Encrypted: Boolean read GetEncrypted;
   published
     property TableName: TFileName read FFileName write SetFileName;
@@ -425,6 +426,7 @@ var
   F: PFldInfoRec;
   FNamesStart: PChar;
   fname: String;
+  offs: LongInt;
 begin
   FieldDefs.Clear;
   F := FFieldInfoPtr;                  { begin with the first field identifier }
@@ -433,6 +435,10 @@ begin
   inc(FNamesStart, SizeOf(LongInt));                      //over TableName pointer
   inc(FNamesStart, SizeOf(LongInt)*(FHeader^.numFields)); //over FieldName pointers
   inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
+
+  SetLength(FPxFields, FHeader^.NumFields);
+  offs := 0;
+
   for i := 1 to FHeader^.NumFields do
   begin
     fname := ConvertEncoding(StrPas(FNamesStart), GetInputEncoding, GetTargetEncoding);
@@ -455,6 +461,12 @@ begin
       pxfBCD:         FieldDefs.Add(fname, ftBCD, F^.fSize);
       pxfBytes:       FieldDefs.Add(fname, ftBytes, F^.fSize);  // was: ftString
     end;
+    with FPxFields[i-1] do begin
+      Name := fname;
+      Info := F;
+      Offset := offs;
+    end;
+    offs := offs + F^.fSize;
     inc(FNamesStart, Length(fname)+1);
     inc(F);
   end;
@@ -661,28 +673,14 @@ begin
   if (RecordCount = 0) then
     exit;
 
-  F := FFieldInfoPtr;  { begin with the first field identifier }
-  p := ActiveBuffer;
-  for i := 1 to FHeader^.numFields do
-  begin
-    if i = Field.FieldNo then
-      break;
-    if F^.fType = pxfBCD then { BCD field size value not used for field size }
-       Inc(p, 17)
-     else
-      Inc(p, F^.fSize);
-    Inc(F);
-  end;
+  F := FPxFields[Field.FieldNo - 1].Info;
+  p := ActiveBuffer + FPxFields[Field.FieldNo - 1].Offset;
+  size := F^.fSize;
 
-  if F^.fType = pxfBCD then { BCD field size value not used for field size }
-    size := 17
-  else
-    size := F^.fSize;
-
-  // These numeric fields are stored as big endian
+  // These numeric fields are stored as big endian --> swap bytes
   if F^.fType in [pxfDate..pxfNumber, pxfTime..pxfAutoInc] then begin
     for i := 0 to pred(size) do
-       s[pred(size-i)] := byte(p[i]);
+      s[pred(size-i)] := byte(p[i]);
     s[pred(size)] := s[pred(size)] xor $80;
   end;
 
@@ -701,52 +699,39 @@ begin
       Result := true;
     end;
   pxfDate:
-    begin
-      i := int;
-      if i <> $FFFFFFFF80000000 then begin     // This transforms to Dec/12/9999 and probably is NULL
-        Move(i,Buffer^,sizeof(Integer));
-        Result := True;
-      end;
+    if int <> $FFFFFFFF80000000 then begin     // This transforms to Dec/12/9999 and probably is NULL
+      Move(int, Buffer^, SizeOf(LongInt));
+      Result := True;
     end;
   pxfShort:
     begin
-      i := si;
-      Move(i,Buffer^,sizeof(Integer));
+      Move(si, Buffer^, SizeOf(SmallInt));
       Result := True;
     end;
   pxfLong, pxfAutoInc:
     begin
-      i := int;
-      Move(i,Buffer^,sizeof(Integer));
+      Move(int, Buffer^, SizeOf(LongInt));
       Result := True;
     end;
-  pxfCurrency, pxfNumber:
+  pxfCurrency, pxfNumber, pxfTimeStamp:
     begin
-      Move(d,Buffer^,sizeof(d));
+      Move(d, Buffer^, SizeOf(d));
       Result := True;
     end;
   pxfLogical:
     begin
       b := not ((p^ = #$80) or (p^ = #0));
       if Assigned(Buffer) then
-        Move(b, Buffer^, Sizeof(b));
-      Result := true;
+        Move(b, Buffer^, SizeOf(b));
+      Result := true;  // Keep outside "if Assigned" otherwise checkboxes will be wrong.
     end;
   pxfTime:
     begin
-      i := int;
-      Move(i,Buffer^,sizeof(Integer));
+      Move(int, Buffer^, SizeOf(LongInt));
       Result := True;
     end;
-  pxfTimeStamp:
-    begin
-      Move(s[0], Buffer^, 8);
-      Result := true;
-    end;
   pxfGraphic:
-    begin
-      Result := ActiveBuffer <> nil;
-    end;
+    Result := ActiveBuffer <> nil;
   end;
 end;
 
@@ -767,7 +752,6 @@ function TParadoxDataset.CreateBlobStream(Field: TField;
   Mode: TBlobStreamMode): TStream;
 var
   memStream: TMemoryStream;
-  F: PFldInfoRec;
   p: PChar;
   header: PAnsiChar;
   idx: Byte;
@@ -783,19 +767,7 @@ begin
   if (Mode <> bmRead) then
     exit;
 
-  F := FFieldInfoPtr;  { begin with the first field identifier }
-  p := ActiveBuffer;
-  for i := 1 to FHeader^.numFields do
-  begin
-    if i = Field.FieldNo then
-      break;
-    if F^.fType = pxfBCD then { BCD field size value not used for field size }
-       Inc(p, 17)
-     else
-      Inc(p, F^.fSize);
-    Inc(F);
-  end;
-
+  p := ActiveBuffer + FPxFields[Field.FieldNo - 1].Offset;
   header := p + Field.Size - SizeOf(TPxBlobInfo);
   Move(header^, blobInfo{%H-}, SizeOf(blobInfo));
   if blobInfo.Length = 0 then
