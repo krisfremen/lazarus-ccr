@@ -121,7 +121,7 @@ type
     nextBlock     : word;
     prevBlock     : word;
     addDataSize   : smallint;
-    fileData      : array[0..$0FF9] of byte;
+    //fileData      : array[0..$0FF9] of byte;
     { fileData size varies according to maxTableSize }
   end;
 
@@ -147,102 +147,99 @@ type
   end;
 
 
-  { TParadoxDataSet }
+  { TParadoxDataset }
 
-  TParadoxDataSet = class(TDataSet)
+  TParadoxDataset = class(TDataset)
   private
     FActive: Boolean;
     FStream: TStream;
     FBlobStream: TStream;
     FFileName: TFileName;
     FHeader: PPxHeader;
-    FaRecord: Longword;
+    FaRecord: LongInt;  // was: LongWord;
     FaBlockstart: LongInt;
     FaBlock: PDataBlock;
     FaBlockIdx: word;
     FBlockReaded: Boolean;
-    FBookmarkOfs: LongWord;
     FFieldInfoPtr: PFldInfoRec;
     FTableNameLen: Integer;
     FInputEncoding: String;
     FTargetEncoding: String;
     FPxFields: Array of TPxField;
-
-    procedure SetFileName(const AValue: TFileName);
     function GetEncrypted: Boolean;
     function GetInputEncoding: String; inline;
     function GetTargetEncoding: String; inline;
-    function GetVersion: real;
+    function GetVersion: String;
     function IsStoredTargetEncoding: Boolean;
     procedure ReadBlock;
     procedure ReadNextBlockHeader;
     procedure ReadPrevBlockHeader;
+    procedure SetFileName(const AValue: TFileName);
     procedure SetTargetEncoding(AValue: String);
   protected
-    procedure InternalOpen; override;
-    procedure InternalClose; override;
-    procedure InternalInitFieldDefs; override;
     function  AllocRecordBuffer: PChar; override;
     procedure FreeRecordBuffer(var Buffer: PChar); override;
+    procedure GetBookmarkData(Buffer: PChar; Data: Pointer); override;
+    function  GetBookmarkFlag(Buffer: PChar): TBookmarkFlag; override;
+    function  GetCanModify: Boolean;override;
+    function  GetRecNo: Integer; override;
+    function  GetRecord(Buffer: PChar; GetMode: TGetMode; {%H-}DoCheck: Boolean): TGetResult; override;
     function  GetRecordCount: Integer; override;
-    function  IsCursorOpen: Boolean; override;
+    function  GetRecordSize: Word; override;
+    procedure InternalClose; override;
+    procedure InternalEdit; override;
     procedure InternalFirst; override;
+    procedure InternalGotoBookmark(ABookmark: Pointer); override;
     procedure InternalHandleException; override;
+    procedure InternalInitFieldDefs; override;
     procedure InternalInitRecord(Buffer: PChar); override;
     procedure InternalLast; override;
+    procedure InternalOpen; override;
     procedure InternalPost; override;
-    procedure InternalEdit; override;
     procedure InternalSetToRecord(Buffer: PChar); override;
-    procedure InternalGotoBookmark(ABookmark: Pointer); override;
-    procedure GetBookmarkData(Buffer: PChar; Data: Pointer); override;
+    function  IsCursorOpen: Boolean; override;
     procedure SetBookmarkData(Buffer: PChar; Data: Pointer); override;
-    function  GetBookmarkFlag(Buffer: PChar): TBookmarkFlag; override;
     procedure SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag); override;
-    function  GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
-    function  GetRecordSize: Word; override;
-    function  GetCanModify: Boolean;override;
     procedure SetRecNo(Value: Integer); override;
-    function  GetRecNo: Integer; override;
   public
     constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
     function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
     function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
     procedure SetFieldData({%H-}Field: TField; {%H-}Buffer: Pointer); override;
     property Encrypted: Boolean read GetEncrypted;
   published
     property TableName: TFileName read FFileName write SetFileName;
-    property TableLevel: real read GetVersion;
-    property InputEncoding: String read GetInputEncoding;
-    property TargetEncoding: string read FTargetEncoding write SetTargetEncoding stored IsStoredTargetEncoding;
-    property FieldDefs;
+    property TableLevel: String read GetVersion;
+    property InputEncoding: String read FInputEncoding;
+    property TargetEncoding: String read FTargetEncoding write SetTargetEncoding stored IsStoredTargetEncoding;
     property Active;
     property AutoCalcFields;
+    property FieldDefs;
     property Filtered;
     property BeforeOpen;
     property AfterOpen;
     property BeforeClose;
     property AfterClose;
-    property BeforeInsert;
-    property AfterInsert;
-    property BeforeEdit;
-    property AfterEdit;
-    property BeforePost;
-    property AfterPost;
-    property BeforeCancel;
-    property AfterCancel;
-    property BeforeDelete;
-    property AfterDelete;
+//    property BeforeInsert;
+//    property AfterInsert;
+//    property BeforeEdit;
+//    property AfterEdit;
+//    property BeforePost;
+//    property AfterPost;
+//    property BeforeCancel;
+//    property AfterCancel;
+//    property BeforeDelete;
+//    property AfterDelete;
     property BeforeScroll;
     property AfterScroll;
 //    property BeforeRefresh;
 //    property AfterRefresh;
     property OnCalcFields;
-    property OnDeleteError;
-    property OnEditError;
+//    property OnDeleteError;
+//    property OnEditError;
     property OnFilterRecord;
-    property OnNewRecord;
-    property OnPostError;
+//    property OnNewRecord;
+//    property OnPostError;
   end;
 
 implementation
@@ -250,16 +247,112 @@ implementation
 uses
   Forms;
 
-{ TParadoxDataSet }
+{ TParadoxDataset }
 
-procedure TParadoxDataSet.SetFileName(const AValue: TFileName);
+constructor TParadoxDataset.Create(AOwner: TComponent);
 begin
-  if Active then
-    Close;
-  FFilename := AValue;
+  inherited Create(AOwner);
+  FHeader := nil;
+  FTargetEncoding := Uppercase(EncodingUTF8);
+  FInputEncoding := '';
 end;
 
-function TParadoxDataSet.GetEncrypted: Boolean;
+function TParadoxDataset.AllocRecordBuffer: PChar;
+begin
+  if Assigned(Fheader) then
+    Result := AllocMem(GetRecordSize)
+  else
+    Result := nil;
+end;
+
+function TParadoxDataset.CreateBlobStream(Field: TField;
+  Mode: TBlobStreamMode): TStream;
+var
+  memStream: TMemoryStream;
+  p: PChar;
+  header: PAnsiChar;
+  idx: Byte;
+  loc: Integer;
+  s: String;
+  blobInfo: TPxBlobInfo;
+  blobIndex: TPxBlobIndex;
+begin
+  memStream := TMemoryStream.Create;
+  Result := memStream;
+
+  if (Mode <> bmRead) then
+    exit;
+
+  p := ActiveBuffer + FPxFields[Field.FieldNo - 1].Offset;
+  header := p + Field.Size - SizeOf(TPxBlobInfo);
+  Move(header^, blobInfo{%H-}, SizeOf(blobInfo));
+  if blobInfo.Length = 0 then
+    exit;
+
+  if Integer(blobInfo.Length) > Field.Size - SizeOf(TPxBlobInfo) then
+  begin
+    if Assigned(FBlobStream) then begin
+      idx := blobInfo.FileLoc and $FF;
+      loc := blobInfo.FileLoc and $FFFFFF00;
+      if idx = $FF then begin
+        // Read from a single blob block
+        FBlobStream.Seek(loc + 9, soFromBeginning);
+        if Field.DataType = ftMemo then begin
+          SetLength(s, blobInfo.Length);
+          FBlobStream.Read(s[1], blobInfo.Length);
+          s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
+          memStream.Write(s[1], Length(s));
+        end else
+        begin
+          if Field.DataType = ftGraphic then begin
+            memstream.WriteAnsiString('bmp');     // Assuming that Paradox can store only bmp as ftGraphic... Wrong?
+            FBlobStream.Position := FBlobStream.Position + 8;
+          end;
+          memStream.CopyFrom(FBlobStream, blobInfo.Length);
+        end;
+      end else begin
+        // Read from a suballocated block
+        FBlobStream.Seek(loc + 12 + 5*idx, soFromBeginning);
+        FBlobStream.Read(blobIndex{%H-}, SizeOf(TPxBlobIndex));
+        FBlobStream.Seek(loc + 16*blobIndex.Offset, soFromBeginning);
+        if Field.DataType = ftMemo then begin
+          SetLength(s, blobInfo.Length);
+          FBlobStream.Read(s[1], blobInfo.Length);
+          s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
+          memStream.Write(s[1], Length(s));
+        end else
+          memStream.CopyFrom(FBlobStream, blobInfo.Length);
+      end;
+    end;
+  end else
+  if Field.DataType = ftMemo then begin
+    SetLength(s, blobInfo.Length);
+    Move(p^, s[1], blobInfo.Length);
+    s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
+    memStream.Write(s[1], Length(s));
+  end else
+    memStream.Write(p, blobInfo.Length);
+
+  memStream.Position := 0;
+end;
+
+procedure TParadoxDataset.FreeRecordBuffer(var Buffer: PChar);
+begin
+  if Assigned(Buffer) then
+    FreeMem(Buffer);
+end;
+
+procedure TParadoxDataset.GetBookmarkData(Buffer: PChar; Data: Pointer);
+begin
+  //TODO
+end;
+
+function TParadoxDataset.GetCanModify: Boolean;
+begin
+  Result := False;
+end;
+
+function TParadoxDataset.GetEncrypted: Boolean;
 begin
   if not Assigned(FHeader) then exit;
   If (FHeader^.fileVersionID <= 4) or not (FHeader^.fileType in [0,2,3,5]) then
@@ -268,395 +361,7 @@ begin
     Result := (FHeader^.encryption2 <> 0)
 end;
 
-function TParadoxDataset.GetInputEncoding: String;
-begin
-  if FInputEncoding = '' then
-    Result := GetDefaultTextEncoding
-  else
-    Result := FInputEncoding;
-end;
-
-function TParadoxDataset.GetTargetEncoding: String;
-begin
-  if (FTargetEncoding = '') or SameText(FTargetEncoding, 'utf-8') then
-    Result := EncodingUTF8
-  else
-    Result := FTargetEncoding;
-end;
-
-function TParadoxDataset.IsStoredTargetEncoding: Boolean;
-begin
-  Result := not SameText(FTargetEncoding, EncodingUTF8);
-end;
-
-procedure TParadoxDataSet.ReadBlock;
-var
-  L   : longint;
-begin
-  L := FaBlockIdx-1;
-  L := (L * FHeader^.maxTableSize * $0400) + FHeader^.headerSize;
-  FStream.Position := L;
-  FStream.Read(FaBlock^, FHeader^.maxTableSize * $0400);
-  FBlockReaded := True;
-end;
-
-procedure TParadoxDataSet.ReadNextBlockHeader;
-var
-  L   : longint;
-begin
-  if FaBlock^.nextBlock = 0 then exit; //last block
-  //Increment Blockstart
-  FaBlockStart := FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1;
-  FaRecord := FaBlockStart+1;
-  L := FaBlock^.nextBlock-1;
-  L := (L * FHeader^.maxTableSize * $0400) + FHeader^.headerSize;
-  FaBlockIdx := FaBlock^.nextBlock;
-  FBlockReaded := False;
-  FStream.Position := L;
-  FStream.Read(FaBlock^,6); //read only Block header
-end;
-
-procedure TParadoxDataSet.ReadPrevBlockHeader;
-var
-  L: LongWord;
-begin
-  L := FaBlock^.prevBlock-1;
-  L := (L * FHeader^.maxTableSize * $0400) + FHeader^.headerSize;
-  FaBlockIdx := FaBlock^.prevBlock;
-  FBlockReaded := False;
-  FStream.Position := L;
-  FStream.Read(FaBlock^,6); //read only Block header
-  //decrement Blockstart
-  L := ((FaBlock^.addDataSize div FHeader^.recordSize)+1);
-  FaBlockStart := FaBlockStart-L;
-  FaRecord := FaBlockStart+1;
-end;
-
-function TParadoxDataSet.GetVersion: real;
-begin
-  Result := 0;
-  if not FActive then exit;
-  if not Assigned(FHeader) then exit;
-  case FHeader^.fileVersionID of
-  $3:Result := 3.0;
-  $4:Result := 3.5;
-  $5..$9:Result := 4.0;
-  $a..$b:Result := 5.0;
-  $c:Result := 7.0;
-  end;
-end;
-
-procedure TParadoxDataset.SetTargetEncoding(AValue: String);
-begin
-  if AValue = FTargetEncoding then exit;
-  FTargetEncoding := Uppercase(AValue);
-end;
-
-procedure TParadoxDataSet.InternalOpen;
-var
-  hdrSize: Word;
-  blobfn: String;
-  cp: Word;
-begin
-  if FFileName = '' then
-    DatabaseError('Tablename is not set');
-  if not FileExists(FFileName) then
-    DatabaseError(Format('Paradox file "%" does not exist.', [FFileName]));
-
-  FStream := TFileStream.Create(FFilename,fmOpenRead or fmShareDenyNone);
-  FStream.Position := 2;
-  hdrSize := FStream.ReadWord;
-  FHeader := AllocMem(hdrSize);
-  FStream.Position := 0;
-  if not FStream.Read(FHeader^, hdrSize) = hdrSize then
-    DatabaseError('No valid Paradox file !');
-  if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 32)) then
-    DatabaseError('No valid Paradox file !');
-
-  if (FHeader^.fileVersionID >= 12) then
-    FTableNameLen := 261
-  else
-    FTableNameLen := 79;
-
-  if (FHeader^.fileVersionID <= 4) or not (FHeader^.FileType in [0,2,3,5]) then
-    FFieldInfoPtr := @FHeader^.FieldInfo35
-   else begin
-     FFieldInfoPtr := @FHeader^.FieldInfo;
-     cp := FHeader^.DosCodePage;
-     FInputEncoding := 'cp' + IntToStr(cp);
-   end;
-
-  if Encrypted then
-    exit;
-
-  FBlobStream := nil;
-  blobfn := ChangeFileExt(FFileName, '.mb');
-  if FileExists(blobfn) then
-    FBlobStream := TFileStream.Create(blobfn, fmOpenRead + fmShareDenyNone)
-  else begin
-    blobfn := ChangeFileExt(FFileName, '.MB');
-    if FileExists(blobfn) then
-      FBlobStream := TFileStream.Create(blobfn, fmOpenRead + fmShareDenyNone);
-  end;
-
-  FaBlock := AllocMem(FHeader^.maxTableSize * $0400);
-  BookmarkSize := SizeOf(longword);
-  InternalFirst;
-  InternalInitFieldDefs;
-  if DefaultFields then CreateFields;
-  BindFields(True);
-  FActive := True;
-end;
-
-procedure TParadoxDataSet.InternalClose;
-begin
-  BindFields(FALSE);
-  if DefaultFields then // Destroy the TField
-    DestroyFields;
-  FreeMem(FHeader);
-  FreeMem(FaBlock);
-  FreeAndNil(FBlobStream);
-  FreeAndNil(FStream);
-  FActive := False;
-end;
-
-procedure TParadoxDataSet.InternalInitFieldDefs;
-var
-  i: integer;
-  F: PFldInfoRec;
-  FNamesStart: PChar;
-  fname: String;
-  offs: LongInt;
-begin
-  FieldDefs.Clear;
-  F := FFieldInfoPtr;                  { begin with the first field identifier }
-  FNamesStart := Pointer(F);
-  inc(FNamesStart, SizeOf(F^)*(FHeader^.numFields));      //Jump over Fielddefs
-  inc(FNamesStart, SizeOf(LongInt));                      //over TableName pointer
-  inc(FNamesStart, SizeOf(LongInt)*(FHeader^.numFields)); //over FieldName pointers
-  inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
-
-  SetLength(FPxFields, FHeader^.NumFields);
-  offs := 0;
-
-  for i := 1 to FHeader^.NumFields do
-  begin
-    fname := ConvertEncoding(StrPas(FNamesStart), GetInputEncoding, GetTargetEncoding);
-    case F^.fType of
-      pxfAlpha:       FieldDefs.Add(fname, ftString, F^.fSize);
-      pxfDate:        FieldDefs.Add(fname, ftDate, 0);
-      pxfShort:       FieldDefs.Add(fname, ftSmallInt, F^.fSize);
-      pxfLong:        FieldDefs.Add(fname, ftInteger, F^.fSize);
-      pxfCurrency:    FieldDefs.Add(fname, ftCurrency, F^.fSize);
-      pxfNumber:      FieldDefs.Add(fname, ftFloat, F^.fSize);
-      pxfLogical:     FieldDefs.Add(fname, ftBoolean, 0); //F^.fSize);
-      pxfMemoBLOb:    FieldDefs.Add(fname, ftMemo, F^.fSize);
-      pxfBLOb:        FieldDefs.Add(fname, ftBlob, F^.fSize);
-      pxfFmtMemoBLOb: FieldDefs.Add(fname, ftMemo, F^.fSize);
-      pxfOLE:         FieldDefs.Add(fname, ftBlob, F^.fSize);
-      pxfGraphic:     FieldDefs.Add(fname, ftGraphic, F^.fSize);  // was: ftBlob
-      pxfTime:        FieldDefs.Add(fname, ftTime, 0); //F^.fSize);
-      pxfTimestamp:   FieldDefs.Add(fname, ftDateTime, 0);
-      pxfAutoInc:     FieldDefs.Add(fname, ftAutoInc, F^.fSize);
-      pxfBCD:         FieldDefs.Add(fname, ftBCD, F^.fSize);
-      pxfBytes:       FieldDefs.Add(fname, ftBytes, F^.fSize);  // was: ftString
-    end;
-    with FPxFields[i-1] do begin
-      Name := fname;
-      Info := F;
-      Offset := offs;
-    end;
-    offs := offs + F^.fSize;
-    inc(FNamesStart, Length(fname)+1);
-    inc(F);
-  end;
-end;
-
-function TParadoxDataSet.AllocRecordBuffer: PChar;
-begin
-  if Assigned(Fheader) then
-    Result := AllocMem(GetRecordSize)
-  else
-    Result := nil;
-end;
-
-procedure TParadoxDataSet.FreeRecordBuffer(var Buffer: PChar);
-begin
-  if Assigned(Buffer) then
-    FreeMem(Buffer);
-end;
-
-function TParadoxDataSet.GetRecordCount: Integer;
-begin
-  if Assigned(FHeader) then
-    Result := FHeader^.numRecords
-  else
-    Result := 0;
-end;
-
-function TParadoxDataSet.IsCursorOpen: Boolean;
-begin
-  Result := FActive;
-end;
-
-procedure TParadoxDataSet.InternalFirst;
-begin
-  FaBlockIdx := FHeader^.firstBlock;
-  FaBlockstart := 0;
-  FaRecord := 0;
-  ReadBlock;
-end;
-
-procedure TParadoxDataSet.InternalHandleException;
-begin
-  Application.HandleException(Self);
-end;
-
-procedure TParadoxDataSet.InternalInitRecord(Buffer: PChar);
-begin
-end;
-
-procedure TParadoxDataSet.InternalLast;
-begin
-  while FaBlockIdx <> FHeader^.lastBlock do
-    ReadNextBlockHeader;
-  inc(FaRecord,(FaBlock^.addDataSize div FHeader^.recordSize)+1);
-end;
-
-procedure TParadoxDataSet.InternalPost;
-begin
-end;
-
-procedure TParadoxDataSet.InternalEdit;
-begin
-end;
-
-procedure TParadoxDataSet.InternalSetToRecord(Buffer: PChar);
-begin
-  if (State <> dsInsert) then
-    InternalGotoBookmark(@PRecInfo(Buffer + FHeader^.recordSize)^.RecordNumber);
-end;
-
-procedure TParadoxDataSet.InternalGotoBookmark(ABookmark: Pointer);
-begin
-  SetrecNo(PLongWord(ABookmark)^);
-end;
-
-procedure TParadoxDataSet.GetBookmarkData(Buffer: PChar; Data: Pointer);
-begin
-  //TODO
-end;
-
-function TParadoxDataSet.GetBookmarkFlag(Buffer: PChar): TBookmarkFlag;
-begin
-  Result := PRecInfo(Buffer + FHeader^.recordSize)^.BookmarkFlag;
-end;
-
-function TParadoxDataSet.GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean): TGetResult;
-var
-  OK : Boolean;
-  L: Longword;
-begin
-  Result := grOK;
-  case GetMode of
-  gmNext:
-    begin
-      inc(FaRecord);
-      if (FaBlockIdx = FHeader^.lastBlock) and (FaRecord > FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1) then
-        Result := grEOF
-      else
-        begin
-          if FaRecord > FaBlockStart+1+(FaBlock^.addDataSize div FHeader^.recordSize) then
-            ReadNextBlockHeader;
-        end;
-    end;
-  gmPrior:
-    begin
-      dec(FaRecord);
-      if (FaBlockIdx = FHeader^.firstBlock) and (FaRecord < 1) then
-        Result := grBOF
-      else
-        begin
-          if FaRecord <= FaBlockStart then
-            begin
-              ReadPrevBlockHeader;
-              FaRecord := FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1;
-            end;
-        end;
-    end;
-  gmCurrent:
-    begin
-      if (FaRecord > RecordCount) or (FaRecord < 1) then
-        result := grError;
-    end;
-  end;
-  if Result = grOK then
-    begin
-      if not FBlockreaded then
-        ReadBlock;
-      L := ((faRecord-(FaBlockstart+1))*FHeader^.recordSize)+6;
-      if (faRecord-(FaBlockstart+1)) >= 0 then
-        begin
-          Move(PChar(FaBlock)[L],Buffer[0],FHeader^.recordSize);
-        end
-      else
-        result := grError;
-      with PRecInfo(Buffer + FHeader^.recordSize)^ do
-        begin
-          BookmarkFlag := bfCurrent;
-          RecordNumber := FaRecord;
-        end;
-    end;
-end;
-
-function TParadoxDataSet.GetRecordSize: Word;
-begin
-  Result := FHeader^.recordSize + sizeof(TRecInfo);
-end;
-
-procedure TParadoxDataSet.SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag);
-begin
-  PRecInfo(Buffer + FHeader^.recordSize)^.BookmarkFlag := Value;
-end;
-
-procedure TParadoxDataSet.SetBookmarkData(Buffer: PChar; Data: Pointer);
-begin
-  //TODO
-end;
-
-procedure TParadoxDataSet.SetFieldData(Field: TField; Buffer: Pointer);
-begin
-end;
-
-function TParadoxDataSet.GetCanModify: Boolean;
-begin
-  Result:=False;
-end;
-
-procedure TParadoxDataSet.SetRecNo(Value: Integer);
-begin
-  if Value < FaRecord then
-    begin
-      while (Value <= FaBlockstart) do
-        ReadPrevBlockHeader;
-      FaRecord := Value;
-    end
-  else
-    begin
-      while (Value > FaBlockstart+((FaBlock^.addDataSize div FHeader^.recordSize)+1)) do
-        ReadNextBlockHeader;
-      FaRecord := Value;
-    end;
-end;
-
-function TParadoxDataSet.GetRecNo: Integer;
-begin
-  Result := -1;
-  if Assigned(ActiveBuffer) then
-    Result := PRecInfo(ActiveBuffer + FHeader^.recordSize)^.RecordNumber;
-end;
-
-function TParadoxDataSet.GetFieldData(Field: TField; Buffer: Pointer): Boolean;
+function TParadoxDataset.GetFieldData(Field: TField; Buffer: Pointer): Boolean;
 var
   b: WordBool;
   F: PFldInfoRec;
@@ -735,89 +440,377 @@ begin
   end;
 end;
 
-constructor TParadoxDataSet.Create(AOwner: TComponent);
+function TParadoxDataset.GetInputEncoding: String;
 begin
-  inherited Create(AOwner);
-  FHeader := nil;
-  FTargetEncoding := Uppercase(EncodingUTF8);
-  FInputEncoding := '';
+  if FInputEncoding = '' then
+    Result := GetDefaultTextEncoding
+  else
+    Result := FInputEncoding;
 end;
 
-destructor TParadoxDataSet.Destroy;
+function TParadoxDataset.GetRecNo: Integer;
 begin
-  inherited Destroy;
+  Result := -1;
+  if Assigned(ActiveBuffer) then
+    Result := PRecInfo(ActiveBuffer + FHeader^.recordSize)^.RecordNumber;
 end;
 
-function TParadoxDataset.CreateBlobStream(Field: TField;
-  Mode: TBlobStreamMode): TStream;
+function TParadoxDataset.GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean): TGetResult;
 var
-  memStream: TMemoryStream;
-  p: PChar;
-  header: PAnsiChar;
-  idx: Byte;
-  loc: Integer;
-  s: String;
-  blobInfo: TPxBlobInfo;
-  blobIndex: TPxBlobIndex;
-  i: Integer;
+  L: Longword;
 begin
-  memStream := TMemoryStream.Create;
-  Result := memStream;
-
-  if (Mode <> bmRead) then
-    exit;
-
-  p := ActiveBuffer + FPxFields[Field.FieldNo - 1].Offset;
-  header := p + Field.Size - SizeOf(TPxBlobInfo);
-  Move(header^, blobInfo{%H-}, SizeOf(blobInfo));
-  if blobInfo.Length = 0 then
-    exit;
-
-  if blobInfo.Length > Field.Size - SizeOf(TPxBlobInfo) then
-  begin
-    if Assigned(FBlobStream) then begin
-      idx := blobInfo.FileLoc and $FF;
-      loc := blobInfo.FileLoc and $FFFFFF00;
-      if idx = $FF then begin
-        // Read from a single blob block
-        FBlobStream.Seek(loc + 9, soFromBeginning);
-        if Field.DataType = ftMemo then begin
-          SetLength(s, blobInfo.Length);
-          FBlobStream.Read(s[1], blobInfo.Length);
-          s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
-          memStream.Write(s[1], Length(s));
-        end else
+  Result := grOK;
+  case GetMode of
+  gmNext:
+    begin
+      inc(FaRecord);
+      if (FaBlockIdx = FHeader^.lastBlock) and
+         (FaRecord > FaBlockStart + FaBlock^.addDataSize div FHeader^.recordSize + 1)
+      then
+        Result := grEOF
+      else
         begin
-          if Field.DataType = ftGraphic then begin
-            memstream.WriteAnsiString('bmp');     // Assuming that Paradox can store only bmp as ftGraphic... Wrong?
-            FBlobStream.Position := FBlobStream.Position + 8;
-          end;
-          memStream.CopyFrom(FBlobStream, blobInfo.Length);
+          if FaRecord > FaBlockStart+1+(FaBlock^.addDataSize div FHeader^.recordSize) then
+            ReadNextBlockHeader;
         end;
-      end else begin
-        // Read from a suballocated block
-        FBlobStream.Seek(loc + 12 + 5*idx, soFromBeginning);
-        FBlobStream.Read(blobIndex{%H-}, SizeOf(TPxBlobIndex));
-        FBlobStream.Seek(loc + 16*blobIndex.Offset, soFromBeginning);
-        if Field.DataType = ftMemo then begin
-          SetLength(s, blobInfo.Length);
-          FBlobStream.Read(s[1], blobInfo.Length);
-          s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
-          memStream.Write(s[1], Length(s));
-        end else
-          memStream.CopyFrom(FBlobStream, blobInfo.Length);
-      end;
     end;
-  end else
-  if Field.DataType = ftMemo then begin
-    SetLength(s, blobInfo.Length);
-    Move(p^, s[1], blobInfo.Length);
-    s := ConvertEncoding(s, GetInputEncoding, GetTargetEncoding);
-    memStream.Write(s[1], Length(s));
-  end else
-    memStream.Write(p, blobInfo.Length);
+  gmPrior:
+    begin
+      dec(FaRecord);
+      if (FaBlockIdx = FHeader^.firstBlock) and (FaRecord < 1) then
+        Result := grBOF
+      else
+        begin
+          if FaRecord <= FaBlockStart then
+            begin
+              ReadPrevBlockHeader;
+              FaRecord := FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1;
+            end;
+        end;
+    end;
+  gmCurrent:
+    begin
+      if (FaRecord > RecordCount) or (FaRecord < 1) then
+        result := grError;
+    end;
+  end;
+  if Result = grOK then
+    begin
+      if not FBlockreaded then
+        ReadBlock;
+      L := ((faRecord-(FaBlockstart+1))*FHeader^.recordSize)+6;
+      if (faRecord-(FaBlockstart+1)) >= 0 then
+        begin
+          Move(PChar(FaBlock)[L],Buffer[0],FHeader^.recordSize);
+        end
+      else
+        result := grError;
+      with PRecInfo(Buffer + FHeader^.recordSize)^ do
+        begin
+          BookmarkFlag := bfCurrent;
+          RecordNumber := FaRecord;
+        end;
+    end;
+end;
 
-  memStream.Position := 0;
+function TParadoxDataset.GetRecordCount: Integer;
+begin
+  if Assigned(FHeader) then
+    Result := FHeader^.numRecords
+  else
+    Result := 0;
+end;
+
+function TParadoxDataset.GetRecordSize: Word;
+begin
+  Result := FHeader^.recordSize + sizeof(TRecInfo);
+end;
+
+function TParadoxDataset.GetTargetEncoding: String;
+begin
+  if (FTargetEncoding = '') or SameText(FTargetEncoding, 'utf-8') then
+    Result := EncodingUTF8
+  else
+    Result := FTargetEncoding;
+end;
+
+function TParadoxDataset.GetVersion: String;
+begin
+  Result := '';
+  if not FActive then
+    exit;
+  if not Assigned(FHeader) then
+    exit;
+  case FHeader^.fileVersionID of
+    $3     : Result := '3.0';
+    $4     : Result := '3.5';
+    $5..$9 : Result := '4.0';
+    $a..$b : Result := '5.0';
+    $c     : Result := '7.0';
+  end;
+end;
+
+procedure TParadoxDataset.InternalClose;
+begin
+  BindFields(FALSE);
+  if DefaultFields then // Destroy the TField
+    DestroyFields;
+  FreeMem(FHeader);
+  FreeMem(FaBlock);
+  FreeAndNil(FBlobStream);
+  FreeAndNil(FStream);
+  FActive := False;
+end;
+
+procedure TParadoxDataset.InternalEdit;
+begin
+end;
+
+procedure TParadoxDataset.InternalFirst;
+begin
+  FaBlockIdx := FHeader^.firstBlock;
+  FaBlockstart := 0;
+  FaRecord := 0;
+  ReadBlock;
+end;
+
+procedure TParadoxDataset.InternalGotoBookmark(ABookmark: Pointer);
+begin
+  SetRecNo(PLongWord(ABookmark)^);
+end;
+
+procedure TParadoxDataset.InternalHandleException;
+begin
+  Application.HandleException(Self);
+end;
+
+procedure TParadoxDataset.InternalInitFieldDefs;
+var
+  i: integer;
+  F: PFldInfoRec;
+  FNamesStart: PChar;
+  fname: String;
+  offs: LongInt;
+begin
+  FieldDefs.Clear;
+  F := FFieldInfoPtr;                  { begin with the first field identifier }
+  FNamesStart := Pointer(F);
+  inc(FNamesStart, SizeOf(F^)*(FHeader^.numFields));      //Jump over Fielddefs
+  inc(FNamesStart, SizeOf(LongInt));                      //over TableName pointer
+  inc(FNamesStart, SizeOf(LongInt)*(FHeader^.numFields)); //over FieldName pointers
+  inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
+
+  SetLength(FPxFields, FHeader^.NumFields);
+  offs := 0;
+
+  for i := 1 to FHeader^.NumFields do
+  begin
+    fname := ConvertEncoding(StrPas(FNamesStart), GetInputEncoding, GetTargetEncoding);
+    case F^.fType of
+      pxfAlpha:       FieldDefs.Add(fname, ftString, F^.fSize);
+      pxfDate:        FieldDefs.Add(fname, ftDate, 0);
+      pxfShort:       FieldDefs.Add(fname, ftSmallInt, F^.fSize);
+      pxfLong:        FieldDefs.Add(fname, ftInteger, F^.fSize);
+      pxfCurrency:    FieldDefs.Add(fname, ftCurrency, F^.fSize);
+      pxfNumber:      FieldDefs.Add(fname, ftFloat, F^.fSize);
+      pxfLogical:     FieldDefs.Add(fname, ftBoolean, 0); //F^.fSize);
+      pxfMemoBLOb:    FieldDefs.Add(fname, ftMemo, F^.fSize);
+      pxfBLOb:        FieldDefs.Add(fname, ftBlob, F^.fSize);
+      pxfFmtMemoBLOb: FieldDefs.Add(fname, ftMemo, F^.fSize);
+      pxfOLE:         FieldDefs.Add(fname, ftBlob, F^.fSize);
+      pxfGraphic:     FieldDefs.Add(fname, ftGraphic, F^.fSize);  // was: ftBlob
+      pxfTime:        FieldDefs.Add(fname, ftTime, 0); //F^.fSize);
+      pxfTimestamp:   FieldDefs.Add(fname, ftDateTime, 0);
+      pxfAutoInc:     FieldDefs.Add(fname, ftAutoInc, F^.fSize);
+      pxfBCD:         FieldDefs.Add(fname, ftBCD, F^.fSize);
+      pxfBytes:       FieldDefs.Add(fname, ftBytes, F^.fSize);  // was: ftString
+    end;
+    with FPxFields[i-1] do begin
+      Name := fname;
+      Info := F;
+      Offset := offs;
+    end;
+    offs := offs + F^.fSize;
+    inc(FNamesStart, Length(fname)+1);
+    inc(F);
+  end;
+end;
+
+procedure TParadoxDataset.InternalInitRecord(Buffer: PChar);
+begin
+end;
+
+procedure TParadoxDataset.InternalLast;
+begin
+  while FaBlockIdx <> FHeader^.lastBlock do
+    ReadNextBlockHeader;
+  inc(FaRecord,(FaBlock^.addDataSize div FHeader^.RecordSize)+1);
+end;
+
+procedure TParadoxDataset.InternalOpen;
+var
+  hdrSize: Word;
+  blobfn: String;
+  cp: Word;
+begin
+  if FFileName = '' then
+    DatabaseError('Tablename is not set');
+  if not FileExists(FFileName) then
+    DatabaseError(Format('Paradox file "%" does not exist.', [FFileName]));
+
+  FStream := TFileStream.Create(FFilename,fmOpenRead or fmShareDenyNone);
+  FStream.Position := 2;
+  hdrSize := FStream.ReadWord;
+  FHeader := AllocMem(hdrSize);
+  FStream.Position := 0;
+  if not FStream.Read(FHeader^, hdrSize) = hdrSize then
+    DatabaseError('No valid Paradox file !');
+  if not ((FHeader^.maxTableSize >= 1) and (FHeader^.maxTableSize <= 32)) then
+    DatabaseError('No valid Paradox file !');
+
+  if (FHeader^.fileVersionID >= 12) then
+    FTableNameLen := 261
+  else
+    FTableNameLen := 79;
+
+  if (FHeader^.fileVersionID <= 4) or not (FHeader^.FileType in [0,2,3,5]) then
+    FFieldInfoPtr := @FHeader^.FieldInfo35
+   else begin
+     FFieldInfoPtr := @FHeader^.FieldInfo;
+     cp := FHeader^.DosCodePage;
+     FInputEncoding := 'cp' + IntToStr(cp);
+   end;
+
+  if Encrypted then
+    exit;
+
+  FBlobStream := nil;
+  blobfn := ChangeFileExt(FFileName, '.mb');
+  if FileExists(blobfn) then
+    FBlobStream := TFileStream.Create(blobfn, fmOpenRead + fmShareDenyNone)
+  else begin
+    blobfn := ChangeFileExt(FFileName, '.MB');
+    if FileExists(blobfn) then
+      FBlobStream := TFileStream.Create(blobfn, fmOpenRead + fmShareDenyNone);
+  end;
+
+  FaBlock := AllocMem(FHeader^.maxTableSize * $0400);
+  BookmarkSize := SizeOf(longword);
+  InternalFirst;
+  InternalInitFieldDefs;
+  if DefaultFields then CreateFields;
+  BindFields(True);
+  FActive := True;
+end;
+
+procedure TParadoxDataset.InternalPost;
+begin
+end;
+
+procedure TParadoxDataset.InternalSetToRecord(Buffer: PChar);
+begin
+  if (State <> dsInsert) then
+    InternalGotoBookmark(@PRecInfo(Buffer + FHeader^.RecordSize)^.RecordNumber);
+end;
+
+function TParadoxDataset.IsCursorOpen: Boolean;
+begin
+  Result := FActive;
+end;
+
+function TParadoxDataset.IsStoredTargetEncoding: Boolean;
+begin
+  Result := not SameText(FTargetEncoding, EncodingUTF8);
+end;
+
+procedure TParadoxDataset.ReadBlock;
+var
+  L   : longint;
+begin
+  L := FaBlockIdx-1;
+  L := (L * FHeader^.maxTableSize * $0400) + FHeader^.headerSize;
+  FStream.Position := L;
+  FStream.Read(FaBlock^, FHeader^.maxTableSize * $0400);
+  FBlockReaded := True;
+end;
+
+procedure TParadoxDataset.ReadNextBlockHeader;
+var
+  L   : longint;
+begin
+  if FaBlock^.nextBlock = 0 then exit; //last block
+  //Increment Blockstart
+  FaBlockStart := FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1;
+  FaRecord := FaBlockStart+1;
+  L := FaBlock^.nextBlock-1;
+  L := (L * FHeader^.maxTableSize * $0400) + FHeader^.headerSize;
+  FaBlockIdx := FaBlock^.nextBlock;
+  FBlockReaded := False;
+  FStream.Position := L;
+  FStream.Read(FaBlock^,6); //read only Block header
+end;
+
+procedure TParadoxDataset.ReadPrevBlockHeader;
+var
+  L: LongWord;
+begin
+  L := FaBlock^.prevBlock-1;
+  L := (L * FHeader^.maxTableSize * $0400) + FHeader^.headerSize;
+  FaBlockIdx := FaBlock^.prevBlock;
+  FBlockReaded := False;
+  FStream.Position := L;
+  FStream.Read(FaBlock^,6); //read only Block header
+  //decrement Blockstart
+  L := ((FaBlock^.addDataSize div FHeader^.recordSize)+1);
+  FaBlockStart := FaBlockStart-L;
+  FaRecord := FaBlockStart+1;
+end;
+
+procedure TParadoxDataset.SetBookmarkData(Buffer: PChar; Data: Pointer);
+begin
+  //TODO
+end;
+
+function TParadoxDataset.GetBookmarkFlag(Buffer: PChar): TBookmarkFlag;
+begin
+  Result := PRecInfo(Buffer + FHeader^.RecordSize)^.BookmarkFlag;
+end;
+
+procedure TParadoxDataset.SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag);
+begin
+  PRecInfo(Buffer + FHeader^.RecordSize)^.BookmarkFlag := Value;
+end;
+
+procedure TParadoxDataset.SetFieldData(Field: TField; Buffer: Pointer);
+begin
+end;
+
+procedure TParadoxDataset.SetFileName(const AValue: TFileName);
+begin
+  if Active then
+    Close;
+  FFilename := AValue;
+end;
+
+procedure TParadoxDataset.SetRecNo(Value: Integer);
+begin
+  if Value < FaRecord then
+  begin
+    while (Value <= FaBlockstart) do
+      ReadPrevBlockHeader;
+    FaRecord := Value;
+  end else
+  begin
+    while (Value > FaBlockstart+((FaBlock^.addDataSize div FHeader^.recordSize)+1)) do
+      ReadNextBlockHeader;
+    FaRecord := Value;
+  end;
+end;
+
+procedure TParadoxDataset.SetTargetEncoding(AValue: String);
+begin
+  if AValue = FTargetEncoding then exit;
+  FTargetEncoding := Uppercase(AValue);
 end;
 
 

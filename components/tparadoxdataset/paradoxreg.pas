@@ -17,9 +17,8 @@ implementation
 {$R pdx_icons.res}
 
 type
-
-  TParadoxFileNamePropertyEditor=class(TFileNamePropertyEditor)
-  protected
+  TParadoxFileNamePropertyEditor = class(TFileNamePropertyEditor)
+  public
     function GetFilter: String; override;
   end;
 
