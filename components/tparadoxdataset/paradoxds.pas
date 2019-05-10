@@ -10,7 +10,7 @@ unit paradoxds;
 interface
 
 uses                               
-  Classes, SysUtils, db;
+  Classes, SysUtils, db, lconvencoding;
 
 
 const
@@ -164,13 +164,17 @@ type
     FBookmarkOfs: LongWord;
     FFieldInfoPtr: PFldInfoRec;
     FTableNameLen: Integer;
+    FInputEncoding: String;
+    FTargetEncoding: String;
 
     procedure SetFileName(const AValue: TFileName);
     function GetEncrypted: Boolean;
+    function GetVersion: real;
     procedure ReadBlock;
     procedure ReadNextBlockHeader;
     procedure ReadPrevBlockHeader;
-    function GetVersion: real;
+    procedure SetInputEncoding(AValue: String);
+    procedure SetTargetEncoding(AValue: String);
   protected
     procedure InternalOpen; override;
     procedure InternalClose; override;
@@ -202,10 +206,12 @@ type
     function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
     function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
     procedure SetFieldData(Field: TField; Buffer: Pointer); override;
-    property Encrypted : Boolean read GetEncrypted;
+    property Encrypted: Boolean read GetEncrypted;
   published
-    property TableName : TFileName read FFileName write SetFileName;
-    property TableLevel : real read GetVersion;
+    property TableName: TFileName read FFileName write SetFileName;
+    property TableLevel: real read GetVersion;
+    property InputEncoding: string read FInputEncoding write SetInputEncoding;
+    property TargetEncoding: string read FTargetEncoding write SetTargetEncoding;
     property FieldDefs;
     property Active;
     property AutoCalcFields;
@@ -316,10 +322,30 @@ begin
   end;
 end;
 
+procedure TParadoxDataset.SetInputEncoding(AValue: String);
+begin
+  if AValue = FInputEncoding then
+    exit;
+  if AValue = '' then
+    FInputEncoding := GetDefaultTextEncoding
+  else
+    FInputEncoding := AValue;
+end;
+
+procedure TParadoxDataset.SetTargetEncoding(AValue: String);
+begin
+  if AValue = FTargetEncoding then exit;
+  if AValue = '' then
+    FTargetEncoding := EncodingUTF8
+  else
+    FTargetEncoding := AValue;
+end;
+
 procedure TParadoxDataSet.InternalOpen;
 var
   hdrSize: Word;
   blobfn: String;
+  cp: Word;
 begin
   if FFileName = '' then
     DatabaseError('Tablename is not set');
@@ -343,8 +369,11 @@ begin
 
   if (FHeader^.fileVersionID <= 4) or not (FHeader^.FileType in [0,2,3,5]) then
     FFieldInfoPtr := @FHeader^.FieldInfo35
-   else
+   else begin
      FFieldInfoPtr := @FHeader^.FieldInfo;
+     cp := FHeader^.DosCodePage;
+     FInputEncoding := 'cp' + IntToStr(cp);
+   end;
 
   if Encrypted then
     exit;
@@ -397,7 +426,7 @@ begin
   inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
   for i := 1 to FHeader^.NumFields do
   begin
-    fname := StrPas(FNamesStart);
+    fname := ConvertEncoding(StrPas(FNamesStart), FInputEncoding, FTargetEncoding);
     case F^.fType of
       pxfAlpha:       FieldDefs.Add(fname, ftString, F^.fSize);
       pxfDate:        FieldDefs.Add(fname, ftDate, 0);
@@ -619,6 +648,7 @@ var
   si:  SmallInt absolute s;
   int: LongInt  absolute s;
   d:   Double   absolute s;
+  str: String;
 begin
   Result := False;
   F := FFieldInfoPtr;  { begin with the first field identifier }
@@ -649,13 +679,12 @@ begin
     end;
 
   case F^.fType of
-  pxfAlpha: //, pxfMemoBLOb, pxfFmtMemoBLOb:
-    begin
-      if (Buffer <> nil) then
-        StrLCopy(Buffer, p, Field.Size)
-      else
-        exit;
-      Result := True;
+  pxfAlpha:
+    if (Buffer <> nil) then begin
+      str := ConvertEncoding(StrPas(p), FInputEncoding, FTargetEncoding);
+      StrLCopy(Buffer, PChar(str), Length(str));
+//        StrLCopy(Buffer, p, Field.Size);
+      Result := true;
     end;
   pxfDate:
     begin
@@ -709,6 +738,8 @@ constructor TParadoxDataSet.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FHeader := nil;
+  FTargetEncoding := EncodingUTF8;
+  FInputEncoding := GetDefaultTextEncoding;
 end;
 
 destructor TParadoxDataSet.Destroy;
@@ -765,12 +796,12 @@ begin
         if Field.DataType = ftMemo then begin
           SetLength(s, blobInfo.Length);
           FBlobStream.Read(s[1], blobInfo.Length);
-          // if EncodingMemo then s := EncodingField(s, field);
+          s := ConvertEncoding(s, FInputEncoding, FTargetEncoding);
           memStream.Write(s[1], Length(s));
         end else
         begin
           if Field.DataType = ftGraphic then begin
-            memstream.WriteAnsiString('bmp');
+            memstream.WriteAnsiString('bmp');     // Assuming that Paradox can store only bmp as ftGraphic... Wrong?
             FBlobStream.Position := FBlobStream.Position + 8;
           end;
           memStream.CopyFrom(FBlobStream, blobInfo.Length);
@@ -783,7 +814,7 @@ begin
         if Field.DataType = ftMemo then begin
           SetLength(s, blobInfo.Length);
           FBlobStream.Read(s[1], blobInfo.Length);
-          //if EncodingMemo then s := EncodingField(s, Field);
+          s := ConvertEncoding(s, FInputEncoding, FTargetEncoding);
           memStream.Write(s[1], Length(s));
         end else
           memStream.CopyFrom(FBlobStream, blobInfo.Length);
@@ -793,7 +824,7 @@ begin
   if Field.DataType = ftMemo then begin
     SetLength(s, blobInfo.Length);
     Move(p^, s[1], blobInfo.Length);
-    //if EncodingMemo then s := EncodingField(s, Field);
+    s := ConvertEncoding(s, FInputEncoding, FTargetEncoding);
     memStream.Write(s[1], Length(s));
   end else
     memStream.Write(p, blobInfo.Length);
