@@ -190,7 +190,7 @@ type
     procedure InternalEdit; override;
     procedure InternalFirst; override;
     procedure InternalGotoBookmark(ABookmark: Pointer); override;
-    procedure InternalHandleException; override;
+//    procedure InternalHandleException; override;
     procedure InternalInitFieldDefs; override;
     procedure InternalInitRecord(Buffer: PChar); override;
     procedure InternalLast; override;
@@ -203,6 +203,8 @@ type
     procedure SetRecNo(Value: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function BookmarkValid(ABookmark: TBookmark): Boolean; override;
+    function CompareBookmarks(Bookmark1, Bookmark2: TBookmark): Longint; override;
     function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
     function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
     procedure SetFieldData({%H-}Field: TField; {%H-}Buffer: Pointer); override;
@@ -242,10 +244,8 @@ type
 //    property OnPostError;
   end;
 
-implementation
 
-uses
-  Forms;
+implementation
 
 { TParadoxDataset }
 
@@ -255,6 +255,7 @@ begin
   FHeader := nil;
   FTargetEncoding := Uppercase(EncodingUTF8);
   FInputEncoding := '';
+  BookmarkSize := SizeOf(LongInt);
 end;
 
 function TParadoxDataset.AllocRecordBuffer: PChar;
@@ -263,6 +264,26 @@ begin
     Result := AllocMem(GetRecordSize)
   else
     Result := nil;
+end;
+
+function TParadoxDataset.BookmarkValid(ABookmark: TBookmark): Boolean;
+begin
+  Result := Assigned(ABookmark) and (Length(ABookMark) <> 0);
+end;
+
+function TParadoxDataset.CompareBookmarks(Bookmark1, Bookmark2: TBookmark): Longint;
+var
+  idx1, idx2: LongWord;
+begin
+  idx1 := PLongWord(Bookmark1)^;
+  idx2 := PLongWord(Bookmark2)^;
+  if idx1 > idx2 then
+    Result := +1
+  else
+  if idx1 = idx2 then
+    Result := 0
+  else
+    Result := -1
 end;
 
 function TParadoxDataset.CreateBlobStream(Field: TField;
@@ -344,7 +365,12 @@ end;
 
 procedure TParadoxDataset.GetBookmarkData(Buffer: PChar; Data: Pointer);
 begin
-  //TODO
+  PLongWord(Data)^ := PRecInfo(Buffer + FHeader^.RecordSize)^.RecordNumber;
+end;
+
+function TParadoxDataset.GetBookmarkFlag(Buffer: PChar): TBookmarkFlag;
+begin
+  Result := PRecInfo(Buffer + FHeader^.RecordSize)^.BookmarkFlag;
 end;
 
 function TParadoxDataset.GetCanModify: Boolean;
@@ -577,14 +603,16 @@ end;
 
 procedure TParadoxDataset.InternalGotoBookmark(ABookmark: Pointer);
 begin
-  SetRecNo(PLongWord(ABookmark)^);
+  if BookmarkValid(ABookmark) then
+    SetRecNo(PLongWord(ABookmark)^);
 end;
 
+{
 procedure TParadoxDataset.InternalHandleException;
 begin
   Application.HandleException(Self);
 end;
-
+}
 procedure TParadoxDataset.InternalInitFieldDefs;
 var
   i: integer;
@@ -769,12 +797,13 @@ end;
 
 procedure TParadoxDataset.SetBookmarkData(Buffer: PChar; Data: Pointer);
 begin
-  //TODO
-end;
-
-function TParadoxDataset.GetBookmarkFlag(Buffer: PChar): TBookmarkFlag;
-begin
-  Result := PRecInfo(Buffer + FHeader^.RecordSize)^.BookmarkFlag;
+  // The BookMarkData is the RecNo: no need to set nothing;
+{
+  if Data <> nil then
+    PRecInfo(Buffer + FHeader^.RecordSize)^.RecordNumber := PLongWord(Data)^
+  else
+    PRecInfo(Buffer + FHeader^.RecordSize)^.RecordNumber := 0;
+  }
 end;
 
 procedure TParadoxDataset.SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag);
