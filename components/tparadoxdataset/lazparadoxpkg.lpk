@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="lazparadoxpkg"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="Christian Ulrich"/>
+    <Author Value="Christian Ulrich, Werner Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -22,8 +22,8 @@
         </Debugging>
       </Linking>
     </CompilerOptions>
-    <Description Value="Dataset for Paradox database files
-Read-only
+    <Description Value="Dataset for Paradox database files; support of blobs, bookmarks and filtering
+Read-only, no indexes
 Tested on Win and Linux gtk2/qt (32bit/64bit)"/>
     <License Value="LGPL"/>
     <Version Minor="2"/>

@@ -10,28 +10,28 @@ unit paradoxds;
 interface
 
 uses                               
-  Classes, SysUtils, db, lconvencoding;
+  Classes, SysUtils, db, lconvencoding, bufdataset_parser;
 
 
 const
-    { Paradox codes for field types }
-    pxfAlpha        = $01;
-    pxfDate         = $02;
-    pxfShort        = $03;
-    pxfLong         = $04;
-    pxfCurrency     = $05;
-    pxfNumber       = $06;
-    pxfLogical      = $09;
-    pxfMemoBLOb     = $0C;
-    pxfBLOb         = $0D;
-    pxfFmtMemoBLOb  = $0E;
-    pxfOLE          = $0F;
-    pxfGraphic      = $10;
-    pxfTime         = $14;
-    pxfTimestamp    = $15;
-    pxfAutoInc      = $16;
-    pxfBCD          = $17;
-    pxfBytes        = $18;
+  { Paradox codes for field types }
+  pxfAlpha        = $01;
+  pxfDate         = $02;
+  pxfShort        = $03;
+  pxfLong         = $04;
+  pxfCurrency     = $05;
+  pxfNumber       = $06;
+  pxfLogical      = $09;
+  pxfMemoBLOb     = $0C;
+  pxfBLOb         = $0D;
+  pxfFmtMemoBLOb  = $0E;
+  pxfOLE          = $0F;
+  pxfGraphic      = $10;
+  pxfTime         = $14;
+  pxfTimestamp    = $15;
+  pxfAutoInc      = $16;
+  pxfBCD          = $17;
+  pxfBytes        = $18;
 
 
 type
@@ -166,11 +166,15 @@ type
     FInputEncoding: String;
     FTargetEncoding: String;
     FPxFields: Array of TPxField;
+    FFilterBuffer : TRecordBuffer;
+    FParser: TBufDatasetParser;
     function GetEncrypted: Boolean;
     function GetInputEncoding: String; inline;
     function GetTargetEncoding: String; inline;
     function GetVersion: String;
     function IsStoredTargetEncoding: Boolean;
+    function PxFilterRecord(Buffer: TRecordBuffer): Boolean;
+    function PxGetActiveBuffer(var Buffer: TRecordBuffer): Boolean;
     procedure ReadBlock;
     procedure ReadNextBlockHeader;
     procedure ReadPrevBlockHeader;
@@ -198,8 +202,11 @@ type
     procedure InternalPost; override;
     procedure InternalSetToRecord(Buffer: PChar); override;
     function  IsCursorOpen: Boolean; override;
+    procedure ParseFilter(const AFilter: string);
     procedure SetBookmarkData(Buffer: PChar; Data: Pointer); override;
     procedure SetBookmarkFlag(Buffer: PChar; Value: TBookmarkFlag); override;
+    procedure SetFiltered(Value: Boolean); override;
+    procedure SetFilterText(const Value: String); override;
     procedure SetRecNo(Value: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -217,6 +224,7 @@ type
     property Active;
     property AutoCalcFields;
     property FieldDefs;
+    property Filter;
     property Filtered;
     property BeforeOpen;
     property AfterOpen;
@@ -268,7 +276,7 @@ end;
 
 function TParadoxDataset.BookmarkValid(ABookmark: TBookmark): Boolean;
 begin
-  Result := Assigned(ABookmark) and (Length(ABookMark) <> 0);
+  Result := Assigned(ABookmark) and (Length(ABookmark) <> 0);
 end;
 
 function TParadoxDataset.CompareBookmarks(Bookmark1, Bookmark2: TBookmark): Longint;
@@ -399,13 +407,15 @@ var
   int: LongInt  absolute s;
   d:   Double   absolute s;
   str: String;
+  buf: TRecordBuffer = nil;
 begin
   Result := False;
   if (RecordCount = 0) then
     exit;
 
+  PXGetActiveBuffer(Buf);
+  p := buf + FPxFields[Field.FieldNo - 1].Offset;
   F := FPxFields[Field.FieldNo - 1].Info;
-  p := ActiveBuffer + FPxFields[Field.FieldNo - 1].Offset;
   size := F^.fSize;
 
   // These numeric fields are stored as big endian --> swap bytes
@@ -484,59 +494,63 @@ end;
 function TParadoxDataset.GetRecord(Buffer: PChar; GetMode: TGetMode; DoCheck: Boolean): TGetResult;
 var
   L: Longword;
+  accepted: Boolean;
 begin
   Result := grOK;
-  case GetMode of
-  gmNext:
-    begin
-      inc(FaRecord);
-      if (FaBlockIdx = FHeader^.lastBlock) and
-         (FaRecord > FaBlockStart + FaBlock^.addDataSize div FHeader^.recordSize + 1)
-      then
-        Result := grEOF
-      else
+  accepted := false;
+
+  repeat
+    case GetMode of
+      gmNext:
         begin
+          inc(FaRecord);
+          if (FaBlockIdx = FHeader^.lastBlock) and
+             (FaRecord > FaBlockStart + FaBlock^.addDataSize div FHeader^.recordSize + 1)
+          then
+            Result := grEOF
+          else
           if FaRecord > FaBlockStart+1+(FaBlock^.addDataSize div FHeader^.recordSize) then
             ReadNextBlockHeader;
         end;
-    end;
-  gmPrior:
-    begin
-      dec(FaRecord);
-      if (FaBlockIdx = FHeader^.firstBlock) and (FaRecord < 1) then
-        Result := grBOF
-      else
+      gmPrior:
         begin
+          dec(FaRecord);
+          if (FaBlockIdx = FHeader^.firstBlock) and (FaRecord < 1) then
+            Result := grBOF
+          else
           if FaRecord <= FaBlockStart then
-            begin
-              ReadPrevBlockHeader;
-              FaRecord := FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1;
-            end;
+          begin
+            ReadPrevBlockHeader;
+            FaRecord := FaBlockStart+(FaBlock^.addDataSize div FHeader^.recordSize)+1;
+          end;
         end;
+      gmCurrent:
+        if (FaRecord > RecordCount) or (FaRecord < 1) then
+          result := grError;
     end;
-  gmCurrent:
-    begin
-      if (FaRecord > RecordCount) or (FaRecord < 1) then
-        result := grError;
-    end;
-  end;
-  if Result = grOK then
-    begin
-      if not FBlockreaded then
+
+    if Result = grOK then begin
+      if not FBlockReaded then
         ReadBlock;
-      L := ((faRecord-(FaBlockstart+1))*FHeader^.recordSize)+6;
-      if (faRecord-(FaBlockstart+1)) >= 0 then
-        begin
-          Move(PChar(FaBlock)[L],Buffer[0],FHeader^.recordSize);
-        end
+      L := ((faRecord - (FaBlockstart + 1))*FHeader^.recordSize) + 6;
+      if (faRecord - (FaBlockstart + 1)) >= 0 then
+        Move(PChar(FaBlock)[L],Buffer[0],FHeader^.recordSize)
       else
-        result := grError;
-      with PRecInfo(Buffer + FHeader^.recordSize)^ do
-        begin
-          BookmarkFlag := bfCurrent;
-          RecordNumber := FaRecord;
-        end;
+        Result := grError;
+      with PRecInfo(Buffer + FHeader^.recordSize)^ do begin
+        BookmarkFlag := bfCurrent;
+        RecordNumber := FaRecord;
+      end;
+
+      // Filtering
+      if Filtered then
+        accepted := PXFilterRecord(Buffer)
+      else
+        accepted := True;
+      if (GetMode = gmCurrent) and not accepted then
+        Result := grError;
     end;
+  until (Result <> grOK) or Accepted;
 end;
 
 function TParadoxDataset.GetRecordCount: Integer;
@@ -584,6 +598,7 @@ begin
     DestroyFields;
   FreeMem(FHeader);
   FreeMem(FaBlock);
+  FreeAndNil(FParser);
   FreeAndNil(FBlobStream);
   FreeAndNil(FStream);
   FActive := False;
@@ -730,6 +745,13 @@ begin
   if DefaultFields then CreateFields;
   BindFields(True);
   FActive := True;
+
+  try
+    ParseFilter(Filter);
+  except
+    on E: Exception do
+      Filter := '';
+  end;
 end;
 
 procedure TParadoxDataset.InternalPost;
@@ -737,9 +759,13 @@ begin
 end;
 
 procedure TParadoxDataset.InternalSetToRecord(Buffer: PChar);
+var
+  bm: LongWord;
 begin
-  if (State <> dsInsert) then
-    InternalGotoBookmark(@PRecInfo(Buffer + FHeader^.RecordSize)^.RecordNumber);
+  if (State <> dsInsert) then begin
+    bm := PRecInfo(Buffer + FHeader^.RecordSize)^.RecordNumber;
+    InternalGotoBookmark(@bm);
+  end;
 end;
 
 function TParadoxDataset.IsCursorOpen: Boolean;
@@ -750,6 +776,59 @@ end;
 function TParadoxDataset.IsStoredTargetEncoding: Boolean;
 begin
   Result := not SameText(FTargetEncoding, EncodingUTF8);
+end;
+
+procedure TParadoxDataset.ParseFilter(const AFilter: string);
+begin
+  if Length(AFilter) > 0 then
+  begin
+    if (FParser = nil) and IsCursorOpen then
+      FParser := TBufDatasetParser.Create(Self);
+    if FParser <> nil then
+    begin
+      FParser.PartialMatch := not (foNoPartialCompare in FilterOptions);
+      FParser.CaseInsensitive := foCaseInsensitive in FilterOptions;
+      FParser.ParseExpression(AFilter);
+    end;
+  end;
+end;
+
+function TParadoxDataset.PxFilterRecord(Buffer: TRecordBuffer): Boolean;
+var
+  SaveState: TDatasetState;
+begin
+  Result := True;
+  if not Assigned(OnFilterRecord) and not Filtered then
+    Exit;
+  SaveState := SetTempState(dsFilter);
+  Try
+    FFilterBuffer := Buffer;
+    If Assigned(OnFilterRecord) then
+      OnFilterRecord(Self, Result);
+    If Result and Filtered and (Filter <> '') then
+      Result := Boolean((FParser.ExtractFromBuffer(FFilterBuffer))^);
+  Finally
+    RestoreState(SaveState);
+  end;
+end;
+
+function TParadoxDataset.PxGetActiveBuffer(var Buffer: TRecordBuffer): Boolean;
+begin
+  case State of
+    dsBrowse:
+      if IsEmpty then
+        Buffer := nil
+      else
+        Buffer := ActiveBuffer;
+    dsEdit,
+    dsInsert:
+      Buffer := ActiveBuffer;
+    dsFilter:
+      Buffer := FFilterBuffer;
+  else
+    Buffer := nil;
+  end;
+  Result := (Buffer <> nil);
 end;
 
 procedure TParadoxDataset.ReadBlock;
@@ -820,6 +899,25 @@ begin
   if Active then
     Close;
   FFilename := AValue;
+end;
+
+procedure TParadoxDataset.SetFiltered(Value: Boolean);
+begin
+  if (Value <> Filtered) then begin
+    inherited;
+    if IsCursorOpen then
+      Refresh;
+  end;
+end;
+
+procedure TParadoxDataset.SetFilterText(const Value: String);
+begin
+  if (Value <> Filter) then begin
+    ParseFilter(Value);
+    inherited;
+    if IsCursorOpen and Filtered then
+      Refresh;
+  end;
 end;
 
 procedure TParadoxDataset.SetRecNo(Value: Integer);
