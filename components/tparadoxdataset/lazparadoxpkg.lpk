@@ -23,9 +23,9 @@
       </Linking>
     </CompilerOptions>
     <Description Value="Dataset for Paradox database files; support of blobs, bookmarks and filtering
-Read-only, no indexes
+Read-only, no indexes, no sorting
 Tested on Win and Linux gtk2/qt (32bit/64bit)"/>
-    <License Value="LGPL"/>
+    <License Value="Mozilla Public License 1.1, or LGPL"/>
     <Version Minor="2"/>
     <Files Count="2">
       <Item1>
