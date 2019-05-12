@@ -2,63 +2,26 @@ object MainForm: TMainForm
   Left = 326
   Height = 413
   Top = 128
-  Width = 734
+  Width = 816
+  AutoSize = True
   Caption = 'Paradox demo'
   ClientHeight = 413
-  ClientWidth = 734
+  ClientWidth = 816
+  OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = btnOpenClick
   LCLVersion = '2.1.0.0'
-  object edFileName: TFileNameEdit
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = btnOpen
-    AnchorSideTop.Side = asrCenter
-    AnchorSideRight.Control = btnOpen
-    Left = 8
-    Height = 23
-    Top = 9
-    Width = 529
-    FileName = 'customer.db'
-    FilterIndex = 0
-    HideDirectories = False
-    ButtonWidth = 23
-    NumGlyphs = 1
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 8
-    MaxLength = 0
-    TabOrder = 0
-    Text = 'customer.db'
-  end
-  object btnOpen: TButton
-    AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = DBNavigator
-    Left = 545
-    Height = 25
-    Top = 8
-    Width = 55
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    Caption = 'Open'
-    OnClick = btnOpenClick
-    TabOrder = 1
-  end
   object DBNavigator: TDBNavigator
-    AnchorSideLeft.Control = btnOpen
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = btnOpen
-    AnchorSideTop.Side = asrCenter
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 608
-    Height = 25
+    Left = 8
+    Height = 28
     Top = 8
     Width = 118
-    Anchors = [akTop, akRight]
     BevelOuter = bvNone
-    BorderSpacing.Top = 6
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     ChildSizing.EnlargeHorizontal = crsScaleChilds
     ChildSizing.EnlargeVertical = crsScaleChilds
@@ -66,100 +29,241 @@ object MainForm: TMainForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 100
-    ClientHeight = 25
+    ClientHeight = 28
     ClientWidth = 118
-    DataSource = DataSource1
+    DataSource = DataSource
     Options = []
-    TabOrder = 2
+    TabOrder = 0
     VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
   end
-  object Grid: TDBGrid
-    AnchorSideLeft.Control = edFileName
-    AnchorSideTop.Control = btnOpen
+  object DBGrid: TDBGrid
+    AnchorSideTop.Control = DBText
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = DBNavigator
+    AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = DBMemo
+    Left = 8
+    Height = 174
+    Top = 74
+    Width = 800
+    AlternateColor = clInactiveBorder
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoFillColumns = True
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Color = clWindow
+    Columns = <    
+      item
+        Alignment = taCenter
+        SizePriority = 0
+        Title.Alignment = taCenter
+        Title.Caption = 'ID'
+        Width = 40
+      end    
+      item
+        Title.Caption = 'Common name'
+        Width = 307
+      end    
+      item
+        SizePriority = 0
+        Title.Caption = 'Scientific Name'
+        Width = 200
+      end    
+      item
+        SizePriority = 0
+        Title.Caption = 'Order'
+        Width = 110
+      end    
+      item
+        SizePriority = 0
+        Title.Caption = 'Genus'
+        Width = 110
+      end>
+    Constraints.MinHeight = 160
+    DataSource = DataSource
+    TabOrder = 1
+  end
+  object DBMemo: TDBMemo
+    AnchorSideLeft.Control = DBGrid
+    AnchorSideRight.Control = DBImage
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 8
-    Height = 364
-    Top = 41
-    Width = 718
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Top = 8
+    Height = 149
+    Top = 256
+    Width = 650
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Color = clWindow
-    Columns = <>
-    DataSource = DataSource1
+    DataSource = DataSource
+    TabOrder = 2
+  end
+  object DBImage: TDBImage
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DBMemo
+    AnchorSideRight.Control = DBGrid
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = DBMemo
+    AnchorSideBottom.Side = asrBottom
+    Left = 666
+    Height = 149
+    Top = 256
+    Width = 142
+    Anchors = [akTop, akRight, akBottom]
+    Center = True
+    DataSource = DataSource
+    Proportional = True
+  end
+  object DBText: TDBText
+    AnchorSideLeft.Control = DBGrid
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 25
+    Top = 47
+    Width = 63
+    DataSource = DataSource
+    Font.Height = -19
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object CbFilterField: TComboBox
+    AnchorSideLeft.Control = CbFiltered
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideTop.Side = asrCenter
+    Left = 414
+    Height = 23
+    Top = 11
+    Width = 123
+    BorderSpacing.Left = 4
+    ItemHeight = 15
+    ItemIndex = 0
+    Items.Strings = (
+      'Order'
+      'Genus'
+    )
+    OnChange = CbFilterFieldChange
+    Style = csDropDownList
     TabOrder = 3
+    Text = 'Order'
   end
-  object Paradox: TParadoxDataSet
-    FieldDefs = <    
-      item
-        Name = 'CustNo'
-        DataType = ftAutoInc
-        Precision = -1
-        Size = 4
-      end    
-      item
-        Name = 'FirstName'
-        DataType = ftString
-        Precision = -1
-        Size = 51
-      end    
-      item
-        Name = 'LastName'
-        DataType = ftString
-        Precision = -1
-        Size = 50
-      end    
-      item
-        Name = 'EMail'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'Street'
-        DataType = ftString
-        Precision = -1
-        Size = 30
-      end    
-      item
-        Name = 'City'
-        DataType = ftString
-        Precision = -1
-        Size = 15
-      end    
-      item
-        Name = 'State/Prov'
-        DataType = ftString
-        Precision = -1
-        Size = 20
-      end    
-      item
-        Name = 'Zip/Postal Code'
-        DataType = ftString
-        Precision = -1
-        Size = 10
-      end    
-      item
-        Name = 'Comments'
-        DataType = ftMemo
-        Precision = -1
-        Size = 110
-      end    
-      item
-        Name = 'DateEntered'
-        DataType = ftDate
-        Precision = -1
-      end>
-    left = 184
-    top = 80
+  object LblEqual: TLabel
+    AnchorSideLeft.Control = CbFilterField
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CbFilterField
+    AnchorSideTop.Side = asrCenter
+    Left = 541
+    Height = 15
+    Top = 15
+    Width = 8
+    BorderSpacing.Left = 4
+    BorderSpacing.Right = 4
+    Caption = '='
+    ParentColor = False
   end
-  object DataSource1: TDataSource
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = DBGrid
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = DBGrid
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 3
+    Top = 44
+    Width = 800
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    Shape = bsTopLine
+  end
+  object BtnSetBookmark: TSpeedButton
+    AnchorSideLeft.Control = DBNavigator
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideBottom.Control = DBNavigator
+    AnchorSideBottom.Side = asrBottom
+    Left = 150
+    Height = 28
+    Top = 8
+    Width = 89
+    Anchors = [akTop, akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 24
+    Caption = '  Set bookmark  '
+    OnClick = BtnSetBookmarkClick
+  end
+  object BtnGotoBookmark: TSpeedButton
+    AnchorSideLeft.Control = BtnSetBookmark
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideBottom.Control = DBNavigator
+    AnchorSideBottom.Side = asrBottom
+    Left = 241
+    Height = 28
+    Top = 8
+    Width = 99
+    Anchors = [akTop, akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 2
+    Caption = ' Go to bookmark  '
+    OnClick = BtnGotoBookmarkClick
+  end
+  object BtnFilter: TSpeedButton
+    AnchorSideLeft.Control = CbFilterValues
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideBottom.Control = DBNavigator
+    AnchorSideBottom.Side = asrBottom
+    Left = 655
+    Height = 28
+    Top = 8
+    Width = 56
+    Anchors = [akTop, akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 2
+    BorderSpacing.Right = 8
+    Caption = '  Execute  '
+    OnClick = BtnFilterClick
+  end
+  object CbFilterValues: TComboBox
+    AnchorSideLeft.Control = LblEqual
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CbFilterField
+    Left = 553
+    Height = 23
+    Top = 11
+    Width = 100
+    ItemHeight = 15
+    Style = csDropDownList
+    TabOrder = 4
+  end
+  object CbFiltered: TCheckBox
+    AnchorSideLeft.Control = BtnGotoBookmark
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DBNavigator
+    AnchorSideTop.Side = asrCenter
+    Left = 364
+    Height = 19
+    Top = 13
+    Width = 46
+    BorderSpacing.Left = 24
+    Caption = 'Filter'
+    Color = clDefault
+    OnChange = CbFilteredChange
+    ParentColor = False
+    TabOrder = 5
+  end
+  object Paradox: TParadoxDataset
+    FieldDefs = <>
+    AfterOpen = ParadoxAfterOpen
+    left = 176
+    top = 120
+  end
+  object DataSource: TDataSource
     DataSet = Paradox
     left = 272
-    top = 80
+    top = 120
   end
 end

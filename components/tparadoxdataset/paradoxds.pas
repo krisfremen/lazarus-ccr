@@ -639,7 +639,7 @@ begin
   FieldDefs.Clear;
   F := FFieldInfoPtr;                  { begin with the first field identifier }
   FNamesStart := Pointer(F);
-  inc(FNamesStart, SizeOf(F^)*(FHeader^.numFields));      //Jump over Fielddefs
+  inc(FNamesStart, SizeOf(F^)*(FHeader^.numFields));      //Jump over FieldDefs
   inc(FNamesStart, SizeOf(LongInt));                      //over TableName pointer
   inc(FNamesStart, SizeOf(LongInt)*(FHeader^.numFields)); //over FieldName pointers
   inc(FNamesStart, FTableNameLen);                        // over Tablename and padding
