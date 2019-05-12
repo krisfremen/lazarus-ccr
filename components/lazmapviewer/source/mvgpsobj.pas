@@ -63,7 +63,7 @@ type
     function GetLat: Double;
     function GetLon: Double;
   public
-    constructor Create(ALon,ALat : double;AEle : double=NO_ELE;ADateTime : TDateTime=NO_DATE);
+    constructor Create(ALon,ALat: double; AEle: double=NO_ELE; ADateTime: TDateTime=NO_DATE);
     class function CreateFrom(aPt: TRealPoint): TGPSPoint;
 
     procedure GetArea(out Area: TRealArea);override;

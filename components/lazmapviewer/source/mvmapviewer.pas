@@ -64,7 +64,7 @@ Type
       procedure DoAsyncInvalidate({%H-}Data: PtrInt);
       procedure DrawObjects(const {%H-}TileId: TTileId; aLeft, aTop, aRight,aBottom: integer);
       procedure DrawPt(const {%H-}Area: TRealArea;aPOI: TGPSPoint);
-      procedure DrawTrack(const Area: TRealArea;trk: TGPSTrack);
+      procedure DrawTrack(const Area: TRealArea; trk: TGPSTrack);
       function GetCacheOnDisk: boolean;
       function GetCachePath: String;
       function GetCenter: TRealPoint;

@@ -1,17 +1,17 @@
 object GPSListViewer: TGPSListViewer
   Left = 282
-  Height = 352
+  Height = 356
   Top = 135
-  Width = 557
+  Width = 753
   Caption = 'GPS points'
-  ClientHeight = 352
-  ClientWidth = 557
+  ClientHeight = 356
+  ClientWidth = 753
   LCLVersion = '2.1.0.0'
   object ListView: TListView
     Left = 6
-    Height = 308
+    Height = 312
     Top = 6
-    Width = 545
+    Width = 741
     Align = alClient
     BorderSpacing.Left = 6
     BorderSpacing.Top = 6
@@ -41,13 +41,13 @@ object GPSListViewer: TGPSListViewer
   object Panel1: TPanel
     Left = 0
     Height = 38
-    Top = 314
-    Width = 557
+    Top = 318
+    Width = 753
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 38
-    ClientWidth = 557
+    ClientWidth = 753
     TabOrder = 1
     object BtnDeletePoint: TBitBtn
       AnchorSideLeft.Control = BtnGoToPoint
@@ -152,7 +152,7 @@ object GPSListViewer: TGPSListViewer
       AnchorSideTop.Control = Panel1
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
-      Left = 476
+      Left = 672
       Height = 26
       Top = 6
       Width = 75
@@ -213,5 +213,45 @@ object GPSListViewer: TGPSListViewer
       OnClick = BtnCalcDistanceClick
       TabOrder = 3
     end
+    object BtnSavePts: TButton
+      AnchorSideLeft.Control = BtnCalcDistance
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 443
+      Height = 25
+      Top = 6
+      Width = 86
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Save points'
+      OnClick = BtnSavePtsClick
+      TabOrder = 4
+    end
+    object BtnLoadTrack: TButton
+      AnchorSideLeft.Control = BtnSavePts
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 535
+      Height = 25
+      Top = 6
+      Width = 81
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Load track'
+      OnClick = BtnLoadTrackClick
+      TabOrder = 5
+    end
+  end
+  object SaveDialog: TSaveDialog
+    DefaultExt = '.*.gps'
+    Filter = 'GPS points (*.gps)|*.gps|All files (*.*)|*.*'
+    left = 472
+    top = 256
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = '.gps'
+    Filter = 'GPS points (*.gps)|*.gps|All files (*.*)|*.*'
+    left = 560
+    top = 256
   end
 end

@@ -11,6 +11,7 @@ uses
 const
   // IDs of GPS items
   _CLICKED_POINTS_ = 10;
+  _TRACK_POINTS_ = 20;
 
 type
 
@@ -21,12 +22,18 @@ type
     BtnGoToPoint: TBitBtn;
     BtnClose: TBitBtn;
     BtnCalcDistance: TButton;
+    BtnSavePts: TButton;
+    BtnLoadTrack: TButton;
     ListView: TListView;
+    OpenDialog: TOpenDialog;
     Panel1: TPanel;
+    SaveDialog: TSaveDialog;
     procedure BtnCalcDistanceClick(Sender: TObject);
     procedure BtnCloseClick(Sender: TObject);
     procedure BtnDeletePointClick(Sender: TObject);
     procedure BtnGoToPointClick(Sender: TObject);
+    procedure BtnSavePtsClick(Sender: TObject);
+    procedure BtnLoadTrackClick(Sender: TObject);
   private
     FViewer: TMapView;
     FList: TGpsObjList;
@@ -78,7 +85,6 @@ begin
     for i:=0 to FList.Count-1 do begin
       gpsObj := FList[i];
       item := ListView.Items.Add;
-//      item.Caption := IntToStr(gpsObj.ID);
       if gpsObj is TGpsPoint then begin
         item.SubItems.Add(gpsObj.Name);
         item.Subitems.Add(LatToStr(TGpsPoint(gpsObj).Lat, true));
@@ -86,7 +92,7 @@ begin
       end;
     end;
   finally
-    ListView.items.EndUpdate;
+    ListView.Items.EndUpdate;
   end;
 end;
 
@@ -174,6 +180,90 @@ begin
       gpsPt := TGpsPoint(gpsObj);
       if Assigned(FViewer) then FViewer.Center := gpsPt.RealPoint;
     end;
+  end;
+end;
+
+procedure TGPSListViewer.BtnSavePtsClick(Sender: TObject);
+var
+  i: Integer;
+  gpsPt: TGpsPoint;
+  gpsObj: TGpsObj;
+  L: TStrings;
+  s: String;
+begin
+  if (OpenDialog.FileName <> '') and (SaveDialog.FileName = '') then
+    SaveDialog.FileName := OpenDialog.FileName;
+  if SaveDialog.FileName <> '' then
+    SaveDialog.InitialDir := ExtractFileDir(SaveDialog.FileName);
+  if not SaveDialog.Execute then exit;
+
+  L := TStringList.Create;
+  try
+    s := 'Index'#9'Name'#9'Longitude'#9'Latitude';
+    L.Add(s);
+    for i:=0 to FList.Count-1 do begin
+      gpsObj := FList[i];
+      if gpsObj is TGpsPoint then begin
+        gpsPt := TGpsPoint(gpsObj);
+        s := Format('%d'#9'%s'#9'%s'#9'%s', [
+          i, gpsPt.Name, LonToStr(gpsPt.Lon, true), LatToStr(gpsPt.Lat, true)
+        ]);
+        L.Add(s);
+      end;
+      L.SaveToFile(SaveDialog.FileName);
+    end;
+  finally
+    L.Free;
+  end;
+end;
+
+procedure TGPSListViewer.BtnLoadTrackClick(Sender: TObject);
+var
+  L: TStrings;
+  gpsTrack: TGpsTrack;
+  gpsPt: TGpsPoint;
+  sa: TStringArray;
+  lon, lat: Double;
+  i: Integer;
+  item: TListItem;
+begin
+  if (SaveDialog.FileName <> '') and (OpenDialog.FileName = '') then
+    OpenDialog.FileName := SaveDialog.FileName;
+  if OpenDialog.FileName <> '' then
+    OpenDialog.InitialDir := ExtractFileDir(OpenDialog.FileName);
+  if not OpenDialog.Execute then exit;
+
+  gpsTrack := TGpsTrack.Create;
+  L := TStringList.Create;
+  try
+    L.LoadFromFile(OpenDialog.FileName);
+    for i := 1 to L.Count - 1 do begin  // i=1 --> skip header line
+      if L[i] = '' then Continue;
+      sa := L[i].Split(#9);
+      if TryStrToGps(sa[2], lon) and TryStrToGps(sa[3], lat) then begin
+        gpsPt := TGpsPoint.Create(lon, lat);
+        gpsPt.Name := sa[1];
+        gpsTrack.Points.Add(gpsPt);
+      end;
+    end;
+    FViewer.GPSItems.Add(gpsTrack, _TRACK_POINTS_);
+    FViewer.Center := gpsPt.RealPoint;
+  finally
+    L.Free;
+  end;
+
+  ListView.Items.BeginUpdate;
+  try
+    ListView.Items.Clear;
+    for i:=0 to gpsTrack.Points.Count - 1 do begin
+      gpsPt := gpsTrack.Points[i];
+      item := ListView.Items.Add;
+      item.SubItems.Add(gpsPt.Name);
+      item.SubItems.Add(LatToStr(gpsPt.Lat, true));
+      item.SubItems.Add(LonToStr(gpsPt.Lon, true));
+    end;
+  finally
+    ListView.Items.EndUpdate;
   end;
 end;
 
