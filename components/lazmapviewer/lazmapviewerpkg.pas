@@ -4,12 +4,13 @@
 
 unit lazMapViewerPkg;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
   mvCache, mvDownloadEngine, mvDragObj, mvEngine, mvGeoNames, mvGpsObj, 
   mvJobQueue, mvJobs, mvMapProvider, mvTypes, mvMapViewer, mvExtraData, 
-  mvDLEFpc, mvMapViewerReg, LazarusPackageIntf;
+  mvDLEFpc, mvMapViewerReg, mvGPX, LazarusPackageIntf;
 
 implementation
 

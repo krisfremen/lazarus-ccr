@@ -123,6 +123,7 @@ type
     FUpdating: integer;
     FItems: TGPSObjList;
     function GetCount: integer;
+    function GetItem(AIndex: Integer): TGpsObj;
   protected
     procedure _Delete(Idx: Integer; var DelLst: TGPSObjList);
     procedure FreePending;
@@ -130,7 +131,7 @@ type
     procedure Lock;
     procedure UnLock;
     procedure CallModified(lst: TGPSObjList; Adding: boolean);
-    property Items: TGPSObjList read FItems;
+//    property Items: TGPSObjList read FItems;
     procedure IdsToObj(const Ids: TIdArray; out objs: TGPSObjArray; IdOwner: integer);
   public
     constructor Create;
@@ -149,6 +150,7 @@ type
     procedure EndUpdate;
 
     property Count: integer read GetCount;
+    property Items[AIndex: Integer]: TGpsObj read GetItem; default;
     property OnModified: TModifiedEvent read FOnModified write FOnModified;
   end;
 
@@ -279,6 +281,11 @@ begin
   Result := FItems.Count
 end;
 
+function TGPSObjectList.GetItem(AIndex: Integer): TGpsObj;
+begin
+  Result := FItems[AIndex];
+end;
+
 procedure TGPSObjectList._Delete(Idx: Integer; var DelLst: TGPSObjList);   // wp: was "out"
 var
   Item: TGpsObj;
@@ -293,7 +300,7 @@ begin
     end;
     if not Assigned(FPending) then
       FPending := TObjectList.Create(true);
-    Item := Items.Extract(Items[Idx]);
+    Item := FItems.Extract(FItems[Idx]);
     FPending.Add(Item);
   finally
     UnLock;
@@ -393,10 +400,10 @@ begin
   Area.TopLeft.lat := 0;
   Lock;
   try
-    if Items.Count > 0 then
+    if Count > 0 then
     begin
       Area := Items[0].BoundingBox;
-      for i:=1 to pred(Items.Count) do
+      for i:=1 to pred(Count) do
       begin
         ptArea := Items[i].BoundingBox;
         ExtendArea(Area, ptArea);
@@ -416,7 +423,7 @@ begin
   Lock;
   try
     Inc(FRefCount);
-    for i:=0 to pred(Items.Count) do
+    for i:=0 to pred(Count) do
     begin
       ItemArea := Items[i].BoundingBox;
       if hasIntersectArea(Area,ItemArea) then
@@ -560,7 +567,7 @@ begin
   aItem.FIdOwner := IdOwner;
   Lock;
   try
-    Result := Items.Add(aItem);
+    Result := FItems.Add(aItem);
     mList := TGPSObjList.Create(false);
     mList.Add(aItem);
     inc(FRefCount);
@@ -594,7 +601,7 @@ begin
   DelLst := nil;
   Lock;
   try
-    for i:=Pred(Items.Count) downto 0 do
+    for i:=pred(Count) downto 0 do
     begin
       if Assigned(Items[i].ExtraData) then
       begin

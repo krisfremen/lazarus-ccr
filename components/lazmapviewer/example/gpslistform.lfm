@@ -243,14 +243,16 @@ object GPSListViewer: TGPSListViewer
     end
   end
   object SaveDialog: TSaveDialog
+    Title = 'Save gps points as'
     DefaultExt = '.*.gps'
     Filter = 'GPS points (*.gps)|*.gps|All files (*.*)|*.*'
     left = 472
     top = 256
   end
   object OpenDialog: TOpenDialog
+    Title = 'Open gps points file'
     DefaultExt = '.gps'
-    Filter = 'GPS points (*.gps)|*.gps|All files (*.*)|*.*'
+    Filter = 'GPS files (*.gps)|*.gps|All files (*.*)|*.*'
     left = 560
     top = 256
   end

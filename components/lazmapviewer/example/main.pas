@@ -18,6 +18,7 @@ type
     BtnGoTo: TButton;
     BtnGPSPoints: TButton;
     BtnSaveToFile: TButton;
+    BtnLoadGPXFile: TButton;
     CbDoubleBuffer: TCheckBox;
     CbFoundLocations: TComboBox;
     CbLocations: TComboBox;
@@ -49,8 +50,10 @@ type
     ControlPanel: TPanel;
     BtnLoadMapProviders: TSpeedButton;
     BtnSaveMapProviders: TSpeedButton;
+    OpenDialog: TOpenDialog;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
+    procedure BtnLoadGPXFileClick(Sender: TObject);
     procedure BtnSearchClick(Sender: TObject);
     procedure BtnGPSPointsClick(Sender: TObject);
     procedure BtnSaveToFileClick(Sender: TObject);
@@ -98,7 +101,7 @@ implementation
 
 uses
   LCLType, IniFiles, Math, FPCanvas, FPImage, IntfGraphics,
-  mvEngine, mvExtraData,
+  mvEngine, mvExtraData, mvGPX,
   globals, gpslistform;
 
 type
@@ -187,6 +190,31 @@ begin
   MapView.Zoom := 12;
   MapView.Center := P.Loc;
   MapView.Invalidate;
+end;
+
+procedure TMainForm.BtnLoadGPXFileClick(Sender: TObject);
+var
+  reader: TGpxReader;
+  pt: TGpsPoint;
+  item: TGpsObj;
+begin
+  if OpenDialog.FileName <> '' then
+    OpenDialog.InitialDir := ExtractFileDir(OpenDialog.Filename);
+  if OpenDialog.Execute then begin
+    reader := TGpxReader.Create;
+    try
+      reader.LoadFromFile(OpenDialog.FileName, MapView.GPSItems);
+      item := MapView.GPSItems.Items[MapView.GPSItems.Count-1];
+      if item is TGpsPoint then
+        pt := TGpsPoint(item)
+      else
+      if item is TGpsTrack then
+        pt := TGpsTrack(item).Points[0];
+      MapView.Center := pt.RealPoint;
+    finally
+      reader.Free;
+    end;
+  end;
 end;
 
 procedure TMainForm.BtnSaveToFileClick(Sender: TObject);
