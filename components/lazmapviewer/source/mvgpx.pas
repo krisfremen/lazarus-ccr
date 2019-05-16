@@ -15,6 +15,7 @@ type
   private
     ID: Integer;
   protected
+    procedure ReadExtensions(ANode: TDOMNode; ATrack: TGpsTrack);
     function ReadPoint(ANode: TDOMNode): TGpsPoint;
     procedure ReadRoute(ANode: TDOMNode; AList: TGpsObjectlist);
     procedure ReadTrack(ANode: TDOMNode; AList: TGpsObjectList);
@@ -26,7 +27,11 @@ type
     procedure LoadFromStream(AStream: TStream; AList: TGpsObjectList);
   end;
 
+
 implementation
+
+uses
+  mvExtraData;
 
 var
   PointSettings: TFormatSettings;
@@ -106,6 +111,36 @@ begin
     Result := child.NodeValue;
 end;
 
+function TryStrToGpxColor(AGpxText: String; out AColor: LongInt): Boolean;
+type
+  PGpxColorRec = ^TGpxColorRec;
+  TGpxColorRec = record
+    r: array[0..1] of char;
+    g: array[0..1] of char;
+    b: array[0..1] of char;
+  end;
+var
+  rv, gv, bv: Integer;
+  ch: Char;
+begin
+  Result := false;
+  if Length(AGpxText) <> 6 then
+    exit;
+  for ch in AGpxText do
+    if not (ch in ['0'..'9', 'A'..'F', 'a'..'f']) then exit;
+
+  with PGpxColorRec(@AGpxText[1])^ do begin
+    rv := (ord(r[0]) - ord('0')) * 16 + ord(r[1]) - ord('0');
+    gv := (ord(g[0]) - ord('0')) * 16 + ord(g[1]) - ord('0');
+    bv := (ord(b[0]) - ord('0')) * 16 + ord(b[1]) - ord('0');
+  end;
+  AColor := rv + gv shl 8 + bv shl 16;
+  Result := true;
+end;
+
+
+{ TGpxReader }
+
 procedure TGpxReader.LoadFromFile(AFileName: String; AList: TGpsObjectList);
 var
   stream: TStream;
@@ -131,6 +166,49 @@ begin
     ReadRoute(doc.DocumentElement.FindNode('rte'), AList);
   finally
     doc.Free;
+  end;
+end;
+
+procedure TGpxReader.ReadExtensions(ANode: TDOMNode; ATrack: TGpsTrack);
+var
+  linenode: TDOMNode;
+  childNode: TDOMNode;
+  nodeName: string;
+  color: LongInt;
+  w: Double = -1;
+  colorUsed: Boolean = false;
+  s: String;
+begin
+  if ANode = nil then
+    exit;
+
+  lineNode := ANode.FirstChild;
+  while lineNode <> nil do begin
+    nodeName := lineNode.NodeName;
+    if nodeName = 'line' then begin
+      childNode := lineNode.FirstChild;
+      while childNode <> nil do begin
+        nodeName := childNode.NodeName;
+        s := GetNodeValue(childNode);
+        case nodeName of
+          'color':
+            if TryStrToGpxColor(s, color) then colorUsed := true;
+          'width':
+            TryStrToFloat(s, w, PointSettings);
+        end;
+        childNode := childNode.NextSibling;
+      end;
+    end;
+    lineNode := lineNode.NextSibling;
+  end;
+
+  if (w <> -1) or colorUsed then begin
+    if ATrack.ExtraData = nil then
+      ATrack.ExtraData := TTrackExtraData.Create(ID);
+    if (ATrack.ExtraData is TTrackExtraData) then begin
+      TTrackExtraData(ATrack.ExtraData).Width := w;
+      TTrackExtraData(ATrack.ExtraData).Color := color;
+    end;
   end;
 end;
 
@@ -240,6 +318,8 @@ begin
           pt := ReadPoint(ANode);
           if pt <> nil then trk.Points.Add(pt);
         end;
+      'extensions':
+        ReadExtensions(ANode, trk);
     end;
     ANode := ANode.NextSibling;
   end;

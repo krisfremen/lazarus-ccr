@@ -60,6 +60,8 @@ Type
       FInactiveColor: TColor;
       FPOIImage: TBitmap;
       FOnDrawGpsPoint: TDrawGpsPointEvent;
+      FDefaultTrackColor: TColor;
+      FDefaultTrackWidth: Integer;
       procedure CallAsyncInvalidate;
       procedure DoAsyncInvalidate({%H-}Data: PtrInt);
       procedure DrawObjects(const {%H-}TileId: TTileId; aLeft, aTop, aRight,aBottom: integer);
@@ -79,6 +81,8 @@ Type
       procedure SetCacheOnDisk(AValue: boolean);
       procedure SetCachePath({%H-}AValue: String);
       procedure SetCenter(AValue: TRealPoint);
+      procedure SetDefaultTrackColor(AValue: TColor);
+      procedure SetDefaultTrackWidth(AValue: Integer);
       procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
       procedure SetInactiveColor(AValue: TColor);
       procedure SetMapProvider(AValue: String);
@@ -132,6 +136,8 @@ Type
       property Align;
       property CacheOnDisk: boolean read GetCacheOnDisk write SetCacheOnDisk;
       property CachePath: String read GetCachePath write SetCachePath;
+      property DefaultTrackColor: TColor read FDefaultTrackColor write SetDefaultTrackColor default clRed;
+      property DefaultTrackWidth: Integer read FDefaultTrackWidth write SetDefaultTrackWidth default 1;
       property DownloadEngine: TMvCustomDownloadEngine read GetDownloadEngine write SetDownloadEngine;
       property Height default 150;
       property InactiveColor: TColor read FInactiveColor write SetInactiveColor;
@@ -398,6 +404,20 @@ begin
   Engine.Center := AValue;
 end;
 
+procedure TMapView.SetDefaultTrackColor(AValue: TColor);
+begin
+  if FDefaultTrackColor = AValue then exit;
+  FDefaultTrackColor := AValue;
+  Invalidate;
+end;
+
+procedure TMapView.SetDefaultTrackWidth(AValue: Integer);
+begin
+  if FDefaultTrackWidth = AValue then exit;
+  FDefaultTrackWidth := AValue;
+  Invalidate;
+end;
+
 procedure TMapView.SetDownloadEngine(AValue: TMvCustomDownloadEngine);
 begin
   FDownloadEngine := AValue;
@@ -565,15 +585,20 @@ var
   aPt: TRealPoint;
   LastInside, IsInside: boolean;
   trkColor: TColor;
+  trkWidth: Integer;
 begin
   if trk.Points.Count>0 then
   begin
-    trkColor := clRed;
+    trkColor := FDefaultTrackColor;
+    trkWidth := FDefaultTrackWidth;
     if trk.ExtraData <> nil then
     begin
       if trk.ExtraData.InheritsFrom(TDrawingExtraData) then
         trkColor := TDrawingExtraData(trk.ExtraData).Color;
+      if trk.ExtraData.InheritsFrom(TTrackExtraData) then
+        trkWidth := round(ScreenInfo.PixelsPerInchX * TTrackExtraData(trk.ExtraData).Width / 25.4);
     end;
+    if trkWidth < 1 then trkWidth := 1;
     LastInside := false;
     for i:=0 to pred(trk.Points.Count) do
     begin
@@ -588,10 +613,12 @@ begin
             Old := Engine.LonLatToScreen(trk.Points[pred(i)].RealPoint);
           {$IFDEF USE_RGBGRAPHICS}
           Buffer.Canvas.OutlineColor := trkColor;
+          // --- no linewidth support in RGBGraphics ---
           Buffer.Canvas.Line(Old.X, Old.y, New.X, New.Y);
           {$ENDIF}
           {$IFDEF USE_LAZINTFIMAGE}
           BufferCanvas.Pen.FPColor := TColorToFPColor(trkColor);
+          BufferCanvas.Pen.Width := trkWidth;
           BufferCanvas.Line(Old.X, Old.Y, New.X, New.Y);
           {$ENDIF}
         end;
@@ -759,6 +786,8 @@ begin
   FEngine := TMapViewerEngine.Create(self);
   FBuiltinDownloadEngine := TMvDEFpc.Create(self);
   FBuiltinDownLoadEngine.Name := 'BuiltIn';
+  FDefaultTrackColor := clRed;
+  FDefaultTrackWidth := 1;
   {$IFDEF USE_RGBGRAPHICS}
   Buffer := TRGB32Bitmap.Create(Width, Height);
   {$ENDIF}

@@ -632,6 +632,8 @@ object MainForm: TMainForm
     Align = alClient
     CacheOnDisk = True
     CachePath = 'cache/'
+    DefaultTrackColor = clBlue
+    DefaultTrackWidth = 3
     DownloadEngine = MapView.BuiltIn
     InactiveColor = clWhite
     MapProvider = 'OpenStreetMap Mapnik'
