@@ -14,6 +14,7 @@ type
   TGpxReader = class
   private
     ID: Integer;
+    FMinLat, FMinLon, FMaxLat, FMaxLon: Double;
   protected
     procedure ReadExtensions(ANode: TDOMNode; ATrack: TGpsTrack);
     function ReadPoint(ANode: TDOMNode): TGpsPoint;
@@ -23,14 +24,15 @@ type
     procedure ReadTrackSegment(ANode: TDOMNode; ATrack: TGpsTrack);
     procedure ReadWayPoints(ANode: TDOMNode; AList: TGpsObjectList);
   public
-    procedure LoadFromFile(AFileName: String; AList: TGpsObjectList);
-    procedure LoadFromStream(AStream: TStream; AList: TGpsObjectList);
+    procedure LoadFromFile(AFileName: String; AList: TGpsObjectList; out ABounds: TRealArea);
+    procedure LoadFromStream(AStream: TStream; AList: TGpsObjectList; out ABounds: TRealArea);
   end;
 
 
 implementation
 
 uses
+  Math,
   mvExtraData;
 
 var
@@ -141,29 +143,37 @@ end;
 
 { TGpxReader }
 
-procedure TGpxReader.LoadFromFile(AFileName: String; AList: TGpsObjectList);
+procedure TGpxReader.LoadFromFile(AFileName: String; AList: TGpsObjectList;
+  out ABounds: TRealArea);
 var
   stream: TStream;
 begin
   stream := TFileStream.Create(AFileName, fmOpenRead + fmShareDenyNone);
   try
-    LoadFromStream(stream, AList);
+    LoadFromStream(stream, AList, ABounds);
   finally
     stream.Free;
   end;
 end;
 
-procedure TGpxReader.LoadFromStream(AStream: TStream; AList: TGpsObjectList);
+procedure TGpxReader.LoadFromStream(AStream: TStream; AList: TGpsObjectList;
+  out ABounds: TRealArea);
 var
   doc: TXMLDocument = nil;
   node: TDOMNode;
 begin
   try
     ID := random(MaxInt - 1000) + 1000;
+    FMinLon := 9999; FMinLat := 9999;
+    FMaxLon := -9999; FMaxLat := -9999;
     ReadXMLFile(doc, AStream);
     ReadWayPoints(doc.DocumentElement.FindNode('wpt'), AList);
     ReadTracks(doc.DocumentElement.FindNode('trk'), AList);
     ReadRoute(doc.DocumentElement.FindNode('rte'), AList);
+    ABounds.TopLeft.Lon := FMinLon;
+    ABounds.TopLeft.Lat := FMaxLat;
+    ABounds.BottomRight.Lon := FMaxLon;
+    ABounds.BottomRight.Lat := FMinLat;
   finally
     doc.Free;
   end;
@@ -260,6 +270,10 @@ begin
   end;
   Result := TGpsPoint.Create(lon, lat, ele, dt);
   Result.Name := sname;
+  FMinLon := Min(FMinLon, lon);
+  FMaxLon := Max(FMaxLon, lon);
+  FMinLat := Min(FMinLat, lat);
+  FMaxLat := Max(FMaxLat, lat);
 end;
 
 procedure TGpxReader.ReadRoute(ANode: TDOMNode; AList: TGpsObjectlist);

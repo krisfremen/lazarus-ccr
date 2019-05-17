@@ -195,22 +195,20 @@ end;
 procedure TMainForm.BtnLoadGPXFileClick(Sender: TObject);
 var
   reader: TGpxReader;
-  pt: TGpsPoint;
   item: TGpsObj;
+  b: TRealArea;
+  pt: TRealPoint;
 begin
   if OpenDialog.FileName <> '' then
     OpenDialog.InitialDir := ExtractFileDir(OpenDialog.Filename);
   if OpenDialog.Execute then begin
     reader := TGpxReader.Create;
     try
-      reader.LoadFromFile(OpenDialog.FileName, MapView.GPSItems);
+      reader.LoadFromFile(OpenDialog.FileName, MapView.GPSItems, b);
       item := MapView.GPSItems.Items[MapView.GPSItems.Count-1];
-      if item is TGpsPoint then
-        pt := TGpsPoint(item)
-      else
-      if item is TGpsTrack then
-        pt := TGpsTrack(item).Points[0];
-      MapView.Center := pt.RealPoint;
+      pt.Lon := (b.TopLeft.Lon + b.BottomRight.Lon) * 0.5;
+      pt.Lat := (b.TopLeft.Lat + b.BottomRight.Lat) * 0.5;
+      MapView.Center := pt;
     finally
       reader.Free;
     end;
