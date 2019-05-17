@@ -60,6 +60,7 @@ Type
       FInactiveColor: TColor;
       FPOIImage: TBitmap;
       FOnDrawGpsPoint: TDrawGpsPointEvent;
+      FDebugTiles: Boolean;
       FDefaultTrackColor: TColor;
       FDefaultTrackWidth: Integer;
       procedure CallAsyncInvalidate;
@@ -81,6 +82,7 @@ Type
       procedure SetCacheOnDisk(AValue: boolean);
       procedure SetCachePath({%H-}AValue: String);
       procedure SetCenter(AValue: TRealPoint);
+      procedure SetDebugTiles(AValue: Boolean);
       procedure SetDefaultTrackColor(AValue: TColor);
       procedure SetDefaultTrackWidth(AValue: Integer);
       procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
@@ -100,7 +102,8 @@ Type
         out ACanvas: TFPCustomCanvas; AWidth, AHeight: Integer);
      {$ENDIF}
       procedure DblClick; override;
-      Procedure DoDrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
+      procedure DoDrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
+      procedure DoDrawTileInfo(const TileID: TTileID; X,Y: Integer);
       function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
         MousePos: TPoint): Boolean; override;
       procedure DoOnResize; override;
@@ -136,6 +139,7 @@ Type
       property Align;
       property CacheOnDisk: boolean read GetCacheOnDisk write SetCacheOnDisk;
       property CachePath: String read GetCachePath write SetCachePath;
+      property DebugTiles: Boolean read FDebugTiles write SetDebugTiles default false;
       property DefaultTrackColor: TColor read FDefaultTrackColor write SetDefaultTrackColor default clRed;
       property DefaultTrackWidth: Integer read FDefaultTrackWidth write SetDefaultTrackWidth default 1;
       property DownloadEngine: TMvCustomDownloadEngine read GetDownloadEngine write SetDownloadEngine;
@@ -404,18 +408,25 @@ begin
   Engine.Center := AValue;
 end;
 
+procedure TMapView.SetDebugTiles(AValue: Boolean);
+begin
+  if FDebugTiles = AValue then exit;
+  FDebugTiles := AValue;
+  Engine.Redraw;
+end;
+
 procedure TMapView.SetDefaultTrackColor(AValue: TColor);
 begin
   if FDefaultTrackColor = AValue then exit;
   FDefaultTrackColor := AValue;
-  Invalidate;
+  Engine.Redraw;
 end;
 
 procedure TMapView.SetDefaultTrackWidth(AValue: Integer);
 begin
   if FDefaultTrackWidth = AValue then exit;
   FDefaultTrackWidth := AValue;
-  Invalidate;
+  Engine.Redraw;
 end;
 
 procedure TMapView.SetDownloadEngine(AValue: TMvCustomDownloadEngine);
@@ -766,7 +777,33 @@ begin
     end;
     {$ENDIF}
   end;
+  if FDebugTiles then
+    DoDrawTileInfo(TileID, X, Y);
   DrawObjects(TileId, X, Y, X + TILE_SIZE, Y + TILE_SIZE);
+end;
+
+procedure TMapView.DoDrawTileInfo(const TileID: TTileID; X, Y: Integer);
+begin
+  {$IFDEF USE_LCL}
+  Buffer.Canvas.Pen.Color := clGray;
+  Buffer.Canvas.Pen.Style := psSolid;
+  Buffer.Canvas.Line(X, Y, X, Y + TILE_SIZE);
+  Buffer.Canvas.Line(X, Y, X + TILE_SIZE, Y);
+  Buffer.Canvas.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
+  Buffer.Canvas.Line(X + TILE_SIZE, Y + TILE_SIZE, X, Y + TILE_SIZE);
+  {$ENDIF}
+
+  {$IFDEF USE_RGBGRAPHICS}
+  {$ENDIF}
+
+  {$IFDEF USE_LAZINTFIMAGE}
+  BufferCanvas.Pen.FPColor := colGray;
+  BufferCanvas.Pen.Style := psSolid;
+  BufferCanvas.Line(X, Y, X, Y + TILE_SIZE);
+  BufferCanvas.Line(X, Y, X + TILE_SIZE, Y);
+  BufferCanvas.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
+  BufferCanvas.Line(X, Y + TILE_SIZE, X + TILE_SIZE, Y + TILE_SIZE);
+  {$ENDIF}
 end;
 
 function TMapView.IsActive: Boolean;

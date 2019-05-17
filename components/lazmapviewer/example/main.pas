@@ -26,6 +26,7 @@ type
     CbUseThreads: TCheckBox;
     CbMouseCoords: TGroupBox;
     CbDistanceUnits: TComboBox;
+    CbDebugTiles: TCheckBox;
     GbCenterCoords: TGroupBox;
     GbScreenSize: TGroupBox;
     InfoCenterLatitude: TLabel;
@@ -57,6 +58,7 @@ type
     procedure BtnSearchClick(Sender: TObject);
     procedure BtnGPSPointsClick(Sender: TObject);
     procedure BtnSaveToFileClick(Sender: TObject);
+    procedure CbDebugTilesChange(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -215,6 +217,11 @@ procedure TMainForm.BtnSaveToFileClick(Sender: TObject);
 begin
   MapView.SaveToFile(TPortableNetworkGraphic, 'mapview.png');
   ShowMessage('Map saved to "mapview.png".');
+end;
+
+procedure TMainForm.CbDebugTilesChange(Sender: TObject);
+begin
+  MapView.DebugTiles := CbDebugTiles.Checked;
 end;
 
 procedure TMainForm.CbDoubleBufferChange(Sender: TObject);
