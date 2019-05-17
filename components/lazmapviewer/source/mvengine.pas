@@ -1142,7 +1142,7 @@ begin
   tmpWin := MapWin;
   tmpWin.Center.Lon := (aArea.TopLeft.Lon + aArea.BottomRight.Lon) / 2;
   tmpWin.Center.Lat := (aArea.TopLeft.Lat + aArea.BottomRight.Lat) / 2;
-  tmpWin.Zoom := 15;
+  tmpWin.Zoom := 18;
   TopLeft.X := 0;
   TopLeft.Y := 0;
   BottomRight.X := tmpWin.Width;
