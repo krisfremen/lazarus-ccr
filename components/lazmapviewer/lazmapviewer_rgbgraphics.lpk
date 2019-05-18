@@ -2,25 +2,25 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="lazMapViewer_Synapse"/>
+    <Name Value="lazmapviewer_rgbgraphics"/>
     <Type Value="RunAndDesignTime"/>
     <Author Value="ti_dic, Werner Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="source\addons\synapse_downloadengine"/>
+        <OtherUnitFiles Value="source\addons\rgbgraphics_drawingengine"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Add-on to LazMapViewer: Contains the download engine based on the Synapse library."/>
+    <Description Value="Add-on to LazMapViewer: Contains the drawing engine based on the RGBGraphics package."/>
     <License Value="GPL2 or later"/>
     <Version Minor="1"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="source\addons\synapse_downloadengine\mvdlesynapse.pas"/>
+        <Filename Value="source\addons\rgbgraphics_drawingengine\mvde_rgbgraphics.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="mvDLESynapse"/>
+        <UnitName Value="mvDE_RGBGraphics"/>
       </Item1>
     </Files>
     <RequiredPkgs Count="3">
@@ -28,7 +28,7 @@
         <PackageName Value="lazMapViewerPkg"/>
       </Item1>
       <Item2>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="rgb_graphics"/>
       </Item2>
       <Item3>
         <PackageName Value="FCL"/>

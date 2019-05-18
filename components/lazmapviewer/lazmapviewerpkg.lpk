@@ -14,6 +14,7 @@
     <Description Value="Component for viewing maps (Google, OpenStreetMap, etc). 
 This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/ci/master/tree/mapviewer/) which itself is based on the MapViewer by Maciej Kaczkowski (https://github.com/maciejkaczkowski/mapviewer)."/>
     <License Value="GPL2 or later"/>
+    <Version Minor="1"/>
     <Files Count="18">
       <Item1>
         <Filename Value="source/mvcache.pas"/>

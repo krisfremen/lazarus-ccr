@@ -27,9 +27,9 @@ uses
 
 type
 
-  { TMVDESynapse }
+  { TMvDESynapse }
 
-  TMVDESynapse = class(TMvCustomDownloadEngine)
+  TMvDESynapse = class(TMvCustomDownloadEngine)
   private
     FProxyHost: string;
     FProxyPassword: string;
@@ -56,13 +56,13 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(PALETTE_PAGE, [TMVDESynapse]);
+  RegisterComponents(PALETTE_PAGE, [TMvDESynapse]);
 end;
 
 
-{ TMVDESynapse }
+{ TMvDESynapse }
 
-procedure TMVDESynapse.DownloadFile(const Url: string; str: TStream);
+procedure TMvDESynapse.DownloadFile(const Url: string; str: TStream);
 var
   FHttp: THTTPSend;
   realURL: String;

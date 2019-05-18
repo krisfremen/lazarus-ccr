@@ -10,3 +10,6 @@ tmvdefpc_200.png
 tmvdesynapse.png
 tmvdesynapse_150.png
 tmvdesynapse_200.png
+tmvrgbgraphicsdrawingengine.png
+tmvrgbgraphicsdrawingengine_150.png
+tmvrgbgraphicsdrawingengine_200.png

@@ -24,7 +24,7 @@ unit mvMapViewer;
 interface
 
 uses
-  Classes, SysUtils, Controls, Graphics, IntfGraphics,
+  Classes, SysUtils, Controls, Graphics, IntfGraphics, Forms,
   MvTypes, MvGPSObj, MvEngine, MvMapProvider, MvDownloadEngine, MvDrawingEngine;
 
 Type
@@ -58,6 +58,7 @@ Type
       FDebugTiles: Boolean;
       FDefaultTrackColor: TColor;
       FDefaultTrackWidth: Integer;
+      FFont: TFont;
       procedure CallAsyncInvalidate;
       procedure DoAsyncInvalidate({%H-}Data: PtrInt);
       procedure DrawObjects(const {%H-}TileId: TTileId; aLeft, aTop, aRight,aBottom: integer);
@@ -74,6 +75,7 @@ Type
       function GetOnZoomChange: TNotifyEvent;
       function GetUseThreads: boolean;
       function GetZoom: integer;
+      function IsFontStored: Boolean;
       procedure SetActive(AValue: boolean);
       procedure SetCacheOnDisk(AValue: boolean);
       procedure SetCachePath({%H-}AValue: String);
@@ -83,6 +85,7 @@ Type
       procedure SetDefaultTrackWidth(AValue: Integer);
       procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
       procedure SetDrawingEngine(AValue: TMvCustomDrawingEngine);
+      procedure SetFont(AValue: TFont);
       procedure SetInactiveColor(AValue: TColor);
       procedure SetMapProvider(AValue: String);
       procedure SetOnCenterMove(AValue: TNotifyEvent);
@@ -90,6 +93,7 @@ Type
       procedure SetOnZoomChange(AValue: TNotifyEvent);
       procedure SetUseThreads(AValue: boolean);
       procedure SetZoom(AValue: integer);
+      procedure UpdateFont(Sender: TObject);
 
     protected
       AsyncInvalidate : boolean;
@@ -137,6 +141,7 @@ Type
       property DefaultTrackWidth: Integer read FDefaultTrackWidth write SetDefaultTrackWidth default 1;
       property DownloadEngine: TMvCustomDownloadEngine read GetDownloadEngine write SetDownloadEngine;
       property DrawingEngine: TMvCustomDrawingEngine read GetDrawingEngine write SetDrawingEngine;
+      property Font: TFont read FFont write SetFont stored IsFontStored;
       property Height default 150;
       property InactiveColor: TColor read FInactiveColor write SetInactiveColor;
       property MapProvider: String read GetMapProvider write SetMapProvider;
@@ -337,6 +342,12 @@ begin
   result := Engine.Zoom;
 end;
 
+function TMapView.IsFontStored: Boolean;
+begin
+  Result := SameText(FFont.Name, 'default') and (FFont.Size = 0) and
+    (FFont.Style = []) and (FFont.Color = clBlack);
+end;
+
 procedure TMapView.SetCacheOnDisk(AValue: boolean);
 begin
   Engine.CacheOnDisk := AValue;
@@ -388,7 +399,13 @@ begin
     FBuiltinDrawingEngine.CreateBuffer(0, 0);
     FDrawingEngine.CreateBuffer(ClientWidth, ClientHeight);
   end;
-  Engine.Redraw;
+  UpdateFont(nil);
+end;
+
+procedure TMapView.SetFont(AValue: TFont);
+begin
+  FFont.Assign(AValue);
+  UpdateFont(nil);
 end;
 
 procedure TMapView.SetInactiveColor(AValue: TColor);
@@ -789,45 +806,43 @@ end;
 
 constructor TMapView.Create(AOwner: TComponent);
 begin
-  Active := false;
-  FGPSItems := TGPSObjectList.Create;
-  FGPSItems.OnModified := @OnGPSItemsModified;
-  FInactiveColor := clWhite;
-  FEngine := TMapViewerEngine.Create(self);
-  FBuiltinDownloadEngine := TMvDEFpc.Create(self);
-  FBuiltinDownloadEngine.Name := 'BuiltInDLE';
-  FDefaultTrackColor := clRed;
-  FDefaultTrackWidth := 1;
-  (*
-  {$IFDEF USE_RGBGRAPHICS}
-  Buffer := TRGB32Bitmap.Create(Width, Height);
-  {$ENDIF}
-  {$IFDEF USE_LAZINTFIMAGE}
-  CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, Width, Height);
-  {$ENDIF}
-  *)
-  Engine.CachePath := 'cache/';
-  Engine.CacheOnDisk := true;
-  Engine.OnDrawTile := @DoDrawTile;
-  Engine.DrawTitleInGuiThread := false;
-  Engine.DownloadEngine := FBuiltinDownloadEngine;
   inherited Create(AOwner);
   Width := 150;
   Height := 150;
+
+  FActive := false;
+  FDefaultTrackColor := clRed;
+  FDefaultTrackWidth := 1;
+  FInactiveColor := clWhite;
+
+  FGPSItems := TGPSObjectList.Create;
+  FGPSItems.OnModified := @OnGPSItemsModified;
+
+  FBuiltinDownloadEngine := TMvDEFpc.Create(self);
+  FBuiltinDownloadEngine.Name := 'BuiltInDLE';
+
+  FEngine := TMapViewerEngine.Create(self);
+  FEngine.CachePath := 'cache/';
+  FEngine.CacheOnDisk := true;
+  FEngine.OnDrawTile := @DoDrawTile;
+  FEngine.DrawTitleInGuiThread := false;
+  FEngine.DownloadEngine := FBuiltinDownloadEngine;
+
   FBuiltinDrawingEngine := TIntfGraphicsDrawingEngine.Create(self);
   FBuiltinDrawingEngine.Name := 'BuiltInDE';
-  FbuiltinDrawingEngine.CreateBuffer(Width, Height);
+  FBuiltinDrawingEngine.CreateBuffer(Width, Height);
+
+  FFont := TFont.Create;
+  FFont.Name := 'default';
+  FFont.Size := 0;
+  FFont.Style := [];
+  FFont.Color := clBlack;
+  FFont.OnChange := @UpdateFont;
 end;
 
 destructor TMapView.Destroy;
 begin
-  FBuiltinDrawingEngine.Free;
-  {
-  {$IFDEF USE_LAZINTFIMAGE}
-  BufferCanvas.Free;
-  {$ENDIF}
-  Buffer.Free;
-  }
+  FFont.Free;
   FreeAndNil(FGPSItems);
   inherited Destroy;
 end;
@@ -938,6 +953,22 @@ begin
   {$ENDIF}
   *)
 end;
+
+procedure TMapView.UpdateFont(Sender: TObject);
+begin
+  if SameText(FFont.Name, 'default') then
+    DrawingEngine.FontName := Screen.SystemFont.Name
+  else
+    DrawingEngine.FontName := FFont.Name;
+  if FFont.Size = 0 then
+    DrawingEngine.FontSize := Screen.SystemFont.Size
+  else
+    DrawingEngine.FontSize := FFont.Size;
+  DrawingEngine.FontStyle := FFont.Style;
+  DrawingEngine.FontColor := ColorToRGB(FFont.Color);
+  Engine.Redraw;
+end;
+
 
 end.
 

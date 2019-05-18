@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons,
-  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine, mvDE_LCL;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine,
+  mvDE_LCL, mvDE_RGBGraphics;
 
 type
 
@@ -92,6 +93,7 @@ type
 
   private
     FLCLDrawingEngine: TLCLDrawingEngine;
+    FRGBGraphicsDrawingEngine: TRGBGraphicsDrawingEngine;
     procedure ClearFoundLocations;
     procedure UpdateCoords(X, Y: Integer);
     procedure UpdateDropdownWidth(ACombobox: TCombobox);
@@ -241,6 +243,11 @@ begin
     1: begin
          if FLCLDrawingEngine = nil then FLCLDrawingEngine := TLCLDrawingEngine.Create(self);
          MapView.DrawingEngine := FLCLDrawingEngine;
+       end;
+    2: begin
+         if FRGBGraphicsDrawingEngine = nil then
+           FRGBGraphicsDrawingEngine := TRGBGraphicsDrawingEngine.Create(self);
+         MapView.DrawingEngine := FRGBGraphicsDrawingEngine;
        end;
   end;
 end;
