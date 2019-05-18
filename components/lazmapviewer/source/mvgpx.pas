@@ -60,8 +60,6 @@ type
   PISOTimeRec = ^TISOTimeRec;
 const
   NUMBER: array['0'..'9'] of Integer = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-const
-  ZERO = ord('0');
 var
   yr,mon,dy, hr,mn,sec,s1000: Integer;
 begin
@@ -160,7 +158,6 @@ procedure TGpxReader.LoadFromStream(AStream: TStream; AList: TGpsObjectList;
   out ABounds: TRealArea);
 var
   doc: TXMLDocument = nil;
-  node: TDOMNode;
 begin
   try
     ID := random(MaxInt - 1000) + 1000;

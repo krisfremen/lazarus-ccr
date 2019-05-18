@@ -92,8 +92,8 @@ type
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
-    FLCLDrawingEngine: TLCLDrawingEngine;
-    FRGBGraphicsDrawingEngine: TRGBGraphicsDrawingEngine;
+    FLCLDrawingEngine: TMvLCLDrawingEngine;
+    FRGBGraphicsDrawingEngine: TMvRGBGraphicsDrawingEngine;
     procedure ClearFoundLocations;
     procedure UpdateCoords(X, Y: Integer);
     procedure UpdateDropdownWidth(ACombobox: TCombobox);
@@ -241,12 +241,12 @@ begin
   case CbDrawingEngine.ItemIndex of
     0: MapView.DrawingEngine := nil;
     1: begin
-         if FLCLDrawingEngine = nil then FLCLDrawingEngine := TLCLDrawingEngine.Create(self);
+         if FLCLDrawingEngine = nil then FLCLDrawingEngine := TMvLCLDrawingEngine.Create(self);
          MapView.DrawingEngine := FLCLDrawingEngine;
        end;
     2: begin
          if FRGBGraphicsDrawingEngine = nil then
-           FRGBGraphicsDrawingEngine := TRGBGraphicsDrawingEngine.Create(self);
+           FRGBGraphicsDrawingEngine := TMvRGBGraphicsDrawingEngine.Create(self);
          MapView.DrawingEngine := FRGBGraphicsDrawingEngine;
        end;
   end;

@@ -749,7 +749,6 @@ var
   stream: TFileStream;
   doc: TXMLDocument = nil;
   node, layerNode: TDOMNode;
-  attr: TDOMNamedNodeMap;
   providerName: String;
   url: String;
   minZoom: Integer;

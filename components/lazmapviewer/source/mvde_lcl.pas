@@ -9,7 +9,7 @@ uses
   mvDrawingEngine;
 
 type
-  TLCLDrawingEngine = class(TMvCustomDrawingEngine)
+  TMvLCLDrawingEngine = class(TMvCustomDrawingEngine)
     private
       FBuffer: TBitmap;
     protected
@@ -45,13 +45,16 @@ type
 
 implementation
 
-destructor TLCLDrawingEngine.Destroy;
+uses
+  LCLType;
+
+destructor TMvLCLDrawingEngine.Destroy;
 begin
   FBuffer.Free;
   inherited;
 end;
 
-procedure TLCLDrawingEngine.CreateBuffer(AWidth, AHeight: Integer);
+procedure TMvLCLDrawingEngine.CreateBuffer(AWidth, AHeight: Integer);
 begin
   FBuffer.Free;
   FBuffer := TBitmap.Create;
@@ -59,11 +62,11 @@ begin
   FBuffer.SetSize(AWidth, AHeight);
 end;
 
-procedure TLCLDrawingEngine.DrawLazIntfImage(X, Y: Integer;
+procedure TMvLCLDrawingEngine.DrawLazIntfImage(X, Y: Integer;
   AImg: TLazIntfImage);
 var
   bmp: TBitmap;
-  h, mh: THandle;
+  h, mh: HBITMAP;
 begin
   bmp := TBitmap.Create;
   try
@@ -78,72 +81,72 @@ begin
   end;
 end;
 
-procedure TLCLDrawingEngine.Ellipse(X1, Y1, X2, Y2: Integer);
+procedure TMvLCLDrawingEngine.Ellipse(X1, Y1, X2, Y2: Integer);
 begin
   FBuffer.Canvas.Ellipse(X1,Y1, X2, Y2);
 end;
 
-procedure TLCLDrawingEngine.FillRect(X1, Y1, X2, Y2: Integer);
+procedure TMvLCLDrawingEngine.FillRect(X1, Y1, X2, Y2: Integer);
 begin
   FBuffer.Canvas.FillRect(X1,Y1, X2, Y2);
 end;
 
-function TLCLDrawingEngine.GetBrushColor: TColor;
+function TMvLCLDrawingEngine.GetBrushColor: TColor;
 begin
   Result := FBuffer.Canvas.Brush.Color;
 end;
 
-function TLCLDrawingEngine.GetBrushStyle: TBrushStyle;
+function TMvLCLDrawingEngine.GetBrushStyle: TBrushStyle;
 begin
   Result := FBuffer.Canvas.Brush.Style
 end;
 
-function TLCLDrawingEngine.GetFontColor: TColor;
+function TMvLCLDrawingEngine.GetFontColor: TColor;
 begin
   Result := FBuffer.Canvas.Font.Color
 end;
 
-function TLCLDrawingEngine.GetFontName: String;
+function TMvLCLDrawingEngine.GetFontName: String;
 begin
   Result := FBuffer.Canvas.Font.Name;
 end;
 
-function TLCLDrawingEngine.GetFontSize: Integer;
+function TMvLCLDrawingEngine.GetFontSize: Integer;
 begin
   Result := FBuffer.Canvas.Font.Size;
 end;
 
-function TLCLDrawingEngine.GetFontStyle: TFontStyles;
+function TMvLCLDrawingEngine.GetFontStyle: TFontStyles;
 begin
   Result := FBuffer.Canvas.Font.Style;
 end;
 
-function TLCLDrawingEngine.GetPenColor: TColor;
+function TMvLCLDrawingEngine.GetPenColor: TColor;
 begin
   Result := FBuffer.Canvas.Pen.Color;
 end;
 
-function TLCLDrawingEngine.GetPenWidth: Integer;
+function TMvLCLDrawingEngine.GetPenWidth: Integer;
 begin
   Result := FBuffer.Canvas.Pen.Width;
 end;
 
-procedure TLCLDrawingEngine.Line(X1, Y1, X2, Y2: Integer);
+procedure TMvLCLDrawingEngine.Line(X1, Y1, X2, Y2: Integer);
 begin
   FBuffer.Canvas.Line(X1, Y1, X2, Y2);
 end;
 
-procedure TLCLDrawingEngine.PaintToCanvas(ACanvas: TCanvas);
+procedure TMvLCLDrawingEngine.PaintToCanvas(ACanvas: TCanvas);
 begin
   ACanvas.Draw(0, 0, FBuffer);
 end;
 
-procedure TLCLDrawingEngine.Rectangle(X1, Y1, X2, Y2: Integer);
+procedure TMvLCLDrawingEngine.Rectangle(X1, Y1, X2, Y2: Integer);
 begin
   FBuffer.Canvas.Rectangle(X1,Y1, X2, Y2);
 end;
 
-function TLCLDrawingEngine.SaveToImage(AClass: TRasterImageClass): TRasterImage;
+function TMvLCLDrawingEngine.SaveToImage(AClass: TRasterImageClass): TRasterImage;
 begin
   Result := AClass.Create;
   Result.Width := FBuffer.Width;
@@ -152,52 +155,52 @@ begin
   Result.Canvas.Draw(0, 0, FBuffer);
 end;
 
-procedure TLCLDrawingEngine.SetBrushColor(AValue: TColor);
+procedure TMvLCLDrawingEngine.SetBrushColor(AValue: TColor);
 begin
   FBuffer.Canvas.Brush.Color := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetBrushStyle(AValue: TBrushStyle);
+procedure TMvLCLDrawingEngine.SetBrushStyle(AValue: TBrushStyle);
 begin
   FBuffer.Canvas.Brush.Style := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetFontColor(AValue: TColor);
+procedure TMvLCLDrawingEngine.SetFontColor(AValue: TColor);
 begin
   FBuffer.Canvas.Font.Color := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetFontName(AValue: String);
+procedure TMvLCLDrawingEngine.SetFontName(AValue: String);
 begin
   FBuffer.Canvas.Font.Name := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetFontSize(AValue: Integer);
+procedure TMvLCLDrawingEngine.SetFontSize(AValue: Integer);
 begin
   FBuffer.Canvas.Font.Size := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetFontStyle(AValue: TFontStyles);
+procedure TMvLCLDrawingEngine.SetFontStyle(AValue: TFontStyles);
 begin
   FBuffer.Canvas.Font.Style := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetPenColor(AValue: TColor);
+procedure TMvLCLDrawingEngine.SetPenColor(AValue: TColor);
 begin
   FBuffer.Canvas.Pen.Color := AValue;
 end;
 
-procedure TLCLDrawingEngine.SetPenWidth(AValue: Integer);
+procedure TMvLCLDrawingEngine.SetPenWidth(AValue: Integer);
 begin
   FBuffer.Canvas.Pen.Width := AValue;
 end;
 
-function TLCLDrawingEngine.TextExtent(const AText: String): TSize;
+function TMvLCLDrawingEngine.TextExtent(const AText: String): TSize;
 begin
   Result := FBuffer.Canvas.TextExtent(AText)
 end;
 
-procedure TLCLDrawingEngine.TextOut(X, Y: Integer; const AText: String);
+procedure TMvLCLDrawingEngine.TextOut(X, Y: Integer; const AText: String);
 begin
   if (AText <> '') then
     FBuffer.Canvas.TextOut(X, Y, AText);

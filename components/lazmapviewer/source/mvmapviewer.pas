@@ -41,15 +41,6 @@ Type
       FEngine: TMapViewerEngine;
       FBuiltinDrawingEngine: TMvCustomDrawingEngine;
       FDrawingEngine: TMvCustomDrawingEngine;
-      (*
-     {$IFDEF USE_RGBGRAPHICS}
-      Buffer: TRGB32Bitmap;
-     {$ENDIF}
-     {$IFDEF USE_LAZINTFIMAGE}
-      Buffer: TLazIntfImage;
-      BufferCanvas: TFPCustomCanvas;
-     {$ENDIF}
-     *)
       FActive: boolean;
       FGPSItems: TGPSObjectList;
       FInactiveColor: TColor;
@@ -167,7 +158,7 @@ implementation
 uses
   GraphType, mvJobQueue, mvExtraData, mvDLEFpc, mvDE_IntfGraphics;
 
-Type
+type
 
   { TDrawObjJob }
 
@@ -496,47 +487,16 @@ begin
   inherited DoOnResize;
   //cancel all rendering threads
   Engine.CancelCurrentDrawing;
-  (*
-  FreeAndNil(Buffer);
-  {$IFDEF USE_RGBGRAPHICS}
-  Buffer := TRGB32Bitmap.Create(ClientWidth,ClientHeight);
-  {$ENDIF}
-  {$IFDEF USE_LAZINTFIMAGE}
-  BufferCanvas.Free;
-  CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, ClientWidth, ClientHeight);
-  {$ENDIF}
-  *)
   DrawingEngine.CreateBuffer(ClientWidth, ClientHeight);
   if IsActive then
     Engine.SetSize(ClientWidth, ClientHeight);
 end;
 
 procedure TMapView.Paint;
-var
-  bmp: TBitmap;
 begin
   inherited Paint;
   if IsActive then
     DrawingEngine.PaintToCanvas(Canvas)
-  (*
-  if IsActive and Assigned(Buffer) then
-  begin
-    {$IFDEF USE_RGBGRAPHICS}
-    Buffer.Canvas.DrawTo(Canvas,0,0);
-    {$ENDIF}
-    {$IFDEF USE_LAZINTFIMAGE}
-    bmp := TBitmap.Create;
-    try
-      bmp.PixelFormat := pf32Bit;
-      bmp.SetSize(Buffer.Width, Buffer.Height);
-      bmp.LoadFromIntfImage(Buffer);
-      Canvas.Draw(0, 0, bmp);
-    finally
-      bmp.Free;
-    end;
-    {$ENDIF}
-  end
-  *)
   else
   begin
     Canvas.Brush.Color := InactiveColor;
@@ -578,7 +538,7 @@ var
   trkColor: TColor;
   trkWidth: Integer;
 begin
-  if trk.Points.Count>0 then
+  if trk.Points.Count > 0 then
   begin
     trkColor := FDefaultTrackColor;
     trkWidth := FDefaultTrackWidth;
@@ -591,6 +551,8 @@ begin
     end;
     if trkWidth < 1 then trkWidth := 1;
     LastInside := false;
+    DrawingEngine.PenColor := trkColor;
+    DrawingEngine.PenWidth := trkWidth;
     for i:=0 to pred(trk.Points.Count) do
     begin
       aPt := trk.Points[i].RealPoint;
@@ -602,18 +564,6 @@ begin
         begin
           if not LastInside then
             Old := Engine.LonLatToScreen(trk.Points[pred(i)].RealPoint);
-          (*
-          {$IFDEF USE_RGBGRAPHICS}
-          Buffer.Canvas.OutlineColor := trkColor;
-          // --- no linewidth support in RGBGraphics ---
-          Buffer.Canvas.Line(Old.X, Old.y, New.X, New.Y);
-          {$ENDIF}
-          {$IFDEF USE_LAZINTFIMAGE}
-          BufferCanvas.Pen.FPColor := TColorToFPColor(trkColor);
-          BufferCanvas.Pen.Width := trkWidth;
-          BufferCanvas.Line(Old.X, Old.Y, New.X, New.Y);
-          {$ENDIF}
-          *)
           DrawingEngine.Line(Old.X, Old.Y, New.X, New.Y);
         end;
         Old := New;
@@ -630,14 +580,6 @@ var
 begin
   if Assigned(FOnDrawGpsPoint) then begin
     FOnDrawGpsPoint(Self, DrawingEngine, aPOI);
-    (*
-    {$IFDEF USE_RGBGRAPHICS}
-    FOnDrawGpsPoint(Self, Buffer, aPOI);
-    {$ENDIF}
-    {$IFDEF USE_LAZINTFIMAGE}
-    FOnDrawGpsPoint(Self, BufferCanvas, aPOI);
-    {$ENDIF}
-    *)
     exit;
   end;
 
@@ -648,18 +590,6 @@ begin
     if aPOI.ExtraData.inheritsFrom(TDrawingExtraData) then
       PtColor := TDrawingExtraData(aPOI.ExtraData).Color;
   end;
-  (*
-  {$IFDEF USE_RGBGRAPHICS}
-  Buffer.Canvas.OutlineColor := ptColor;
-  Buffer.Canvas.Line(Pt.X, Pt.y-5, Pt.X, Pt.Y+5);
-  Buffer.Canvas.Line(Pt.X-5, Pt.y, Pt.X+5, Pt.Y);
-  {$ENDIF}
-  {$IFDEF USE_LAZINTFIMAGE}
-  BufferCanvas.Pen.FPColor := TColorToFPColor(ptColor);
-  BufferCanvas.Line(Pt.X, Pt.Y-5, Pt.X, Pt.Y+5);
-  BufferCanvas.Line(Pt.X-5, Pt.Y, Pt.X+5, Pt.Y);
-  {$ENDIF}
-  *)
   DrawingEngine.PenColor := ptColor;
   DrawingEngine.Line(Pt.X, Pt.Y - 5, Pt.X, Pt.Y + 5);
   DrawingEngine.Line(Pt.X - 5, Pt.Y, Pt.X + 5, Pt.Y);
@@ -712,77 +642,19 @@ end;
 
 procedure TMapView.DoDrawTile(const TileId: TTileId; X, Y: integer;
   TileImg: TLazIntfImage);
-(*
-{$IFDEF USE_RGBGRAPHICS}
-var
-  temp: TRGB32Bitmap;
-  ri: TRawImage;
-  BuffLaz: TLazIntfImage;
-{$ENDIF}
-*)
 begin
-  {
-  if Assigned(Buffer) then
-  begin
-  }
-    if Assigned(TileImg) then
-    begin
-      (*
-     {$IFDEF USE_RGBGRAPHICS}
-      if (X >= 0) and (Y >= 0) then //http://mantis.freepascal.org/view.php?id=27144
-      begin
-        ri.Init;
-        ri.Description.Init_BPP32_R8G8B8A8_BIO_TTB(Buffer.Width,Buffer.Height);
-        ri.Data := Buffer.Pixels;
-        BuffLaz := TLazIntfImage.Create(ri, false);
-        try
-          BuffLaz.CopyPixels(TileImg, X, Y);
-          ri.Init;
-        finally
-          FreeandNil(BuffLaz);
-        end;
-      end
-      else
-      begin
-        //i think it take more memory then the previous method but work in all case
-        temp := TRGB32Bitmap.CreateFromLazIntfImage(TileImg);
-        try
-          Buffer.Draw(X, Y, temp);
-        finally
-          FreeAndNil(temp);
-        end;
-      end;
-     {$ENDIF}
-     {$IFDEF USE_LAZINTFIMAGE}
-      {$IF LCL_FULLVERSION < 1090000}
-      { Workaround for //http://mantis.freepascal.org/view.php?id=27144 }
-      CopyPixels(TileImg, Buffer, X, Y);
-      {$ELSE}
-      Buffer.CopyPixels(TileImg, X, Y);
-      {$IFEND}
-     {$ENDIF}
-     *)
-      DrawingEngine.DrawLazIntfImage(X, Y, TileImg);
-    end
-    else begin
-      DrawingEngine.BrushColor := clWhite;
-      DrawingEngine.BrushStyle := bsSolid;
-      DrawingEngine.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
-    (*
-    {$IFDEF USE_RGBGRAPHICS}
-      Buffer.Canvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
-    {$ENDIF}
-    {$IFDEF USE_LAZINTFIMAGE}
-    begin
-      BufferCanvas.Brush.FPColor := ColWhite;
-      BufferCanvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
-    end;
-    {$ENDIF}
-    *)
-    end;
-//  end;
+  if Assigned(TileImg) then begin
+    DrawingEngine.DrawLazIntfImage(X, Y, TileImg);
+  end
+  else begin
+    DrawingEngine.BrushColor := clWhite;
+    DrawingEngine.BrushStyle := bsSolid;
+    DrawingEngine.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
+  end;
+
   if FDebugTiles then
     DoDrawTileInfo(TileID, X, Y);
+
   DrawObjects(TileId, X, Y, X + TILE_SIZE, Y + TILE_SIZE);
 end;
 
@@ -828,7 +700,7 @@ begin
   FEngine.DrawTitleInGuiThread := false;
   FEngine.DownloadEngine := FBuiltinDownloadEngine;
 
-  FBuiltinDrawingEngine := TIntfGraphicsDrawingEngine.Create(self);
+  FBuiltinDrawingEngine := TMvIntfGraphicsDrawingEngine.Create(self);
   FBuiltinDrawingEngine.Name := 'BuiltInDE';
   FBuiltinDrawingEngine.CreateBuffer(Width, Height);
 
@@ -862,18 +734,6 @@ end;
 function TMapView.SaveToImage(AClass: TRasterImageClass): TRasterImage;
 begin
   Result := DrawingEngine.SaveToImage(AClass);
-  (*
-  Result := AClass.Create;
-  Result.Width := Width;
-  Result.Height := Height;
-  Result.Canvas.FillRect(0, 0, Width, Height);
-  {$IFDEF USE_RGBGRAPHICS}
-  Buffer.Canvas.DrawTo(Result.Canvas,0,0);
-  {$ENDIF}
-  {$IFDEF USE_LAZINTFIMAGE}
-  Result.LoadFromIntfImage(Buffer);
-  {$ENDIF}
-  *)
 end;
 
 procedure TMapView.SaveToStream(AClass: TRasterImageClass; AStream: TStream);
@@ -947,11 +807,6 @@ end;
 procedure TMapView.ClearBuffer;
 begin
   DrawingEngine.CreateBuffer(ClientWidth, ClientHeight);       // ???
-  (*
-  {$IFDEF USE_LAZINTFIMAGE}
-  CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, ClientWidth, ClientHeight);
-  {$ENDIF}
-  *)
 end;
 
 procedure TMapView.UpdateFont(Sender: TObject);

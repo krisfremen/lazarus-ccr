@@ -25,6 +25,7 @@ object MainForm: TMainForm
     DefaultTrackWidth = 3
     DownloadEngine = MapView.BuiltInDLE
     DrawingEngine = MapView.BuiltInDE
+    Font.Color = clBlack
     InactiveColor = clWhite
     MapProvider = 'OpenStreetMap Mapnik'
     UseThreads = True

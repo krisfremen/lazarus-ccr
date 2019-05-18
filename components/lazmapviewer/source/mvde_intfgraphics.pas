@@ -10,7 +10,7 @@ uses
   mvDrawingEngine;
 
 type
-  TIntfGraphicsDrawingEngine = class(TMvCustomDrawingEngine)
+  TMvIntfGraphicsDrawingEngine = class(TMvCustomDrawingEngine)
   private
     FBuffer: TLazIntfImage;
     FCanvas: TFPCustomCanvas;
@@ -112,21 +112,21 @@ end;
 {$IFEND}
 
 
-destructor TIntfGraphicsDrawingEngine.Destroy;
+destructor TMvIntfGraphicsDrawingEngine.Destroy;
 begin
   FCanvas.Free;
   FBuffer.Free;
   inherited;
 end;
 
-procedure TIntfGraphicsDrawingEngine.CreateBuffer(AWidth, AHeight: Integer);
+procedure TMvIntfGraphicsDrawingEngine.CreateBuffer(AWidth, AHeight: Integer);
 begin
   FCanvas.Free;
   FBuffer.Free;
   CreateLazIntfImageAndCanvas(FBuffer, FCanvas, AWidth, AHeight);
 end;
 
-procedure TIntfGraphicsDrawingEngine.CreateLazIntfImageAndCanvas(
+procedure TMvIntfGraphicsDrawingEngine.CreateLazIntfImageAndCanvas(
   out ABuffer: TLazIntfImage;
   out ACanvas: TFPCustomCanvas; AWidth, AHeight: Integer);
 var
@@ -145,7 +145,7 @@ begin
   ACanvas.FillRect(0, 0, AWidth, AHeight);
 end;
 
-procedure TIntfGraphicsDrawingEngine.DrawLazIntfImage(X, Y: Integer;
+procedure TMvIntfGraphicsDrawingEngine.DrawLazIntfImage(X, Y: Integer;
   AImg: TLazIntfImage);
 begin
   {$IF Laz_FullVersion < 1090000}
@@ -156,19 +156,19 @@ begin
   {$IFEND}
 end;
 
-procedure TIntfGraphicsDrawingEngine.Ellipse(X1, Y1, X2, Y2: Integer);
+procedure TMvIntfGraphicsDrawingEngine.Ellipse(X1, Y1, X2, Y2: Integer);
 begin
   if FCanvas <> nil then
     FCanvas.Ellipse(X1,Y1, X2, Y2);
 end;
 
-procedure TIntfGraphicsDrawingEngine.FillRect(X1, Y1, X2, Y2: Integer);
+procedure TMvIntfGraphicsDrawingEngine.FillRect(X1, Y1, X2, Y2: Integer);
 begin
   if FCanvas <> nil then
     FCanvas.FillRect(X1,Y1, X2, Y2);
 end;
 
-function TIntfGraphicsDrawingEngine.GetBrushColor: TColor;
+function TMvIntfGraphicsDrawingEngine.GetBrushColor: TColor;
 begin
   if FCanvas <> nil then
     Result := FPColorToTColor(FCanvas.Brush.FPColor)
@@ -176,7 +176,7 @@ begin
     Result := 0;
 end;
 
-function TIntfGraphicsDrawingEngine.GetBrushStyle: TBrushStyle;
+function TMvIntfGraphicsDrawingEngine.GetBrushStyle: TBrushStyle;
 begin
   if FCanvas <> nil then
     Result := FCanvas.Brush.Style
@@ -184,27 +184,27 @@ begin
     Result := bsSolid;
 end;
 
-function TIntfGraphicsDrawingEngine.GetFontColor: TColor;
+function TMvIntfGraphicsDrawingEngine.GetFontColor: TColor;
 begin
   Result := FFontColor
 end;
 
-function TIntfGraphicsDrawingEngine.GetFontName: String;
+function TMvIntfGraphicsDrawingEngine.GetFontName: String;
 begin
   Result := FFontName;
 end;
 
-function TIntfGraphicsDrawingEngine.GetFontSize: Integer;
+function TMvIntfGraphicsDrawingEngine.GetFontSize: Integer;
 begin
   Result := FFontSize;
 end;
 
-function TIntfGraphicsDrawingEngine.GetFontStyle: TFontStyles;
+function TMvIntfGraphicsDrawingEngine.GetFontStyle: TFontStyles;
 begin
   Result := FFontStyle;
 end;
 
-function TIntfGraphicsDrawingEngine.GetPenColor: TColor;
+function TMvIntfGraphicsDrawingEngine.GetPenColor: TColor;
 begin
   if FCanvas <> nil then
     Result := FPColorToTColor(FCanvas.Pen.FPColor)
@@ -212,7 +212,7 @@ begin
     Result := 0;
 end;
 
-function TIntfGraphicsDrawingEngine.GetPenWidth: Integer;
+function TMvIntfGraphicsDrawingEngine.GetPenWidth: Integer;
 begin
   if FCanvas <> nil then
     Result := FCanvas.Pen.Width
@@ -220,13 +220,13 @@ begin
     Result := 0;
 end;
 
-procedure TIntfGraphicsDrawingEngine.Line(X1, Y1, X2, Y2: Integer);
+procedure TMvIntfGraphicsDrawingEngine.Line(X1, Y1, X2, Y2: Integer);
 begin
   if FCanvas <> nil then
     FCanvas.Line(X1, Y1, X2, Y2);
 end;
 
-procedure TIntfGraphicsDrawingEngine.PaintToCanvas(ACanvas: TCanvas);
+procedure TMvIntfGraphicsDrawingEngine.PaintToCanvas(ACanvas: TCanvas);
 var
   bmp: TBitmap;
 begin
@@ -243,13 +243,13 @@ begin
   end;
 end;
 
-procedure TIntfGraphicsDrawingEngine.Rectangle(X1, Y1, X2, Y2: Integer);
+procedure TMvIntfGraphicsDrawingEngine.Rectangle(X1, Y1, X2, Y2: Integer);
 begin
   if FCanvas <> nil then
     FCanvas.Rectangle(X1,Y1, X2, Y2);
 end;
 
-function TIntfGraphicsDrawingEngine.SaveToImage(AClass: TRasterImageClass): TRasterImage;
+function TMvIntfGraphicsDrawingEngine.SaveToImage(AClass: TRasterImageClass): TRasterImage;
 begin
   Result := AClass.Create;
   Result.Width := FBuffer.Width;
@@ -258,51 +258,51 @@ begin
   Result.LoadFromIntfImage(FBuffer);
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetBrushColor(AValue: TColor);
+procedure TMvIntfGraphicsDrawingEngine.SetBrushColor(AValue: TColor);
 begin
   if FCanvas <> nil then
     FCanvas.Brush.FPColor := TColorToFPColor(AValue);
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetBrushStyle(AValue: TBrushStyle);
+procedure TMvIntfGraphicsDrawingEngine.SetBrushStyle(AValue: TBrushStyle);
 begin
   if FCanvas <> nil then
     FCanvas.Brush.Style := AValue;
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetFontColor(AValue: TColor);
+procedure TMvIntfGraphicsDrawingEngine.SetFontColor(AValue: TColor);
 begin
   FFontColor := AValue;
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetFontName(AValue: String);
+procedure TMvIntfGraphicsDrawingEngine.SetFontName(AValue: String);
 begin
   FFontName := AValue;
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetFontSize(AValue: Integer);
+procedure TMvIntfGraphicsDrawingEngine.SetFontSize(AValue: Integer);
 begin
   FFontSize := AValue;
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetFontStyle(AValue: TFontStyles);
+procedure TMvIntfGraphicsDrawingEngine.SetFontStyle(AValue: TFontStyles);
 begin
   FFontStyle := AValue;
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetPenColor(AValue: TColor);
+procedure TMvIntfGraphicsDrawingEngine.SetPenColor(AValue: TColor);
 begin
   if FCanvas <> nil then
     FCanvas.Pen.FPColor := TColorToFPColor(AValue);
 end;
 
-procedure TIntfGraphicsDrawingEngine.SetPenWidth(AValue: Integer);
+procedure TMvIntfGraphicsDrawingEngine.SetPenWidth(AValue: Integer);
 begin
   if FCanvas <> nil then
     FCanvas.Pen.Width := AValue;
 end;
 
-function TIntfGraphicsDrawingEngine.TextExtent(const AText: String): TSize;
+function TMvIntfGraphicsDrawingEngine.TextExtent(const AText: String): TSize;
 var
   bmp: TBitmap;
 begin
@@ -318,7 +318,7 @@ begin
   end;
 end;
 
-procedure TIntfGraphicsDrawingEngine.TextOut(X, Y: Integer; const AText: String);
+procedure TMvIntfGraphicsDrawingEngine.TextOut(X, Y: Integer; const AText: String);
 var
   bmp: TBitmap;
   ex: TSize;
