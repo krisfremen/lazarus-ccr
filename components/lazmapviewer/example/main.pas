@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons,
-  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine, mvDE_LCL;
 
 type
 
@@ -27,15 +27,19 @@ type
     CbMouseCoords: TGroupBox;
     CbDistanceUnits: TComboBox;
     CbDebugTiles: TCheckBox;
+    CbDrawingEngine: TComboBox;
     GbCenterCoords: TGroupBox;
     GbScreenSize: TGroupBox;
+    GbSearch: TGroupBox;
+    GbGPS: TGroupBox;
     InfoCenterLatitude: TLabel;
     InfoViewportHeight: TLabel;
     InfoCenterLongitude: TLabel;
     InfoBtnGPSPoints: TLabel;
     GPSPointInfo: TLabel;
     InfoViewportWidth: TLabel;
-    Label8: TLabel;
+    Label1: TLabel;
+    LblSelectLocation: TLabel;
     LblCenterLatitude: TLabel;
     LblViewportHeight: TLabel;
     LblViewportWidth: TLabel;
@@ -48,10 +52,12 @@ type
     LblZoom: TLabel;
     MapView: TMapView;
     GeoNames: TMVGeoNames;
-    ControlPanel: TPanel;
     BtnLoadMapProviders: TSpeedButton;
     BtnSaveMapProviders: TSpeedButton;
     OpenDialog: TOpenDialog;
+    PageControl: TPageControl;
+    PgData: TTabSheet;
+    PgConfig: TTabSheet;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnLoadGPXFileClick(Sender: TObject);
@@ -59,6 +65,7 @@ type
     procedure BtnGPSPointsClick(Sender: TObject);
     procedure BtnSaveToFileClick(Sender: TObject);
     procedure CbDebugTilesChange(Sender: TObject);
+    procedure CbDrawingEngineChange(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -84,6 +91,7 @@ type
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
+    FLCLDrawingEngine: TLCLDrawingEngine;
     procedure ClearFoundLocations;
     procedure UpdateCoords(X, Y: Integer);
     procedure UpdateDropdownWidth(ACombobox: TCombobox);
@@ -105,7 +113,7 @@ implementation
 
 uses
   LCLType, IniFiles, Math, FPCanvas, FPImage, IntfGraphics,
-  mvEngine, mvExtraData, mvGPX,
+  mvEngine, mvGPX,
   globals, gpslistform;
 
 type
@@ -226,6 +234,17 @@ begin
   MapView.DebugTiles := CbDebugTiles.Checked;
 end;
 
+procedure TMainForm.CbDrawingEngineChange(Sender: TObject);
+begin
+  case CbDrawingEngine.ItemIndex of
+    0: MapView.DrawingEngine := nil;
+    1: begin
+         if FLCLDrawingEngine = nil then FLCLDrawingEngine := TLCLDrawingEngine.Create(self);
+         MapView.DrawingEngine := FLCLDrawingEngine;
+       end;
+  end;
+end;
+
 procedure TMainForm.CbDoubleBufferChange(Sender: TObject);
 begin
   MapView.DoubleBuffered := CbDoubleBuffer.Checked;
@@ -296,9 +315,16 @@ begin
   CbProviders.ItemIndex := CbProviders.Items.Indexof(MapView.MapProvider);
   MapView.DoubleBuffered := true;
   MapView.Zoom := 1;
-  ControlPanel.Caption := '';
   CbUseThreads.Checked := MapView.UseThreads;
   CbDoubleBuffer.Checked := MapView.DoubleBuffered;
+
+  InfoPositionLongitude.Caption := '';
+  InfoPositionLatitude.Caption := '';
+  InfoCenterLongitude.Caption := '';
+  InfoCenterLatitude.Caption := '';
+  InfoViewportWidth.Caption := '';
+  InfoViewportHeight.Caption := '';
+  GPSPointInfo.caption := '';
 
   ReadFromIni;
 end;
@@ -343,6 +369,7 @@ begin
 
   // Draw the GPS point as a circle
   ADrawer.BrushColor := clRed;
+  ADrawer.BrushStyle := bsSolid;
   ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
 
   // Draw the caption of the GPS point

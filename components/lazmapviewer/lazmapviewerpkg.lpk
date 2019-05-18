@@ -14,7 +14,7 @@
     <Description Value="Component for viewing maps (Google, OpenStreetMap, etc). 
 This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/ci/master/tree/mapviewer/) which itself is based on the MapViewer by Maciej Kaczkowski (https://github.com/maciejkaczkowski/mapviewer)."/>
     <License Value="GPL2 or later"/>
-    <Files Count="17">
+    <Files Count="18">
       <Item1>
         <Filename Value="source/mvcache.pas"/>
         <UnitName Value="mvCache"/>
@@ -74,16 +74,20 @@ This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/c
       </Item14>
       <Item15>
         <Filename Value="source/mvgpx.pas"/>
-        <UnitName Value="mvgpx"/>
+        <UnitName Value="mvGPX"/>
       </Item15>
       <Item16>
         <Filename Value="source/mvdrawingengine.pas"/>
-        <UnitName Value="mvdrawingengine"/>
+        <UnitName Value="mvDrawingEngine"/>
       </Item16>
       <Item17>
-        <Filename Value="source/mvdeintfgraphics.pas"/>
-        <UnitName Value="mvdeintfgraphics"/>
+        <Filename Value="source/mvde_intfgraphics.pas"/>
+        <UnitName Value="mvde_intfgraphics"/>
       </Item17>
+      <Item18>
+        <Filename Value="source/mvde_lcl.pas"/>
+        <UnitName Value="mvde_lcl"/>
+      </Item18>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>

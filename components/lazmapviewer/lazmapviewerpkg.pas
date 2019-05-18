@@ -10,8 +10,8 @@ interface
 uses
   mvCache, mvDownloadEngine, mvDragObj, mvEngine, mvGeoNames, mvGpsObj, 
   mvJobQueue, mvJobs, mvMapProvider, mvTypes, mvMapViewer, mvExtraData, 
-  mvDLEFpc, mvMapViewerReg, mvGPX, mvDrawingEngine, mvDEIntfGraphics, 
-  LazarusPackageIntf;
+  mvDLEFpc, mvMapViewerReg, mvGPX, mvDrawingEngine, mvDE_IntfGraphics, 
+  mvDE_LCL, LazarusPackageIntf;
 
 implementation
 

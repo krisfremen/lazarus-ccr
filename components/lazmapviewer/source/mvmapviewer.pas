@@ -20,21 +20,11 @@
 unit mvMapViewer;
 
 {$MODE objfpc}{$H+}
-(*
-// Activate one of the following defines
-{$DEFINE USE_LAZINTFIMAGE}
-{.$DEFINE USE_RGBGRAPHICS}    // NOTE: This needs package "rgb_graphics" in requirements
 
-// Make sure that one of the USE_XXXX defines is active. Default is USE_LAZINTFIMAGE
-{$IFNDEF USE_RGBGRAPHICS}{$IFNDEF USE_LAZINTFIMAGE}{$DEFINE USE_LAZINTFIMAGES}{$ENDIF}{$ENDIF}
-{$IFDEF USE_RGBGRAPHICS}{$IFDEF USE_LAZINTFIMAGE}{$UNDEF USE_RGBGRAPHICS}{$ENDIF}{$ENDIF}
-  *)
 interface
 
 uses
   Classes, SysUtils, Controls, Graphics, IntfGraphics,
-//  {$IFDEF USE_RGBGRAPHICS}RGBGraphics,{$ENDIF}
-//  {$IFDEF USE_LAZINTFIMAGE}FPCanvas,{$ENDIF}
   MvTypes, MvGPSObj, MvEngine, MvMapProvider, MvDownloadEngine, MvDrawingEngine;
 
 Type
@@ -104,12 +94,6 @@ Type
     protected
       AsyncInvalidate : boolean;
       procedure ActivateEngine;
-      (*
-     {$IFDEF USE_LAZINTFIMAGE}
-      procedure CreateLazIntfImageAndCanvas(out ABuffer: TLazIntfImage;
-        out ACanvas: TFPCustomCanvas; AWidth, AHeight: Integer);
-     {$ENDIF}
-     *)
       procedure DblClick; override;
       procedure DoDrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
       procedure DoDrawTileInfo(const TileID: TTileID; X,Y: Integer);
@@ -176,65 +160,7 @@ Type
 implementation
 
 uses
-  {$IFDEF USE_LAZINTFIMAGE}
-  Math, FPImgCanv, FPImage, LCLVersion,
-  {$ENDIF}
-  GraphType, mvJobQueue, mvExtraData, mvDLEFpc, mvDEIntfGraphics;
-
-                          (*
-{$IFDEF USE_LAZINTFIMAGE}
-// Workaround for http://mantis.freepascal.org/view.php?id=27144
-procedure CopyPixels(ASource, ADest: TLazIntfImage;
-  XDst: Integer = 0; YDst: Integer = 0;
-  AlphaMask: Boolean = False; AlphaTreshold: Word = 0);
-var
-  SrcHasMask, DstHasMask: Boolean;
-  x, y, xStart, yStart, xStop, yStop: Integer;
-  c: TFPColor;
-  SrcRawImage, DestRawImage: TRawImage;
-begin
-  ASource.GetRawImage(SrcRawImage);
-  ADest.GetRawImage(DestRawImage);
-
-  if DestRawImage.Description.IsEqual(SrcRawImage.Description) and (XDst =  0) and (YDst = 0) then
-  begin
-    // same description -> copy
-    if DestRawImage.Data <> nil then
-      System.Move(SrcRawImage.Data^, DestRawImage.Data^, DestRawImage.DataSize);
-    if DestRawImage.Mask <> nil then
-      System.Move(SrcRawImage.Mask^, DestRawImage.Mask^, DestRawImage.MaskSize);
-    Exit;
-  end;
-
-  // copy pixels
-  XStart := IfThen(XDst < 0, -XDst, 0);
-  YStart := IfThen(YDst < 0, -YDst, 0);
-  XStop := IfThen(ADest.Width - XDst < ASource.Width, ADest.Width - XDst, ASource.Width) - 1;
-  YStop := IfTHen(ADest.Height - YDst < ASource.Height, ADest.Height - YDst, ASource.Height) - 1;
-
-  SrcHasMask := SrcRawImage.Description.MaskBitsPerPixel > 0;
-  DstHasMask := DestRawImage.Description.MaskBitsPerPixel > 0;
-
-  if DstHasMask then begin
-    for y:= yStart to yStop do
-      for x:=xStart to xStop do
-        ADest.Masked[x+XDst,y+YDst] := SrcHasMask and ASource.Masked[x,y];
-  end;
-
-  for y:=yStart to yStop do
-    for x:=xStart to xStop do
-    begin
-      c := ASource.Colors[x,y];
-      if not DstHasMask and SrcHasMask and (c.alpha = $FFFF) then // copy mask to alpha channel
-        if ASource.Masked[x,y] then
-          c.alpha := 0;
-
-      ADest.Colors[x+XDst,y+YDst] := c;
-      if AlphaMask and (c.alpha < AlphaTreshold) then
-        ADest.Masked[x+XDst,y+YDst] := True;
-    end;
-end;
-{$ENDIF}     *)
+  GraphType, mvJobQueue, mvExtraData, mvDLEFpc, mvDE_IntfGraphics;
 
 Type
 
@@ -462,6 +388,7 @@ begin
     FBuiltinDrawingEngine.CreateBuffer(0, 0);
     FDrawingEngine.CreateBuffer(ClientWidth, ClientHeight);
   end;
+  Engine.Redraw;
 end;
 
 procedure TMapView.SetInactiveColor(AValue: TColor);
@@ -822,6 +749,7 @@ begin
     end
     else begin
       DrawingEngine.BrushColor := clWhite;
+      DrawingEngine.BrushStyle := bsSolid;
       DrawingEngine.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
     (*
     {$IFDEF USE_RGBGRAPHICS}
@@ -849,28 +777,6 @@ begin
   DrawingEngine.Line(X, Y, X + TILE_SIZE, Y);
   DrawingEngine.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
   DrawingEngine.Line(X, Y + TILE_SIZE, X + TILE_SIZE, Y + TILE_SIZE);
-  (*
-  {$IFDEF USE_LCL}
-  Buffer.Canvas.Pen.Color := clGray;
-  Buffer.Canvas.Pen.Style := psSolid;
-  Buffer.Canvas.Line(X, Y, X, Y + TILE_SIZE);
-  Buffer.Canvas.Line(X, Y, X + TILE_SIZE, Y);
-  Buffer.Canvas.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
-  Buffer.Canvas.Line(X + TILE_SIZE, Y + TILE_SIZE, X, Y + TILE_SIZE);
-  {$ENDIF}
-
-  {$IFDEF USE_RGBGRAPHICS}
-  {$ENDIF}
-
-  {$IFDEF USE_LAZINTFIMAGE}
-  BufferCanvas.Pen.FPColor := colGray;
-  BufferCanvas.Pen.Style := psSolid;
-  BufferCanvas.Line(X, Y, X, Y + TILE_SIZE);
-  BufferCanvas.Line(X, Y, X + TILE_SIZE, Y);
-  BufferCanvas.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
-  BufferCanvas.Line(X, Y + TILE_SIZE, X + TILE_SIZE, Y + TILE_SIZE);
-  {$ENDIF}
-  *)
 end;
 
 function TMapView.IsActive: Boolean;
@@ -889,7 +795,7 @@ begin
   FInactiveColor := clWhite;
   FEngine := TMapViewerEngine.Create(self);
   FBuiltinDownloadEngine := TMvDEFpc.Create(self);
-  FBuiltinDownLoadEngine.Name := 'BuiltIn';
+  FBuiltinDownloadEngine.Name := 'BuiltInDLE';
   FDefaultTrackColor := clRed;
   FDefaultTrackWidth := 1;
   (*
@@ -909,6 +815,7 @@ begin
   Width := 150;
   Height := 150;
   FBuiltinDrawingEngine := TIntfGraphicsDrawingEngine.Create(self);
+  FBuiltinDrawingEngine.Name := 'BuiltInDE';
   FbuiltinDrawingEngine.CreateBuffer(Width, Height);
 end;
 
@@ -924,26 +831,6 @@ begin
   FreeAndNil(FGPSItems);
   inherited Destroy;
 end;
-                             (*
-{$IFDEF USE_LAZINTFIMAGE}
-procedure TMapView.CreateLazIntfImageAndCanvas(out ABuffer: TLazIntfImage;
-  out ACanvas: TFPCustomCanvas; AWidth, AHeight: Integer);
-var
-  rawImg: TRawImage;
-begin
-  rawImg.Init;
-  {$IFDEF DARWIN}
-  rawImg.Description.Init_BPP32_A8R8G8B8_BIO_TTB(AWidth, AHeight);
-  {$ELSE}
-  rawImg.Description.Init_BPP32_B8G8R8_BIO_TTB(AWidth, AHeight);
-  {$ENDIF}
-  rawImg.CreateData(True);
-  ABuffer := TLazIntfImage.Create(rawImg, true);
-  ACanvas := TFPImageCanvas.Create(ABuffer);
-  ACanvas.Brush.FPColor := colWhite;
-  ACanvas.FillRect(0, 0, AWidth, AHeight);
-end;
-{$ENDIF}                       *)
 
 procedure TMapView.SaveToFile(AClass: TRasterImageClass; const AFileName: String);
 var
