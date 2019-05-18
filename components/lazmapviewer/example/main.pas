@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons,
-  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine;
 
 type
 
@@ -71,7 +71,9 @@ type
     procedure GeoNamesNameFound(const AName: string; const ADescr: String;
       const ALoc: TRealPoint);
     procedure MapViewChange(Sender: TObject);
-    procedure MapViewDrawGpsPoint(Sender, ACanvas: TObject; APoint: TGpsPoint);
+    procedure MapViewDrawGpsPoint(Sender: TObject;
+      ADrawer: TMvCustomDrawingEngine; APoint: TGpsPoint);
+//    procedure MapViewDrawGpsPoint(Sender, ACanvas: TObject; APoint: TGpsPoint);
     procedure MapViewMouseLeave(Sender: TObject);
     procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure MapViewMouseUp(Sender: TObject; Button: TMouseButton;
@@ -328,48 +330,26 @@ begin
   UpdateViewportSize;
 end;
 
-procedure TMainForm.MapViewDrawGpsPoint(Sender, ACanvas: TObject;
-  APoint: TGpsPoint);
+procedure TMainForm.MapViewDrawGpsPoint(Sender: TObject;
+  ADrawer: TMvCustomDrawingEngine; APoint: TGpsPoint);
 const
   R = 5;
 var
   P: TPoint;
-  cnv: TFPCustomCanvas;
-  txt: String;
-  w, h: Integer;
-  bmp: TBitmap;
-  img: TLazIntfImage;
+  ext: TSize;
 begin
-  if not (ACanvas is TFPCustomCanvas) then
-    exit;
-
   // Screen coordinates of the GPS point
   P := TMapView(Sender).LonLatToScreen(APoint.RealPoint);
 
   // Draw the GPS point as a circle
-  cnv := TFPCustomCanvas(ACanvas);
-  cnv.Brush.FPColor := colRed;
-  cnv.Ellipse(P.X-R, P.Y-R, P.X+R, P.Y+R);
+  ADrawer.BrushColor := clRed;
+  ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
 
-  // Draw the "name" of the GPS point. Note: FPCustomCanvas, by default,
-  // does not support text output. Therefore we paint to a bitmap first and
-  // render this on the FPCustomCanvas.
-  txt := APoint.Name;
-  bmp := TBitmap.Create;
-  try
-//    bmp.PixelFormat := pf32Bit;    // crashes Linux!
-    w := bmp.Canvas.TextWidth(txt);
-    h := bmp.Canvas.TextHeight(txt);
-    bmp.SetSize(w, h);
-    bmp.Canvas.Brush.Color := clWhite;
-    bmp.Canvas.FillRect(0, 0, w, h);
-    bmp.Canvas.TextOut(0, 0, txt);
-    img := bmp.CreateIntfImage;
-    cnv.Draw(P.X - w div 2, P.Y - h - 2*R, img);
-    img.Free;
-  finally
-    bmp.Free;
-  end;
+  // Draw the caption of the GPS point
+  ext := ADrawer.TextExtent(APoint.Name);
+  ADrawer.BrushColor := clWhite;
+  ADrawer.BrushStyle := bsClear;
+  ADrawer.TextOut(P.X - ext.CX div 2, P.Y - ext.CY - R - 5, APoint.Name);
 end;
 
 procedure TMainForm.MapViewMouseLeave(Sender: TObject);

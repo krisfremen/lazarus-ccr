@@ -20,7 +20,7 @@
 unit mvMapViewer;
 
 {$MODE objfpc}{$H+}
-
+(*
 // Activate one of the following defines
 {$DEFINE USE_LAZINTFIMAGE}
 {.$DEFINE USE_RGBGRAPHICS}    // NOTE: This needs package "rgb_graphics" in requirements
@@ -28,18 +28,19 @@ unit mvMapViewer;
 // Make sure that one of the USE_XXXX defines is active. Default is USE_LAZINTFIMAGE
 {$IFNDEF USE_RGBGRAPHICS}{$IFNDEF USE_LAZINTFIMAGE}{$DEFINE USE_LAZINTFIMAGES}{$ENDIF}{$ENDIF}
 {$IFDEF USE_RGBGRAPHICS}{$IFDEF USE_LAZINTFIMAGE}{$UNDEF USE_RGBGRAPHICS}{$ENDIF}{$ENDIF}
-
+  *)
 interface
 
 uses
   Classes, SysUtils, Controls, Graphics, IntfGraphics,
-  {$IFDEF USE_RGBGRAPHICS}RGBGraphics,{$ENDIF}
-  {$IFDEF USE_LAZINTFIMAGE}FPCanvas,{$ENDIF}
-  MvTypes, MvGPSObj, MvEngine, MvMapProvider, MvDownloadEngine;
+//  {$IFDEF USE_RGBGRAPHICS}RGBGraphics,{$ENDIF}
+//  {$IFDEF USE_LAZINTFIMAGE}FPCanvas,{$ENDIF}
+  MvTypes, MvGPSObj, MvEngine, MvMapProvider, MvDownloadEngine, MvDrawingEngine;
 
 Type
 
-  TDrawGpsPointEvent = procedure (Sender, ACanvas: TObject; APoint: TGpsPoint) of object;
+  TDrawGpsPointEvent = procedure (Sender: TObject;
+    ADrawer: TMvCustomDrawingEngine; APoint: TGpsPoint) of object;
 
   { TMapView }
 
@@ -48,6 +49,9 @@ Type
       FDownloadEngine: TMvCustomDownloadEngine;
       FBuiltinDownloadEngine: TMvCustomDownloadEngine;
       FEngine: TMapViewerEngine;
+      FBuiltinDrawingEngine: TMvCustomDrawingEngine;
+      FDrawingEngine: TMvCustomDrawingEngine;
+      (*
      {$IFDEF USE_RGBGRAPHICS}
       Buffer: TRGB32Bitmap;
      {$ENDIF}
@@ -55,6 +59,7 @@ Type
       Buffer: TLazIntfImage;
       BufferCanvas: TFPCustomCanvas;
      {$ENDIF}
+     *)
       FActive: boolean;
       FGPSItems: TGPSObjectList;
       FInactiveColor: TColor;
@@ -72,6 +77,7 @@ Type
       function GetCachePath: String;
       function GetCenter: TRealPoint;
       function GetDownloadEngine: TMvCustomDownloadEngine;
+      function GetDrawingEngine: TMvCustoMDrawingEngine;
       function GetMapProvider: String;
       function GetOnCenterMove: TNotifyEvent;
       function GetOnChange: TNotifyEvent;
@@ -86,6 +92,7 @@ Type
       procedure SetDefaultTrackColor(AValue: TColor);
       procedure SetDefaultTrackWidth(AValue: Integer);
       procedure SetDownloadEngine(AValue: TMvCustomDownloadEngine);
+      procedure SetDrawingEngine(AValue: TMvCustomDrawingEngine);
       procedure SetInactiveColor(AValue: TColor);
       procedure SetMapProvider(AValue: String);
       procedure SetOnCenterMove(AValue: TNotifyEvent);
@@ -97,10 +104,12 @@ Type
     protected
       AsyncInvalidate : boolean;
       procedure ActivateEngine;
+      (*
      {$IFDEF USE_LAZINTFIMAGE}
       procedure CreateLazIntfImageAndCanvas(out ABuffer: TLazIntfImage;
         out ACanvas: TFPCustomCanvas; AWidth, AHeight: Integer);
      {$ENDIF}
+     *)
       procedure DblClick; override;
       procedure DoDrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
       procedure DoDrawTileInfo(const TileID: TTileID; X,Y: Integer);
@@ -143,6 +152,7 @@ Type
       property DefaultTrackColor: TColor read FDefaultTrackColor write SetDefaultTrackColor default clRed;
       property DefaultTrackWidth: Integer read FDefaultTrackWidth write SetDefaultTrackWidth default 1;
       property DownloadEngine: TMvCustomDownloadEngine read GetDownloadEngine write SetDownloadEngine;
+      property DrawingEngine: TMvCustomDrawingEngine read GetDrawingEngine write SetDrawingEngine;
       property Height default 150;
       property InactiveColor: TColor read FInactiveColor write SetInactiveColor;
       property MapProvider: String read GetMapProvider write SetMapProvider;
@@ -169,9 +179,9 @@ uses
   {$IFDEF USE_LAZINTFIMAGE}
   Math, FPImgCanv, FPImage, LCLVersion,
   {$ENDIF}
-  GraphType, mvJobQueue, mvExtraData, mvDLEFpc;
+  GraphType, mvJobQueue, mvExtraData, mvDLEFpc, mvDEIntfGraphics;
 
-
+                          (*
 {$IFDEF USE_LAZINTFIMAGE}
 // Workaround for http://mantis.freepascal.org/view.php?id=27144
 procedure CopyPixels(ASource, ADest: TLazIntfImage;
@@ -224,7 +234,7 @@ begin
         ADest.Masked[x+XDst,y+YDst] := True;
     end;
 end;
-{$ENDIF}
+{$ENDIF}     *)
 
 Type
 
@@ -363,6 +373,14 @@ begin
     Result := FDownloadEngine;
 end;
 
+function TMapView.GetDrawingEngine: TMvCustomDrawingEngine;
+begin
+  if FDrawingEngine = nil then
+    Result := FBuiltinDrawingEngine
+  else
+    Result := FDrawingEngine;
+end;
+
 function TMapView.GetMapProvider: String;
 begin
   result := Engine.MapProvider;
@@ -433,6 +451,17 @@ procedure TMapView.SetDownloadEngine(AValue: TMvCustomDownloadEngine);
 begin
   FDownloadEngine := AValue;
   FEngine.DownloadEngine := GetDownloadEngine;
+end;
+
+procedure TMapView.SetDrawingEngine(AValue: TMvCustomDrawingEngine);
+begin
+  FDrawingEngine := AValue;
+  if AValue = nil then
+    FBuiltinDrawingEngine.CreateBuffer(ClientWidth, ClientHeight)
+  else begin
+    FBuiltinDrawingEngine.CreateBuffer(0, 0);
+    FDrawingEngine.CreateBuffer(ClientWidth, ClientHeight);
+  end;
 end;
 
 procedure TMapView.SetInactiveColor(AValue: TColor);
@@ -523,6 +552,7 @@ begin
   inherited DoOnResize;
   //cancel all rendering threads
   Engine.CancelCurrentDrawing;
+  (*
   FreeAndNil(Buffer);
   {$IFDEF USE_RGBGRAPHICS}
   Buffer := TRGB32Bitmap.Create(ClientWidth,ClientHeight);
@@ -531,6 +561,8 @@ begin
   BufferCanvas.Free;
   CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, ClientWidth, ClientHeight);
   {$ENDIF}
+  *)
+  DrawingEngine.CreateBuffer(ClientWidth, ClientHeight);
   if IsActive then
     Engine.SetSize(ClientWidth, ClientHeight);
 end;
@@ -540,6 +572,9 @@ var
   bmp: TBitmap;
 begin
   inherited Paint;
+  if IsActive then
+    DrawingEngine.PaintToCanvas(Canvas)
+  (*
   if IsActive and Assigned(Buffer) then
   begin
     {$IFDEF USE_RGBGRAPHICS}
@@ -557,6 +592,7 @@ begin
     end;
     {$ENDIF}
   end
+  *)
   else
   begin
     Canvas.Brush.Color := InactiveColor;
@@ -622,6 +658,7 @@ begin
         begin
           if not LastInside then
             Old := Engine.LonLatToScreen(trk.Points[pred(i)].RealPoint);
+          (*
           {$IFDEF USE_RGBGRAPHICS}
           Buffer.Canvas.OutlineColor := trkColor;
           // --- no linewidth support in RGBGraphics ---
@@ -632,6 +669,8 @@ begin
           BufferCanvas.Pen.Width := trkWidth;
           BufferCanvas.Line(Old.X, Old.Y, New.X, New.Y);
           {$ENDIF}
+          *)
+          DrawingEngine.Line(Old.X, Old.Y, New.X, New.Y);
         end;
         Old := New;
         LastInside := IsInside;
@@ -646,12 +685,15 @@ var
   PtColor: TColor;
 begin
   if Assigned(FOnDrawGpsPoint) then begin
+    FOnDrawGpsPoint(Self, DrawingEngine, aPOI);
+    (*
     {$IFDEF USE_RGBGRAPHICS}
     FOnDrawGpsPoint(Self, Buffer, aPOI);
     {$ENDIF}
     {$IFDEF USE_LAZINTFIMAGE}
     FOnDrawGpsPoint(Self, BufferCanvas, aPOI);
     {$ENDIF}
+    *)
     exit;
   end;
 
@@ -662,6 +704,7 @@ begin
     if aPOI.ExtraData.inheritsFrom(TDrawingExtraData) then
       PtColor := TDrawingExtraData(aPOI.ExtraData).Color;
   end;
+  (*
   {$IFDEF USE_RGBGRAPHICS}
   Buffer.Canvas.OutlineColor := ptColor;
   Buffer.Canvas.Line(Pt.X, Pt.y-5, Pt.X, Pt.Y+5);
@@ -672,6 +715,10 @@ begin
   BufferCanvas.Line(Pt.X, Pt.Y-5, Pt.X, Pt.Y+5);
   BufferCanvas.Line(Pt.X-5, Pt.Y, Pt.X+5, Pt.Y);
   {$ENDIF}
+  *)
+  DrawingEngine.PenColor := ptColor;
+  DrawingEngine.Line(Pt.X, Pt.Y - 5, Pt.X, Pt.Y + 5);
+  DrawingEngine.Line(Pt.X - 5, Pt.Y, Pt.X + 5, Pt.Y);
 
 //  Buffer.Draw();
 end;
@@ -721,17 +768,22 @@ end;
 
 procedure TMapView.DoDrawTile(const TileId: TTileId; X, Y: integer;
   TileImg: TLazIntfImage);
+(*
 {$IFDEF USE_RGBGRAPHICS}
 var
   temp: TRGB32Bitmap;
   ri: TRawImage;
   BuffLaz: TLazIntfImage;
 {$ENDIF}
+*)
 begin
+  {
   if Assigned(Buffer) then
   begin
+  }
     if Assigned(TileImg) then
     begin
+      (*
      {$IFDEF USE_RGBGRAPHICS}
       if (X >= 0) and (Y >= 0) then //http://mantis.freepascal.org/view.php?id=27144
       begin
@@ -765,8 +817,13 @@ begin
       Buffer.CopyPixels(TileImg, X, Y);
       {$IFEND}
      {$ENDIF}
+     *)
+      DrawingEngine.DrawLazIntfImage(X, Y, TileImg);
     end
-    else
+    else begin
+      DrawingEngine.BrushColor := clWhite;
+      DrawingEngine.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
+    (*
     {$IFDEF USE_RGBGRAPHICS}
       Buffer.Canvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
     {$ENDIF}
@@ -776,7 +833,9 @@ begin
       BufferCanvas.FillRect(X, Y, X + TILE_SIZE, Y + TILE_SIZE);
     end;
     {$ENDIF}
-  end;
+    *)
+    end;
+//  end;
   if FDebugTiles then
     DoDrawTileInfo(TileID, X, Y);
   DrawObjects(TileId, X, Y, X + TILE_SIZE, Y + TILE_SIZE);
@@ -784,6 +843,13 @@ end;
 
 procedure TMapView.DoDrawTileInfo(const TileID: TTileID; X, Y: Integer);
 begin
+  DrawingEngine.PenColor := clGray;
+  DrawingEngine.PenWidth := 1;
+  DrawingEngine.Line(X, Y, X, Y + TILE_SIZE);
+  DrawingEngine.Line(X, Y, X + TILE_SIZE, Y);
+  DrawingEngine.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
+  DrawingEngine.Line(X, Y + TILE_SIZE, X + TILE_SIZE, Y + TILE_SIZE);
+  (*
   {$IFDEF USE_LCL}
   Buffer.Canvas.Pen.Color := clGray;
   Buffer.Canvas.Pen.Style := psSolid;
@@ -804,6 +870,7 @@ begin
   BufferCanvas.Line(X + TILE_SIZE, Y, X + TILE_SIZE, Y + TILE_SIZE);
   BufferCanvas.Line(X, Y + TILE_SIZE, X + TILE_SIZE, Y + TILE_SIZE);
   {$ENDIF}
+  *)
 end;
 
 function TMapView.IsActive: Boolean;
@@ -825,12 +892,14 @@ begin
   FBuiltinDownLoadEngine.Name := 'BuiltIn';
   FDefaultTrackColor := clRed;
   FDefaultTrackWidth := 1;
+  (*
   {$IFDEF USE_RGBGRAPHICS}
   Buffer := TRGB32Bitmap.Create(Width, Height);
   {$ENDIF}
   {$IFDEF USE_LAZINTFIMAGE}
   CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, Width, Height);
   {$ENDIF}
+  *)
   Engine.CachePath := 'cache/';
   Engine.CacheOnDisk := true;
   Engine.OnDrawTile := @DoDrawTile;
@@ -839,18 +908,23 @@ begin
   inherited Create(AOwner);
   Width := 150;
   Height := 150;
+  FBuiltinDrawingEngine := TIntfGraphicsDrawingEngine.Create(self);
+  FbuiltinDrawingEngine.CreateBuffer(Width, Height);
 end;
 
 destructor TMapView.Destroy;
 begin
+  FBuiltinDrawingEngine.Free;
+  {
   {$IFDEF USE_LAZINTFIMAGE}
   BufferCanvas.Free;
   {$ENDIF}
   Buffer.Free;
-  inherited Destroy;
+  }
   FreeAndNil(FGPSItems);
+  inherited Destroy;
 end;
-
+                             (*
 {$IFDEF USE_LAZINTFIMAGE}
 procedure TMapView.CreateLazIntfImageAndCanvas(out ABuffer: TLazIntfImage;
   out ACanvas: TFPCustomCanvas; AWidth, AHeight: Integer);
@@ -869,7 +943,7 @@ begin
   ACanvas.Brush.FPColor := colWhite;
   ACanvas.FillRect(0, 0, AWidth, AHeight);
 end;
-{$ENDIF}
+{$ENDIF}                       *)
 
 procedure TMapView.SaveToFile(AClass: TRasterImageClass; const AFileName: String);
 var
@@ -885,6 +959,8 @@ end;
 
 function TMapView.SaveToImage(AClass: TRasterImageClass): TRasterImage;
 begin
+  Result := DrawingEngine.SaveToImage(AClass);
+  (*
   Result := AClass.Create;
   Result.Width := Width;
   Result.Height := Height;
@@ -895,6 +971,7 @@ begin
   {$IFDEF USE_LAZINTFIMAGE}
   Result.LoadFromIntfImage(Buffer);
   {$ENDIF}
+  *)
 end;
 
 procedure TMapView.SaveToStream(AClass: TRasterImageClass; AStream: TStream);
@@ -967,9 +1044,12 @@ end;
 
 procedure TMapView.ClearBuffer;
 begin
+  DrawingEngine.CreateBuffer(ClientWidth, ClientHeight);       // ???
+  (*
   {$IFDEF USE_LAZINTFIMAGE}
   CreateLazIntfImageAndCanvas(Buffer, BufferCanvas, ClientWidth, ClientHeight);
   {$ENDIF}
+  *)
 end;
 
 end.
