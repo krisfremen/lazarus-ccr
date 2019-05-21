@@ -42,6 +42,8 @@ type
   public
     destructor Destroy; override;
     procedure CreateBuffer(AWidth, AHeight: Integer); override;
+    procedure DrawBitmap(X, Y: Integer; ABitmap: TCustomBitmap;
+      UseAlphaChannel: Boolean); override;
     procedure DrawLazIntfImage(X, Y: Integer; AImg: TLazIntfImage); override;
     procedure Ellipse(X1, Y1, X2, Y2: Integer); override;
     procedure FillRect(X1, Y1, X2, Y2: Integer); override;
@@ -59,7 +61,7 @@ procedure Register;
 implementation
 
 uses
-  GraphType, FPImage,
+  GraphType, LCLType, FPImage,
   mvTypes;
 
 procedure Register;
@@ -77,6 +79,36 @@ procedure TMvRGBGraphicsDrawingEngine.CreateBuffer(AWidth, AHeight: Integer);
 begin
   FreeAndNil(FBuffer);
   FBuffer := TRGB32Bitmap.Create(AWidth, AHeight);
+end;
+
+procedure TMvRGBGraphicsDrawingEngine.DrawBitmap(X,Y: Integer;
+  ABitmap: TCustomBitmap; UseAlphaChannel: Boolean);
+var
+  intfImg: TLazIntfImage;
+  i, j: Integer;
+  cimg, cbuf: TFPColor;
+  alpha: Double;
+begin
+  intfImg := ABitmap.CreateIntfImage;
+  try
+    if UseAlphaChannel then begin
+      for j := 0 to intfImg.Height - 1 do
+        for i := 0 to intfImg.Width - 1 do begin
+          cimg := intfImg.Colors[i, j];
+          alpha := cimg.Alpha / word($FFFF);
+          cbuf := TColorToFPColor(FBuffer.Canvas.GetColor(i + X, j + Y));
+          cbuf.Red := Round(alpha * cimg.Red + (1 - alpha) * cbuf.Red);
+          cbuf.Green := Round(alpha * cimg.Green + (1 - alpha) * cbuf.Green);
+          cbuf.Blue := Round(alpha * cimg.Blue + (1 - alpha) * cbuf.Blue);
+          FBuffer.Canvas.SetColor(i + X, j + Y, FPColorToTColor(cbuf));
+        end;
+    end else
+      for j := 0 to intfImg.Height - 1 do
+        for i := 0 to intfImg.Width - 1 do
+          FBuffer.Canvas.SetColor(i + X, j + Y, FPColorToTColor(intfImg.Colors[i, j]));
+  finally
+    intfimg.Free;
+  end;
 end;
 
 procedure TMvRGBGraphicsDrawingEngine.DrawLazIntfImage(X, Y: Integer;
@@ -235,6 +267,7 @@ begin
   end;
 end;
 
+(*
 procedure TMvRGBGraphicsDrawingEngine.TextOut(X, Y: Integer; const AText: String);
 var
   bmp: TBitmap;
@@ -281,6 +314,81 @@ begin
             FBuffer.Canvas.SetColor(X + i, Y + j, FPColorToTColor(img.Colors[i, j]));
     finally
       img.Free;
+    end;
+  finally
+    bmp.Free;
+  end;
+end;
+*)
+
+procedure TMvRGBGraphicsDrawingEngine.TextOut(X, Y: Integer; const AText: String);
+var
+  bmp: TBitmap;
+  ex: TSize;
+  img: TLazIntfImage;
+  i, j: Integer;
+  c: TColor;
+  fc, tc: TFPColor;
+  intens, intens0: Int64;
+  alpha: Double;
+  hb, hm: HBitmap;
+begin
+  if (AText = '') then
+    exit;
+
+  bmp := TBitmap.Create;
+  try
+    bmp.PixelFormat := pf32Bit;
+    bmp.SetSize(1, 1);
+    bmp.Canvas.Font.Name := FFontName;
+    bmp.Canvas.Font.Size := FFontSize;
+    bmp.Canvas.Font.Style := FFontStyle;
+    bmp.Canvas.Font.Color := FFontColor;
+    ex := bmp.Canvas.TextExtent(AText);
+    bmp.SetSize(ex.CX, ex.CY);
+    if GetBrushStyle <> bsClear then begin
+      bmp.Canvas.Brush.Color := GetBrushColor;
+      bmp.Canvas.FillRect(0, 0, bmp.Width, bmp.Height);
+      bmp.Canvas.TextOut(0, 0, AText);
+      DrawBitmap(X, Y, bmp, false);
+    end else
+    begin
+      if FFontColor = clWhite then
+        bmp.Canvas.Brush.Color := clBlack
+      else
+        bmp.Canvas.Brush.Color := clWhite;
+      bmp.Canvas.FillRect(0, 0, bmp.Width, bmp.Height);
+      bmp.Canvas.TextOut(0, 0, AText);
+
+      img := bmp.CreateIntfImage;
+      try
+        fc := TColorToFPColor(bmp.Canvas.Font.Color);
+        intens0 := (fc.Red + fc.Green + fc.Blue);
+        for j := 0 to img.Height - 1 do
+          for i := 0 to img.Width - 1 do begin
+            c := bmp.Canvas.Pixels[i, j];
+            tc := TColorToFPColor(c);
+            if c = bmp.Canvas.Brush.Color then
+              tc.Alpha := alphaTransparent
+            else if c = FFontColor then
+              tc.Alpha := alphaOpaque
+            else begin
+              intens := tc.Red + tc.Green + tc.Blue;
+              if intens0 = 0 then
+                alpha := (3 * alphaopaque - intens) / (3 * alphaOpaque - intens0)
+              else
+                alpha := intens / intens0;
+              tc.Alpha := round(alphaOpaque * alpha);
+            end;
+            img.Colors[i, j] := tc;
+          end;
+        img.CreateBitmaps(hb, hm);
+        bmp.Handle := hb;
+        bmp.MaskHandle := hm;
+        DrawBitmap(X, Y, bmp, true);
+      finally
+        img.Free;
+      end;
     end;
   finally
     bmp.Free;

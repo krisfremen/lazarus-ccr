@@ -6,20 +6,22 @@ interface
 
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, StdCtrls, ComCtrls, Buttons,
+  ExtCtrls, StdCtrls, ComCtrls, Buttons, IntfGraphics, ColorBox,
   mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine,
-  mvDE_LCL, mvDE_RGBGraphics;
+  mvDE_RGBGraphics;
 
 type
 
   { TMainForm }
 
   TMainForm = class(TForm)
+    Bevel1: TBevel;
     BtnSearch: TButton;
     BtnGoTo: TButton;
     BtnGPSPoints: TButton;
     BtnSaveToFile: TButton;
     BtnLoadGPXFile: TButton;
+    BtnPOITextFont: TButton;
     CbDoubleBuffer: TCheckBox;
     CbFoundLocations: TComboBox;
     CbLocations: TComboBox;
@@ -29,6 +31,9 @@ type
     CbDistanceUnits: TComboBox;
     CbDebugTiles: TCheckBox;
     CbDrawingEngine: TComboBox;
+    CbShowPOIImage: TCheckBox;
+    cbPOITextBgColor: TColorBox;
+    FontDialog: TFontDialog;
     GbCenterCoords: TGroupBox;
     GbScreenSize: TGroupBox;
     GbSearch: TGroupBox;
@@ -40,6 +45,7 @@ type
     GPSPointInfo: TLabel;
     InfoViewportWidth: TLabel;
     Label1: TLabel;
+    LblPOITextBgColor: TLabel;
     LblSelectLocation: TLabel;
     LblCenterLatitude: TLabel;
     LblViewportHeight: TLabel;
@@ -65,12 +71,15 @@ type
     procedure BtnSearchClick(Sender: TObject);
     procedure BtnGPSPointsClick(Sender: TObject);
     procedure BtnSaveToFileClick(Sender: TObject);
+    procedure BtnPOITextFontClick(Sender: TObject);
     procedure CbDebugTilesChange(Sender: TObject);
     procedure CbDrawingEngineChange(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
+    procedure cbPOITextBgColorChange(Sender: TObject);
     procedure CbProvidersChange(Sender: TObject);
+    procedure CbShowPOIImageChange(Sender: TObject);
     procedure CbUseThreadsChange(Sender: TObject);
     procedure CbDistanceUnitsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -81,7 +90,6 @@ type
     procedure MapViewChange(Sender: TObject);
     procedure MapViewDrawGpsPoint(Sender: TObject;
       ADrawer: TMvCustomDrawingEngine; APoint: TGpsPoint);
-//    procedure MapViewDrawGpsPoint(Sender, ACanvas: TObject; APoint: TGpsPoint);
     procedure MapViewMouseLeave(Sender: TObject);
     procedure MapViewMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure MapViewMouseUp(Sender: TObject; Button: TMouseButton;
@@ -92,8 +100,8 @@ type
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
-    FLCLDrawingEngine: TMvLCLDrawingEngine;
     FRGBGraphicsDrawingEngine: TMvRGBGraphicsDrawingEngine;
+    POIImage: TCustomBitmap;
     procedure ClearFoundLocations;
     procedure UpdateCoords(X, Y: Integer);
     procedure UpdateDropdownWidth(ACombobox: TCombobox);
@@ -114,7 +122,7 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLType, IniFiles, Math, FPCanvas, FPImage, IntfGraphics,
+  LCLType, IniFiles, Math, FPCanvas, FPImage, FpImgCanv, GraphType,
   mvEngine, mvGPX,
   globals, gpslistform;
 
@@ -231,6 +239,13 @@ begin
   ShowMessage('Map saved to "mapview.png".');
 end;
 
+procedure TMainForm.BtnPOITextFontClick(Sender: TObject);
+begin
+  FontDialog.Font.Assign(MapView.Font);
+  if FontDialog.Execute then
+    MapView.Font.Assign(FontDialog.Font);
+end;
+
 procedure TMainForm.CbDebugTilesChange(Sender: TObject);
 begin
   MapView.DebugTiles := CbDebugTiles.Checked;
@@ -241,10 +256,6 @@ begin
   case CbDrawingEngine.ItemIndex of
     0: MapView.DrawingEngine := nil;
     1: begin
-         if FLCLDrawingEngine = nil then FLCLDrawingEngine := TMvLCLDrawingEngine.Create(self);
-         MapView.DrawingEngine := FLCLDrawingEngine;
-       end;
-    2: begin
          if FRGBGraphicsDrawingEngine = nil then
            FRGBGraphicsDrawingEngine := TMvRGBGraphicsDrawingEngine.Create(self);
          MapView.DrawingEngine := FRGBGraphicsDrawingEngine;
@@ -286,9 +297,22 @@ begin
   combo.Canvas.TextOut(x, y, P.Descr);
 end;
 
+procedure TMainForm.cbPOITextBgColorChange(Sender: TObject);
+begin
+  MapView.POITextBgColor := cbPOITextBgColor.Selected;
+end;
+
 procedure TMainForm.CbProvidersChange(Sender: TObject);
 begin
   MapView.MapProvider := CbProviders.Text;
+end;
+
+procedure TMainForm.CbShowPOIImageChange(Sender: TObject);
+begin
+  if CbShowPOIImage.Checked then
+    MapView.POIImage.Assign(POIImage)
+  else
+    MapView.POIImage.Clear;
 end;
 
 procedure TMainForm.CbUseThreadsChange(Sender: TObject);
@@ -316,6 +340,11 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+//  FMapMarker := CreateMapMarker(32, clRed, clBlack);
+  POIImage := TPortableNetworkGraphic.Create;
+  POIImage.PixelFormat := pf32bit;
+  POIImage.LoadFromFile('../../mapmarker.png');
+
   ForceDirectories(HOMEDIR + 'cache/');
   MapView.CachePath := HOMEDIR + 'cache/';
   MapView.GetMapProviders(CbProviders.Items);
@@ -324,6 +353,7 @@ begin
   MapView.Zoom := 1;
   CbUseThreads.Checked := MapView.UseThreads;
   CbDoubleBuffer.Checked := MapView.DoubleBuffered;
+  CbPOITextBgColor.Selected := MapView.POITextBgColor;
 
   InfoPositionLongitude.Caption := '';
   InfoPositionLatitude.Caption := '';
@@ -340,6 +370,7 @@ procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   WriteToIni;
   ClearFoundLocations;
+  FreeAndNil(POIImage)
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -374,16 +405,25 @@ begin
   // Screen coordinates of the GPS point
   P := TMapView(Sender).LonLatToScreen(APoint.RealPoint);
 
-  // Draw the GPS point as a circle
-  ADrawer.BrushColor := clRed;
-  ADrawer.BrushStyle := bsSolid;
-  ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
-
+  // Draw the GPS point with MapMarker bitmap
+  {
+  if CbShowPOIImage.Checked and not MapView.POIImage.Empty then begin
+    ADrawer.DrawBitmap(P.X - MapView.POIImage.Width div 2, P.Y - MapView.POIImage.Height, MapView.POIImage, true);
+  end else begin
+  }
+    // Draw the GPS point as a circle
+    ADrawer.BrushColor := clRed;
+    ADrawer.BrushStyle := bsSolid;
+    ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
+    P.Y := P.Y + R;
+  //end;
+    {
   // Draw the caption of the GPS point
   ext := ADrawer.TextExtent(APoint.Name);
   ADrawer.BrushColor := clWhite;
   ADrawer.BrushStyle := bsClear;
-  ADrawer.TextOut(P.X - ext.CX div 2, P.Y - ext.CY - R - 5, APoint.Name);
+  ADrawer.TextOut(P.X - ext.CX div 2, P.Y + 5, APoint.Name);
+  }
 end;
 
 procedure TMainForm.MapViewMouseLeave(Sender: TObject);

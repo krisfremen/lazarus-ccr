@@ -32,6 +32,8 @@ type
     public
       destructor Destroy; override;
       procedure CreateBuffer(AWidth, AHeight: Integer); override;
+      procedure DrawBitmap(X, Y: Integer; ABitmap: TCustomBitmap;
+        UseAlphaChannel: Boolean); override;
       procedure DrawLazIntfImage(X, Y: Integer; AImg: TLazIntfImage); override;
       procedure Ellipse(X1, Y1, X2, Y2: Integer); override;
       procedure FillRect(X1, Y1, X2, Y2: Integer); override;
@@ -60,6 +62,12 @@ begin
   FBuffer := TBitmap.Create;
   FBuffer.PixelFormat := pf32Bit;
   FBuffer.SetSize(AWidth, AHeight);
+end;
+
+procedure TMvLCLDrawingEngine.DrawBitmap(X, Y: Integer; ABitmap: TCustomBitmap;
+  UseAlphaChannel: Boolean);
+begin
+  FBuffer.Canvas.Draw(X, Y, ABitmap);
 end;
 
 procedure TMvLCLDrawingEngine.DrawLazIntfImage(X, Y: Integer;

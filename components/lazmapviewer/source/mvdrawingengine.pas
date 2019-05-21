@@ -29,6 +29,8 @@ type
 
   public
     procedure CreateBuffer(AWidth, AHeight: Integer); virtual; abstract;
+    procedure DrawBitmap(X, Y: Integer; ABitmap: TCustomBitmap;
+      UseAlphaChannel: Boolean); virtual; abstract;
     procedure DrawLazIntfImage(X, Y: Integer; AImg: TLazIntfImage); virtual; abstract;
     procedure Ellipse(X1, Y1, X2, Y2: Integer); virtual; abstract;
     procedure FillRect(X1, Y1, X2, Y2: Integer); virtual; abstract;

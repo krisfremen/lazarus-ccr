@@ -45,6 +45,7 @@ Type
       FGPSItems: TGPSObjectList;
       FInactiveColor: TColor;
       FPOIImage: TBitmap;
+      FPOITextBgColor: TColor;
       FOnDrawGpsPoint: TDrawGpsPointEvent;
       FDebugTiles: Boolean;
       FDefaultTrackColor: TColor;
@@ -66,10 +67,11 @@ Type
       function GetOnZoomChange: TNotifyEvent;
       function GetUseThreads: boolean;
       function GetZoom: integer;
+      function IsCachePathStored: Boolean;
       function IsFontStored: Boolean;
       procedure SetActive(AValue: boolean);
       procedure SetCacheOnDisk(AValue: boolean);
-      procedure SetCachePath({%H-}AValue: String);
+      procedure SetCachePath(AValue: String);
       procedure SetCenter(AValue: TRealPoint);
       procedure SetDebugTiles(AValue: Boolean);
       procedure SetDefaultTrackColor(AValue: TColor);
@@ -82,9 +84,12 @@ Type
       procedure SetOnCenterMove(AValue: TNotifyEvent);
       procedure SetOnChange(AValue: TNotifyEvent);
       procedure SetOnZoomChange(AValue: TNotifyEvent);
+      procedure SetPOIImage(AValue: TBitmap);
+      procedure SetPOITextBgColor(AValue: TColor);
       procedure SetUseThreads(AValue: boolean);
       procedure SetZoom(AValue: integer);
       procedure UpdateFont(Sender: TObject);
+      procedure UpdateImage(Sender: TObject);
 
     protected
       AsyncInvalidate : boolean;
@@ -123,10 +128,10 @@ Type
       property Engine: TMapViewerEngine read FEngine;
       property GPSItems: TGPSObjectList read FGPSItems;
     published
-      property Active: boolean read FActive write SetActive;
+      property Active: boolean read FActive write SetActive default false;
       property Align;
-      property CacheOnDisk: boolean read GetCacheOnDisk write SetCacheOnDisk;
-      property CachePath: String read GetCachePath write SetCachePath;
+      property CacheOnDisk: boolean read GetCacheOnDisk write SetCacheOnDisk default true;
+      property CachePath: String read GetCachePath write SetCachePath stored IsCachePathStored;
       property DebugTiles: Boolean read FDebugTiles write SetDebugTiles default false;
       property DefaultTrackColor: TColor read FDefaultTrackColor write SetDefaultTrackColor default clRed;
       property DefaultTrackWidth: Integer read FDefaultTrackWidth write SetDefaultTrackWidth default 1;
@@ -134,11 +139,12 @@ Type
       property DrawingEngine: TMvCustomDrawingEngine read GetDrawingEngine write SetDrawingEngine;
       property Font: TFont read FFont write SetFont stored IsFontStored;
       property Height default 150;
-      property InactiveColor: TColor read FInactiveColor write SetInactiveColor;
+      property InactiveColor: TColor read FInactiveColor write SetInactiveColor default clWhite;
       property MapProvider: String read GetMapProvider write SetMapProvider;
-      property POIImage: TBitmap read FPOIImage write FPOIImage;
+      property POIImage: TBitmap read FPOIImage write SetPOIImage;
+      property POITextBgColor: TColor read FPOITextBgColor write SetPOITextBgColor default clNone;
       property PopupMenu;
-      property UseThreads: boolean read GetUseThreads write SetUseThreads;
+      property UseThreads: boolean read GetUseThreads write SetUseThreads default false;
       property Width default 150;
       property Zoom: integer read GetZoom write SetZoom;
       property OnCenterMove: TNotifyEvent read GetOnCenterMove write SetOnCenterMove;
@@ -156,7 +162,8 @@ Type
 implementation
 
 uses
-  GraphType, mvJobQueue, mvExtraData, mvDLEFpc, mvDE_IntfGraphics;
+  GraphType, Types,
+  mvJobQueue, mvExtraData, mvDLEFpc, mvDE_IntfGraphics;
 
 type
 
@@ -333,6 +340,11 @@ begin
   result := Engine.Zoom;
 end;
 
+function TMapView.IsCachePathStored: Boolean;
+begin
+  Result := not SameText(CachePath, 'cache/');
+end;
+
 function TMapView.IsFontStored: Boolean;
 begin
   Result := SameText(FFont.Name, 'default') and (FFont.Size = 0) and
@@ -346,7 +358,7 @@ end;
 
 procedure TMapView.SetCachePath(AValue: String);
 begin
-  Engine.CachePath := CachePath;
+  Engine.CachePath := AValue; //CachePath;
 end;
 
 procedure TMapView.SetCenter(AValue: TRealPoint);
@@ -432,6 +444,20 @@ end;
 procedure TMapView.SetOnZoomChange(AValue: TNotifyEvent);
 begin
   Engine.OnZoomChange := AValue;
+end;
+
+procedure TMapView.SetPOIImage(AValue: TBitmap);
+begin
+  if FPOIImage = AValue then exit;
+  FPOIImage := AValue;
+  Engine.Redraw;
+end;
+
+procedure TMapView.SetPOITextBgColor(AValue: TColor);
+begin
+  if FPOITextBgColor = AValue then exit;
+  FPOITextBgColor := AValue;
+  Engine.Redraw;
 end;
 
 procedure TMapView.SetUseThreads(AValue: boolean);
@@ -575,8 +601,10 @@ end;
 
 procedure TMapView.DrawPt(const Area: TRealArea; aPOI: TGPSPoint);
 var
-  PT: TPoint;
+  Pt: TPoint;
   PtColor: TColor;
+  extent: TSize;
+  s: String;
 begin
   if Assigned(FOnDrawGpsPoint) then begin
     FOnDrawGpsPoint(Self, DrawingEngine, aPOI);
@@ -590,11 +618,28 @@ begin
     if aPOI.ExtraData.inheritsFrom(TDrawingExtraData) then
       PtColor := TDrawingExtraData(aPOI.ExtraData).Color;
   end;
-  DrawingEngine.PenColor := ptColor;
-  DrawingEngine.Line(Pt.X, Pt.Y - 5, Pt.X, Pt.Y + 5);
-  DrawingEngine.Line(Pt.X - 5, Pt.Y, Pt.X + 5, Pt.Y);
 
-//  Buffer.Draw();
+  // Draw point marker
+  if Assigned(FPOIImage) and not (FPOIImage.Empty) then
+    DrawingEngine.DrawBitmap(Pt.X - FPOIImage.Width div 2, Pt.Y - FPOIImage.Height, FPOIImage, true)
+  else begin
+    DrawingEngine.PenColor := ptColor;
+    DrawingEngine.Line(Pt.X, Pt.Y - 5, Pt.X, Pt.Y + 5);
+    DrawingEngine.Line(Pt.X - 5, Pt.Y, Pt.X + 5, Pt.Y);
+    Pt.Y := Pt.Y + 5;
+  end;
+
+  // Draw point text
+  s := aPOI.Name;
+  if FPOITextBgColor = clNone then
+    DrawingEngine.BrushStyle := bsClear
+  else begin
+    DrawingEngine.BrushStyle := bsSolid;
+    DrawingEngine.BrushColor := FPOITextBgColor;
+    s := ' ' + s + ' ';
+  end;
+  extent := DrawingEngine.TextExtent(s);
+  DrawingEngine.Textout(Pt.X - extent.CX div 2, Pt.Y + 5, s);
 end;
 
 procedure TMapView.CallAsyncInvalidate;
@@ -710,11 +755,16 @@ begin
   FFont.Style := [];
   FFont.Color := clBlack;
   FFont.OnChange := @UpdateFont;
+
+  FPOIImage := TBitmap.Create;
+  FPOIImage.OnChange := @UpdateImage;
+  FPOITextBgColor := clNone;
 end;
 
 destructor TMapView.Destroy;
 begin
   FFont.Free;
+  FreeAndNil(FPOIImage);
   FreeAndNil(FGPSItems);
   inherited Destroy;
 end;
@@ -824,6 +874,10 @@ begin
   Engine.Redraw;
 end;
 
+procedure TMapView.UpdateImage(Sender: TObject);
+begin
+  Engine.Redraw;
+end;
 
 end.
 

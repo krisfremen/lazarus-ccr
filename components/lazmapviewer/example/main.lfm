@@ -17,22 +17,17 @@ object MainForm: TMainForm
     Hint = 'Displays the map'
     Top = 0
     Width = 608
-    Active = False
     Align = alClient
-    CacheOnDisk = True
-    CachePath = 'cache/'
     DefaultTrackColor = clBlue
     DefaultTrackWidth = 3
     DownloadEngine = MapView.BuiltInDLE
     DrawingEngine = MapView.BuiltInDE
     Font.Color = clBlack
-    InactiveColor = clWhite
     MapProvider = 'OpenStreetMap Mapnik'
     UseThreads = True
     Zoom = 0
     OnZoomChange = MapViewZoomChange
     OnChange = MapViewChange
-    OnDrawGpsPoint = MapViewDrawGpsPoint
     OnMouseLeave = MapViewMouseLeave
     OnMouseMove = MapViewMouseMove
     OnMouseUp = MapViewMouseUp
@@ -573,7 +568,6 @@ object MainForm: TMainForm
         ItemIndex = 0
         Items.Strings = (
           'default'
-          'LCL'
           'RGBGraphics'
         )
         OnChange = CbDrawingEngineChange
@@ -758,6 +752,78 @@ object MainForm: TMainForm
         OnChange = CbDebugTilesChange
         TabOrder = 4
       end
+      object CbShowPOIImage: TCheckBox
+        AnchorSideLeft.Control = CbDebugTiles
+        AnchorSideTop.Control = Bevel1
+        AnchorSideTop.Side = asrBottom
+        Left = 6
+        Height = 19
+        Top = 189
+        Width = 107
+        BorderSpacing.Top = 6
+        Caption = 'Show POI image'
+        OnChange = CbShowPOIImageChange
+        TabOrder = 5
+      end
+      object BtnPOITextFont: TButton
+        AnchorSideTop.Control = CbShowPOIImage
+        AnchorSideTop.Side = asrBottom
+        Left = 6
+        Height = 25
+        Top = 216
+        Width = 92
+        AutoSize = True
+        BorderSpacing.Top = 8
+        Caption = 'POI text font'
+        OnClick = BtnPOITextFontClick
+        TabOrder = 6
+      end
+      object cbPOITextBgColor: TColorBox
+        AnchorSideLeft.Control = LblPOITextBgColor
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = BtnPOITextFont
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = CbDrawingEngine
+        AnchorSideRight.Side = asrBottom
+        Left = 153
+        Height = 22
+        Top = 217
+        Width = 108
+        NoneColorColor = clWhite
+        Style = [cbStandardColors, cbExtendedColors, cbIncludeNone, cbCustomColor, cbPrettyNames, cbCustomColors]
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        ItemHeight = 16
+        OnChange = cbPOITextBgColorChange
+        TabOrder = 7
+      end
+      object LblPOITextBgColor: TLabel
+        AnchorSideLeft.Control = BtnPOITextFont
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = BtnPOITextFont
+        AnchorSideTop.Side = asrCenter
+        Left = 106
+        Height = 15
+        Top = 221
+        Width = 39
+        BorderSpacing.Left = 8
+        Caption = 'Backgr.'
+        ParentColor = False
+      end
+      object Bevel1: TBevel
+        AnchorSideLeft.Control = CbDrawingEngine
+        AnchorSideTop.Control = CbDebugTiles
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = CbDrawingEngine
+        AnchorSideRight.Side = asrBottom
+        Left = 6
+        Height = 4
+        Top = 179
+        Width = 255
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 8
+        Shape = bsTopLine
+      end
     end
   end
   object GeoNames: TMVGeoNames
@@ -770,5 +836,11 @@ object MainForm: TMainForm
     Filter = 'GPX files (*.gpx)|*.gpx|All files (*.*)|*.*'
     left = 240
     top = 456
+  end
+  object FontDialog: TFontDialog
+    MinFontSize = 0
+    MaxFontSize = 0
+    left = 648
+    top = 280
   end
 end
