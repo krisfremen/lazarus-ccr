@@ -688,6 +688,8 @@ function JvMessageBox(const Text: string; Flags: DWORD): Integer; overload;
 ********************)
 
 procedure UpdateTrackFont(TrackFont, Font: TFont; TrackOptions: TJvTrackFontOptions);
+function IsHotTrackFontDfmStored(TrackFont, Font: TFont; TrackOptions: TJvTrackFontOptions): Boolean;
+
 (********************
 // Returns the size of the image
 // used for checkboxes and radiobuttons.
@@ -6446,6 +6448,30 @@ begin
       TrackFont.Pitch := Font.Pitch;
     if not (hoPreserveStyle in TrackOptions) then
       TrackFont.Style := Font.Style;
+  end;
+end;
+
+function IsHotTrackFontDfmStored(TrackFont, Font: TFont; TrackOptions: TJvTrackFontOptions): Boolean;
+var
+  DefFont: TFont;
+begin
+  if hoFollowFont in TrackOptions then
+    DefFont := nil
+  else
+  begin
+    DefFont := TFont.Create;
+    Font := DefFont;
+    TrackOptions := []; // compare all
+  end;
+  try
+    Result := ((hoPreserveCharSet in TrackOptions) and (TrackFont.Charset <> Font.Charset)) or
+              ((hoPreserveColor in TrackOptions) and (TrackFont.Color <> Font.Color)) or
+              ((hoPreserveHeight in TrackOptions) and (TrackFont.Height <> Font.Height)) or
+              ((hoPreservePitch in TrackOptions) and (TrackFont.Pitch <> Font.Pitch)) or
+              ((hoPreserveStyle in TrackOptions) and (TrackFont.Style <> Font.Style)) or
+              ((hoPreserveName in TrackOptions) and (TrackFont.Name <> Font.Name));
+  finally
+    DefFont.Free;
   end;
 end;
 

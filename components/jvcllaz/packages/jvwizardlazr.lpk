@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="JvWizardLazR"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="..\run\JvWizard"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvWizard"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files Count="5">
+      <Item1>
+        <Filename Value="..\run\JvWizard\jvwizard.pas"/>
+        <UnitName Value="JvWizard"/>
+      </Item1>
+      <Item2>
+        <Filename Value="..\run\JvWizard\jvwizardcommon.pas"/>
+        <UnitName Value="JvWizardCommon"/>
+      </Item2>
+      <Item3>
+        <Filename Value="..\run\JvWizard\jvwizardroutemaplist.pas"/>
+        <UnitName Value="JvWizardRouteMapList"/>
+      </Item3>
+      <Item4>
+        <Filename Value="..\run\JvWizard\jvwizardroutemapnodes.pas"/>
+        <UnitName Value="JvWizardRouteMapNodes"/>
+      </Item4>
+      <Item5>
+        <Filename Value="..\run\JvWizard\jvwizardroutemapsteps.pas"/>
+        <UnitName Value="JvWizardRouteMapSteps"/>
+      </Item5>
+    </Files>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="JvCoreLazR"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
