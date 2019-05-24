@@ -2,7 +2,7 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="jvcmpd"/>
+    <Name Value="JvCmpD"/>
     <Type Value="RunAndDesignTime"/>
     <Author Value="Various authors - see header of each unit for original author."/>
     <CompilerOptions>

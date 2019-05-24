@@ -20,15 +20,15 @@
     <Version Major="1" Release="4"/>
     <Files Count="5">
       <Item1>
-        <Filename Value="..\run\JvCmp\JvSpellChecker.pas"/>
+        <Filename Value="..\run\JvCmp\jvspellchecker.pas"/>
         <UnitName Value="JvSpellChecker"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvCmp\JvSpellerForm.pas"/>
+        <Filename Value="..\run\JvCmp\jvspellerform.pas"/>
         <UnitName Value="JvSpellerForm"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvCmp\JvSpellIntf.pas"/>
+        <Filename Value="..\run\JvCmp\jvspellintf.pas"/>
         <UnitName Value="JvSpellIntf"/>
       </Item3>
       <Item4>
