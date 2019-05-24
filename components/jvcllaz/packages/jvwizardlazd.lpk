@@ -4,6 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="JvWizardLazD"/>
     <Type Value="RunAndDesignTime"/>
+    <Author Value="Various authors - see header of jvwizard.pas for original authors. Lazarus port by Michal Gawrycki."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -12,6 +13,9 @@
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvWizard"/>
       </SearchPaths>
     </CompilerOptions>
+    <Description Value="&quot;Wizard&quot; component (Designtime package)"/>
+    <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
+    <Version Major="1" Release="4"/>
     <Files Count="2">
       <Item1>
         <Filename Value="..\design\JvWizard\jvwizardeditorform.pas"/>
