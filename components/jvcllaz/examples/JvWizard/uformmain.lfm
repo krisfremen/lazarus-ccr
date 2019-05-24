@@ -3,7 +3,6 @@ object Form1: TForm1
   Height = 336
   Top = 212
   Width = 477
-  ActiveControl = JvWizardWelcomePage1
   Caption = 'JvWizard demo'
   ClientHeight = 336
   ClientWidth = 477
@@ -13,7 +12,7 @@ object Form1: TForm1
     Height = 336
     Top = 0
     Width = 477
-    ActivePage = JvWizardWelcomePage1
+    ActivePage = JvWizardInteriorPage4
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -3048,7 +3047,10 @@ object Form1: TForm1
       Height = 294
       Top = 0
       Width = 145
+      Color = clBlack
       Font.Color = clWhite
+      NodeColors.Line = clMedGray
+      NodeColors.Disabled = clSilver
     end
   end
   object ImageList1: TImageList
