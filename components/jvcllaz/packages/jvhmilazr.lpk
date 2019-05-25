@@ -2,7 +2,7 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="jvhmilazr"/>
+    <Name Value="JvHMILazR"/>
     <Author Value="Various authors - see header of each unit for original author."/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -29,13 +29,10 @@
         <UnitName Value="JvLED"/>
       </Item2>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="JvCoreLazR"/>
       </Item1>
-      <Item2>
-        <PackageName Value="LCL"/>
-      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

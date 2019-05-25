@@ -125,8 +125,8 @@ type
 //    procedure CMCtl3DChanged(var Msg: TLMessage); message CM_CTL3DCHANGED;
 //    procedure WMSysColorChange(var Msg: TLMessage); message LM_SYSCOLORCHANGE;
 //    procedure WndProc(var Msg: TLMessage); override;
-    procedure FocusSet(PrevWnd: THandle); override;
-    procedure FocusKilled(NextWnd: THandle); override;
+//    procedure FocusSet(PrevWnd: THandle); override;
+//    procedure FocusKilled(NextWnd: THandle); override;
     procedure ColorChanged; override;
     procedure ParentColorChanged; override;
     procedure DrawBorder; dynamic;
@@ -929,7 +929,6 @@ const
   HalfPi = 1.57079632679489661923;
 var
   Edge: Integer;
-  ButtonRect: TRect;
   Face, Highlight, Shadow: TColor;
   Size: Integer;
   OldOrg: TPoint;
@@ -938,7 +937,6 @@ var
   lColor: TColor;
 begin
   Size := 2 * FRadius + 1;
-  ButtonRect := Bounds(0, 0, Size, Size);
   lCanvas := FBitmap.Canvas;
     lCanvas.Brush.Color := Parent.Brush.Color;
     lCanvas.Brush.Style := bsSolid;
@@ -1072,6 +1070,8 @@ begin
   end;
 end;
 
+{ - strange: does not compile in qt with these methods...
+
 procedure TJvCustomDialButton.FocusKilled(NextWnd: THandle);
 begin
   inherited FocusKilled(NextWnd);
@@ -1085,7 +1085,7 @@ begin
   if HandleAllocated then
     DrawBorder;
 end;
-
+}
 procedure TJvCustomDialButton.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var

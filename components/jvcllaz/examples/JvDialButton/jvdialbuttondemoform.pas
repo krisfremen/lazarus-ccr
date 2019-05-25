@@ -5,8 +5,8 @@ unit JvDialButtonDemoForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, JvDialButton,
-  JvLED;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
+  JvDialButton, JvLED;
 
 type
 
@@ -15,6 +15,7 @@ type
   TForm1 = class(TForm)
     cmbPointerShape: TComboBox;
     cmbBorderStyle: TComboBox;
+    cbColor: TColorBox;
     JvDialButton1: TJvDialButton;
     JvLED1: TJvLED;
     JvLED10: TJvLED;
@@ -26,10 +27,12 @@ type
     JvLED7: TJvLED;
     JvLED8: TJvLED;
     JvLED9: TJvLED;
+    Label1: TLabel;
     lblPointerShape: TLabel;
     lblBorderStyle: TLabel;
     procedure cmbBorderStyleChange(Sender: TObject);
     procedure cmbPointerShapeChange(Sender: TObject);
+    procedure cbColorChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure JvDialButton1Change(Sender: TObject);
   private
@@ -79,6 +82,11 @@ end;
 procedure TForm1.cmbPointerShapeChange(Sender: TObject);
 begin
   JvDialButton1.PointerShape := TJvDialPointerShape(cmbPointerShape.ItemIndex);
+end;
+
+procedure TForm1.cbColorChange(Sender: TObject);
+begin
+  JvDialButton1.Color := cbColor.Selected;
 end;
 
 procedure TForm1.cmbBorderStyleChange(Sender: TObject);
