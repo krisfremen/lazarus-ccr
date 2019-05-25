@@ -82,9 +82,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CustomOptions Value="-dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

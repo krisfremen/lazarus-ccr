@@ -17,21 +17,18 @@
     <Version Major="1" Release="4"/>
     <Files Count="2">
       <Item1>
-        <Filename Value="..\run\JvValidators\JvErrorIndicator.pas"/>
+        <Filename Value="..\run\JvValidators\jverrorindicator.pas"/>
         <UnitName Value="JvErrorIndicator"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvValidators\JvValidators.pas"/>
+        <Filename Value="..\run\JvValidators\jvvalidators.pas"/>
         <UnitName Value="JvValidators"/>
       </Item2>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="JvCoreLazR"/>
       </Item1>
-      <Item2>
-        <PackageName Value="FCL"/>
-      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

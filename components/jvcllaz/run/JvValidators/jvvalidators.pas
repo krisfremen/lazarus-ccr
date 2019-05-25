@@ -25,6 +25,8 @@ Known Issues:
 
 unit JvValidators;
 
+{.$DEFINE VALIDATORS_DEBUG}
+
 {$mode objfpc}{$H+}
 
 // NB: this is here so a user can disable DB support if he wants to
@@ -277,6 +279,7 @@ const
 implementation
 
 uses
+  LazLogger,
   {$IFDEF JVVALIDATORS_SUPPORTS_DBCONTROLS}
   DBCtrls,
   {$ENDIF JVVALIDATORS_SUPPORTS_DBCONTROLS}
@@ -304,7 +307,10 @@ end;
 
 procedure Debug(const Msg: string); overload;
 begin
-//  Application.MessageBox(PChar(Msg),PChar('Debug'),MB_OK or MB_TASKMODAL)
+  {$IFDEF VALIDATORS_DEBUG}
+  DebugLn(Msg);
+  //Application.MessageBox(PChar(Msg),PChar('Debug'),MB_OK or MB_TASKMODAL)
+  {$ENDIF}
 end;
 
 procedure Debug(const Msg: string; const Fmt: array of const); overload;
