@@ -19,7 +19,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclNonVisual, [
     TJvHtmlParser, TJvFormToHtml, TJvStringListToHtml, TJvStrToHtml
   ]);
 end;

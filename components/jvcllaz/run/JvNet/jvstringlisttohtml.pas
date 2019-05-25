@@ -130,12 +130,13 @@ end;
 
 procedure TJvStringListToHtml.DoStringsChange(Sender: TObject);
 begin
-  FreeAndNil(FHTML);
+  FHTML.Clear;  // wp: clear instead of Free
+//  FreeAndNil(FHTML);
 end;
 
 function TJvStringListToHtml.GetHTML: TStrings;
 begin
-  if ComponentState * [csLoading, csDestroying] <> [] then
+// if ComponentState * [csLoading, csDestroying] <> [] then  // wp: removed
     if FHTML.Count = 0 then
       ConvertToHTMLStrings(Strings, FHTML);
   Result := FHTML;

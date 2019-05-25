@@ -320,12 +320,8 @@ const
 var
   ConversionsHash: array of Word;
 
-{$IFNDEF UNICODE}
-const
-  MB_ERR_INVALID_CHARS = 8;
-{$ENDIF ~UNICODE}
 
-{ TJvStrToHtml }
+  { TJvStrToHtml }
 
 constructor TJvStrToHtml.Create(AOwner: TComponent);
 begin
@@ -478,6 +474,7 @@ begin
       if not found then begin
         Delete(html, Length(html), 1);
         Delete(html, 1, 1);
+        if html[1] = '#' then Delete(html, 1, 1);
         if html[1] = 'x' then html[1] := '$';
         Append(UnicodeToUTF8(StrToInt(html)));
       end;
