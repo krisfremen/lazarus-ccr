@@ -4,7 +4,7 @@ uses
   Forms, Interfaces,
   MainFrm in 'MainFrm.pas' {frmValidateEditDemo};
 
-{$R *.RES}
+{$R *.res}
 
 begin
   Application.Scaled:=True;

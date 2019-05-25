@@ -13,8 +13,6 @@ object frmValidateEditDemo: TfrmValidateEditDemo
   Constraints.MinWidth = 325
   DefaultMonitor = dmDesktop
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Shell Dlg 2'
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '2.1.0.0'
@@ -23,115 +21,86 @@ object frmValidateEditDemo: TfrmValidateEditDemo
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 16
-    Height = 269
+    Height = 283
     Top = 16
-    Width = 487
+    Width = 502
     AutoSize = True
     BorderSpacing.Around = 16
     Caption = 'Properties'
-    ClientHeight = 251
-    ClientWidth = 483
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Shell Dlg 2'
-    Font.Style = [fsBold]
-    ParentFont = False
+    ClientHeight = 263
+    ClientWidth = 498
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = cbDisplayFormat
       AnchorSideTop.Control = GroupBox1
       Left = 12
-      Height = 13
+      Height = 15
       Top = 8
-      Width = 75
+      Width = 82
       BorderSpacing.Top = 8
       Caption = 'Display Format:'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ParentColor = False
-      ParentFont = False
     end
     object Label3: TLabel
       AnchorSideLeft.Control = cbDisplayFormat
       AnchorSideTop.Side = asrBottom
       AnchorSideBottom.Control = edCheckChars
       Left = 12
-      Height = 13
-      Top = 109
-      Width = 64
+      Height = 15
+      Top = 111
+      Width = 69
       Anchors = [akLeft, akBottom]
       BorderSpacing.Top = 11
       BorderSpacing.Bottom = 4
       Caption = 'Check Chars:'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ParentColor = False
-      ParentFont = False
     end
     object Label4: TLabel
       AnchorSideTop.Control = seDecimalPlaces
       AnchorSideTop.Side = asrCenter
       Left = 236
-      Height = 13
-      Top = 105
-      Width = 69
+      Height = 15
+      Top = 108
+      Width = 79
       Caption = 'Decimal Places'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ParentColor = False
-      ParentFont = False
     end
     object Label6: TLabel
       AnchorSideLeft.Control = cbDisplayFormat
       AnchorSideTop.Control = edDisplayPrefix
       AnchorSideTop.Side = asrCenter
       Left = 12
-      Height = 13
-      Top = 54
-      Width = 65
+      Height = 15
+      Top = 58
+      Width = 70
       Caption = 'Display Prefix'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ParentColor = False
-      ParentFont = False
     end
     object Label7: TLabel
       AnchorSideLeft.Control = cbDisplayFormat
       AnchorSideTop.Control = edDisplaySuffix
       AnchorSideTop.Side = asrCenter
       Left = 12
-      Height = 13
-      Top = 79
-      Width = 65
+      Height = 15
+      Top = 85
+      Width = 70
       Caption = 'Display Suffix'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ParentColor = False
-      ParentFont = False
     end
     object cbDisplayFormat: TComboBox
       AnchorSideLeft.Control = GroupBox1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
       Left = 12
-      Height = 21
-      Top = 25
+      Height = 23
+      Top = 27
       Width = 193
       BorderSpacing.Left = 12
       BorderSpacing.Top = 4
       DropDownCount = 24
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ItemHeight = 13
+      ItemHeight = 15
       OnChange = cbDisplayFormatChange
       OnKeyPress = cbDisplayFormatKeyPress
-      ParentFont = False
       Style = csDropDownList
       TabOrder = 0
     end
@@ -142,14 +111,10 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       Left = 221
       Height = 19
       Top = 52
-      Width = 85
+      Width = 97
       BorderSpacing.Top = 6
       Caption = 'Has Maximum'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = chkHasMaxValueClick
-      ParentFont = False
       TabOrder = 1
     end
     object chkHasMinValue: TCheckBox
@@ -158,31 +123,23 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideTop.Side = asrCenter
       Left = 221
       Height = 19
-      Top = 77
-      Width = 81
+      Top = 79
+      Width = 96
       Caption = 'Has Minimum'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = chkHasMinValueClick
-      ParentFont = False
       TabOrder = 2
     end
     object seDecimalPlaces: TSpinEdit
       AnchorSideLeft.Control = edMaxValue
       AnchorSideTop.Control = edMinValue
       AnchorSideTop.Side = asrBottom
-      Left = 318
-      Height = 21
-      Top = 101
+      Left = 330
+      Height = 23
+      Top = 104
       Width = 49
       BorderSpacing.Top = 4
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       MaxValue = 0
       OnChange = seDecimalPlacesChange
-      ParentFont = False
       TabOrder = 3
       Value = 2
     end
@@ -193,15 +150,11 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       Left = 221
       Height = 19
       Top = 27
-      Width = 89
+      Width = 96
       BorderSpacing.Left = 16
       BorderSpacing.Top = 27
       Caption = 'Empty if Zero?'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = chkZeroEmptyClick
-      ParentFont = False
       TabOrder = 4
     end
     object edCheckChars: TEdit
@@ -210,33 +163,25 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = btnCheckChars
       Left = 12
-      Height = 21
-      Top = 126
-      Width = 298
+      Height = 23
+      Top = 130
+      Width = 310
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 8
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
       TabOrder = 5
     end
     object btnCheckChars: TButton
       AnchorSideLeft.Control = edMaxValue
       AnchorSideTop.Control = seDecimalPlaces
       AnchorSideTop.Side = asrBottom
-      Left = 318
+      Left = 330
       Height = 21
-      Top = 126
+      Top = 131
       Width = 49
       BorderSpacing.Top = 4
       Caption = 'Set'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = btnCheckCharsClick
-      ParentFont = False
       TabOrder = 6
     end
     object edDisplayPrefix: TEdit
@@ -244,31 +189,23 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cbDisplayFormat
       AnchorSideTop.Side = asrBottom
-      Left = 93
-      Height = 21
-      Top = 50
+      Left = 98
+      Height = 23
+      Top = 54
       Width = 57
       BorderSpacing.Left = 16
       BorderSpacing.Top = 4
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
       TabOrder = 7
     end
     object edDisplaySuffix: TEdit
       AnchorSideLeft.Control = edDisplayPrefix
       AnchorSideTop.Control = edDisplayPrefix
       AnchorSideTop.Side = asrBottom
-      Left = 93
-      Height = 21
-      Top = 75
+      Left = 98
+      Height = 23
+      Top = 81
       Width = 57
       BorderSpacing.Top = 4
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
       TabOrder = 8
     end
     object btnSetDisplayPrefix: TButton
@@ -276,35 +213,27 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = edDisplayPrefix
       AnchorSideTop.Side = asrCenter
-      Left = 158
+      Left = 163
       Height = 21
-      Top = 50
+      Top = 55
       Width = 47
       BorderSpacing.Left = 8
       BorderSpacing.Top = 4
       Caption = 'Set'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = btnSetDisplayPrefixClick
-      ParentFont = False
       TabOrder = 9
     end
     object btnSetDisplaySuffix: TButton
       AnchorSideLeft.Control = btnSetDisplayPrefix
       AnchorSideTop.Control = edDisplaySuffix
       AnchorSideTop.Side = asrCenter
-      Left = 158
+      Left = 163
       Height = 21
-      Top = 75
+      Top = 82
       Width = 47
       BorderSpacing.Top = 3
       Caption = 'Set'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = btnSetDisplaySuffixClick
-      ParentFont = False
       TabOrder = 10
     end
     object edMaxValue: TEdit
@@ -312,60 +241,48 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chkHasMaxValue
       AnchorSideTop.Side = asrCenter
-      Left = 318
-      Height = 21
-      Top = 51
+      Left = 330
+      Height = 23
+      Top = 50
       Width = 49
       BorderSpacing.Left = 12
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnExit = edMaxValueExit
-      ParentFont = False
       TabOrder = 11
     end
     object edMinValue: TEdit
       AnchorSideLeft.Control = edMaxValue
       AnchorSideTop.Control = edMaxValue
       AnchorSideTop.Side = asrBottom
-      Left = 318
-      Height = 21
-      Top = 76
+      Left = 330
+      Height = 23
+      Top = 77
       Width = 49
       BorderSpacing.Top = 4
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnExit = edMinValueExit
-      ParentFont = False
       TabOrder = 12
     end
     object GroupBox3: TGroupBox
       AnchorSideTop.Control = edCheckChars
       AnchorSideTop.Side = asrBottom
       Left = 12
-      Height = 80
-      Top = 159
-      Width = 459
+      Height = 86
+      Top = 165
+      Width = 474
       AutoSize = True
       BorderSpacing.Around = 12
       Caption = 'Critical Points'
-      ClientHeight = 62
-      ClientWidth = 455
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
+      ClientHeight = 66
+      ClientWidth = 470
       TabOrder = 13
       object Label9: TLabel
         AnchorSideLeft.Control = edCPMaxValue
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = colCPAbove
         AnchorSideTop.Side = asrCenter
-        Left = 307
-        Height = 13
+        Left = 317
+        Height = 15
         Top = 8
-        Width = 31
+        Width = 36
         BorderSpacing.Left = 16
         Caption = 'Colour'
         ParentColor = False
@@ -374,10 +291,10 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideLeft.Control = Label9
         AnchorSideTop.Control = colCPBelow
         AnchorSideTop.Side = asrCenter
-        Left = 307
-        Height = 13
-        Top = 34
-        Width = 31
+        Left = 317
+        Height = 15
+        Top = 35
+        Width = 36
         Caption = 'Colour'
         ParentColor = False
       end
@@ -385,9 +302,9 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideLeft.Control = cbCPCheckPoints
         AnchorSideBottom.Control = cbCPCheckPoints
         Left = 12
-        Height = 13
+        Height = 15
         Top = 12
-        Width = 65
+        Width = 72
         Anchors = [akLeft, akBottom]
         BorderSpacing.Bottom = 4
         Caption = 'Check Points:'
@@ -397,8 +314,8 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideLeft.Control = chkMaxValueIncluded
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = GroupBox3
-        Left = 242
-        Height = 21
+        Left = 252
+        Height = 23
         Top = 4
         Width = 49
         BorderSpacing.Left = 16
@@ -412,9 +329,9 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = edCPMaxValue
         AnchorSideTop.Side = asrCenter
-        Left = 342
+        Left = 357
         Height = 22
-        Top = 3
+        Top = 4
         Width = 105
         BorderSpacing.Left = 4
         ItemHeight = 16
@@ -424,9 +341,9 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideLeft.Control = edCPMaxValue
         AnchorSideTop.Control = edCPMaxValue
         AnchorSideTop.Side = asrBottom
-        Left = 242
-        Height = 21
-        Top = 29
+        Left = 252
+        Height = 23
+        Top = 31
         Width = 49
         BorderSpacing.Top = 4
         OnExit = edCPMinValueExit
@@ -436,9 +353,9 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       object colCPBelow: TColorBox
         AnchorSideLeft.Control = colCPAbove
         AnchorSideTop.Control = edCPMinValue
-        Left = 342
+        Left = 357
         Height = 22
-        Top = 29
+        Top = 31
         Width = 105
         BorderSpacing.Right = 8
         BorderSpacing.Bottom = 6
@@ -450,13 +367,13 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideTop.Control = edCPMinValue
         AnchorSideTop.Side = asrCenter
         Left = 12
-        Height = 21
-        Top = 29
+        Height = 23
+        Top = 31
         Width = 89
         BorderSpacing.Left = 12
         BorderSpacing.Bottom = 12
         DropDownCount = 24
-        ItemHeight = 13
+        ItemHeight = 15
         OnChange = cbCPCheckPointsChange
         Style = csDropDownList
         TabOrder = 4
@@ -467,8 +384,8 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideTop.Side = asrCenter
         Left = 113
         Height = 19
-        Top = 5
-        Width = 113
+        Top = 6
+        Width = 123
         Caption = 'Max Value Included'
         OnClick = chkMaxValueIncludedClick
         TabOrder = 5
@@ -480,8 +397,8 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         AnchorSideTop.Side = asrCenter
         Left = 113
         Height = 19
-        Top = 30
-        Width = 109
+        Top = 33
+        Width = 122
         BorderSpacing.Left = 12
         Caption = 'Min Value Included'
         OnClick = chkMinValueIncludedClick
@@ -496,51 +413,38 @@ object frmValidateEditDemo: TfrmValidateEditDemo
     AnchorSideRight.Control = GroupBox1
     AnchorSideRight.Side = asrBottom
     Left = 16
-    Height = 124
-    Top = 395
-    Width = 487
+    Height = 130
+    Top = 413
+    Width = 502
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
     BorderSpacing.Bottom = 16
     Caption = 'Set To'
-    ClientHeight = 106
-    ClientWidth = 483
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Shell Dlg 2'
-    Font.Style = [fsBold]
-    ParentFont = False
+    ClientHeight = 110
+    ClientWidth = 498
     TabOrder = 1
     object Label5: TLabel
       AnchorSideLeft.Control = GroupBox2
       AnchorSideTop.Control = edSetTo
       AnchorSideTop.Side = asrCenter
       Left = 12
-      Height = 13
+      Height = 15
       Top = 12
-      Width = 26
+      Width = 28
       BorderSpacing.Left = 12
       Caption = 'Value'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ParentColor = False
-      ParentFont = False
     end
     object edSetTo: TEdit
       AnchorSideLeft.Control = Label5
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = GroupBox2
-      Left = 46
-      Height = 21
+      Left = 48
+      Height = 23
       Top = 8
       Width = 121
       BorderSpacing.Left = 8
       BorderSpacing.Top = 8
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
       TabOrder = 0
     end
     object rgSetToType: TRadioGroup
@@ -549,9 +453,9 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Side = asrBottom
       Left = 12
-      Height = 49
-      Top = 41
-      Width = 258
+      Height = 51
+      Top = 43
+      Width = 265
       AutoFill = True
       AutoSize = True
       BorderSpacing.Top = 12
@@ -567,11 +471,8 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 4
       ClientHeight = 31
-      ClientWidth = 254
+      ClientWidth = 261
       Columns = 4
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       ItemIndex = 3
       Items.Strings = (
         'Currency'
@@ -579,7 +480,6 @@ object frmValidateEditDemo: TfrmValidateEditDemo
         'Integer'
         'Text'
       )
-      ParentFont = False
       TabOrder = 1
     end
     object btnSetTo: TButton
@@ -587,19 +487,15 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = edSetTo
       AnchorSideTop.Side = asrCenter
-      Left = 171
-      Height = 23
+      Left = 173
+      Height = 25
       Top = 7
       Width = 42
       AutoSize = True
       BorderSpacing.Left = 4
       Caption = 'Set'
       Default = True
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = btnSetToClick
-      ParentFont = False
       TabOrder = 2
     end
     object chkAsVariant: TCheckBox
@@ -607,16 +503,12 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = edSetTo
       AnchorSideTop.Side = asrCenter
-      Left = 229
+      Left = 231
       Height = 19
-      Top = 9
-      Width = 68
+      Top = 10
+      Width = 71
       BorderSpacing.Left = 16
       Caption = 'as Variant'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
       TabOrder = 3
     end
     object btnSetToPI: TButton
@@ -624,18 +516,14 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = edSetTo
       AnchorSideTop.Side = asrCenter
-      Left = 313
-      Height = 23
+      Left = 318
+      Height = 25
       Top = 7
-      Width = 66
+      Width = 69
       AutoSize = True
       BorderSpacing.Left = 16
       Caption = 'Set to pi'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       OnClick = btnSetToPIClick
-      ParentFont = False
       TabOrder = 4
     end
   end
@@ -646,20 +534,15 @@ object frmValidateEditDemo: TfrmValidateEditDemo
     AnchorSideRight.Control = GroupBox1
     AnchorSideRight.Side = asrBottom
     Left = 16
-    Height = 78
-    Top = 301
-    Width = 487
+    Height = 82
+    Top = 315
+    Width = 502
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
     BorderSpacing.Bottom = 16
     Caption = 'Validate Edit'
-    ClientHeight = 60
-    ClientWidth = 483
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Shell Dlg 2'
-    Font.Style = [fsBold]
-    ParentFont = False
+    ClientHeight = 62
+    ClientWidth = 498
     TabOrder = 2
     object chkValueChanged: TCheckBox
       AnchorSideTop.Control = JvValidateEdit
@@ -668,18 +551,14 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = GroupBox4
       AnchorSideBottom.Side = asrBottom
-      Left = 320
+      Left = 322
       Height = 19
-      Top = 29
-      Width = 151
+      Top = 31
+      Width = 164
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 4
       BorderSpacing.Bottom = 12
       Caption = 'Message on Value Change?'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
-      ParentFont = False
       TabOrder = 0
     end
     object JvValidateEdit: TJvValidateEdit
@@ -688,9 +567,9 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       AnchorSideRight.Control = GroupBox4
       AnchorSideRight.Side = asrBottom
       Left = 12
-      Height = 21
+      Height = 23
       Top = 4
-      Width = 459
+      Width = 474
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 12
       BorderSpacing.Top = 4
@@ -702,12 +581,8 @@ object frmValidateEditDemo: TfrmValidateEditDemo
       DisplayFormat = dfFloat
       DecimalPlaces = 2
       EditText = '0'
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Shell Dlg 2'
       MaxValue = 0
       MinValue = 0
-      ParentFont = False
       TabOrder = 1
       OnCustomValidate = JvValidateEditCustomValidate
       OnValueChanged = JvValidateEditValueChanged
