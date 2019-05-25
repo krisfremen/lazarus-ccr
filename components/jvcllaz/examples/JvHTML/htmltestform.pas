@@ -81,6 +81,7 @@ end;
 
 procedure TMainForm.edHTMLTitleChange(Sender: TObject);
 begin
+  JvStringListToHTML1.HTMLTitle := edHTMLTitle.Text;
   MemoChange(nil);
 end;
 
