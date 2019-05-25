@@ -412,7 +412,7 @@ end;
 procedure TfrmValidatorsEditor.DoAddNewValidator(Sender: TObject);
 begin
   with Sender as TAction do
-    AddNew(TJvBaseValidatorClass(Tag));
+    AddNew({%H-}TJvBaseValidatorClass(Tag));
 end;
 
 type
@@ -438,7 +438,7 @@ begin
     end;
     A := TAction.Create(Self);
     A.Caption := AName;
-    A.Tag := NativeInt(AClass);
+    A.Tag := {%H-}PtrInt(AClass);
     A.ImageIndex := 0;
     if I - K < 9 then
       A.ShortCut := ShortCut(Ord('0') + I + 1 - K, [ssCtrl]);

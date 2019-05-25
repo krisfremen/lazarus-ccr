@@ -1,133 +1,197 @@
 object frmMain: TfrmMain
   Left = 306
-  Height = 274
+  Height = 270
   Top = 126
-  Width = 619
+  Width = 519
+  AutoSize = True
   Caption = 'JvValidators demo'
-  ClientHeight = 274
-  ClientWidth = 619
+  ClientHeight = 270
+  ClientWidth = 519
   Color = clBtnFace
-  Constraints.MinHeight = 270
-  Constraints.MinWidth = 560
   DefaultMonitor = dmDesktop
   Font.Color = clWindowText
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '2.1.0.0'
   object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
     Left = 16
     Height = 15
     Top = 16
     Width = 167
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 16
     Caption = 'This edit must have a(ny) value:'
     FocusControl = edRequired
     ParentColor = False
   end
   object Label2: TLabel
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = edRequired
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 15
-    Top = 64
+    Top = 66
     Width = 233
+    BorderSpacing.Top = 8
     Caption = 'This edit must have more than 9  characters:'
     FocusControl = edRequired10Chars
     ParentColor = False
   end
   object Label3: TLabel
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = edRequired10Chars
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 15
-    Top = 112
+    Top = 116
     Width = 228
+    BorderSpacing.Top = 8
     Caption = 'This edit must match the reg. expr."A.B.C.":'
     FocusControl = edRegExpr
     ParentColor = False
   end
   object Label4: TLabel
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = edRegExpr
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 15
-    Top = 160
+    Top = 162
     Width = 201
+    BorderSpacing.Top = 8
     Caption = 'The value must be between 0 and 100:'
     FocusControl = edRange0to100
     ParentColor = False
   end
   object Label5: TLabel
-    Left = 280
+    AnchorSideLeft.Control = edRequired10Chars
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label1
+    Left = 281
     Height = 15
     Top = 16
     Width = 35
+    BorderSpacing.Left = 32
     Caption = 'Result:'
     ParentColor = False
   end
   object edRequired: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = edRequired10Chars
+    AnchorSideRight.Side = asrBottom
     Left = 16
     Height = 23
-    Top = 32
-    Width = 240
+    Top = 35
+    Width = 233
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
     TabOrder = 0
   end
   object edRequired10Chars: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Label2
+    AnchorSideRight.Side = asrBottom
     Left = 16
     Height = 23
-    Top = 80
-    Width = 240
+    Top = 85
+    Width = 233
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
     TabOrder = 1
   end
   object edRegExpr: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = edRequired10Chars
+    AnchorSideRight.Side = asrBottom
     Left = 16
     Height = 23
-    Top = 128
-    Width = 240
+    Top = 131
+    Width = 233
+    Anchors = [akTop, akLeft, akRight]
     TabOrder = 2
   end
   object edRange0to100: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label4
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = udRange0to100
     Left = 16
     Height = 23
-    Top = 176
-    Width = 227
+    Top = 181
+    Width = 212
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 4
     TabOrder = 3
     Text = '-1'
   end
   object udRange0to100: TUpDown
-    Left = 243
+    AnchorSideRight.Control = edRequired10Chars
+    AnchorSideRight.Side = asrBottom
+    Left = 232
     Height = 23
-    Top = 176
-    Width = 15
+    Top = 181
+    Width = 17
+    Anchors = [akTop, akRight]
     Associate = edRange0to100
     Max = 200
     Min = -100
     Position = -1
     TabOrder = 4
-    Wrap = False
   end
   object btnCheck: TButton
-    Left = 336
+    AnchorSideLeft.Control = btnValSum
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btnProviderCheck
+    Left = 356
     Height = 25
-    Top = 224
+    Top = 228
     Width = 137
-    Anchors = [akLeft, akBottom]
     AutoSize = True
+    BorderSpacing.Left = 24
+    BorderSpacing.Right = 16
     Caption = 'Use OnValidateFailed'
     OnClick = btnCheckClick
     TabOrder = 7
   end
   object btnProviderCheck: TButton
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = edRange0to100
+    AnchorSideTop.Side = asrBottom
     Left = 16
     Height = 25
-    Top = 224
+    Top = 228
     Width = 130
-    Anchors = [akLeft, akBottom]
     AutoSize = True
+    BorderSpacing.Top = 24
+    BorderSpacing.Bottom = 16
     Caption = 'Use JvErrorIndicator'
     OnClick = btnProviderCheckClick
     TabOrder = 5
   end
   object reResults: TMemo
+    AnchorSideLeft.Control = Label5
+    AnchorSideTop.Control = edRequired
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = edRange0to100
+    AnchorSideBottom.Side = asrBottom
     Cursor = crArrow
-    Left = 280
-    Height = 167
-    Top = 32
-    Width = 326
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Left = 281
+    Height = 169
+    Top = 35
+    Width = 212
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Right = 16
     Lines.Strings = (
       'This is a demo for the JvValidators component as well as the JvErrorProvider and, to some extent, the JvValidationSummary component.'
       ''
@@ -154,20 +218,23 @@ object frmMain: TfrmMain
     WordWrap = False
   end
   object btnValSum: TButton
-    Left = 160
+    AnchorSideLeft.Control = btnProviderCheck
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btnProviderCheck
+    Left = 170
     Height = 25
-    Top = 224
+    Top = 228
     Width = 162
-    Anchors = [akLeft, akBottom]
     AutoSize = True
+    BorderSpacing.Left = 24
     Caption = 'Use JvValidationSummary'
     OnClick = btnValSumClick
     TabOrder = 6
   end
   object JvValidators1: TJvValidators
     OnValidateFailed = JvValidators1ValidateFailed
-    left = 258
-    top = 104
+    left = 408
+    top = 24
     object JvRequiredFieldValidator1: TJvRequiredFieldValidator
       ControlToValidate = edRequired
       PropertyToValidate = 'Text'
@@ -197,12 +264,12 @@ object frmMain: TfrmMain
   object JvErrorIndicator1: TJvErrorIndicator
     ImageIndex = 0
     DefaultUseAnchors = False
-    left = 296
-    top = 104
+    left = 408
+    top = 80
   end
   object JvValidationSummary1: TJvValidationSummary
     OnChange = JvValidationSummary1Change
-    left = 328
-    top = 104
+    left = 408
+    top = 136
   end
 end

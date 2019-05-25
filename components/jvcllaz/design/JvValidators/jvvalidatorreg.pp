@@ -12,7 +12,7 @@ procedure Register;
 
 implementation
 
-{$R ..\..\resource\JvValidatorsReg.res}
+{$R ..\..\resource\jvvalidatorsreg.res}
 
 uses
   JvDsgnConsts, JvValidators, JvErrorIndicator, JvValidatorsEditorForm;

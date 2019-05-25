@@ -96,8 +96,8 @@ type
     // get the number of registered base validator classes
     class function BaseValidatorsCount: Integer;
     // get info on a registered class
-    class procedure GetBaseValidatorInfo(Index: Integer; var DisplayName: string;
-      var ABaseValidatorClass: TJvBaseValidatorClass);
+    class procedure GetBaseValidatorInfo(Index: Integer; out DisplayName: string;
+      out ABaseValidatorClass: TJvBaseValidatorClass);
 
   public
     {$IFDEF JVVALIDATORS_SUPPORTS_DBCONTROLS}
@@ -305,7 +305,7 @@ begin
   Result := GlobalValidatorsList;
 end;
 
-procedure Debug(const Msg: string); overload;
+procedure Debug(const {%H-}Msg: string); overload;
 begin
   {$IFDEF VALIDATORS_DEBUG}
   DebugLn(Msg);
@@ -379,7 +379,7 @@ begin
 end;
 
 class procedure TJvBaseValidator.GetBaseValidatorInfo(Index: Integer;
-  var DisplayName: string; var ABaseValidatorClass: TJvBaseValidatorClass);
+  out DisplayName: string; out ABaseValidatorClass: TJvBaseValidatorClass);
 begin
   if (Index < 0) or (Index >= ValidatorsList.Count) then
     raise Exception.CreateFmt(RsEInvalidIndexd, [Index]);

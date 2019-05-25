@@ -64,6 +64,7 @@ type
     procedure btnCheckClick(Sender: TObject);
     procedure btnProviderCheckClick(Sender: TObject);
     procedure btnValSumClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure reResultsEnter(Sender: TObject);
     procedure JvCustomValidator1Validate(Sender: TObject;
       ValueToValidate: Variant; var Valid: Boolean);
@@ -94,6 +95,16 @@ begin
   JvValidators1.ErrorIndicator := JvErrorIndicator1;
   JvValidators1.ValidationSummary := JvValidationSummary1;
 end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  AutoSize := false;
+  reResults.Anchors := reResults.Anchors + [akRight];;
+  Constraints.MinWidth := Width;
+  Constraints.MinHeight := Height;
+  Width := Width + 100;
+end;
+
 
 procedure TfrmMain.btnCheckClick(Sender: TObject);
 begin
@@ -162,6 +173,7 @@ begin
   JvErrorIndicator1.Error[BaseValidator.ControlToValidate] := BaseValidator.ErrorMessage;
   reResults.Lines.Add(Format('PROVIDER: %s',[BaseValidator.ErrorMessage]));
 end;
+
 procedure TfrmMain.JvValidationSummary1Change(Sender: TObject);
 var i:integer;
 begin
