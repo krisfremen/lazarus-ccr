@@ -338,7 +338,7 @@ type
 
 implementation
 
-{$R ../../resource/JvXPCore.res}
+{$R ../../resource/jvxpcore.res}
 
 //=== { TJvXPCustomControl } =================================================
 
