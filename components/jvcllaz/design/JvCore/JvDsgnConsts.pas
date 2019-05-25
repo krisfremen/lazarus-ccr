@@ -63,6 +63,8 @@ resourcestring
 resourcestring
   RsPaletteJvcl = 'Jvcl';
   RsPaletteJvclDB = 'Jvcl DB';
+  RsPaletteJvclNonVisual = 'Jvcl Non-Visual';
+
   RsPaletteSystem = 'Jv System';
   RsPaletteDialog = 'Jv Dialogs';
   RsPaletteButton = 'Jv Buttons';
@@ -75,7 +77,7 @@ resourcestring
   RsPaletteSliderSplitter = 'Jv Trackers, Sliders, Splitters';
   RsPaletteImageAnimator = 'Jv Images, Animators';
   RsPaletteVisual = 'Jv Visual';
-  RsPaletteNonVisual = 'Jv Non-Visual';
+//  RsPaletteNonVisual = 'Jv Non-Visual';
   RsPaletteThreading = 'Jv Threading';
   RsPalettePersistence = 'Jv Persistence';
   RsPaletteAppForm = 'Jv Application, Forms';

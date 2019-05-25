@@ -25,7 +25,6 @@ uses
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvcl, [
-    TJvId3v1, TJvId3v2,
     TJvAnimatedImage,
     TJvBmpAnimator,
 	TjvPicClip,
@@ -34,6 +33,10 @@ begin
     TJvFullColorPanel, TJvFullColorTrackBar, TJvFullColorGroup, TJvFullColorLabel,
     TJvFullColorSpaceCombo, TJvFullColorAxisCombo, TJvFullColorCircle,
     TJvFullColorDialog, TJvFullColorCircleDialog
+  ]);
+
+  RegisterComponents(RsPaletteJvclNonVisual, [
+    TJvId3v1, TJvId3v2
   ]);
 
   RegisterComponentEditor(TJvID3Controller, TJvID3ControllerEditor);

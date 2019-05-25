@@ -19,7 +19,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclNonVisual, [
     TJvValidators, TJvValidationSummary, TJvErrorIndicator
   ]);
 //  RegisterComponents(RsPaletteValidators, [TJvValidators, TJvValidationSummary, TJvErrorIndicator]);
