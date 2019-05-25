@@ -75,13 +75,10 @@ type
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     procedure AdjustClientRect(var Rect: TRect); override;
-    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer;
-      Raw: boolean = false; WithThemeSpace: boolean = true); override;
     procedure HookEnabledChanged; override;
     procedure HookMouseDown; override;
     procedure HookPosChanged; override;
     procedure Paint; override;
-    procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     property Alignment: TAlignment read FAlignment write SetAlignment default taCenter;
     property BorderWidth: TBorderWidth read FBorderWidth write SetBorderWidth default 0;
     property BoundColor: TColor read FBoundColor write SetBoundColor default clGray;
@@ -105,6 +102,9 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer;
+      Raw: boolean = false; WithThemeSpace: boolean = true); override;
+    procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
   end;
 
   TJvXPContainer = class(TJvXPCustomContainer)

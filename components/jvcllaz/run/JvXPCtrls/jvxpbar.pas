@@ -113,12 +113,6 @@ type
     FClient: TJvXPBarItem;
   protected
     procedure AssignClient(AClient: TObject); override;
-    function IsCaptionLinked: Boolean; override;
-    function IsCheckedLinked: Boolean; override;
-    function IsEnabledLinked: Boolean; override;
-    function IsHintLinked: Boolean; override;
-    function IsImageIndexLinked: Boolean; override;
-    function IsVisibleLinked: Boolean; override;
     function IsOnExecuteLinked: Boolean; override;
     procedure SetCaption(const Value: string); override;
     procedure SetHint(const Value: string); override;
@@ -131,6 +125,14 @@ type
     procedure SetVisible(Value: Boolean); override;
     procedure SetOnExecute(Value: TNotifyEvent); override;
     property Client: TJvXPBarItem read FClient write FClient;
+  public
+    function IsCaptionLinked: Boolean; override;
+    function IsCheckedLinked: Boolean; override;
+    function IsEnabledLinked: Boolean; override;
+    function IsHintLinked: Boolean; override;
+    function IsImageIndexLinked: Boolean; override;
+    function IsVisibleLinked: Boolean; override;
+
   end;
 
   TJvXPBarItemActionLinkClass = class of TJvXPBarItemActionLink;
@@ -449,7 +451,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     function GetHitTestAt(X, Y: Integer): TJvXPBarHitTest;
-    function GetItemAt(X, Y: Integer): Integer;
+    function GetItemAt({%H-}X, Y: Integer): Integer;
     procedure Click; override;
     property Height default 46;
     property VisibleItems: TJvXPBarVisibleItems read FVisibleItems;
@@ -550,7 +552,7 @@ procedure RoundedFrame(Canvas: TCanvas; ARect: TRect; AColor: TColor; R: Integer
 
 implementation
 
-{$R ../../resource/JvXPBar.res}
+{$R ../../resource/jvxpbar.res}
 
 uses
   Menus;
@@ -1772,8 +1774,8 @@ begin
 end;
 
 procedure TJvXPCustomWinXPBar.SetHotTrack(Value: Boolean);
-const
-  MouseEvents: TJvXPControlStyle = [csRedrawMouseEnter, csRedrawMouseLeave];
+//const
+//  MouseEvents: TJvXPControlStyle = [csRedrawMouseEnter, csRedrawMouseLeave];
 begin
   if Value <> FHotTrack then
   begin

@@ -38,11 +38,11 @@ uses
 type
   TJvXPCustomButtonActionLink = class(TWinControlActionLink)
   protected
-    function IsImageIndexLinked: Boolean; override;
     procedure AssignClient(AClient: TObject); override;
     procedure SetImageIndex(Value: Integer); override;
   public
     destructor Destroy; override;
+    function IsImageIndexLinked: Boolean; override;
   end;
 
   TJvXPLayout = (blGlyphLeft, blGlyphRight, blGlyphTop, blGlyphBottom);
@@ -85,7 +85,6 @@ type
     procedure SetWordWrap(Value: Boolean); virtual;
     procedure Paint; override;
     procedure HookResized; override;
-    procedure SetBounds(ALeft, ATop, AWidth, AHeight: integer); override;
     procedure UpdateBitmaps;
 
     // advanced properties.
@@ -104,6 +103,7 @@ type
     destructor Destroy; override;
     procedure Click; override;
     procedure Loaded ; override;
+    procedure SetBounds(ALeft, ATop, AWidth, AHeight: integer); override;
   published
 //    property TabStop default True;
 //    property UseDockManager default True;
@@ -504,7 +504,7 @@ end;
 
 procedure TJvXPCustomButton.KeyUp(var Key: Word; Shift: TShiftState);
 var
-  Pos: TPoint;
+  Pos: TPoint = (X:0; Y:0);
 begin
   // it's not possible to call the 'HookMouseUp' or 'HookMouseLeave' methods,
   // because we don't want to call their event handlers.

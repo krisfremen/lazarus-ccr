@@ -5,10 +5,9 @@ unit MainFrm;
 interface
 
 uses
-  //Windows, Messages, 
-  SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, JvXPCore, JvXPBar, JvXPContainer, ImgList, ActnList, ExtCtrls,
-  StdCtrls, ComCtrls, JvExControls, JvComponent, JvXPCheckCtrls,
+  SysUtils, Classes, Graphics, Controls, Forms, StdCtrls, ComCtrls, ExtCtrls,
+  Dialogs, ImgList, ActnList,
+  JvXPCore, JvXPBar, JvXPContainer, JvExControls, JvComponent, JvXPCheckCtrls,
   JvXPButtons;
 
 resourcestring

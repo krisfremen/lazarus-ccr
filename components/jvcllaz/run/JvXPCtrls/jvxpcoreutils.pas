@@ -54,7 +54,7 @@ procedure JvXPDrawBoundLines(const ACanvas: TCanvas; const BoundLines: TJvXPBoun
 
 procedure JvXPConvertToGray2(ABitmap: TBitmap);
 
-procedure JvXPRenderText(const AParent: TControl; const ACanvas: TCanvas;
+procedure JvXPRenderText(const {%H-}AParent: TControl; const ACanvas: TCanvas;
   ACaption: TCaption; const AFont: TFont; const AEnabled, AShowAccelChar: Boolean;
   var ARect: TRect; AFlags: Integer);
 
@@ -64,7 +64,7 @@ procedure JvXPFrame3D(const ACanvas: TCanvas; const ARect: TRect;
 procedure JvXPColorizeBitmap(ABitmap: TBitmap; const AColor: TColor);
 
 procedure JvXPSetDrawFlags(const AAlignment: TAlignment; const AWordWrap: Boolean;
-  var Flags: Integer);
+  out Flags: Integer);
 
 procedure JvXPPlaceText(const AParent: TControl; const ACanvas: TCanvas;
   const AText: TCaption; const AFont: TFont; const AEnabled, AShowAccelChar: Boolean;
@@ -74,7 +74,7 @@ procedure JvXPPlaceText(const AParent: TControl; const ACanvas: TCanvas;
 implementation
 
 uses
-  IntfGraphics, fpCanvas, fpImage, fpImgCanv;
+  IntfGraphics, fpCanvas, fpImage;
 
 function JvXPMethodsEqual(const Method1, Method2: TMethod): Boolean;
 begin
@@ -414,7 +414,7 @@ begin
 end;
 
 procedure JvXPSetDrawFlags(const AAlignment: TAlignment; const AWordWrap: Boolean;
-  var Flags: Integer);
+  out Flags: Integer);
 begin
   Flags := DT_END_ELLIPSIS;
   case AAlignment of

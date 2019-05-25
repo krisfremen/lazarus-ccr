@@ -442,15 +442,6 @@ begin
   end;
 end;
 
-{$IFDEF USEJVCL}
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
-{$ENDIF USEJVCL}
 
 end.
 

@@ -2,23 +2,23 @@ object frmMain: TfrmMain
   Left = 291
   Height = 191
   Top = 290
-  Width = 486
+  Width = 504
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'frmMain'
   ClientHeight = 191
-  ClientWidth = 486
+  ClientWidth = 504
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Color = clWindowText
   OnCreate = FormCreate
   Position = poDesktopCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object cntHeader: TJvXPContainer
     Left = 0
     Height = 15
     Top = 0
-    Width = 486
+    Width = 504
     Caption = 'cntHeader'
     OnPaint = cntHeaderPaint
     Align = alTop
@@ -288,7 +288,7 @@ object frmMain: TfrmMain
     Left = 145
     Height = 17
     Top = 80
-    Width = 334
+    Width = 352
     Caption = '&Toogle Enable-Mode'
     TabOrder = 8
     Anchors = [akTop, akLeft, akRight]

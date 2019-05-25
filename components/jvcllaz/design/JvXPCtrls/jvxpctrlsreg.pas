@@ -39,7 +39,7 @@ begin
 end;
 
 initialization
-  {$I ../resource/JvXPCtrlsLaz.lrs}
+  {$I ../resource/jvxpctrlslaz.lrs}
   
 end.
 

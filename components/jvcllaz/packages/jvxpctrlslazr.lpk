@@ -17,40 +17,37 @@
     <Version Major="1" Release="4"/>
     <Files Count="6">
       <Item1>
-        <Filename Value="..\run\JvXPCtrls\JvXPBar.pas"/>
+        <Filename Value="..\run\JvXPCtrls\jvxpbar.pas"/>
         <UnitName Value="JvXPBar"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvXPCtrls\JvXPButtons.pas"/>
+        <Filename Value="..\run\JvXPCtrls\jvxpbuttons.pas"/>
         <UnitName Value="JvXPButtons"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvXPCtrls\JvXPCheckCtrls.pas"/>
+        <Filename Value="..\run\JvXPCtrls\jvxpcheckctrls.pas"/>
         <UnitName Value="JvXPCheckCtrls"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvXPCtrls\JvXPContainer.pas"/>
+        <Filename Value="..\run\JvXPCtrls\jvxpcontainer.pas"/>
         <UnitName Value="JvXPContainer"/>
       </Item4>
       <Item5>
-        <Filename Value="..\run\JvXPCtrls\JvXPCore.pas"/>
+        <Filename Value="..\run\JvXPCtrls\jvxpcore.pas"/>
         <UnitName Value="JvXPCore"/>
       </Item5>
       <Item6>
-        <Filename Value="..\run\JvXPCtrls\JvXPCoreUtils.pas"/>
+        <Filename Value="..\run\JvXPCtrls\jvxpcoreutils.pas"/>
         <UnitName Value="JvXPCoreUtils"/>
       </Item6>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="JvStdCtrlsLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="JvCoreLazR"/>
       </Item2>
-      <Item3>
-        <PackageName Value="FCL"/>
-      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
