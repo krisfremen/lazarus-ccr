@@ -163,6 +163,7 @@ type
     procedure SetBoundsRect(ARect: TRect);
   public
     constructor Create(AOwner: TCalendarLite);
+    destructor Destroy; override;
     procedure Draw;
     property BoundsRect: TRect read FBoundsRect write SetBoundsRect;
     property Buffer: TBitmap read FBuffer;
@@ -678,6 +679,12 @@ begin
   FOwner := AOwner;
   FCanvas := FBuffer.Canvas;
   FTextStyle:= DefTextStyle;
+end;
+
+destructor TCalDrawer.Destroy;
+begin
+  FBuffer.Free;
+  inherited;
 end;
 
 procedure TCalDrawer.CalcSettings;
