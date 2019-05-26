@@ -41,7 +41,7 @@ unit CalendarLite;
 interface
 
 uses
-  Classes, SysUtils, LResources, LCLVersion,
+  Classes, SysUtils, LResources, LCLVersion, LMessages,
   Forms, Controls, Graphics, Dialogs, Types, ExtCtrls, Menus;
 
 {$if lcl_fullversion >= 1080000}
@@ -129,6 +129,7 @@ type
   TCalDrawer = class
   private
     FBoundsRect: TRect;
+    FBuffer: TBitmap;
     FCanvas: TCanvas;
     FCellSize: TSize;
     FColPositions: TColArray;
@@ -141,6 +142,7 @@ type
     FTextStyle: TTextStyle;
     procedure CalcSettings;
     procedure DrawArrow(ARect: TRect; AHead: TArrowhead; ADirec: TArrowDirection);
+    procedure DrawBackground;
     procedure DrawDayCells;
     procedure DrawDayLabels;
     procedure DrawTodayRow;
@@ -158,9 +160,12 @@ type
     procedure GotoYear(AYear: word);
     procedure LeftClick(APoint: TPoint; Shift: TShiftState);
     procedure RightClick;
+    procedure SetBoundsRect(ARect: TRect);
   public
-    constructor Create(ACanvas: TCanvas);
+    constructor Create(AOwner: TCalendarLite);
     procedure Draw;
+    property BoundsRect: TRect read FBoundsRect write SetBoundsRect;
+    property Buffer: TBitmap read FBuffer;
   end;
 
 
@@ -195,6 +200,7 @@ type
 
   TCalendarLite = class(TCustomControl)
   private
+    FBufferValid: Boolean;
     FCalDrawer: TCalDrawer;
     FColors: TCalColors;
     FDate: TDateTime;
@@ -270,8 +276,13 @@ type
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     function SelMode(Shift: TShiftState): TCalSelMode;
+    procedure SetBiDiMode(AValue: TBiDiMode); override;
+    procedure SetParentBiDiMode(AValue: Boolean); override;
 
     procedure Paint; override;
+    procedure Resize; override;
+    procedure UpdateBiDiMode;
+    procedure UpdateBuffer;
     procedure UseDayName(ADayOfWeek: TDayOfWeek; const AValue: String);
     procedure UseDayNames(const AValue: String);
     procedure UseDisplayTexts(const AValue: String);
@@ -281,7 +292,6 @@ type
     { Hints }
     procedure ShowHintWindow(APoint: TPoint; ADate: TDate);
     procedure HideHintWindow;
-
   public
     constructor Create(anOwner: TComponent); override;
     destructor Destroy; override;
@@ -661,10 +671,12 @@ end;
 
 { TCalDrawer }
 
-constructor TCalDrawer.Create(ACanvas: TCanvas);
+constructor TCalDrawer.Create(AOwner: TCalendarLite);
 begin
   inherited Create;
-  FCanvas:= ACanvas;
+  FBuffer := TBitmap.Create;
+  FOwner := AOwner;
+  FCanvas := FBuffer.Canvas;
   FTextStyle:= DefTextStyle;
 end;
 
@@ -735,6 +747,7 @@ begin
   if not Assigned(FCanvas) then Exit;
   DecodeDate(FOwner.FDate, FThisYear, FThisMonth, FThisDay);
   CalcSettings;
+  DrawBackground;
   DrawTopRow;
   DrawDayLabels;
   DrawTodayRow;
@@ -811,6 +824,18 @@ begin
          end;
      end;
   end;
+end;
+
+procedure TCalDrawer.DrawBackground;
+begin
+  FBuffer.Canvas.Brush.Color := FOwner.Colors.BackgroundColor;
+  if (coShowBorder in FOwner.Options) then
+  begin
+    FCanvas.Pen.Color := FOwner.FColors.BorderColor;
+    FCanvas.Pen.Style := psSolid;
+    FCanvas.Rectangle(0, 0, FBuffer.Width, FBuffer.Height);
+  end else
+    FBuffer.Canvas.FillRect(0, 0, FBuffer.Width, FBuffer.Height);
 end;
 
 procedure TCalDrawer.DrawDayCells;
@@ -1337,6 +1362,14 @@ begin
   end;
 end;
 
+procedure TCalDrawer.SetBoundsRect(ARect: TRect);
+begin
+  if FBoundsRect = ARect then exit;
+  FBoundsRect := ARect;
+  FBuffer.SetSize(FBoundsRect.Width, FBoundsRect.Height);
+  Draw;
+end;
+
 
 { TCalColors }
 
@@ -1368,6 +1401,7 @@ procedure TCalColors.SetColor(AIndex: Integer; AValue: TColor);
 begin
   if FColors[AIndex] = AValue then exit;
   FColors[AIndex] := AValue;
+  FOwner.FBufferValid := false;
   FOwner.Invalidate;
 end;
 
@@ -1380,7 +1414,7 @@ begin
   FFormatSettings := DefaultFormatSettings;
   FSelDates := TCalDateList.Create;
   FColors := TCalColors.Create(self);
-  Color := clWhite;
+  //Color := clWhite;
   FStartingDayOfWeek:= dowSunday;
   with GetControlClassDefaultSize do
     SetInitialBounds(0, 0, cx, cy);
@@ -1391,7 +1425,7 @@ begin
   Constraints.MinHeight := ScaleX(DefMinHeight, DESIGNTIME_PPI);
   Constraints.MinWidth := ScaleY(DefMinWidth, DESIGNTIME_PPI);
   {$endif}
-  Canvas.Brush.Style := bsSolid;
+  //Canvas.Brush.Style := bsSolid;
   TabStop := true;
   SetDefaultDayNames;
 //  FCustomDayNames := GetDayNames;
@@ -1400,8 +1434,7 @@ begin
   SetDefaultDisplayTexts;
   FCustomDisplayTexts := GetDisplayTexts;
   FPopupMenu := TPopupMenu.Create(Self);
-  FCalDrawer := TCalDrawer.Create(Canvas);
-  FCalDrawer.FOwner:= Self;
+  FCalDrawer := TCalDrawer.Create(Self);
   FDblClickTimer := TTimer.Create(self);
   FDblClickTimer.Enabled := false;
   FDblClickTimer.Interval := DBLCLICK_INTERVAL;
@@ -1504,10 +1537,13 @@ begin
   if MonthOf(FDate) <> oldMonth then
     MonthChange;
 
+  FBufferValid := false;
+  {
   with FCalDrawer do begin
     FCanvas.Brush.Color := Colors.BackgroundColor;
     FCanvas.FillRect(FBoundsRect);
   end;
+  }
   Invalidate;
 end;
 
@@ -1628,6 +1664,8 @@ begin
     mbLeft  : FCalDrawer.LeftClick(FClickPoint, FClickShift);
     mbRight : FCalDrawer.RightClick;
   end;
+  FBufferValid := false;
+  Invalidate;
 end;
 
 function TCalendarLite.IsSelected(ADate: TDate): Boolean;
@@ -1737,9 +1775,10 @@ var
 begin
   if Assigned(FCalDrawer) then
   begin
-    if ParentColor then
-      Colors.BackgroundColor := Parent.Color;
-
+    if not FBufferValid then
+      UpdateBuffer;
+    Canvas.Draw(0, 0, FCalDrawer.Buffer);
+(*
     if ParentFont then
     begin
       if (Parent.Font <> FCalDrawer.FCanvas.Font)
@@ -1755,7 +1794,10 @@ begin
              FCalDrawer.FTextStyle.RightToLeft := False;
     end;
 
-    Canvas.Brush.Color:= Colors.BackGroundColor;
+    if ParentColor then
+      Canvas.Brush.Color := Parent.Color
+    else
+      Canvas.Brush.Color:= Colors.BackGroundColor;
     Canvas.FillRect(ClientRect);
     if (coShowBorder in FOptions) then
     begin
@@ -1769,9 +1811,23 @@ begin
     if (coShowBorder in FOptions) then InflateRect(r, -1, -1);
     FCalDrawer.FBoundsRect:= r;
     FCalDrawer.Draw;
+    *)
   end;
 
   inherited Paint;
+end;
+
+procedure TCalendarLite.Resize;
+begin
+  FBufferValid := false;
+  inherited;
+end;
+
+procedure TCalendarLite.UpdateBuffer;
+begin
+  FCalDrawer.BoundsRect:= ClientRect;
+  FCalDrawer.Draw;
+  FBufferValid := true;
 end;
 
 procedure TCalendarLite.PopulateHolidayPopupMenu;
@@ -1879,6 +1935,7 @@ procedure TCalendarLite.SetButtonHeight(const AValue: Integer);
 begin
   if FButtonHeight = AValue then exit;
   FButtonHeight := AValue;
+  FBufferValid := false;
   Invalidate;
 end;
 
@@ -1886,6 +1943,7 @@ procedure TCalendarLite.SetButtonWidth(const AValue: Integer);
 begin
   if FButtonWidth = AValue then exit;
   FButtonWidth := AValue;
+  FBufferValid := false;
   Invalidate;
 end;
 
@@ -1922,6 +1980,8 @@ begin
   DateChange;
   if MonthOf(FDate) <> oldMonth then
     MonthChange;
+  FBufferValid := false;
+  FBufferValid := false;
   Invalidate;
 end;
 
@@ -2078,6 +2138,12 @@ begin
     Result := smNextSingle;
 end;
 
+procedure TCalendarLite.SetBiDiMode(AValue: TBiDiMode);
+begin
+  inherited;
+  UpdateBiDiMode;
+end;
+
 procedure TCalendarLite.SetMultiSelect(AValue: Boolean);
 begin
   if AValue = FMultiSelect then
@@ -2088,10 +2154,17 @@ begin
   FPrevDate := FDate;
 end;
 
+procedure TCalendarLite.SetParentBiDiMode(AValue: Boolean);
+begin
+  inherited;
+  UpdateBiDiMode;
+end;
+
 procedure TCalendarLite.SetStartingDayOfWeek(AValue: TDayOfWeek);
 begin
   if FStartingDayOfWeek = AValue then Exit;
   FStartingDayOfWeek := AValue;
+  FBufferValid := false;
   Invalidate;
 end;
 
@@ -2105,6 +2178,7 @@ begin
   end;
   if Length(FCalDrawer.FRowPositions) <> LastRow+1 then
     SetLength(FCalDrawer.FRowPositions, LastRow+1);
+  FBufferValid := false;
   Invalidate;
 end;
 
@@ -2112,6 +2186,7 @@ procedure TCalendarLite.SetWeekendDays(AValue: TDaysOfWeek);
 begin
   if FWeekendDays = AValue then Exit;
   FWeekendDays := AValue;
+  FBufferValid := false;
   Invalidate;
 end;
 
@@ -2123,6 +2198,16 @@ procedure TCalendarLite.TimerExpired(Sender: TObject);
 begin
   FDblClickTimer.Enabled := false;
   InternalClick;
+end;
+
+procedure TCalendarLite.UpdateBiDiMode;
+begin
+  case (BiDiMode = bdLeftToRight) of
+    False: if not FCalDrawer.FTextStyle.RightToLeft then
+             FCalDrawer.FTextStyle.RightToLeft := True;
+    True : if FCalDrawer.FTextStyle.RightToLeft then
+            FCalDrawer.FTextStyle.RightToLeft := False;
+  end;
 end;
 
 procedure TCalendarlite.UseDayName(ADayOfWeek: TDayOfWeek; const AValue: String);

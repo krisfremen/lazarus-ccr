@@ -216,8 +216,6 @@ begin
   copyCal.Languages := demoCal.Languages;
   exit;
 
-
-
   if demoCal.Languages = lgCustom then begin
     demoCal.DayNames := 'S,M,T,W,T,F,S';
     demoCal.MonthNames := 'Ja,Fe,Mr,Ap,Ma,Jn,Jl,Au,Sp,Oc,Nv,Dc';

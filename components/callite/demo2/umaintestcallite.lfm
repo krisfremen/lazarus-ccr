@@ -1,10 +1,10 @@
 object Form1: TForm1
   Left = 700
-  Height = 845
+  Height = 746
   Top = 122
   Width = 851
   Caption = 'Examples of the TCalendaLite  component'
-  ClientHeight = 845
+  ClientHeight = 746
   ClientWidth = 851
   Color = clWindow
   Font.CharSet = ANSI_CHARSET
@@ -12,16 +12,16 @@ object Form1: TForm1
   LCLVersion = '2.1.0.0'
   object PSettings: TPanel
     Left = 0
-    Height = 448
+    Height = 432
     Top = 0
     Width = 851
     Align = alTop
-    ClientHeight = 448
+    ClientHeight = 432
     ClientWidth = 851
     TabOrder = 0
     object cgOptions: TCheckGroup
       Left = 24
-      Height = 392
+      Height = 384
       Top = 40
       Width = 160
       AutoFill = True
@@ -34,7 +34,7 @@ object Form1: TForm1
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 372
+      ClientHeight = 364
       ClientWidth = 156
       Items.Strings = (
         'coBoldDayNames'
@@ -118,7 +118,7 @@ object Form1: TForm1
     object rgLanguage: TRadioGroup
       Left = 200
       Height = 216
-      Top = 216
+      Top = 208
       Width = 160
       AutoFill = True
       Caption = 'Language to use'
@@ -149,7 +149,7 @@ object Form1: TForm1
     end
     object rgStartingDOW: TRadioGroup
       Left = 200
-      Height = 168
+      Height = 160
       Top = 40
       Width = 160
       AutoFill = True
@@ -161,7 +161,7 @@ object Form1: TForm1
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 148
+      ClientHeight = 140
       ClientWidth = 156
       Items.Strings = (
         'Sunday'
@@ -177,11 +177,11 @@ object Form1: TForm1
     end
     object GroupBox1: TGroupBox
       Left = 376
-      Height = 392
+      Height = 384
       Top = 40
       Width = 160
       Caption = 'Colors'
-      ClientHeight = 372
+      ClientHeight = 364
       ClientWidth = 156
       TabOrder = 6
       object CbArrowBorder: TColorButton
@@ -490,7 +490,7 @@ object Form1: TForm1
     end
     object SelDateListbox: TListBox
       Left = 560
-      Height = 152
+      Height = 120
       Top = 280
       Width = 274
       Columns = 3
@@ -632,14 +632,14 @@ object Form1: TForm1
       }
       OnClick = sbResetButtonHeightClick
     end
-  end
-  object Label1: TLabel
-    Left = 15
-    Height = 15
-    Top = 818
-    Width = 34
-    Caption = 'Label1'
-    ParentColor = False
+    object Label1: TLabel
+      Left = 562
+      Height = 15
+      Top = 408
+      Width = 34
+      Caption = 'Label1'
+      ParentColor = False
+    end
   end
   object FontDialog: TFontDialog
     MinFontSize = 0
