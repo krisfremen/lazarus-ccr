@@ -50,15 +50,15 @@
       </Item7>
       <Item8>
         <Filename Value="..\run\JvDB\jvdbconst.pas"/>
-        <UnitName Value="jvdbconst"/>
+        <UnitName Value="JvDBConst"/>
       </Item8>
     </Files>
     <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="jvstdctrlslazr"/>
+        <PackageName Value="JvStdCtrlsLazR"/>
       </Item1>
       <Item2>
-        <PackageName Value="jvctrlslazr"/>
+        <PackageName Value="JvCtrlsLazR"/>
       </Item2>
       <Item3>
         <PackageName Value="JvCoreLazR"/>

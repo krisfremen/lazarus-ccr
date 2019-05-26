@@ -29,7 +29,7 @@
     </Files>
     <RequiredPkgs Count="5">
       <Item1>
-        <PackageName Value="jvstdctrlslazr"/>
+        <PackageName Value="JvStdCtrlsLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="IDEIntf"/>
@@ -38,7 +38,7 @@
         <PackageName Value="JvCoreLazD"/>
       </Item3>
       <Item4>
-        <PackageName Value="jvdblazr"/>
+        <PackageName Value="JvDBLazR"/>
       </Item4>
       <Item5>
         <PackageName Value="FCL"/>

@@ -192,9 +192,6 @@ type
     destructor Destroy; override;
   end;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvPageListTreeView = class(TJvCustomPageListTreeView)
   published
     property AutoExpand;
@@ -284,9 +281,6 @@ type
     property Items;
   end;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvSettingsTreeView = class(TJvCustomSettingsTreeView)
   published
     property AutoExpand;
@@ -380,15 +374,6 @@ type
     property Items;
   end;
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL$';
-    Revision: '$Revision$';
-    Date: '$Date$';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 

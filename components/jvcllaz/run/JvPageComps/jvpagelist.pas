@@ -180,7 +180,6 @@ type
     property PageCount: Integer read GetPageCount;
   end;
 
-(******************** NOT CONVERTED  *)
   TJvStandardPage = class(TJvCustomPage)
   published
     property BorderWidth;
@@ -273,7 +272,6 @@ type
     property ParentBackground default False;
     {$ENDIF JVCLThemesEnabled}
   end;
-(******************** NOT CONVERTED *)
 
 implementation
 
@@ -941,13 +939,12 @@ begin
     Pages[Index].Caption := NewCaption;
 end;
 
-(**************                          *)
+
 //===TJvPageList =============================================================
 
 function TJvPageList.InternalGetPageClass: TJvCustomPageClass;
 begin
   Result := TJvStandardPage;
 end;
-(*******************)
 
 end.

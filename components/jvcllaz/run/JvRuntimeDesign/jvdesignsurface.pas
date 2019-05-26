@@ -41,10 +41,8 @@ interface
 uses
   Classes, SysUtils,
   LCLProc, LCLType, LResources, LCLIntf, LMessages,
-  //Messages,
   Forms, Controls, Graphics,
   Dialogs,
-  //Windows,
   ExtCtrls, Contnrs;
 
 type
@@ -266,15 +264,6 @@ type
     property OnSelectionChange: TNotifyEvent read GetOnSelectionChange write SetOnSelectionChange;
   end;
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL: https://jvcl.svn.sourceforge.net/svnroot/jvcl/trunk/jvcl/run/JvDesignSurface.pas $';
-    Revision: '$Revision: 12931 $';
-    Date: '$Date: 2010-11-28 15:36:50 +0200 (Κυρ, 28 Νοε 2010) $';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 
@@ -1146,13 +1135,6 @@ begin
   Surface.OnSelectionChange := Value;
 end;
 
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
 
 end.
 

@@ -28,7 +28,7 @@ Known Issues:
 
 unit JvTimeLineEditor;
 
-//{$I jvcl.inc}
+{$mode objfpc}{$H+}
 
 interface
 

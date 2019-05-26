@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="JvOutlookBarCustomDrawDemo"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -13,7 +15,6 @@
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -44,7 +45,9 @@
       <Unit1>
         <Filename Value="JvOutlookBarCustomDrawDemoMainForm.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="JvOutlookBarCustomDrawDemoMainFrm"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit1>
     </Units>
   </ProjectOptions>
@@ -52,7 +55,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="JvOutlookBarCustomDrawDemo"/>
+      <Filename Value="../../bin/JvOutlookBarCustomDrawDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

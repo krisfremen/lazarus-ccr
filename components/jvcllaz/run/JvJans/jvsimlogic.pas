@@ -379,7 +379,7 @@ implementation
 uses
   Math, JvJVCLUtils;
 
-{$R ..\..\resource\JvSimImages.res}
+{$R ..\..\resource\jvsimimages.res}
 
 const
   LED_SIZE = 12;

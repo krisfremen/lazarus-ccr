@@ -18,20 +18,20 @@
     <Version Major="1" Release="4"/>
     <Files Count="3">
       <Item1>
-        <Filename Value="..\design\JvPageComps\JvPageCompsReg.pas"/>
+        <Filename Value="..\design\JvPageComps\jvpagecompsreg.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvPageCompsReg"/>
       </Item1>
       <Item2>
-        <Filename Value="..\design\JvPageComps\JvNavPaneEditors.pas"/>
+        <Filename Value="..\design\JvPageComps\jvnavpaneeditors.pas"/>
         <UnitName Value="JvNavPaneEditors"/>
       </Item2>
       <Item3>
-        <Filename Value="..\design\JvPageComps\JvPageListEditors.pas"/>
+        <Filename Value="..\design\JvPageComps\jvpagelisteditors.pas"/>
         <UnitName Value="JvPageListEditors"/>
       </Item3>
     </Files>
-    <RequiredPkgs Count="4">
+    <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="IDEIntf"/>
       </Item1>
@@ -41,9 +41,6 @@
       <Item3>
         <PackageName Value="JvPageCompsR"/>
       </Item3>
-      <Item4>
-        <PackageName Value="FCL"/>
-      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

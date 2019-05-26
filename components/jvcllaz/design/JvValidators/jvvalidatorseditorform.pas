@@ -25,6 +25,8 @@ Known Issues:
 
 unit JvValidatorsEditorForm;
 
+{$mode objfpc}{$H+}
+
 interface
 
 uses

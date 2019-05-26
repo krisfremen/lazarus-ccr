@@ -11,7 +11,7 @@ procedure Register;
 
 implementation
 
-{$R ../../resource/JvRuntimeDesign.res}
+{$R ../../resource/jvruntimedesign.res}
 
 uses
   JvDsgnConsts, JvDesignSurface;

@@ -25,39 +25,39 @@
     <Version Major="1" Release="4"/>
     <Files Count="9">
       <Item1>
-        <Filename Value="..\run\JvCore\JvTypes.pas"/>
+        <Filename Value="..\run\JvCore\jvtypes.pas"/>
         <UnitName Value="JvTypes"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvCore\JvComponent.pas"/>
+        <Filename Value="..\run\JvCore\jvcomponent.pas"/>
         <UnitName Value="JvComponent"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvCore\JvConsts.pas"/>
+        <Filename Value="..\run\JvCore\jvconsts.pas"/>
         <UnitName Value="JvConsts"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvCore\JvExControls.pas"/>
+        <Filename Value="..\run\JvCore\jvexcontrols.pas"/>
         <UnitName Value="JvExControls"/>
       </Item4>
       <Item5>
-        <Filename Value="..\run\JvCore\JvExExtCtrls.pas"/>
+        <Filename Value="..\run\JvCore\jvexextctrls.pas"/>
         <UnitName Value="JvExExtCtrls"/>
       </Item5>
       <Item6>
-        <Filename Value="..\run\JvCore\JvJCLUtils.pas"/>
+        <Filename Value="..\run\JvCore\jvjclutils.pas"/>
         <UnitName Value="JvJCLUtils"/>
       </Item6>
       <Item7>
-        <Filename Value="..\run\JvCore\JvJVCLUtils.pas"/>
+        <Filename Value="..\run\JvCore\jvjvclutils.pas"/>
         <UnitName Value="JvJVCLUtils"/>
       </Item7>
       <Item8>
-        <Filename Value="..\run\JvCore\JvResources.pas"/>
+        <Filename Value="..\run\JvCore\jvresources.pas"/>
         <UnitName Value="JvResources"/>
       </Item8>
       <Item9>
-        <Filename Value="..\run\JvCore\JvThemes.pas"/>
+        <Filename Value="..\run\JvCore\jvthemes.pas"/>
         <UnitName Value="JvThemes"/>
       </Item9>
     </Files>

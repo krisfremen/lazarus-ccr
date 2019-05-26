@@ -30,9 +30,7 @@ unit JvFullColorListForm;
 interface
 
 uses
-//  Windows, Messages,
-  SysUtils, //Variants,
-  Classes, Graphics, Controls, Forms,
+  SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, Buttons, ImgList,
   JvFullColorSpaces, JvFullColorDialogs, JvFullColorCtrls;
 

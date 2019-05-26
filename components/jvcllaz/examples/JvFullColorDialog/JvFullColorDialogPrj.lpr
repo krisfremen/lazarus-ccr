@@ -10,6 +10,7 @@ uses
 {$R *.res}
 
 begin
+  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TJvFullColorDialogMainFrm, JvFullColorDialogMainFrm);
   Application.Run;

@@ -2,39 +2,34 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvJansLazD"/>
+    <Name Value="JvRuntimeDesignLazD"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="Original author: Jan Verhoeven [jan1 dott verhoeven att wxs dott nl]"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\design\JvJans"/>
-        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvJans"/>
+        <OtherUnitFiles Value="..\design\JvRuntimeDesign"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvRuntimeDesign"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code of Jan's Components):
-- YearGrid
-- Simulation components"/>
+    <Description Value="Runtime form designer"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvJans\JvJansReg.pas"/>
+        <Filename Value="..\design\JvRuntimeDesign\jvruntimedesignreg.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="JvJansReg"/>
+        <UnitName Value="JvRuntimeDesignReg"/>
       </Item1>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvJansLazR"/>
+        <PackageName Value="JvRuntimeDesignLazR"/>
+        <MaxVersion Major="1" Release="2"/>
       </Item2>
-      <Item3>
-        <PackageName Value="FCL"/>
-      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -6,9 +6,6 @@ unit JvDesignUtils;
 
 interface
 uses
-  {$IFDEF UNITVERSIONING}
-  JclUnitVersioning,
-  {$ENDIF UNITVERSIONING}
   SysUtils, LCLProc, LCLType, LResources, LCLIntf, LMessages,
   Classes, Controls, Graphics, Forms, dialogs;
 
@@ -58,7 +55,6 @@ type
   end;
 
 
-
 function DesignClientToParent(const APt: TPoint; AControl, AParent: TControl): TPoint;
 
 function DesignMin(AA, AB: Integer): Integer;
@@ -86,15 +82,6 @@ procedure DesignSaveComponentToFile(AComp: TComponent; const AFileName: string);
 procedure DesignLoadComponentFromFile(AComp: TComponent;
   const AFileName: string; AOnError: TReaderError);
 
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL: https://jvcl.svn.sourceforge.net/svnroot/jvcl/trunk/jvcl/run/JvDesignUtils.pas $';
-    Revision: '$Revision: 12535 $';
-    Date: '$Date: 2009-10-02 12:36:42 +0300 (Παρ, 02 Οκτ 2009) $';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
 
 implementation
 
@@ -428,14 +415,6 @@ begin
 
 end;
 
-
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
 
 end.
 

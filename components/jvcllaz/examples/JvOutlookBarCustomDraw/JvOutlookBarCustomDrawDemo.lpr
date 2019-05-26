@@ -12,6 +12,7 @@ begin
   {$IFDEF LCL_FullVersion >= 1080000}
   Application.Scaled := True;
   {$ENDIF}
+  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TJvOutlookBarCustomDrawDemoMainFrm, JvOutlookBarCustomDrawDemoMainFrm);
   Application.Run;

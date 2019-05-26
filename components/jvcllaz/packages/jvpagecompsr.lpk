@@ -17,15 +17,15 @@
     <Version Major="1" Release="4"/>
     <Files Count="6">
       <Item1>
-        <Filename Value="..\run\JvPageComps\JvNavigationPane.pas"/>
+        <Filename Value="..\run\JvPageComps\jvnavigationpane.pas"/>
         <UnitName Value="JvNavigationPane"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvPageComps\JvPageList.pas"/>
+        <Filename Value="..\run\JvPageComps\jvpagelist.pas"/>
         <UnitName Value="JvPageList"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvPageComps\JvPageListTreeView.pas"/>
+        <Filename Value="..\run\JvPageComps\jvpagelisttreeview.pas"/>
         <UnitName Value="JvPageListTreeView"/>
       </Item3>
       <Item4>
@@ -33,24 +33,21 @@
         <UnitName Value="jvnotebookpagelist"/>
       </Item4>
       <Item5>
-        <Filename Value="..\run\JvPageComps\JvTabBar.pas"/>
+        <Filename Value="..\run\JvPageComps\jvtabbar.pas"/>
         <UnitName Value="JvTabBar"/>
       </Item5>
       <Item6>
-        <Filename Value="..\run\JvPageComps\JvTabBarXPPainter.pas"/>
+        <Filename Value="..\run\JvPageComps\jvtabbarxppainter.pas"/>
         <UnitName Value="JvTabBarXPPainter"/>
       </Item6>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="JvStdCtrlsLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="JvCoreLazR"/>
       </Item2>
-      <Item3>
-        <PackageName Value="FCL"/>
-      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

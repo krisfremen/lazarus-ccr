@@ -17,29 +17,26 @@
     <Version Major="1" Release="4"/>
     <Files Count="4">
       <Item1>
-        <Filename Value="..\run\JvRuntimeDesign\JvDesignClip.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\jvdesignclip.pas"/>
         <UnitName Value="JvDesignClip"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvRuntimeDesign\JvDesignImp.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\jvdesignimp.pas"/>
         <UnitName Value="JvDesignImp"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvRuntimeDesign\JvDesignSurface.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
         <UnitName Value="JvDesignSurface"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvRuntimeDesign\JvDesignUtils.pas"/>
+        <Filename Value="..\run\JvRuntimeDesign\jvdesignutils.pas"/>
         <UnitName Value="JvDesignUtils"/>
       </Item4>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="JvCoreLazR"/>
       </Item1>
-      <Item2>
-        <PackageName Value="FCL"/>
-      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -19,19 +19,19 @@
     <Version Major="1" Release="4"/>
     <Files Count="4">
       <Item1>
-        <Filename Value="..\run\JvAppFrm\JvFormAnimatedIcon.pas"/>
+        <Filename Value="..\run\JvAppFrm\jvformanimatedicon.pas"/>
         <UnitName Value="JvFormAnimatedIcon"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvAppFrm\JvFormWallpaper.pas"/>
+        <Filename Value="..\run\JvAppFrm\jvformwallpaper.pas"/>
         <UnitName Value="JvFormWallpaper"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvAppFrm\JvAppAnimatedIcon.pas"/>
+        <Filename Value="..\run\JvAppFrm\jvappanimatedicon.pas"/>
         <UnitName Value="JvAppAnimatedIcon"/>
       </Item3>
       <Item4>
-        <Filename Value="..\run\JvAppFrm\JvAnimTitle.pas"/>
+        <Filename Value="..\run\JvAppFrm\jvanimtitle.pas"/>
         <UnitName Value="JvAnimTitle"/>
       </Item4>
     </Files>
