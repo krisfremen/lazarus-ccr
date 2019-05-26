@@ -490,7 +490,7 @@ type
 
 implementation
 
-{$R ..\..\resource\JvTimeLine.res}
+{$R ..\..\resource\jvtimeline.res}
 
 uses
   Math, Types, DateUtils, Themes,

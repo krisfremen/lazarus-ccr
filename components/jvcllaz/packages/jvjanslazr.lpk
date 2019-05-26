@@ -27,7 +27,7 @@
         <UnitName Value="JvYearGridEditForm"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvJansjvsimindicator.pas"/>
+        <Filename Value="..\run\JvJans/jvsimindicator.pas"/>
         <UnitName Value="JvSimIndicator"/>
       </Item3>
       <Item4>
