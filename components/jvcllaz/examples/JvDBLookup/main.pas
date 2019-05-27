@@ -21,7 +21,9 @@ type
     ImageList1: TImageList;
     JvDBLookupCombo1: TJvDBLookupCombo;
     JvDBLookupList1: TJvDBLookupList;
+    Panel1: TPanel;
     SomeData: TBufDataset;
+    Splitter1: TSplitter;
     procedure FormShow(Sender: TObject);
     procedure JvDBLookupList1GetImageIndex(Sender: TObject; IsEmpty: Boolean;
       var ImageIndex: Integer; var TextMargin: Integer);

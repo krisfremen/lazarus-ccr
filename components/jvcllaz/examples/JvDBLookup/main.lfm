@@ -1,95 +1,114 @@
 object Form1: TForm1
   Left = 298
-  Height = 331
+  Height = 475
   Top = 119
   Width = 433
   Caption = 'JvDBLookup controls'
-  ClientHeight = 331
+  ClientHeight = 475
   ClientWidth = 433
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object DBGrid1: TDBGrid
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = DBEdit1
     Left = 8
-    Height = 129
+    Height = 236
     Top = 8
     Width = 417
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Around = 8
+    Align = alClient
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 2
     Color = clWindow
     Columns = <>
     DataSource = DSCities
     TabOrder = 0
   end
-  object JvDBLookupList1: TJvDBLookupList
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = JvDBLookupCombo1
+  object Panel1: TPanel
     Left = 8
-    Height = 116
-    Top = 176
+    Height = 214
+    Top = 253
     Width = 417
+    Align = alBottom
     BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
+    BorderSpacing.Top = 2
     BorderSpacing.Right = 8
-    DataField = 'CITY_ID'
-    DataSource = DSSomeData
-    DisplayEmpty = 'none...'
-    EmptyItemColor = clSilver
-    Anchors = [akLeft, akRight, akBottom]
-    ImageList = ImageList1
-    LookupField = 'ID'
-    LookupDisplay = 'NAME;COUNTRY'
-    LookupSource = DSCities
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 214
+    ClientWidth = 417
     TabOrder = 1
-    UseRecordCount = True
-    OnGetImageIndex = JvDBLookupList1GetImageIndex
+    object DBEdit1: TDBEdit
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 112
+      DataField = 'CITY_ID'
+      DataSource = DSSomeData
+      CharCase = ecNormal
+      MaxLength = 0
+      TabOrder = 0
+    end
+    object JvDBLookupList1: TJvDBLookupList
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = DBEdit1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = JvDBLookupCombo1
+      Left = 0
+      Height = 148
+      Top = 31
+      Width = 417
+      BorderSpacing.Top = 8
+      DataField = 'CITY_ID'
+      DataSource = DSSomeData
+      DisplayEmpty = 'none...'
+      EmptyItemColor = clSilver
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ImageList = ImageList1
+      LookupField = 'ID'
+      LookupDisplay = 'NAME;COUNTRY'
+      LookupSource = DSCities
+      TabOrder = 1
+      UseRecordCount = True
+      OnGetImageIndex = JvDBLookupList1GetImageIndex
+    end
+    object JvDBLookupCombo1: TJvDBLookupCombo
+      AnchorSideLeft.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 23
+      Top = 191
+      Width = 417
+      DisplayAllFields = True
+      DataField = 'CITY_ID'
+      DataSource = DSSomeData
+      DisplayEmpty = 'none...'
+      EmptyItemColor = clSilver
+      Anchors = [akLeft, akRight, akBottom]
+      ImageList = ImageList1
+      LookupField = 'ID'
+      LookupDisplay = 'NAME;COUNTRY'
+      LookupSource = DSCities
+      TabOrder = 2
+      UseRecordCount = True
+      OnGetImageIndex = JvDBLookupList1GetImageIndex
+    end
   end
-  object DBEdit1: TDBEdit
-    AnchorSideLeft.Control = DBGrid1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideBottom.Control = JvDBLookupList1
-    Left = 8
-    Height = 23
-    Top = 145
-    Width = 112
-    DataField = 'CITY_ID'
-    DataSource = DSSomeData
-    Anchors = [akLeft, akBottom]
-    CharCase = ecNormal
-    MaxLength = 0
-    TabOrder = 2
-  end
-  object JvDBLookupCombo1: TJvDBLookupCombo
-    AnchorSideLeft.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 8
-    Height = 23
-    Top = 300
-    Width = 417
-    BorderSpacing.Around = 8
-    DisplayAllFields = True
-    DataField = 'CITY_ID'
-    DataSource = DSSomeData
-    DisplayEmpty = 'none...'
-    EmptyItemColor = clSilver
-    Anchors = [akLeft, akRight, akBottom]
-    ImageList = ImageList1
-    LookupField = 'ID'
-    LookupDisplay = 'NAME;COUNTRY'
-    LookupSource = DSCities
-    TabOrder = 3
-    UseRecordCount = True
-    OnGetImageIndex = JvDBLookupList1GetImageIndex
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 246
+    Width = 433
+    Align = alBottom
+    ResizeAnchor = akBottom
   end
   object SomeData: TBufDataset
     FieldDefs = <    
@@ -97,8 +116,8 @@ object Form1: TForm1
         Name = 'CITY_ID'
         DataType = ftInteger
       end>
-    left = 183
-    top = 134
+    left = 168
+    top = 32
   end
   object Cities: TBufDataset
     FieldDefs = <    
@@ -120,12 +139,12 @@ object Form1: TForm1
         Name = 'FLAG'
         DataType = ftInteger
       end>
-    left = 264
-    top = 134
+    left = 249
+    top = 32
   end
   object ImageList1: TImageList
-    left = 224
-    top = 240
+    left = 209
+    top = 138
     Bitmap = {
       4C69060000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -324,12 +343,12 @@ object Form1: TForm1
   end
   object DSSomeData: TDataSource
     DataSet = SomeData
-    left = 183
-    top = 184
+    left = 168
+    top = 82
   end
   object DSCities: TDataSource
     DataSet = Cities
-    left = 264
-    top = 184
+    left = 249
+    top = 82
   end
 end

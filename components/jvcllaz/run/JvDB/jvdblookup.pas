@@ -1068,7 +1068,7 @@ end;
 function TJvLookupControl.DefaultTextHeight: Integer;
 begin
   //Result := Screen.SystemFont.GetTextHeight('Mg'); //Canvas.TextHeight('Mg');
-  Result := Font.GetTextHeight('Mg');
+  Result := Font.GetTextHeight('Mg') + 4;
 end;
 
 function TJvLookupControl.GetTextHeight: Integer;
