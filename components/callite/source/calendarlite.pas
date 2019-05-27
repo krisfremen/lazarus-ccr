@@ -88,7 +88,8 @@ type
   TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
                 coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
                 coShowTodayFrame, coShowTodayName, coShowTodayRow,
-                coShowWeekend, coUseTopRowColors);
+                coShowWeekend, coShowDayNames, coShowTopRow, coUseTopRowColors
+  );
   TCalOptions = set of TCalOption;
 
   TCalDateArray = array of TDate;
@@ -135,6 +136,7 @@ type
     FColPositions: TColArray;
     FOwner: TCalendarLite;
     FRowPositions: TRowArray;
+    FLastRow: Integer;
     FStartDate: TDateTime;
     FThisDay: word;
     FThisMonth: word;
@@ -362,7 +364,8 @@ type
     property MultiSelect: Boolean read FMultiSelect write SetMultiSelect
       default false;
     property Options: TCalOptions read FOptions write SetOptions
-      default [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays, coShowTodayRow];
+      default [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
+               coShowTodayRow, coShowDayNames, coShowTopRow];
     property StartingDayOfWeek: TDayOfWeek read FStartingDayOfWeek
       write SetStartingDayOfWeek default dowSunday;
     property WeekendDays: TDaysOfWeek read FWeekendDays
@@ -430,7 +433,6 @@ const
   FirstDateRow = 2;
   LastDateRow = 7;
   TodayRow = 8;
-  LastRow: word = 0;
   DefCalHeight = 160;
   DefCalWidth = 210;
   DefMinHeight = 120;
@@ -695,6 +697,7 @@ var
   ch: Integer = 0;
   sp: Integer = 0;
   cw: Integer = 0;
+  cy: Integer = 0;
   bit: integer = 0;
   i, cellWidths, totalSpace, cellHeights,
   adjSpace, borderh, borderv, numRows: integer;
@@ -706,10 +709,10 @@ begin
     FTextStyle.RightToLeft:= True;
   SetLength(FRowPositions, 0);
   if (coShowTodayRow in FOwner.Options) then
-    LastRow := TodayRow
+    FLastRow := TodayRow
   else
-    LastRow := LastDateRow;
-  SetLength(FRowPositions, LastRow+1);
+    FLastRow := LastDateRow;
+  SetLength(FRowPositions, FLastRow+1);
 
   totalspace := Succ(LastCol)*3;
   sz := Size(FBoundsRect);
@@ -724,13 +727,15 @@ begin
       False : FColPositions[8-i]:= borderh + Pred(i)*cw + hSpc*i;
       True  : FColPositions[i]:= borderh + Pred(i)*cw + hSpc*i;
     end;
-  case LastRow of
+
+  case FLastRow of
     LastDateRow : totalSpace := 12;
     TodayRow    : totalSpace := 14;
   end;
-
   cellHeights := sz.cy - totalSpace;
-  numRows := Succ(LastRow);
+  numRows := Succ(FLastRow);
+  if not (coShowDayNames in FOwner.Options) then dec(numRows);
+  if not (coShowTopRow in FOwner.Options) then dec(numRows);
   DivMod(cellHeights, numRows, ch, rem);
   FCellSize.cy := ch;
   adjSpace := sz.cy - numRows*ch;
@@ -740,14 +745,17 @@ begin
   if (borderv = 0) then
     bit := rem + 1;
   rem := sp shl 1;
-  cw := bit + borderv + rem;
-  FRowPositions[TopRow] := cw;
-  inc(cw, rem);
-  FRowPositions[DayRow] := cw + ch;
-  for i := FirstDateRow to LastDateRow do
-    FRowPositions[i] := cw + i*ch + (i-1)*sp;
-  if (LastRow = TodayRow) then
-   FRowPositions[TodayRow] := FRowPositions[LastDateRow] + borderv + ch + rem;
+  cy := bit + borderv + rem;
+  FRowPositions[TopRow] := cy;
+  if coShowTopRow in FOwner.Options then inc(cy, rem + ch);
+  FRowPositions[DayRow] := cy;
+  if coShowDayNames in FOwner.Options then inc(cy, ch);
+  for i := FirstDateRow to LastDateRow do begin
+    FRowPositions[i] := cy;
+    inc(cy, ch + sp);
+  end;
+  if (FLastRow = TodayRow) then
+    FRowPositions[TodayRow] := FRowPositions[LastDateRow] + borderv + ch + rem;
 end;
 
 procedure TCalDrawer.Draw;
@@ -993,6 +1001,9 @@ var
   rec: TRect;
   lbls: TWeekNameArray;
 begin
+  if not (coShowDayNames in FOwner.Options) then
+    exit;
+
   FCanvas.Font.Color:= FOwner.Colors.TextColor;
   if (coBoldDayNames in FOwner.Options) then
     FCanvas.Font.Style := FCanvas.Font.Style + [fsBold]
@@ -1026,9 +1037,10 @@ var
   s: String;
   ds: String;
 begin
-  if (LastRow <> TodayRow) then Exit;
-  r1 := GetCellAtColRow(2, TodayRow);
+  if (FLastRow <> TodayRow) then
+    exit;
 
+  r1 := GetCellAtColRow(2, TodayRow);
   if coUseTopRowColors in FOwner.Options then begin
     if (FCanvas.Font.Color <> FOwner.Colors.TopRowTextColor)
       then FCanvas.Font.Color:= FOwner.Colors.TopRowTextColor;
@@ -1065,13 +1077,14 @@ begin
     Dec(r1.Right, halfRem);
     rem := 0;
   end;
-  r2:= r1;
+  r2 := r1;
 
   r1.Left := r1.Left + halfRem;
   r1.Right := r1.Left + w1;
   InflateRect(r1, 0, -FCellSize.cy div 5);
   if (FCanvas.Pen.Color <> FOwner.Colors.TodayFrameColor) then
     FCanvas.Pen.Color := FOwner.Colors.TodayFrameColor;
+  FCanvas.Pen.Style := psSolid;
   FCanvas.Pen.Width := 2;
   FCanvas.Frame(r1);
   FCanvas.Pen.Width := 1;
@@ -1091,6 +1104,9 @@ var
   s: String;
   dt: TDateTime;
 begin
+  if not (coShowTopRow in FOwner.Options) then
+    exit;
+
   if coUseTopRowColors in FOwner.Options then begin
     FCanvas.Font.Color := FOwner.Colors.TopRowTextColor;
     FCanvas.Brush.Color := FOwner.Colors.TopRowColor;
@@ -1233,8 +1249,8 @@ end;
 
 function TCalDrawer.GetColRowPosition(aCol, aRow: integer): TSize;
 begin
-  Result.cy:= FRowPositions[aRow];
-  Result.cx:= FColPositions[aCol];
+  Result.cy := FRowPositions[aRow];
+  Result.cx := FColPositions[aCol];
 end;
 
 function TCalDrawer.GetDateOfCell(ACell: TSize): TDate;
@@ -1449,7 +1465,7 @@ begin
   FDblClickTimer.OnTimer := @TimerExpired;
   FWeekendDays := [dowSunday, dowSaturday];
   FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
-               coShowTodayRow];
+               coShowTodayRow, coShowDayNames, coShowTopRow];
   SetLanguage(lgEnglish);
   FPrevMouseDate := 0;
   Date := SysUtils.Date;
@@ -2140,14 +2156,14 @@ end;
 
 procedure TCalendarLite.SetOptions(AValue: TCalOptions);
 begin
-  if FOptions = AValue then Exit;
+  //if FOptions = AValue then Exit;
   FOptions := AValue;
   case (coShowTodayRow in FOptions) of
-    False: if LastRow <> LastDateRow then LastRow := LastDateRow;
-    True : if LastRow <> TodayRow then LastRow := TodayRow;
+    False: if FCalDrawer.FLastRow <> LastDateRow then FCalDrawer.FLastRow := LastDateRow;
+    True : if FCalDrawer.FLastRow <> TodayRow then FCalDrawer.FLastRow := TodayRow;
   end;
-  if Length(FCalDrawer.FRowPositions) <> LastRow+1 then
-    SetLength(FCalDrawer.FRowPositions, LastRow+1);
+  if High(FCalDrawer.FRowPositions) <> FCalDrawer.FLastRow then
+    SetLength(FCalDrawer.FRowPositions, FCalDrawer.FLastRow+1);
   Draw;
 end;
 

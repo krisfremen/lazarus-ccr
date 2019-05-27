@@ -295,7 +295,8 @@ begin
 end;
 
 procedure TForm1.cgOptionsItemClick(Sender: TObject; Index: integer);
-var opt: TCalOption;
+var
+  opt: TCalOption;
 begin
   opt := TCalOption(Index);
   if (opt in demoCal.Options) then
