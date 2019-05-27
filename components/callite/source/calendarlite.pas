@@ -268,6 +268,7 @@ type
       const AXProportion, AYProportion: Double); override;
     {$endif}
     procedure DblClick; override;
+    procedure FontChanged(Sender: TObject); override;
     class function GetControlClassDefaultSize: TSize; override;
     procedure InternalClick;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -754,6 +755,7 @@ begin
   if not Assigned(FCanvas) then Exit;
   DecodeDate(FOwner.FDate, FThisYear, FThisMonth, FThisDay);
   CalcSettings;
+  FCanvas.Font.Assign(FOwner.Font);
   DrawBackground;
   DrawTopRow;
   DrawDayLabels;
@@ -905,7 +907,7 @@ begin
         begin
           FCanvas.Font.Color := FOwner.Colors.HolidayColor;
           if coBoldHolidays in FOwner.Options then
-            FCanvas.Font.Style := [fsBold];
+            FCanvas.Font.Style := FCanvas.Font.Style + [fsBold];
         end else
         { Special case: override weekend }
         if (coShowWeekend in FOwner.Options) and
@@ -913,21 +915,21 @@ begin
         begin
           FCanvas.Font.Color := FOwner.Colors.WeekendColor;
           if coBoldWeekend in FOwner.Options then
-            FCanvas.Font.Style := [fsBold];
+            FCanvas.Font.Style := FCanvas.Font.Style + [fsBold];
         end;
       end else
       begin
         { color of days from previous and next months }
-        FCanvas.Font.Color:= FOwner.Colors.PastMonthColor;
+        FCanvas.Font.Color := FOwner.Colors.PastMonthColor;
         Include(state, csOtherMonth);
       end;
 
       { Set default background color }
       if FOwner.IsSelected(dt) then begin
-        FCanvas.Brush.Color:= FOwner.FColors.SelectedDateColor;
+        FCanvas.Brush.Color := FOwner.FColors.SelectedDateColor;
         Include(state, csSelectedDay);
       end else
-        FCanvas.Brush.Color:= FOwner.Colors.BackgroundColor;
+        FCanvas.Brush.Color := FOwner.Colors.BackgroundColor;
 
       { Set border pen of "today" cell }
       if (dt = todayDate) and (coShowTodayFrame in FOwner.Options) then
@@ -993,9 +995,9 @@ var
 begin
   FCanvas.Font.Color:= FOwner.Colors.TextColor;
   if (coBoldDayNames in FOwner.Options) then
-    FCanvas.Font.Style := [fsBold]
+    FCanvas.Font.Style := FCanvas.Font.Style + [fsBold]
   else
-    FCanvas.Font.Style := [];
+    FCanvas.Font.Style := FCanvas.Font.Style - [fsBold];
   map := Integer(FOwner.FStartingDayOfWeek);
   for c:= Low(TWeekNameArray) to High(TWeekNameArray) do
   begin
@@ -1037,8 +1039,8 @@ begin
     FCanvas.Font.Color:= FOwner.Colors.TextColor;
 
   if coBoldToday in FOwner.Options then
-    FCanvas.Font.Style := [fsBold] else
-    FCanvas.Font.Style := [];
+    FCanvas.Font.Style := FCanvas.Font.Style + [fsBold] else
+    FCanvas.Font.Style := FCanvas.Font.Style - [fsBold];
 
   s:= FOwner.GetDisplayText(dtToday);
   if pos('%s', s) = 0 then begin
@@ -1090,18 +1092,18 @@ var
   dt: TDateTime;
 begin
   if coUseTopRowColors in FOwner.Options then begin
-    FCanvas.Font.Color:= FOwner.Colors.TopRowTextColor;
+    FCanvas.Font.Color := FOwner.Colors.TopRowTextColor;
     FCanvas.Brush.Color := FOwner.Colors.TopRowColor;
     r := GetCellAtColRow(GetLeftColIndex, TopRow);
     r.Right := GetCellAtColRow(GetRightColIndex, TopRow).Right;
     FCanvas.FillRect(r);
   end else
   if (FCanvas.Font.Color <> FOwner.Colors.TextColor) then
-    FCanvas.Font.Color:= FOwner.Colors.TextColor;
+    FCanvas.Font.Color := FOwner.Colors.TextColor;
   if (coBoldTopRow in FOwner.Options) then
-    FCanvas.Font.Style := [fsBold]
+    FCanvas.Font.Style := FCanvas.Font.Style + [fsBold]
   else
-    FCanvas.Font.Style := [];
+    FCanvas.Font.Style := FCanvas.Font.Style - [fsBold];
 
   case (FOwner.BiDiMode = bdLeftToRight) of
     False: begin
@@ -1588,6 +1590,12 @@ procedure TCalendarLite.Draw;
 begin
   FBufferValid := false;
   Invalidate;
+end;
+
+procedure TCalendarLite.FontChanged(Sender: TObject);
+begin
+  inherited;
+  Draw;
 end;
 
 class function TCalendarLite.GetControlClassDefaultSize: TSize;
