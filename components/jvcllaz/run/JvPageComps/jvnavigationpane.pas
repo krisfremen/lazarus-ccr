@@ -3520,6 +3520,7 @@ const
 var
   R, TempRect: TRect;
   X, Y, H: Integer;
+  flags: Integer;
 
   function IsValidImage: Boolean;
   begin
@@ -3536,14 +3537,13 @@ begin
     InflateRect(R, -4, 0);
     SetBkMode(Canvas.Handle, TRANSPARENT);
     TempRect := R;
-    DrawText(Canvas, Caption, Length(Caption), TempRect,
-      DT_CALCRECT or cAlignment[Alignment] or cWordWrap[WordWrap] or DT_VCENTER or DT_NOPREFIX or DT_END_ELLIPSIS);
+    flags := cAlignment[Alignment] or cWordWrap[WordWrap] or DT_VCENTER or DT_END_ELLIPSIS;
+    DrawText(Canvas, Caption, Length(Caption), TempRect, flags or DT_CALCRECT);
     if WordWrap then
       OffsetRect(R, 0, (Height - H) div 2);
     if IsValidImage and (Alignment = taCenter) then
       OffsetRect(R, 0, -Images.Height div 2);
-    DrawText(Canvas, Caption, Length(Caption), R,
-      cAlignment[Alignment] or cWordWrap[WordWrap] or DT_VCENTER or DT_NOPREFIX or DT_END_ELLIPSIS);
+    DrawText(Canvas, Caption, Length(Caption), R, flags);
     SetBkMode(Canvas.Handle, OPAQUE);
   end;
   if IsValidImage then
@@ -3785,7 +3785,7 @@ begin
     end;
     SetBkMode(Canvas.Handle, TRANSPARENT);
     DrawText(Canvas, Caption, Length(Caption), R,
-      DT_SINGLELINE or DT_VCENTER or DT_NOPREFIX or DT_EDITCONTROL or cAlignment[Alignment]);
+      DT_SINGLELINE or DT_VCENTER {or DT_NOPREFIX} or DT_EDITCONTROL or cAlignment[Alignment]);
     SetBkMode(Canvas.Handle, OPAQUE);
   end;
   Canvas.Pen.Color := FrameColor;
@@ -4927,7 +4927,7 @@ DrawButton:
           SetBkMode(Canvas.Handle, TRANSPARENT);
           InflateRect(R, -2, 0);
           Dec(R.Right, 3 + 7);
-          DrawText(Canvas, Caption, Length(Caption), R, DT_LEFT or DT_VCENTER or DT_NOPREFIX or DT_END_ELLIPSIS);
+          DrawText(Canvas, Caption, Length(Caption), R, DT_LEFT or DT_VCENTER {or DT_NOPREFIX} or DT_END_ELLIPSIS);
           Inc(R.Right, 3 + 7);
           InflateRect(R, 2, 0);
           SetBkMode(Canvas.Handle, OPAQUE);

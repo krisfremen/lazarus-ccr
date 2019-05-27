@@ -241,7 +241,7 @@ begin
     Parent := Page;
     Checked[Items.Add('Alan Chong')] := Random(4) = 1;
     Checked[Items.Add('Andreas Hausladen')] := Random(4) = 1;
-    Checked[Items.Add('André Snepvangers')] := Random(4) = 1;
+    Checked[Items.Add('AndrÃ© Snepvangers')] := Random(4) = 1;
     Checked[Items.Add('Michael Beck')] := Random(4) = 1;
     Checked[Items.Add('Leroy Casterline')] := Random(4) = 1;
     Checked[Items.Add('Chris Latta')] := Random(4) = 1;
@@ -279,7 +279,7 @@ begin
     Align := alClient;
     Items.Add('Alan Chong');
     Items.Add('Andreas Hausladen');
-    Items.Add('André Snepvangers');
+    Items.Add('AndrÃ© Snepvangers');
     Items.Add('Michael Beck');
     Items.Add('Leroy Casterline');
     Items.Add('Chris Latta');

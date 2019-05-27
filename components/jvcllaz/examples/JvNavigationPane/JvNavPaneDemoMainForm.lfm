@@ -7,10 +7,8 @@ object JvNavPaneDemoMainFrm: TJvNavPaneDemoMainFrm
   VertScrollBar.Page = 467
   Caption = 'JvNavigationPane Demo'
   DockSite = True
-  Font.Height = -11
-  Font.Name = 'Tahoma'
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '2.1.0.0'
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
     left = 92
