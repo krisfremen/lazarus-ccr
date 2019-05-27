@@ -7,7 +7,7 @@ object MainForm: TMainForm
   ClientHeight = 519
   ClientWidth = 740
   OnCreate = FormCreate
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   inline SynEdit1: TSynEdit
     Left = 0
     Height = 322
@@ -17,7 +17,7 @@ object MainForm: TMainForm
     Font.Height = -13
     Font.Name = 'Courier New'
     Font.Pitch = fpFixed
-    Font.Quality = fqNonAntialiased
+    Font.Quality = fqCleartype
     ParentColor = False
     ParentFont = False
     TabOrder = 0
