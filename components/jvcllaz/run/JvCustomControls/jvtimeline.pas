@@ -420,8 +420,10 @@ type
   published
     property Align;
     property AutoSize;
+    property BorderSpacing;
     property BorderStyle;
     property Color;
+    property Constraints;
     property Cursor;
     property DragCursor;
     property DragLine;
@@ -493,6 +495,7 @@ implementation
 {$R ..\..\resource\jvtimeline.res}
 
 uses
+  InterfaceBase, LCLPlatformDef,
   Math, Types, DateUtils, Themes,
   JvJCLUtils, JvJVCLUtils;
 
@@ -831,13 +834,16 @@ const
 var
   Button: TThemedScrollBar;
   Details: TThemedElementDetails;
+  useThemedBtn: Boolean;
 begin
   if TimeLine = nil then
     Exit;
   if not Visible then
     Exit;
 
-  if ThemeServices.ThemesEnabled then
+  useThemedBtn := ThemeServices.ThemesEnabled and not (WidgetSet.LCLPlatform in [lpQT, lpGTK2]);
+
+  if useThemedBtn then
   begin
     if FPushed then
       Button := tsArrowBtnLeftPressed
@@ -1155,7 +1161,8 @@ begin
     else
       FArrows[I].UpdatePlacement;
   end;
-  FItemHeight := Canvas.TextHeight('Tg') + ITEM_MARGIN;
+  if FItemHeight = 0 then
+    FItemHeight := Canvas.TextHeight('Tg') + ITEM_MARGIN;
 end;
 
 procedure TJvCustomTimeLine.UpdateOffset;
@@ -2033,8 +2040,7 @@ begin
       ACanvas.Pen.Color := Item.TextColor;
       if (Length(Item.Caption) > 0) then
       begin
-        R.Bottom := Min(R.Top + ACanvas.TextHeight(Item.Caption), R.Bottom);
-
+        R.Bottom := R.Top + ACanvas.TextHeight(Item.Caption) + 2;
         ACanvas.Rectangle(R);
         R.Left := R.Left + 2;
         SetBkMode(ACanvas.Handle, TRANSPARENT);

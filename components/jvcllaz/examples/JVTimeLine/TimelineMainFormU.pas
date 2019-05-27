@@ -41,7 +41,6 @@ type
 
   TTimelineMainForm = class(TForm)
     Bevel1: TBevel;
-    Bevel2: TBevel;
     CbImgIndex: TComboBoxEx;
     ImageList1: TImageList;
     Splitter1: TSplitter;
@@ -105,6 +104,7 @@ type
     procedure chkMultiClick(Sender: TObject);
     procedure btnFontClick(Sender: TObject);
     procedure btnYrFontClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure TimeLine1Click(Sender: TObject);
     procedure Changecaption1Click(Sender: TObject);
     procedure remove1Click(Sender: TObject);
@@ -218,6 +218,18 @@ begin
   end;
 end;
 
+procedure TTimelineMainForm.FormShow(Sender: TObject);
+var
+  h: Integer;
+begin
+  h := Height;
+  AutoSize := true;
+  AutoSize := false;
+  Constraints.MinWidth := Width;
+  Constraints.MinHeight := Height;
+  Height := h;
+end;
+
 procedure TTimelineMainForm.TimeLine1Click(Sender: TObject);
 begin
   if TimeLine1.Selected <> nil then
@@ -279,8 +291,8 @@ begin
   if chkNoImages.Checked then
   begin
     TimeLine1.Images := nil;
-    TimeLine1.ItemHeight := 16;
-    udItemHeight.Position := 16;
+    TimeLine1.ItemHeight := 17;
+    udItemHeight.Position := 17;
   end
   else
     chkLargeClick(nil);
@@ -312,14 +324,14 @@ begin
   if chkLarge.Checked then
   begin
     TimeLine1.Images := ImageList2;
-    TimeLine1.ItemHeight := 50;
-    udItemHeight.Position := 50;
+    TimeLine1.ItemHeight := 60;
+    udItemHeight.Position := 60;
   end
   else
   begin
     TimeLine1.Images := ImageList1;
-    TimeLine1.ItemHeight := 36;
-    udItemHeight.Position := 36;
+    TimeLine1.ItemHeight := 40;
+    udItemHeight.Position := 40;
   end;
 end;
 
