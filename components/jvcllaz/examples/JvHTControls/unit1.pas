@@ -11,9 +11,9 @@ uses
 
 type
 
-  { TForm1 }
+  { TMainForm }
 
-  TForm1 = class(TForm)
+  TMainForm = class(TForm)
     Button1: TButton;
     Button2: TButton;
     ButtonPanel1: TButtonPanel;
@@ -50,31 +50,31 @@ type
   end;
 
 var
-  Form1: TForm1;
+  MainForm: TMainForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TMainForm }
 
-procedure TForm1.Memo1Change(Sender: TObject);
+procedure TMainForm.Memo1Change(Sender: TObject);
 begin
   JvHTLabel1.Caption := Memo1.Text;
   JvHTLabel1.Hint := Memo1.Text;
 end;
 
-procedure TForm1.Memo3Change(Sender: TObject);
+procedure TMainForm.Memo3Change(Sender: TObject);
 begin
   JvDBHTLabel1.Mask := Memo3.Text;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TMainForm.FormCreate(Sender: TObject);
 begin
   RegisterHtHints;
 end;
 
-procedure TForm1.FormShow(Sender: TObject);
+procedure TMainForm.FormShow(Sender: TObject);
 begin
   MemDataset1.AppendRecord([1, 'asdfxc', 'wertfx']);
   MemDataset1.AppendRecord([2, 'brdrgrsdgx', 'sdfwetrcx']);
@@ -83,29 +83,29 @@ begin
   MemDataset1.AppendRecord([5, 'trcbxg', 'her4fekg']);
 end;
 
-procedure TForm1.JvDBHTLabel1HyperLinkClick(Sender: TObject; LinkName: string);
+procedure TMainForm.JvDBHTLabel1HyperLinkClick(Sender: TObject; LinkName: string);
 begin
   MessageDlg('TJvDBHTLabel', 'Hyperlink: ' + LinkName, mtInformation, [mbOK], 0);
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TMainForm.Button1Click(Sender: TObject);
 begin
   JvHTListBox1.Items.Add(Memo2.Text);
   JvHTComboBox1.Items.Add(Memo2.Text);
 end;
 
-procedure TForm1.Button2Click(Sender: TObject);
+procedure TMainForm.Button2Click(Sender: TObject);
 begin
   JvHTComboBox1.Items.Clear;
   JvHTListBox1.Items.Clear;
 end;
 
-procedure TForm1.JvHTLabel1HyperLinkClick(Sender: TObject; LinkName: string);
+procedure TMainForm.JvHTLabel1HyperLinkClick(Sender: TObject; LinkName: string);
 begin
   MessageDlg('TJvHTLabel', 'Hyperlink: ' + LinkName, mtInformation, [mbOK], 0);
 end;
 
-procedure TForm1.JvHTListBox1HyperLinkClick(Sender: TObject; LinkName: string);
+procedure TMainForm.JvHTListBox1HyperLinkClick(Sender: TObject; LinkName: string);
 begin
   MessageDlg('JvHTListBox', 'Hyperlink: ' + LinkName, mtInformation, [mbOK], 0);
 end;

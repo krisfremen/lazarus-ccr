@@ -7081,6 +7081,7 @@ end;
 
 const
   cBR = '<BR>';
+  cBR2 = '<BR/>';
   cHR = '<HR>';
   cTagBegin = '<';
   cTagEnd = '>';
@@ -7117,8 +7118,9 @@ begin
   Result := Text;
   for I := Low(Conversions) to High(Conversions) do
     Result := StringReplace(Result, Conversions[I].Html, Utf8ToAnsi(Conversions[I].Text), [rfReplaceAll, rfIgnoreCase]);
-  Result := StringReplace(Result, sLineBreak, '', [rfReplaceAll, rfIgnoreCase]); // only <BR> can be new line
+  Result := StringReplace(Result, sLineBreak, '', [rfReplaceAll, rfIgnoreCase]);        // only <BR> can be new line
   Result := StringReplace(Result, cBR, sLineBreak, [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, cBR2, sLineBreak, [rfReplaceAll, rfIgnoreCase]);      // Fixes <BR/>, but not <BR />!
   Result := StringReplace(Result, cHR, cHR + sLineBreak, [rfReplaceAll, rfIgnoreCase]); // fixed <HR><BR>
 end;
 
@@ -7367,13 +7369,14 @@ begin
     RemBrushColor := Canvas.Brush.Color;
     RemFontSize   := Canvas.Font.size;
   end;
+
   vStr  := TStringList.Create;
   try
     Alignment := taLeftJustify;
     IsLink := False;
     MouseOnLink := False;
     vText := Text;
-    vStr.Text := vText;
+    vStr.Text := HTMLPrepareText(vText);
     LinkName := '';
     TempLink := '';
     ScriptPosition := spNormal;
@@ -7387,7 +7390,8 @@ begin
     vM := '';
     for vCount := 0 to vStr.Count - 1 do
     begin
-      vText := HTMLPrepareText(vStr[vCount]);
+//      vText := HTMLPrepareText(vStr[vCount]);
+      vText := vStr[vCount];
       CurLeft := CalcPos(vText);
       while vText <> '' do
       begin

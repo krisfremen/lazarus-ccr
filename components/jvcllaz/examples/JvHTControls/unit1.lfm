@@ -1,11 +1,11 @@
-object Form1: TForm1
-  Left = 256
+object MainForm: TMainForm
+  Left = 369
   Height = 468
-  Top = 122
-  Width = 582
+  Top = 219
+  Width = 575
   Caption = 'JvHTControls'
   ClientHeight = 468
-  ClientWidth = 582
+  ClientWidth = 575
   OnCreate = FormCreate
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
@@ -13,7 +13,7 @@ object Form1: TForm1
     Left = 0
     Height = 422
     Top = 0
-    Width = 582
+    Width = 575
     ActivePage = TabSheet1
     Align = alClient
     TabIndex = 0
@@ -21,10 +21,10 @@ object Form1: TForm1
     object TabSheet1: TTabSheet
       Caption = 'TJvHTLabel'
       ClientHeight = 394
-      ClientWidth = 574
+      ClientWidth = 567
       object JvHTLabel1: TJvHTLabel
         Left = 8
-        Height = 106
+        Height = 196
         Hint = 'HTLabel with:<br />'#13#10'<b>bold</b><br>'#13#10'<i>italic</i><br>'#13#10'<u>underline</u><br>'#13#10'<s>strikeout</s><br>'#13#10'<font color="Red">c</font><font color="blue">o</font><font color="Green">l</font><font color="Fuchsia">o</font><font color="Maroon">r</font><br>'#13#10'<a href="http://www.freepascal.org/">Links</a> and <a href="custom">custom links</a>'
         Top = 8
         Width = 120
@@ -36,10 +36,10 @@ object Form1: TForm1
       end
       object Memo1: TMemo
         Left = 0
-        Height = 122
+        Height = 123
         Hint = '<b>HTML</b><br>'#13#10'<i>Enter HTML content</i>'
-        Top = 272
-        Width = 574
+        Top = 271
+        Width = 567
         Align = alBottom
         Lines.Strings = (
           'HTLabel with:<br>'
@@ -62,8 +62,8 @@ object Form1: TForm1
         Cursor = crVSplit
         Left = 0
         Height = 5
-        Top = 267
-        Width = 574
+        Top = 266
+        Width = 567
         Align = alBottom
         ResizeAnchor = akBottom
       end
@@ -235,7 +235,7 @@ object Form1: TForm1
     Left = 6
     Height = 34
     Top = 428
-    Width = 570
+    Width = 563
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
     HelpButton.Name = 'HelpButton'
