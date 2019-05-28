@@ -16,7 +16,6 @@ begin
   {$IF LCL_FULLVERSION >= 1080000}
   Application.Scaled := True;
   {$ENDIF}
-  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;

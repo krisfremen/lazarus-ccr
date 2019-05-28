@@ -228,6 +228,8 @@ type
 
 implementation
 
+uses
+  InterfaceBase;
 
 //=== { TJvScopeLineValues } =================================================
 
@@ -730,7 +732,12 @@ begin
         FLines[I].FValues.Add(FLines[I].Position);
     end;
   end;
+  {$IFDEF LCLQt}
+  Invalidate;
+  Application.ProcessMessages;
+  {$ELSE}
   Repaint;
+  {$IFEND}
   if Assigned(FOnUpdate) then
     FOnUpdate(Self);
 end;
