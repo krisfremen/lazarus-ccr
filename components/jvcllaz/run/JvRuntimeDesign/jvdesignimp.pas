@@ -182,19 +182,25 @@ type
     DDC: TDesignerDeviceContext;
     constructor Create(AMessenger: TJvDesignCustomMessenger); reintroduce;
     // IDesignerNotify interface
-    procedure Modified;
-    procedure Notification(AnObject: TPersistent; Operation: TOperation); reintroduce;
+    procedure Modified; override;
+//    procedure Notification(AnObject: TPersistent; Operation: TOperation); reintroduce;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
 
     // IDesigner, IDesignerHook interface
     function GetCustomForm: TCustomForm;
-    procedure SetCustomForm(Value: TCustomForm);
     function GetIsControl: Boolean;
-    procedure SetIsControl(Value: Boolean);
+    function GetRoot: TComponent;
+    function GetShiftState: TShiftState; override;
     function IsDesignMsg(Sender: TControl; var Msg: TLMessage): Boolean; override;
     procedure PaintGrid; override;
-    procedure ValidateRename(AComponent: TComponent; const CurName, NewName: string); reintroduce;
+    procedure PrepareFreeDesigner(AFreeComponent: boolean); override;
+    procedure SelectOnlyThisComponent(AComponent: TComponent);override;
+    procedure SetCustomForm(Value: TCustomForm);
+    procedure SetIsControl(Value: Boolean);
     function UniqueName(const BaseName: string): string; override;
-    function GetRoot: TComponent;
+    procedure UTF8KeyPress(var UTF8Key: TUTF8Char); override;
+    procedure ValidateRename(AComponent: TComponent; const CurName, NewName: string); override; //reintroduce;
+
     //{$IFDEF COMPILER9_UP}
     //procedure PaintMenu;
     //{$ENDIF COMPILER9_UP}
@@ -1251,6 +1257,10 @@ begin
   Result := nil;
 end;
 
+function TJvDesignDesigner.GetShiftState: TShiftState;
+begin
+  Result := [];
+end;
 function TJvDesignDesigner.IsDesignMsg(Sender: TControl; var Msg: TLMessage): Boolean;
 begin
   Result := Messenger.IsDesignMessage(Sender, Msg);
@@ -1261,13 +1271,23 @@ begin
   //
 end;
 
-procedure TJvDesignDesigner.Notification(AnObject: TPersistent;
-  Operation: TOperation);
+procedure TJvDesignDesigner.Notification(AComponent: TComponent; Operation: TOperation);
+//procedure TJvDesignDesigner.Notification(AnObject: TPersistent; Operation: TOperation);
 begin
   //
 end;
 
 procedure TJvDesignDesigner.PaintGrid;
+begin
+  //
+end;
+
+procedure TJvDesignDesigner.PrepareFreeDesigner(AFreeComponent: boolean);
+begin
+  //
+end;
+
+procedure TJvDesignDesigner.SelectOnlyThisComponent(AComponent: TComponent);
 begin
   //
 end;
@@ -1283,6 +1303,11 @@ begin
 end;
 
 function TJvDesignDesigner.UniqueName(const BaseName: string): string;
+begin
+  //
+end;
+
+procedure TJvDesignDesigner.UTF8KeyPress(var UTF8Key: TUTF8Char);
 begin
   //
 end;
