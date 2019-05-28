@@ -124,19 +124,24 @@ type
     procedure SetYearAlignment(const Value: TAlignment);
 
     // Event handlers
-    procedure Color1Click(Sender: TObject);
-    procedure Copy1Click(Sender: TObject);
-    procedure Cut1Click(Sender: TObject);
-    procedure Delete1Click(Sender: TObject);
     procedure DoShowHint(var HintStr: THintString; var CanShow: Boolean;
       var HintInfo: THintInfo);
-    procedure Edit1Click(Sender: TObject);
-    procedure NoColor1Click(Sender: TObject);
-    procedure Paste1Click(Sender: TObject);
-    procedure SaveAsHTML(Sender: TObject);
+    procedure mnuBookMarkColorClick(Sender: TObject);
+    procedure mnuBorderColorClick(Sender: TObject);
+    procedure mnuClearFindClick(Sender: TObject);
+    procedure mnuColorClick(Sender: TObject);
+    procedure mnuCopyClick(Sender: TObject);
+    procedure mnuCutClick(Sender: TObject);
+    procedure mnuDeleteClick(Sender: TObject);
+    procedure mnuEditClick(Sender: TObject);
+    procedure mnuFindClick(Sender: TObject);
+    procedure mnuNoColorClick(Sender: TObject);
+    procedure mnuPasteClick(Sender: TObject);
+    procedure mnuSaveAsHTML(Sender: TObject);
+    procedure mnuSaveFound(Sender: TObject);
+    procedure mnuYearClick(Sender: TObject);
     procedure SetupGridPop(Sender: TObject);
     procedure SetYearChanged(const Value: TOnYearChanged);
-    procedure Year1Click(Sender: TObject);
 
     // Utilities
     procedure MakeHTML(AList: TStringList; Border, Filter: Boolean);
@@ -148,13 +153,8 @@ type
     procedure CreatePopup;
     procedure Launch(AFile: string);
     procedure SetSelectDate(const Value: TOnSelectDate);
-    procedure BorderColor1Click(Sender: TObject);
     procedure SetInfoChanging(const Value: TOnInfoChanging);
     procedure ClearBookMarks;
-    procedure BookMarkColor1Click(Sender: TObject);
-    procedure Find1Click(Sender: TObject);
-    procedure ClearFind1Click(Sender: TObject);
-    procedure SaveFound(Sender: TObject);
     function IsCurrentYear: Boolean;
 
     procedure CellMarginsChange(Sender: TObject);
@@ -169,7 +169,8 @@ type
     procedure DayMonthIndexToColRow(DayIndex: Integer; MonthIndex: Integer; out ACol, ARow: Integer);
 
   protected
-    procedure DrawTextInCell(aCol,aRow: Integer; aRect: TRect; aState: TGridDrawState); override;
+    procedure DrawColumnText(aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState); override;
+    procedure DrawTextInCell(aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState); override;
     function SelectCell(ACol, ARow: Integer): Boolean; override;
     procedure DblClick; override;
     procedure DoPrepareCanvas(aCol,aRow:Integer; aState: TGridDrawState); override;
@@ -255,8 +256,8 @@ type
     property OnDblClick;
     property OnClick;
 
-    property DefaultColWidth: Integer read GetDefaultColWidth write SetDefaultColWidth  default 16;
-    property DefaultRowHeight default 18; //: Integer read GetDefaultRowHeight write SetDefaultRowHeihgt default 18;
+    property DefaultColWidth: Integer read GetDefaultColWidth write SetDefaultColWidth default 18;
+    property DefaultRowHeight default 18;
 
     property Align;
     property Anchors;
@@ -315,8 +316,8 @@ begin
   FirstRowHeight := 18;
   FirstColWidth := 70;
 
-  DefaultColWidth := 16;
-  DefaultRowHeight := 18;//FFirstRowHeight;
+  DefaultColWidth := 18;
+  DefaultRowHeight := 18;
 
   ColCount := 38;
   RowCount := 13;
@@ -325,11 +326,6 @@ begin
   Width := 512;
   Height := 213;
   Flat := true;
-
-  // THIS IS WRONG, VERY WRONG! (obones)
-  Application.ShowHint := True;
-  Application.OnShowHint := @DoShowHint;
-  Application.HintHidePause := 5000;
 
   DecodeDate(Now, FCurrentYear, FCurrentMonth, FCurrentDay);
   HTMLFontName := 'Arial';
@@ -412,9 +408,7 @@ begin
         Month := ARow;
         Day := StrToInt(FYearData[ACol, ARow].DisplayText);
         ADate := EncodeDate(Year, Month, Day);
-        DS := FormatDateTime('d-mmm-yyyy', ADate);
-        W := DayOfWeek(ADate);
-        DS := FormatSettings.ShortDayNames[W] + ' ' + DS;
+        DS := FormatDateTime('ddd, ddddd', ADate);
         AList.Append('<tr>');
         AList.Append('<td width=20%>' + DS + '</td>');
         Infs := FYearData[ACol, ARow].InfoText;
@@ -427,7 +421,7 @@ begin
   AList.Append('</font></body></html>');
 end;
 
-procedure TJvYearGrid.SaveAsHTML(Sender: TObject);
+procedure TJvYearGrid.mnuSaveAsHTML(Sender: TObject);
 var
   List: TStringList;
   FileName: string;
@@ -695,7 +689,7 @@ begin
     end;
 end;
 
-procedure TJvYearGrid.Copy1Click(Sender: TObject);
+procedure TJvYearGrid.mnuCopyClick(Sender: TObject);
 var
   S: string;
 begin
@@ -703,7 +697,7 @@ begin
     Clipboard.AsText := S;
 end;
 
-procedure TJvYearGrid.Cut1Click(Sender: TObject);
+procedure TJvYearGrid.mnuCutClick(Sender: TObject);
 var
   S: string;
 begin
@@ -714,7 +708,7 @@ begin
   end;
 end;
 
-procedure TJvYearGrid.Year1Click(Sender: TObject);
+procedure TJvYearGrid.mnuYearClick(Sender: TObject);
 var
   S: string;
   AYear: Word;
@@ -732,7 +726,7 @@ begin
   end;
 end;
 
-procedure TJvYearGrid.Paste1Click(Sender: TObject);
+procedure TJvYearGrid.mnuPasteClick(Sender: TObject);
 var
   S: string;
 begin
@@ -741,7 +735,7 @@ begin
       SetCellData(Clipboard.AsText);
 end;
 
-procedure TJvYearGrid.Delete1Click(Sender: TObject);
+procedure TJvYearGrid.mnuDeleteClick(Sender: TObject);
 var
   S: string;
 begin
@@ -760,7 +754,7 @@ begin
   G := FGridPop;
   M := TMenuItem.Create(G);
   M.Caption := RsYear;
-  M.OnClick := @Year1Click;
+  M.OnClick := @mnuYearClick;
   M.Tag := 1;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
@@ -768,46 +762,46 @@ begin
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsEdit;
-  M.OnClick := @Edit1Click;
+  M.OnClick := @mnuEditClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsColor;
-  M.OnClick := @Color1Click;
+  M.OnClick := @mnuColorClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsNoColor;
-  M.OnClick := @NoColor1Click;
+  M.OnClick := @mnuNoColorClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := cMenuBreakCaption;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsCopyItem;
-  M.OnClick := @Copy1Click;
+  M.OnClick := @mnuCopyClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsCutItem;
-  M.OnClick := @Cut1Click;
+  M.OnClick := @mnuCutClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsPasteItem;
-  M.OnClick := @Paste1Click;
+  M.OnClick := @mnuPasteClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsDeleteItem;
-  M.OnClick := @Delete1Click;
+  M.OnClick := @mnuDeleteClick;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := cMenuBreakCaption;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsSaveAllInfo;
-  M.OnClick := @SaveAsHTML;
+  M.OnClick := @mnuSaveAsHTML;
   M.Tag := 1;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsSaveFoundInfo;
-  M.OnClick := @SaveFound;
+  M.OnClick := @mnuSaveFound;
   M.Tag := 1;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
@@ -815,12 +809,12 @@ begin
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsBorderColor;
-  M.OnClick := @BorderColor1Click;
+  M.OnClick := @mnuBorderColorClick;
   M.Tag := 1;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsBookMarkColor;
-  M.OnClick := @BookMarkColor1Click;
+  M.OnClick := @mnuBookMarkColorClick;
   M.Tag := 1;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
@@ -828,17 +822,17 @@ begin
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsFindItem;
-  M.OnClick := @Find1Click;
+  M.OnClick := @mnuFindClick;
   M.Tag := 1;
   G.Items.Add(M);
   M := TMenuItem.Create(G);
   M.Caption := RsClearFind;
-  M.OnClick := @ClearFind1Click;
+  M.OnClick := @mnuClearFindClick;
   M.Tag := 1;
   G.Items.Add(M);
 end;
 
-procedure TJvYearGrid.Edit1Click(Sender: TObject);
+procedure TJvYearGrid.mnuEditClick(Sender: TObject);
 var
   DS: string;
   lCol, lRow: Integer;
@@ -882,7 +876,7 @@ begin
   end;
 end;
 
-procedure TJvYearGrid.Color1Click(Sender: TObject);
+procedure TJvYearGrid.mnuColorClick(Sender: TObject);
 var
   CD: TColorDialog;
 begin
@@ -901,7 +895,7 @@ begin
   CD.Free;
 end;
 
-procedure TJvYearGrid.NoColor1Click(Sender: TObject);
+procedure TJvYearGrid.mnuNoColorClick(Sender: TObject);
 begin
   if (Col < 1) or (Row < 1) or (FYearData[Col, Row].DisplayText = '') then
     Exit;
@@ -1006,7 +1000,7 @@ begin
     OnDblClick(Self)
   else
     if (Col > 0) and (Row > 0) and (FYearData[Col, Row].DisplayText <> '') then
-      Edit1Click(nil);
+      mnuEditClick(nil);
 end;
 
 procedure TJvYearGrid.SetBorderColor(const Value: TColor);
@@ -1018,7 +1012,7 @@ begin
   end;
 end;
 
-procedure TJvYearGrid.BorderColor1Click(Sender: TObject);
+procedure TJvYearGrid.mnuBorderColorClick(Sender: TObject);
 var
   CD: TColorDialog;
 begin
@@ -1031,7 +1025,7 @@ begin
   CD.Free;
 end;
 
-procedure TJvYearGrid.BookMarkColor1Click(Sender: TObject);
+procedure TJvYearGrid.mnuBookMarkColorClick(Sender: TObject);
 var
   CD: TColorDialog;
 begin
@@ -1110,7 +1104,7 @@ begin
   end;
 end;
 
-procedure TJvYearGrid.Find1Click(Sender: TObject);
+procedure TJvYearGrid.mnuFindClick(Sender: TObject);
 var
   S: string;
   lCol, lRow: Integer;
@@ -1127,17 +1121,17 @@ begin
   Invalidate;
 end;
 
-procedure TJvYearGrid.ClearFind1Click(Sender: TObject);
+procedure TJvYearGrid.mnuClearFindClick(Sender: TObject);
 begin
   ClearBookMarks;
 end;
 
 procedure TJvYearGrid.Find;
 begin
-  Find1Click(nil);
+  mnuFindClick(nil);
 end;
 
-procedure TJvYearGrid.SaveFound(Sender: TObject);
+procedure TJvYearGrid.mnuSaveFound(Sender: TObject);
 var
   List: TStringList;
   FileName: string;
@@ -1564,6 +1558,12 @@ begin
   end;
 end;
 
+procedure TJvYearGrid.DrawColumnText(ACol,ARow: Integer; ARect: TRect;
+  AState: TGridDrawState);
+begin
+  DrawTextInCell(ACol, 0, ARect, AState);
+end;
+
 procedure TJvYearGrid.DrawTextInCell(ACol,ARow: Integer;
   ARect: TRect; AState: TGridDrawState);
 var
@@ -1571,6 +1571,7 @@ var
   S: String;
   SExt: TSize;
   textLeft: Integer;
+  ts: TTextStyle;
 
   function GetTextLeft(Alignment: TAlignment; AWidth: Integer): Integer;
   begin
@@ -1607,7 +1608,9 @@ begin
     if (DayIndex > 0) and (MonthIndex > 0) then
       textLeft := GetTextLeft(DaysAlignment, SExt.CX);
 
-    TextRect(ARect, textLeft, (ARect.Top + ARect.Bottom - SExt.CY) div 2, S);
+    ts := TextStyle;
+    ts.Layout := tlCenter;
+    TextRect(ARect, textLeft, (ARect.Top + ARect.Bottom - SExt.CY) div 2, S, ts);
   end;
 end;
 

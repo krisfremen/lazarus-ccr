@@ -2312,7 +2312,7 @@ resourcestring
   RsEnterYear = 'Enter year (1999-2050):';
   RsInvalidYear = 'invalid year';
   RsYear = '&Year...';
-  RsEdit = '&Edit';
+  RsEdit = '&Edit...';
   RsColor = '&Color...';
   RsNoColor = '&No Color';
   RsSaveAllInfo = '&Save All Info';

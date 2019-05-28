@@ -5,17 +5,20 @@ unit main;
 interface
 
 uses
+  {$IFDEF LINUX}clocale,{$ENDIF}
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Spin, StdCtrls, Grids,
-  ExtCtrls, JvYearGrid;
+  ExtCtrls, ComCtrls, JvYearGrid;
 
 type
 
-  { TForm1 }
+  { TMainForm }
 
-  TForm1 = class(TForm)
-    CbDayNamesAlignment: TComboBox;
-    CbMonthNamesAlignment: TComboBox;
-    CbDaysAlignment: TComboBox;
+  TMainForm = class(TForm)
+    cmbMonthFormat: TComboBox;
+    cmbDayNamesAlignment: TComboBox;
+    cmbDayFormat: TComboBox;
+    cmbMonthNamesAlignment: TComboBox;
+    cmbDaysAlignment: TComboBox;
     CbFlat: TCheckBox;
     JvYearGrid1: TJvYearGrid;
     EdLeftMargin: TSpinEdit;
@@ -25,16 +28,22 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
+    lblYear: TLabel;
     Panel1: TPanel;
-    procedure CbDayNamesAlignmentChange(Sender: TObject);
-    procedure CbDaysAlignmentChange(Sender: TObject);
+    udYear: TUpDown;
+    procedure cmbDayFormatChange(Sender: TObject);
+    procedure cmbDayNamesAlignmentChange(Sender: TObject);
+    procedure cmbDaysAlignmentChange(Sender: TObject);
     procedure CbFlatChange(Sender: TObject);
-    procedure CbMonthNamesAlignmentChange(Sender: TObject);
+    procedure cmbMonthFormatChange(Sender: TObject);
+    procedure cmbMonthNamesAlignmentChange(Sender: TObject);
     procedure EdBottomMarginChange(Sender: TObject);
     procedure EdLeftMarginChange(Sender: TObject);
     procedure EdRightMarginChange(Sender: TObject);
     procedure EdTopMarginChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure udYearClick(Sender: TObject; Button: TUDBtnType);
   private
 
   public
@@ -42,72 +51,96 @@ type
   end;
 
 var
-  Form1: TForm1;
+  MainForm: TMainForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+uses
+  DateUtils;
 
-procedure TForm1.CbDayNamesAlignmentChange(Sender: TObject);
+{ TMainForm }
+
+procedure TMainForm.cmbDayNamesAlignmentChange(Sender: TObject);
 begin
-  JvYearGrid1.DayNamesAlignment := TAlignment(CbDayNamesAlignment.ItemIndex);
+  JvYearGrid1.DayNamesAlignment := TAlignment(cmbDayNamesAlignment.ItemIndex);
 end;
 
-procedure TForm1.CbDaysAlignmentChange(Sender: TObject);
+procedure TMainForm.cmbDayFormatChange(Sender: TObject);
 begin
-  JvYearGrid1.DaysAlignment := TAlignment(CbDaysAlignment.ItemIndex);
+  JvYearGrid1.DayFormat := TJvDayFormat(cmbDayFormat.ItemIndex);
 end;
 
-procedure TForm1.CbFlatChange(Sender: TObject);
+procedure TMainForm.cmbDaysAlignmentChange(Sender: TObject);
+begin
+  JvYearGrid1.DaysAlignment := TAlignment(cmbDaysAlignment.ItemIndex);
+end;
+
+procedure TMainForm.CbFlatChange(Sender: TObject);
 begin
   JvYearGrid1.Flat := CbFlat.Checked;
 end;
 
-procedure TForm1.CbMonthNamesAlignmentChange(Sender: TObject);
+procedure TMainForm.cmbMonthFormatChange(Sender: TObject);
 begin
-  JvYearGrid1.MonthNamesAlignment := TAlignment(CbMonthNamesAlignment.ItemIndex);
+  JvYearGrid1.MonthFormat := TJvMonthFormat(cmbMonthFormat.ItemIndex);
 end;
 
-procedure TForm1.EdBottomMarginChange(Sender: TObject);
+procedure TMainForm.cmbMonthNamesAlignmentChange(Sender: TObject);
+begin
+  JvYearGrid1.MonthNamesAlignment := TAlignment(cmbMonthNamesAlignment.ItemIndex);
+end;
+
+procedure TMainForm.EdBottomMarginChange(Sender: TObject);
 begin
   JvYearGrid1.CellMargins.Bottom := EdBottomMargin.Value;
 end;
 
-procedure TForm1.EdLeftMarginChange(Sender: TObject);
+procedure TMainForm.EdLeftMarginChange(Sender: TObject);
 begin
   JvYearGrid1.CellMargins.Left := EdLeftMargin.Value;
 end;
 
-procedure TForm1.EdRightMarginChange(Sender: TObject);
+procedure TMainForm.EdRightMarginChange(Sender: TObject);
 begin
   JvYearGrid1.CellMargins.Right := EdRightMargin.Value;
 end;
 
-procedure TForm1.EdTopMarginChange(Sender: TObject);
+procedure TMainForm.EdTopMarginChange(Sender: TObject);
 begin
   JvYearGrid1.CellMargins.Top := EdTopMargin.Value;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  JvYearGrid1.Year := YearOf(Date);
+
   EdLeftMargin.Value := JvYearGrid1.CellMargins.Left;
   EdRightMargin.Value := JvYearGrid1.CellMargins.Right;
   EdTopMargin.Value := JvYearGrid1.CellMargins.Top;
   EdBottomMargin.Value := JvYearGrid1.CellMargins.Bottom;
 
-  CbDayNamesAlignment.ItemIndex := ord(JvYearGrid1.DayNamesAlignment);
-  CbMonthNamesAlignment.ItemIndex := ord(JvYearGrid1.MonthNamesAlignment);
-  CbDaysAlignment.ItemIndex := ord(JvYearGrid1.DaysAlignment);
+  cmbDayNamesAlignment.ItemIndex := ord(JvYearGrid1.DayNamesAlignment);
+  cmbMonthNamesAlignment.ItemIndex := ord(JvYearGrid1.MonthNamesAlignment);
+  cmbDaysAlignment.ItemIndex := ord(JvYearGrid1.DaysAlignment);
+  cmbDayFormat.ItemIndex := ord(JvYearGrid1.DayFormat);
+  cmbMonthFormat.ItemIndex := ord(JvYearGrid1.MonthFormat);
+
+  udYear.Position := JvYearGrid1.Year;
 
   CbFlat.Checked := JvYearGrid1.Flat;
 end;
 
-initialization
-  {$IFDEF WINDOWS}
-  GetLocaleFormatSettings(1033, FormatSettings);
-  {$ENDIF}
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  AutoSize := true;
+end;
+
+procedure TMainForm.udYearClick(Sender: TObject; Button: TUDBtnType);
+begin
+  JvYearGrid1.Year := udYear.Position;
+end;
 
 end.
 
