@@ -102,7 +102,7 @@ begin
         Strings.AddObject(
           Format('%s - %s',
             [ID3_FrameIDToString(lFrameID), TFSDesigner(FSDesigner).FrameDescription[lFrameID]]),
-          TObject(lFrameID));
+          TObject(PtrInt(lFrameID)));
   finally
     Strings.EndUpdate;
   end;
@@ -128,7 +128,7 @@ function TJvID3DefineDlg.GetFrameID: TJvID3FrameID;
 begin
   with cmbFrames do
     if ItemIndex >= 0 then
-      Result := TJvID3FrameID(Items.Objects[ItemIndex])
+      Result := TJvID3FrameID(PtrInt(Items.Objects[ItemIndex]))
     else
       Result := fiUnknownFrame;
 end;

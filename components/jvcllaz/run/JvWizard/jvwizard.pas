@@ -337,7 +337,8 @@ interface
 
 uses
   SysUtils, Classes,
-  Controls, Forms, Graphics, Buttons, ImgList, Types, LMessages, LCLType, LCLIntf,
+  Controls, Forms, Graphics, Buttons, ImgList, Types,
+  LMessages, LCLType, LCLIntf, LCLVersion,
   JvWizardCommon, JvComponent;
 
 type
@@ -795,7 +796,9 @@ type
     procedure RepositionButtons;
     procedure UpdateButtonsStatus;
     procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
+    {$IF LCL_FullVersion >= 2000000}
     procedure WMGetDlgCode(var Msg: TLMGetDlgCode); message LM_GETDLGCODE;
+    {$IFEND}
     procedure CMDesignHitTest(var Msg: TCMDesignHitTest); message CM_DESIGNHITTEST;
     function FindNextEnabledPage(PageIndex: Integer; const Step: Integer = 1;
       CheckDisable: Boolean = True): TJvWizardCustomPage;
@@ -2959,10 +2962,12 @@ begin
     Rect.Bottom := Rect.Bottom - FButtonBarHeight;
 end;
 
+{$IF LCL_FullVersion >= 2000000}
 procedure TJvWizard.WMGetDlgCode(var Msg: TLMGetDlgCode);
 begin
   Msg.Result := DLGC_WANTALLKEYS or DLGC_WANTARROWS;
 end;
+{$IFEND}
 
 procedure TJvWizard.UpdateButtonsStatus;
 var

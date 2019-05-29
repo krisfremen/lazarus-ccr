@@ -502,7 +502,7 @@ begin
     with Frame do
     begin
       with cmbPictureType do
-        PictureType := TJvID3PictureType(Items.Objects[ItemIndex]);
+        PictureType := TJvID3PictureType(PtrInt(Items.Objects[ItemIndex]));
       Description := edtPictureName.Text;
       MIMEType := AnsiString(ExtToMIMEType(ExtractFileExt(FileName)));
       LoadFromFile(FileName);
@@ -571,7 +571,7 @@ begin
   begin
     edtPictureName.Text := Frame.Description;
     with cmbPictureType do
-      ItemIndex := Items.IndexOfObject(TObject(Frame.PictureType));
+      ItemIndex := Items.IndexOfObject(TObject(PtrInt(Frame.PictureType)));
   end;
 
   imgPicture.Picture.Assign(Frame);
@@ -590,7 +590,7 @@ begin
   try
     Strings.Clear;
     for PictureType := Low(TJvID3PictureType) to High(TJvID3PictureType) do
-      Strings.AddObject(CPictureTypeStr[PictureType], TObject(PictureType));
+      Strings.AddObject(CPictureTypeStr[PictureType], TObject(PtrInt(PictureType)));
   finally
     Strings.EndUpdate;
   end;
@@ -640,7 +640,7 @@ begin
   with Frame do
   begin
     with cmbPictureType do
-      PictureType := TJvID3PictureType(Items.Objects[ItemIndex]);
+      PictureType := TJvID3PictureType(PtrInt(Items.Objects[ItemIndex]));
     Description := edtPictureName.Text;
 
     lsvPictures.Items.BeginUpdate;

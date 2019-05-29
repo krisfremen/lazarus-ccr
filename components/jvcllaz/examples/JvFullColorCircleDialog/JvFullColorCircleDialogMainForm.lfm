@@ -101,7 +101,7 @@ object JvFullColorCircleDlgMainFrm: TJvFullColorCircleDlgMainFrm
   object JvFullColorCircleDialog: TJvFullColorCircleDialog
     HelpContext = 0
     OnApply = JvFullColorCircleDialogApply
-    left = 184
-    top = 80
+    Left = 184
+    Top = 80
   end
 end

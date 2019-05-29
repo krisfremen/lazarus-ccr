@@ -1701,8 +1701,11 @@ begin
     begin
       Dest.Canvas.Brush.Color := clSilver;
       Dest.Canvas.FillRect(Bounds(0, 0, CellWidth, CellHeight));
-      Dest.Canvas.Draw(-(Index mod Cols) * CellWidth,
-        -(Index div Cols) * CellHeight, Source);
+      Dest.Canvas.Draw(
+        -(Index mod Cols) * CellWidth,
+        -(Index div Cols) * CellHeight,
+        Source
+      );
     end;
     Dest.Transparent := Source.Transparent;
   end;

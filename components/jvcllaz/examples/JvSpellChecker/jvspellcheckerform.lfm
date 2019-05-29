@@ -15,7 +15,7 @@ object frmSpellChecker: TfrmSpellChecker
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   Scaled = False
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
@@ -253,8 +253,8 @@ object frmSpellChecker: TfrmSpellChecker
   end
   object alSpell: TActionList
     OnUpdate = alSpellUpdate
-    left = 112
-    top = 144
+    Left = 112
+    Top = 144
     object acIgnore: TAction
       Caption = '&Ignore'
       OnExecute = acIgnoreExecute

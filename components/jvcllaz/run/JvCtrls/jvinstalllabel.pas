@@ -75,9 +75,11 @@ type
     property Styles[Index: Integer]: TFontStyles read GetStyles write SetStyles;
   published
     property Align;
-    property Font;
+    property BorderSpacing;
     property Color default clBtnFace;
+    property Constraints;
     property DefaultImage: Integer read FDefaultImage write SetIndex default -1;
+    property Font;
     property Images: TCustomImageList read FImageList write SetImageList;
     property Lines: TStrings read GetLines write SetLines;
     property LineSpacing: Integer read FLineSpacing write SetLineSpacing default 10;

@@ -430,9 +430,6 @@ begin
   NT.CloseButton := ShowCloseButton1.Checked;
 end;
 
-type
-  THackForm = class(TCustomForm);
-
 procedure TJvNavPaneDemoMainFrm.DoToolEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
   if (Target is TCustomForm) and (Target <> Self) then

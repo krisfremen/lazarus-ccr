@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 438
   ClientWidth = 669
   OnCreate = FormCreate
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object JvTabBar1: TJvTabBar
     Left = 0
     Height = 30
@@ -35,7 +35,7 @@ object Form1: TForm1
     Height = 408
     Top = 30
     Width = 669
-    PageIndex = 1
+    PageIndex = 0
     Align = alClient
     TabOrder = 1
     object lprPage: TPage
@@ -1064,8 +1064,9 @@ object Form1: TForm1
     DirectiveAttri.Style = [fsBold]
     CompilerMode = pcmDelphi
     NestedComments = False
-    left = 157
-    top = 111
+    TypeHelpers = True
+    Left = 157
+    Top = 111
   end
   object JvModernTabBarPainter1: TJvModernTabBarPainter
     Color = clGradientInactiveCaption
@@ -1076,22 +1077,22 @@ object Form1: TForm1
     DisabledFont.Color = clGrayText
     SelectedFont.Color = clWindowText
     SelectedFont.Style = [fsBold]
-    left = 155
-    top = 209
+    Left = 155
+    Top = 209
   end
   object JvTabBarXPPainter1: TJvTabBarXPPainter
     Font.Color = clWindowText
     DisabledFont.Color = clGrayText
     SelectedFont.Color = clWindowText
     FixedTabSize = 0
-    left = 312
-    top = 209
+    Left = 312
+    Top = 209
   end
   object SynXMLSyn1: TSynXMLSyn
     DefaultFilter = 'XML Document (*.xml,*.xsd,*.xsl,*.xslt,*.dtd)|*.xml;*.xsd;*.xsl;*.xslt;*.dtd'
     Enabled = False
     WantBracesParsed = False
-    left = 241
-    top = 111
+    Left = 241
+    Top = 111
   end
 end

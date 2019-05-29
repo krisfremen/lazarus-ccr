@@ -54,7 +54,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\XPCtrls_SimpleDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/XPCtrls_SimpleDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

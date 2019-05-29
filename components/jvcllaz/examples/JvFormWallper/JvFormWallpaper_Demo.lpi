@@ -54,7 +54,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="../../bin/JvFormWallpaper_Demo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvFormWallpaper_Demo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

@@ -64,7 +64,7 @@ object Form1: TForm1
     ParentColor = False
   end
   object JvPicClip1: TJvPicClip
-    left = 96
-    top = 32
+    Left = 96
+    Top = 32
   end
 end

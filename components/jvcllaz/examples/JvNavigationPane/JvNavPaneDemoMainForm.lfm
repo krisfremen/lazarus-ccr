@@ -8,7 +8,7 @@ object JvNavPaneDemoMainFrm: TJvNavPaneDemoMainFrm
   Caption = 'JvNavigationPane Demo'
   DockSite = True
   OnCreate = FormCreate
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.0.2.0'
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
     left = 92

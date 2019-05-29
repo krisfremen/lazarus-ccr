@@ -2260,7 +2260,7 @@ end;
 
 procedure TJvNavIconButton.ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange);
 begin
-  if (Msg.Sender <> Self) and ParentStyleManager then
+  if (Msg.Sender <> Self) and ParentStyleManager and not (csDestroying in ComponentState) then
   begin
     StyleManager := Msg.StyleManager;
     ParentStyleManager := True;

@@ -55,7 +55,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\JvWizardDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvWizardDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

@@ -69,7 +69,7 @@ unit JvComboListBox;
 interface
 
 uses
-  LCLIntf, LCLType,
+  LCLIntf, LCLType, LCLVersion,
   Classes, Graphics, Controls, Forms, StdCtrls,
   Menus;
 
@@ -204,9 +204,11 @@ type
     property OnMouseUp;
     property OnMouseWheel;
     property OnMouseWheelDown;
+    {$IF LCL_FullVersion >= 2000000}
     property OnMouseWheelHorz;
     property OnMouseWheelLeft;
     property OnMouseWheelRight;
+    {$IFEND}
     property OnMouseWheelUp;
     property OnResize;
     property OnSelectionChange;
@@ -464,7 +466,10 @@ begin
     // draw the combo button
     GetCursorPos(Pt);
     Pt := ScreenToClient(Pt);
-    I := ItemAtPos(Pt, True);
+    if (Pt.X < 0) or (Pt.Y < 0) then
+      I := -1
+    else
+      I := ItemAtPos(Pt, True);
     if (not HotTrackCombo and (State * [odSelected, odFocused] <> [])) or (HotTrackCombo and (I = Index)) then
     begin
       // draw frame

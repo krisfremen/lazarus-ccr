@@ -32,7 +32,6 @@ interface
 
 uses
   SysUtils, Classes;
-//  JvComponentBase;
 
 type
   TJvStrToHtml = class(TComponent)  // TJvComponent)
@@ -58,7 +57,7 @@ function HtmlToString(const Value: string): string;
 implementation
 
 uses
-  LazUtf8;
+  LCLVersion, LazUtf8;
 
 type
   TJvHtmlCodeRec = record
@@ -408,7 +407,11 @@ begin
     if P^ in ['a'..'z', 'A'..'Z', '0'..'9', '_', ' '] then
       Append(P^)
     else begin
+      {$IF LCL_FullVersion >= 2000000}
       ch := UTF8CodePointToUniCode(P, n);
+      {$ELSE}
+      ch := UTF8CharacterToUniCode(P, n);
+      {$IFEND}
       found := false;
       for J := Low(Conversions) to High(Conversions) do
         if ch = Conversions[J].Ch then begin

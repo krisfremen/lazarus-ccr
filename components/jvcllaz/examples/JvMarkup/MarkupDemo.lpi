@@ -55,7 +55,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\MarkupDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/MarkupDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

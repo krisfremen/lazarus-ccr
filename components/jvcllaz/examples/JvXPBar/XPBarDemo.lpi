@@ -52,7 +52,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\XPBarDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/XPBarDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

@@ -41,7 +41,7 @@ unit JvRollOut;
 interface
 
 uses
-  LCLType, LCLIntf, LMessages,
+  LCLType, LCLIntf, LMessages, LCLVersion,
   SysUtils, Classes, Controls, Graphics, ImgList, ExtCtrls, ActnList, Forms,
   //JvExtComponent,
   JvThemes;
@@ -258,7 +258,9 @@ type
     property Font;
     property GroupIndex;
     property ImageOptions;
+    {$IF LCL_FullVersion >= 2000000}
     property ParentBackground default True;
+    {$IFEND}
     property ParentColor;
     property ParentFont;
     property ParentShowHint;

@@ -165,7 +165,7 @@ begin
   with TJvFullColorLabel(Sender) do
   begin
     JvFullColorDialog.FullColor := LabelColor;
-    JvFullColorDialog.Tag := Integer(Sender);
+    JvFullColorDialog.Tag := PtrInt(Sender);
     if JvFullColorDialog.Execute then
     begin
       LabelColor := JvFullColorDialog.FullColor;

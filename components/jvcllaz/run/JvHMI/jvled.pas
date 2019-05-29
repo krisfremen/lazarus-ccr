@@ -115,7 +115,7 @@ type
 implementation
 
 uses
-  SysUtils;
+  SysUtils, LCLVersion;
 
 {$R ../../resource/jvled.res}
 
@@ -234,7 +234,11 @@ end;
 
 procedure TJvCustomLED.DoBlink(Sender: TObject);
 begin
+  {$IF LCL_FullVersion >= 2000000}
   if not IsIconic(Application.Handle) then
+  {$ELSE}
+  if not IsIconic(Application.MainForm.Handle) then
+  {$IFEND}
     Status := not Status;
 end;
 

@@ -7,7 +7,7 @@ object MainForm: TMainForm
   ClientHeight = 384
   ClientWidth = 858
   OnShow = FormShow
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.0.2.0'
   object PageControl: TPageControl
     Left = 0
     Height = 384
@@ -136,7 +136,7 @@ object MainForm: TMainForm
         Font.Height = -13
         Font.Name = 'Courier New'
         Font.Pitch = fpFixed
-        Font.Quality = fqAntialiased
+        Font.Quality = fqCleartype
         ParentColor = False
         ParentFont = False
         TabOrder = 1

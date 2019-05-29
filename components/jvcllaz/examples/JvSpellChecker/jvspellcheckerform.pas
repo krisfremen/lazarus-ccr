@@ -123,14 +123,15 @@ begin
 end;
 
 procedure TfrmSpellChecker.FormCreate(Sender: TObject);
-var S:string;
+var
+  S:string;
 begin
   ASpellChecker := TJvSpellChecker.Create(self);
   // Dictionaries are plain text files, one word per row, preferably sorted.
   // If you don't load a dictionary, all words are misspelled and you won't get any suggestions
-  S := ExtractFilePath(Application.ExeName) + 'english.dic';
+  S := ExtractFilePath(Application.ExeName) + '../../dict/english.dic';
   if not FileExists(S) then
-    S := '..' + PathDelim + 'Dict' + PathDelim + 'english.dic';
+    S := '..' + PathDelim + 'Dict' + PathDelim + '../dict/english.dic';
   if FileExists(S) then
     ASpellChecker.Dictionary := S
   else

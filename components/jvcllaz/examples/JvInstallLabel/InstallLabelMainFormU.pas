@@ -32,9 +32,12 @@ interface
 
 uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, ImgList, JvInstallLabel;
+  StdCtrls, ExtCtrls, JvInstallLabel;
 
 type
+
+  { TInstallLabelMainForm }
+
   TInstallLabelMainForm = class(TForm)
     ImageList1: TImageList;
     Next: TButton;
@@ -42,6 +45,7 @@ type
     Image1: TImage;
     Panel1: TPanel;
     InstallLabel1: TJvInstallLabel;
+    Panel2: TPanel;
     procedure NextClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);

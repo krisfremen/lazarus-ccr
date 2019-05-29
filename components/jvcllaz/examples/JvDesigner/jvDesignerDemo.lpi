@@ -231,7 +231,7 @@
         <Loaded Value="True"/>
       </Unit25>
       <Unit26>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\forms.pp"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="8"/>
         <TopLine Value="1737"/>
@@ -247,7 +247,7 @@
         <UsageCount Value="12"/>
       </Unit27>
       <Unit28>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
         <EditorIndex Value="3"/>
         <TopLine Value="3305"/>
         <CursorPos Y="3324"/>
@@ -255,7 +255,7 @@
         <Loaded Value="True"/>
       </Unit28>
       <Unit29>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
         <EditorIndex Value="4"/>
         <TopLine Value="8121"/>
         <CursorPos Y="8145"/>
@@ -263,7 +263,7 @@
         <Loaded Value="True"/>
       </Unit29>
       <Unit30>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\lclmessageglue.pas"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\lclmessageglue.pas"/>
         <UnitName Value="LCLMessageGlue"/>
         <EditorIndex Value="2"/>
         <TopLine Value="102"/>
@@ -399,7 +399,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\jvDesignerDemo"/>
+      <Filename Value="..\..\bin\$(TargetCPU)-$(TargetOS)\JvDesignerDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

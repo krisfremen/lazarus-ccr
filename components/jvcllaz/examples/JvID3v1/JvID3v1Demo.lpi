@@ -53,7 +53,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\JvID3v1Demo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvID3v1Demo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

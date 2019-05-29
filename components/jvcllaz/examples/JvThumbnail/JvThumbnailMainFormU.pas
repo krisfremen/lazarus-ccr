@@ -100,7 +100,6 @@ type
     ThumbView: TJVThumbview;
     Panel5: TPanel;
     ProgressBar: TProgressBar;
-    Bevel1: TBevel;
 
     procedure BtnEditSelThumbClick(Sender: TObject);
     procedure BtnStopLoadingClick(Sender: TObject);

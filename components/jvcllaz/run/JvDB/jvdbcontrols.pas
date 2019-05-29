@@ -41,7 +41,7 @@ unit JvDBControls;
 interface
 
 uses
-  JvBaseEdits, DB, DBCtrls, Classes, LMessages, GroupedEdit;
+  JvBaseEdits, DB, DBCtrls, Classes, LMessages, LCLVersion, GroupedEdit;
 
 type
 
@@ -129,8 +129,10 @@ type
     property Enabled;
     property Font;
     property FormatOnEditing;
+    {$IF LCL_FullVersion >= 2000000}
     property ImageIndex;
     property Images;
+    {$IFEND}
     property ButtonWidth;
     property HideSelection;
     property Anchors;

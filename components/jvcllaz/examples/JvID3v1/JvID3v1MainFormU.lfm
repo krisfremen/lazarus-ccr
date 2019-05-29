@@ -18,7 +18,7 @@ object JvID3v1MainForm: TJvID3v1MainForm
   OnDropFiles = FormDropFiles
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '1.8.4.0'
   object lblArtist: TLabel
     AnchorSideTop.Control = edtArtist
     AnchorSideTop.Side = asrCenter

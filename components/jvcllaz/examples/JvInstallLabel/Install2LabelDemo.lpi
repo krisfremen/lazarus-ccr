@@ -57,7 +57,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\Install2LabelDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/Install2LabelDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

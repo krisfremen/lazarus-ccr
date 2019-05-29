@@ -96,7 +96,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  OpenDialog1.InitialDir := '..' + PathDelim + 'examples' + PathDelim + 'JvTabBar';
+  OpenDialog1.InitialDir := '../../examples/JvTabBar';
   LoadFile(OpenDialog1.InitialDir + PathDelim + 'main.pas');
   LoadFile(OpenDialog1.InitialDir + PathDelim + 'main.lfm');
 end;
@@ -107,7 +107,7 @@ var
   info: TTabInfo;
 begin
   for i := JvTabBar1.Tabs.Count-1 downto 0 do begin
-    info := TTabInfo((JvTabBar1.Tabs[i]).Tag);
+    info := TTabInfo(JvTabBar1.Tabs[i].Tag);
     FreeAndNil(info);
   end;
 end;

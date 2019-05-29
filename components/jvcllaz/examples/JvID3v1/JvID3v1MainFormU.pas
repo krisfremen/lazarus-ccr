@@ -224,7 +224,7 @@ var
 begin
   if JvId3v11.FileName > '' then
   begin
-    { Store TagPresent in variabele to prevent double checks whether the file
+    { Store TagPresent in variable to prevent double checks whether the file
       has a tag }
     HasTag := JvId3v11.HasTag;
     lblHasTag.Font.Color := CHasTagColor[HasTag];

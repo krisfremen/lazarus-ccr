@@ -1433,10 +1433,10 @@ end;
 procedure TJvDEFColorSpace.AddCustomColor(AColor: TColor;
   AShortName, APrettyName: string);
 begin
-  if FDelphiColors.IndexOfObject(TObject(AColor)) = -1 then
+  if FDelphiColors.IndexOfObject(TObject(PtrInt(AColor))) = -1 then
   begin
     FDelphiColors.Values[AShortName] := APrettyName;
-    FDelphiColors.Objects[FDelphiColors.IndexOfName(AShortName)] := TObject(AColor);
+    FDelphiColors.Objects[FDelphiColors.IndexOfName(AShortName)] := TObject(PtrInt(AColor));
   end;
 end;
 
@@ -1447,7 +1447,7 @@ var
 begin
   NewColor := clNone;
   for I := 0 to FDelphiColors.Count - 1 do
-    if AColor = TColor(FDelphiColors.Objects[I]) then
+    if AColor = PtrInt(FDelphiColors.Objects[I]) then
     begin
       NewColor := AColor;
       Break;
@@ -1512,7 +1512,7 @@ end;
 function TJvDEFColorSpace.GetColorValue(Index: Integer): TColor;
 begin
   if (Index >= 0) and (Index < FDelphiColors.Count) then
-    Result := TColor(FDelphiColors.Objects[Index])
+    Result := PtrInt(FDelphiColors.Objects[Index])
   else
     Result := clNone;
 end;

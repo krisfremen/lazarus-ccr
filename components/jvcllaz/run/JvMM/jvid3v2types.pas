@@ -1325,7 +1325,7 @@ end;
 
 procedure TJvID3TermFinder.BuildList_ID3Genres;
 var
-  I: Integer;
+  I: PtrInt;
 begin
   if Assigned(FLists[ltID3Genres]) then
     Exit;
@@ -1358,7 +1358,7 @@ begin
     for FrameID := Low(TJvID3FrameID) to High(TJvID3FrameID) do
       with CID3FrameDefs[FrameID] do
         if LongTextID[0] <> #0 then
-          AddObject(string(LongTextID), TObject(FrameID));
+          AddObject(string(LongTextID), TObject(PtrInt(FrameID)));
   end;
 end;
 
@@ -1378,13 +1378,13 @@ begin
     for FrameID := Low(TJvID3FrameID) to High(TJvID3FrameID) do
       with CID3FrameDefs[FrameID] do
         if ShortTextID[0] <> #0 then
-          AddObject(string(ShortTextID), TObject(FrameID));
+          AddObject(string(ShortTextID), TObject(PtrInt(FrameID)));
   end;
 end;
 
 procedure TJvID3TermFinder.BuildList_ISO_639_2Code;
 var
-  I: Integer;
+  I: PtrInt;
 begin
   if Assigned(FLists[ltISO_639_2Code]) then
     Exit;
@@ -1403,7 +1403,7 @@ end;
 
 procedure TJvID3TermFinder.BuildList_ISO_639_2Name;
 var
-  I: Integer;
+  I: PtrInt;
 begin
   if Assigned(FLists[ltISO_639_2Name]) then
     Exit;
@@ -1436,7 +1436,7 @@ begin
         AStrings.AddObject('', TObject(255));
 
       for I := 0 to FLists[ltID3Genres].Count - 1 do
-        if InclWinampGenres or (Integer(FLists[ltID3Genres].Objects[I]) <= CGenre_HighV1) then
+        if InclWinampGenres or (PtrInt(FLists[ltID3Genres].Objects[I]) <= CGenre_HighV1) then
           AStrings.AddObject(FLists[ltID3Genres][I], FLists[ltID3Genres].Objects[I]);
     finally
       AStrings.EndUpdate;
@@ -1464,7 +1464,7 @@ begin
       Result := -1;
 
     if Result >= 0 then
-      Result := Integer(FLists[ltID3Genres].Objects[Result])
+      Result := PtrInt(FLists[ltID3Genres].Objects[Result])
     else
       Result := cDefaultGenre[InclWinampGenres];
   end;
@@ -1494,7 +1494,7 @@ begin
     Result := -1;
 
   if Result >= 0 then
-    Result := Integer(FLists[ltID3Genres].Objects[Result])
+    Result := PtrInt(FLists[ltID3Genres].Objects[Result])
   else
     Result := CDefaultGenre[InclWinampGenres];
 end;
@@ -1516,7 +1516,7 @@ begin
   if I < 0 then
     Result := fiUnknownFrame
   else
-    Result := TJvID3FrameID(FLists[ltID3LongText].Objects[I]);
+    Result := TJvID3FrameID(PtrInt(FLists[ltID3LongText].Objects[I]));
 end;
 
 function TJvID3TermFinder.ID3ShortTextToFrameID(
@@ -1536,7 +1536,7 @@ begin
   if I < 0 then
     Result := fiUnknownFrame
   else
-    Result := TJvID3FrameID(FLists[ltID3ShortText].Objects[I]);
+    Result := TJvID3FrameID(PtrInt(FLists[ltID3ShortText].Objects[I]));
 end;
 
 function TJvID3TermFinder.IsFrameOk(const S: AnsiString): Boolean;
@@ -1560,7 +1560,7 @@ begin
 
   Result := FLists[ltISO_639_2Code].IndexOf(string(AnsiLowerCase(ACode)));
   if Result >= 0 then
-    Result := Integer(FLists[ltISO_639_2Code].Objects[Result]);
+    Result := Integer(PtrInt(FLists[ltISO_639_2Code].Objects[Result]));
 end;
 
 procedure TJvID3TermFinder.ISO_639_2Names(AStrings: TStrings);
@@ -1577,7 +1577,7 @@ begin
 
   Result := FLists[ltISO_639_2Name].IndexOf(AName);
   if Result >= 0 then
-    Result := Integer(FLists[ltISO_639_2Name].Objects[Result]);
+    Result := PtrInt(FLists[ltISO_639_2Name].Objects[Result]);
 end;
 
 initialization

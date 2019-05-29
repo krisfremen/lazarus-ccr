@@ -54,7 +54,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\JvLookupAutoCompleteDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvLookupAutoCompleteDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

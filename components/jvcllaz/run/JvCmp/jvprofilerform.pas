@@ -115,6 +115,7 @@ type
 implementation
 
 uses
+  LCLVersion,
  {$IFDEF LINUX}
   baseunix, unix, linux, users,
  {$ELSE}
@@ -462,10 +463,12 @@ end;
 
 procedure TProfReport.lvReportColumnClick(Sender: TObject; Column: TListColumn);
 begin
+  {$IF LCL_FullVersion >= 2000000}
   //  lvReport.Items.BeginUpdate;
   lvReport.CustomSort(TLVCompare(@DefSort), Column.Index);
   OddClick := not OddClick;
   //  lvReport.Items.EndUpdate;
+  {$IFEND}
 end;
 
 procedure TProfReport.SaveBtnClick(Sender: TObject);

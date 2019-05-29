@@ -87,6 +87,8 @@ end;
 
 procedure TForm1.CreateCombinedImage(ABitmap: TBitmap;
   out ANumCols, ANumRows: Integer);
+const
+  FOLDER = '../../design/';
 var
   pic: TPicture;
   c, r, i: Integer;
@@ -95,39 +97,39 @@ var
 begin
   L := TStringList.Create;
   try
-    L.Add('../design/JvMM/images/tjvbmpanimator.bmp');                  //0
-    L.Add('../design/JvMM/images/tjvfullcoloraxiscombo.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolorcircle.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolorcircledialog.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolorgroup.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolorlabel.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolorpanel.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolorspacecombo.bmp');
-    L.Add('../design/JvMM/images/tjvfullcolortrackbar.bmp');
-    L.Add('../design/JvMM/images/tjvgradient.bmp');
-    L.Add('../design/JvMM/images/tjvgradientheaderpanel.bmp');   // 10
-    L.Add('../design/JvMM/images/tjvid3v2.bmp');
-    L.Add('../design/JvMM/images/tjvpicclip.bmp');
-    L.Add('../design/JvMM/images/tjvspecialprogress.bmp');
-    L.Add('../design/JvHMI/images/tjvdialbutton.bmp');
-    L.Add('../design/JvHMI/images/tjvled.bmp');
-    L.Add('../design/JvDB/images/tjvdbcalcedit.bmp');
-    L.Add('../design/JvDB/images/tjvdbhtlabel.bmp');
-    L.Add('../design/JvDB/images/tjvdbsearchcombobox.bmp');
-    L.Add('../design/JvDB/images/tjvdbsearchedit.bmp');
-    L.Add('../design/JvDB/images/tjvdbtreeview.bmp');  // 20
-    L.Add('../design/JvCustomControls/images/tjvimagelistviewer.png');
-    L.Add('../design/JvCustomControls/images/tjvimagesviewer.png');
-    L.Add('../design/JvCustomControls/images/tjvmoderntabbarpainter.bmp');
-    L.Add('../design/JvCustomControls/images/tjvoutlookbar.png');
-    L.Add('../design/JvCustomControls/images/tjvownerdrawviewer.png');
-    L.Add('../design/JvCustomControls/images/tjvtabbar.bmp');
-    L.Add('../design/JvCustomControls/images/tjvthumbimage.png');
-    L.Add('../design/JvCustomControls/images/tjvthumbnail.png');
-    L.Add('../design/JvCustomControls/images/tjvthumbview.png');
-    L.Add('../design/JvCustomControls/images/tjvtimeline.png');   // 30
-    L.Add('../design/JvCustomControls/images/tjvtmtimeline.png');
-    L.Add('../design/JvCustomControls/images/tjvvalidateedit.png');    // 32
+    L.Add(FOLDER + 'JvMM/images/tjvbmpanimator.bmp');                  //0
+    L.Add(FOLDER + 'JvMM/images/tjvfullcoloraxiscombo.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorcircle.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorcircledialog.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorgroup.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorlabel.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorpanel.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorspacecombo.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolortrackbar.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvgradient.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvgradientheaderpanel.bmp');   // 10
+    L.Add(FOLDER + 'JvMM/images/tjvid3v2.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvpicclip.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvspecialprogress.bmp');
+    L.Add(FOLDER + 'JvHMI/images/tjvdialbutton.bmp');
+    L.Add(FOLDER + 'JvHMI/images/tjvled.bmp');
+    L.Add(FOLDER + 'JvDB/images/tjvdbcalcedit.bmp');
+    L.Add(FOLDER + 'JvDB/images/tjvdbhtlabel.bmp');
+    L.Add(FOLDER + 'JvDB/images/tjvdbsearchcombobox.bmp');
+    L.Add(FOLDER + 'JvDB/images/tjvdbsearchedit.bmp');
+    L.Add(FOLDER + 'JvDB/images/tjvdbtreeview.bmp');  // 20
+    L.Add(FOLDER + 'JvCustomControls/images/tjvimagelistviewer.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvimagesviewer.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvmoderntabbarpainter.bmp');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvoutlookbar.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvownerdrawviewer.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvtabbar.bmp');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvthumbimage.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvthumbnail.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvthumbview.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvtimeline.png');   // 30
+    L.Add(FOLDER + 'JvCustomControls/images/tjvtmtimeline.png');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvvalidateedit.png');    // 32
     ANumCols := 8;
     ANumRows := 4;
 

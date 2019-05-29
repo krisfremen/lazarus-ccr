@@ -12,7 +12,7 @@ object JvID3v2EditForm: TJvID3v2EditForm
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.0.2.0'
   object lsbNavigator: TListBox
     Left = 4
     Height = 479

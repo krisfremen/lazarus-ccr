@@ -37,7 +37,8 @@ unit JvBaseEdits;
 interface
 
 uses
-  Classes, SysUtils, EditBtn, LMessages, CalcForm, Forms, GroupedEdit;
+  Classes, SysUtils, EditBtn, LMessages, LCLVersion, Forms,
+  CalcForm, GroupedEdit;
 
 type
 
@@ -173,9 +174,11 @@ type
     property ButtonWidth;
     property Glyph;
     property NumGlyphs;
+    {$IF LCL_FullVersion >= 2000000}
     property Images;
     property ImageIndex;
     property ImageWidth;
+    {$IFEND}
     property Action;
     property DirectInput;
     property FocusOnButtonClick;
@@ -254,9 +257,11 @@ type
     property DragKind;
     property Glyph;
     property NumGlyphs;
+    {$IF LCL_FullVersion >= 2000000}
     property Images;
     property ImageIndex;
     property ImageWidth;
+    {$IFEND}
     property Flat;
     property ParentBiDiMode;
     property OnEndDock;

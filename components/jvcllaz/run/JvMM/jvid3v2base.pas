@@ -3854,7 +3854,7 @@ begin
     if hfUnsynchronisation in Header.Flags then
       ApplyUnsynchronisationSchemeOnCurrentStream;
 
-    FileStream := TFileStream.Create(FFileName, fmOpenReadWrite or fmShareExclusive);
+    FileStream := TFileStream.Create(AFileName, fmOpenReadWrite or fmShareExclusive);
     try
       OldTagSizeInclHeader := GetTagSizeInclHeader(FileStream);
 
@@ -5151,7 +5151,7 @@ end;
 procedure TJvID3Frame.DataChanged;
 begin
   if Assigned(FController) then
-    FController.ID3Event(ideFrameChange, Longint(Self));
+    FController.ID3Event(ideFrameChange, PtrInt(Self));
 end;
 
 procedure TJvID3Frame.Error(const Msg: string);

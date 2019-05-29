@@ -82,20 +82,20 @@ object Form1: TForm1
     Font.Color = clWindowText
     DisabledFont.Color = clGrayText
     SelectedFont.Color = clWindowText
-    left = 360
-    top = 192
+    Left = 360
+    Top = 192
   end
   object JvTabBarXPPainter1: TJvTabBarXPPainter
     Font.Color = clWindowText
     DisabledFont.Color = clGrayText
     SelectedFont.Color = clWindowText
     FixedTabSize = 0
-    left = 360
-    top = 120
+    Left = 360
+    Top = 120
   end
   object ImageList1: TImageList
-    left = 208
-    top = 120
+    Left = 208
+    Top = 120
     Bitmap = {
       4C69040000001000000010000000FFFFFF00FFFFFF00459AD3EF4498D2FF4197
       D1FF3F95D1FF3D94D0FF3B93D0FF3B92CFFF3B92CFFF3B92CFFF3D94D0FF4398
@@ -230,12 +230,12 @@ object Form1: TForm1
   end
   object OpenDialog1: TOpenDialog
     Options = [ofAllowMultiSelect, ofEnableSizing, ofViewDetail]
-    left = 209
-    top = 191
+    Left = 209
+    Top = 191
   end
   object PopupMenu1: TPopupMenu
-    left = 77
-    top = 109
+    Left = 77
+    Top = 109
     object MenuItem1: TMenuItem
       Action = AcModernPainter
       AutoCheck = True
@@ -249,8 +249,8 @@ object Form1: TForm1
   end
   object ActionList1: TActionList
     Images = ImageList1
-    left = 78
-    top = 184
+    Left = 78
+    Top = 184
     object AcFileOpen: TAction
       Category = 'File'
       Caption = 'Open...'
@@ -278,8 +278,8 @@ object Form1: TForm1
     end
   end
   object MainMenu1: TMainMenu
-    left = 77
-    top = 253
+    Left = 77
+    Top = 253
     object MenuItem3: TMenuItem
       Caption = 'File'
       object MenuItem4: TMenuItem

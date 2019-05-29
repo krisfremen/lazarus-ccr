@@ -17,6 +17,7 @@ begin
   {$IFDEF LCLVersion >= 1080000}
   Application.Scaled := True;
   {$ENDIF}
+  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;

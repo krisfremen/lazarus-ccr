@@ -6,8 +6,8 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, JvRollOut, ImgList,
-  StdCtrls, ActnList, Menus; //, JvExtComponent;
+  Dialogs, ExtCtrls, StdCtrls, ActnList, Menus,
+  JvRollOut;
 
 type
   TForm1 = class(TForm)

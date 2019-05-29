@@ -66,11 +66,11 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="../../bin/JvThumbnailDemo"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvThumbnailDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Debugging>

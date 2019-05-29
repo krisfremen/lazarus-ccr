@@ -50,7 +50,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   dir: String;
 begin
-  dir := ExpandFileName(Application.Location + '../examples/JvTabBar_NotebookPages/');
+  dir := ExpandFileName(Application.Location + '../../examples/JvTabBar_NotebookPages/');
   PasSynEdit.Lines.LoadfromFile(dir + 'main.pas');
   XMLSynEdit.Lines.LoadFromFile(dir + 'JvTabBarDemo_NotebookPages.lpi');
   Image1.Picture.LoadFromFile(dir + 'JvTabBarDemo_NotebookPages.ico');
