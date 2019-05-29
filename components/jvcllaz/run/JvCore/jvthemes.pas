@@ -35,7 +35,7 @@ interface
 uses
   LCLType, LCLIntf, LMessages,
   //Types,
-  SysUtils, Classes, Contnrs,
+  SysUtils, Classes,
   {$IFDEF JVCLThemesEnabled}
   Themes,
   {$ENDIF JVCLThemesEnabled}
@@ -500,7 +500,7 @@ end;
 
 procedure PerformEraseBackground(Control: TControl; DC: HDC; Offset: TPoint; const R: TRect);
 var
-  WindowOrg: TPoint;
+  WindowOrg: TPoint = (X:0; Y:0);
   OrgRgn, Rgn: THandle;
   {$IFDEF COMPILER16_UP}
   OldPen: HPEN;

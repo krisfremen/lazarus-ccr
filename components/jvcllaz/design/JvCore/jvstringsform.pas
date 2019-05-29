@@ -36,9 +36,10 @@ uses
   LCLType,
   Classes,
   //Windows,
-  Forms, Controls, Dialogs, StdCtrls, ExtCtrls,
+  Forms, Controls, Dialogs, StdCtrls, ExtCtrls
   //DesignIntf, DesignEditors,
-  JvComponent;
+  //JvComponent
+  ;
 
 type
   TJvStrEditDlg = class(TForm)  //TJvForm)
@@ -56,7 +57,7 @@ type
     procedure FileSave(Sender: TObject);
     procedure UpdateStatus(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MemoKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     procedure HelpBtnClick(Sender: TObject);
   private
     // (rom) removed string[15] to increase flexibility

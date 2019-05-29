@@ -54,17 +54,17 @@ type
     procedure AcShowToolbarCaptionsExecute(Sender: TObject);
     procedure AcToolbarExecute(Sender: TObject);
     procedure AcUpdateExecute(Sender: TObject);
-    procedure AlActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
+    procedure AlActionsUpdate({%H-}AAction: TBasicAction; var {%H-}Handled: Boolean);
     procedure FormActivate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormClose(Sender: TObject; var {%H-}CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure TvItemsChange(Sender: TObject; Node: TTreeNode);
-    procedure TvItemsCollapsing(Sender: TObject; Node: TTreeNode;
-      var AllowCollapse: Boolean);
+    procedure TvItemsCollapsing(Sender: TObject; {%H-}Node: TTreeNode;
+      var {%H-}AllowCollapse: Boolean);
     procedure TvItemsEdited(Sender: TObject; Node: TTreeNode; var S: string);
-    procedure TvItemsKeyPress(Sender: TObject; var Key: char);
+    procedure TvItemsKeyPress(Sender: TObject; var {%H-}Key: char);
   private
     FUpdateSelectionCount: Integer;
     FLargeToolBtnSize: Integer;
@@ -113,11 +113,11 @@ implementation
 {$R *.lfm}
 
 uses
-  PropEditUtils, IDEWindowIntf, IDEImagesIntf, ObjInspStrConsts,
+  PropEditUtils, IDEWindowIntf, IDEImagesIntf, ObjInspStrConsts
   {$IF LCL_FullVersion < 1080000}
-  JvJVCLUtils,
+  , JvJVCLUtils
   {$ENDIF}
-  JvConsts;
+  ;
 
 type
   THackOutlookBar = class(TJvCustomOutlookBar);
@@ -418,8 +418,8 @@ end;
 procedure TFrmOLBEditor.ExchangeItems(Node1, Node2: TTreeNode);
 var
   I: Integer;
-  page1, page2: TJvOutlookBarPage;
-  btn1, btn2: TJvOutlookBarButton;
+  //page1, page2: TJvOutlookBarPage;
+  //btn1, btn2: TJvOutlookBarButton;
 begin
   (*
   if TObject(Node1.Data) is TJvOutlookBarButton then
@@ -678,8 +678,6 @@ end;
 procedure TFrmOLBEditor.RefreshNames;
 var
   pageNode, buttonNode: TTreeNode;
-  obj: TObject;
-  s: string;
 begin
   if (FOutlookBar = nil) or (FDesigner = nil) then
     exit;
@@ -728,7 +726,6 @@ end;
 procedure TFrmOLBEditor.SelectPageInObjectInspector(APage: TJvOutlookbarPage;
   ForceUpdate: Boolean);
 var
-  I: Integer;
   NewSelection: TPersistentSelectionList;
 begin
   if (FOutlookBar = nil) or (GlobalDesignHook = nil) then
@@ -749,7 +746,6 @@ end;
 procedure TFrmOLBEditor.SelectButtonInObjectInspector(AButton: TJvOutlookBarButton;
   ForceUpdate: Boolean);
 var
-  I: Integer;
   NewSelection: TPersistentSelectionList;
 begin
   if (FOutlookBar = nil) or (GlobalDesignHook = nil) then

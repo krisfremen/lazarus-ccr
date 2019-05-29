@@ -228,9 +228,6 @@ type
 
 implementation
 
-uses
-  InterfaceBase;
-
 //=== { TJvScopeLineValues } =================================================
 
 procedure TJvScopeLineValues.Add(Value: Integer);

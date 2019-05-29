@@ -25,11 +25,11 @@ type
     FCanvas: TCanvas;
     FDC: HDC;
     FDCControl: TWinControl;
-    FDCOrigin: TPoint;   // DC origin on desktop
+    // FDCOrigin: TPoint;   // DC origin on desktop
     FFlags: TDesignerDCFlags;
-    FFormClientOrigin: TPoint; // Form client origin on desktop
-    FFormOrigin: TPoint; // DC origin relative to designer Form
-    FDcSize: TPoint;
+    // FFormClientOrigin: TPoint; // Form client origin on desktop
+    // FFormOrigin: TPoint; // DC origin relative to designer Form
+    // FDcSize: TPoint;
     FForm: TCustomForm;
     FSavedDC: HDC;
     FPaintCount: integer;
@@ -44,7 +44,7 @@ type
     procedure Clear;
     procedure BeginPainting;
     procedure EndPainting;
-    function RectVisible(ALeft, ATop, ARight, ABottom: integer): boolean;
+    function RectVisible({%H-}ALeft, {%H-}ATop, {%H-}ARight, {%H-}ABottom: integer): boolean;
     property Canvas: TCanvas read FCanvas;
     property DC: HDC read FDC;
     property Form: TCustomForm read FForm;
@@ -351,22 +351,23 @@ end;
 
 function TDesignerDeviceContext.GetDCOrigin: TPoint;
 begin
-
+  Result := Point(0, 0);
 end;
 
 function TDesignerDeviceContext.GetDCSize: TPoint;
 begin
-
+  Result := Point(0, 0);
 end;
 
 function TDesignerDeviceContext.GetFormClientOrigin: TPoint;
 begin
+  Result := Point(0, 0);
 
 end;
 
 function TDesignerDeviceContext.GetFormOrigin: TPoint;
 begin
-
+  Result := Point(0, 0);
 end;
 
 constructor TDesignerDeviceContext.Create;
@@ -412,7 +413,7 @@ end;
 function TDesignerDeviceContext.RectVisible(ALeft, ATop, ARight,
   ABottom: integer): boolean;
 begin
-
+  Result := false;
 end;
 
 

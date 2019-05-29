@@ -125,9 +125,9 @@ type
     procedure FormShow(Sender: TObject);
     procedure lbxWizardPagesClick(Sender: TObject);
     procedure lbxWizardPagesMouseDown(Sender: TObject;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+      {%H-}Button: TMouseButton; {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
     procedure lbxWizardPagesDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
+      {%H-}State: TDragState; var Accept: Boolean);
     procedure lbxWizardPagesDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure actWizardPagesUpdate(AAction: TBasicAction;
       var Handled: Boolean);

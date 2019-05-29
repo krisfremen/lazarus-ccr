@@ -31,7 +31,7 @@ interface
 
 uses
 //  LazLogger,
-  SysUtils, Classes, Controls, Forms, ToolWin, Menus, ActnList, ComCtrls, ImgList,
+  SysUtils, Classes, Controls, Forms, Menus, ActnList, ComCtrls, ImgList,
   PropEdits, GraphPropEdits, ComponentEditors,
   JvOutlookBar;
 

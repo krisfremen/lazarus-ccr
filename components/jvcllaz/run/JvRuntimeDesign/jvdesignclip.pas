@@ -5,7 +5,7 @@ unit JvDesignClip;
 interface
 
 uses
-  LCLProc, LCLType, LResources, LCLIntf, LMessages, Classes;
+  LCLProc, LCLType, LResources, LCLIntf, Classes;
 
 type
   TJvDesignComponentClipboard = class(TObject)
@@ -14,7 +14,7 @@ type
     FParentComponent: TComponent;
     procedure Close;
     procedure Open;
-    procedure ReadError(Reader: TReader; const Msg: string; var Handled: Boolean);
+    procedure ReadError({%H-}Reader: TReader; const {%H-}Msg: string; var Handled: Boolean);
   public
     constructor Create(ParentComponent: TComponent);
 
@@ -36,8 +36,7 @@ procedure DesignCopyStreamToClipboard(InFmt: Cardinal; InS: TStream);
 implementation
 
 uses
-  SysUtils, Clipbrd,
-  JvDesignUtils;
+  SysUtils, Clipbrd;
 
 var
   CF_COMPONENTSTREAM: UINT;
@@ -63,7 +62,7 @@ function DesignLoadComponentFromBinaryStream(InStream: TStream;
   InComponent: TComponent; InOnError: TReaderError): TComponent;
 var
   MS: TMemoryStream;
-  SZ: Int64;
+  SZ: Int64 = 0;
 begin
   InStream.Read(SZ, SizeOf(SZ));
   MS := TMemoryStream.Create;
@@ -84,9 +83,11 @@ begin
 end;
 
 procedure DesignCopyStreamToClipboard(InFmt: Cardinal; InS: TStream);
+{
 var
   HMem: THandle;
   PMem: Pointer;
+}
 begin
   Clipboard.Open;
   Clipboard.AddFormat( InFmt, InS);
@@ -118,9 +119,11 @@ begin
 end;
 
 procedure DesignCopyStreamFromClipboard(InFmt: Cardinal; InS: TStream);
+{
 var
   HMem: THandle;
   PMem: Pointer;
+  }
 begin
   Clipboard.GetFormat(InFmt, InS);
  { HMem := Clipboard.GetAsHandle(InFmt);

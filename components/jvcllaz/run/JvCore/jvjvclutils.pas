@@ -3091,9 +3091,9 @@ type
 function CheckTaskWindow(Window: HWND; Data: PtrInt): LongBool; stdcall;
 begin
   Result := True;
-  if PCheckTaskInfo(Data)^.FocusWnd = Window then
+  if {%H-}PCheckTaskInfo(Data)^.FocusWnd = Window then
   begin
-    PCheckTaskInfo(Data)^.Found := True;
+    {%H-}PCheckTaskInfo(Data)^.Found := True;
     Result := False;
   end;
 end;
@@ -3108,7 +3108,7 @@ begin
 {$IFDEF MSWINDOWS}
   Info.FocusWnd := GetActiveWindow;
   Info.Found := False;
-  EnumThreadWindows(GetCurrentThreadID, @CheckTaskWindow, PtrInt(@Info));
+  EnumThreadWindows(GetCurrentThreadID, @CheckTaskWindow, {%H-}PtrInt(@Info));
   Result := Info.Found;
 {$ELSE}
  {$IFDEF UNIX}
@@ -7087,7 +7087,7 @@ const
   cTagEnd = '>';
   cLT = '<';
   cGT = '>';
-  cQuote = '"';
+  //cQuote = '"';
   cCENTER = 'CENTER';
   cRIGHT = 'RIGHT';
   cHREF = 'HREF';
@@ -7581,7 +7581,7 @@ procedure HTMLDrawText(Canvas: TCanvas; Rect: TRect;
 var
   W: Integer;
   S: Boolean;
-  St: string;
+  St: string = '';
 begin
   HTMLDrawTextEx(Canvas, Rect, State, Text, W, htmlShow, 0, 0, S, St, SuperSubScriptRatio, Scale);
 end;
@@ -7594,7 +7594,7 @@ procedure HTMLDrawTextHL(Canvas: TCanvas; Rect: TRect;
 var
   W: Integer;
   S: Boolean;
-  St: string;
+  St: string = '';
 begin
   HTMLDrawTextEx(Canvas, Rect, State, Text, W, htmlShow, MouseX, MouseY, S, St, SuperSubScriptRatio, Scale);
 end;
@@ -7620,7 +7620,7 @@ function HTMLTextExtent(Canvas: TCanvas; Rect: TRect;
   const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): TSize;
 var
   S: Boolean;
-  St: string;
+  St: string = '';
 begin
   HTMLDrawTextEx2(Canvas, Rect, State, Text, Result.cx, Result.cy, htmlCalcWidth, 0, 0, S, St, SuperSubScriptRatio, Scale);
   if Result.cy = 0 then
@@ -7632,7 +7632,7 @@ function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
   const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 var
   S: Boolean;
-  St: string;
+  St: string = '';
 begin
   HTMLDrawTextEx(Canvas, Rect, State, Text, Result, htmlCalcWidth, 0, 0, S, St, SuperSubScriptRatio, Scale);
 end;
@@ -7640,7 +7640,7 @@ end;
 function HTMLTextHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 var
   S: Boolean;
-  St: string;
+  St: string = '';
   R: TRect;
 begin
   R := Rect(0, 0, 0, 0);

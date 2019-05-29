@@ -50,6 +50,7 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="43"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -224,8 +225,8 @@
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
         <UnitName Value="JvDesignImp"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="1007"/>
-        <CursorPos Y="1029"/>
+        <TopLine Value="1215"/>
+        <CursorPos Y="1232"/>
         <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit25>
@@ -264,10 +265,9 @@
       <Unit30>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\lclmessageglue.pas"/>
         <UnitName Value="LCLMessageGlue"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="102"/>
-        <CursorPos X="64" Y="114"/>
+        <CursorPos X="55" Y="118"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit30>
@@ -275,123 +275,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8122" TopLine="8103"/>
+        <Caret Line="8123" TopLine="8103"/>
       </Position1>
       <Position2>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8123" TopLine="8103"/>
+        <Caret Line="8125" TopLine="8103"/>
       </Position2>
       <Position3>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8125" TopLine="8103"/>
+        <Caret Line="8127" TopLine="8103"/>
       </Position3>
       <Position4>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8127" TopLine="8103"/>
+        <Caret Line="8128" TopLine="8103"/>
       </Position4>
       <Position5>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8128" TopLine="8103"/>
+        <Caret Line="8130" TopLine="8103"/>
       </Position5>
       <Position6>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8130" TopLine="8103"/>
+        <Caret Line="8131" TopLine="8103"/>
       </Position6>
       <Position7>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8131" TopLine="8103"/>
+        <Caret Line="8139" TopLine="8121"/>
       </Position7>
       <Position8>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8139" TopLine="8121"/>
+        <Caret Line="8142" TopLine="8121"/>
       </Position8>
       <Position9>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8142" TopLine="8121"/>
+        <Caret Line="8145" TopLine="8121"/>
       </Position9>
       <Position10>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
-        <Caret Line="8145" TopLine="8121"/>
-      </Position10>
-      <Position11>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
         <Caret Line="3324" TopLine="3305"/>
-      </Position11>
-      <Position12>
+      </Position10>
+      <Position11>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
         <Caret Line="1226" TopLine="1215"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
+        <Caret Line="436" TopLine="418"/>
       </Position12>
       <Position13>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="436" TopLine="418"/>
+        <Caret Line="438" TopLine="418"/>
       </Position13>
       <Position14>
-        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="438" TopLine="418"/>
+        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
+        <Caret Line="1227" TopLine="1215"/>
       </Position14>
       <Position15>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1227" TopLine="1215"/>
+        <Caret Line="1234" TopLine="1215"/>
       </Position15>
       <Position16>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1234" TopLine="1215"/>
+        <Caret Line="994" TopLine="977"/>
       </Position16>
       <Position17>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="994" TopLine="977"/>
+        <Caret Line="995" TopLine="977"/>
       </Position17>
       <Position18>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="995" TopLine="977"/>
+        <Caret Line="1003" TopLine="977"/>
       </Position18>
       <Position19>
-        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1003" TopLine="977"/>
+        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
+        <Caret Line="540" TopLine="522"/>
       </Position19>
       <Position20>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="540" TopLine="522"/>
+        <Caret Line="542" TopLine="522"/>
       </Position20>
       <Position21>
-        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="542" TopLine="522"/>
+        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
+        <Caret Line="1006" TopLine="977"/>
       </Position21>
       <Position22>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1006" TopLine="977"/>
+        <Caret Line="1008" TopLine="979"/>
       </Position22>
       <Position23>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1008" TopLine="979"/>
+        <Caret Line="1025" TopLine="1007"/>
       </Position23>
       <Position24>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1025" TopLine="1007"/>
+        <Caret Line="1026" TopLine="1007"/>
       </Position24>
       <Position25>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1026" TopLine="1007"/>
+        <Caret Line="1028" TopLine="1007"/>
       </Position25>
       <Position26>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1028" TopLine="1007"/>
+        <Caret Line="1029" TopLine="1007"/>
       </Position26>
       <Position27>
-        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Caret Line="1029" TopLine="1007"/>
+        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
+        <Caret Line="922" TopLine="905"/>
       </Position27>
       <Position28>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="922" TopLine="905"/>
+        <Caret Line="333" TopLine="315"/>
       </Position28>
       <Position29>
         <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="333" TopLine="315"/>
+        <Caret Line="361" TopLine="342"/>
       </Position29>
       <Position30>
-        <Filename Value="..\..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <Caret Line="361" TopLine="342"/>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\lclmessageglue.pas"/>
+        <Caret Line="118" Column="55" TopLine="102"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>
@@ -414,15 +414,6 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <BreakPoints Count="1">
-      <Item1>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="..\..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <Line Value="1232"/>
-      </Item1>
-    </BreakPoints>
     <Exceptions Count="3">
       <Item1>
         <Name Value="EAbort"/>

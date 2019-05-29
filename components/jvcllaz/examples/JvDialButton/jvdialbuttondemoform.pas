@@ -77,6 +77,7 @@ begin
   FReady := true;
 
   cmbPointerShapeChange(nil);
+  JvDialButton1Change(nil);
 end;
 
 procedure TForm1.cmbPointerShapeChange(Sender: TObject);

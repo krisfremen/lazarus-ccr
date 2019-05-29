@@ -13,11 +13,11 @@
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvJans"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code of Jan's Components):
+    <Description Value="Custom controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code of Jan&apos;s Components):
 - YearGrid
 - Simulation components"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
-    <Version Major="1" Release="4"/>
+    <Version Major="1" Release="5"/>
     <Files Count="1">
       <Item1>
         <Filename Value="..\design\JvJans\jvjansreg.pas"/>

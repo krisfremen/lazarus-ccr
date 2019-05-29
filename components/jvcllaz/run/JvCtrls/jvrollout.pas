@@ -511,8 +511,6 @@ end;
 //=== { TJvCustomRollOut } ===================================================
 
 constructor TJvCustomRollOut.Create(AOwner: TComponent);
-var
-  R: TRect;
 begin
   inherited Create(AOwner);
   IncludeThemeStyle(Self, [csNeedsBorderPaint, csParentBackground]);
@@ -1405,7 +1403,7 @@ end;                               }
 
 function TJvCustomRollOut.MouseIsOnButton: Boolean;
 var
-  P: TPoint;
+  P: TPoint = (x:0; y:0);
   R: TRect;
 begin
   GetCursorPos(P);

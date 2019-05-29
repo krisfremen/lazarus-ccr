@@ -85,7 +85,7 @@ type
     procedure MouseLeave(Control: TControl); override;
     procedure Paint; override;
     procedure PaintButton(ACanvas: TCanvas); virtual;
-    procedure PaintFrame(ACanvas: TCanvas); virtual;
+    procedure PaintFrame({%H-}ACanvas: TCanvas); virtual;
     function InsideBtn(X, Y: Integer): Boolean; virtual;
     function WantKey(Key: Integer; Shift: TShiftState;
       const KeyText: WideString): Boolean; override;
@@ -419,7 +419,7 @@ begin
     else
       Exit;
     { wait 'til menu is done }
-    while PeekMessage(Msg, 0, LM_MOUSEFIRST, LM_MOUSELAST, PM_REMOVE) do
+    while PeekMessage(Msg{%H-}, 0, LM_MOUSEFIRST, LM_MOUSELAST, PM_REMOVE) do
       {nothing};
     { release button }
     MouseUp(Button, Shift, X, Y);

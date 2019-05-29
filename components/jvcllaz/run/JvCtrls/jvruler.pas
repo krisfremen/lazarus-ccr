@@ -31,7 +31,7 @@ unit JvRuler;
 interface
 
 uses
-  LCLIntf, LCLType, Types,
+  LCLIntf, LCLType,
   Classes, SysUtils, Graphics, Controls, JvComponent;
 
 type

@@ -99,7 +99,7 @@ type
 implementation
 
 uses
-  JvConsts, Themes;
+  Themes;
 
 constructor TJvMarkupViewer.Create(AOwner: TComponent);
 begin

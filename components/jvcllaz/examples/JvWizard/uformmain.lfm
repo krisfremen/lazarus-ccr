@@ -1,17 +1,18 @@
 object Form1: TForm1
   Left = 366
-  Height = 336
+  Height = 317
   Top = 212
-  Width = 477
+  Width = 756
+  ActiveControl = JvWizardInteriorPage4
   Caption = 'JvWizard demo'
-  ClientHeight = 336
-  ClientWidth = 477
+  ClientHeight = 317
+  ClientWidth = 756
   LCLVersion = '2.1.0.0'
   object JvWizard1: TJvWizard
     Left = 0
-    Height = 336
+    Height = 317
     Top = 0
-    Width = 477
+    Width = 756
     ActivePage = JvWizardInteriorPage4
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
@@ -44,12 +45,12 @@ object Form1: TForm1
     object JvWizardWelcomePage1: TJvWizardWelcomePage
       Header.ImageIndex = 0
       Header.Title.Color = clNone
-      Header.Title.Text = 'Welcome'
+      Header.Title.Text = 'Welcome page'
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Subtitle of welcome page'
+      Header.Subtitle.Text = 'This is the JvWizard demo for Lazarus'
       Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
       VisibleButtons = [bkNext, bkCancel]
       Caption = 'JvWizardWelcomePage1'
@@ -2928,9 +2929,10 @@ object Form1: TForm1
         01394E0FEDC22D466436238C189C00D8740600EF62B94ACCBC51680000000049
         454E44AE426082
       }
-      WaterMark.Width = 145
+      WaterMark.Image.Layout = ilTile
+      WaterMark.Width = 300
       object Label1: TLabel
-        Left = 162
+        Left = 352
         Height = 15
         Top = 88
         Width = 116
@@ -2941,13 +2943,14 @@ object Form1: TForm1
     object JvWizardInteriorPage1: TJvWizardInteriorPage
       Header.ImageIndex = 1
       Header.Title.Color = clNone
-      Header.Title.Text = 'Title of page 1'
+      Header.Title.Text = 'Page 1'
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Subtitle of page 1'
+      Header.Subtitle.Text = 'An edit control was added to page 1.'
       Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      VisibleButtons = [bkStart, bkBack, bkNext, bkCancel]
       Caption = 'JvWizardInteriorPage1'
       object Label2: TLabel
         Left = 24
@@ -2969,13 +2972,14 @@ object Form1: TForm1
     object JvWizardInteriorPage2: TJvWizardInteriorPage
       Header.ImageIndex = 2
       Header.Title.Color = clNone
-      Header.Title.Text = 'Title of page 2'
+      Header.Title.Text = 'Page 2'
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Subtitle'
+      Header.Subtitle.Text = 'A checkbox and a radiobutton were added to page 2.'
       Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      VisibleButtons = [bkStart, bkBack, bkNext, bkCancel]
       Caption = 'JvWizardInteriorPage2'
       object CheckBox1: TCheckBox
         Left = 32
@@ -2997,18 +3001,19 @@ object Form1: TForm1
     object JvWizardInteriorPage3: TJvWizardInteriorPage
       Header.ImageIndex = 3
       Header.Title.Color = clNone
-      Header.Title.Text = 'Title of page 3'
+      Header.Title.Text = 'Page 3'
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Subtitle'
+      Header.Subtitle.Text = 'A listbox was added to page 3.'
       Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      VisibleButtons = [bkStart, bkBack, bkNext, bkCancel]
       Caption = 'JvWizardInteriorPage3'
       object ListBox1: TListBox
-        Left = 21
+        Left = 16
         Height = 187
-        Top = 85
+        Top = 80
         Width = 187
         Items.Strings = (
           '123'
@@ -3024,27 +3029,27 @@ object Form1: TForm1
     object JvWizardInteriorPage4: TJvWizardInteriorPage
       Header.ImageIndex = 4
       Header.Title.Color = clNone
-      Header.Title.Text = 'Title of page 4'
+      Header.Title.Text = 'Finished'
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Subtitle'
+      Header.Subtitle.Text = 'This completes this little demo.'
       Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
-      VisibleButtons = [bkBack, bkFinish, bkCancel]
+      VisibleButtons = [bkStart, bkBack, bkFinish, bkCancel]
       Caption = 'JvWizardInteriorPage4'
       object Label3: TLabel
         Left = 27
         Height = 15
         Top = 94
-        Width = 31
-        Caption = 'Finish'
+        Width = 51
+        Caption = 'Good bye'
         ParentColor = False
       end
     end
     object JvWizardRouteMapNodes1: TJvWizardRouteMapNodes
       Left = 0
-      Height = 294
+      Height = 275
       Top = 0
       Width = 145
       Color = clBlack

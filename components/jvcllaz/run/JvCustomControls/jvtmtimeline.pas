@@ -33,9 +33,8 @@ unit JvTMTimeLine;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, LCLVersion, Types,
-  SysUtils, Classes, Controls, Buttons, Graphics, ExtCtrls, Forms, ImgList,
-  JvExControls;
+  LCLIntf, LCLType, LCLVersion, Types,
+  SysUtils, Classes, Controls, Buttons, Graphics, ExtCtrls, Forms, ImgList;
 
 const
   cTMTimeLineDayWidth = 19;
@@ -341,8 +340,8 @@ type
 implementation
 
 uses
-  LCLStrConsts, Themes,
-  JvConsts, JvJCLUtils, JvJVCLUtils, JvResources;
+  Themes,
+  JvJCLUtils, JvJVCLUtils, JvResources;
 
 {$R ..\..\resource\jvtmtimeline.res}
 

@@ -141,10 +141,10 @@ type
     procedure PaintDragRects;
   public
     constructor Create(AOwner: TJvDesignSurface); override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+    procedure MouseDown({%H-}Button: TMouseButton; {%H-}Shift: TShiftState;
       X, Y: Integer); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+    procedure MouseMove({%H-}Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState;
       X, Y: Integer); override;
   end;
 
@@ -155,11 +155,11 @@ type
     procedure CalcDragRect; virtual;
     procedure PaintDragRect; virtual;
   public
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+    procedure MouseDown({%H-}Button: TMouseButton; {%H-}Shift: TShiftState;
       X, Y: Integer); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer); override;
+    procedure MouseMove({%H-}Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState;
+      {%H-}X, {%H-}Y: Integer); override;
   end;
 
   TJvDesignSizer = class(TJvDesignBander)
@@ -184,7 +184,7 @@ type
     // IDesignerNotify interface
     procedure Modified; override;
 //    procedure Notification(AnObject: TPersistent; Operation: TOperation); reintroduce;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Notification({%H-}AComponent: TComponent; {%H-}Operation: TOperation); override;
 
     // IDesigner, IDesignerHook interface
     function GetCustomForm: TCustomForm;
@@ -193,13 +193,13 @@ type
     function GetShiftState: TShiftState; override;
     function IsDesignMsg(Sender: TControl; var Msg: TLMessage): Boolean; override;
     procedure PaintGrid; override;
-    procedure PrepareFreeDesigner(AFreeComponent: boolean); override;
-    procedure SelectOnlyThisComponent(AComponent: TComponent);override;
-    procedure SetCustomForm(Value: TCustomForm);
-    procedure SetIsControl(Value: Boolean);
-    function UniqueName(const BaseName: string): string; override;
-    procedure UTF8KeyPress(var UTF8Key: TUTF8Char); override;
-    procedure ValidateRename(AComponent: TComponent; const CurName, NewName: string); override; //reintroduce;
+    procedure PrepareFreeDesigner({%H-}AFreeComponent: boolean); override;
+    procedure SelectOnlyThisComponent({%H-}AComponent: TComponent);override;
+    procedure SetCustomForm({%H-}Value: TCustomForm);
+    procedure SetIsControl({%H-}Value: Boolean);
+    function UniqueName(const {%H-}BaseName: string): string; override;
+    procedure UTF8KeyPress(var {%H-}UTF8Key: TUTF8Char); override;
+    procedure ValidateRename({%H-}AComponent: TComponent; const {%H-}CurName, {%H-}NewName: string); override; //reintroduce;
 
     //{$IFDEF COMPILER9_UP}
     //procedure PaintMenu;
@@ -210,7 +210,8 @@ type
   end;
 
 
- {TJvDesignDesigner = class(TIDesigner) //class(TComponent, IDesignerHook)
+ (*
+ TJvDesignDesigner = class(TIDesigner) //class(TComponent, IDesignerHook)
   private
     FMessenger: TJvDesignCustomMessenger;
   public
@@ -235,7 +236,8 @@ type
     property Messenger: TJvDesignCustomMessenger read FMessenger write FMessenger;
     property IsControl: Boolean read GetIsControl write SetIsControl;
     property Form: TCustomForm read GetCustomForm write SetCustomForm;
-  end;          }
+  end;
+  *)
 
   TJvDesignDesignerMessenger = class(TJvDesignCustomMessenger)
   private
@@ -1304,7 +1306,7 @@ end;
 
 function TJvDesignDesigner.UniqueName(const BaseName: string): string;
 begin
-  //
+  Result := '';
 end;
 
 procedure TJvDesignDesigner.UTF8KeyPress(var UTF8Key: TUTF8Char);

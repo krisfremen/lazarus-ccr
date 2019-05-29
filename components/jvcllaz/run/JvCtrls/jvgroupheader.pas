@@ -26,7 +26,7 @@ interface
 uses
   LCLIntf, LCLType,
   Classes, Graphics, Controls, ExtCtrls,
-  JvJCLUtils, JvComponent, JvTypes;
+  JvComponent, JvTypes;
 
 type
   TJvGroupHeaderOptions = class(TPersistent)

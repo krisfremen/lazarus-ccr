@@ -169,7 +169,7 @@ type
     FNodeImages: TJvSettingsTreeImages;
     FOnGetImageIndex: TTVExpandedEvent;
     FOnGetSelectedIndex: TTVExpandedEvent;
-    procedure SetImageSelection(const Value: TJvSettingsTreeImages);
+    procedure SetImageSelection(const {%H-}Value: TJvSettingsTreeImages);
   protected
     FLastSelected: TTreeNode;
     procedure Delete(Node: TTreeNode); override;
@@ -584,7 +584,8 @@ end;
 
 procedure TJvPageIndexNodes.ReadData(Stream: TStream);
 var
-  APageIndex, ACount: Integer;
+  APageIndex: Integer = 0;
+  ACount: Integer = 0;
   LNode: TTreeNode;
   LHandleAllocated: Boolean;
 begin

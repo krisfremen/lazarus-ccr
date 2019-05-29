@@ -296,7 +296,7 @@ var
   LT: Int64;
   Msg: TMsg;
 
-  function HasSelectedText(var StartPos, EndPos: Integer): Boolean;
+  function HasSelectedText(out StartPos, EndPos: Integer): Boolean;
   begin
     GetEditSel(StartPos, EndPos);
     Result := EndPos > StartPos;
@@ -356,12 +356,12 @@ begin
 
   if ListSearch then
   begin
-    LT := GetTickCount;
+    LT := GetTickCount64;
     if FLastTime > LT then
       LT := $100000000 + LT; // double limit.
     if LT - FLastTime >= MaxFilterTime then
       FFilter := '';
-    FLastTime := GetTickCount;
+    FLastTime := GetTickCount64;
   end
   else
     FFilter := GetText;
@@ -412,7 +412,7 @@ begin
 
     if CharInSet(Key, LeadBytes) then
     begin
-      if PeekMessage(Msg, GetEditHandle, 0, 0, PM_NOREMOVE) and (Msg.Message = LM_CHAR) then
+      if PeekMessage(Msg{%H-}, GetEditHandle, 0, 0, PM_NOREMOVE) and (Msg.Message = LM_CHAR) then
       begin
         if SelectItem(SaveText + Char(Msg.WParam)) then
         begin

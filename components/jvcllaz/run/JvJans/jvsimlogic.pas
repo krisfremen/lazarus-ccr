@@ -125,9 +125,9 @@ type
     procedure DisconnectFinal;
   protected
     procedure DblClick; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -187,9 +187,9 @@ type
   protected
     procedure DblClick; override;
     class function GetControlClassDefaultSize: TSize; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer); override;
     procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -235,9 +235,9 @@ type
     procedure SetOutput3(const Value: Boolean);
   protected
     class function GetControlClassDefaultSize: TSize; override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer); override;
     procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -274,7 +274,7 @@ type
     class function GetControlClassDefaultSize: TSize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; X, Y: Integer); override;
     procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -314,7 +314,7 @@ type
     class function GetControlClassDefaultSize: TSize; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp({%H-}Button: TMouseButton; {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer); override;
     procedure Resize; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -464,12 +464,11 @@ end;
 procedure TJvSimControl.DrawLED(ARect: TRect;
   ASurfColor, ALitColor, ABkColor: TColor);
 var
-  d, one, four: Integer;
+  one, four: Integer;
 begin
   if Parent = nil then
     exit;
 
-  d := Scale96ToForm(LED_SIZE);
   one := Scale96ToForm(1);
   four := Scale96ToForm(4);
 
@@ -1953,7 +1952,7 @@ var
   SurfCol, LitCol: TColor;
   P: TPoint;
   X, Y: Integer;
-  d, one, three, five, eight, nine: Integer;
+  d: Integer;
   Lit: Boolean;
 begin
   if not Gates[Index].Active then
@@ -2012,13 +2011,11 @@ var
   R: TRect;
   S: string;
   ts: TTextStyle;
-  h: Integer;
 begin
   with Canvas do
   begin
     Font.Assign(Self.Font);
     if Font.Size = 0 then Font.Size := 9;
-    h := TextHeight('Tj');
 
     Brush.Color := clSilver;
     R := ClientRect;
@@ -2293,7 +2290,6 @@ end;
 procedure TJvSimButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
-  R: TRect;
   h2: Integer;
 begin
   FMdp := Point(X, Y);
@@ -2343,9 +2339,7 @@ begin
   R := ClientRect;
   InflateRect(R, -15, -15);
   if PtInRect(R, P) then
-  begin
-    Down := not FDown;
-  end
+    Down := not FDown
   else
     BinCheck(Self);
 end;
@@ -2642,7 +2636,7 @@ end;
 
 procedure TJvSimLight.Paint;
 var
-  TlPoly, BrPoly: array [0..2] of TPoint;
+//  TlPoly, BrPoly: array [0..2] of TPoint;
   xw, yh: Integer;
   R: TRect;
   HiColor, LoColor, SurfCol: TColor;
@@ -2660,6 +2654,7 @@ var
       Ellipse(FLEDRect);
 //      Ellipse(15, 15, xw - 15, yh - 15);
     end;
+
     //   SelectClipRgn(Canvas.handle,0);
     //   DeleteObject(rgn);
     //   rgn :=  CreatePolygonRgn(BrPoly,3,WINDING);
@@ -2707,6 +2702,7 @@ begin
   yh := Height - 1;
 //  cr := Width div 4;
 //  x4 := Width div 4;
+ {
   // topleft region
   TlPoly[0] := Point(Left, Top + yh);
   TlPoly[1] := Point(Left, Top);
@@ -2715,6 +2711,7 @@ begin
   BrPoly[0] := Point(Left + xw, Top);
   BrPoly[1] := Point(Left + xw, Top + yh);
   BrPoly[2] := Point(Left, Top + yh);
+}
   Canvas.Pen.Style := psSolid;
   HiColor := clBtnHighlight;
   LoColor := clBtnShadow;
@@ -3188,7 +3185,7 @@ procedure TJvSimReverse.InitDimensions;
 const
   MARGIN = 1;
 var
-  m, d, h: Integer;
+  m, d: Integer;
 begin
   if Parent = nil then
     exit;

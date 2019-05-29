@@ -90,8 +90,8 @@ type
     procedure SetAlignment(const Value: TAlignment);
     procedure SetWordWrap(const Value: Boolean);
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
-    procedure ParentStyleManagerChange(var Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
-    procedure CMControlChange(var Msg: TLMessage); message CM_CONTROLCHANGE;
+    procedure ParentStyleManagerChange(var {%H-}Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
+    procedure CMControlChange(var {%H-}Msg: TLMessage); message CM_CONTROLCHANGE;
     procedure SetParentStyleManager(const Value: Boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -204,7 +204,6 @@ type
     procedure DoStyleChange(Sender: TObject);
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
     procedure SetParentStyleManager(const Value: Boolean);
-    procedure SetCursor(const Value: TCursor);
     function GetDragZoneRect: TRect;
     function MouseInDragZone(X, Y: Integer): Boolean;
   protected
@@ -214,6 +213,7 @@ type
     procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMMouseMove(var Msg: TLMMouseMove); message LM_MOUSEMOVE;
     procedure RequestAlign; override;
+    procedure SetCursor(Value: TCursor); //override;   // FIX ME: Crash when override is active !!!
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -353,8 +353,8 @@ type
     procedure SetStyleManager(const Value: TJvNavPaneStyleManager);
     procedure DoStyleChange(Sender: TObject);
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
-    procedure ParentStyleManagerChange(var Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
-    procedure CMControlChange(var Msg: TLMessage); message CM_CONTROLCHANGE;
+    procedure ParentStyleManagerChange(var {%H-}Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
+    procedure CMControlChange(var {%H-}Msg: TLMessage); message CM_CONTROLCHANGE;
     procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     procedure SetParentStyleManager(const Value: Boolean);
   protected
@@ -596,15 +596,12 @@ type
     FImageIndex: TImageIndex;
     FParentStyleManager: Boolean;
     FBackground: TJvNavPaneBackgroundImage;
-    procedure SetCaption(const Value: TCaption);
     procedure SetIconic(const Value: Boolean);
     procedure SetImageIndex(const Value: TImageIndex);
-    function GetCaption: TCaption;
     function GetIconic: Boolean;
     function GetImageIndex: TImageIndex;
     procedure DoButtonClick(Sender: TObject);
-    function GetHint: string;
-    procedure SetHint(const Value: string);
+    function GetHint: TTranslateString;
     procedure SetIconPanel(const Value: TJvIconPanel);
     function GetColors: TJvNavPanelColors;
     procedure SetColors(const Value: TJvNavPanelColors);
@@ -617,10 +614,9 @@ type
     procedure SetAlignment(const Value: TAlignment);
     procedure SetWordWrap(const Value: Boolean);
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
-    procedure ParentStyleManagerChange(var Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
-    procedure CMControlChange(var Msg: TLMessage); message CM_CONTROLCHANGE;
+    procedure ParentStyleManagerChange(var {%H-}Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
+    procedure CMControlChange(var {%H-}Msg: TLMessage); message CM_CONTROLCHANGE;
     procedure SetParentStyleManager(const Value: Boolean);
-    procedure SetAction(const Value: TBasicAction); // override;
     procedure SetBackground(const Value: TJvNavPaneBackgroundImage);
     procedure DoBackgroundChange(Sender: TObject);
   protected
@@ -641,6 +637,10 @@ type
     property WordWrap: Boolean read GetWordWrap write SetWordWrap;
     procedure ActionChange(Sender: TObject; CheckDefaults: Boolean); override;
     procedure Paint; override;
+    function GetCaption: TCaption; override;
+    procedure SetCaption(Value: TCaption); override;
+    procedure SetAction(Value: TBasicAction); override;
+    procedure SetHint(const AValue: TTranslateString); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -661,7 +661,7 @@ type
     property DragMode;
     property Iconic: Boolean read GetIconic write SetIconic default False;
     property ImageIndex: TImageIndex read GetImageIndex write SetImageIndex default -1;
-    property Hint: string read GetHint write SetHint;
+    property Hint: TTranslateString read GetHint write SetHint;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnContextPopup;
     property OnDragDrop;
@@ -769,7 +769,7 @@ type
     procedure DoCloseClick(Sender: TObject);
     procedure SetShowGrabber(const Value: Boolean);
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
-    procedure ParentStyleManagerChange(var Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
+    procedure ParentStyleManagerChange(var {%H-}Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
     procedure SetParentStyleManager(const Value: Boolean);
     function GetDrawPartialMenuFrame: Boolean;
     procedure SetDrawPartialMenuFrame(const Value: Boolean);
@@ -777,7 +777,7 @@ type
     procedure SetColors(const Value: TJvNavPanelColors);
     procedure SetHeaderVisible(const Value: Boolean);
     function IsColorsStored: Boolean;
-    procedure CMControlChange(var Msg: TLMessage); message CM_CONTROLCHANGE;
+    procedure CMControlChange(var {%H-}Msg: TLMessage); message CM_CONTROLCHANGE;
     procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     procedure WMNCPaint(var Msg: TWMNCPaint); message LM_NCPAINT;
     procedure AlignButtons;
@@ -916,8 +916,8 @@ type
     procedure SetAlignment(const Value: TAlignment);
     procedure SetWordWrap(const Value: Boolean);
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
-    procedure ParentStyleManagerChange(var Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
-    procedure CMControlChange(var Msg: TLMessage); message CM_CONTROLCHANGE;
+    procedure ParentStyleManagerChange(var {%H-}Msg: TLMessage); message CM_PARENTSTYLEMANAGERCHANGE;
+    procedure CMControlChange(var {%H-}Msg: TLMessage); message CM_CONTROLCHANGE;
     procedure WMNCPaint(var Msg: TWMNCPaint); message LM_NCPAINT;
     procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     procedure SetParentStyleManager(const Value: Boolean);
@@ -1668,8 +1668,8 @@ begin
 end;
 
 function TJvCustomNavigationPane.IsNavPanelFontStored: Boolean;
-var
-  F: TFont;
+//var
+//  F: TFont;
 begin
   //TODO:
   (*
@@ -2087,8 +2087,6 @@ var
   Rect: TRect;
   P: TPoint;
   I: Integer;
-  
-  h, w: integer;
 begin
   with Canvas do
   begin
@@ -2926,7 +2924,7 @@ begin
   Result := NavPanel.Colors;
 end;
 
-function TJvNavPanelPage.GetHint: string;
+function TJvNavPanelPage.GetHint: TTranslateString;
 begin
   if NavPanel = nil then
     Result := ''
@@ -2964,7 +2962,7 @@ begin
   end;
 end;
 
-procedure TJvNavPanelPage.SetCaption(const Value: TCaption);
+procedure TJvNavPanelPage.SetCaption(Value: TCaption);
 begin
   if NavPanel <> nil then
     NavPanel.Caption := Value;
@@ -3007,10 +3005,10 @@ begin
   //    Header.StyleManager := Value;
 end;
 
-procedure TJvNavPanelPage.SetHint(const Value: string);
+procedure TJvNavPanelPage.SetHint(const AValue: TTranslateString);
 begin
-  NavPanel.Hint := Value;
-  IconButton.Hint := Value;
+  NavPanel.Hint := AValue;
+  IconButton.Hint := AValue;
 end;
 
 procedure TJvNavPanelPage.SetIconic(const Value: Boolean);
@@ -3205,7 +3203,7 @@ begin
   Result := inherited GetAction;
 end;
 
-procedure TJvNavPanelPage.SetAction(const Value: TBasicAction);
+procedure TJvNavPanelPage.SetAction(Value: TBasicAction);
 begin
   inherited Action := Value;
   FNavPanel.Action := Value;
@@ -3440,7 +3438,7 @@ begin
   end;
 end;
 
-procedure TJvOutlookSplitter.SetCursor(const Value: TCursor);
+procedure TJvOutlookSplitter.SetCursor(Value: TCursor);
 begin
   inherited Cursor := Value;
   FOldCursor := Value;
@@ -5133,12 +5131,12 @@ begin
 end;
 
 procedure TJvNavPaneBackgroundImage.PictureChanged(Sender: TObject);
-var
-  G: TGraphic;
+//var
+//  G: TGraphic;
 begin
-  G := Picture.Graphic;
   //TODO:
   (*
+  G := Picture.Graphic;
   if G <> nil then
     if not ( (G is TMetaFile) or  (G is TIcon)) then
       G.Transparent := FTransparent;

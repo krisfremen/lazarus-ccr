@@ -19,7 +19,7 @@ uses
   JvDsgnConsts,
   JvNavigationPane, JvNavPaneEditors,
   JvTabBar, JvTabBarXPPainter,
-  JvPageList, JvNotebookPageList,
+  JvNotebookPageList,
   JvPageListEditors,
   JvPageListTreeView;
 

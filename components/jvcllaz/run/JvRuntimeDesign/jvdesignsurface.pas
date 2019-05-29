@@ -41,9 +41,7 @@ interface
 uses
   Classes, SysUtils,
   LCLProc, LCLType, LResources, LCLIntf, LMessages,
-  Forms, Controls, Graphics,
-  Dialogs,
-  ExtCtrls, Contnrs;
+  Forms, Controls, Graphics, Dialogs, ExtCtrls;
 
 type
   TJvDesignSurface = class;
@@ -63,7 +61,7 @@ type
     function IsDesignMessage(ASender: TControl; var AMessage: TLMessage): Boolean; virtual;
     procedure Clear; virtual;
     procedure DesignChildren(AContainer: TWinControl; ADesigning: Boolean);
-    procedure DesignComponent(AComponent: TComponent; ADesigning: Boolean); virtual;
+    procedure DesignComponent({%H-}AComponent: TComponent; {%H-}ADesigning: Boolean); virtual;
     property Container: TWinControl read FContainer write SetContainer;
     property OnDesignMessage: TJvDesignMessage read FOnDesignMessage write FOnDesignMessage;
   end;
@@ -172,7 +170,7 @@ type
     procedure NeedMessenger;
     procedure NeedSelector;
     //procedure PaintContainerBkgnd(ADC: HDC);
-    procedure ReaderError(Reader: TReader; const Msg: string; var Handled: Boolean);
+    procedure ReaderError({%H-}Reader: TReader; const {%H-}Msg: string; var Handled: Boolean);
     procedure SetActive(AValue: Boolean);
     procedure SetContainer(AValue: TWinControl);
     //procedure SetDrawGrid(const Value: Boolean);
@@ -228,7 +226,7 @@ type
 
   TJvDesignScrollBox = class(TScrollBox)
   protected
-    procedure AutoScrollInView(AControl: TControl); //CV override;
+    procedure AutoScrollInView({%H-}AControl: TControl); //CV override;
   end;
 
   TJvDesignPanel = class(TPanel)
@@ -818,9 +816,10 @@ begin
 end;
 }
 
+{
 type
   TAccessWinControl = class(TWinControl);
-
+}
 function TJvDesignSurface.IsDesignMessage(ASender: TControl;
   var AMsg: TLMessage; const APt: TPoint): Boolean;
 
@@ -845,11 +844,12 @@ function TJvDesignSurface.IsDesignMessage(ASender: TControl;
        Result := True;
     end;
   end;
-}
+
 var
   PosChangedHandle: HWND;
   I: Integer;
   Control: TAccessWinControl;
+}
 begin
   if not Active then
     Result := False

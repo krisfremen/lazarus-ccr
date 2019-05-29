@@ -36,7 +36,7 @@ unit JvWizardRouteMapSteps;
 interface
 
 uses
-  Types, SysUtils, Classes, Graphics, Controls, Forms, LCLIntf, LCLType,
+  SysUtils, Classes, Graphics, Controls, Forms, LCLIntf, LCLType,
   JvWizard;
 
 type
@@ -61,7 +61,7 @@ type
     procedure SetPreviousStepText(const Value: string);
     procedure SetShowDivider(const Value: Boolean);
     procedure SetShowNavigators(const Value: Boolean);
-    function DetectPageCount(var ActivePageIndex: Integer): Integer; // Add by Yu Wei
+    function DetectPageCount(out ActivePageIndex: Integer): Integer; // Add by Yu Wei
     function DetectPage(const Pt: TPoint): TJvWizardCustomPage; // Add by Yu Wei
     function StoreActiveStepFormat: Boolean;
     function StoreNextStepText: Boolean;
@@ -156,7 +156,7 @@ begin
     Height - FIndent - 32 + Canvas.TextHeight('Wq'));
 end;
 
-function TJvWizardRouteMapSteps.DetectPageCount(var ActivePageIndex: Integer): Integer;
+function TJvWizardRouteMapSteps.DetectPageCount(out ActivePageIndex: Integer): Integer;
 var
   I: Integer;
 begin
@@ -275,8 +275,10 @@ begin
   Canvas.Font.Style := [];
   if Self.ShowDivider then
   begin
-    SetRect(DividerRect, Left + Indent, TextRect.Bottom + 5, Width - Indent,
-      TextRect.Bottom + 6);
+    DividerRect := Rect(
+      Left + Indent, TextRect.Bottom + 5,
+      Width - Indent, TextRect.Bottom + 6
+    );
     DrawEdge(Canvas.Handle, DividerRect, EDGE_RAISED, BF_FLAT or BF_BOTTOM);
   end;
 

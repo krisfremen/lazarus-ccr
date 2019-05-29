@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectGroup FileVersion="1">
-    <Targets Count="22">
-      <Target0 FileName="JvCoreLazR.lpk"/>
-      <Target1 FileName="JvCoreLazD.lpk"/>
-      <Target2 FileName="JvCtrlsLazR.lpk"/>
-      <Target3 FileName="JvCtrlsLazD.lpk"/>
-      <Target4 FileName="JvStdCtrlsLazR.lpk"/>
-      <Target5 FileName="JvStdCtrlsLazD.lpk"/>
-      <Target6 FileName="JvDBLazR.lpk"/>
-      <Target7 FileName="JvDBLazD.lpk"/>
-      <Target8 FileName="JvPageCompsR.lpk"/>
-      <Target9 FileName="JvPageCompsD.lpk"/>
-      <Target10 FileName="JvValidatorsLazR.lpk"/>
-      <Target11 FileName="JvValidatorsLazD.lpk"/>
-      <Target12 FileName="JvXPCtrlsLazR.lpk"/>
-      <Target13 FileName="JvXPCtrlsLazD.lpk"/>
+    <Targets Count="24">
+      <Target0 FileName="jvcorelazr.lpk"/>
+      <Target1 FileName="jvcorelazd.lpk"/>
+      <Target2 FileName="jvctrlslazr.lpk"/>
+      <Target3 FileName="jvctrlslazd.lpk"/>
+      <Target4 FileName="jvstdctrlslazr.lpk"/>
+      <Target5 FileName="jvstdctrlslazd.lpk"/>
+      <Target6 FileName="jvdblazr.lpk"/>
+      <Target7 FileName="jvdblazd.lpk"/>
+      <Target8 FileName="jvpagecompsr.lpk"/>
+      <Target9 FileName="jvpagecompsd.lpk"/>
+      <Target10 FileName="jvvalidatorslazr.lpk"/>
+      <Target11 FileName="jvvalidatorslazd.lpk"/>
+      <Target12 FileName="jvxpctrlslazr.lpk"/>
+      <Target13 FileName="jvxpctrlslazd.lpk"/>
       <Target14 FileName="jvruntimedesignlazr.lpk"/>
       <Target15 FileName="jvruntimedesignlazd.lpk"/>
       <Target16 FileName="jvcustomlazr.lpk"/>
@@ -24,6 +24,8 @@
       <Target19 FileName="jvcmpd.lpk"/>
       <Target20 FileName="jvjanslazr.lpk"/>
       <Target21 FileName="jvjanslazd.lpk"/>
+      <Target22 FileName="jvwizardlazr.lpk"/>
+      <Target23 FileName="jvwizardlazd.lpk"/>
     </Targets>
   </ProjectGroup>
 </CONFIG>

@@ -365,7 +365,7 @@ type
 implementation
 
 uses
-  Math, StrUtils, VarUtils, Variants,
+  Math, StrUtils, Variants,
   JvJCLUtils, JvResources;
 
 //  JclStrings, JvJCLUtils, JvResources, JclSysUtils;
@@ -396,7 +396,7 @@ var
   ABcd: TBcd;
 begin
   if Truncate and (BcdScale(Bcd) > 0) then
-    NormalizeBcd(Bcd, ABcd, Bcd.Precision, 0)
+    NormalizeBcd(Bcd, ABcd{%H-}, Bcd.Precision, 0)
   else
     ABcd := Bcd;
   Result := StrToInt64(BcdToStr(ABcd));
@@ -499,10 +499,12 @@ end;
 //=== { TJvCustomValidateEdit } ==============================================
 
 constructor TJvCustomValidateEdit.Create(AOwner: TComponent);
+{
 var
   MappedDecimal: Cardinal;
 const
   MAPVK_VK_TO_CHAR = 2;
+}
 begin
   inherited Create(AOwner);
   FSelfChange := False;
@@ -793,8 +795,8 @@ begin
 end;
 
 function TJvCustomValidateEdit.GetAsFloat: Double;
-var
-  Cur: Currency;
+//var
+//  Cur: Currency;
 begin
   case FDisplayFormat of
     dfBinary:
@@ -917,7 +919,7 @@ end;
 function TJvCustomValidateEdit.GetValue: Variant;
 var
   DisplayedText: string;
-  Cur: Currency;
+  //Cur: Currency;
   Bcd: TBcd;
 begin
   case FDisplayFormat of
@@ -941,7 +943,7 @@ begin
     dfHex:
       Result := IntRangeValue(StrToIntDef('$' + FEditText, 0));
     dfBcd:
-      if TryStrToBcd(FEditText, Bcd) then
+      if TryStrToBcd(FEditText, Bcd{%H-}) then
         Result := VarFMTBcdCreate(Bcd)
       else
         Result := VarFMTBcdCreate; // Null
@@ -1354,10 +1356,9 @@ procedure TJvCustomValidateEdit.DisplayText;
 
   function FormatedValue(Value: Double): Double;
   begin
+    Result := Value;
     if Assigned(FOnDecimalRounding) then
-      FOnDecimalRounding(Self, Result, Value)
-    else
-      Result := Value;
+      FOnDecimalRounding(Self, Result, Value);
   end;
 
 begin
@@ -1475,10 +1476,9 @@ end;
 
 function TJvCustomValidateEdit.GetText: TCaption;
 begin
+  Result := inherited Text;
   if (Result = EmptyValue) and (EmptyValue <> '') then
-    Result := ''
-  else
-    Result := inherited Text;
+    Result := '';
 end;
 
 procedure TJvCustomValidateEdit.SetText(const NewValue: TCaption);

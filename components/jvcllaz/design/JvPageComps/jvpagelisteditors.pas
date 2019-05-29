@@ -31,8 +31,7 @@ interface
 
 uses
   SysUtils, Classes, ImgList, Menus,
-  PropEdits, GraphPropEdits, ComponentEditors,
-  JvPageList; //, JvDsgnEditors;
+  PropEdits, GraphPropEdits, ComponentEditors;
 
 type
   (*
@@ -98,12 +97,13 @@ implementation
 
 uses
   TypInfo,
-  JvDsgnConsts, JvPageListTreeView; //, JvPageListEditorForm;
+  JvPageListTreeView;
 
 type
-  THackPageList = class(TJvPageList);
+//  THackPageList = class(TJvPageList);
   THackTreeView = class(TJvCustomPageListTreeView);
 
+{
 const
   cShowEditor = 0;
   cDash = 1;
@@ -118,7 +118,7 @@ const
   unbvAddPage       = 0;
   unbvDeletePage    = 1;
   unbvShowPage      = 2;
-
+}
 
 { TJvCustomPageListEditor }
 (****************************************** NOT WORKING

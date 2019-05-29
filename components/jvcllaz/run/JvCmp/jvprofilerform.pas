@@ -130,6 +130,7 @@ const
   DefHeader2 =
     'Profiler 32 - (C) 1996 Certified Software Corp, portions Copyright (C) 1997 by Peter Thörnqvist; all rights reserved.';
 
+{
 type
   PProfType = ^TProfType;
   TProfType = record
@@ -144,6 +145,7 @@ type
     CallerID: Integer;
     EntryTime: Integer;
   end;
+}
 
 function GetUserName: String;
 // http://forum.lazarus.freepascal.org/index.php/topic,23171.msg138057.html#msg138057
@@ -262,7 +264,7 @@ var
 begin
   if FEnabled then
   begin
-    Snap := GetTickCount;
+    Snap := GetTickCount64;
     if FStackSize > MaxStackSize then
       raise EJVCLException.CreateResFmt(@RsEMaxStackSizeExceededd, [MaxStackSize]);
     Inc(FStackSize);
@@ -297,7 +299,7 @@ var
 begin
   if Enabled then
   begin
-    Snap := GetTickCount;
+    Snap := GetTickCount64;
     with FProfileInfo[ID] do
     begin
       Elapsed := Snap - InOutTime;
@@ -329,7 +331,7 @@ begin
   begin
     //    Initialize;
     DoStart;
-    FStartTime := GetTickCount;
+    FStartTime := GetTickCount64;
     FStarted := True;
   end;
 end;
@@ -338,7 +340,7 @@ procedure TJvProfiler.Stop;
 begin
   if FEnabled and FStarted then
   begin
-    FEndTime := GetTickCount;
+    FEndTime := GetTickCount64;
     DoStop;
     FStarted := False;
   end;

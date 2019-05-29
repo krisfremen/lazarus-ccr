@@ -143,7 +143,7 @@ type
     FModalResult: TModalResult;
     FOnMouseLeave: TNotifyEvent;
     FOnMouseEnter: TNotifyEvent;
-    procedure SetVersion(const Value: string);
+    procedure SetVersion(const {%H-}Value: string);
     procedure CMFocusChanged(var Msg: TLMessage); message CM_FOCUSCHANGED;
     procedure CMDialogChar(var Msg: TCMDialogChar); message CM_DIALOGCHAR;
     procedure CMBorderChanged(var Msg: TLMessage); message CM_BORDERCHANGED;
@@ -170,7 +170,7 @@ type
     procedure HookMouseDown; dynamic;
     procedure HookMouseEnter; dynamic;
     procedure HookMouseLeave; dynamic;
-    procedure HookMouseMove(X: Integer = 0; Y: Integer = 0); dynamic;
+    procedure HookMouseMove({%H-}X: Integer = 0; {%H-}Y: Integer = 0); dynamic;
     procedure HookMouseUp; dynamic;
     procedure HookParentColorChanged; dynamic;
     procedure HookParentFontChanged; dynamic;
@@ -617,7 +617,7 @@ end;
 
 procedure TJvXPCustomControl.HookMouseUp;
 var
-  CurrentPos: TPoint;
+  CurrentPos: TPoint = (X:0; Y: 0);
   NewControl: TWinControl;
 begin
   // this hook is called, if the user releases the left mouse button.

@@ -411,7 +411,7 @@ type
     FOnDisplaying: TJvWizardRouteMapDisplayEvent;
     function GetPage(Index: Integer): TJvWizardCustomPage;
     function GetPageCount: Integer;
-    procedure SetAlign(Value: TJvWizardAlign);
+    procedure SetAlign(Value: TJvWizardAlign); reintroduce;
     procedure SetPageIndex(Value: Integer);
     procedure SetImage(const Value: TJvWizardImage);
     procedure CMDesignHitTest(var Msg: TCMDesignHitTest); message CM_DESIGNHITTEST;
@@ -425,12 +425,12 @@ type
     function HasPicture: Boolean;
     procedure SetParent(AParent: TWinControl); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    function PageAtPos(Pt: TPoint): TJvWizardCustomPage; virtual;
-    procedure WizardPageAdded(const APage: TJvWizardCustomPage); virtual;
-    procedure WizardPageDeleted(const APage: TJvWizardCustomPage); virtual;
-    procedure WizardPageUpdated(const APage: TJvWizardCustomPage); virtual;
-    procedure WizardPageActivated(const APage: TJvWizardCustomPage); virtual;
-    procedure WizardPageMoved(const APage: TJvWizardCustomPage; const OldIndex: Integer); virtual;
+    function PageAtPos({%H-}Pt: TPoint): TJvWizardCustomPage; virtual;
+    procedure WizardPageAdded(const {%H-}APage: TJvWizardCustomPage); virtual;
+    procedure WizardPageDeleted(const {%H-}APage: TJvWizardCustomPage); virtual;
+    procedure WizardPageUpdated(const {%H-}APage: TJvWizardCustomPage); virtual;
+    procedure WizardPageActivated(const {%H-}APage: TJvWizardCustomPage); virtual;
+    procedure WizardPageMoved(const {%H-}APage: TJvWizardCustomPage; const {%H-}OldIndex: Integer); virtual;
     function CanDisplay(const APage: TJvWizardCustomPage): Boolean; virtual;
     property Wizard: TJvWizard read FWizard write FWizard;
     property Align: TJvWizardAlign read FAlign write SetAlign default alLeft;
@@ -659,7 +659,7 @@ type
     procedure ImageChanged(Sender: TObject);
     procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     procedure CMFontChanged(var Msg: TLMessage); message CM_FONTCHANGED;
-    procedure CMTextChanged(var Msg: TLMessage); message CM_TEXTCHANGED;
+    procedure CMTextChanged(var {%H-}Msg: TLMessage); message CM_TEXTCHANGED;
     procedure CMEnabledChanged(var Msg: TLMessage); message CM_ENABLEDCHANGED;
     function GetSubtitle: TJvWizardPageTitle;
     function GetTitle: TJvWizardPageTitle;
@@ -673,7 +673,7 @@ type
     { DrawPage is called by paint method. all the derived page controls
       should call this method to paint itsself rather than the overrided
       paint method. }
-    procedure DrawPage(ACanvas: TCanvas; var ARect: TRect); virtual;
+    procedure DrawPage({%H-}ACanvas: TCanvas; var {%H-}ARect: TRect); virtual;
     { called before the page shows up. Page: From page }
     procedure Enter(const FromPage: TJvWizardCustomPage); virtual;
     { called after the page shows up. }

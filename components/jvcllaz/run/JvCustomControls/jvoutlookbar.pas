@@ -518,8 +518,8 @@ const
   cMinTextWidth = 32;
   cButtonLeftOffset = 4;
   cButtonTopOffset = 2;
-  cInitRepeatPause = 400;
-  cRepeatPause = 100;
+//  cInitRepeatPause = 400;
+//  cRepeatPause = 100;
 
   UP_DOWN_DEFAULT_SIZE = 14;
 

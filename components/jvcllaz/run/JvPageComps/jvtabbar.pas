@@ -163,7 +163,7 @@ type
     function GetDividerWidth(Canvas: TCanvas; LeftTab: TJvTabBarItem): Integer; virtual; abstract;
     function GetPixelsPerInch: Integer; virtual; abstract;
     function GetRealImageSize(ATab: TJvTabBarItem): TSize;
-    procedure GetScrollButtons(TabBar: TJvCustomTabBar; var LeftButton, RightButton: TRect); {virtual; reserved for future use }
+    procedure GetScrollButtons({%H-}TabBar: TJvCustomTabBar; var {%H-}LeftButton, {%H-}RightButton: TRect); {virtual; reserved for future use }
     function GetTabBar(ATab: TJvTabBarItem): TJvCustomTabBar;
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; virtual; abstract;
     function Options: TJvTabBarPainterOptions; virtual; abstract;
@@ -220,7 +220,7 @@ type
     procedure DrawMoveDivider(Canvas: TCanvas; Tab: TJvTabBarItem; MoveLeft: Boolean); override;
     procedure DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect); override;
     function GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem; ATabRect: TRect): TRect; override;
-    function GetDividerWidth(Canvas: TCanvas; LeftTab: TJvTabBarItem): Integer; override;
+    function GetDividerWidth({%H-}Canvas: TCanvas; {%H-}LeftTab: TJvTabBarItem): Integer; override;
     function GetPixelsPerInch: Integer; override;
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; override;
     function Options: TJvTabBarPainterOptions; override;
@@ -324,7 +324,6 @@ type
     procedure SetClosingTab(Tab: TJvTabBarItem);
     procedure UpdateScrollButtons;
     function FindSelectableTab(Tab: TJvTabBarItem): TJvTabBarItem;
-    procedure SetHint(const Value: TCaption);
     procedure SetFlatScrollButtons(const Value: Boolean);
     procedure SetPageList(const Value: TCustomControl);
     procedure SetOrientation(const Value: TJvTabBarOrientation);
@@ -346,7 +345,7 @@ type
     procedure PaintTab(ACanvas: TCanvas; Tab: TJvTabBarItem); virtual;
     procedure Resize; override;
 
-    class function GetControlClassDefaultSize: TSize;
+    class function GetControlClassDefaultSize: TSize; override;
     function GetTabHeight(Tab: TJvTabBarItem): Integer;
     function GetTabWidth(Tab: TJvTabBarItem): Integer;
 
@@ -379,6 +378,8 @@ type
     procedure CMMouseLeave(var Msg: TLMessage); message CM_MOUSELEAVE;
     procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     procedure Loaded; override;
+
+    procedure SetHint(const Value: TCaption); override;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -1427,13 +1428,15 @@ end;
 procedure TJvCustomTabBar.CalculatePreferredSize(
   var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean);
 var
-  tabSize: TSize;
-  imgSize: TSize;
+//  tabSize: TSize;
+//  imgSize: TSize;
   h: Integer;
  {$IF LCL_FullVersion >= 1090000}
   imgRes: TScaledImageListResolution;
  {$ENDIF}
 begin
+  inherited CalculatePreferredSize(PreferredWidth,PreferredHeight,WithThemeSpace);
+
   CurrentPainter.AutoSize;
 
   // Text height

@@ -34,10 +34,9 @@ unit JvCheckBox;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  Classes, Graphics, Controls, StdCtrls, Types,
-  JvTypes, JvLinkedControls;
-//  JvTypes, JvExStdCtrls, JvLinkedControls, JvDataSourceIntf;
+  LCLIntf, LCLType,
+  Classes, Graphics, Controls, StdCtrls,
+  JvLinkedControls;
 
 const
   DefaultValueChecked = '1';

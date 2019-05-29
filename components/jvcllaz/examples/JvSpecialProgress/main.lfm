@@ -55,8 +55,8 @@ object MainForm: TMainForm
     Left = 245
     Height = 15
     Top = 60
-    Width = 57
-    Caption = 'Start color:'
+    Width = 53
+    Caption = 'End color:'
     ParentColor = False
   end
   object CbEndColor: TColorBox

@@ -70,9 +70,6 @@ type
 
 implementation
 
-uses
-  JvTypes, JvResources;
-
 // NOTE: hash table and soundex lookup code originally from Julian Bucknall's
 // "Algorithms Alfresco" column in The Delphi Magazine, Issue 52, December 1999
 // Used with permission
@@ -307,7 +304,7 @@ procedure TJvDefaultSpellChecker.BuildTables;
 var
   AFile: TextFile;
   Value: string;
-  LastValue: string;
+  LastValue: string = '';
   SoundexVal: TSoundex;
   I: Integer;
   N: Integer;

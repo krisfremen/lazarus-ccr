@@ -462,11 +462,6 @@ function TJvCustomPage.DoEraseBackground(ACanvas: TCanvas; Param: Integer): Bool
 begin
   exit;
 
-
-
-
-
-
   ACanvas.Brush.Color := Self.Color;
   ACanvas.Brush.Style := bsSolid;
   ACanvas.FillRect(Rect(0, 0, Width, Height));

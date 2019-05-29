@@ -453,7 +453,7 @@ begin
         if Assigned(AControl) and Assigned(AControl.Parent) then
         begin
           AHintInfo := HintInfo;
-          AControl.Parent.Perform(CM_HINTSHOW, 0, PtrInt(@AHintInfo));
+          AControl.Parent.Perform(CM_HINTSHOW, 0, {%H-}PtrInt(@AHintInfo));
           HintInfo.HintColor := AHintInfo.HintColor;
         end;
       end;

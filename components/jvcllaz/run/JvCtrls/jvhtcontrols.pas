@@ -693,7 +693,7 @@ end;
 procedure TJvCustomHTListBox.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   R: TRect;
-  LinkName: string;
+  LinkName: string = '';
   State: TOwnerDrawState;
   I: Integer;
 begin
@@ -725,7 +725,7 @@ procedure TJvCustomHTListBox.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
   R: TRect;
-  LinkName: string;
+  LinkName: string = '';
   State: TOwnerDrawState;
   I: Integer;
 begin
@@ -968,7 +968,7 @@ end;
 procedure TJvCustomHTLabel.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   R: TRect;
-  LinkName: string;
+  LinkName: string = '';
   LastHovered: Boolean;
 begin
   FMouseX := X;
@@ -1002,7 +1002,7 @@ end;
 procedure TJvCustomHTLabel.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
   R: TRect;
-  LinkName: string;
+  LinkName: string = '';
 begin
   FMouseX := X;
   FMouseY := Y;

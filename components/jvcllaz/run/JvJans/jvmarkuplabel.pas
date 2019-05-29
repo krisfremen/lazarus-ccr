@@ -104,8 +104,7 @@ type
 implementation
 
 uses
-  Themes,
-  JvJCLUtils, JvConsts;
+  Themes;
 
 constructor TJvMarkupLabel.Create(AOwner: TComponent);
 begin

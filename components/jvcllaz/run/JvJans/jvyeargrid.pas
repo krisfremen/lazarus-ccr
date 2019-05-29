@@ -170,10 +170,10 @@ type
 
   protected
     procedure DrawColumnText(aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState); override;
-    procedure DrawTextInCell(aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState); override;
+    procedure DrawTextInCell(aCol, aRow: Integer; aRect: TRect; {%H-}aState: TGridDrawState); override;
     function SelectCell(ACol, ARow: Integer): Boolean; override;
     procedure DblClick; override;
-    procedure DoPrepareCanvas(aCol,aRow:Integer; aState: TGridDrawState); override;
+    procedure DoPrepareCanvas(aCol,aRow:Integer; {%H-}aState: TGridDrawState); override;
     procedure SetAutoSize(Value: Boolean); override;
     procedure UpdateAllSizes;
     procedure AdjustBounds;
@@ -186,7 +186,7 @@ type
     // this component before its rewrite. The writer does nothing
     // because the value is now stored as Year.
     procedure ReadGridYear(Reader: TReader);
-    procedure WriteGridYear(Writer: TWriter);
+    procedure WriteGridYear({%H-}Writer: TWriter);
     procedure DefineProperties(Filer: TFiler); override;
 
   public
@@ -379,7 +379,7 @@ end;
 
 procedure TJvYearGrid.MakeHTML(AList: TStringList; Border, Filter: Boolean);
 var
-  ACol, ARow, W: Integer;
+  ACol, ARow: Integer;
   DS, Tbs, Infs: string;
   Month, Day: Word;
   ADate: TDate;
@@ -691,7 +691,7 @@ end;
 
 procedure TJvYearGrid.mnuCopyClick(Sender: TObject);
 var
-  S: string;
+  S: string = '';
 begin
   if GetCellData(S) then
     Clipboard.AsText := S;
@@ -699,7 +699,7 @@ end;
 
 procedure TJvYearGrid.mnuCutClick(Sender: TObject);
 var
-  S: string;
+  S: string = '';
 begin
   if GetCellData(S) then
   begin
@@ -728,7 +728,7 @@ end;
 
 procedure TJvYearGrid.mnuPasteClick(Sender: TObject);
 var
-  S: string;
+  S: string = '';
 begin
   if GetCellData(S) then
     if Clipboard.HasFormat(CF_TEXT) then
@@ -737,7 +737,7 @@ end;
 
 procedure TJvYearGrid.mnuDeleteClick(Sender: TObject);
 var
-  S: string;
+  S: string = '';
 begin
   if GetCellData(S) then
     SetCellData('');
@@ -1561,7 +1561,7 @@ end;
 procedure TJvYearGrid.DrawColumnText(ACol,ARow: Integer; ARect: TRect;
   AState: TGridDrawState);
 begin
-  DrawTextInCell(ACol, 0, ARect, AState);
+  DrawTextInCell(ACol, ARow, ARect, AState);
 end;
 
 procedure TJvYearGrid.DrawTextInCell(ACol,ARow: Integer;

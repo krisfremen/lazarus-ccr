@@ -477,7 +477,7 @@ function TJvCustomNumEdit.IsValidChar(Key: Char): Boolean;
 var
   S: string;
   FSelStart, SelStop, DecPos: Integer;
-  RetValue: Double;
+  RetValue: Double = 0.0;
 begin
   Result := False;
   S := EditText;

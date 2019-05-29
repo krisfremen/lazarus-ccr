@@ -96,7 +96,7 @@ type
     procedure CMCursorChanged(var Msg: TLMessage); message CM_CURSORCHANGED;
     procedure CMFontChanged(var Msg: TLMessage); message CM_FONTCHANGED;
     procedure CursorChanged;
-    procedure FontChanged;
+    procedure FontChanged; reintroduce;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -229,7 +229,7 @@ procedure TJvWizardRouteMapList.Paint;
 var
   I: Integer;
   R: TRect;
-  P: TPoint;
+  P: TPoint = (X:0; Y:0);
 begin
   Canvas.Brush.Style := bsSolid;
   Canvas.Brush.Color := Color;
