@@ -251,12 +251,12 @@ end;
 function TJvPicClip.GetGraphicCell(Index: Integer): TBitmap;
 begin
   CheckIndex(Index);
-  AssignBitmapCell(Picture.Graphic, FBitmap, Cols, Rows, Index);
-  if Picture.Graphic is TBitmap then
+  if FPicture.Graphic is TBitmap then
     if FBitmap.PixelFormat <> pfDevice then
       FBitmap.PixelFormat := TBitmap(Picture.Graphic).PixelFormat;
   FBitmap.TransparentColor := FMaskColor or PaletteMask;
   FBitmap.Transparent := (FMaskColor <> clNone) and Masked;
+  AssignBitmapCell(Picture.Graphic, FBitmap, Cols, Rows, Index);
   Result := FBitmap;
 end;
 
