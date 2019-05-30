@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="10"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <LRSInOutputDirectory Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
-      <MainUnit Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="default" Default="True"/>
@@ -16,9 +16,10 @@
       <Version Value="2"/>
     </PublishOptions>
     <RunParams>
-      <local>
-        <FormatVersion Value="1"/>
-      </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
@@ -32,8 +33,7 @@
       <Unit0>
         <Filename Value="JvNavPaneDemo.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="36" Y="11"/>
+        <CursorPos X="54" Y="18"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -79,8 +79,10 @@
       <Unit6>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
         <UnitName Value="JvNavigationPane"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="25"/>
+        <TopLine Value="2880"/>
+        <CursorPos X="31" Y="2893"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit6>
@@ -94,7 +96,7 @@
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\lcltype.pp"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\lcltype.pp"/>
         <UnitName Value="LCLType"/>
         <EditorIndex Value="8"/>
         <TopLine Value="230"/>
@@ -103,7 +105,7 @@
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\graphics.pp"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\graphics.pp"/>
         <UnitName Value="Graphics"/>
         <EditorIndex Value="7"/>
         <TopLine Value="1125"/>
@@ -121,7 +123,7 @@
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\controls.pp"/>
+        <Filename Value="c:\lazarus-trunk_fpc304\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="6"/>
         <TopLine Value="162"/>
@@ -147,123 +149,119 @@
         <Loaded Value="True"/>
       </Unit13>
     </Units>
-    <JumpHistory Count="29" HistoryIndex="28">
+    <JumpHistory Count="28" HistoryIndex="27">
       <Position1>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="3787" Column="24" TopLine="3769"/>
+        <Filename Value="JvNavPaneDemoMainForm.pas"/>
+        <Caret Line="274" Column="34" TopLine="258"/>
       </Position1>
       <Position2>
         <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="286" Column="29" TopLine="264"/>
+        <Caret Line="57" Column="54" TopLine="39"/>
       </Position2>
       <Position3>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="645" Column="28" TopLine="618"/>
+        <Filename Value="JvNavPaneDemoMainForm.pas"/>
+        <Caret Line="438" Column="3" TopLine="435"/>
       </Position3>
       <Position4>
         <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="280" Column="22" TopLine="258"/>
+        <Caret Line="57" Column="15" TopLine="39"/>
       </Position4>
       <Position5>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="3434" Column="40" TopLine="3425"/>
+        <Filename Value="JvNavPaneDemoMainForm.pas"/>
+        <Caret Line="423" Column="40" TopLine="415"/>
       </Position5>
       <Position6>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="3443" Column="23" TopLine="3424"/>
+        <Caret Line="2190" Column="37" TopLine="2182"/>
       </Position6>
       <Position7>
-        <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="274" Column="34" TopLine="258"/>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="2197" Column="65" TopLine="2182"/>
       </Position7>
       <Position8>
-        <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="57" Column="54" TopLine="39"/>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="2201" TopLine="2181"/>
       </Position8>
       <Position9>
-        <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="438" Column="3" TopLine="435"/>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="2250" TopLine="2229"/>
       </Position9>
       <Position10>
-        <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="57" Column="15" TopLine="39"/>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="2265" TopLine="2233"/>
       </Position10>
       <Position11>
-        <Filename Value="JvNavPaneDemoMainForm.pas"/>
-        <Caret Line="423" Column="40" TopLine="415"/>
+        <Filename Value="D:\lazarus202_fpc304_win64\fpc\3.0.4\source\rtl\inc\objpas.inc"/>
+        <Caret Line="550" Column="38" TopLine="537"/>
       </Position11>
       <Position12>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2190" Column="37" TopLine="2182"/>
+        <Caret Line="2262" Column="35" TopLine="2233"/>
       </Position12>
       <Position13>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2197" Column="65" TopLine="2182"/>
+        <Caret Line="2265" TopLine="2233"/>
       </Position13>
       <Position14>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2201" TopLine="2181"/>
+        <Caret Line="2250" TopLine="2233"/>
       </Position14>
       <Position15>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2250" TopLine="2229"/>
+        <Caret Line="2265" TopLine="2233"/>
       </Position15>
       <Position16>
         <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2265" TopLine="2233"/>
+        <Caret Line="2238" Column="31" TopLine="2233"/>
       </Position16>
       <Position17>
-        <Filename Value="D:\lazarus202_fpc304_win64\fpc\3.0.4\source\rtl\inc\objpas.inc"/>
-        <Caret Line="550" Column="38" TopLine="537"/>
-      </Position17>
-      <Position18>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2262" Column="35" TopLine="2233"/>
-      </Position18>
-      <Position19>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2265" TopLine="2233"/>
-      </Position19>
-      <Position20>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2250" TopLine="2233"/>
-      </Position20>
-      <Position21>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2265" TopLine="2233"/>
-      </Position21>
-      <Position22>
-        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
-        <Caret Line="2238" Column="31" TopLine="2233"/>
-      </Position22>
-      <Position23>
         <Filename Value="JvNavPaneDemoMainForm.pas"/>
         <Caret Line="423" Column="40" TopLine="310"/>
-      </Position23>
-      <Position24>
+      </Position17>
+      <Position18>
         <Filename Value="..\..\run\JvPageComps\jvpagelist.pas"/>
         <Caret Line="94" Column="14" TopLine="76"/>
-      </Position24>
-      <Position25>
+      </Position18>
+      <Position19>
         <Filename Value="..\..\run\JvPageComps\jvpagelist.pas"/>
         <Caret Line="81" Column="15" TopLine="76"/>
-      </Position25>
-      <Position26>
+      </Position19>
+      <Position20>
         <Filename Value="..\..\run\JvPageComps\jvpagelist.pas"/>
         <Caret Line="437" Column="3" TopLine="434"/>
-      </Position26>
-      <Position27>
+      </Position20>
+      <Position21>
         <Filename Value="..\..\run\JvPageComps\jvpagelist.pas"/>
         <Caret Line="93" Column="17" TopLine="62"/>
-      </Position27>
-      <Position28>
+      </Position21>
+      <Position22>
         <Filename Value="..\..\run\JvPageComps\jvpagelist.pas"/>
         <Caret Line="322" Column="3" TopLine="320"/>
-      </Position28>
-      <Position29>
+      </Position22>
+      <Position23>
         <Filename Value="..\..\run\JvPageComps\jvpagelist.pas"/>
         <Caret Line="79" Column="16" TopLine="75"/>
-      </Position29>
+      </Position23>
+      <Position24>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret TopLine="3455"/>
+      </Position24>
+      <Position25>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="1091" Column="26" TopLine="1069"/>
+      </Position25>
+      <Position26>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="4176" Column="3" TopLine="4174"/>
+      </Position26>
+      <Position27>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="3096" Column="28" TopLine="3077"/>
+      </Position27>
+      <Position28>
+        <Filename Value="..\..\run\JvPageComps\jvnavigationpane.pas"/>
+        <Caret Line="646" Column="15" TopLine="626"/>
+      </Position28>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
@@ -283,6 +281,7 @@
     </Parsing>
     <Linking>
       <Debugging>
+        <UseHeaptrc Value="True"/>
         <UseExternalDbgSyms Value="True"/>
       </Debugging>
       <Options>

@@ -2882,6 +2882,7 @@ destructor TJvNavPanelPage.Destroy;
 begin
   FStyleLink.Free;
   FBackground.Free;
+  FHeader.Free;
   inherited Destroy;
 end;
 
