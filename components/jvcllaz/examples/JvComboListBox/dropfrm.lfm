@@ -10,17 +10,15 @@ object frmDrop: TfrmDrop
   ClientWidth = 290
   Color = clBtnFace
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Shell Dlg 2'
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object Label1: TLabel
     Left = 11
-    Height = 13
+    Height = 15
     Top = 8
-    Width = 64
+    Width = 68
     Caption = 'Select folder:'
     ParentColor = False
   end
