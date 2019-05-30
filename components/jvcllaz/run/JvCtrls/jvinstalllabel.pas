@@ -255,7 +255,7 @@ begin
   if csDestroying in ComponentState then
     Exit;
 
-  DrawThemedBackground(Self, Canvas, ClientRect, Self.Color);
+  //DrawThemedBackground(Self, Canvas, ClientRect, Self.Color);  // wp: removed because of debugger crash in Linux
 
   if csDesigning in ComponentState then
     with Canvas do
