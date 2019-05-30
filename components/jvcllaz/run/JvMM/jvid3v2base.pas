@@ -151,7 +151,7 @@ type
     function ReadSyncSafeInteger(var AInt: Cardinal; const ASize: Byte): Longint; overload;
     function ReadSyncSafeInteger(var AInt: Int64; const ASize: Byte = 4): Longint; overload;
 
-    procedure ReadFromStream(AStream: TStream; const ASize: Integer);
+    procedure ReadFromStream(AStream: TStream; const ASize: PtrInt);
 
     { Write }
     function WriteDate(const ADate: TDateTime): Longint;
@@ -7715,7 +7715,7 @@ begin
 end;
 
 procedure TJvID3Stream.ReadFromStream(AStream: TStream;
-  const ASize: Integer);
+  const ASize: PtrInt);
 begin
   Position := 0;
   SetSize(ASize);

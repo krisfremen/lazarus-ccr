@@ -48,6 +48,7 @@ type
     JvID3v21: TJvID3v2;
     Panel1: TPanel;
     ShellTreeView: TShellTreeView;
+    procedure FormCreate(Sender: TObject);
     procedure ListView1DblClick(Sender: TObject);
     procedure ShellTreeViewChange(Sender: TObject);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
@@ -161,6 +162,14 @@ begin
     lFileName := AppendPathDelim(ShellTreeView.Path) + ListView1.Selected.SubItems[0];
     if TJvID3v2EditForm.Execute(lFileName) then
       UpdateItem(ListView1.Selected, lFileName);
+  end;
+end;
+
+procedure TJvID3v2MainForm.FormCreate(Sender: TObject);
+begin
+  if (ParamCount > 0) and DirectoryExists(ParamStr(1)) then begin
+    ShellTreeView.Path := ParamStr(1);
+    ChangeToDir(ParamStr(1));
   end;
 end;
 
