@@ -546,9 +546,11 @@ object MainForm: TMainForm
     object JvMarkupLabel1: TJvMarkupLabel
       Left = 408
       Top = 24
+      Font.Color = clInfoText
       BorderSpacing.Around = 4
       Color = clInfoBk
       ParentColor = False
+      ParentFont = False
     end
     object Panel2: TPanel
       Left = 0
