@@ -112,7 +112,6 @@ begin
   PitchX := Memo.Width + 32;
   PitchY := Memo.Top + Memo.Height - Image.Top + 31;
   Index := 0;
-  Image.Picture.Bitmap := TBitmap.Create;
   for X := 0 to 3 do
     for Y := 0 to 1 do
       if (X <> 0) or (Y <> 0) then
@@ -125,7 +124,6 @@ begin
         LImage.Parent := Self;
         LImage.Stretch := False;
         LImage.Center := true;
-        LImage.Picture.Bitmap := TBitmap.Create;
         LImage.SetBounds(Image.Left+X*PitchX, Image.Top+Y*PitchY, Image.Width, Image.Height);
         LMemo := TMemo.Create(Self);
         LMemo.Parent := Self;
