@@ -193,15 +193,20 @@ begin
   end;
 end;
 
+const
+  PARAGRAPH_MARK = #$E2#$81#$8B;
+
 procedure TJvHTMLParserMainForm.TableKeyFound(Sender: TObject; Key, Results,
   OriginalLine: string);
 begin
   Self.Tag := Self.Tag + 1;
-  DisplayMemo1.Lines.Add(Key + #13#10 + Results);
+  DisplayMemo1.Lines.Add(Key + LineEnding + Results);
   if UpperCase(Key) = 'TR' then
     CurNode := TreeView1.Items.AddChild(nil, 'TR')
-  else
+  else begin
+    Results := StringReplace(Results, LineEnding, PARAGRAPH_MARK, [rfReplaceAll]);
     TreeView1.Items.AddChild(CurNode, Results);
+  end;
 end;
 
 procedure TJvHTMLParserMainForm.TableKeyFoundEx(Sender: TObject;
@@ -211,13 +216,15 @@ var
   i : integer;
 begin
   Self.Tag := Self.Tag + 1;
-  DisplayMemo1.Lines.Add(Key + #13#10 + Results);
+  DisplayMemo1.Lines.Add(Key + LineEnding + Results);
   for i:=0 to Attributes.Count-1 do
     DisplayMemo1.Lines.Add('Attributes=' + Attributes[i]);
   if UpperCase(Key) = 'TR' then
     CurNode := TreeView1.Items.AddChild(nil, 'TR')
-  else
+  else begin
+    Results := StringReplace(Results, LineEnding, PARAGRAPH_MARK, [rfReplaceAll]);
     TreeView1.Items.AddChild(CurNode, Results);
+  end;
 end;
 
 procedure TJvHTMLParserMainForm.HTML2TextKeyFound(Sender: TObject; Key, Results,
