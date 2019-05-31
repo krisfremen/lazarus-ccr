@@ -7121,7 +7121,8 @@ begin
   Result := Text;
   for I := Low(Conversions) to High(Conversions) do
     Result := StringReplace(Result, Conversions[I].Html, Utf8ToAnsi(Conversions[I].Text), [rfReplaceAll, rfIgnoreCase]);
-  Result := StringReplace(Result, sLineBreak, '', [rfReplaceAll, rfIgnoreCase]);        // only <BR> can be new line
+  Result := StringReplace(Result, #13, '', [rfReplaceAll]);        // only <BR> can be new line
+  Result := StringReplace(Result, #10, '', [rfReplaceAll]);        // only <BR> can be new line
   Result := StringReplace(Result, cBR, sLineBreak, [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, cBR2, sLineBreak, [rfReplaceAll, rfIgnoreCase]);      // Fixes <BR/>, but not <BR />!
   Result := StringReplace(Result, cHR, cHR + sLineBreak, [rfReplaceAll, rfIgnoreCase]); // fixed <HR><BR>

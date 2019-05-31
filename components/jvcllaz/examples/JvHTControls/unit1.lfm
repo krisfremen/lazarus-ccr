@@ -24,8 +24,8 @@ object MainForm: TMainForm
       ClientWidth = 567
       object JvHTLabel1: TJvHTLabel
         Left = 8
-        Height = 196
-        Hint = 'HTLabel with:<br />'#13#10'<b>bold</b><br>'#13#10'<i>italic</i><br>'#13#10'<u>underline</u><br>'#13#10'<s>strikeout</s><br>'#13#10'<font color="Red">c</font><font color="blue">o</font><font color="Green">l</font><font color="Fuchsia">o</font><font color="Maroon">r</font><br>'#13#10'<a href="http://www.freepascal.org/">Links</a> and <a href="custom">custom links</a>'
+        Height = 106
+        Hint = 'HTLabel with:<br/>'#13#10'<b>bold</b><br>'#13#10'<i>italic</i><br>'#13#10'<u>underline</u><br>'#13#10'<s>strikeout</s><br>'#13#10'<font color="Red">c</font><font color="blue">o</font><font color="Green">l</font><font color="Fuchsia">o</font><font color="Maroon">r</font><br>'#13#10'<a href="http://www.freepascal.org/">Links</a> and <a href="custom">custom links</a>'
         Top = 8
         Width = 120
         Caption = 'HTLabel with:<br>'#13#10'<b>bold</b><br>'#13#10'<i>italic</i><br>'#13#10'<u>underline</u><br>'#13#10'<s>strikeout</s><br>'#13#10'<font color="Red">c</font><font color="blue">o</font><font color="Green">l</font><font color="Fuchsia">o</font><font color="Maroon">r</font><br>'#13#10'<a href="http://www.freepascal.org/">Links</a> and <a href="custom">custom links</a>'
