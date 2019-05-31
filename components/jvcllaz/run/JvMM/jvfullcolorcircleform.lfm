@@ -2,12 +2,12 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
   Left = 274
   Height = 574
   Top = 219
-  Width = 1010
+  Width = 1022
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Color circle configurations'
   ClientHeight = 574
-  ClientWidth = 1010
+  ClientWidth = 1022
   Color = clBtnFace
   Font.Color = clWindowText
   KeyPreview = True
@@ -64,21 +64,21 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
     Left = 412
     Height = 550
     Top = 8
-    Width = 590
+    Width = 602
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     BevelInner = bvRaised
     BevelOuter = bvLowered
     Caption = 'PanelGraphics'
     ClientHeight = 550
-    ClientWidth = 590
+    ClientWidth = 602
     Font.Color = clWindowText
     ParentFont = False
     TabOrder = 5
     object LabelAxisSettings: TLabel
       AnchorSideLeft.Control = JvColorAxisConfigCombo
       AnchorSideTop.Control = PanelGraphics
-      Left = 208
+      Left = 217
       Height = 15
       Top = 10
       Width = 69
@@ -98,10 +98,10 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = PanelGraphics
       AnchorSideBottom.Side = asrBottom
-      Left = 100
+      Left = 106
       Height = 480
       Top = 60
-      Width = 472
+      Width = 478
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 8
@@ -125,12 +125,14 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       OnBlueColorChange = JvColorCircleBlueColorChange
     end
     object JvFullColorTrackBarCommon: TJvFullColorTrackBar
+      AnchorSideLeft.Control = Bevel10
+      AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = JvColorCircle
       AnchorSideBottom.Control = Bevel10
-      Left = 40
+      Left = 38
       Height = 237
       Top = 60
-      Width = 21
+      Width = 24
       Anchors = [akTop, akLeft, akBottom]
       FullColor = 83886079
       AxisConfig = acYZX
@@ -146,10 +148,10 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       AnchorSideTop.Side = asrBottom
       AnchorSideBottom.Control = JvFullColorTrackBarRed
       AnchorSideBottom.Side = asrBottom
-      Left = 68
+      Left = 74
       Height = 237
       Top = 303
-      Width = 21
+      Width = 24
       Anchors = [akTop, akLeft, akBottom]
       BorderSpacing.Left = 8
       FullColor = 83820544
@@ -167,10 +169,10 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       AnchorSideTop.Side = asrBottom
       AnchorSideBottom.Control = JvFullColorTrackBarRed
       AnchorSideBottom.Side = asrBottom
-      Left = 39
+      Left = 42
       Height = 237
       Top = 303
-      Width = 21
+      Width = 24
       Anchors = [akTop, akLeft, akBottom]
       BorderSpacing.Left = 8
       FullColor = 67174144
@@ -190,7 +192,7 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       Left = 10
       Height = 237
       Top = 303
-      Width = 21
+      Width = 24
       Anchors = [akTop, akLeft, akBottom]
       BorderSpacing.Left = 8
       FullColor = 67109119
@@ -206,7 +208,7 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = LabelAxisSettings
       AnchorSideTop.Side = asrBottom
-      Left = 208
+      Left = 217
       Height = 23
       Top = 29
       Width = 257
@@ -222,10 +224,12 @@ object JvFullColorCircleFrm: TJvFullColorCircleFrm
       AnchorSideLeft.Control = PanelGraphics
       AnchorSideTop.Control = JvColorCircle
       AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = JvFullColorTrackBarBlue
+      AnchorSideRight.Side = asrBottom
       Left = 2
       Height = 6
       Top = 297
-      Width = 90
+      Width = 96
     end
   end
   object PanelCommonSettings: TPanel
