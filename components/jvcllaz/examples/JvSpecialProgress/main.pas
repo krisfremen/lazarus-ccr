@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
-  ExtCtrls, JvSpecialProgress;
+  ExtCtrls, Spin, JvSpecialProgress;
 
 type
 
@@ -14,6 +14,7 @@ type
 
   TMainForm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     CbBorderColor: TColorBox;
     CbTextColor: TColorBox;
     CbTextCentered: TCheckBox;
@@ -31,8 +32,10 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    LblHeight: TLabel;
     LblFormat: TLabel;
     ScrollBar1: TScrollBar;
+    seHeight: TSpinEdit;
     procedure CbBorderChange(Sender: TObject);
     procedure CbBorderColorChange(Sender: TObject);
     procedure CbTextColorChange(Sender: TObject);
@@ -45,6 +48,7 @@ type
     procedure CbTextOptionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ScrollBar1Change(Sender: TObject);
+    procedure seHeightChange(Sender: TObject);
   private
     FSavedCaption: String;
 
@@ -66,6 +70,11 @@ begin
   JvSpecialProgress1.Position := Scrollbar1.Position;
 end;
 
+procedure TMainForm.seHeightChange(Sender: TObject);
+begin
+  JvSpecialProgress1.Height := seHeight.Value;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   FSavedCaption := JvSpecialProgress1.Caption;
@@ -85,6 +94,7 @@ begin
     CbTextColor.Selected := GetDefaultColor(dctFont)
   else
     CbTextColor.Selected := JvSpecialProgress1.Font.Color;
+  seHeight.Value := JvSpecialProgress1.Height;
 end;
 
 procedure TMainForm.CbStartColorChange(Sender: TObject);
