@@ -455,7 +455,8 @@ begin
   begin
     FPosition := APosition;
     BitmapNeeded;
-    DrawPointer;
+    Invalid := true;
+    //DrawPointer;
     lChanged := True;
   end;
 
