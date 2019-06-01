@@ -54,6 +54,8 @@ begin
   PasSynEdit.Lines.LoadfromFile(dir + 'main.pas');
   XMLSynEdit.Lines.LoadFromFile(dir + 'JvTabBarDemo_NotebookPages.lpi');
   Image1.Picture.LoadFromFile(dir + 'JvTabBarDemo_NotebookPages.ico');
+  Image1.Width := Image1.Picture.Width;
+  Image1.Height := Image1.Picture.Height;
 end;
 
 procedure TForm1.JvTabBar1TabCloseQuery(Sender: TObject; Item: TJvTabBarItem;

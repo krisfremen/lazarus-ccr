@@ -1065,8 +1065,8 @@ object Form1: TForm1
     CompilerMode = pcmDelphi
     NestedComments = False
     TypeHelpers = True
-    Left = 157
-    Top = 111
+    left = 157
+    top = 111
   end
   object JvModernTabBarPainter1: TJvModernTabBarPainter
     Color = clGradientInactiveCaption
@@ -1077,22 +1077,22 @@ object Form1: TForm1
     DisabledFont.Color = clGrayText
     SelectedFont.Color = clWindowText
     SelectedFont.Style = [fsBold]
-    Left = 155
-    Top = 209
+    left = 155
+    top = 209
   end
   object JvTabBarXPPainter1: TJvTabBarXPPainter
     Font.Color = clWindowText
     DisabledFont.Color = clGrayText
     SelectedFont.Color = clWindowText
     FixedTabSize = 0
-    Left = 312
-    Top = 209
+    left = 312
+    top = 209
   end
   object SynXMLSyn1: TSynXMLSyn
     DefaultFilter = 'XML Document (*.xml,*.xsd,*.xsl,*.xslt,*.dtd)|*.xml;*.xsd;*.xsl;*.xslt;*.dtd'
     Enabled = False
     WantBracesParsed = False
-    Left = 241
-    Top = 111
+    left = 241
+    top = 111
   end
 end
