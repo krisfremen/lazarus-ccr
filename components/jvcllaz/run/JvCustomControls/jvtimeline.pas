@@ -330,6 +330,7 @@ type
     procedure HorzScroll(ScrollCode: TScrollCode; var ScrollPos: Integer); virtual;
     procedure ItemClick(Item: TJvTimeItem); virtual;
     procedure ItemDblClick(Item: TJvTimeItem); virtual;
+    procedure Resize; override;
     procedure Size; virtual;
     procedure SaveItem(Item: TJvTimeItem; Stream: TStream); virtual;
     procedure LoadItem(Item: TJvTimeItem; Stream: TStream); virtual;
@@ -2083,6 +2084,12 @@ procedure TJvCustomTimeLine.ItemClick(Item: TJvTimeItem);
 begin
   if Assigned(FOnItemClick) then
     FOnItemClick(Self, Item);
+end;
+
+procedure TJvCustomTimeLine.Resize;
+begin
+  inherited;
+  Invalidate;
 end;
 
 procedure TJvCustomTimeLine.Size;
