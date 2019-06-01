@@ -929,65 +929,63 @@ const
   HalfPi = 1.57079632679489661923;
 var
   Edge: Integer;
-  Face, Highlight, Shadow: TColor;
+  FaceClr, HighlightClr, ShadowClr: TColor;
   Size: Integer;
-  OldOrg: TPoint;
   lCanvas: TCanvas;
   I: Integer;
   lColor: TColor;
+  xL, yT, xR, yB: Integer;
 begin
   Size := 2 * FRadius + 1;
   lCanvas := FBitmap.Canvas;
-    lCanvas.Brush.Color := Parent.Brush.Color;
-    lCanvas.Brush.Style := bsSolid;
-    {$IFDEF JVCLThemesEnabled}
-    if not StyleServices.Enabled then
-    {$ENDIF JVCLThemesEnabled}
-      lCanvas.FillRect(FBitmapRect);
-    SetViewportOrgEx(lCanvas.Handle, FSize div 2 - FRadius, FSize div 2 - FRadius,
-      @OldOrg);
-    try
-      // Draw edge.
-      lCanvas.Pen.Style := psClear;
+  lCanvas.Brush.Color := Parent.Brush.Color;
+  lCanvas.Brush.Style := bsSolid;
+  {$IFDEF JVCLThemesEnabled}
+  if not StyleServices.Enabled then
+  {$ENDIF JVCLThemesEnabled}
+    lCanvas.FillRect(FBitmapRect);
 
-      Highlight := ColorToRGB(clBtnHighlight);
-      if Color = clDefault then
-        lColor := clGray
-      else
-        lColor := Color;
-      Face := ColorToRGB(lColor);
-      // darking the color by halving each color part value
-      Shadow := (ColorToRGB(lColor) and $00FEFEFE) shr 1;
+  xL := FSize div 2 - FRadius;
+  xR := xL + 2*FRadius;
+  yT := FSize div 2 - FRadius;
+  yB := yT + 2*FRadius;
 
-      for I := 0 to Size do
-      begin
-        lCanvas.Brush.Color := Blend(Cos(I * HalfPi / Size), Highlight, Face);
-        lCanvas.Pie(0, 0, Size, Size, I + 1, 0, I - 1, 0);
-        lCanvas.Pie(0, 0, Size, Size, 0, I - 1, 0, I + 1);
-      end;
+  lCanvas.Pen.Style := psClear;
+  HighlightClr := ColorToRGB(clBtnHighlight);
+  if Color = clDefault then
+    lColor := clGray
+  else
+    lColor := Color;
+  FaceClr := ColorToRGB(lColor);
+  // darking the color by halving each color part value
+  ShadowClr := (ColorToRGB(lColor) and $00FEFEFE) shr 1;
 
-      for I := 0 to Size do
-      begin
-        lCanvas.Brush.Color := Blend(1.0 - Sin(I * HalfPi / Size), Face, Shadow);
-        lCanvas.Pie(0, 0, Size, Size, Size, I + 1, Size, I - 1);
-        lCanvas.Pie(0, 0, Size, Size, I - 1, Size, I + 1, Size);
-      end;
+  for I := 0 to Size do
+  begin
+    lCanvas.Brush.Color := Blend(Cos(I * HalfPi / Size), HighlightClr, FaceClr);
+    lCanvas.Pie(xL, yT, xR, yB, I+1, 0, I-1, 0);
+    lCanvas.Pie(xL, yT, xR, yB, 0, I-1, 0, I+1);
+  end;
 
-      // Draw top of disk.
-      lCanvas.Pen.Style := psSolid;
-      lCanvas.Pen.Color := lColor;
-      lCanvas.Brush.Color := lColor;
-      Edge := FButtonEdge * FRadius div 100 + 1;
-      lCanvas.Ellipse(0 + Edge, 0 + Edge, 0 + Size - Edge, 0 + Size - Edge);
+  for I := 0 to Size do
+  begin
+    lCanvas.Brush.Color := Blend(1.0 - Sin(I * HalfPi / Size), FaceClr, ShadowClr);
+    lCanvas.Pie(xL, yT, xR, yB, Size, I+1, Size, I-1);
+    lCanvas.Pie(xL, yT, xR, yB, I-1, Size, I+1, Size);
+  end;
 
-      // Draw bounding circle.
-      lCanvas.Pen.Color := clBtnText;
-      lCanvas.Brush.Style := bsClear;
-      lCanvas.Ellipse(0, 0, Size, Size);
-    finally
-      // Reset viewport origin.
-      SetViewportOrgEx(lCanvas.Handle, OldOrg.X, OldOrg.Y, nil);
-    end;
+  // Draw top of disk.
+  lCanvas.Pen.Style := psSolid;
+  lCanvas.Pen.Color := lColor;
+  lCanvas.Brush.Color := lColor;
+  Edge := FButtonEdge * FRadius div 100 + 1;
+  lCanvas.Ellipse(xL + Edge, yT + Edge, xR - Edge, yB - Edge);
+
+  // Draw bounding circle.
+  lCanvas.Pen.Color := clBtnText;
+  lCanvas.Brush.Style := bsClear;
+  lCanvas.Ellipse(xL, yT, xR, yB);
+
   FBitmapInvalid := False;
 end;
 
@@ -1069,7 +1067,7 @@ begin
     end;
   end;
 end;
-
+                  (*
 { - strange: does not compile in qt with these methods...
 
 procedure TJvCustomDialButton.FocusKilled(NextWnd: THandle);
@@ -1084,8 +1082,8 @@ begin
   inherited FocusSet(PrevWnd);
   if HandleAllocated then
     DrawBorder;
-end;
-}
+end;       *)
+
 procedure TJvCustomDialButton.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
