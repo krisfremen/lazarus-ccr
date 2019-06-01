@@ -365,7 +365,10 @@ var
   OldYear, Month, Day: Word;
 begin
   DecodeDate(ADateTime, OldYear, Month, Day);
-  Result := EncodeDate(NewYear, Month, Day);
+  if NewYear <= 0 then
+    Result := 0
+  else
+    Result := EncodeDate(NewYear, Month, Day);
 end;
 
 procedure TJvID3v2EditForm.CtrlsToTag;
