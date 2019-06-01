@@ -73,51 +73,48 @@ uses
 
 procedure TMainForm.New1Click(Sender: TObject);
 begin
-    JvDesignPanel.Clear;
+  JvDesignPanel.Clear;
 end;
 
 procedure TMainForm.Grid1Click(Sender: TObject);
 begin
-
+  //
 end;
 
 procedure TMainForm.csDesigning1Click(Sender: TObject);
 begin
-    JvDesignPanel.Active := false;
+  JvDesignPanel.Active := false;
   if WindowProcHook1.Checked then
     JvDesignPanel.Surface.MessengerClass := TJvDesignWinControlHookMessenger
   else
     JvDesignPanel.Surface.MessengerClass := TJvDesignDesignerMessenger;
   JvDesignPanel.Active := true;
   JvDesignPanel.Invalidate;
-
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
-     OpenDialog.InitialDir := ExtractFilePath(Application.ExeName);
+//  OpenDialog.InitialDir := ExtractFilePath(Application.ExeName);
+  OpenDialog.InitialDir := '../../../examples/JvDesigner/';
   SaveDialog.InitialDir := OpenDialog.InitialDir;
   JvDesignPanel.Surface.Active := true;
-
 end;
 
 procedure TMainForm.Active1Click(Sender: TObject);
 begin
-    JvDesignPanel.Active := Active1.Checked;
+  JvDesignPanel.Active := Active1.Checked;
   JvDesignPanel.Invalidate;
-
 end;
 
 procedure TMainForm.Open1Click(Sender: TObject);
 begin
-    if OpenDialog.Execute then
+  if OpenDialog.Execute then
     JvDesignPanel.LoadFromFile(OpenDialog.Filename);
-
 end;
 
 procedure TMainForm.Rules1Click(Sender: TObject);
 begin
-    if Rules1.Checked then
+  if Rules1.Checked then
   begin
     JvDesignPanel.Color := clWhite;
     JvDesignPanel.DrawRules := true;
@@ -129,14 +126,12 @@ begin
     JvDesignPanel.OnPaint := @JvDesignPanelPaint;
   end;
   JvDesignPanel.Invalidate;
-
 end;
 
 procedure TMainForm.Save1Click(Sender: TObject);
 begin
-    if SaveDialog.Execute then
+  if SaveDialog.Execute then
     JvDesignPanel.SaveToFile(SaveDialog.Filename);
-
 end;
 
 procedure TMainForm.JvDesignPanelGetAddClass(Sender: TObject;
@@ -148,26 +143,22 @@ begin
       DesignClass := '';
     SelectButton.Down  := true;
   end;
-
 end;
 
 procedure TMainForm.JvDesignPanelPaint(Sender: TObject);
 begin
   with JvDesignPanel do
-     DesignPaintGrid(Canvas, ClientRect, Color);
-
+    DesignPaintGrid(Canvas, ClientRect, Color);
 end;
 
 procedure TMainForm.PaletteButtonClick(Sender: TObject);
 const
   cClasses: array[0..4] of string = ( '', 'TButton', 'TLabel', 'TPanel',
     'TImage' );
-
 begin
 // StickyClass := (GetKeyState(VK_SHIFT) < 0);
-    StickyClass := False;
+   StickyClass := False;
    DesignClass := cClasses[TControl(Sender).Tag];
-
 end;
 
 initialization

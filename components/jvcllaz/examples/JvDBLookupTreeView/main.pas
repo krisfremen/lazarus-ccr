@@ -5,9 +5,9 @@ unit main;
 interface
 
 uses
-  Classes, SysUtils, BufDataset, DB, Forms, Controls, Graphics, Dialogs,
-  DBGrids, JvDBLookup, JvDBLookupTreeView, JvDBTreeView, ExtCtrls, DBCtrls,
-  StdCtrls, Grids;
+  Classes, SysUtils, BufDataset, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, ExtCtrls, Grids, DB, DBGrids, DBCtrls,
+  JvDBLookupTreeView;
 
 type
 
