@@ -28,6 +28,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
+    Label4: TLabel;
     lblYear: TLabel;
     Panel1: TPanel;
     udYear: TUpDown;
@@ -42,7 +43,6 @@ type
     procedure EdRightMarginChange(Sender: TObject);
     procedure EdTopMarginChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure udYearClick(Sender: TObject; Button: TUDBtnType);
   private
 
@@ -126,15 +126,11 @@ begin
   cmbDaysAlignment.ItemIndex := ord(JvYearGrid1.DaysAlignment);
   cmbDayFormat.ItemIndex := ord(JvYearGrid1.DayFormat);
   cmbMonthFormat.ItemIndex := ord(JvYearGrid1.MonthFormat);
+  cmbMonthFormatChange(nil);
 
   udYear.Position := JvYearGrid1.Year;
 
   CbFlat.Checked := JvYearGrid1.Flat;
-end;
-
-procedure TMainForm.FormShow(Sender: TObject);
-begin
-  AutoSize := true;
 end;
 
 procedure TMainForm.udYearClick(Sender: TObject; Button: TUDBtnType);

@@ -213,8 +213,11 @@ begin
       end;
       Inc(AWidth, AGraphic.Width);
     end;
+    ACanvas.Draw(ARect.Left, ARect.Top, Bmp);
+    {
     BitBlt(ACanvas.Handle, ARect.Left, ARect.Top, Bmp.Width, Bmp.Height,
       Bmp.Canvas.Handle, 0, 0, SRCCOPY);
+      }
   finally
     Bmp.Free;
   end;

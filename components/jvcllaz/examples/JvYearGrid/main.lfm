@@ -1,14 +1,13 @@
 object MainForm: TMainForm
   Left = 361
-  Height = 371
+  Height = 546
   Top = 215
-  Width = 885
+  Width = 1310
   AutoSize = True
   Caption = 'JvYearGrid Demo'
-  ClientHeight = 371
-  ClientWidth = 885
+  ClientHeight = 546
+  ClientWidth = 1310
   OnCreate = FormCreate
-  OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object JvYearGrid1: TJvYearGrid
     AnchorSideLeft.Control = Owner
@@ -100,21 +99,23 @@ object MainForm: TMainForm
     Left = 0
     Height = 97
     Top = 264
-    Width = 722
+    Width = 730
     AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 97
-    ClientWidth = 722
+    ClientWidth = 730
     ParentFont = False
     TabOrder = 1
     object EdLeftMargin: TSpinEdit
-      AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = EdTopMargin
       AnchorSideTop.Side = asrBottom
-      Left = 16
+      AnchorSideRight.Control = Label4
+      AnchorSideRight.Side = asrBottom
+      Left = 24
       Height = 23
       Top = 31
       Width = 50
+      Anchors = [akTop, akRight]
       BorderSpacing.Left = 16
       BorderSpacing.Top = 4
       OnChange = EdLeftMarginChange
@@ -125,7 +126,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = EdTopMargin
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = EdLeftMargin
-      Left = 136
+      Left = 144
       Height = 23
       Top = 31
       Width = 50
@@ -138,7 +139,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = EdLeftMargin
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 74
+      Left = 82
       Height = 23
       Top = 4
       Width = 58
@@ -152,7 +153,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = EdTopMargin
       AnchorSideTop.Control = EdLeftMargin
       AnchorSideTop.Side = asrBottom
-      Left = 74
+      Left = 82
       Height = 23
       Top = 58
       Width = 58
@@ -165,7 +166,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = Label1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = EdTopMargin
-      Left = 406
+      Left = 414
       Height = 23
       Top = 4
       Width = 100
@@ -186,7 +187,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label2
       AnchorSideRight.Side = asrBottom
-      Left = 242
+      Left = 250
       Height = 15
       Top = 8
       Width = 156
@@ -202,7 +203,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label1
       AnchorSideRight.Side = asrBottom
-      Left = 226
+      Left = 234
       Height = 15
       Top = 35
       Width = 172
@@ -217,7 +218,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = cmbDayNamesAlignment
       AnchorSideRight.Side = asrBottom
-      Left = 406
+      Left = 414
       Height = 23
       Top = 31
       Width = 100
@@ -239,7 +240,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label1
       AnchorSideRight.Side = asrBottom
-      Left = 316
+      Left = 324
       Height = 15
       Top = 62
       Width = 82
@@ -254,7 +255,7 @@ object MainForm: TMainForm
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = cmbDayNamesAlignment
       AnchorSideRight.Side = asrBottom
-      Left = 406
+      Left = 414
       Height = 23
       Top = 58
       Width = 100
@@ -276,7 +277,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = lblYear
       AnchorSideTop.Control = cmbMonthFormat
       AnchorSideTop.Side = asrCenter
-      Left = 640
+      Left = 648
       Height = 19
       Top = 33
       Width = 39
@@ -290,7 +291,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = cmbDayNamesAlignment
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cmbDayNamesAlignment
-      Left = 514
+      Left = 522
       Height = 23
       Top = 4
       Width = 100
@@ -310,7 +311,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = cmbDayNamesAlignment
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cmbMonthNamesAlignment
-      Left = 514
+      Left = 522
       Height = 23
       Top = 31
       Width = 100
@@ -331,7 +332,7 @@ object MainForm: TMainForm
       AnchorSideTop.Control = cmbDayFormat
       AnchorSideBottom.Control = cmbDayFormat
       AnchorSideBottom.Side = asrBottom
-      Left = 665
+      Left = 673
       Height = 23
       Top = 4
       Width = 57
@@ -349,7 +350,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cmbDayFormat
       AnchorSideTop.Side = asrCenter
-      Left = 640
+      Left = 648
       Height = 15
       Top = 8
       Width = 22
@@ -357,6 +358,18 @@ object MainForm: TMainForm
       Caption = 'Year'
       ParentColor = False
       ParentFont = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = EdTopMargin
+      AnchorSideTop.Side = asrCenter
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 66
+      BorderSpacing.Left = 8
+      Caption = 'Cell margins'
+      ParentColor = False
     end
   end
 end
