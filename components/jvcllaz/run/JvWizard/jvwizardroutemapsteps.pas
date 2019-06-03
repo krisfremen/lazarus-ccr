@@ -249,6 +249,9 @@ var
   S: string;
   LDrawProperties: Cardinal;
 begin
+  if PageIndex = -1 then
+    exit;
+
   LRect := ClientRect;
   TotalPageCount := DetectPageCount(ActivePageIndex);
   Canvas.Brush.Color := Color;
