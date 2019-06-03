@@ -44,7 +44,7 @@ unit JvWizardRouteMapNodes;
 interface
 
 uses
-  Graphics, Classes, LCLIntf, LCLType,
+  Graphics, Classes, Controls, LCLIntf, LCLType,
   JvWizard;
 
 type
@@ -79,24 +79,28 @@ type
     FNodeColors: TJvWizardRouteMapNodeColors;
     FIndent: Integer;
     FAllowClickableNodes: Boolean;
+    function IsIndentStored: Boolean;
+    function IsItemHeightStored: Boolean;
     procedure SetItemHeight(Value: Integer);
     procedure SetUsePageTitle(Value: Boolean);
     procedure SetIndent(Value: Integer);
     procedure SetAllowClickableNodes(const Value: Boolean);
   protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     function PageAtPos(Pt: TPoint): TJvWizardCustomPage; override;
     procedure Paint; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property ItemHeight: Integer read FItemHeight write SetItemHeight default 20;
     property AllowClickableNodes: Boolean read FAllowClickableNodes write SetAllowClickableNodes default True; // ss 10/14/2003
     property Align;
     property Color default clBackground;
     property Font;
     property Image;
-    property Indent: Integer read FIndent write SetIndent default 8;
+    property Indent: Integer read FIndent write SetIndent stored IsIndentStored;
+    property ItemHeight: Integer read FItemHeight write SetItemHeight stored IsItemHeightStored;
     property NodeColors: TJvWizardRouteMapNodeColors read FNodeColors write FNodeColors;
     property UsePageTitle: Boolean read FUsePageTitle write SetUsePageTitle default True;
     property OnDisplaying;
@@ -163,11 +167,11 @@ end;
 constructor TJvWizardRouteMapNodes.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FItemHeight := 20;
+  FItemHeight := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_NODES_ITEMHEIGHT);
   Color := clBackground;
   Font.Color := clWhite;
   FUsePageTitle := True;
-  FIndent := 8;
+  FIndent := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_NODES_INDENT);
   FAllowClickableNodes := True; // ss 10/14/2003
   FNodeColors := TJvWizardRouteMapNodeColors.Create(Self);
 end;
@@ -176,6 +180,29 @@ destructor TJvWizardRouteMapNodes.Destroy;
 begin
   FNodeColors.Free;
   inherited Destroy;
+end;
+
+procedure TJvWizardRouteMapNodes.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if IsIndentStored then
+      FIndent := Round(FIndent * AXProportion);
+    if IsItemHeightStored then
+      FItemHeight := Round(FItemHeight * AYProportion);
+  end;
+end;
+
+function TJvWizardRouteMapNodes.IsIndentStored: Boolean;
+begin
+  Result := FIndent <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_NODES_INDENT);
+end;
+
+function TJvWizardRouteMapNodes.IsItemHeightStored: Boolean;
+begin
+  Result := FItemHeight <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_NODES_ITEMHEIGHT);
 end;
 
 function TJvWizardRouteMapNodes.PageAtPos(Pt: TPoint): TJvWizardCustomPage;
@@ -218,7 +245,13 @@ var
   AColor: TColor;
   AFont: TFont;
   IsFirstPage, IsLastPage: Boolean;
+  w6, w12, w18, w20: Integer;
 begin
+  w6 := Scale96ToFont(6);
+  w12 := Scale96ToFont(12);
+  w18 := Scale96ToFont(18);
+  w20 := Scale96ToFont(20);
+
   ARect := ClientRect;
   with Canvas do
   begin
@@ -269,17 +302,17 @@ begin
 
           ATextRect := ARect;
           if not (IsFirstPage or IsLastPage) then
-            ATextRect.Left := ATextRect.Left + 18;
+            ATextRect.Left := ATextRect.Left + w18;
 
           NodeRect := ATextRect;
-          NodeRect.Right := NodeRect.Left + 12;
-          NodeRect.Top := NodeRect.Top + Trunc((FItemHeight - 12) / 2);
-          NodeRect.Bottom := NodeRect.Top + 12;
+          NodeRect.Right := NodeRect.Left + w12;
+          NodeRect.Top := NodeRect.Top + Trunc((FItemHeight - w12) / 2);
+          NodeRect.Bottom := NodeRect.Top + w12;
 
           if not (IsFirstPage or IsLastPage) then
-            ATextRect.Left := ATextRect.Left + 20
+            ATextRect.Left := ATextRect.Left + w20
           else
-            ATextRect.Left := ATextRect.Left + 18 + 20;
+            ATextRect.Left := ATextRect.Left + w18 + w20;
 
           try
             Pen.Color := FNodeColors.Line;
@@ -299,35 +332,35 @@ begin
             Brush.Color := FNodeColors.Line;
             if IsFirstPage or IsLastPage then
             begin
-              MoveTo(NodeRect.Right, NodeRect.Top + 5);
-              LineTo(NodeRect.Right + 13, NodeRect.Top + 5);
-              MoveTo(NodeRect.Right, NodeRect.Top + 6);
-              LineTo(NodeRect.Right + 13, NodeRect.Top + 6);
+              MoveTo(NodeRect.Right, NodeRect.Top + w6-1);
+              LineTo(NodeRect.Right + w12+1, NodeRect.Top + w6-1);
+              MoveTo(NodeRect.Right, NodeRect.Top + w6);
+              LineTo(NodeRect.Right + w12+1, NodeRect.Top + w6);
               if IsFirstPage then
               begin
-                MoveTo(NodeRect.Right + 11, NodeRect.Top + 6);
-                LineTo(NodeRect.Right + 11, ATextRect.Bottom);
-                MoveTo(NodeRect.Right + 12, NodeRect.Top + 6);
-                LineTo(NodeRect.Right + 12, ATextRect.Bottom);
+                MoveTo(NodeRect.Right + w12-1, NodeRect.Top + w6);
+                LineTo(NodeRect.Right + w12-1, ATextRect.Bottom);
+                MoveTo(NodeRect.Right + w12, NodeRect.Top + w6);
+                LineTo(NodeRect.Right + w12, ATextRect.Bottom);
               end
               else
               begin
-                MoveTo(NodeRect.Right + 11, NodeRect.Top + 5);
-                LineTo(NodeRect.Right + 11, ATextRect.Top);
-                MoveTo(NodeRect.Right + 12, NodeRect.Top + 5);
-                LineTo(NodeRect.Right + 12, ATextRect.Top);
+                MoveTo(NodeRect.Right + w12-1, NodeRect.Top + w6-1);
+                LineTo(NodeRect.Right + w12-1, ATextRect.Top);
+                MoveTo(NodeRect.Right + w12, NodeRect.Top + w6-1);
+                LineTo(NodeRect.Right + w12, ATextRect.Top);
               end;
             end
             else
             begin
-              MoveTo(NodeRect.Left + 5, NodeRect.Top);
-              LineTo(NodeRect.Left + 5, ATextRect.Top - 1);
-              MoveTo(NodeRect.Left + 6, NodeRect.Top);
-              LineTo(NodeRect.Left + 6, ATextRect.Top - 1);
-              MoveTo(NodeRect.Left + 5, NodeRect.Bottom);
-              LineTo(NodeRect.Left + 5, ATextRect.Bottom + 1);
-              MoveTo(NodeRect.Left + 6, NodeRect.Bottom);
-              LineTo(NodeRect.Left + 6, ATextRect.Bottom + 1);
+              MoveTo(NodeRect.Left + w6-1, NodeRect.Top);
+              LineTo(NodeRect.Left + w6-1, ATextRect.Top - 1);
+              MoveTo(NodeRect.Left + w6, NodeRect.Top);
+              LineTo(NodeRect.Left + w6, ATextRect.Top - 1);
+              MoveTo(NodeRect.Left + w6-1, NodeRect.Bottom);
+              LineTo(NodeRect.Left + w6-1, ATextRect.Bottom + 1);
+              MoveTo(NodeRect.Left + w6, NodeRect.Bottom);
+              LineTo(NodeRect.Left + w6, ATextRect.Bottom + 1);
             end;
 
             Brush.Color := AColor;

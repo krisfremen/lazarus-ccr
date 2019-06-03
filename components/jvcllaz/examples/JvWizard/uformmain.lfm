@@ -7,7 +7,7 @@ object Form1: TForm1
   Caption = 'JvWizard demo'
   ClientHeight = 317
   ClientWidth = 596
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '1.8.4.0'
   object JvWizard1: TJvWizard
     Left = 0
     Height = 317
@@ -49,9 +49,9 @@ object Form1: TForm1
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
-      Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'This is the JvWizard demo for Lazarus'
-      Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      Header.SubTitle.Color = clNone
+      Header.SubTitle.Text = 'This is the JvWizard demo for Lazarus'
+      Header.SubTitle.Anchors = [akTop, akLeft, akRight, akBottom]
       VisibleButtons = [bkNext, bkCancel]
       Caption = 'JvWizardWelcomePage1'
       WaterMark.Image.Picture.Data = {
@@ -1909,9 +1909,9 @@ object Form1: TForm1
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
-      Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'An edit control was added to page 1.'
-      Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      Header.SubTitle.Color = clNone
+      Header.SubTitle.Text = 'An edit control was added to page 1.'
+      Header.SubTitle.Anchors = [akTop, akLeft, akRight, akBottom]
       VisibleButtons = [bkStart, bkBack, bkNext, bkCancel]
       Caption = 'JvWizardInteriorPage1'
       object Label2: TLabel
@@ -1938,9 +1938,9 @@ object Form1: TForm1
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
-      Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'A checkbox and a radiobutton were added to page 2.'
-      Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      Header.SubTitle.Color = clNone
+      Header.SubTitle.Text = 'A checkbox and a radiobutton were added to page 2.'
+      Header.SubTitle.Anchors = [akTop, akLeft, akRight, akBottom]
       VisibleButtons = [bkStart, bkBack, bkNext, bkCancel]
       Caption = 'JvWizardInteriorPage2'
       object CheckBox1: TCheckBox
@@ -1967,9 +1967,9 @@ object Form1: TForm1
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
-      Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'A listbox was added to page 3.'
-      Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      Header.SubTitle.Color = clNone
+      Header.SubTitle.Text = 'A listbox was added to page 3.'
+      Header.SubTitle.Anchors = [akTop, akLeft, akRight, akBottom]
       VisibleButtons = [bkStart, bkBack, bkNext, bkCancel]
       Caption = 'JvWizardInteriorPage3'
       object ListBox1: TListBox
@@ -1995,9 +1995,9 @@ object Form1: TForm1
       Header.Title.Anchors = [akTop, akLeft, akRight]
       Header.Title.Font.Height = -16
       Header.Title.Font.Style = [fsBold]
-      Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'This completes this little demo.'
-      Header.Subtitle.Anchors = [akTop, akLeft, akRight, akBottom]
+      Header.SubTitle.Color = clNone
+      Header.SubTitle.Text = 'This completes this little demo.'
+      Header.SubTitle.Anchors = [akTop, akLeft, akRight, akBottom]
       VisibleButtons = [bkStart, bkBack, bkFinish, bkCancel]
       Caption = 'JvWizardInteriorPage4'
       object Label3: TLabel

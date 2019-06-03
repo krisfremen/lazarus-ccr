@@ -348,6 +348,23 @@ type
 const
   bkAllButtons = [bkStart, bkLast, bkBack, bkFinish, bkNext, bkCancel, bkHelp];
 
+  DEFAULT_WIZARD_ROUTECONTROL_WIDTH = 145;
+  DEFAULT_WIZARD_WATERMARK_WIDTH = 164;
+  DEFAULT_WIZARD_WATERMARK_BORDERWIDTH = 1;
+  DEFAULT_WIZARD_PAGEHEADER_HEIGHT = 64;
+  DEFAULT_WIZARD_PAGEHEADER_IMAGEOFFSET = 0;
+  DEFAULT_WIZARD_PAGEPANEL_BORDERWIDTH = 7;
+  DEFAULT_WIZARD_PAGETITLE_INDENT = 0;
+  DEFAULT_WIZARD_PAGETITLE_ANCHORPLACEMENT = 4;
+
+  DEFAULT_WIZARD_ROUTEMAP_CURVATURE = 9;
+  DEFAULT_WIZARD_ROUTEMAP_OFFSET = 8;
+  DEFAULT_WIZARD_ROUTEMAP_HOTTRACKBORDER = 2;
+  DEFAULT_WIZARD_ROUTEMAP_ITEMHEIGHT = 25;
+  DEFAULT_WIZARD_ROUTEMAP_NODES_INDENT = 8;
+  DEFAULT_WIZARD_ROUTEMAP_NODES_ITEMHEIGHT = 20;
+  DEFAULT_WIZARD_ROUTEMAP_STEPS_INDENT = 5;
+
 type
   TJvWizardAlign = alTop..alRight;
   TJvWizardLeftRight = alLeft..alRight;
@@ -502,6 +519,8 @@ type
     FAnchors: TAnchors;
     FIndent: Integer;
     FFont: TFont;
+    function IsAnchorPlacementStored: Boolean;
+    function IsIndentStored: Boolean;
     procedure SetText(const Value: string);
     procedure SetAlignment(Value: TAlignment);
     procedure SetAnchors(Value: TAnchors);
@@ -524,12 +543,18 @@ type
     procedure Assign(Source: TPersistent); override;
     procedure PaintTo(ACanvas: TCanvas; var ARect: TRect); override;
   published
-    property Text: string read FText write SetText;
-    property Anchors: TAnchors read FAnchors write SetAnchors default [akLeft, akTop];
-    property AnchorPlacement: Integer read FAnchorPlacement write SetAnchorPlacement default 4;
-    property Indent: Integer read FIndent write SetIndent default 0;
-    property Alignment: TAlignment read FAlignment write SetAlignment default taLeftJustify;
-    property Font: TFont read FFont write SetFont;
+    property Text: string
+      read FText write SetText;
+    property Anchors: TAnchors
+      read FAnchors write SetAnchors default [akLeft, akTop];
+    property AnchorPlacement: Integer
+      read FAnchorPlacement write SetAnchorPlacement stored IsAnchorPlacementStored;
+    property Indent: Integer
+      read FIndent write SetIndent stored IsIndentStored;
+    property Alignment: TAlignment
+      read FAlignment write SetAlignment default taLeftJustify;
+    property Font: TFont
+      read FFont write SetFont;
   end;
 
   TJvWizardPageObject = class(TJvWizardGraphicObject)
@@ -553,6 +578,8 @@ type
     FImageOffset: Integer;
     FImageAlignment: TJvWizardImageLeftRight;
     FShowDivider: Boolean;
+    function IsHeightStored: Boolean;
+    function IsImageOffsetStored: Boolean;
     procedure SetHeight(Value: Integer);
     procedure SetImageIndex(Value: Integer);
     procedure SetImageOffset(Value: Integer);
@@ -574,12 +601,12 @@ type
     procedure PaintTo(ACanvas: TCanvas; var ARect: TRect); override;
   published
     property ImageIndex: Integer read FImageIndex write SetImageIndex default -1;
-    property ImageOffset: Integer read FImageOffset write SetImageOffset default 0;
+    property ImageOffset: Integer read FImageOffset write SetImageOffset stored IsImageOffsetStored;
     property ImageAlignment: TJvWizardImageLeftRight read FImageAlignment write SetImageAlignment default iaRight;
-    property Height: Integer read FHeight write SetHeight default 70;
+    property Height: Integer read FHeight write SetHeight stored IsHeightStored;
     property ParentFont: Boolean read FParentFont write SetParentFont default True;
     property Title: TJvWizardPageTitle read FTitle write SetTitle;
-    property Subtitle: TJvWizardPageTitle read FSubtitle write SetSubtitle;
+    property SubTitle: TJvWizardPageTitle read FSubtitle write SetSubtitle;
     property ShowDivider: Boolean read FShowDivider write SetShowDivider default True;
     property Color default clWindow;
     property Visible;
@@ -596,6 +623,8 @@ type
     procedure SetBorderWidth(Value: Integer);
     procedure SetAlign(Value: TJvWizardLeftRight);
     procedure ImageChanged(Sender: TObject);
+    function IsBorderWidthStored: Boolean;
+    function IsWidthStored: Boolean;
   protected
     procedure VisibleChanged; override;
   public
@@ -604,9 +633,11 @@ type
     procedure PaintTo(ACanvas: TCanvas; var ARect: TRect); override;
   published
     property Align: TJvWizardLeftRight read FAlign write SetAlign default alLeft;
-    property BorderWidth: Integer read FBorderWidth write SetBorderWidth default 1;
+    property BorderWidth: Integer
+      read FBorderWidth write SetBorderWidth stored IsBorderWidthStored;
     property Image: TJvWizardImage read FImage write FImage;
-    property Width: Integer read FWidth write SetWidth default 164;
+    property Width: Integer
+      read FWidth write SetWidth stored IsWidthStored;
     property Color default clActiveCaption;
     property Visible;
   end;
@@ -615,12 +646,14 @@ type
   TJvWizardPagePanel = class(TJvWizardPageObject)
   private
     FBorderWidth: Word;
+    function IsBorderWidthStored: Boolean;
     procedure SetBorderWidth(Value: Word);
   public
     constructor Create; override;
     procedure PaintTo(ACanvas: TCanvas; var ARect: TRect); override;
   published
-    property BorderWidth: Word read FBorderWidth write SetBorderWidth default 7;
+    property BorderWidth: Word
+      read FBorderWidth write SetBorderWidth stored IsBorderWidthStored;
     property Color default clBtnFace;
     property Visible default False;
   end;
@@ -681,6 +714,14 @@ type
     procedure Done; virtual;
     { called just before the page is hidden. Page: To page }
     procedure ExitPage(const ToPage: TJvWizardCustomPage); virtual; // renamed from Exit() to ExitPage
+    { adaption of dimensions to screen dpi }
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$IF LCL_FullVersion >= 1080100}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF LCL_FullVersion >= 1080000}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -725,6 +766,8 @@ type
     FWaterMark: TJvWizardWaterMark;
   protected
     procedure AdjustClientRect(var Rect: TRect); override;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     procedure DrawPage(ACanvas: TCanvas; var ARect: TRect); override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -772,6 +815,7 @@ type
     FOnActivePageChanged: TNotifyEvent;
     FOnActivePageChanging: TJvWizardChangingPageEvent;
     FHeaderImages: TCustomImageList;
+    FHeaderImagesWidth: Integer;
     FImageChangeLink: TChangeLink;
     FAutoHideButtonBar: Boolean;
     FDefaultButtons: Boolean;
@@ -784,6 +828,9 @@ type
     procedure SetButtonBarHeight(Value: Integer);
     procedure SetActivePage(Page: TJvWizardCustomPage);
     procedure SetHeaderImages(Value: TCustomImageList);
+    {$IF LCL_FullVersion >= 1090000}
+    procedure SetHeaderImagesWidth(Value: Integer);
+    {$IFEND}
     function GetButtonClick(Index: Integer): TNotifyEvent;
     procedure SetButtonClick(Index: Integer; const Value: TNotifyEvent);
     procedure ImageListChange(Sender: TObject);
@@ -851,6 +898,9 @@ type
     property ShowDivider: Boolean read FShowDivider write SetShowDivider default True;
     property ShowRouteMap: Boolean read GetShowRouteMap write SetShowRouteMap;
     property HeaderImages: TCustomImageList read FHeaderImages write SetHeaderImages;
+    {$IF LCL_FullVersion >= 1090000}
+    property HeaderImagesWidth: Integer read FHeaderImagesWidth write SetHeaderImagesWidth default 0;
+    {$IFEND}
     property OnSelectFirstPage: TJvWizardSelectPageEvent read FOnSelectFirstPage write FOnSelectFirstPage;
     property OnSelectLastPage: TJvWizardSelectPageEvent read FOnSelectLastPage write FOnSelectLastPage;
     property OnSelectNextPage: TJvWizardSelectPageEvent read FOnSelectNextPage write FOnSelectNextPage;
@@ -1290,7 +1340,7 @@ begin
   FAlign := alLeft;
   inherited Align := alLeft;
   TabStop := False;
-  Width := 145;
+  Width := DEFAULT_WIZARD_ROUTECONTROL_WIDTH;
   Visible := True;
   FPages := TList.Create;
   DoubleBuffered := True;
@@ -1639,8 +1689,8 @@ end;
 constructor TJvWizardPageTitle.Create;
 begin
   inherited Create;
-  FAnchorPlacement := 4;
-  FIndent := 0;
+  FAnchorPlacement := DEFAULT_WIZARD_PAGETITLE_ANCHORPLACEMENT;
+  FIndent := DEFAULT_WIZARD_PAGETITLE_INDENT;
   FAnchors := [akLeft, akTop];
   FAlignment := taLeftJustify;
   FFont := TFont.Create;
@@ -1670,6 +1720,14 @@ begin
   { Write empty Text to DFM because the default value differs from '' }
   if Filer is TWriter then
     Filer.DefineProperty('Text', nil, @WriteText, FText = '');
+end;
+
+function TJvWizardPageTitle.IsAnchorPlacementStored: Boolean;
+var
+  ap: Integer;
+begin
+  ap := WizardPageHeader.WizardPage.Scale96ToFont(DEFAULT_WIZARD_PAGETITLE_ANCHORPLACEMENT);
+  Result := FAnchorPlacement <> ap;
 end;
 
 procedure TJvWizardPageTitle.SetWizardPageHeader(Value: TJvWizardPageHeader);
@@ -1818,6 +1876,11 @@ begin
   DoChange;
 end;
 
+function TJvWizardPageTitle.IsIndentStored: Boolean;
+begin
+  Result := FIndent <> WizardPageHeader.WizardPage.Scale96ToFont(FIndent);
+end;
+
 procedure TJvWizardPageTitle.Assign(Source: TPersistent);
 begin
   if Source is TJvWizardPageTitle then
@@ -1861,7 +1924,7 @@ constructor TJvWizardPageHeader.Create;
 begin
   inherited Create;
   Color := clWindow;
-  FHeight := 70;
+  FHeight := DEFAULT_WIZARD_PAGEHEADER_HEIGHT;  // will be scaled by page
   FParentFont := True;
   { Set up Title }
   FTitle := TJvWizardPageTitle.Create;
@@ -1874,7 +1937,7 @@ begin
   FSubtitle.FAnchors := [akLeft, akTop, akRight, akBottom];
   FSubtitle.FText := RsSubtitle;
   FImageAlignment := iaRight;
-  FImageOffset := 0;
+  FImageOffset := DEFAULT_WIZARD_PAGEHEADER_IMAGEOFFSET;  // will be scaled by page
   FImageIndex := -1;
   FShowDivider := True;
 end;
@@ -1939,11 +2002,34 @@ end;
 
 function TJvWizardPageHeader.GetImageRect(const AImages: TCustomImageList;
   var ARect: TRect): TRect;
+var
+{$IF LCL_FullVersion >= 1090000}
+  imgres: TScaledImageListResolution;
+  ppi: Integer;
+  f: Double;
+{$IFEND}
+  w, h: Integer;
+  delta: Integer;
 begin
-  Result := Bounds(ARect.Left, ARect.Top, AImages.Width, AImages.Height);
-  OffsetRect(Result, 0, ((ARect.Bottom - ARect.Top) - AImages.Height) div 2);
+  {$IF LCL_FullVersion >= 1090000}
+  ppi := WizardPage.Font.PixelsPerInch;
+  f := WizardPage.GetCanvasScaleFactor;
+  if AImages = WizardPage.Wizard.HeaderImages then
+    w := WizardPage.Wizard.HeaderImagesWidth
+    else w := 0;
+  imgres := AImages.ResolutionForPPI[w, ppi, f];
+  h := imgRes.Height;
+  w := imgRes.Width;
+  {$ELSE}
+  h := AImages.Height;
+  w := AImages.Width;
+  {$IFEND}
+  delta := WizardPage.Scale96ToFont(4);
+
+  Result := Bounds(ARect.Left, ARect.Top, w, h);
+  OffsetRect(Result, 0, ((ARect.Bottom - ARect.Top) - h) div 2);
   if FImageAlignment = iaRight then
-    OffsetRect(Result, ARect.Right - ARect.Left - AImages.Width - 4, 0);
+    OffsetRect(Result, ARect.Right - ARect.Left - w - delta, 0);
 
   if FImageAlignment = iaLeft then
   begin
@@ -1961,6 +2047,16 @@ begin
     if Result.Left < ARect.Right then
       ARect.Right := Result.Left;
   end;
+end;
+
+function TJvWizardPageHeader.IsHeightStored: Boolean;
+begin
+  Result := FHeight <> WizardPage.Scale96ToFont(DEFAULT_WIZARD_PAGEHEADER_HEIGHT);
+end;
+
+function TJvWizardPageHeader.IsImageOffsetStored: Boolean;
+begin
+  Result := FImageOffset <> WizardPage.Scale96ToFont(DEFAULT_WIZARD_PAGEHEADER_IMAGEOFFSET);
 end;
 
 procedure TJvWizardPageHeader.SetSubtitle(const Value: TJvWizardPageTitle);
@@ -2052,8 +2148,8 @@ begin
   inherited Create;
   FAlign := alLeft;
   Color := clActiveCaption;
-  FWidth := 164;
-  FBorderWidth := 1;
+  FWidth := DEFAULT_WIZARD_WATERMARK_WIDTH;
+  FBorderWidth := DEFAULT_WIZARD_WATERMARK_BORDERWIDTH;
   FImage := TJvWizardImage.Create;
   FImage.OnChange := @ImageChanged;
 end;
@@ -2121,10 +2217,35 @@ begin
     FImage.PaintTo(ACanvas, R);
   end;
 end;
+      (*
+procedure TJvWizardWaterMark.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    BeginUpdate;
+    try
+      FWidth := Round(FWidth * AXProportion);
+    finally
+      EndUpdate;
+    end;
+  end;
+end;*)
 
 procedure TJvWizardWaterMark.ImageChanged(Sender: TObject);
 begin
   DoChange;
+end;
+
+function TJvWizardWaterMark.IsBorderWidthStored: Boolean;
+begin
+  Result := FBorderWidth <> WizardPage.Scale96ToFont(DEFAULT_WIZARD_WATERMARK_BORDERWIDTH);
+end;
+
+function TJvWizardWaterMark.IsWidthStored: Boolean;
+begin
+  Result := FWidth <> WizardPage.Scale96ToFont(DEFAULT_WIZARD_WATERMARK_WIDTH);
 end;
 
 procedure TJvWizardWaterMark.VisibleChanged;
@@ -2139,9 +2260,14 @@ end;
 constructor TJvWizardPagePanel.Create;
 begin
   inherited Create;
-  FBorderWidth := 7;
+  FBorderWidth := DEFAULT_WIZARD_PAGEPANEL_BORDERWIDTH;;
   Color := clBtnFace;
   Visible := False;
+end;
+
+function TJvWizardPagePanel.IsBorderWidthStored: Boolean;
+begin
+  Result := FBorderWidth <> WizardPage.Scale96ToFont(DEFAULT_WIZARD_PAGEPANEL_BORDERWIDTH);
 end;
 
 procedure TJvWizardPagePanel.PaintTo(ACanvas: TCanvas; var ARect: TRect);
@@ -2183,9 +2309,16 @@ begin
   Color := clBtnFace;
   FHeader := TJvWizardPageHeader.Create;
   FHeader.WizardPage := Self;
+  FHeader.Height := Scale96ToFont(DEFAULT_WIZARD_PAGEHEADER_HEIGHT);
+  FHeader.ImageOffset := Scale96ToFont(DEFAULT_WIZARD_PAGEHEADER_IMAGEOFFSET);
+  Title.AnchorPlacement := Scale96ToFont(DEFAULT_WIZARD_PAGETITLE_ANCHORPLACEMENT);
+  Title.Indent := Scale96ToFont(DEFAULT_WIZARD_PAGETITLE_INDENT);
+  SubTitle.AnchorPlacement := Scale96ToFont(DEFAULT_WIZARD_PAGETITLE_ANCHORPLACEMENT);
+  SubTitle.Indent := Scale96ToFont(DEFAULT_WIZARD_PAGETITLE_INDENT);
   FImage := TJvWizardImage.Create;
   FImage.OnChange := @ImageChanged;
   FPanel := TJvWizardPagePanel.Create;
+  FPanel.BorderWidth := Scale96ToFont(DEFAULT_WIZARD_PAGEPANEL_BORDERWIDTH);
   FPanel.WizardPage := Self;
   { try to avoid screen flicker, it paints its image
     into memory, then move image memory to the screen at once. }
@@ -2440,12 +2573,57 @@ begin
   Header.Title := Value;
 end;
 
+procedure TJvWizardCustomPage.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if FHeader.IsHeightStored then
+      FHeader.Height := Round(FHeader.Height * AYProportion);
+    if FHeader.IsImageOffsetStored then
+      FHeader.ImageOffset := Round(FHeader.ImageOffset * AXProportion);
+
+    if Title.IsIndentStored then
+      Title.Indent := Round(Title.Indent * AXProportion);
+    if Title.IsAnchorPlacementStored then
+      Title.AnchorPlacement := Round(Title.AnchorPlacement * AXProportion);
+
+    if SubTitle.IsIndentStored then
+      SubTitle.Indent := Round(SubTitle.Indent * AXProportion);
+    if SubTitle.IsAnchorPlacementStored then
+      SubTitle.AnchorPlacement := Round(SubTitle.AnchorPlacement * AXProportion);
+
+    if FPanel.IsBorderWidthStored then
+      FPanel.BorderWidth := Round(FPanel.BorderWidth * AXProportion);
+  end;
+end;
+
+{$IF LCL_FullVersion >= 1080100}
+procedure TJvWizardCustomPage.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(Title.Font, AToPPI, AProportion);
+  DoScaleFontPPI(SubTitle.Font, AToPPI, AProportion);
+end;
+{$ELSEIF LCL_FullVersion >= 1080000}
+procedure TJvWizardCustomPage.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(Title.Font, AProportion);
+  DoScaleFontPPI(SubTitle.Font, AProportion);
+end;
+{$ENDIF}
+
 //=== { TJvWizardWelcomePage } ===============================================
 
 constructor TJvWizardWelcomePage.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FWaterMark := TJvWizardWaterMark.Create;
+  FWaterMark.Width := Scale96ToFont(DEFAULT_WIZARD_WATERMARK_WIDTH);
+  FWaterMark.BorderWidth := Scale96ToFont(DEFAULT_WIZARD_WATERMARK_BORDERWIDTH);
   FWaterMark.WizardPage := Self;
   FHeader.FTitle.FText := RsWelcome;
   // welcome pages don't have dividers by default
@@ -2468,6 +2646,19 @@ begin
       Rect.Left := Rect.Left + FWaterMark.Width
     else
       Rect.Right := Rect.Right - FWaterMark.Width;
+  end;
+end;
+
+procedure TJvWizardWelcomePage.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if FWaterMark.IsWidthStored then
+      FWatermark.Width := Round(FWatermark.Width * AXProportion);
+    if FWaterMark.IsBorderWidthStored then
+      FWatermark.BorderWidth := Round(FWaterMark.BorderWidth * AXProportion);
   end;
 end;
 
@@ -2922,6 +3113,15 @@ begin
     FActivePage.Invalidate;
 end;
 
+{$IF LCL_FullVersion >= 1090000}
+procedure TJvWizard.SetHeaderImagesWidth(Value: Integer);
+begin
+  if FHeaderImagesWidth <> Value then begin
+    FHeaderImagesWidth := Value;
+  end;
+end;
+{$IFEND}
+
 function TJvWizard.GetButtonClick(Index: Integer): TNotifyEvent;
 begin
   if FNavigateButtons[TJvWizardButtonKind(Index)].Control <> nil then
@@ -3034,6 +3234,10 @@ var
     end;
   end;
 
+const
+  cDELTA = 2;
+var
+  delta: Integer;
 begin
   if Parent = nil then
     Exit;
@@ -3050,25 +3254,26 @@ begin
         Exclude(AButtonSet, bkFinish);
       end;
     end;
-    ATop := ClientRect.Bottom - FButtonBarHeight + CalculateButtonPlacement + 2;
+    delta := Scale96ToForm(cDELTA);
+    ATop := ClientRect.Bottom - FButtonBarHeight + CalculateButtonPlacement + delta;
     { Position left side buttons }
     ALeft := ClientRect.Left + CalculateButtonPlacement;
-    LocateButton(bkHelp, CalculateButtonPlacement + 2);
+    LocateButton(bkHelp, CalculateButtonPlacement + delta);
     LocateButton(bkStart, 1);
     LocateButton(bkLast, 0);
     { Position right side buttons }
     ALeft := ClientRect.Right - CalculateButtonPlacement;
     if [bkNext, bkFinish] * AButtonSet = [bkNext, bkFinish] then
     begin
-      LocateButton(bkCancel, -1);
-      LocateButton(bkFinish, -CalculateButtonPlacement - 2);
+      LocateButton(bkCancel, -delta div 2);
+      LocateButton(bkFinish, -CalculateButtonPlacement - delta);
     end
     else
     begin
-      LocateButton(bkCancel, -CalculateButtonPlacement - 2);
-      LocateButton(bkFinish, -1);
+      LocateButton(bkCancel, -CalculateButtonPlacement - delta);
+      LocateButton(bkFinish, -delta div 2);
     end;
-    LocateButton(bkNext, -2);
+    LocateButton(bkNext, -delta);
     LocateButton(bkBack, 0);
   end
   else // Hide all buttons
@@ -3178,5 +3383,21 @@ procedure TJvWizard.SetNavigateButtons(Index: Integer; Value: TJvWizardNavigateB
 begin
   FNavigateButtons[TJvWizardButtonKind(Index)] := Value;
 end;
+
+(*
+procedure TJvWizard.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    BeginUpdate;
+    try
+    finally
+      EndUpdate;
+    end;
+  end;
+end;
+  *)
 
 end.

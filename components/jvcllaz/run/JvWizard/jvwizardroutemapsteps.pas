@@ -50,11 +50,13 @@ type
     FShowNavigators: Boolean;
     FShowNavigation: Boolean;
     FMultiline: Boolean;
+    FArrowSize: Integer;
     function GetActiveStepRect: TRect;
     function GetPreviousStepRect: TRect;
     function GetNextStepRect: TRect;
     function GetPreviousArrowRect: TRect;
     function GetNextArrowRect: TRect;
+    function IsIndentStored: Boolean;
     procedure SetIndent(const Value: Integer);
     procedure SetNextStepText(const Value: string);
     procedure SetActiveStepFormat(const Value: string);
@@ -69,6 +71,8 @@ type
     procedure SetShowNavigation(const Value: Boolean);
     procedure SetMultiline(const Value: Boolean);
   protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     function PageAtPos(Pt: TPoint): TJvWizardCustomPage; override;
     procedure Paint; override;
@@ -78,7 +82,7 @@ type
     property Color default clBackground;
     property Font;
     property Image;
-    property Indent: Integer read FIndent write SetIndent default 5;
+    property Indent: Integer read FIndent write SetIndent stored IsIndentStored;
     property PreviousStepText: string read FPreviousStepText write SetPreviousStepText stored StorePreviousStepText;
     property ActiveStepFormat: string read FActiveStepFormat write SetActiveStepFormat stored StoreActiveStepFormat;
     property Multiline: Boolean read FMultiline write SetMultiline default False;
@@ -93,10 +97,14 @@ implementation
 uses
   JvResources;
 
+const
+  cArrowSize = 16;
+
 constructor TJvWizardRouteMapSteps.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FIndent := 5;
+  FIndent := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_STEPS_INDENT);
+  FArrowSize := Scale96ToFont(cArrowSize);
   Color := clBackground;
   Font.Color := clWhite;
   FPreviousStepText := RsBackTo;
@@ -138,6 +146,19 @@ begin
   end;
 end;
 
+procedure TJvWizardRouteMapSteps.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if IsIndentStored then
+      FIndent := Round(FIndent * AXProportion);
+    if FArrowSize <> Scale96ToFont(cArrowSize) then
+      FArrowSize := Round(cArrowSize * AXProportion);
+  end;
+end;
+
 function TJvWizardRouteMapSteps.GetActiveStepRect: TRect;
 begin
   Result := Rect(Left + FIndent, (ClientHeight div 2 - Canvas.TextHeight('Wq')),
@@ -146,14 +167,14 @@ end;
 
 function TJvWizardRouteMapSteps.GetNextArrowRect: TRect;
 begin
-  Result := Rect(Left + FIndent, Height - Indent - 32, Left + FIndent + 16,
-    (Height - FIndent) - 16);
+  Result := Rect(Left + FIndent, Height - Indent - 2*FArrowSize, Left + FIndent + FArrowSize,
+    (Height - FIndent) - FArrowSize);
 end;
 
 function TJvWizardRouteMapSteps.GetNextStepRect: TRect;
 begin
-  Result := Rect(Left + FIndent, Height - FIndent - 32, Width,
-    Height - FIndent - 32 + Canvas.TextHeight('Wq'));
+  Result := Rect(Left + FIndent, Height - FIndent - 2*FArrowSize, Width,
+    Height - FIndent - 2*FArrowSize + Canvas.TextHeight('Wq'));
 end;
 
 function TJvWizardRouteMapSteps.DetectPageCount(out ActivePageIndex: Integer): Integer;
@@ -176,14 +197,19 @@ end;
 
 function TJvWizardRouteMapSteps.GetPreviousArrowRect: TRect;
 begin
-  Result := Rect(Left + FIndent, Top + FIndent, Left + FIndent + 16,
-    Top + FIndent + 16);
+  Result := Rect(Left + FIndent, Top + FIndent, Left + FIndent + FArrowSize,
+    Top + FIndent + FArrowSize);
 end;
 
 function TJvWizardRouteMapSteps.GetPreviousStepRect: TRect;
 begin
   Result := Rect(Left + FIndent, Top + FIndent, Width,
     Top + FIndent + Canvas.TextHeight('Wq'));
+end;
+
+function TJvWizardRouteMapSteps.IsIndentStored: Boolean;
+begin
+  Result := FIndent <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_STEPS_INDENT);
 end;
 
 procedure TJvWizardRouteMapSteps.MouseMove(Shift: TShiftState; X, Y: Integer);

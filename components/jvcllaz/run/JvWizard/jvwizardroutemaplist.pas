@@ -36,7 +36,8 @@ unit JvWizardRouteMapList;
 interface
 
 uses
-  Types, SysUtils, Classes, Graphics, Controls, Forms, LMessages, LCLIntf, LCLType,
+  LMessages, LCLIntf, LCLType, LCLVersion,
+  Types, SysUtils, Classes, Graphics, Controls, Forms,
   JvTypes, JvJVCLUtils, JvWizard;
 
 type
@@ -87,6 +88,12 @@ type
     procedure SetActiveFontOptions(const Value: TJvTrackFontOptions);
     procedure SetHotTrackFontOptions(const Value: TJvTrackFontOptions);
     function IsHotTrackFontStored: Boolean;
+    function IsCurvatureStored: Boolean;
+    function IsHorzOffsetStored: Boolean;
+    function IsHotTrackBorderStored: Boolean;
+    function IsItemHeightStored: Boolean;
+    function IsTextOffsetStored: Boolean;
+    function IsVertOffsetStored: Boolean;
   protected
     procedure DrawPageItem(ACanvas: TCanvas; ARect: TRect; MousePos: TPoint; APageIndex: Integer); virtual;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -97,6 +104,14 @@ type
     procedure CMFontChanged(var Msg: TLMessage); message CM_FONTCHANGED;
     procedure CursorChanged;
     procedure FontChanged; reintroduce;
+    { High-DPI }
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$IF LCL_FullVersion >= 1080100}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF LCL_FullVersion >= 1080000}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -107,13 +122,12 @@ type
     property Alignment: TAlignment read FAlignment write SetAlignment default taCenter;
     property Clickable: Boolean read FClickable write FClickable default True;
     property Color default $00C08000;
-    property Curvature: Integer read FCurvature write SetCurvature default 9;
+    property Curvature: Integer read FCurvature write SetCurvature stored IsCurvatureStored;
     property Font;
-    property HorzOffset: Integer read FHorzOffset write SetHorzOffset default 8;
-    property HotTrackBorder: Integer read FHotTrackBorder write FHotTrackBorder default 2;
+    property HorzOffset: Integer read FHorzOffset write SetHorzOffset stored IsHorzOffsetStored;
+    property HotTrackBorder: Integer read FHotTrackBorder write FHotTrackBorder stored IsHotTrackBorderStored;
     property HotTrackCursor: TCursor read FHotTrackCursor write FHotTrackCursor default crHandPoint;
     property HotTrack: Boolean read FHotTrack write FHotTrack default True;
-
     property HotTrackFont: TFont read FHotTrackFont write SetHotTrackFont stored IsHotTrackFontStored;
     property HotTrackFontOptions: TJvTrackFontOptions read FHotTrackFontOptions write SetHotTrackFontOptions default
       DefaultTrackFontOptions;
@@ -122,12 +136,12 @@ type
     property IncludeDisabled: Boolean read FIncludeDisabled write SetIncludeDisabled default False;
     property BorderColor: TColor read FBorderColor write SetBorderColor default clNavy;
     property ItemColor: TColor read FItemColor write SetItemColor default clCream;
-    property ItemHeight: Integer read FItemHeight write SetItemHeight default 25;
+    property ItemHeight: Integer read FItemHeight write SetItemHeight stored IsItemHeightStored;
     property ItemText: TRouteMapListItemText read FItemText write SetItemText default itCaption;
     property Rounded: Boolean read FRounded write SetRounded default False;
     property ShowImages: Boolean read FShowImages write SetShowImages default False;
-    property TextOffset: Integer read FTextOffset write SetTextOffset default 8;
-    property VertOffset: Integer read FVertOffset write SetVertOffset default 8;
+    property TextOffset: Integer read FTextOffset write SetTextOffset stored IsTextOffsetStored;
+    property VertOffset: Integer read FVertOffset write SetVertOffset stored IsVertOffsetStored;
     property OnDrawItem: TJvWizardDrawRouteMapListItem read FOnDrawItem write FOnDrawItem;
   end;
 
@@ -147,18 +161,18 @@ begin
   FHotTrackFontOptions := DefaultTrackFontOptions;
   Color := $00C08000;
   FHotTrackCursor := crHandPoint;
-  FVertOffset := 8;
-  FHorzOffset := 8;
-  FItemHeight := 25;
+  FVertOffset := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_OFFSET);
+  FHorzOffset := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_OFFSET);
+  FItemHeight := Scale96toFont(DEFAULT_WIZARD_ROUTEMAP_ITEMHEIGHT);
   FClickable := True;
   FAlignment := taCenter;
-  FTextOffset := 8;
+  FTextOffset := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_OFFSET);
   FBorderColor := clNavy;
   FItemColor := clCream;
   FItemText := itCaption;
   FHotTrack := True;
-  FCurvature := 9;
-  FHotTrackBorder := 2;
+  FCurvature := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_CURVATURE);
+  FHotTrackBorder := Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_HOTTRACKBORDER);
   FTextOnly := False;
 end;
 
@@ -268,7 +282,10 @@ var
   AOrigRect: TRect;
   BkColor: TColor;
   S: string;
+  w4: Integer;
 begin
+  w4 := Scale96ToFont(4);
+
   ACanvas.Lock;
   try
     AOrigRect := ARect;
@@ -313,20 +330,21 @@ begin
           case Alignment of
             taLeftJustify:
               begin
-                Wizard.HeaderImages.Draw(ACanvas, ARect.Left + 4, ARect.Top + ATop, Pages[APageIndex].Header.ImageIndex,  Pages[APageIndex].Enabled);
-                Inc(ARect.Left, Wizard.HeaderImages.Width + 4);
+                Wizard.HeaderImages.Draw(ACanvas, ARect.Left + w4, ARect.Top + ATop,
+                  Pages[APageIndex].Header.ImageIndex,  Pages[APageIndex].Enabled);
+                Inc(ARect.Left, Wizard.HeaderImages.Width + w4);
               end;
             taRightJustify:
               begin
-                Wizard.HeaderImages.Draw(ACanvas, ARect.Right - Wizard.HeaderImages.Width - 4, ARect.Top + ATop,
+                Wizard.HeaderImages.Draw(ACanvas, ARect.Right - Wizard.HeaderImages.Width - w4, ARect.Top + ATop,
                   Pages[APageIndex].Header.ImageIndex,  Pages[APageIndex].Enabled);
-                Dec(ARect.Right, Wizard.HeaderImages.Width + 4);
+                Dec(ARect.Right, Wizard.HeaderImages.Width + w4);
               end;
             taCenter:
               begin
                 ALeft := ((ARect.Right - ARect.Left) - Wizard.HeaderImages.Width) div 2;
-                Inc(ARect.Top, 4);
-                Wizard.HeaderImages.Draw(ACanvas, ARect.Left + ALeft, ARect.Top + 8,
+                Inc(ARect.Top, w4);
+                Wizard.HeaderImages.Draw(ACanvas, ARect.Left + ALeft, ARect.Top + w4 + w4,
                   Pages[APageIndex].Header.ImageIndex,  Pages[APageIndex].Enabled);
                 Inc(ARect.Top, Wizard.HeaderImages.Height);
   //              if ItemText = itSubtitle then
@@ -560,5 +578,72 @@ function TJvWizardRouteMapList.IsHotTrackFontStored: Boolean;
 begin
   Result := IsHotTrackFontDfmStored(HotTrackFont, Font, HotTrackFontOptions);
 end;
+
+function TJvWizardRouteMapList.IsCurvatureStored: Boolean;
+begin
+  Result := FCurvature <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_CURVATURE);
+end;
+
+function TJvWizardRouteMapList.IsHorzOffsetStored: Boolean;
+begin
+  Result := FHorzOffset <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_OFFSET);
+end;
+
+function TJvWizardRouteMapList.IsHotTrackBorderStored: Boolean;
+begin
+  Result := FHotTrackBorder <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_HOTTRACKBORDER);
+end;
+
+function TJvWizardRouteMapList.IsItemHeightStored: Boolean;
+begin
+  Result := FItemHeight <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_ITEMHEIGHT);
+end;
+
+function TJvWizardRouteMapList.IsTextOffsetStored: Boolean;
+begin
+  Result := FTextOffset <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_OFFSET);
+end;
+
+function TJvWizardRouteMapList.IsVertOffsetStored: Boolean;
+begin
+  Result := FVertOffset <> Scale96ToFont(DEFAULT_WIZARD_ROUTEMAP_OFFSET);
+end;
+
+procedure TJvWizardRouteMapList.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if IsCurvatureStored then
+      FCurvature := Round(FCurvature * AXProportion);
+    if IsHorzOffsetStored then
+      FHorzOffset := Round(FHorzOffset * AXProportion);
+    if IsHotTrackBorderStored then
+      FHotTrackBorder := Round(FHotTrackBorder * AXProportion);
+    if IsItemHeightStored then
+      FItemHeight := Round(FItemHeight * AYProportion);
+    if IsTextOffsetStored then
+      FTextOffset := Round(FHorzOffset * AYProportion);
+    if IsVertOffsetStored then
+      FVertOffset := Round(FHorzOffset * AYProportion);
+  end;
+end;
+
+{$IF LCL_FullVersion >= 1080100}
+procedure TJvWizardRouteMapList.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(ActiveFont, AToPPI, AProportion);
+  DoScaleFontPPI(HotTrackFont, AToPPI, AProportion);
+end;
+{$ELSEIF LCL_FullVersion >= 1080000}
+procedure TJvWizardRouteMapList.ScaleFontsPPI(const AProportion: Double);
+begin
+  DoScaleFontPPI(ActiveFont, AProportion);
+  DoScaleFontPPI(HotTrackFont, AProportion);
+end;
+{$ENDIF}
 
 end.
