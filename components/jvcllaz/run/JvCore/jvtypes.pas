@@ -104,14 +104,19 @@ type
   // Base class for persistent properties that can show events.
   // By default, Delphi and BCB don't show the events of a class
   // derived from TPersistent unless it also derives from
-  // TComponent. However, up until version 5, you couldn't have
-  // a Component as a Sub Component of another one, thus preventing
-  // from having events for a sub property.
+  // TComponent.
   // The design time editor associated with TJvPersistent will display
   // the events, thus mimicking a Sub Component.
   TJvPersistent = class(TComponent)
+  private
+    FOwner: TPersistent;
+    function _GetOwner: TPersistent;
+  protected
+    function GetOwner: TPersistent; override;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TPersistent); reintroduce; virtual;
+    function GetNamePath: string; override;
+    property Owner: TPersistent read _GetOwner;
   end;
 
   // Added by dejoy (2005-04-20)
@@ -120,13 +125,13 @@ type
   // and property change notify.
   TJvPropertyChangeEvent = procedure(Sender: TObject; const PropName: string) of object;
 
-  TJvPersistentProperty = class(TPersistent)   // ?? TJvPersistent)
+  TJvPersistentProperty = class(TJvPersistent)
   private
     FUpdateCount: Integer;
     FOnChanging: TNotifyEvent;
-    FOnChange: TNotifyEvent;
+    FOnChanged: TNotifyEvent;
     FOnChangingProperty: TJvPropertyChangeEvent;
-    FOnChangeProperty: TJvPropertyChangeEvent;
+    FOnChangedProperty: TJvPropertyChangeEvent;
   protected
     procedure Changed; virtual;
     procedure Changing; virtual;
@@ -137,9 +142,9 @@ type
   public
     procedure BeginUpdate; virtual;
     procedure EndUpdate; virtual;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
     property OnChanging: TNotifyEvent read FOnChanging write FOnChanging;
-    property OnChangeProperty: TJvPropertyChangeEvent read FOnChangeProperty write FOnChangeProperty;
+    property OnChangedProperty: TJvPropertyChangeEvent read FOnChangedProperty write FOnChangedProperty;
     property OnChangingProperty: TJvPropertyChangeEvent read FOnChangingProperty write FOnChangingProperty;
   end;
 
@@ -351,8 +356,8 @@ const
   CenturyOffset: Byte = 60;
   NullDate: TDateTime = 0; {-693594}
 
-(*********** NOT CONVERTED
 type
+(*********** NOT CONVERTED
   // JvDriveCtrls / JvLookOut
   TJvImageSize = (isSmall, isLarge);
   TJvImageAlign = (iaLeft, iaCentered);
@@ -361,8 +366,7 @@ type
   TJvDriveTypes = set of TJvDriveType;
 ********************)
 
-type
-  // Defines how a property (like a HotTrackFont) follows changes in the component's normal Font
+// Defines how a property (like a HotTrackFont) follows changes in the component's normal Font
   TJvTrackFontOption = (
     hoFollowFont,  // makes HotTrackFont follow changes to the normal Font
     hoPreserveCharSet,  // don't change HotTrackFont.Charset
@@ -370,11 +374,16 @@ type
     hoPreserveHeight,   // don't change HotTrackFont.Height (affects Size as well)
     hoPreserveName,     // don't change HotTrackFont.Name
     hoPreservePitch,    // don't change HotTrackFont.Pitch
-    hoPreserveStyle);   // don't change HotTrackFont.Style
+    hoPreserveStyle,    // don't change HotTrackFont.Style
+    hoPreserveOrientation, // don't change HotTrackFont.Orientation
+    hoPreserveQuality      // don't change HotTrackFont.Quality
+  );
   TJvTrackFontOptions = set of TJvTrackFontOption;
 
 const
   DefaultTrackFontOptions = [hoFollowFont, hoPreserveColor, hoPreserveStyle];
+  DefaultHotTrackColor = $00D2BDB6;
+  DefaultHotTrackFrameColor = $006A240A;
 
 (********************
 type
@@ -685,13 +694,51 @@ type
 
 implementation
 
-constructor TJvPersistent.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
+{ TJvPersistent }
 
+constructor TJvPersistent.Create(AOwner: TPersistent);
+begin
+  if AOwner is TComponent then
+    inherited Create(AOwner as TComponent)
+  else
+    inherited Create(nil);
   SetSubComponent(True);
-  Name := 'SubComponent';
+
+  FOwner := AOwner;
 end;
+
+type
+  TPersistentAccessProtected = class(TPersistent);
+
+function TJvPersistent.GetNamePath: string;
+var
+  S: string;
+  lOwner: TPersistent;
+begin
+  Result := inherited GetNamePath;
+  lOwner := GetOwner;   //Resturn Nested NamePath
+  if (lOwner <> nil)
+    and ( (csSubComponent in TComponent(lOwner).ComponentStyle)
+         or (TPersistentAccessProtected(lOwner).GetOwner <> nil)
+        )
+   then
+  begin
+    S := lOwner.GetNamePath;
+    if S <> '' then
+      Result := S + '.' + Result;
+  end;
+end;
+
+function TJvPersistent.GetOwner: TPersistent;
+begin
+  Result := FOwner;
+end;
+
+function TJvPersistent._GetOwner: TPersistent;
+begin
+  Result := GetOwner;
+end;
+
 
 { TJvPersistentProperty }
 
@@ -704,14 +751,14 @@ end;
 
 procedure TJvPersistentProperty.Changed;
 begin
-  if (FUpdateCount = 0) and Assigned(FOnChange) then
-    FOnChange(Self);
+  if (FUpdateCount = 0) and Assigned(FOnChanged) then
+    FOnChanged(Self);
 end;
 
 procedure TJvPersistentProperty.ChangedProperty(const PropName: string);
 begin
-  if Assigned(FOnChangeProperty) then
-    FOnChangeProperty(Self, PropName);
+  if Assigned(FOnChangedProperty) then
+    FOnChangedProperty(Self, PropName);
 end;
 
 procedure TJvPersistentProperty.Changing;

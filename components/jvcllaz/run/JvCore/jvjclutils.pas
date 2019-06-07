@@ -1234,12 +1234,14 @@ type
 
     property OnChange: TIntegerListChange read FOnChange write FOnChange;
   end;
+***************************)
 
 type
   TCollectionSortProc = function(Item1, Item2: TCollectionItem): Integer;
 
 procedure CollectionSort(Collection: Classes.TCollection; SortProc: TCollectionSortProc);
 
+(********************* NOT CONVERTED
 {$IFDEF COMPILER5}
 function SecondsBetween(const Now: TDateTime; const FTime: TDateTime): Integer;
 {$ENDIF COMPILER5}
@@ -9851,6 +9853,8 @@ end;
 {$ENDIF COMPILER5}
 {$ENDIF !BCB}
 
+**********************)
+
 procedure CollectionQuickSort(List: Classes.TCollection; L, R: Integer; SortProc: TCollectionSortProc);
 var
  I, J, pix: Integer;
@@ -9902,6 +9906,7 @@ begin
     CollectionQuickSort(Collection, 0, Collection.Count - 1, SortProc);
 end;
 
+(********************* NOT CONVERTED
 {$IFDEF COMPILER5}
 function SecondsBetween(const Now: TDateTime; const FTime: TDateTime): Integer;
 begin

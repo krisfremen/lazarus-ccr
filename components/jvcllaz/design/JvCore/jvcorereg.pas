@@ -4,10 +4,18 @@ unit JvCoreReg;
 
 interface
 
-uses
-  SysUtils;
+procedure Register;
 
 implementation
+
+uses
+  PropEdits,
+  JvTypes, JvDsgnEditors;
+
+procedure Register;
+begin
+  RegisterPropertyEditor(TypeInfo(TJvPersistentProperty), nil, '', TJvPersistentPropertyEditor);
+end;
 
 end.
 

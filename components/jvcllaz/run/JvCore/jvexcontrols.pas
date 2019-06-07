@@ -64,7 +64,9 @@ const
   ******************** NOT CONVERTED *)
 
 type
+  (********************** NOT CONVERTED ****
   TJvHotTrackOptions = class;
+  *****************************************)
 
   { IJvExControl is used for the identification of an JvExXxx control. }
   IJvExControl = interface
@@ -79,6 +81,7 @@ type
   end;
 
 
+  (***************************** NOT CONVERTED ****
   { IJvHotTrack is Specifies whether Control are highlighted when the mouse passes over them}
   IJvHotTrack = interface
     ['{8F1B40FB-D8E3-46FE-A7A3-21CE4B199A8F}']
@@ -118,6 +121,7 @@ type
     property FrameVisible: Boolean read FFrameVisible write SetFrameVisible default False;
     property FrameColor: TColor read FFrameColor write SetFrameColor default $006A240A;
   end;
+  ***********************)
 
 type
   TStructPtrMessage = class(TObject)
@@ -133,8 +137,11 @@ type
 procedure DrawDotNetControl(Control: TWinControl; AColor: TColor; InControl: Boolean);
 procedure HandleDotNetHighlighting(Control: TWinControl; const Msg: TLMessage;
   MouseOver: Boolean; Color: TColor);
-function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: PtrInt): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
-function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: TControl): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
+
+procedure CreateWMMessage(var Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LParam: LPARAM); overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
+//function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: PtrInt): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
+//function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: TControl): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
+
 function SmallPointToLong(const Pt: TSmallPoint): LongInt; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
 function ShiftStateToKeyData(Shift: TShiftState): Longint;
 
@@ -153,6 +160,11 @@ type
   //******************** NOT CONVERTED
   //WINCONTROL_DECL_DEFAULT(WinControl)
 
+  TJvDoEraseBackgroundMethod = function(Canvas: TCanvas; Param: LPARAM): Boolean of object;
+
+function IsDefaultEraseBackground(Method: TJvDoEraseBackgroundMethod; MethodPtr: Pointer): Boolean;
+
+type
   TJvExCustomControl = class(TCustomControl)
   private
     // TODO:
@@ -163,9 +175,9 @@ type
     FOnMouseEnter: TNotifyEvent;
     FOnMouseLeave: TNotifyEvent;
     FOnParentColorChanged: TNotifyEvent;
-    function BaseWndProc(Msg: Integer; WParam: PtrInt = 0; LParam: Longint = 0): Integer; overload;
-    function BaseWndProc(Msg: Integer; WParam: Ptrint; LParam: TControl): Integer; overload;
-    function BaseWndProcEx(Msg: Integer; WParam: Integer; var LParam): Integer;
+    function BaseWndProc(Msg: Integer; WParam: PtrInt = 0; LParam: Longint = 0): LRESULT; overload;
+    function BaseWndProc(Msg: Integer; WParam: Ptrint; LParam: TControl): LRESULT; overload;
+    function BaseWndProcEx(Msg: Integer; WParam: Integer; var LParam): LRESULT;
   protected
     procedure WndProc(var Msg: TLMessage); override;
     procedure FocusChanged(AControl: TWinControl); dynamic;
@@ -348,6 +360,15 @@ end;
 begin
 end;
 
+procedure CreateWMMessage(var Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LParam: LPARAM);
+begin
+  Mesg.Msg := Msg;
+  Mesg.WParam := WParam;
+  Mesg.LParam := LParam;
+  Mesg.Result := 0;
+end;
+
+{  --- replaced by newer version above
 function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: PtrInt): TLMessage;
 begin
   Result.Msg := Msg;
@@ -360,6 +381,7 @@ function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: TControl): TLMess
 begin
   Result := CreateWMMessage(Msg, WParam, Ptrint(LParam));
 end;
+}
 
 { TStructPtrMessage }
 constructor TStructPtrMessage.Create(AMsg: Integer; WParam: Integer; var LParam);
@@ -483,6 +505,7 @@ begin
   end;
 end;
 
+(**************************** NOT CONVERTED ***
 
 //=== { TJvHotTrackOptions } ======================================
 
@@ -561,6 +584,8 @@ begin
   end;
 end;
 
+*********************************)
+
 //============================================================================
 
 //******************** NOT CONVERTED
@@ -579,18 +604,14 @@ function TJvExGraphicControl.BaseWndProc(Msg: Integer; WParam: Integer = 0; LPar
 var
   Mesg: TLMessage;
 begin
-  Mesg := CreateWMMessage(Msg, WParam, LParam);
+  CreateWMMessage(Mesg, Msg, WParam, LParam);
   inherited WndProc(Mesg);
   Result := Mesg.Result;
 end;
 
 function TJvExGraphicControl.BaseWndProc(Msg: Integer; WParam: Integer; LParam: TControl): Integer;
-var
-  Mesg: TLMessage;
 begin
-  Mesg := CreateWMMessage(Msg, WParam, LParam);
-  inherited WndProc(Mesg);
-  Result := Mesg.Result;
+  Result := BaseWndProc(Msg, WParam, LCLType.LPARAM(LParam));
 end;
 
 function TJvExGraphicControl.BaseWndProcEx(Msg: Integer; WParam: Integer; var LParam): Integer;
@@ -758,31 +779,35 @@ end;
 
 //============================================================================
 
+function IsDefaultEraseBackground(Method: TJvDoEraseBackgroundMethod;
+  MethodPtr: Pointer): Boolean;
+begin
+  Result := TMethod(Method).Code = MethodPtr;
+end;
+
+//============================================================================
+
 constructor TJvExCustomControl.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FHintColor := clDefault;
 end;
 
-function TJvExCustomControl.BaseWndProc(Msg: Integer; WParam: PtrInt = 0; LParam: Longint = 0): Integer;
+function TJvExCustomControl.BaseWndProc(Msg: Integer; WParam: PtrInt = 0; LParam: Longint = 0): LRESULT;
 var
   Mesg: TLMessage;
 begin
-  Mesg := CreateWMMessage(Msg, WParam, LParam);
+  CreateWMMessage(Mesg, Msg, WParam, LParam);
   inherited WndProc(Mesg);
   Result := Mesg.Result;
 end;
 
-function TJvExCustomControl.BaseWndProc(Msg: Integer; WParam: PtrInt; LParam: TControl): Integer;
-var
-  Mesg: TLMessage;
+function TJvExCustomControl.BaseWndProc(Msg: Integer; WParam: PtrInt; LParam: TControl): LRESULT;
 begin
-  Mesg := CreateWMMessage(Msg, WParam, LParam);
-  inherited WndProc(Mesg);
-  Result := Mesg.Result;
+  Result := BaseWndProc(Msg, WParam, LCLType.LPARAM(LParam));
 end;
 
-function TJvExCustomControl.BaseWndProcEx(Msg: Integer; WParam: Integer; var LParam): Integer;
+function TJvExCustomControl.BaseWndProcEx(Msg: Integer; WParam: Integer; var LParam): LRESULT;
 var
   Mesg: TStructPtrMessage;
 begin

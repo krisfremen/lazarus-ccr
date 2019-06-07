@@ -23,7 +23,7 @@
 "/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="6"/>
-    <Files Count="9">
+    <Files Count="10">
       <Item1>
         <Filename Value="..\run\JvCore\jvtypes.pas"/>
         <UnitName Value="JvTypes"/>
@@ -60,6 +60,10 @@
         <Filename Value="..\run\JvCore\jvthemes.pas"/>
         <UnitName Value="JvThemes"/>
       </Item9>
+      <Item10>
+        <Filename Value="..\run\JvCore\jvextcomponent.pas"/>
+        <UnitName Value="JvExtComponent"/>
+      </Item10>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>
