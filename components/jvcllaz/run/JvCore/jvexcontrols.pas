@@ -64,10 +64,6 @@ const
   ******************** NOT CONVERTED *)
 
 type
-  (********************** NOT CONVERTED ****
-  TJvHotTrackOptions = class;
-  *****************************************)
-
   { IJvExControl is used for the identification of an JvExXxx control. }
   IJvExControl = interface
     ['{8E6579C3-D683-4562-AFAB-D23C8526E386}']
@@ -80,50 +76,6 @@ type
     ['{76942BC0-2A6E-4DC4-BFC9-8E110DB7F601}']
   end;
 
-
-  (***************************** NOT CONVERTED ****
-  { IJvHotTrack is Specifies whether Control are highlighted when the mouse passes over them}
-  IJvHotTrack = interface
-    ['{8F1B40FB-D8E3-46FE-A7A3-21CE4B199A8F}']
-
-    function GetHotTrack:Boolean;
-    function GetHotTrackFont:TFont;
-    function GetHotTrackFontOptions:TJvTrackFontOptions;
-    function GetHotTrackOptions:TJvHotTrackOptions;
-
-    procedure SetHotTrack(Value: Boolean);
-    procedure SetHotTrackFont(Value: TFont);
-    procedure SetHotTrackFontOptions(Value: TJvTrackFontOptions);
-    procedure SetHotTrackOptions(Value: TJvHotTrackOptions);
-
-    property HotTrack: Boolean read GetHotTrack write SetHotTrack;
-    property HotTrackFont: TFont read GetHotTrackFont write SetHotTrackFont;
-    property HotTrackFontOptions: TJvTrackFontOptions read GetHotTrackFontOptions write SetHotTrackFontOptions;
-    property HotTrackOptions: TJvHotTrackOptions read GetHotTrackOptions write SetHotTrackOptions;
-  end;
-
-  TJvHotTrackOptions = class(TJvPersistentProperty)
-  private
-    FEnabled: Boolean;
-    FFrameVisible: Boolean;
-    FColor: TColor;
-    FFrameColor: TColor;
-    procedure SetColor(Value: TColor);
-    procedure SetEnabled(Value: Boolean);
-    procedure SetFrameColor(Value: TColor);
-    procedure SetFrameVisible(Value: Boolean);
-  public
-    constructor Create; virtual;
-    procedure Assign(Source: TPersistent); override;
-  published
-    property Enabled: Boolean read FEnabled write SetEnabled default False;
-    property Color: TColor read FColor write SetColor default $00D2BDB6;
-    property FrameVisible: Boolean read FFrameVisible write SetFrameVisible default False;
-    property FrameColor: TColor read FFrameColor write SetFrameColor default $006A240A;
-  end;
-  ***********************)
-
-type
   TStructPtrMessage = class(TObject)
   private
   public
@@ -144,22 +96,13 @@ procedure CreateWMMessage(var Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LP
 
 function SmallPointToLong(const Pt: TSmallPoint): LongInt; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
 function ShiftStateToKeyData(Shift: TShiftState): Longint;
-
-//******************** NOT CONVERTED
-//function GetFocusedControl(AControl: TControl): TWinControl;
-
+function GetFocusedControl(AControl: TControl): TWinControl;
 function DlgcToDlgCodes(Value: Longint): TDlgCodes;
 function DlgCodesToDlgc(Value: TDlgCodes): Longint;
 procedure GetHintColor(var HintInfo: THintInfo; AControl: TControl; HintColor: TColor);
 function DispatchIsDesignMsg(Control: TControl; var Msg: TLMessage): Boolean;
 
 type
-  //******************** NOT CONVERTED
-  //CONTROL_DECL_DEFAULT(Control)
-
-  //******************** NOT CONVERTED
-  //WINCONTROL_DECL_DEFAULT(WinControl)
-
   TJvDoEraseBackgroundMethod = function(Canvas: TCanvas; Param: LPARAM): Boolean of object;
 
 function IsDefaultEraseBackground(Method: TJvDoEraseBackgroundMethod; MethodPtr: Pointer): Boolean;
@@ -413,7 +356,6 @@ begin
     Result := Result or ShiftMask;
 end;
 
-(******************** NOT CONVERTED
 function GetFocusedControl(AControl: TControl): TWinControl;
 var
   Form: TCustomForm;
@@ -423,7 +365,6 @@ begin
   if Assigned(Form) then
     Result := Form.ActiveControl;
 end;
-******************** NOT CONVERTED *)
 
 function DlgcToDlgCodes(Value: Longint): TDlgCodes;
 begin
@@ -505,86 +446,12 @@ begin
   end;
 end;
 
-(**************************** NOT CONVERTED ***
-
-//=== { TJvHotTrackOptions } ======================================
-
-constructor TJvHotTrackOptions.Create;
+function IsDefaultEraseBackground(Method: TJvDoEraseBackgroundMethod;
+  MethodPtr: Pointer): Boolean;
 begin
-  inherited Create;
-  FEnabled := False;
-  FFrameVisible := False;
-  FColor := $00D2BDB6;
-  FFrameColor := $006A240A;
+  Result := TMethod(Method).Code = MethodPtr;
 end;
 
-procedure TJvHotTrackOptions.Assign(Source: TPersistent);
-begin
-  if Source is TJvHotTrackOptions then
-  begin
-    BeginUpdate;
-    try
-      Enabled := TJvHotTrackOptions(Source).Enabled;
-      Color := TJvHotTrackOptions(Source).Color;
-      FrameVisible := TJvHotTrackOptions(Source).FrameVisible;
-      FrameColor := TJvHotTrackOptions(Source).FrameColor;
-    finally
-      EndUpdate;
-    end;
-  end
-  else
-    inherited Assign(Source);
-end;
-
-procedure TJvHotTrackOptions.SetColor(Value: TColor);
-begin
-  if FColor <> Value then
-  begin
-    Changing;
-    ChangingProperty('Color');
-    FColor := Value;
-    ChangedProperty('Color');
-    Changed;
-  end;
-end;
-
-procedure TJvHotTrackOptions.SetEnabled(Value: Boolean);
-begin
-  if FEnabled <> Value then
-  begin
-    Changing;
-    ChangingProperty('Enabled');
-    FEnabled := Value;
-    ChangedProperty('Enabled');
-    Changed;
-  end;
-end;
-
-procedure TJvHotTrackOptions.SetFrameVisible(Value: Boolean);
-begin
-  if FFrameVisible <> Value then
-  begin
-    Changing;
-    ChangingProperty('FrameVisible');
-    FFrameVisible := Value;
-    ChangedProperty('FrameVisible');
-    Changed;
-  end;
-end;
-
-procedure TJvHotTrackOptions.SetFrameColor(Value: TColor);
-begin
-  if FFrameColor <> Value then
-  begin
-    Changing;
-    ChangingProperty('FrameColor');
-    FFrameColor := Value;
-    ChangedProperty('FrameColor');
-    Changed;
-  end;
-end;
-
-*********************************)
 
 //============================================================================
 
@@ -777,15 +644,8 @@ begin
   end;
 end;
 
-//============================================================================
 
-function IsDefaultEraseBackground(Method: TJvDoEraseBackgroundMethod;
-  MethodPtr: Pointer): Boolean;
-begin
-  Result := TMethod(Method).Code = MethodPtr;
-end;
-
-//============================================================================
+{ TJvExCustomControl }
 
 constructor TJvExCustomControl.Create(AOwner: TComponent);
 begin
@@ -913,7 +773,7 @@ end;
 
 // 25.09.2007 - SESS:
 // I have done this because TextChanged wasn't fired as expected.
-// I still don't shure if this problem is only for this reintroduced
+// I still don't sure if this problem is only for this reintroduced
 // method because the way LCL treats Caption or will have the same
 // problem with other reintroduced methods. So far, I tested some
 // other events and seems not.

@@ -89,8 +89,8 @@ type
     function WantKey(Key: Integer; Shift: TShiftState): Boolean; virtual;
     function HintShow(var HintInfo: THintInfo): Boolean; reintroduce; dynamic;
     function HitTest(X, Y: Integer): Boolean; reintroduce; virtual;
-    procedure MouseEnter; override;
-    procedure MouseLeave; override;
+    procedure MouseEnter(AControl: TControl); reintroduce; dynamic;
+    procedure MouseLeave(AControl: TControl); reintroduce; dynamic;
     property MouseOver: Boolean read FMouseOver write FMouseOver;
     property HintColor: TColor read FHintColor write FHintColor default clDefault;
     property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
@@ -332,26 +332,20 @@ begin
   Result := BaseWndProcEx(CM_HINTSHOW, 0, HintInfo) <> 0;
 end;
 
-procedure TJvExCustomPanel.MouseEnter;
+procedure TJvExCustomPanel.MouseEnter(AControl: TControl);
 begin
-  inherited;
   FMouseOver := True;
-  { --not needed
   if Assigned(FOnMouseEnter) then
     FOnMouseEnter(Self);
   BaseWndProc(CM_MOUSEENTER, 0, AControl);
-  ------}
 end;
 
-procedure TJvExCustomPanel.MouseLeave;
+procedure TJvExCustomPanel.MouseLeave(AControl: TControl);
 begin
   FMouseOver := False;
-  inherited;
-  { ------ not needed in LCL
   BaseWndProc(CM_MOUSELEAVE, 0, AControl);
   if Assigned(FOnMouseLeave) then
     FOnMouseLeave(Self);
-  ------------- }
 end;
 
 procedure TJvExCustomPanel.FocusChanged(AControl: TWinControl);
@@ -449,12 +443,10 @@ begin
     CM_HITTEST:
       with TCMHitTest(Msg) do
         Result := LRESULT(HitTest(XPos, YPos));
-    { -------------- not needed in LCL ----------
     CM_MOUSEENTER:
       MouseEnter(TControl(Msg.LParam));
     CM_MOUSELEAVE:
       MouseLeave(TControl(Msg.LParam));
-    --------------------------------------------}
     CM_VISIBLECHANGED:
       VisibleChanged;
     CM_ENABLEDCHANGED:

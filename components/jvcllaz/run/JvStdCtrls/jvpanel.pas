@@ -190,9 +190,9 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseEnter(AControl: TControl); override;
+    procedure MouseLeave(AControl: TControl); override;
     (************************* NOT CONVERTED ****
-    procedure MouseEnter; override;
-    procedure MouseLeave; override;
     procedure ParentColorChanged; override;
     ********************************************)
     procedure TextChanged; override;
@@ -270,8 +270,8 @@ type
     property Layout;
     property Movable;
     property Sizeable;
-    (******************** NOT CONVERTED ***
     property HintColor;
+    (******************** NOT CONVERTED ***
     property Transparent;
     **************************************)
     property MultiLine;
@@ -860,7 +860,6 @@ begin
         ACanvas.Font := Self.Font;
 
       SetBkMode(Handle, BkModeTransparent);
-      Font := Self.Font;
       ATextRect := GetClientRect;
       InflateRect(ATextRect, -BorderWidth, -BorderWidth);
       BevelSize := 0;
@@ -911,8 +910,7 @@ begin
 end;
 **************************************)
 
-(********************** NOT CONVERTED ****
-procedure TJvCustomArrangePanel.MouseEnter;
+procedure TJvCustomArrangePanel.MouseEnter(AControl: TControl);
 var
   NeedRepaint: Boolean;
   OtherDragging: Boolean;
@@ -920,12 +918,12 @@ begin
   if csDesigning in ComponentState then
     Exit;
 
-  if not MouseOver and Enabled and (Control = nil) then
+  if not MouseOver and Enabled and (AControl = nil) then
   begin
     OtherDragging := Mouse.IsDragging;
-    NeedRepaint := not Transparent and
+    NeedRepaint := not FTransparent and
      ((FHotTrack and Enabled and not FDragging and not OtherDragging));
-    inherited MouseEnter(Control); // set MouseOver
+    inherited MouseEnter(AControl); // set MouseOver
     if NeedRepaint then
       Repaint;
   end
@@ -933,7 +931,7 @@ begin
     inherited;
 end;
 
-procedure TJvCustomArrangePanel.MouseLeave;
+procedure TJvCustomArrangePanel.MouseLeave(AControl: TControl);
 var
   NeedRepaint: Boolean;
   OtherDragging:Boolean;
@@ -941,11 +939,11 @@ begin
   if csDesigning in ComponentState then
     Exit;
   OtherDragging := Mouse.IsDragging;
-  if MouseOver and Enabled and (Control = nil) then
+  if MouseOver and Enabled and (AControl = nil) then
   begin
-    NeedRepaint := not Transparent and
+    NeedRepaint := not FTransparent and
      ((FHotTrack and (FDragging or (Enabled and not OtherDragging))));
-    inherited MouseLeave(Control); // set MouseOver
+    inherited MouseLeave(AControl); // set MouseOver
 
     if Sizeable then
       RestoreSizeableCursor;;
@@ -956,7 +954,6 @@ begin
   else
     inherited;
 end;
-**********************************)
 
 procedure TJvCustomArrangePanel.SetSizeableCursor;
 begin
