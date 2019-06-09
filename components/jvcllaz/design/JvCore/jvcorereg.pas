@@ -9,12 +9,13 @@ procedure Register;
 implementation
 
 uses
-  PropEdits,
+  Classes, PropEdits,
   JvTypes, JvDsgnEditors;
 
 procedure Register;
 begin
   RegisterPropertyEditor(TypeInfo(TJvPersistentProperty), nil, '', TJvPersistentPropertyEditor);
+  RegisterPropertyEditor(TypeInfo(TComponentName), TJvPersistentProperty, 'Name', THiddenPropertyEditor);
 end;
 
 end.
