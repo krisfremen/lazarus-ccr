@@ -270,6 +270,13 @@ begin
   ts := Canvas.TextStyle;
   ts.ShowPrefix := false;
   ts.RightToLeft := IsRightToLeft;
+  ts.ExpandTabs := Flags and DT_EXPANDTABS <> 0;
+  ts.Wordbreak := Flags and DT_WORDBREAK <> 0;
+  ts.SingleLine := not ts.WordBreak;
+  ts.EndEllipsis := Flags and DT_END_ELLIPSIS <> 0;
+  ts.Alignment := taLeftJustify;
+  if Flags and DT_RIGHT <> 0 then ts.Alignment := taRightJustify;
+  if Flags and DT_CENTER <> 0 then ts.Alignment := taCenter;
   Canvas.Font := Font;
   if not Enabled then
   begin

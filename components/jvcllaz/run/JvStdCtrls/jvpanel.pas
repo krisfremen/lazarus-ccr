@@ -44,7 +44,7 @@ interface
 uses
   LCLType, LCLIntf, LMessages, Types,
   SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  JvTypes, JvExtComponent, JvExControls, JvHotTrackPersistent;
+  JvTypes, JvExtComponent, JvHotTrackPersistent;
 
 type
   TJvPanelResizeParentEvent = procedure(Sender: TObject; nLeft, nTop, nWidth, nHeight: Integer) of object;
@@ -869,9 +869,7 @@ begin
         Inc(BevelSize, BevelWidth);
       InflateRect(ATextRect, -BevelSize, -BevelSize);
       Flags := DT_EXPANDTABS or WORDWRAPS[MultiLine] or ALIGNMENTS[Alignment];
-      (*************** NOT CONVERTED ***
-      Flags := DrawTextBiDiModeFlags(Flags);
-      *********************************)
+      Flags := DrawTextBiDiModeFlags(Self, Flags);
 
       //calculate required rectangle size
       DrawText(ACanvas.Handle, PChar(Caption), -1, ATextRect, Flags or DT_CALCRECT);

@@ -47,7 +47,8 @@ interface
 
 uses
   LCLIntf, LCLType,
-  SysUtils, Classes, Graphics;
+  SysUtils, Classes, Graphics,
+  JvTypes;
 
 const
 (******************** NOT CONVERTED
@@ -322,8 +323,10 @@ function TrueInflateRect(const R: TRect; const I: Integer): TRect;
 {**** Color routines }
 procedure RGBToHSV(R, G, B: Integer; var H, S, V: Integer);
 function RGBToBGR(Value: Cardinal): Cardinal;
+***********************************)
 function ColorToPrettyName(Value: TColor): string;
 function PrettyNameToColor(const Value: string): TColor;
+(******************** NOT CONVERTED ***
 
 {**** other routines }
 procedure SwapInt(var Int1, Int2: Integer); {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF SUPPORTS_INLINE}
@@ -366,6 +369,7 @@ function ReplaceAllStrings(const S: string; Words, Frases: TStrings): string;
 function ReplaceStrings(const S: string; PosBeg, Len: Integer; Words, Frases: TStrings; var NewSelStart: Integer): string;
 { CountOfLines calculates the lines count in a string, S,
   each line must be separated from another with CrLf sequence }
+  *****************************)
 function CountOfLines(const S: string): Integer;
 { DeleteLines deletes all lines from strings which in the words,  words.
   The word of will be deleted from strings. }
@@ -373,6 +377,7 @@ procedure DeleteOfLines(Ss: TStrings; const Words: array of string);
 { DeleteEmptyLines deletes all empty lines from strings, Ss.
   Lines contained only spaces also deletes. }
 procedure DeleteEmptyLines(Ss: TStrings);
+(************************** NOT CONVERTED ************
 { SQLAddWhere addes or modifies existing where-statement, where,
   to the strings, SQL.
   Note: If strings SQL allready contains where-statement,
@@ -3568,6 +3573,7 @@ begin
   for I := 0 to Words.Count - 1 do
     Result := ReplaceString(Result, Words[I], Frases[I]);
 end;
+*********************************)
 
 function CountOfLines(const S: string): Integer;
 begin
@@ -3600,6 +3606,7 @@ begin
   DeleteOfLines(Ss,['']);
 end;
 
+(************************* NOT CONVERTED ****
 procedure SQLAddWhere(SQL: TStrings; const Where: string);
 var
   I, J: Integer;
@@ -9667,6 +9674,7 @@ begin
     (Value and $0000FF00) or
    ((Value and $000000FF) shl 16);
 end;
+*************************)
 
 function ColorToPrettyName(Value: TColor): string;
 var
@@ -9728,6 +9736,7 @@ begin
     Result := clNone;
 end;
 
+(********************** NOT CONVERTED ****
 {$IFNDEF CLR}
 function StartsText(const SubStr, S: string): Boolean;
 begin

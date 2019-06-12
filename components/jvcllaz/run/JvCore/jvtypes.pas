@@ -39,7 +39,9 @@ unit JvTypes;
 interface
 
 uses
-  Classes, Controls, Forms, Graphics, LMessages, SysUtils;
+  LCLType,
+  Classes, Controls, Forms, Graphics, LMessages, SysUtils,
+  JvResources;
 
 const
   MaxPixelCount = 32767;
@@ -385,11 +387,12 @@ const
   DefaultHotTrackColor = $00D2BDB6;
   DefaultHotTrackFrameColor = $006A240A;
 
-(********************
 type
+  (******************** NOT CONVERTED ***********
   // from JvListView.pas
   TJvSortMethod = (smAutomatic, smAlphabetic, smNonCaseSensitive, smNumeric, smDate, smTime, smDateTime, smCurrency);
   TJvListViewColumnSortEvent = procedure(Sender: TObject; Column: Integer; var AMethod: TJvSortMethod) of object;
+  **********************************************)
 
   // from JvOfficeColorPanel.pas
   TJvAddInControlSiteInfo = record
@@ -404,6 +407,10 @@ type
   TJvColorQuadLayOut = (cqlNone, cqlLeft, cqlRight, cqlClient);
   TJvGetAddInControlSiteInfoEvent = procedure(Sender: TControl; var ASiteInfo: TJvAddInControlSiteInfo) of object;
 
+  TJvColorDialogOption = (jcdFullOpen, jcdPreventFullOpen, jcdShowHelp,
+    jcdSolidColor, jcdAnyColor);
+  TJvColorDialogOptions = set of TJvColorDialogOption;
+
   // from JvColorProvider.pas
   TColorType = (ctStandard, ctSystem, ctCustom);
 
@@ -417,19 +424,12 @@ const
   ColCount = 20;
   StandardColCount = 40;
   SysColCount = 30;
-  {$IFDEF COMPILER5}
   clSystemColor = TColor($80000000);
   clHotLight = TColor(clSystemColor or COLOR_HOTLIGHT);
   clGradientActiveCaption = TColor(clSystemColor or COLOR_GRADIENTACTIVECAPTION);
   clGradientInactiveCaption = TColor(clSystemColor or COLOR_GRADIENTINACTIVECAPTION);
   clMenuHighlight = TColor(clSystemColor or COLOR_MENUHILIGHT);
   clMenuBar = TColor(clSystemColor or COLOR_MENUBAR);
-  {$ENDIF COMPILER5}
-  {$IFDEF COMPILER6}
-   {$IF not declared(clHotLight)}
-    {$MESSAGE ERROR 'You do not have installed Delphi 6 Update 2. Please install this before installing the JVCL. http://www.borland.com/downloads/registered/del6_reg_updates_prompt.html'}
-   {$IFEND}
-  {$ENDIF COMPILER6}
 
   ColorValues: array [0 .. ColCount - 1] of TDefColorItem = (
     (Value: clBlack;      Constant: 'clBlack';      Description: RsClBlack),
@@ -537,6 +537,7 @@ const
   );
 
 
+(********************** NOT CONVERTED ****
 type
   TJvSizeRect = packed record
     Top: Integer;
@@ -692,6 +693,9 @@ type
 {$ENDIF !CLR}
 ***************)
 
+function DrawTextBiDiModeFlags(AControl: TControl; AFlags: LongInt): LongInt;
+
+
 implementation
 
 { TJvPersistent }
@@ -786,6 +790,30 @@ begin
     Changing
   else
     Changed;
+end;
+
+{------------------------------------------------------------------------------}
+
+function DrawTextBiDiModeFlags(AControl: TControl; AFlags: LongInt): LongInt;
+var
+  alignment: TAlignment;
+begin
+  Result := AFlags;
+  if AControl.UseRightToLeftAlignment then begin
+    if AFlags and DT_RIGHT <> 0 then
+      alignment := taRightJustify
+    else
+    if AFlags and DT_CENTER <> 0 then
+      alignment := taCenter
+    else
+      alignment := taLeftJustify;
+    case alignment of
+      taLeftJustify: Result := Result or DT_RIGHT;
+      taRightJustify: Result := Result and not DT_RIGHT;
+    end;
+  end;
+  if AControl.UseRightToLeftReading then
+    Result := Result or DT_RTLREADING;
 end;
 
 end.

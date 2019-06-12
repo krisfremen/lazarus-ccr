@@ -311,7 +311,7 @@ end;
 
 function TJvPersistentPropertyEditor.GetValue:string;
 begin
-  FmtStr(Result, '(%s)', [GetPropType^.Name]);
+  Result := Format('(%s)', [GetPropType^.Name]);
 end;
 
 

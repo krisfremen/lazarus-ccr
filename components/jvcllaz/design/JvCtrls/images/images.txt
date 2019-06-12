@@ -28,3 +28,4 @@ tjvrollout_200.png
 tjvcombolistbox.bmp
 tjvlookupautocomplete.bmp
 tjvinstalllabel.bmp
+tjvofficecolorpanel.bmp

@@ -15,13 +15,13 @@ implementation
 
 uses
   Classes, Controls, PropEdits,
-  JvDsgnConsts, //JvDsgnEditors,
-  JvButton, JvCheckbox, JvBaseEdits, JVPanel;
+  JvDsgnConsts, JvCheckbox, JvPanel, JvBaseEdits;
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [TJvCheckbox, TJvPanel, TJvCalcEdit]);
-//  RegisterPropertyEditor(TypeInfo(TJvArrangeSettings), nil, '', TJvPersistentPropertyEditor);
+  RegisterComponents(RsPaletteJvcl, [
+    TJvCheckbox, TJvPanel, TJvCalcEdit
+  ]);
 end;
 
 end.

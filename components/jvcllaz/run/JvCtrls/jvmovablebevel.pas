@@ -126,6 +126,7 @@ procedure TJvMovableBevel.DoMove(Shift: TShiftState; DeltaX, DeltaY: Integer);
 begin
   // Must work on it in order to make expand and shrink the way coreldraw does when
   // shift and ctrl keys are pressed.
+
   {  If ssCtrl in shift then
      begin
       if Abs(FStartPoint.X - Left) < Abs(FStartPoint.Y - Top) then

@@ -90,10 +90,7 @@ procedure DrawDotNetControl(Control: TWinControl; AColor: TColor; InControl: Boo
 procedure HandleDotNetHighlighting(Control: TWinControl; const Msg: TLMessage;
   MouseOver: Boolean; Color: TColor);
 
-procedure CreateWMMessage(var Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LParam: LPARAM); overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
-//function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: PtrInt): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
-//function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: TControl): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
-
+procedure CreateWMMessage(out Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LParam: LPARAM); overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
 function SmallPointToLong(const Pt: TSmallPoint): LongInt; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
 function ShiftStateToKeyData(Shift: TShiftState): Longint;
 function GetFocusedControl(AControl: TControl): TWinControl;
@@ -303,7 +300,7 @@ end;
 begin
 end;
 
-procedure CreateWMMessage(var Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LParam: LPARAM);
+procedure CreateWMMessage(out Mesg: TLMessage; Msg: Cardinal; WParam: WPARAM; LParam: LPARAM);
 begin
   Mesg.Msg := Msg;
   Mesg.WParam := WParam;

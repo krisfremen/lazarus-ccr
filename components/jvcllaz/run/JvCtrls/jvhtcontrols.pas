@@ -341,8 +341,8 @@ type
     procedure SetSuperSubScriptRatio(const Value: Double);
   protected
     procedure CalculatePreferredSize(var PreferredWidth, PreferredHeight: integer;
-      WithThemeSpace: Boolean); override;
-    procedure CalculateSize(MaxWidth: integer; var NeededWidth, NeededHeight: integer);
+      {%H-}WithThemeSpace: Boolean); override;
+    procedure CalculateSize(MaxWidth: integer; out NeededWidth, NeededHeight: integer);
     function ComputeLayoutRect: TRect;
     procedure FontChanged(Sender: TObject); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -895,7 +895,7 @@ begin
 end;
 
 procedure TJvCustomHTLabel.CalculateSize(MaxWidth: integer;
-  var NeededWidth, NeededHeight: integer);
+  out NeededWidth, NeededHeight: integer);
 begin
   Canvas.Handle;
   Canvas.Font.Assign(Font);
