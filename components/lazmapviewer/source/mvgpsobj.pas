@@ -48,6 +48,7 @@ type
     procedure GetArea(out Area: TRealArea); virtual; abstract;
     property Name: String read FName write FName;
     property ExtraData: TObject read FExtraData write SetExtraData;
+    property IdOwner: Integer read FIdOwner;
     property BoundingBox: TRealArea read GetBoundingBox write SetBoundingBox;
   end;
 
@@ -132,7 +133,7 @@ type
     procedure UnLock;
     procedure CallModified(lst: TGPSObjList; Adding: boolean);
 //    property Items: TGPSObjList read FItems;
-    procedure IdsToObj(const Ids: TIdArray; out objs: TGPSObjArray; IdOwner: integer);
+    procedure IdsToObj(const Ids: TIdArray; out objs: TGPSObjArray; AIdOwner: integer);
   public
     constructor Create;
     destructor Destroy; override;
@@ -141,9 +142,9 @@ type
       out Notfound: TIdArray);
     procedure GetArea(out Area: TRealArea); override;
     function GetObjectsInArea(const Area: TRealArea): TGPSObjList;
-    function GetIdsArea(const Ids: TIdArray; IdOwner: integer): TRealArea;
+    function GetIdsArea(const Ids: TIdArray; AIdOwner: integer): TRealArea;
 
-    function Add(aItem: TGpsObj; IdOwner: integer): integer;
+    function Add(aItem: TGpsObj; AIdOwner: integer): integer;
     procedure DeleteById(const Ids: Array of integer);
 
     procedure BeginUpdate;
@@ -349,7 +350,7 @@ begin
 end;
 
 procedure TGPSObjectList.IdsToObj(const Ids: TIdArray; out objs: TGPSObjArray;
-  IdOwner: integer);
+  AIdOwner: integer);
 
   function ToSelect(aId: integer): boolean;
   var
@@ -373,7 +374,7 @@ begin
   try
     for i:=0 to pred(FItems.Count) do
     begin
-      if (IdOwner = 0) or (IdOwner = FItems[i].FIdOwner) then
+      if (AIdOwner = 0) or (AIdOwner = FItems[i].FIdOwner) then
         if Assigned(FItems[i].ExtraData) and FItems[i].ExtraData.InheritsFrom(TDrawingExtraData) then
         begin
           if ToSelect(TDrawingExtraData(FItems[i].ExtraData).Id) then
@@ -537,7 +538,7 @@ begin
     CallModified(DelLst, false);
 end;
 
-function TGPSObjectList.GetIdsArea(const Ids: TIdArray; IdOwner: integer): TRealArea;
+function TGPSObjectList.GetIdsArea(const Ids: TIdArray; AIdOwner: integer): TRealArea;
 var
   Objs: TGPSObjarray;
   i: integer;
@@ -548,7 +549,7 @@ begin
   Result.TopLeft.Lon := 0;
   Lock;
   try
-    IdsToObj(Ids, Objs, IdOwner);
+    IdsToObj(Ids, Objs, AIdOwner);
     if Length(Objs) > 0 then
     begin
       Result := Objs[0].BoundingBox;
@@ -560,11 +561,11 @@ begin
   end;
 end;
 
-function TGPSObjectList.Add(aItem: TGpsObj; IdOwner: integer): integer;
+function TGPSObjectList.Add(aItem: TGpsObj; AIdOwner: integer): integer;
 var
   mList: TGPSObjList;
 begin
-  aItem.FIdOwner := IdOwner;
+  aItem.FIdOwner := AIdOwner;
   Lock;
   try
     Result := FItems.Add(aItem);
