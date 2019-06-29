@@ -283,7 +283,7 @@ var
 begin
   oBmp := TPicture.Create;
   try
-    oBmp.LoadFromClipboardFormat(PredefinedClipboardFormat(pcfDelphiBitmap));
+    oBmp.LoadFromClipboardFormat(PredefinedClipboardFormat(pcfBitmap));
     Width := oBmp.Width;
     Height := oBmp.Height;
     Canvas.Draw(0, 0, oBmp.Graphic);
