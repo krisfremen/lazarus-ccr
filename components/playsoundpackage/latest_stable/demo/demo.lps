@@ -2,7 +2,7 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="9"/>
+    <Version Value="11"/>
     <BuildModes Active="Default"/>
     <Units Count="6">
       <Unit0>
@@ -16,9 +16,9 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="32" Y="9"/>
         <UsageCount Value="20"/>
-        <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
@@ -28,11 +28,10 @@
       </Unit2>
       <Unit3>
         <Filename Value="..\uplaysound.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="118"/>
         <CursorPos X="28" Y="118"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="X:\TEMP\wzbed3\grille.pas"/>
@@ -43,24 +42,19 @@
       <Unit5>
         <Filename Value="..\aboutplaysound.pas"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="580"/>
-        <CursorPos X="32" Y="589"/>
+        <CursorPos X="22" Y="588"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit5>
     </Units>
-    <JumpHistory Count="3" HistoryIndex="2">
-      <Position1>
-        <Filename Value="umainform.pas"/>
-      </Position1>
-      <Position2>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="44" Column="3" TopLine="10"/>
-      </Position2>
-      <Position3>
-        <Filename Value="..\aboutplaysound.pas"/>
-      </Position3>
-    </JumpHistory>
+    <General>
+      <ActiveWindowIndexAtStart Value="-1"/>
+    </General>
+    <JumpHistory HistoryIndex="-1"/>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
 </CONFIG>

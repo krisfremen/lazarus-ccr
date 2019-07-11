@@ -585,7 +585,7 @@ begin
     Font.Size:=10;
     // BackGroundColor shows if no BackGround image is set
     BackGroundColor := clWindow;
-    Version := '0.0.4.0';
+    Version := '0.0.8.0';
     AuthorName := 'Gordon Bamber';
     AuthorEmail := 'minesadorada@charcodelvalle.com';
     Organisation := 'Public Domain';

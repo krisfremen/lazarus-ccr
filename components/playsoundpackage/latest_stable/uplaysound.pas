@@ -143,12 +143,13 @@ begin
   AboutBoxBackgroundColor := clCream;
   //AboutBoxFontName (string)
   //AboutBoxFontSize (integer)
-  AboutBoxVersion := '0.0.7';
+  AboutBoxVersion := '0.0.8';
   AboutBoxAuthorname := 'Gordon Bamber';
   AboutBoxOrganisation := 'Public Domain';
   AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
   AboutBoxLicenseType := 'MODIFIEDGPL';
-  AboutBoxDescription := 'Plays WAVE sounds in Windows or Linux';
+  AboutBoxDescription := 'Plays WAVE sounds in Windows or Linux' + LineEnding +
+                         'Public methods: Execute and StopSound';
 end;
 
 destructor Tplaysound.Destroy;
@@ -164,6 +165,11 @@ procedure Tplaysound.Execute;
 begin
   if not FileExists(fPathToSoundFile) then
     Exit;
+  {$IFDEF WINDOWS}
+  fDefaultPlayCommand := 'sndPlaySound';
+  {$ELSE}
+  fDefaultPlayCommand := GetNonWindowsPlayCommand; // Linux, Mac etc.
+  {$ENDIF}
   Try
     PlaySound(fPathToSoundFile);
   Except
