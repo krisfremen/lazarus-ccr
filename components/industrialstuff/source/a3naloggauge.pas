@@ -202,6 +202,8 @@ type
     property Position: Single
       read FPosition write SetPosition;
     property Scale: Integer
+      read FScaleMaxValue write SetScaleMaxValue default 100; deprecated 'Use ScaleMax instead';
+    property ScaleMax: Integer
       read FScaleMaxValue write SetScaleMaxValue default 100;
     property ScaleMin: Integer
       read FScaleMinValue write SetScaleMinValue default 0;
