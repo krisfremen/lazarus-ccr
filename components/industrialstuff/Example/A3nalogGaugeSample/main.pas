@@ -23,6 +23,8 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    ScaleMinEdit: TSpinEdit;
+    ScaleMinLabel: TLabel;
     StartStopButton: TButton;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -56,8 +58,8 @@ type
     CenterRadEdit: TSpinEdit;
     CircleLabel: TLabel;
     CircleRadEdit: TSpinEdit;
-    ScaleLabel: TLabel;
-    ScaleEdit: TSpinEdit;
+    ScaleMaxLabel: TLabel;
+    ScaleMaxEdit: TSpinEdit;
     AngleLabel: TLabel;
     AngleEdit: TSpinEdit;
     WidthLabel: TLabel;
@@ -86,7 +88,9 @@ type
     AboutLabel: TLabel;
     AAModeBox: TComboBox;
     AAModeLabel: TLabel;
+    procedure AboutLabelMouseLeave(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure ScaleMinEditChange(Sender: TObject);
     procedure StartStopButtonClick(Sender: TObject);
     procedure StyleBoxChange(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
@@ -112,7 +116,7 @@ type
     procedure MarginEditChange(Sender: TObject);
     procedure CenterRadEditChange(Sender: TObject);
     procedure CircleRadEditChange(Sender: TObject);
-    procedure ScaleEditChange(Sender: TObject);
+    procedure ScaleMaxEditChange(Sender: TObject);
     procedure AngleEditChange(Sender: TObject);
     procedure WidthEditChange(Sender: TObject);
     procedure NumMainEditChange(Sender: TObject);
@@ -202,7 +206,7 @@ begin
   CenterRadEdit.Value := AnalogGauge1.CenterRadius;
   CircleRadEdit.Value := AnalogGauge1.CircleRadius;
   MarginEdit.Value := AnalogGauge1.Margin;
-  ScaleEdit.Value := AnalogGauge1.Scale;
+  ScaleMaxEdit.Value := AnalogGauge1.Scale;
   AngleEdit.Value := AnalogGauge1.Angle;
   MinimEdit.Value := AnalogGauge1.IndMinimum;
   MaximEdit.Value := AnalogGauge1.IndMaximum;
@@ -454,12 +458,21 @@ begin
   end;
 end;
 
-procedure TMainForm.ScaleEditChange(Sender: TObject);
+procedure TMainForm.ScaleMaxEditChange(Sender: TObject);
 begin
-  if ScaleEdit.Text <> '' then begin
-    AnalogGauge1.Scale := ScaleEdit.Value;
-    AnalogGauge2.Scale := ScaleEdit.Value;
-    AnalogGauge3.Scale := ScaleEdit.Value;
+  if ScaleMaxEdit.Text <> '' then begin
+    AnalogGauge1.Scale := ScaleMaxEdit.Value;
+    AnalogGauge2.Scale := ScaleMaxEdit.Value;
+    AnalogGauge3.Scale := ScaleMaxEdit.Value;
+  end;
+end;
+
+procedure TMainForm.ScaleMinEditChange(Sender: TObject);
+begin
+  if ScaleMinEdit.Text <> '' then begin
+    AnalogGauge1.ScaleMin := ScaleMinEdit.Value;
+    AnalogGauge2.ScaleMin := ScaleMinEdit.Value;
+    AnalogGauge3.ScaleMin := ScaleMinEdit.Value;
   end;
 end;
 
@@ -716,6 +729,11 @@ begin
   {$ELSE}
   ShellExecute(0, nil, PChar('http://www.irnis.net/'), nil, nil, SW_SHOWDEFAULT);
   {$ENDIF}
+end;
+
+procedure TMainForm.AboutLabelMouseLeave(Sender: TObject);
+begin
+  Screen.Cursor := crDefault;
 end;
 
 end.

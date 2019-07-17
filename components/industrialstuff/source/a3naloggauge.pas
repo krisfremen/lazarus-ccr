@@ -68,7 +68,8 @@ type
     FCaptionFont: TFont;
     // values
     FPosition: Single;
-    FScaleValue: Integer;
+    FScaleMaxValue: Integer;
+    FScaleMinValue: Integer;
     FMinimum: Integer;
     FMaximum: Integer;
     FCaption: string;
@@ -118,7 +119,8 @@ type
     procedure SetLengthSubTicks(I: Integer);
     procedure SetFaceOptions(O: TFaceOptions);
     procedure SetPosition(V: Single);
-    procedure SetScaleValue(I: Integer);
+    procedure SetScaleMaxValue(I: Integer);
+    procedure SetScaleMinValue(I: Integer);
     procedure SetMaximum(I: Integer);
     procedure SetMinimum(I: Integer);
     procedure SetCaption(const S: string);
@@ -200,7 +202,9 @@ type
     property Position: Single
       read FPosition write SetPosition;
     property Scale: Integer
-      read FScaleValue write SetScaleValue default 100;
+      read FScaleMaxValue write SetScaleMaxValue default 100;
+    property ScaleMin: Integer
+      read FScaleMinValue write SetScaleMinValue default 0;
     property Style: TStyle
       read FStyle write SetStyle default agsCenterStyle;
     property TicksColor: TColor
@@ -269,7 +273,8 @@ begin
   FPosition := 0;
   FMargin := Scale96ToFont(DEFAULT_MARGIN);
   FStyle := agsCenterStyle;
-  FScaleValue := 100;
+  FScaleMaxValue := 100;
+  FScaleMiNValue := 0;
   FMaximum := 80;
   FMinimum := 20;
   FScaleAngle := 120;
@@ -351,6 +356,7 @@ var
   txt: String;
   txtDist: Integer;
   apw: Integer;  // pen width of arc
+  v: Double;
 begin
   W := Bitmap.Width;
   H := Bitmap.Height;
@@ -450,12 +456,12 @@ begin
       Canvas.TextOut(pt.X - Canvas.TextWidth(FCaption) div 2, pt.Y, FCaption);
     end;
 
-    { Draw min/max indicator arcs }
+    { Draw min/mid/max indicator arcs }
     apw := Scale96ToFont(4 * K);
     if (foShowIndicatorMax in FFaceOptions) then begin
       SetPenStyles(Canvas.Pen, apw, FMaxColor);
       SinCos(DegToRad(A + FScaleAngle), sinA, cosA);
-      SinCos(DegToRad(A + Max*FScaleAngle/FScaleValue), sinB, cosB);
+      SinCos(DegToRad(A + FScaleAngle * (Max - FScaleMinValue)/(FScaleMaxValue - FScaleMinValue)), sinB, cosB);
       Canvas.Arc(X - J, Y - J, X + J, Y + J,
         Round(C - J * cosA),
         Round(Y - J * sinA),
@@ -465,8 +471,8 @@ begin
     end;
     if (foShowIndicatorMid in FFaceOptions) and (FMinimum < FMaximum) then begin
       SetPenStyles(Canvas.Pen, apw, FMidColor);
-      SinCos(DegToRad(A + Max*FScaleAngle/FScaleValue), sinA, cosA);
-      SinCos(DegToRad(A + Min*FScaleAngle/FScaleValue), sinB, cosB);
+      SinCos(DegToRad(A + FScaleAngle*(Max - FScaleMinValue)/(FScaleMaxValue - FScaleMinValue)), sinA, cosA);
+      SinCos(DegToRad(A + FScaleAngle*(Min - FScaleMinValue)/(FScaleMaxValue - FScaleMinValue)), sinB, cosB);
       Canvas.Arc(X - J, Y - J, X + J, Y + J,
         Round(C - J * cosA),
         Round(Y - J * sinA),
@@ -476,7 +482,7 @@ begin
     end;
     if (foShowIndicatorMin in FFaceOptions) then begin
       SetPenStyles(Canvas.Pen, apw, FMinColor);
-      SinCos(DegToRad(A + Min*FScaleAngle/FScaleValue), sinA, cosA);
+      SinCos(DegToRad(A + FScaleAngle*(Min - FScaleMinValue)/(FScaleMaxValue-FScaleMinValue)), sinA, cosA);
       SinCos(DegToRad(A), sinB, cosB);
       Canvas.Arc(X - J, Y - J, X + J, Y + J,
         Round(C - J * cosA),
@@ -520,7 +526,8 @@ begin
         hTxt := Canvas.TextHeight('Tg');
         Canvas.Brush.Style := bsClear;
         SinCos(DegToRad(A + dA), sinA, cosA);
-        txt := FormatFloat('0', I * fScaleValue div fNumMainTicks);
+        v := (fScaleMaxValue - fScaleMinValue) * I / fNumMainTicks + fScaleMinValue;
+        txt := FormatFloat('0', round(v));
         wTxt := Canvas.TextWidth(txt);
         Canvas.TextOut(
           Round(C-(J-(FLengthMainTicks+txtDist)*K-I)*cosA) - wTxt div 2,
@@ -537,6 +544,7 @@ var
   J, X, Y, M, W, H, R: Integer;
   A, C: Single;
   cosA, sinA: Extended;
+  angle: Single;
 begin
   M := FMargin * K;
   R := FCenterRadius * K;
@@ -587,7 +595,8 @@ begin
         raise Exception.Create('Style unknown');
     end;{case}
 
-    SinCos((A + FPosition*FScaleAngle/FScaleValue)*pi/180, sinA, cosA);
+    angle := (FPosition - FScaleMinValue) / (FScaleMaxValue - FScaleMinValue) * FScaleAngle;
+    SinCos((A + angle)*pi/180, sinA, cosA);
     Canvas.Pen.Width := FArrowWidth * K;
     Canvas.Pen.Color := FArrowColor;
     Canvas.MoveTo(X, Y);
@@ -1077,20 +1086,34 @@ procedure TA3nalogGauge.SetPosition(V: Single);
 begin
   if V <> FPosition then begin
     FPosition := V;
+    if FPosition < FScaleMinValue then FPosition := FScaleMinValue;
+    if FPosition > FScaleMaxValue then FPosition := FScaleMaxValue;
     if (FPosition > fMaximum) and Assigned(FOverMax) then OnOverMax(Self);
     if (FPosition < fMinimum) and Assigned(FOverMin) then OnOverMin(Self);
     RedrawArrow;
   end
 end;
 
-procedure TA3nalogGauge.SetScaleValue(I: Integer);
+procedure TA3nalogGauge.SetScaleMaxValue(I: Integer);
 begin
-  if I <> FScaleValue then begin
-    if I > 1 then begin
-      FScaleValue := I;
-      if FMaximum >= FScaleValue then FMaximum := FScaleValue - 1;
-      if FMinimum > FScaleValue - FMaximum then FMinimum := FScaleValue - fMaximum;
-    end;
+  if I <> FScaleMaxValue then begin
+    if I = FScaleMinValue then
+      exit;
+    FScaleMaxValue := I;
+    if FPosition > FScaleMaxValue then FPosition := FScaleMaxValue;
+    if FMaximum >= FScaleMaxValue then FMaximum := FScaleMaxValue - 1;
+    if FMinimum > FScaleMaxValue - FMaximum then FMinimum := FScaleMaxValue - fMaximum;
+    RedrawScale;
+  end;
+end;
+
+procedure TA3nalogGauge.SetScaleMinValue(I: Integer);
+begin
+  if I <> FScaleMinValue then begin
+    if I = FScaleMaxValue then
+      exit;
+    FScaleMinValue := I;
+    if FPosition < FScaleMinValue then FPosition := FScaleMinValue;
     RedrawScale;
   end;
 end;
@@ -1098,7 +1121,7 @@ end;
 procedure TA3nalogGauge.SetMaximum(I: Integer);
 begin
   if I <> FMaximum then begin
-    if (I > 0) and (I < FScaleValue) then
+    if (I > FScaleMinValue) and (I < FScaleMaxValue) then
       FMaximum := I;
     RedrawScale;
   end;
@@ -1107,7 +1130,7 @@ end;
 procedure TA3nalogGauge.SetMinimum(I: Integer);
 begin
   if I <> FMinimum then begin
-    if (I > 0) and (I < FScaleValue) then
+    if (I > FScaleMinValue) and (I < FScaleMaxValue) then
       FMinimum := I;
     RedrawScale;
   end
