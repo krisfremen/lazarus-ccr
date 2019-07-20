@@ -61,7 +61,7 @@ resourcestring
 
 //=== JVCL IDE palettes ======================================================
 resourcestring
-  RsPaletteJvcl = 'Jvcl';
+  RsPaletteJvclVisual = 'Jvcl Visual';
   RsPaletteJvclDB = 'Jvcl DB';
   RsPaletteJvclNonVisual = 'Jvcl Non-Visual';
 
@@ -89,6 +89,7 @@ resourcestring
   RsPaletteBDE = 'Jv BDE';
   RsPalettePrintPreview = 'Jv Print Preview';
   RsPaletteInterpreter = 'Jv Interpreter';
+  RsPaletteGlobusComponents = 'JVCL Globus';
   RsPaletteGlobusComponents1 = 'JVCL Globus 1';
   RsPaletteGlobusComponents2 = 'JVCL Globus 2';
   RsPaletteValidators = 'Jv Validators';

@@ -28,7 +28,7 @@ const
   cImageIndex = 'ImageIndex';
 begin
   // JvNavigationPanel
-  RegisterComponents(RsPaletteJvcl, [  // was: RsPaletteNavPane
+  RegisterComponents(RsPaletteJvclVisual, [  // was: RsPaletteNavPane
     TJvNavigationPane,
     TJvNavIconButton,
     TJvNavPanelButton, TJvNavPanelHeader, TJvNavPanelDivider,
@@ -46,7 +46,7 @@ begin
     TJvNavIconButtonImageIndexProperty);
 
   // JvPageList
-  RegisterComponents(RsPaletteJvcl, [        // was: RsPaletteListComboTree
+  RegisterComponents(RsPaletteJvclVisual, [        // was: RsPaletteListComboTree
     //TJvPageList,
     TJvNotebookPageList]);
   {
@@ -63,7 +63,7 @@ begin
   }
 
   // JvPageTree
-  RegisterComponents(RsPaletteJvcl, [  // was: TsPaletteListComboTree
+  RegisterComponents(RsPaletteJvclVisual, [  // was: TsPaletteListComboTree
     TJvSettingsTreeView, TJvPageListTreeView
   ]);
   RegisterClasses([TJvSettingsTreeView, TJvPageListTreeView]);

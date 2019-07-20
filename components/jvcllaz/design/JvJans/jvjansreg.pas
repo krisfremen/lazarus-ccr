@@ -23,12 +23,12 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclVisual, [
     TJvYearGrid
   ]);
 
   // Simulator Components
-  RegisterComponents(RsPaletteJvcl, [            // was: RsPaletteJansSim
+  RegisterComponents(RsPaletteJvclVisual, [            // was: RsPaletteJansSim
     TJvSimScope, TJvSimIndicator, TJvSimPID,
     TJvSimPIDLinker, TJvSimConnector, TJvLogic, TJvSimButton, TJvSimLight,
     TJvSimLogicBox, TJvSimReverse,
@@ -36,7 +36,7 @@ begin
   ]);
 
   // Markup components
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclVisual, [
     TJvMarkupViewer, TJvMarkupLabel
   ]);
 

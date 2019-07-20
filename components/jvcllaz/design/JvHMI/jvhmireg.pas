@@ -19,7 +19,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclVisual, [
     TJvDialButton, TJvLED
   ]);
 end;

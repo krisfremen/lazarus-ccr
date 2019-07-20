@@ -22,7 +22,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclVisual, [
     TJvMovableBevel, TJvMovablePanel, TJvRuler, TJvGroupHeader, TJvRollOut,
     TJvHint, TJvHTLabel, TJvHTListbox, TJvHTCombobox, TJvComboListBox,
     TJvOfficeColorPanel,

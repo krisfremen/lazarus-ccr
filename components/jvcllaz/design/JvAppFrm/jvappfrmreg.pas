@@ -20,7 +20,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclVisual, [
     TJvAppAnimatedIcon, TJvFormAnimatedIcon, TJvAnimTitle, TJvFormWallPaper
   ]);
 end;

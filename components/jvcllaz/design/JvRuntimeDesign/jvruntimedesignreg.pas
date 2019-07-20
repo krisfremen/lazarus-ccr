@@ -18,7 +18,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [//RsPaletteRuntimeDesign, [
+  RegisterComponents(RsPaletteJvclVisual, [//RsPaletteRuntimeDesign, [
     TJvDesignSurface, 
     TJvDesignScrollBox, 
     TJvDesignPanel

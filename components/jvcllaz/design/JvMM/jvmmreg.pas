@@ -24,7 +24,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvcl, [
+  RegisterComponents(RsPaletteJvclVisual, [
     TJvAnimatedImage,
     TJvBmpAnimator,
 	TjvPicClip,

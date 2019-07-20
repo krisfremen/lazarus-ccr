@@ -25,7 +25,7 @@ const
   cActivePage = 'ActivePage';
   cPages = 'Pages';
 begin
-  RegisterComponents({RsPaletteWizard}RsPaletteJvcl, [TJvWizard, TJvWizardRouteMapSteps,
+  RegisterComponents({RsPaletteWizard}RsPaletteJvclVisual, [TJvWizard, TJvWizardRouteMapSteps,
     TJvWizardRouteMapNodes, TJvWizardRouteMapList]);
   RegisterNoIcon([TJvWizardCustomPage, TJvWizardWelcomePage,
     TJvWizardInteriorPage]);
