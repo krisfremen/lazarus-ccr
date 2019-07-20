@@ -39,6 +39,7 @@ type
     AcColWidth: TAction;
     AcSettingsReadFormulas: TAction;
     AcSettingsAutoUpdateRowheights: TAction;
+    AcSettingsAutoDetectCellType: TAction;
     AcWorksheetShowHeaders: TAction;
     AcWorksheetShowGrid: TAction;
     AcWorksheetProtection: TAction;
@@ -101,6 +102,7 @@ type
     MenuItem194: TMenuItem;
     MenuItem195: TMenuItem;
     MenuItem196: TMenuItem;
+    MenuItem197: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -456,6 +458,7 @@ type
     procedure AcRowAddExecute(Sender: TObject);
     procedure AcRowDeleteExecute(Sender: TObject);
     procedure AcRowHeightExecute(Sender: TObject);
+    procedure AcSettingsAutoDetectCellTypeExecute(Sender: TObject);
     procedure AcSettingsAutoUpdateRowheightsExecute(Sender: TObject);
     procedure AcSettingsReadFormulasExecute(Sender: TObject);
     procedure AcSortColAscExecute(Sender: TObject);
@@ -797,6 +800,11 @@ begin
   SearchForm.SearchParams := DefaultSearchParams;
   SearchForm.ReplaceParams := DefaultReplaceParams;
   SearchForm.Execute(WorkbookSource.Workbook);
+end;
+
+procedure TMainForm.AcSettingsAutoDetectCellTypeExecute(Sender: TObject);
+begin
+  WorksheetGrid.AutoDetectCellType := AcSettingsautoDetectCellType.Checked;
 end;
 
 procedure TMainForm.AcSettingsCSVParamsExecute(Sender: TObject);

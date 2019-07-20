@@ -13,7 +13,7 @@ object MainForm: TMainForm
   OnDropFiles = FormDropFiles
   OnShow = FormShow
   ShowHint = True
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '2.1.0.0'
   object WorkbookTabControl: TsWorkbookTabControl
     Left = 0
     Height = 609
@@ -98,11 +98,11 @@ object MainForm: TMainForm
         'Options=boAutoCalc, boCalcBeforeSaving, boReadFormulas'
         '(-) FormatSettings='
         '  ThousandSeparator=.'
-        '  DecimalSeparator=.'
+        '  DecimalSeparator=,'
         '  ListSeparator=;'
         '  DateSeparator=.'
         '  TimeSeparator=:'
-        '  ShortDateFormat=MM.yy'
+        '  ShortDateFormat=dd.MM.yyyy'
         '  LongDateFormat=dddd, d. MMMM yyyy'
         '  ShortTimeFormat=hh:nn'
         '  LongTimeFormat=hh:nn:ss'
@@ -349,7 +349,7 @@ object MainForm: TMainForm
       Width = 130
       WorkbookSource = WorkbookSource
       DropDownCount = 24
-      ItemIndex = 49
+      ItemIndex = 69
       TabOrder = 0
       Text = 'Arial'
     end
@@ -1931,6 +1931,7 @@ object MainForm: TMainForm
       Category = 'Settings'
       AutoCheck = True
       Caption = 'Update row heights after loading'
+      Hint = 'Automatically update the row heights'
       OnExecute = AcSettingsAutoUpdateRowheightsExecute
     end
     object AcWorksheetShowGrid: TAction
@@ -1954,6 +1955,14 @@ object MainForm: TMainForm
       Caption = 'More...'
       Hint = 'Zoom worksheet'
       OnExecute = AcZoomMoreExecute
+    end
+    object AcSettingsAutoDetectCellType: TAction
+      Category = 'Settings'
+      AutoCheck = True
+      Caption = 'Automatically detect cell type'
+      Checked = True
+      Hint = 'Automatically detect the type of the cell content.'
+      OnExecute = AcSettingsAutoDetectCellTypeExecute
     end
   end
   object ImageList: TImageList
@@ -4846,6 +4855,10 @@ object MainForm: TMainForm
       end
       object MenuItem192: TMenuItem
         Action = AcSettingsAutoUpdateRowheights
+        AutoCheck = True
+      end
+      object MenuItem197: TMenuItem
+        Action = AcSettingsAutoDetectCellType
         AutoCheck = True
       end
     end
