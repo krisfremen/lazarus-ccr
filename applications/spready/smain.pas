@@ -40,6 +40,15 @@ type
     AcSettingsReadFormulas: TAction;
     AcSettingsAutoUpdateRowheights: TAction;
     AcSettingsAutoDetectCellType: TAction;
+    AcShowPageBreaks: TAction;
+    AcHideCols: TAction;
+    AcShowCols: TAction;
+    AcAddPageBreakCol: TAction;
+    AcAddPageBreakRow: TAction;
+    AcRemovePageBreakCol: TAction;
+    AcRemovePageBreakRow: TAction;
+    AcHideRows: TAction;
+    AcShowRows: TAction;
     AcWorksheetShowHeaders: TAction;
     AcWorksheetShowGrid: TAction;
     AcWorksheetProtection: TAction;
@@ -103,7 +112,21 @@ type
     MenuItem195: TMenuItem;
     MenuItem196: TMenuItem;
     MenuItem197: TMenuItem;
+    MenuItem198: TMenuItem;
+    MenuItem199: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem200: TMenuItem;
+    MenuItem201: TMenuItem;
+    MenuItem202: TMenuItem;
+    MenuItem203: TMenuItem;
+    MenuItem204: TMenuItem;
+    MenuItem205: TMenuItem;
+    MenuItem206: TMenuItem;
+    MenuItem207: TMenuItem;
+    MenuItem208: TMenuItem;
+    MenuItem209: TMenuItem;
+    MenuItem210: TMenuItem;
+    MenuItem211: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem51: TMenuItem;
@@ -441,6 +464,10 @@ type
     WorkbookTabControl: TsWorkbookTabControl;
     WorksheetGrid: TsWorksheetGrid;
     procedure AcAboutExecute(Sender: TObject);
+    procedure AcAddPageBreakColExecute(Sender: TObject);
+    procedure AcAddPageBreakColUpdate(Sender: TObject);
+    procedure AcAddPageBreakRowExecute(Sender: TObject);
+    procedure AcAddPageBreakRowUpdate(Sender: TObject);
     procedure AcAutoRowHeightsExecute(Sender: TObject);
     procedure AcColAddExecute(Sender: TObject);
     procedure AcColDeleteExecute(Sender: TObject);
@@ -453,14 +480,23 @@ type
     procedure AcFrozenColsUpdate(Sender: TObject);
     procedure AcFrozenRowsExecute(Sender: TObject);
     procedure AcFrozenRowsUpdate(Sender: TObject);
+    procedure AcHideColsExecute(Sender: TObject);
+    procedure AcHideRowsExecute(Sender: TObject);
     procedure AcNumFormatCustomGetNumberFormatString(Sender: TObject;
       AWorkbook: TsWorkbook; var ANumFormatStr: String);
+    procedure AcRemovePageBreakColExecute(Sender: TObject);
+    procedure AcRemovePageBreakColUpdate(Sender: TObject);
+    procedure AcRemovePageBreakRowExecute(Sender: TObject);
+    procedure AcRemovePageBreakRowUpdate(Sender: TObject);
     procedure AcRowAddExecute(Sender: TObject);
     procedure AcRowDeleteExecute(Sender: TObject);
     procedure AcRowHeightExecute(Sender: TObject);
     procedure AcSettingsAutoDetectCellTypeExecute(Sender: TObject);
     procedure AcSettingsAutoUpdateRowheightsExecute(Sender: TObject);
     procedure AcSettingsReadFormulasExecute(Sender: TObject);
+    procedure AcShowColsExecute(Sender: TObject);
+    procedure AcShowPageBreaksExecute(Sender: TObject);
+    procedure AcShowRowsExecute(Sender: TObject);
     procedure AcSortColAscExecute(Sender: TObject);
     procedure AcSortExecute(Sender: TObject);
     procedure ActionListUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -555,6 +591,56 @@ begin
     F.ShowModal;
   finally
     F.Free;
+  end;
+end;
+
+procedure TMainForm.AcAddPageBreakColExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  c: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    c := WorksheetGrid.GetWorksheetCol(WorksheetGrid.Col);
+    sheet.AddPageBreakToCol(c);
+    WorksheetGrid.Invalidate;
+  end;
+end;
+
+procedure TMainForm.AcAddPageBreakColUpdate(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  c: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    c := WorksheetGrid.GetWorksheetCol(WorksheetGrid.Col);
+    AcAddPageBreakCol.Enabled := not sheet.IsPageBreakCol(c);
+  end;
+end;
+
+procedure TMainForm.AcAddPageBreakRowExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  r: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    r := WorksheetGrid.GetWorksheetRow(WorksheetGrid.Row);
+    sheet.AddPageBreakToRow(r);
+    WorksheetGrid.Invalidate;
+  end;
+end;
+
+procedure TMainForm.AcAddPageBreakRowUpdate(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  r: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    r := WorksheetGrid.GetWorksheetRow(WorksheetGrid.Row);
+    AcAddPageBreakRow.Enabled := not sheet.IsPageBreakRow(r);
   end;
 end;
 
@@ -701,6 +787,40 @@ begin
   AcFrozenRows.Checked := WorksheetGrid.FrozenRows > 0;
 end;
 
+procedure TMainForm.AcHideColsExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  i: Integer;
+  rng: TsCellRange;
+  c: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    for i:=0 to sheet.GetSelectionCount-1 do begin
+      rng := sheet.GetSelection[i];
+      for c := rng.Col1 to rng.Col2 do
+        WorksheetGrid.HideCol(WorksheetGrid.GetGridCol(c));
+    end;
+  end;
+end;
+
+procedure TMainForm.AcHideRowsExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  i: Integer;
+  rng: TsCellRange;
+  r: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    for i:=0 to sheet.GetSelectionCount-1 do begin
+      rng := sheet.GetSelection[i];
+      for r := rng.Row1 to rng.Row2 do
+        WorksheetGrid.HideRow(WorksheetGrid.GetGridRow(r));
+    end;
+  end;
+end;
+
 procedure TMainForm.AcNumFormatCustomGetNumberFormatString(Sender: TObject;
   AWorkbook: TsWorkbook; var ANumFormatStr: String);
 var
@@ -718,6 +838,56 @@ begin
       ANumFormatStr := F.NumFormatStr;
   finally
     F.Free;
+  end;
+end;
+
+procedure TMainForm.AcRemovePageBreakColExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  c: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    c := WorksheetGrid.GetWorksheetCol(WorksheetGrid.Col);
+    sheet.RemovePageBreakFromCol(c);
+    WorksheetGrid.Invalidate;
+  end;
+end;
+
+procedure TMainForm.AcRemovePageBreakColUpdate(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  c: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    c := WorksheetGrid.GetWorksheetCol(WorksheetGrid.Col);
+    AcRemovePageBreakCol.Enabled := sheet.IsPageBreakCol(c);
+  end;
+end;
+
+procedure TMainForm.AcRemovePageBreakRowExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  r: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    r := WorksheetGrid.GetWorksheetRow(WorksheetGrid.Row);
+    sheet.RemovePageBreakFromRow(r);
+    WorksheetGrid.Invalidate;
+  end;
+end;
+
+procedure TMainForm.AcRemovePageBreakRowUpdate(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  r: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    r := WorksheetGrid.GetWorksheetRow(WorksheetGrid.Row);
+    AcRemovePageBreakRow.Enabled := sheet.IsPageBreakRow(r);
   end;
 end;
 
@@ -862,6 +1032,23 @@ begin
     WorkbookSource.Options := WorkbookSource.Options - [boReadFormulas];
 end;
 
+procedure TMainForm.AcShowColsExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  i: Integer;
+  rng: TsCellRange;
+  c: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    for i:=0 to sheet.GetSelectionCount-1 do begin
+      rng := sheet.GetSelection[i];
+      for c := rng.Col1 to rng.Col2 do
+        WorksheetGrid.ShowCol(WorksheetGrid.GetGridCol(c));
+    end;
+  end;
+end;
+
 procedure TMainForm.AcShowGridLinesExecute(Sender: TObject);
 begin
   WorksheetGrid.ShowGridLines := AcShowGridLines.Checked;
@@ -880,6 +1067,28 @@ end;
 procedure TMainForm.AcShowHeadersUpdate(Sender: TObject);
 begin
   AcShowHeaders.Checked := WorksheetGrid.ShowHeaders;
+end;
+
+procedure TMainForm.AcShowPageBreaksExecute(Sender: TObject);
+begin
+  WorksheetGrid.ShowPageBreaks := AcShowPageBreaks.Checked;
+end;
+
+procedure TMainForm.AcShowRowsExecute(Sender: TObject);
+var
+  sheet: TsWorksheet;
+  i: Integer;
+  rng: TsCellRange;
+  r: Cardinal;
+begin
+  sheet := WorksheetGrid.Worksheet;
+  if sheet <> nil then begin
+    for i:=0 to sheet.GetSelectionCount-1 do begin
+      rng := sheet.GetSelection[i];
+      for r := rng.Row1 to rng.Row2 do
+        WorksheetGrid.ShowRow(WorksheetGrid.GetGridRow(r));
+    end;
+  end;
 end;
 
 procedure TMainForm.AcSortColAscExecute(Sender: TObject);

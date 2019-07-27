@@ -11,16 +11,16 @@ object FormatSettingsForm: TFormatSettingsForm
   OnCreate = FormCreate
   Position = poMainFormCenter
   ShowHint = True
-  LCLVersion = '1.5'
+  LCLVersion = '2.1.0.0'
   object PageControl: TPageControl
     Left = 8
     Height = 438
     Top = 8
     Width = 454
-    ActivePage = PgCurrency
+    ActivePage = PgNumber
     Align = alClient
     BorderSpacing.Around = 8
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     OnChange = PageControlChange
     object PgNumber: TTabSheet
@@ -39,7 +39,7 @@ object FormatSettingsForm: TFormatSettingsForm
         Left = 16
         Height = 15
         Top = 51
-        Width = 108
+        Width = 107
         Caption = 'Thousand separator:'
         ParentColor = False
       end
@@ -170,13 +170,13 @@ object FormatSettingsForm: TFormatSettingsForm
     end
     object PgDateTime: TTabSheet
       Caption = 'Date/time'
-      ClientHeight = 401
+      ClientHeight = 410
       ClientWidth = 446
       object LblNumFormat1: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 20
-        Width = 160
+        Width = 128
         Caption = 'Long date format string:'
         ParentColor = False
       end
@@ -211,9 +211,9 @@ object FormatSettingsForm: TFormatSettingsForm
       end
       object LblNumFormat2: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 52
-        Width = 162
+        Width = 129
         Caption = 'Short date format string:'
         ParentColor = False
       end
@@ -243,65 +243,65 @@ object FormatSettingsForm: TFormatSettingsForm
       end
       object LblDateSeparator: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 83
-        Width = 102
+        Width = 79
         Caption = 'Date separator:'
         ParentColor = False
       end
       object LblLongMonthNames: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 116
-        Width = 130
+        Width = 107
         Caption = 'Long month names:'
         ParentColor = False
       end
       object LblShortMonthNames: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 148
-        Width = 132
+        Width = 108
         Caption = 'Short month names:'
         ParentColor = False
       end
       object LblLongDayNames: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 180
-        Width = 111
+        Width = 90
         Caption = 'Long day names:'
         ParentColor = False
       end
       object LblShortDayNames: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 212
-        Width = 113
+        Width = 91
         Caption = 'Short day names:'
         ParentColor = False
       end
       object LblNumFormat3: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 252
-        Width = 160
+        Width = 129
         Caption = 'Long time format string:'
         ParentColor = False
       end
       object LblNumFormat4: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 284
-        Width = 162
+        Width = 130
         Caption = 'Short time format string:'
         ParentColor = False
       end
       object LblTimeSeparator: TLabel
         Left = 16
-        Height = 20
+        Height = 15
         Top = 315
-        Width = 103
+        Width = 81
         Caption = 'Time separator:'
         ParentColor = False
       end
@@ -343,8 +343,8 @@ object FormatSettingsForm: TFormatSettingsForm
       end
       object Label3: TLabel
         Left = 4
-        Height = 40
-        Top = 357
+        Height = 30
+        Top = 376
         Width = 438
         Align = alBottom
         BorderSpacing.Around = 4
@@ -355,7 +355,7 @@ object FormatSettingsForm: TFormatSettingsForm
       object Bevel1: TBevel
         Left = 0
         Height = 3
-        Top = 350
+        Top = 369
         Width = 446
         Align = alBottom
         Shape = bsBottomLine
@@ -381,7 +381,7 @@ object FormatSettingsForm: TFormatSettingsForm
     object LblDateTimeSample: TLabel
       Left = 6
       Height = 36
-      Top = 2
+      Top = 0
       Width = 287
       Anchors = [akTop, akLeft, akRight]
       AutoSize = False

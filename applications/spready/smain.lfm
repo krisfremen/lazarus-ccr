@@ -35,6 +35,8 @@ object MainForm: TMainForm
       EditorLineMode = elmMultiLine
       FrozenCols = 0
       FrozenRows = 0
+      PageBreakPen.Color = clBlue
+      PageBreakPen.Style = psDash
       ReadFormulas = True
       TextOverflow = True
       WorkbookSource = WorkbookSource
@@ -1963,6 +1965,65 @@ object MainForm: TMainForm
       Checked = True
       Hint = 'Automatically detect the type of the cell content.'
       OnExecute = AcSettingsAutoDetectCellTypeExecute
+    end
+    object AcShowPageBreaks: TAction
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Show page breaks'
+      Checked = True
+      OnExecute = AcShowPageBreaksExecute
+    end
+    object AcHideCols: TAction
+      Category = 'Worksheet'
+      Caption = 'Hide column(s)'
+      Hint = 'Hide selected column(s)'
+      OnExecute = AcHideColsExecute
+    end
+    object AcHideRows: TAction
+      Category = 'Worksheet'
+      Caption = 'Hide row(s)'
+      Hint = 'Hide selected row(s)'
+      OnExecute = AcHideRowsExecute
+    end
+    object AcShowCols: TAction
+      Category = 'Worksheet'
+      Caption = 'Show columns'
+      Hint = 'Show columns'
+      OnExecute = AcShowColsExecute
+    end
+    object AcShowRows: TAction
+      Category = 'Worksheet'
+      Caption = 'Show row(s)'
+      Hint = 'Show row(s) previously hidden'
+      OnExecute = AcShowRowsExecute
+    end
+    object AcAddPageBreakCol: TAction
+      Category = 'Worksheet'
+      Caption = 'Add page break'
+      Hint = 'Add page break before active cell'
+      OnExecute = AcAddPageBreakColExecute
+      OnUpdate = AcAddPageBreakColUpdate
+    end
+    object AcAddPageBreakRow: TAction
+      Category = 'Worksheet'
+      Caption = 'Add page break'
+      Hint = 'Add page break above active cell'
+      OnExecute = AcAddPageBreakRowExecute
+      OnUpdate = AcAddPageBreakRowUpdate
+    end
+    object AcRemovePageBreakCol: TAction
+      Category = 'Worksheet'
+      Caption = 'Remove page break'
+      Hint = 'Remove page break left of active cell'
+      OnExecute = AcRemovePageBreakColExecute
+      OnUpdate = AcRemovePageBreakColUpdate
+    end
+    object AcRemovePageBreakRow: TAction
+      Category = 'Worksheet'
+      Caption = 'Remove page break'
+      Hint = 'Remove page break above active cell'
+      OnExecute = AcRemovePageBreakRowExecute
+      OnUpdate = AcRemovePageBreakRowUpdate
     end
   end
   object ImageList: TImageList
@@ -4503,6 +4564,10 @@ object MainForm: TMainForm
         Action = AcWorksheetShowHeaders
         AutoCheck = True
       end
+      object MenuItem199: TMenuItem
+        Action = AcShowPageBreaks
+        AutoCheck = True
+      end
       object MenuItem164: TMenuItem
         Action = AcWorksheetRTL
         AutoCheck = True
@@ -4517,6 +4582,24 @@ object MainForm: TMainForm
         Action = AcRowDelete
       end
       object MenuItem174: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem210: TMenuItem
+        Action = AcHideRows
+      end
+      object MenuItem209: TMenuItem
+        Action = AcShowRows
+      end
+      object MenuItem211: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem205: TMenuItem
+        Action = AcAddPageBreakRow
+      end
+      object MenuItem207: TMenuItem
+        Action = AcRemovePageBreakRow
+      end
+      object MenuItem206: TMenuItem
         Caption = '-'
       end
       object MenuItem175: TMenuItem
@@ -4542,6 +4625,26 @@ object MainForm: TMainForm
         Action = AcColDelete
       end
       object MenuItem173: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem200: TMenuItem
+        Action = AcHideCols
+      end
+      object MenuItem201: TMenuItem
+        Action = AcShowCols
+        Caption = 'Show column(s)'
+        Hint = 'Show hidden column(s) within selection'
+      end
+      object MenuItem202: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem203: TMenuItem
+        Action = AcAddPageBreakCol
+      end
+      object MenuItem208: TMenuItem
+        Action = AcRemovePageBreakCol
+      end
+      object MenuItem204: TMenuItem
         Caption = '-'
       end
       object MenuItem172: TMenuItem
@@ -4786,6 +4889,10 @@ object MainForm: TMainForm
       end
       object MenuItem135: TMenuItem
         Action = AcShowHeaders
+        AutoCheck = True
+      end
+      object MenuItem198: TMenuItem
+        Action = AcShowPageBreaks
         AutoCheck = True
       end
       object MenuItem133: TMenuItem

@@ -357,6 +357,11 @@ begin
   // Thousand separator
   Result.ThousandSeparator := FCbThousandSeparator.Separator;
 
+  if Result.DecimalSeparator = '.' then
+    Result.ListSeparator := ','
+  else if Result.DecimalSeparator = ',' then
+    Result.ListSeparator := ';';
+
   // --- Currency format parameters ---
   // Currency symbol
   Result.CurrencyString := EdCurrencySymbol.Text;

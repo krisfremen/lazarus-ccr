@@ -105,7 +105,9 @@
       <Unit5>
         <Filename Value="sformatsettingsform.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormatSettingsForm"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
         <UnitName Value="sFormatsettingsForm"/>
       </Unit5>
       <Unit6>

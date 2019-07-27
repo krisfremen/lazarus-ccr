@@ -707,10 +707,16 @@ begin
     cs := DefaultFormatSettings.CurrencyString;
   CbCurrSymbol.ItemIndex := CbCurrSymbol.Items.IndexOf(cs);
 
+  if VarIsNull(ASample) then begin
+    FSampleValue := 1.25;
+    FSampleText := 'test';
+  end else
   if varIsStr(ASample) then
     FSampleText := VarToStr(ASample)
-  else
+  else begin
     FSampleValue := ASample;
+    if isNaN(FSamplevalue) then FSamplevalue := 1.25;
+  end;
   InitNumFormats(FWorkbook.FormatSettings);
   SetNumFormatStr(ANumFormatStr);
 end;
