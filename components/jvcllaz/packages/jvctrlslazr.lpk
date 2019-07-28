@@ -17,7 +17,7 @@ Movable bevel and panel, ruler, exandable panel (RollOut), group header, hyperte
 "/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="6"/>
-    <Files Count="10">
+    <Files Count="11">
       <Item1>
         <Filename Value="..\run\JvCtrls\jvhint.pas"/>
         <UnitName Value="JvHint"/>
@@ -58,6 +58,10 @@ Movable bevel and panel, ruler, exandable panel (RollOut), group header, hyperte
         <Filename Value="..\run\JvCtrls\jvofficecolorpanel.pas"/>
         <UnitName Value="JvOfficeColorPanel"/>
       </Item10>
+      <Item11>
+        <Filename Value="..\run\JvCtrls\jvbehaviorlabel.pas"/>
+        <UnitName Value="JvBehaviorLabel"/>
+      </Item11>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>

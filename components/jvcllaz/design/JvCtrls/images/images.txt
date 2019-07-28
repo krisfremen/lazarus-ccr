@@ -25,6 +25,7 @@ tjvgroupheader_200.png
 tjvrollout.png
 tjvrollout_150.png
 tjvrollout_200.png
+tjvbehaviorlabel.bmp
 tjvcombolistbox.bmp
 tjvlookupautocomplete.bmp
 tjvinstalllabel.bmp
