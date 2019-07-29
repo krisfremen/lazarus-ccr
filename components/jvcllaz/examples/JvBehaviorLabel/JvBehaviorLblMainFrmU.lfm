@@ -8,8 +8,8 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
   Caption = 'JvBehaviorLabel Demo'
   ClientHeight = 304
   ClientWidth = 572
-  Color = clBtnFace
   Font.Color = clWindowText
+  OnActivate = FormActivate
   LCLVersion = '2.1.0.0'
   object lblCodeBreaker: TJvBehaviorLabel
     AnchorSideLeft.Control = Owner
@@ -38,12 +38,9 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     Transparent = False
   end
   object lblAppearing: TJvBehaviorLabel
-    AnchorSideLeft.Control = lblCodeBreaker
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = lblCodeBreaker
     Left = 301
     Height = 22
-    Top = 18
+    Top = 16
     Width = 259
     Behavior = 'Appearing'
     BehaviorOptions.Delay = 10
@@ -72,7 +69,6 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     Top = 91
     Width = 259
     Behavior = 'Blinking'
-    BehaviorOptions.Interval = 220
     Alignment = taCenter
     AutoSize = False
     BorderSpacing.Top = 18
@@ -88,8 +84,6 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     Transparent = False
   end
   object lblBouncing: TJvBehaviorLabel
-    AnchorSideLeft.Control = lblAppearing
-    AnchorSideTop.Control = lblBlinking
     Left = 301
     Height = 22
     Top = 91
@@ -135,7 +129,8 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     Transparent = False
   end
   object lblSpecial: TJvBehaviorLabel
-    AnchorSideLeft.Control = lblAppearing
+    AnchorSideLeft.Control = lblScrolling
+    AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = lblScrolling
     Left = 301
     Height = 22
@@ -145,6 +140,8 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     BehaviorOptions.Interval = 35
     Alignment = taCenter
     AutoSize = False
+    BorderSpacing.Left = 18
+    BorderSpacing.Right = 24
     Caption = 'I ACT IN A SPECIAL WAY'
     Color = clBlack
     Font.CharSet = ANSI_CHARSET
@@ -194,13 +191,12 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     TabOrder = 0
   end
   object btnAppear: TButton
-    AnchorSideLeft.Control = lblAppearing
+    AnchorSideLeft.Control = btnSpecial
     AnchorSideTop.Control = btnCodeBreak
     Left = 315
     Height = 25
     Top = 48
     Width = 80
-    BorderSpacing.Left = 14
     Caption = '&Appearing'
     OnClick = btnAppearClick
     TabOrder = 1
@@ -219,7 +215,7 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     TabOrder = 2
   end
   object btnBounce: TButton
-    AnchorSideLeft.Control = btnAppear
+    AnchorSideLeft.Control = btnSpecial
     AnchorSideTop.Control = btnBlink
     Left = 315
     Height = 25
@@ -243,12 +239,13 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     TabOrder = 4
   end
   object btnSpecial: TButton
-    AnchorSideLeft.Control = btnAppear
+    AnchorSideLeft.Control = lblSpecial
     AnchorSideTop.Control = btnScroll
     Left = 315
     Height = 25
     Top = 194
     Width = 80
+    BorderSpacing.Left = 14
     Caption = 'S&pecial'
     OnClick = btnSpecialClick
     TabOrder = 5
@@ -268,7 +265,7 @@ object JvBehaviorLblMainFrm: TJvBehaviorLblMainFrm
     TabOrder = 6
   end
   object btnAll: TButton
-    AnchorSideLeft.Control = btnAppear
+    AnchorSideLeft.Control = btnSpecial
     AnchorSideTop.Control = btnType
     Left = 315
     Height = 25

@@ -43,8 +43,7 @@ unit JvBehaviorLabel;
 interface
 
 uses
-  LCLIntf, Classes, //Windows, Messages,
-  Controls, StdCtrls, ExtCtrls; //,  JvExStdCtrls;
+  LCLIntf, Classes, Controls, StdCtrls, ExtCtrls;
 
 type
   TJvCustomBehaviorLabel = class;

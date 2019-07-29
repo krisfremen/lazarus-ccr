@@ -33,6 +33,9 @@ uses
   Dialogs, StdCtrls, JvBehaviorLabel;
 
 type
+
+  { TJvBehaviorLblMainFrm }
+
   TJvBehaviorLblMainFrm = class(TForm)
     lblCodeBreaker: TJvBehaviorLabel;
     btnCodeBreak: TButton;
@@ -57,6 +60,7 @@ type
     procedure btnSpecialClick(Sender: TObject);
     procedure btnTypeClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     procedure DoCodeBreakStart(Sender:TObject);
     procedure DoCodeBreakStop(Sender:TObject);
@@ -91,6 +95,14 @@ end;
 procedure TJvBehaviorLblMainFrm.DoCodeBreakStop(Sender: TObject);
 begin
   ShowMessage('Congratulations! You''ve hacked the system!');
+end;
+
+procedure TJvBehaviorLblMainFrm.FormActivate(Sender: TObject);
+begin
+  AutoSize := false;
+  // Remove anchors because these labels will change their positions.
+  lblAppearing.SetBounds(lblSpecial.Left, lblCodeBreaker.Top, lblSpecial.Width, lblSpecial.Height);
+  lblBouncing.SetBounds(lblSpecial.Left, lblBlinking.Top, lblSpecial.Width, lblSpecial.Height);
 end;
 
 procedure TJvBehaviorLblMainFrm.btnAppearClick(Sender: TObject);

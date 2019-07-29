@@ -32,7 +32,6 @@ interface
 uses
   Classes, SysUtils,
   PropEdits;
-//  DesignEditors, DesignIntf;
 
 type
   TJvLabelBehaviorProperty = class(TStringProperty)
@@ -78,12 +77,26 @@ end;
 
 procedure TJvLabelBehaviorProperty.SetValue(const Value: string);
 {
-var                                        wp -- to do
+var
   List: IDesignerSelections;
   LDesigner: IJvFormDesigner;
   }
 begin
   inherited SetValue(Value);
+
+  {
+  try
+    for i := 0 to PropCount - 1 do begin
+      subItem := TPersistent(GetObjectValueAt(i));
+      if subItem <> nil then
+        Result.Add(subItem);
+    end;
+  except
+    Result.Free;
+    raise;
+  end;
+      }
+
   {
   List := CreateSelectionList;
   Designer.GetSelections(List);
