@@ -1,5 +1,10 @@
-tjvid3v1.bmp
-tjvid3v2.bmp
+tjvid3v1.png
+tjvid3v1_150.png
+tjvid3v1_200.png
+
+tjvid3v2.png
+tjvid3v2_150.png
+tjvid3v2_200.png
 
 tjvgradient.png
 tjvgradient_150.png
@@ -13,8 +18,13 @@ tjvspecialprogress.png
 tjvspecialprogress_150.png
 tjvspecialprogress_200.png
 
-tjvanimatedimage.bmp
-tjvbmpanimator.bmp
+tjvanimatedimage.png
+tjvanimatedimage_150.png
+tjvanimatedimage_200.png
+
+tjvbmpanimator.png
+tjvbmpanimator_150.png
+tjvbmpanimator_200.png
 
 tjvfullcoloraxiscombo.png
 tjvfullcoloraxiscombo_150.png
