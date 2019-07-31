@@ -122,7 +122,9 @@ var
   val: Double;
   cell: PCell;
   sheet: TsWorksheet;
+  book: TsWorkbook;
 begin
+  book := FWorkbook as TsWorkbook;
   sheet := FWorksheet as TsWorksheet;
 
   col := StrToInt(GetFieldValue(AFields, 'X')) - 1;
@@ -132,28 +134,29 @@ begin
   // Formula
   expr := GetFieldValue(AFields, 'E');  // expression in R1C1 syntax
   if expr <> '' then
-  begin
-    expr := 'A1';  // to do: Convert R1C1 expression to A1 expression!
-    sheet.WriteFormula(cell, expr);  // to do!!!!
-    exit;
-  end;
+    sheet.WriteFormula(cell, expr, false, true);
 
-  // Value
-  sval := GetFieldValue(AFields, 'K');
-  if sval <> '' then begin
-    if sval[1] = '"' then
-    begin
-      sval := UnquoteStr(sval);
-      if (sval = 'TRUE') or (sval = 'FALSE') then
-        sheet.WriteBoolValue(cell, (sval = 'TRUE'))
-      else
-        sheet.WriteText(cell, UnquoteStr(sval))
-      // to do: error values
-    end else begin
-      val := StrToFloat(sval, FPointSeparatorSettings);
-      sheet.WriteNumber(cell, val);
-      // to do: dates
+  book.LockFormulas;  // Protect formulas from being deleted by the WriteXXXX calls
+  try
+    // Value
+    sval := GetFieldValue(AFields, 'K');
+    if sval <> '' then begin
+      if sval[1] = '"' then
+      begin
+        sval := UnquoteStr(sval);
+        if (sval = 'TRUE') or (sval = 'FALSE') then
+          sheet.WriteBoolValue(cell, (sval = 'TRUE'))
+        else
+          sheet.WriteText(cell, UnquoteStr(sval))
+        // to do: error values
+      end else begin
+        val := StrToFloat(sval, FPointSeparatorSettings);
+        sheet.WriteNumber(cell, val);
+        // to do: dates
+      end;
     end;
+  finally
+    book.UnlockFormulas;
   end;
 end;
 
