@@ -23,8 +23,14 @@ type
     FWorksheetName: String;
     FPointSeparatorSettings: TFormatSettings;
     FDateMode: TDateMode;
+    FPrevX: Integer;
+    FPrevY: Integer;
+    FNumRows, FNumCols: Integer;
+    FRecordLine: String;
+    FLineNumber: Integer;
   protected
     function GetFieldValue(const AFields: TsSYLKFields; AFieldName: Char): String;
+    procedure ProcessBounds(const AFields: TsSYLKFields);
     procedure ProcessCell(const AFields: TsSYLKFields);
     procedure ProcessFormat(const AFields: TsSYLKFields);
     procedure ProcessLine(const ALine: String);
@@ -115,20 +121,56 @@ begin
   Result := '';
 end;
 
+procedure TsSYLKReader.ProcessBounds(const AFields: TsSYLKFields);
+var
+  srows, scols: String;
+begin
+  scols := GetFieldValue(AFields, 'X');
+  srows := GetFieldValue(AFields, 'Y');
+  if (scols = '') or (srows = '') then
+    exit;
+
+  FNumRows := StrToInt(srows);
+  FNumCols := StrToInt(scols);
+end;
+
 procedure TsSYLKReader.ProcessCell(const AFields: TsSYLKFields);
 var
-  row, col: Cardinal;
+  row, col: Integer;
   sval, expr: String;
   val: Double;
   cell: PCell;
   sheet: TsWorksheet;
   book: TsWorkbook;
+  s: String;
 begin
   book := FWorkbook as TsWorkbook;
   sheet := FWorksheet as TsWorksheet;
 
-  col := StrToInt(GetFieldValue(AFields, 'X')) - 1;
-  row := StrToInt(GetFieldValue(AFields, 'Y')) - 1;
+  s := GetFieldValue(AFields, 'X');
+  if (s <> '') and TryStrToInt(s, col) then begin
+    dec(col);
+    FPrevX := col;
+  end else
+    col := FPrevX;
+
+  s := GetFieldValue(AFields, 'Y');
+  if (s <> '') and TryStrToInt(s, row) then begin
+    dec(row);
+    FPrevY := row;
+  end else
+    row := FPrevY;
+
+  if (row >= FNumRows) then begin
+    FWorkbook.AddErrorMsg('line %d, %s": column is outside range.', [FLineNumber, FRecordLine]);
+    exit;
+  end;
+
+  if (col >= FNumCols) then begin
+    FWorkbook.AddErrorMsg('line%d, "%s": row is outside range.', [FLineNumber, FRecordLine]);
+    exit;
+  end;
+
   cell := sheet.GetCell(row, col);
 
   // Formula
@@ -215,6 +257,7 @@ begin
 
     // Determine whether the format applies to column, row or
 
+    (*
     scol := GetFieldValue(AFields, 'C');
     // Column format, not supported yet
     if scol <> '' then
@@ -224,19 +267,38 @@ begin
     // Row format, not yet supported
     if srow <> '' then
       exit;
+    *)
 
     // Cell format
     scol := GetFieldValue(AFields, 'X');
-    srow := GetFieldValue(AFields, 'Y');
-    if (scol <> '') and (srow <> '') then
-    begin
-      if not TryStrToInt(scol, col) then exit;
-      if not TryStrToInt(srow, row) then exit;
-      cell := sheet.GetCell(row, col);
+    if (scol <> '') and TryStrToInt(scol, col) then begin
+      dec(col);
+      FPrevX := col;
+    end else
+      col := FPrevX;
 
-      sheet.WriteNumberFormat(cell, nf, decs);
-      sheet.WriteHorAlignment(cell, ha);
+    srow := GetFieldValue(AFields, 'Y');
+    if (srow <> '') and TryStrToInt(srow, row) then begin
+      dec(row);
+      FPrevY := row;
+    end else
+      row := FPrevY;
+
+    if (row >= FNumRows) then begin
+      FWorkbook.AddErrorMsg('line %d, %s": column is outside range.', [FLineNumber, FRecordLine]);
+      exit;
     end;
+
+    if (col >= FNumCols) then begin
+      FWorkbook.AddErrorMsg('line%d, "%s": row is outside range.', [FLineNumber, FRecordLine]);
+      exit;
+    end;
+
+    // Cell format
+
+    cell := sheet.GetCell(row, col);
+    sheet.WriteNumberFormat(cell, nf, decs);
+    sheet.WriteHorAlignment(cell, ha);
   end;
 
   // Column width
@@ -265,6 +327,8 @@ begin
        TryStrToInt(scol2, col2) and
        TryStrToFloat(sval, val, FPointSeparatorSettings) then
     begin
+      if col2 > FNumCols then
+        col2 := FNumCols;
       for col := col1-1 to col2-1 do
         sheet.WriteColWidth(col, val, suChars);
     end;
@@ -338,6 +402,7 @@ procedure TsSYLKReader.ProcessRecord(ARecordType: String;
 begin
   case ARecordType of
     'ID': ;                       // Begin of file - nothing to do for us
+    'B' : ProcessBounds(AFields); // Bounds of the sheet
     'C' : ProcessCell(AFields);   // Content record
     'F' : ProcessFormat(AFields); // Format record
     'E' : ;                       // End of file
@@ -361,8 +426,11 @@ begin
   // Create worksheet
   FWorksheet := (FWorkbook as TsWorkbook).AddWorksheet(FWorksheetName, true);
 
-  for i:=0 to AStrings.Count-1 do
+  for i:=0 to AStrings.Count-1 do begin
+    FRecordLine := AStrings[i];
+    FLineNumber := i;
     ProcessLine(AStrings[i]);
+  end;
 end;
 
 
