@@ -25,9 +25,7 @@ uses
 procedure Register;
 begin
   RegisterComponents(RsPaletteJvclVisual, [
-    TJvAnimatedImage,
-    TJvBmpAnimator,
-	TjvPicClip,
+    TJvAnimatedImage, TJvBmpAnimator, TJvPicClip,
     TJvGradient, TJvGradientHeaderPanel,
     TJvSpecialProgress,
     TJvFullColorPanel, TJvFullColorTrackBar, TJvFullColorGroup, TJvFullColorLabel,
@@ -44,8 +42,8 @@ begin
 
   RegisterPropertyEditor(TypeInfo(TJvFullColorSpaceID), nil, '', TJvColorIDEditor);
   RegisterPropertyEditor(TypeInfo(TJvFullColor), nil, '', TJvFullColorProperty);
-  {
   RegisterPropertyEditor(TypeInfo(TJvFullColorList), nil, '', TJvFullColorListEditor);
+  {
   RegisterSelectionEditor(TJvFullColorPanel, TJvFullColorSelection);
   RegisterSelectionEditor(TJvFullColorCircle, TJvFullColorSelection);
   RegisterSelectionEditor(TJvFullColorLabel, TJvFullColorSelection);

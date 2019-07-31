@@ -137,6 +137,7 @@ type
     procedure RequiresUnits(Proc: TGetStrProc); override;
     procedure PrepareItem(Index: Integer; const AItem: IMenuItem); override;
   end;
+  **********************)
 
   TJvFullColorListEditor = class(TClassProperty)
   public
@@ -145,7 +146,6 @@ type
     function AllEqual: Boolean; override;
     procedure FormApply(Sender: TObject);
   end;
-**********************)
 
 procedure RegisterFullColorSpaceEditor(AColorSpaceID: TJvFullColorSpaceID;
   AEditorClass: TJvFullColorSpacePropertyClass);
@@ -160,7 +160,7 @@ implementation
 
 uses
   Math, SysUtils, TypInfo, Forms,
-  JvFullColorDialogs;
+  JvFullColorCtrls, JvFullColorDialogs, JvFullColorListForm;
 
 const
   COLOR_PREVIEW_RECT = 16;
@@ -639,6 +639,7 @@ begin
     for I := 0 to Count - 1 do
       RequireClass(Proc, ColorSpaceByIndex[I].ClassType);
 end;
+*************************)
 
 //=== { TJvFullColorListEditor } =============================================
 
@@ -678,7 +679,7 @@ begin
             if FullColorList.IndexOf(Items[IndexColor]) = -1 then
               FullColorList.Add(Items[IndexColor]);
 
-      FullColorListForm.OnApply := FormApply;
+      FullColorListForm.OnApply := @FormApply;
       FullColorListForm.ColorList := FullColorList;
       if FullColorListForm.Execute then
         FormApply(FullColorListForm);
@@ -697,9 +698,8 @@ end;
 
 function TJvFullColorListEditor.GetAttributes: TPropertyAttributes;
 begin
-  Result := [paDialog, paVCL, paMultiSelect];
+  Result := [paDialog, {paVCL, } paMultiSelect];
 end;
-********************)
 
 var
   GFullColorSpaceEditorArray: array of TJvFullColorSpacePropertyClass;

@@ -31,7 +31,6 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages,
-  //Windows, Messages,
   SysUtils, Classes, Controls, Graphics,
   ComCtrls, StdCtrls, ExtCtrls, Types,
   //JvJCLUtils,
@@ -681,6 +680,7 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure CalcRects(out XPos, YPos, XInc, YInc: Integer);
     procedure InvalidateIndex(AIndex: Integer);
+    class function GetControlClassDefaultSize: TSize; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -708,6 +708,7 @@ type
     property Align;
     property Anchors;
     property BorderSpacing;
+    property BorderStyle default bsSingle;
     property BorderWidth;
     property Color;
     property Constraints;
@@ -3422,11 +3423,15 @@ begin
   FSquareSize := 6;
   FSelectedIndex := -1;
   FMouseIndex := -1;
+
   (*************** NOT CONVERTED ***
   BevelKind := bkTile;
   *********************************)
-  Width := 100;
-  Height := 100;
+  BorderStyle := bsSingle;  // instead of BevelKind
+
+  // setup default sizes
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
 end;
 
 destructor TJvFullColorGroup.Destroy;
@@ -3448,6 +3453,12 @@ begin
   YOffset := Height - (FSquareSize * RowCount) - 2;
   YInc := YOffset div RowCount;
   YPos := ((YOffset - (YInc * (RowCount - 1))) div 2) + 1;
+end;
+
+class function TJvFullColorGroup.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 100;
+  Result.CY := 100;
 end;
 
 procedure TJvFullColorGroup.ItemsChange(Sender: TObject; Index: Integer;
@@ -3765,7 +3776,7 @@ begin
     else
       Inc(X, XInc + FSquareSize);
   end;
-
+           (* wp: what is this good for? Draws strange borders.
   with Canvas do
   begin
     Brush.Style := bsSolid;
@@ -3780,6 +3791,7 @@ begin
         Min(lClipRect.Right, Self.Width - 2),
         Min(Y, Self.Height - 2)
       );
+
       X := XOffset;
       for IndexX := 0 to ColCount do
       begin
@@ -3798,6 +3810,7 @@ begin
       Inc(Y, YInc + FSquareSize);
     end;
   end;
+  *)
 end;
 
 procedure TJvFullColorGroup.SetEdge(const Value: TJvFullColorEdge);

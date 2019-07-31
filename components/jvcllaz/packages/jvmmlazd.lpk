@@ -17,7 +17,7 @@
     <Description Value="JVCL Multimedia and image components (Design-time package): 
 bmp animator, id3v1 and id3v2 tags,  full color components and dialogs, gradient, gradient header, special progress bar, animated image"/>
     <Version Major="1" Release="6"/>
-    <Files Count="5">
+    <Files Count="6">
       <Item1>
         <Filename Value="..\design\JvMM\jvmmreg.pas"/>
         <HasRegisterProc Value="True"/>
@@ -39,6 +39,10 @@ bmp animator, id3v1 and id3v2 tags,  full color components and dialogs, gradient
         <Filename Value="..\design\JvMM\jvfullcolorspaceseditors.pas"/>
         <UnitName Value="JvFullColorSpacesEditors"/>
       </Item5>
+      <Item6>
+        <Filename Value="..\design\JvMM\jvfullcolorlistform.pas"/>
+        <UnitName Value="JvFullColorListForm"/>
+      </Item6>
     </Files>
     <RequiredPkgs Count="4">
       <Item1>

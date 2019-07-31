@@ -35,7 +35,11 @@ uses
   JvFullColorSpaces, JvFullColorDialogs, JvFullColorCtrls;
 
 type
+
+  { TJvFullColorListFrm }
+
   TJvFullColorListFrm = class(TForm)
+    ImageList: TImageList;
     JvFullColorDialog: TJvFullColorDialog;
     ListBoxColors: TListBox;
     ActionList: TActionList;
@@ -45,16 +49,16 @@ type
     ButtonNew: TButton;
     ButtonModify: TButton;
     ButtonDelete: TButton;
-    Button4: TButton;
+    ButtonCancel: TButton;
     ButtonOK: TButton;
     BitBtnMoveUp: TBitBtn;
     ActionMoveUp: TAction;
     ActionMoveDown: TAction;
     BitBtnMoveDown: TBitBtn;
     ButtonApply: TButton;
-    Button1: TButton;
+    ButtonClear: TButton;
     ActionClear: TAction;
-    Button2: TButton;
+    ButtonInsert: TButton;
     ActionInsert: TAction;
     procedure ActionNewUpdate(Sender: TObject);
     procedure ActionModifyUpdate(Sender: TObject);
@@ -71,6 +75,8 @@ type
     procedure ActionMoveUpExecute(Sender: TObject);
     procedure ActionMoveDownExecute(Sender: TObject);
     procedure ButtonApplyClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure JvFullColorDialogApply(Sender: TObject;
       AFullColor: TJvFullColor);
     procedure ListBoxColorsDrawItem(Control: TWinControl; Index: Integer;
@@ -94,6 +100,7 @@ var
 implementation
 
 uses
+  Math, LCLType, LCLIntf, LCLVersion,
   JvDsgnConsts;
 
 {$R *.lfm}
@@ -195,8 +202,10 @@ end;
 procedure TJvFullColorListFrm.ActionNewExecute(Sender: TObject);
 begin
   JvFullColorDialog.Options := JvFullColorDialog.Options - [foShowApply];
-  if JvFullColorDialog.Execute then
+  if JvFullColorDialog.Execute then begin
     ListBoxColors.Items.AddObject('', TObject(JvFullColorDialog.FullColor));
+    ListBoxColors.ItemIndex := ListBoxColors.Items.Count-1;
+  end;
 end;
 
 procedure TJvFullColorListFrm.ActionNewUpdate(Sender: TObject);
@@ -207,6 +216,40 @@ end;
 function TJvFullColorListFrm.Execute: Boolean;
 begin
   Result := (ShowModal = mrOK);
+end;
+
+procedure TJvFullColorListFrm.FormCreate(Sender: TObject);
+begin
+  BitBtnMoveUp.Width := BitBtnMoveUp.Height;
+  BitBtnMoveDown.Width := BitBtnMoveDown.Height;
+  {$IF LCL_FullVersion >= 2000000}
+  BitBtnMoveUp.Images := ImageList;
+  BitBtnMoveUp.ImageIndex := 0;
+  BitBtnMoveDown.Images := ImageList;
+  BitBtnMoveDown.ImageIndex := 1;
+  {$ELSE}
+  ImageList.GetBitmap(0, BitBtnMoveUp.Glyph);
+  ImageList.GetBitmap(1, BitBtnMoveDown.Glyph);
+  {$IFEND}
+end;
+
+procedure TJvFullColorListFrm.FormShow(Sender: TObject);
+var
+  i, w: Integer;
+  s: string;
+  cs: TJvColorSpace;
+begin
+  w := 0;
+  ListBoxColors.Canvas.Font.Assign(ListboxColors.Font);
+  for i := 0 to ColorSpaceManager.Count-1 do begin;
+    with ColorSpaceManager.ColorSpaceByIndex[i] do
+      if ID <> csDEF then begin
+        s := Format('%s: %s = $FF; %s = $FF; %s = $FF',
+          [ Name, AxisName[axIndex0], AxisName[axIndex1], AxisName[axIndex2] ]);
+        w := Max(w, ListBoxColors.Canvas.TextWidth(s));
+      end;
+  end;
+  ListBoxColors.ClientWidth := w + ListBoxColors.ItemHeight + GetSystemMetrics(SM_CXVSCROLL) + 8;
 end;
 
 function TJvFullColorListFrm.GetColorList: TJvFullColorList;
@@ -257,8 +300,6 @@ var
 begin
   with TListBox(Control), Canvas do
   begin
-    if odSelected in State then
-      Font.Color := clCaptionText;
     Pen.Style := psSolid;
     Pen.Color := Brush.Color;
     Brush.Style := bsSolid;
