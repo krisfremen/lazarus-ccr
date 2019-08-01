@@ -37,7 +37,7 @@ uses
 type
   TJvDEFFamily = (pfConstant, pfSystem);
 
-  TJvFullColorProperty = class(TPropertyEditor)  //, ICustomPropertyDrawing)
+  TJvFullColorProperty = class(TPropertyEditor)
   private
     function GetIsColorProperty: Boolean;
     procedure DialogApply(Sender: TObject; AFullColor: TJvFullColor);
@@ -50,8 +50,6 @@ type
     procedure Edit; override;
     procedure EditSpace(AColorID: TJvFullColorSpaceID);
     procedure SetColor(AFullColor: TJvFullColor);
-    // ICustomPropertyDrawing
-    procedure PropDrawName(ACanvas: TCanvas; const ARect: TRect; {%H-}AState: TPropEditDrawState); override;
     procedure PropDrawValue(ACanvas: TCanvas; const ARect: TRect; {%H-}AState: TPropEditDrawState); override;
     property IsColorProperty: Boolean read GetIsColorProperty;
   end;
@@ -146,6 +144,7 @@ type
     function AllEqual: Boolean; override;
     procedure FormApply(Sender: TObject);
   end;
+
 
 procedure RegisterFullColorSpaceEditor(AColorSpaceID: TJvFullColorSpaceID;
   AEditorClass: TJvFullColorSpacePropertyClass);
@@ -303,18 +302,12 @@ begin
       Proc(ColorSpaceByIndex[I].ShortName);
 end;
 
-procedure TJvFullColorProperty.PropDrawName(ACanvas: TCanvas;
-  const ARect: TRect; AState: TPropEditDrawState);
-begin
-  ACanvas.TextOut(ARect.Left, ARect.Top, GetName);
-//  DefaultPropertyDrawName(Self, ACanvas, ARect);
-end;
-
 procedure TJvFullColorProperty.PropDrawValue(ACanvas: TCanvas;
   const ARect: TRect; AState: TPropEditDrawState);
 var
   OldPenColor, OldBrushColor: TColor;
   Right: Integer;
+  h: Integer;
 begin
   with ACanvas do
   begin
@@ -330,13 +323,13 @@ begin
 
     Right := (ARect.Bottom - ARect.Top) + ARect.Left;
 
-    Rectangle(ARect.Left + 1, ARect.Top + 1, Right - 1, ARect.Bottom - 1);
+    Rectangle(ARect.Left + 2, ARect.Top + 2, Right - 2, ARect.Bottom - 2);
 
     Pen.Color := OldPenColor;
     Brush.Color := OldBrushColor;
   end;
-  ACanvas.TextOut(ARect.Left, ARect.Top, GetVisualValue);
-//  DefaultPropertyDrawValue(Self, ACanvas, Rect(Right, ARect.Top, ARect.Right, ARect.Bottom));
+  h := ACanvas.TextHeight('Tg');
+  ACanvas.TextOut(Right + 2, (ARect.Top + ARect.Bottom - h) div 2, GetVisualValue);
 end;
 
 procedure TJvFullColorProperty.SetColor(AFullColor: TJvFullColor);
@@ -367,6 +360,7 @@ begin
       end;
     end;
 end;
+
 
 //=== { TJvFullColorSpaceProperty } ==========================================
 
@@ -407,6 +401,7 @@ function TJvFullColorSpaceProperty.GetValue: string;
 begin
   Result := ColorSpace.Name;
 end;
+
 
 //=== { TJvFullColorAxisProperty } ===========================================
 
