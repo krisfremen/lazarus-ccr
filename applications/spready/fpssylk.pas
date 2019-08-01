@@ -34,6 +34,7 @@ type
     procedure ProcessCell(const AFields: TsSYLKFields);
     procedure ProcessFormat(const AFields: TsSYLKFields);
     procedure ProcessLine(const ALine: String);
+    procedure ProcessNumFormat(const AFields: TsSYLKFields);
     procedure ProcessRecord(ARecordType: String; const AFields: TsSYLKFields);
   public
     constructor Create(AWorkbook: TsBasicWorkbook); override;
@@ -209,19 +210,40 @@ var
   col, row, col1, col2: LongInt;
   ch1, ch2: Char;
   nf: TsNumberFormat;
+  nfs: String;
   decs: Integer;
   ha: TsHorAlignment;
+  hasStyle: Boolean;
+  fill: Boolean;
   val: Double;
   P: PChar;
+  n: Integer;
   sheet: TsWorksheet;
+  dest: Integer;   // 0=cell format, 1=col format, 2=rowFormat
+  fmt: TsCellFormat;
+  fmtIdx: Integer;
+  b: TsCellBorders;
+  i: Integer;
 begin
   sheet := FWorksheet as TsWorksheet;
 
   nf := nfGeneral;
   ha := haDefault;
   decs := 0;
+  fill := false;
+  b := [];
+  InitFormatRecord(fmt);
 
   // Format
+  nfs := '';
+  s := GetFieldValue(AFields, 'P');
+  if (s <> '') then begin
+    if LowerCase(s) = 'general' then
+      nf := nfGeneral
+    else if TryStrToInt(s, n) then
+      nfs := FNumFormatList[n];
+  end;
+
   s := GetFieldValue(AFields, 'F');
   if s <> '' then
   begin
@@ -252,53 +274,99 @@ begin
       'L': ha := haLeft;
       'R': ha := haRight;
       '-': ;  // ???
-      'X': ;  // "Fill"
     end;
+  end;
 
-    // Determine whether the format applies to column, row or
-
-    (*
-    scol := GetFieldValue(AFields, 'C');
-    // Column format, not supported yet
-    if scol <> '' then
-      exit;
-
-    srow := GetFieldValue(AFields, 'R');
-    // Row format, not yet supported
-    if srow <> '' then
-      exit;
-    *)
-
-    // Cell format
-    scol := GetFieldValue(AFields, 'X');
-    if (scol <> '') and TryStrToInt(scol, col) then begin
-      dec(col);
-      FPrevX := col;
-    end else
-      col := FPrevX;
-
-    srow := GetFieldValue(AFields, 'Y');
-    if (srow <> '') and TryStrToInt(srow, row) then begin
-      dec(row);
-      FPrevY := row;
-    end else
-      row := FPrevY;
-
-    if (row >= FNumRows) then begin
-      FWorkbook.AddErrorMsg('line %d, %s": column is outside range.', [FLineNumber, FRecordLine]);
-      exit;
+  // Style
+  s := GetFieldValue(AFields, 'S');
+  if s <> '' then begin
+    for i := 1 to Length(s) do begin
+      ch1 := s[i];
+      case ch1 of
+        'S': fill := true;
+        'T': Include(b, cbNorth);
+        'L': Include(b, cbWest);
+        'R': Include(b, cbEast);
+        'B': Include(b, cbSouth);
+      end;
     end;
+  end;
 
-    if (col >= FNumCols) then begin
-      FWorkbook.AddErrorMsg('line%d, "%s": row is outside range.', [FLineNumber, FRecordLine]);
-      exit;
-    end;
+  // Determin to which cell, column or row the format applies
+  dest := 0;  // assume cell format
+  scol := GetFieldValue(AFields, 'X');
+  if (scol <> '') and TryStrToInt(scol, col) then begin
+    dec(col);
+    FPrevX := col;
+  end else
+    col := FPrevX;
 
-    // Cell format
+  srow := GetFieldValue(AFields, 'Y');
+  if (srow <> '') and TryStrToInt(srow, row) then begin
+    dec(row);
+    FPrevY := row;
+  end else
+    row := FPrevY;
 
-    cell := sheet.GetCell(row, col);
-    sheet.WriteNumberFormat(cell, nf, decs);
-    sheet.WriteHorAlignment(cell, ha);
+  if (row >= FNumRows) and (FNumRows > 0) then begin
+    FWorkbook.AddErrorMsg('line %d, %s": row %d  is outside range.', [FLineNumber, FRecordLine, row]);
+    exit;
+  end;
+
+  if (col >= FNumCols) and (FNumCols > 0) then begin
+    FWorkbook.AddErrorMsg('line%d, "%s": column %d is outside range.', [FLineNumber, FRecordLine, col]);
+    exit;
+  end;
+
+  // Column format
+  scol := GetFieldValue(AFields, 'C');
+  if (scol <> '') and TryStrToInt(scol, col) then begin
+    dec(col);
+    dest := 1; // is column format
+  end;
+
+  // Row format
+  srow := GetFieldValue(AFields, 'R');
+  if (srow <> '') and TryStrToInt(srow, row) then begin
+    dec(row);
+    dest := 2;  // is row format
+  end;
+
+  // Create format record and store in workbook format list
+  if ha <> haDefault then begin
+    fmt.HorAlignment := ha;
+    Include(fmt.UsedFormattingfields, uffHorAlign);
+  end;
+  if fill then begin
+    fmt.Background.Style := fsGray25;
+    fmt.Background.FgColor := scBlack;
+    fmt.Background.BgColor := scTransparent;
+    Include(fmt.UsedFormattingFields, uffBackground);
+  end;
+  if b <> [] then begin
+    fmt.Border := b;
+    Include(fmt.UsedFormattingFields, uffBorder);
+  end;
+  if (nfs = '') then begin
+    if nf in [nfCurrency, nfCurrencyRed] then
+      nfs := BuildCurrencyFormatString(nf, FWorkbook.FormatSettings, decs, -1, -1, '?', false)
+    else
+      nfs := BuildNumberFormatString(nf, FWorkbook.FormatSettings, decs);
+  end;
+  if (nfs <> '') and (nfs <> 'General') then begin
+    fmt.NumberFormatIndex := TsWorkbook(FWorkbook).AddNumberFormat(nfs);
+    Include(fmt.UsedFormattingFields, uffNumberFormat);
+  end;
+  fmtIdx := TsWorkbook(FWorkbook).AddCellFormat(fmt);
+
+  // Apply format to cell, col or row
+  case dest of
+    0: begin
+         cell := sheet.GetCell(row, col);
+         sheet.WriteCellFormatIndex(cell, fmtIdx);
+       end;
+    1: sheet.WriteColFormatIndex(col, fmtIdx);
+    2: sheet.WriteRowFormatIndex(row, fmtIdx);
   end;
 
   // Column width
@@ -397,15 +465,24 @@ begin
   ProcessRecord(rtd, fields);
 end;
 
+procedure TsSYLKReader.ProcessNumFormat(const AFields: TsSYLKFields);
+var
+  s: String;
+begin
+  s := GetFieldValue(AFields, 'P');
+  FNumFormatList.Add(s);
+end;
+
 procedure TsSYLKReader.ProcessRecord(ARecordType: String;
   const AFields: TsSYLKFields);
 begin
   case ARecordType of
-    'ID': ;                       // Begin of file - nothing to do for us
-    'B' : ProcessBounds(AFields); // Bounds of the sheet
-    'C' : ProcessCell(AFields);   // Content record
-    'F' : ProcessFormat(AFields); // Format record
-    'E' : ;                       // End of file
+    'ID': ;                          // Begin of file - nothing to do for us
+    'B' : ProcessBounds(AFields);    // Bounds of the sheet
+    'C' : ProcessCell(AFields);      // Content record
+    'F' : ProcessFormat(AFields);    // Format record
+    'P' : ProcessNumFormat(AFields); // Excel number format
+    'E' : ;                          // End of file
   end;
 end;
 
@@ -422,6 +499,7 @@ var
   i: Integer;
 begin
   Unused(AParams);
+  FNumFormatList.Clear;
 
   // Create worksheet
   FWorksheet := (FWorkbook as TsWorkbook).AddWorksheet(FWorksheetName, true);
