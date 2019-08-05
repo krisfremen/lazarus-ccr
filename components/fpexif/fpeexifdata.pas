@@ -57,6 +57,7 @@ type
     FOnEndReading: TExifEndReadingEvent;
     function GetImgHeight: Integer;
     function GetImgWidth: Integer;
+    function GetOrientation: TExifOrientation;
     function GetTagByID(ATagID: TTagID): TTag;
     function GetTagByIndex(AIndex: Integer): TTag;
     function GetTagByName(AFullTagName: String): TTag;
@@ -131,6 +132,8 @@ type
       read GetImgHeight;
     property ImgWidth: Integer
       read GetImgWidth;
+    property ImgOrientation: TExifOrientation
+      read GetOrientation;
 
     property OnBeginReading: TExifBeginReadingEvent
       read FOnBeginReading write FOnBeginReading;
@@ -868,6 +871,18 @@ begin
   else
     Result := tag.AsInteger;
 end;
+
+function TExifData.GetOrientation: TExifOrientation;
+var
+  tag: TTag;
+begin
+  tag := TagByName['Orientation'];
+  if tag = nil then
+    Result := eoUnknown
+  else
+    Result := TExifOrientation(tag.AsInteger);
+end;
+
 
 { Finds the tag which defines the sub-IFD to which the specified tag belongs }
 function TExifData.GetParentTag(ATag: TTag): TTag;
@@ -1766,6 +1781,7 @@ begin
   Move(dw, FRawData[0], 4);
 end;
                 *)
+
 
 initialization
 

@@ -246,6 +246,7 @@ msgid "Extensible metadata platform"
 msgstr ""
 
 #: fpestrconsts.rsfilenotfounderror
+#, object-pascal-format
 msgid "File \"%s\" not found."
 msgstr "Datei \"%s\" nicht gefunden."
 
@@ -502,6 +503,7 @@ msgid "Humidity"
 msgstr "Feuchte"
 
 #: fpestrconsts.rsimagedatafilenotexisting
+#, object-pascal-format
 msgid "File \"%s\" providing the image data does not exist."
 msgstr "Datei \"%s\", die die Bilddaten zur Verfügung stellen sollte, existiert nicht."
 
@@ -530,6 +532,7 @@ msgid "Image number"
 msgstr "Bildnummer"
 
 #: fpestrconsts.rsimageresourcenametoolong
+#, object-pascal-format
 msgid "Image resource name \"%s\" too long."
 msgstr ""
 
@@ -570,6 +573,7 @@ msgid "Incorrect file structure"
 msgstr "Falsche Dateistruktur"
 
 #: fpestrconsts.rsincorrecttagtype
+#, object-pascal-format
 msgid "Incorrect tag type %d: Index=%d, TagID=$%.04x, File:\"%s\""
 msgstr "Falscher Tag-Typ %d: Index=%d, TagID=$%.94x, Datei: \"%s\""
 
@@ -598,6 +602,7 @@ msgid "IPTC data expected, but not found."
 msgstr "IPTC-Daten erwartet, aber nicht gefunden."
 
 #: fpestrconsts.rsiptcextendeddatasizenotsupported
+#, object-pascal-format
 msgid "Data size %d not supported for an IPTC extended dataset."
 msgstr "Datengröße %d wird für einen erweiterten IPTC Datensatz nicht unterstützt."
 
@@ -630,6 +635,7 @@ msgid "Writing error of compressed data."
 msgstr "Fehler beim Schreiben der komprimierten Daten."
 
 #: fpestrconsts.rsjpegreadwriteerrorinsegment
+#, object-pascal-format
 msgid "Read/write error in segment $FF%.2x"
 msgstr "Lese-/Schreibfehler in Segment $FF%.2x"
 
@@ -852,6 +858,7 @@ msgid "Range check error."
 msgstr ""
 
 #: fpestrconsts.rsreadincompleteifdrecord
+#, object-pascal-format
 msgid "Read incomplete IFD record at stream position %d."
 msgstr ""
 
@@ -1073,6 +1080,7 @@ msgid "Supplemental category"
 msgstr "Zusatzkategorie"
 
 #: fpestrconsts.rstagtypenotsupported
+#, object-pascal-format
 msgid "Tag \"%s\" has an unsupported type."
 msgstr "Der Typ von Tag \"%s\" wird nicht unterstützt."
 
@@ -1161,6 +1169,7 @@ msgid "White point"
 msgstr "Weißpunkt"
 
 #: fpestrconsts.rswritingnotimplemented
+#, object-pascal-format
 msgid "Writing of %s files not yet implemented."
 msgstr ""
 

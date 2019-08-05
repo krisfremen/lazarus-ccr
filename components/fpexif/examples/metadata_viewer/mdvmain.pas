@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ShellCtrls,
   ExtCtrls, ComCtrls, StdCtrls,
-  fpeMetadata, fpeMakerNote;
+  fpeGlobal, fpeMetadata, fpeMakerNote;
 
 type
 
@@ -58,6 +58,7 @@ type
   private
     FImgInfo: TImgInfo;
     FImageLoaded: Boolean;
+    FImageOrientation: TExifOrientation;
     procedure LoadFile(const AFileName: String);
     procedure LoadFromIni;
     procedure SaveToIni;
@@ -76,8 +77,8 @@ implementation
 {$R *.lfm}
 
 uses
-  IniFiles, Math, StrUtils, DateUtils,
-  fpeGlobal, fpeTags, fpeExifData, fpeIptcData;
+  LCLType, IniFiles, Math, StrUtils, DateUtils, IntfGraphics,
+  fpeTags, fpeExifData, fpeIptcData;
 
 const
   TAG_ID_CAPTION = 'Tag ID';
@@ -85,6 +86,85 @@ const
 function CalcIniName: String;
 begin
   Result := ChangeFileExt(Application.ExeName, '.ini');
+end;
+
+procedure RotateBitmap(const ABitmap: TBitmap; AOrientation: TExifOrientation);
+Var
+  bmp: TBitmap;
+  srcImg, dstImg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  i, j: integer;
+  w1, h1: Integer;  // Input bitmap width and height diminished by 1
+Begin
+  Assert(ABitmap <> nil, 'RotateBitmap: Input bitmap is expected not to be nil.');
+
+  if (AOrientation = eoUnknown) or (AOrientation = eoNormal) then
+    exit;
+
+  w1 := ABitmap.Width - 1;
+  h1 := ABitmap.Height - 1;
+  srcImg := TLazIntfImage.Create(0, 0);
+  try
+    srcImg.LoadFromBitmap(ABitmap.Handle, ABitmap.MaskHandle);
+    bmp := TBitmap.Create;
+    try
+      dstImg := TLazIntfImage.Create(0, 0);
+      try
+        if AOrientation in [eoRotate90, eoRotate270, eoMirrorHorRot90, eoMirrorHorRot270] then
+        begin
+          bmp.SetSize(ABitmap.Height, ABitmap.Width);
+          dstImg.LoadFromBitmap(bmp.Handle, bmp.MaskHandle);
+          case AOrientation of
+            eoRotate90:
+              for i:=0 to w1 do
+                for j:=0 to h1 do
+                  dstImg.Colors[h1-j, i] := srcImg.Colors[i, j];
+            eoRotate270:
+              for i:=0 to w1 do
+                for j:=0 to h1 do
+                  dstImg.Colors[j, w1-i] := srcImg.Colors[i, j];
+            eoMirrorHorRot90:
+              for i:=0 to w1 do
+                for j:=0 to h1 do
+                  dstImg.Colors[h1-j, w1-i] := srcImg.Colors[i, j];
+            eoMirrorHorRot270:
+              for i:=0 to w1 do
+                for j:=0 to h1 do
+                  dstImg.Colors[j, i] := srcImg.Colors[i, j];
+          end;
+        end else
+        if AOrientation in [eoRotate180, eoMirrorHor, eoMirrorVert] then
+        begin
+          bmp.SetSize(ABitmap.Width, ABitmap.Height);
+          dstImg.LoadFromBitmap(bmp.Handle, bmp.MaskHandle);
+          case AOrientation of
+            eoRotate180:
+              for i:=0 to w1 do
+                for j:=0 to h1 do
+                  dstImg.Colors[w1-i, h1-j] := srcImg.Colors[i, j];
+            eoMirrorHor:
+              for j:=0 to h1 do
+                for i:=0 to w1 do
+                  dstImg.Colors[w1-i, j] := srcImg.Colors[i, j];
+            eoMirrorVert:
+              for i:=0 to w1 do
+                for j:=0 to h1 do
+                  dstImg.Colors[i, h1-j] := srcImg.Colors[i, j];
+          end;
+        end;
+        dstImg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+        bmp.Handle := ImgHandle;
+        bmp.MaskHandle := ImgMaskHandle;
+      finally
+        dstImg.Free;
+      end;
+      ABitmap.Assign(bmp);
+    finally
+      bmp.Free;
+    end;
+  finally
+    srcImg.Free;
+  end;
 end;
 
 
@@ -167,6 +247,7 @@ var
   i: Integer;
   ms: TMemoryStream;
   suffix: String;
+  crs: TCursor;
 begin
   FImageLoaded := false;
   Image.Picture.Clear;
@@ -191,6 +272,7 @@ begin
         end;
       end;
       if FImgInfo.HasExif then begin
+        FImageOrientation := FImgInfo.ExifData.ImgOrientation;
         FImgInfo.ExifData.ExportOptions := FImgInfo.ExifData.ExportOptions + [eoTruncateBinary];
         for i := 0 to FImgInfo.ExifData.TagCount-1 do begin
           lTag := FImgInfo.ExifData.TagByIndex[i];
@@ -237,12 +319,14 @@ begin
           item.SubItems.Add(lTag.AsString);
         end;
       end;
-      if FImgInfo.HasThumbnail then begin
+
+      if FImgInfo.HasThumbnail and Assigned(FImgInfo.ExifData) then begin
         ms := TMemoryStream.Create;
         try
           FImgInfo.ExifData.SaveThumbnailToStream(ms);
           ms.Position := 0;
           PreviewImage.Picture.LoadFromStream(ms);
+          RotateBitmap(PreviewImage.Picture.Bitmap, FImageOrientation);
         finally
           ms.Free;
         end;
@@ -255,8 +339,16 @@ begin
       end;
 
       if PageControl1.ActivePage = PgImage then begin
-        Image.Picture.LoadfromFile(AFileName);
-        FImageLoaded := true;
+        crs := Screen.Cursor;
+        try
+          Screen.Cursor := crHourglass;
+          Image.Picture.LoadFromFile(AFileName);
+          if Assigned(FImgInfo.ExifData) then
+            RotateBitmap(Image.Picture.Bitmap, FImageOrientation);
+          FImageLoaded := true;
+        finally
+          Screen.Cursor := crs;
+        end;
       end;
     except
       on E:Exception do begin
@@ -325,13 +417,23 @@ begin
 end;
 
 procedure TMainForm.PageControl1Change(Sender: TObject);
+var
+  crs: TCursor;
 begin
   if FImgInfo = nil then
     exit;
 
   if not FImageLoaded then begin
-    Image.Picture.LoadfromFile(FImgInfo.FileName);
-    FImageLoaded := true;
+    crs := Screen.Cursor;
+    try
+      Screen.Cursor := crHourglass;
+      Image.Picture.LoadFromFile(FImgInfo.FileName);
+      if FImgInfo.ExifData <> nil then
+        RotateBitmap(Image.Picture.Bitmap, FImgInfo.ExifData.ImgOrientation);
+      FImageLoaded := true;
+    finally
+      Screen.Cursor := crs;
+    end;
   end;
 end;
 

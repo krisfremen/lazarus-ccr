@@ -84,11 +84,15 @@ type
 
   TLookupCompareFunc = function(AValue1, AValue2: String): Boolean;
 
+  TExifOrientation = (                   // all angles are clockwise
+    eoUnknown, eoNormal, eoMirrorHor, eoRotate180, eoMirrorVert,
+    eoMirrorHorRot270, eoRotate90, eoMirrorHorRot90, eoRotate270
+  );
+
   EFpExif = class(Exception);
   EFpExifReader = class(EFpExif);
   EFpExifWriter = class(EFpExif);
 
-//  TTagAcceptProc = function(ATag: TTagEntry): Boolean;
 
 const
   TagElementSize: array[1..13] of Integer = (1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8, 4);

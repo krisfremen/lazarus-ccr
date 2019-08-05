@@ -94,7 +94,7 @@ object MainForm: TMainForm
         Left = 8
         Height = 15
         Top = 4
-        Width = 94
+        Width = 93
         BorderSpacing.Left = 8
         BorderSpacing.Top = 4
         BorderSpacing.Bottom = 4
@@ -329,7 +329,7 @@ object MainForm: TMainForm
         Height = 25
         Hint = 'Replaces the image date.'
         Top = 5
-        Width = 66
+        Width = 67
         AutoSize = True
         BorderSpacing.Left = 8
         BorderSpacing.Bottom = 4
