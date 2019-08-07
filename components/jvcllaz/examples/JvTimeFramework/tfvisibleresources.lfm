@@ -1,0 +1,53 @@
+object VisibleResources: TVisibleResources
+  Left = 707
+  Height = 205
+  Top = 215
+  Width = 271
+  Caption = 'Visible Resources'
+  ClientHeight = 205
+  ClientWidth = 271
+  Font.Color = clWindowText
+  OnClose = FormClose
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  Scaled = False
+  object ResourcesCheckList: TCheckListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 16
+    Height = 129
+    Top = 16
+    Width = 239
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 16
+    ItemHeight = 0
+    TabOrder = 0
+  end
+  object OKButton: TBitBtn
+    AnchorSideLeft.Control = ResourcesCheckList
+    Left = 40
+    Height = 25
+    Top = 160
+    Width = 75
+    BorderSpacing.Left = 24
+    Kind = bkOK
+    TabOrder = 1
+  end
+  object CancelButton: TBitBtn
+    AnchorSideRight.Control = ResourcesCheckList
+    AnchorSideRight.Side = asrBottom
+    Left = 156
+    Height = 25
+    Top = 160
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 24
+    Kind = bkCancel
+    TabOrder = 2
+  end
+end

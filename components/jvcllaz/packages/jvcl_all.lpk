@@ -11,55 +11,60 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <RequiredPkgs Count="16">
+    <Description Value="A meta package for simple installation of all JVCL designtime packages."/>
+    <Version Major="1" Release="6"/>
+    <RequiredPkgs Count="17">
       <Item1>
-        <PackageName Value="JvXPCtrlsLazD"/>
+        <PackageName Value="JvTimeFrameworkLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvWizardLazD"/>
+        <PackageName Value="JvXPCtrlsLazD"/>
       </Item2>
       <Item3>
-        <PackageName Value="JvValidatorsLazD"/>
+        <PackageName Value="JvWizardLazD"/>
       </Item3>
       <Item4>
-        <PackageName Value="JvRuntimeDesignLazD"/>
+        <PackageName Value="JvValidatorsLazD"/>
       </Item4>
       <Item5>
-        <PackageName Value="JvPageCompsD"/>
+        <PackageName Value="JvRuntimeDesignLazD"/>
       </Item5>
       <Item6>
-        <PackageName Value="JvNetLazD"/>
+        <PackageName Value="JvPageCompsD"/>
       </Item6>
       <Item7>
-        <PackageName Value="JvMMLazD"/>
+        <PackageName Value="JvNetLazD"/>
       </Item7>
       <Item8>
-        <PackageName Value="JvJansLazD"/>
+        <PackageName Value="JvMMLazD"/>
       </Item8>
       <Item9>
-        <PackageName Value="JvStdCtrlsLazD"/>
+        <PackageName Value="JvJansLazD"/>
       </Item9>
       <Item10>
-        <PackageName Value="JvHMILazD"/>
+        <PackageName Value="JvStdCtrlsLazD"/>
       </Item10>
       <Item11>
-        <PackageName Value="JvDBLazD"/>
+        <PackageName Value="JvHMILazD"/>
       </Item11>
       <Item12>
-        <PackageName Value="JvCustomLazD"/>
+        <PackageName Value="JvDBLazD"/>
       </Item12>
       <Item13>
-        <PackageName Value="JvCtrlsLazD"/>
+        <PackageName Value="JvCustomLazD"/>
       </Item13>
       <Item14>
-        <PackageName Value="JvAppFrmLazD"/>
+        <PackageName Value="JvCtrlsLazD"/>
       </Item14>
       <Item15>
-        <PackageName Value="JvCmpD"/>
+        <PackageName Value="JvAppFrmLazD"/>
       </Item15>
       <Item16>
-        <PackageName Value="JvCoreLazD"/>
+        <PackageName Value="JvCmpD"/>
       </Item16>
+      <Item17>
+        <PackageName Value="JvCoreLazD"/>
+      </Item17>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

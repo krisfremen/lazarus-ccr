@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectGroup FileVersion="1">
-    <Targets Count="32">
+    <Targets Count="34">
       <Target0 FileName="jvcorelazr.lpk"/>
       <Target1 FileName="jvcorelazd.lpk"/>
       <Target2 FileName="jvctrlslazr.lpk"/>
@@ -34,6 +34,8 @@
       <Target29 FileName="jvwizardlazd.lpk"/>
       <Target30 FileName="jvxpctrlslazr.lpk"/>
       <Target31 FileName="jvxpctrlslazd.lpk"/>
+      <Target32 FileName="jvtimeframeworklazr.lpk"/>
+      <Target33 FileName="jvtimeframeworklazd.lpk"/>
     </Targets>
   </ProjectGroup>
 </CONFIG>
