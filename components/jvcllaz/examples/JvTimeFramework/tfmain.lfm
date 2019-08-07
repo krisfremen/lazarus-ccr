@@ -1123,7 +1123,7 @@ object MainForm: TMainForm
     LineSpacing = 2
     ShowStartEnd = False
     left = 304
-    top = 224
+    top = 200
   end
   object dbUTF: TSQLite3Connection
     Connected = False
@@ -1496,5 +1496,57 @@ object MainForm: TMainForm
       FA397E621FE77CC386FA4A73B0351B896B5B3EFBAC2E998CE311AE31E2E73D1B
       36348834EDAD6AFF03880DBFF8
     }
+  end
+  object JvTFDaysPrinter1: TJvTFDaysPrinter
+    ScheduleManager = utfScheduleManager1
+    PageLayout.FooterHeight = 0
+    PageLayout.HeaderHeight = 0
+    PageLayout.MarginLeft = 25
+    PageLayout.MarginTop = 17
+    PageLayout.MarginRight = 25
+    PageLayout.MarginBottom = 63
+    PageLayout.ColsPerPage = 0
+    PageLayout.RowsPerPage = 0
+    PageLayout.AlwaysShowColHdr = False
+    PageLayout.AlwaysShowRowHdr = False
+    OnPrintProgress = JvTFDaysPrinter1PrintProgress
+    OnAssembleProgress = JvTFDaysPrinter1AssembleProgress
+    Title = 'SIMPLDaysPrinter Demo'
+    ApptAttr.Color = clLime
+    ApptAttr.ParentFont = False
+    ApptBuffer = 0
+    ColHdrHeight = 0
+    Color = clBlack
+    Cols = <>
+    ColTitleStyle = ctsSingleClip
+    DateFormat = 'ddddd'
+    FancyRowHdrAttr.Hr2400 = False
+    FancyRowHdrAttr.MajorFont.Height = -19
+    FormattedDesc = False
+    Granularity = 1
+    GridLineColor = clBlack
+    GroupHdrAttr.Font.Color = clWindowText
+    GroupHdrAttr.ParentFont = False
+    GroupHdrAttr.FrameColor = clBlack
+    Grouping = grNone
+    HdrAttr.Font.Color = clWindowText
+    HdrAttr.ParentFont = False
+    HdrAttr.FrameColor = clBlack
+    MinColWidth = 5
+    MinRowHeight = 1
+    PrimeTime.StartTime = 0.333333333333333
+    PrimeTime.EndTime = 0.708333333333333
+    PrimeTime.Color = clYellow
+    RowHdrType = rhGrid
+    RowHdrWidth = 0
+    RowHeight = 0
+    ShowPics = False
+    ShowText = False
+    TimeFormat = 't'
+    OnApptProgress = JvTFDaysPrinter1ApptProgress
+    GridStartTime = 0
+    GridEndTime = 0
+    left = 304
+    top = 259
   end
 end

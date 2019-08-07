@@ -43,6 +43,7 @@ type
 
   TMainForm = class(TForm)
     ImageList: TImageList;
+    JvTFDaysPrinter1: TJvTFDaysPrinter;
     Label1: TLabel;
     Label2: TLabel;
     Panel2: TPanel;
@@ -576,26 +577,24 @@ end;
 
 procedure TMainForm.PrintButtonClick(Sender: TObject);
 begin
-  (********************  wp: deactivated due to stack overflow ************
-  With JvTFDaysPrinter1 do
-    Begin
-      // "Copy" the display properties from the JvTFDays control
-      SetProperties(JvTFDays1);
-      // Set gridline color to black for sharp display on printed page
-      GridLineColor := clBlack;
-      // print 48 rows on each page
-      PageLayout.RowsPerPage := 48;
-      // fit all the columns onto one page wide
-      PageLayout.ColsPerPage := 0;
-      // "Copy" the schedules from the JvTFDays control
-      Cols.Assign(JvTFDays1.Cols);
-      PrintProgress.Show;
-      Application.ProcessMessages;
-      // print the document
-      PrintDirect;
-      PrintProgress.Close;
-    End;
-    ************************)
+  with JvTFDaysPrinter1 do
+  begin
+    // "Copy" the display properties from the JvTFDays control
+    SetProperties(JvTFDays1);
+    // Set gridline color to black for sharp display on printed page
+    GridLineColor := clBlack;
+    // print 48 rows on each page
+    PageLayout.RowsPerPage := 48;
+    // fit all the columns onto one page wide
+    PageLayout.ColsPerPage := 0;
+    // "Copy" the schedules from the JvTFDays control
+    Cols.Assign(JvTFDays1.Cols);
+    PrintProgress.Show;
+    Application.ProcessMessages;
+    // print the document
+    PrintDirect;
+    PrintProgress.Close;
+  end;
 end;
 
 procedure TMainForm.JvTFDaysPrinter1ApptProgress(Sender: TObject;

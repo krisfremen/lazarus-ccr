@@ -32,7 +32,7 @@ interface
 
 uses
   LCLIntf, LCLType,
-  Classes, SysUtils, Controls, //Windows, Messages,
+  Classes, SysUtils, Controls,
   Graphics, ImgList, ExtCtrls, Printers, Forms,
   //JvComponentBase,
   JvComponent, JvTypes, JvTFUtils;
@@ -4339,6 +4339,7 @@ const
 var
   PPI: Integer;
 begin
+  (**************** DONE
   PPI := 300;  // wp -- just a workaround for next commented lines...
   { wp --- to do
   if Horizontal then
@@ -4346,6 +4347,11 @@ begin
   else
     PPI := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSY);
   }
+  ******************)
+  if Horizontal then
+    PPI := Printer.XDPI
+  else
+    PPI := Printer.YDPI;
   if (FromMeasure = pmPixels) and (ToMeasure = pmInches) then
     Result := round(Value / PPI * 100)
   else
@@ -4483,9 +4489,10 @@ function TJvTFPrinter.GetBodyHeight: Integer; // always in pixels
 var
   PhysHeight, TopMarginPels, BottomMarginPels, HeaderPels, FooterPels: Integer;
 begin
-  { wp --- to do
+  { wp --- to do  **************** DONE ***************
   PhysHeight := Windows.GetDeviceCaps(Printer.Handle, PHYSICALHEIGHT);
   }
+  PhysHeight := Printer.PaperSize.Height;
   TopMarginPels := ConvertMeasure(PageLayout.MarginTop, Measure, pmPixels, False);
   BottomMarginPels := ConvertMeasure(PageLayout.MarginBottom, Measure, pmPixels, False);
   HeaderPels := ConvertMeasure(PageLayout.HeaderHeight, Measure, pmPixels, False);
@@ -4510,9 +4517,10 @@ function TJvTFPrinter.GetBodyWidth: Integer; // always in pixels
 var
   PhysWidth, LeftMarginPels, RightMarginPels: Integer;
 begin
-  { wp --- to do
+  { wp --- to do  **************** DONE *****************
   PhysWidth := Windows.GetDeviceCaps(Printer.Handle, PHYSICALWIDTH);
   }
+  PhysWidth := Printer.PaperSize.Width;
   LeftMarginPels := ConvertMeasure(PageLayout.MarginLeft, Measure, pmPixels, True);
   RightMarginPels := ConvertMeasure(PageLayout.MarginRight, Measure, pmPixels, True);
 
@@ -4589,12 +4597,16 @@ function TJvTFPrinter.GetUnprintable: TJvTFMargins;
 var
   LeftMarg, TopMarg, WidthPaper, HeightPaper, WidthPrintable, HeightPrintable: Integer;
 begin
-  { wp --- to do
+  { wp --- to do   ----------- DONE ----------------
   LeftMarg := Windows.GetDeviceCaps(Printer.Handle, PHYSICALOFFSETX);
   TopMarg := Windows.GetDeviceCaps(Printer.Handle, PHYSICALOFFSETY);
   WidthPaper := Windows.GetDeviceCaps(Printer.Handle, PHYSICALWIDTH);
   HeightPaper := Windows.GetDeviceCaps(Printer.Handle, PHYSICALHEIGHT);
   }
+  LeftMarg := Printer.PaperSize.PaperRect.WorkRect.Left;
+  TopMarg := Printer.PaperSize.PaperRect.WorkRect.Top;
+  WidthPaper := Printer.PaperSize.Width;
+  HeightPaper := Printer.PaperSize.Height;
   WidthPrintable := Printer.PageWidth;
   HeightPrintable := Printer.PageHeight;
 
@@ -4749,13 +4761,18 @@ function TJvTFPrinter.PrinterToScreen(Value: Integer;
 var
   ScreenPPI, PrinterPPI: Integer;
 begin
-  { wp --- to do
+  { wp --- to do  ************* DONE ************
   ScreenPPI := Screen.PixelsPerInch;
   if Horizontal then
     PrinterPPI := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSX)
   else
     PrinterPPI := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSY);
     }
+  ScreenPPI := Screen.PixelsPerInch;
+  if Horizontal then
+    PrinterPPI := Printer.XDPI
+  else
+    PrinterPPI := Printer.YDPI;
   Result := Trunc(ScreenPPI / PrinterPPI * Value);
 end;
 
@@ -4778,7 +4795,11 @@ var
   ScreenPPI, PrinterPPI: Integer;
 begin
   ScreenPPI := Screen.PixelsPerInch;
-  { wp --- to do
+  if Horizontal then
+    PrinterPPI := Printer.XDPI
+  else
+    PrinterPPI := Printer.YDPI;
+  { wp --- to do    *********** DONE ***********
   if Horizontal then
     PrinterPPI := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSX)
   else
@@ -4860,6 +4881,10 @@ begin
     raise EJvTFPrinterError.CreateRes(@RsECouldNotCreateTJvTFPrinterPageLayou);
 
   FPrinter := aPrinter;
+  FMargins.Left := 25;
+  FMargins.Right := 25;
+  FMargins.Top := 17;
+  FMargins.Bottom := 63;
 end;
 
 procedure TJvTFPrinterPageLayout.Assign(Source: TPersistent);
