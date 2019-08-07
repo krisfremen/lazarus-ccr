@@ -25,8 +25,7 @@ begin
       mtError, [mbOK], 0);
     Halt;
   end;
-
-  Application.CreateForm(TPhotoOpMain, PhotoOpMain);
+  Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TVisibleResources, VisibleResources);
   Application.CreateForm(TShare, Share);
   Application.CreateForm(TApptEdit, ApptEdit);

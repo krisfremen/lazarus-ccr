@@ -26,10 +26,12 @@
 
 unit tfApptEdit;
 
+{$mode objfpc}{$H+}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls, JvTFManager, ExtCtrls, ButtonPanel,
   DateTimePicker;
 
@@ -97,7 +99,7 @@ var
   DaysGrid : TJvTFDays;
 begin
   // Just a short cut to save typing :)
-  DaysGrid := PhotoOpMain.JvTFDays1;
+  DaysGrid := MainForm.JvTFDays1;
 
   If Assigned(Appt) Then
     Begin
@@ -122,7 +124,7 @@ begin
     Begin
       // Assume we are adding a new appt
       // Request an appt from the server
-      Appt := PhotoOpMain.JvTFDays1.ScheduleManager.dbNewAppt('');
+      Appt := MainForm.JvTFDays1.ScheduleManager.dbNewAppt('');
       // Right now this appt object is in a state of flux.  It is not
       // assigned to any schedules and shouldn't be because we're unsure
       // of its data.  The caching system is programmed to automatically
@@ -205,7 +207,7 @@ begin
           If AddingAppt Then
             Begin
               // Just a shortcut to save some typing :-)
-              DaysGrid := PhotoOpMain.JvTFDays1;
+              DaysGrid := MainForm.JvTFDays1;
 
               // Add the appt to selected schedule(s)
               For I := 0 to DaysGrid.Cols.Count - 1 do

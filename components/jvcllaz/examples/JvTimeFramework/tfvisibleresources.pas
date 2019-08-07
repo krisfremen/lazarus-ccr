@@ -31,14 +31,17 @@ unit tfVisibleResources;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Buttons, checklst;
+  //Windows, Messages,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, Buttons, checklst, ButtonPanel;
 
 type
+
+  { TVisibleResources }
+
   TVisibleResources = class(TForm)
+    ButtonPanel1: TButtonPanel;
     ResourcesCheckList: TCheckListBox;
-    OKButton: TBitBtn;
-    CancelButton: TBitBtn;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var TheAction: TCloseAction);
   private
@@ -62,7 +65,7 @@ var
 begin
   // Check the template and check any resources currently
   // visible in the grid
-  With PhotoOpMain.JvTFDays1.Template do
+  With MainForm.JvTFDays1.Template do
     For I := 0 to ResourcesCheckList.Items.Count - 1 do
       ResourcesCheckList.Checked[I] :=
         CompNames.IndexOf(ResourcesCheckList.Items[I]) > -1;
@@ -76,17 +79,17 @@ begin
   If ModalResult = mrOK Then
   begin
       // First, clear the old resources from the template
-      PhotoOpMain.JvTFDays1.Template.CompNames.Clear;
-      PhotoOpMain.JvTFWeeks1.SchedNames.Clear;
-      PhotoOpMain.JvTFMonths1.SchedNames.Clear;
+      MainForm.JvTFDays1.Template.CompNames.Clear;
+      MainForm.JvTFWeeks1.SchedNames.Clear;
+      MainForm.JvTFMonths1.SchedNames.Clear;
 
       // Next, add the new resources to the template
       For I := 0 to ResourcesCheckList.Items.Count - 1 do
          If ResourcesCheckList.Checked[I] Then
          begin
-             PhotoOpMain.JvTFDays1.Template.CompNames.Add(ResourcesCheckList.Items[I]);
-             PhotoOpMain.JvTFWeeks1.SchedNames.Add(ResourcesCheckList.Items[I]);
-             PhotoOpMain.JvTFMonths1.SchedNames.Add(ResourcesCheckList.Items[I]);
+             MainForm.JvTFDays1.Template.CompNames.Add(ResourcesCheckList.Items[I]);
+             MainForm.JvTFWeeks1.SchedNames.Add(ResourcesCheckList.Items[I]);
+             MainForm.JvTFMonths1.SchedNames.Add(ResourcesCheckList.Items[I]);
          end;
   end;
 end;

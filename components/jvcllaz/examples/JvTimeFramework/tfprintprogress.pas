@@ -26,10 +26,12 @@
 
 unit tfPrintProgress;
 
+{$mode objfpc}{$H+}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ComCtrls;
 
 type
@@ -51,7 +53,8 @@ var
 
 implementation
 
-uses tfMain;
+uses
+  tfMain;
 
 {$R *.lfm}
 

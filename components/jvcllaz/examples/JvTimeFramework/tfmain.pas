@@ -26,22 +26,22 @@
 
 unit tfMain;
 
+{$mode objfpc}{$H+}
+
 interface
 
 uses
   LCLIntf,
-  //Windows, Messages,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Db, sqldb, sqlite3conn, //DBTables,
   ComCtrls, StdCtrls, Buttons, ExtCtrls, ImgList, DateTimePicker, JvTFManager,
-  JvTFDays, JvTFGlance, JvTFGlanceTextViewer, JvTFMonths, JvTFWeeks,
-  JvComponent, JvExControls;
+  JvTFDays, JvTFGlance, JvTFGlanceTextViewer, JvTFMonths, JvTFWeeks;
 
 type
 
-  { TPhotoOpMain }
+  { TMainForm }
 
-  TPhotoOpMain = class(TForm)
+  TMainForm = class(TForm)
     ImageList: TImageList;
     Label1: TLabel;
     Label2: TLabel;
@@ -127,7 +127,7 @@ type
   end;
 
 var
-  PhotoOpMain: TPhotoOpMain;
+  MainForm: TMainForm;
 
 implementation
 
@@ -136,7 +136,7 @@ uses
 
 {$R *.lfm}
 
-procedure TPhotoOpMain.utfScheduleManager1PostAppt(Sender: TObject;
+procedure TMainForm.utfScheduleManager1PostAppt(Sender: TObject;
   Appt: TJvTFAppt);
 var
   I : Integer;
@@ -190,7 +190,7 @@ begin
     End;
 end;
 
-procedure TPhotoOpMain.utfScheduleManager1DeleteAppt(Sender: TObject;
+procedure TMainForm.utfScheduleManager1DeleteAppt(Sender: TObject;
   Appt: TJvTFAppt);
 begin
   // First delete the appointment from the appointment table
@@ -208,7 +208,7 @@ begin
     End;
 end;
 
-procedure TPhotoOpMain.utfScheduleManager1RefreshAppt(Sender: TObject;
+procedure TMainForm.utfScheduleManager1RefreshAppt(Sender: TObject;
   Appt: TJvTFAppt);
 begin
   With GetApptQuery do
@@ -244,7 +244,7 @@ begin
     End;
 end;
 
-procedure TPhotoOpMain.ModeComboChange(Sender: TObject);
+procedure TMainForm.ModeComboChange(Sender: TObject);
 begin
   If ModeCombo.ItemIndex = 0 Then
     // Single mode
@@ -280,12 +280,12 @@ begin
     End;
 end;
 
-procedure TPhotoOpMain.ViewSchedsButtonClick(Sender: TObject);
+procedure TMainForm.ViewSchedsButtonClick(Sender: TObject);
 begin
   VisibleResources.ShowModal;
 end;
 
-procedure TPhotoOpMain.HideSchedButtonClick(Sender: TObject);
+procedure TMainForm.HideSchedButtonClick(Sender: TObject);
 var
   I,
   NameIndex : Integer;
@@ -316,7 +316,7 @@ begin
   End;
 end;
 
-procedure TPhotoOpMain.ResourceComboChange(Sender: TObject);
+procedure TMainForm.ResourceComboChange(Sender: TObject);
 begin
   JvTFDays1.Template.LinearName := ResourceCombo.Text;
   JvTFWeeks1.SchedNames.Clear;
@@ -327,7 +327,7 @@ begin
   JvTFMonths1.Refresh;
 end;
 
-procedure TPhotoOpMain.DaysComboChange(Sender: TObject);
+procedure TMainForm.DaysComboChange(Sender: TObject);
 begin
   Case DaysCombo.ItemIndex of
     0 : JvTFDays1.Template.LinearDayCount := 31;
@@ -340,7 +340,7 @@ begin
   End;
 end;
 
-procedure TPhotoOpMain.ShareButtonClick(Sender: TObject);
+procedure TMainForm.ShareButtonClick(Sender: TObject);
 begin
   If JvTFDays1.SelAppt <> nil Then
     Share.ShowModal
@@ -348,17 +348,17 @@ begin
     MessageDlg('Please select an appointment.', mtInformation, [mbOK], 0);
 end;
 
-procedure TPhotoOpMain.PrevDateButtonClick(Sender: TObject);
+procedure TMainForm.PrevDateButtonClick(Sender: TObject);
 begin
   JvTFDays1.PrevDate;
 end;
 
-procedure TPhotoOpMain.NextDateButtonClick(Sender: TObject);
+procedure TMainForm.NextDateButtonClick(Sender: TObject);
 begin
   JvTFDays1.NextDate;
 end;
 
-procedure TPhotoOpMain.GotoDatePickerChange(Sender: TObject);
+procedure TMainForm.GotoDatePickerChange(Sender: TObject);
 begin
   // GotoDatePicker.OnCloseUp should also point to this handler
   JvTFDays1.GotoDate(GotoDatePicker.Date);
@@ -366,7 +366,7 @@ begin
   JvTFWeeks1.DisplayDate := GotoDatePicker.Date;
 end;
 
-procedure TPhotoOpMain.GotoDatePickerUserInput(Sender: TObject;
+procedure TMainForm.GotoDatePickerUserInput(Sender: TObject;
   const UserString: String; var DateAndTime: TDateTime;
   var AllowChange: Boolean);
 begin
@@ -374,7 +374,7 @@ begin
   GotoDatePicker.OnChange(nil);
 end;
 
-procedure TPhotoOpMain.TimeIncComboChange(Sender: TObject);
+procedure TMainForm.TimeIncComboChange(Sender: TObject);
 begin
   Case TimeIncCombo.ItemIndex of
      0 : JvTFDays1.Granularity := 60;
@@ -392,7 +392,7 @@ begin
   End;
 end;
 
-procedure TPhotoOpMain.NewApptButtonClick(Sender: TObject);
+procedure TMainForm.NewApptButtonClick(Sender: TObject);
 begin
   // Simply open the EditAppt window.  The Appt var of the
   // EditAppt form will already be nil (which indicates
@@ -400,7 +400,7 @@ begin
   ApptEdit.ShowModal;
 end;
 
-procedure TPhotoOpMain.EditApptButtonClick(Sender: TObject);
+procedure TMainForm.EditApptButtonClick(Sender: TObject);
 begin
   If Assigned(JvTFDays1.SelAppt) Then
     Begin
@@ -414,7 +414,7 @@ begin
                [mbOK], 0);
 end;
 
-procedure TPhotoOpMain.DeleteApptButtonClick(Sender: TObject);
+procedure TMainForm.DeleteApptButtonClick(Sender: TObject);
 var
   Appt : TJvTFAppt;
   dbDel : Boolean;
@@ -471,14 +471,14 @@ begin
                mtInformation, [mbOK], 0);
 end;
 
-procedure TPhotoOpMain.JvTFDays1DateChanging(Sender: TObject;
+procedure TMainForm.JvTFDays1DateChanging(Sender: TObject;
   var NewDate: TDate);
 begin
   // Make sure all appts are posted before moving on.
   JvTFDays1.ScheduleManager.PostAppts;
 end;
 
-procedure TPhotoOpMain.JvTFDays1DateChanged(Sender: TObject);
+procedure TMainForm.JvTFDays1DateChanged(Sender: TObject);
 begin
   // Synchronize the tool bar
   With JvTFDays1.Template do
@@ -488,7 +488,7 @@ begin
       GotoDatePicker.Date := CompDate;
 end;
 
-procedure TPhotoOpMain.JvTFDays1GranularityChanged(Sender: TObject);
+procedure TMainForm.JvTFDays1GranularityChanged(Sender: TObject);
 begin
   // Update the TimeIncCombo when the granularity is changed.
   //  (This can be done by <Ctrl> + <Insert> and <Ctrl> + <Delete>)
@@ -509,7 +509,7 @@ begin
   End;
 end;
 
-procedure TPhotoOpMain.JvTFDays1DblClick(Sender: TObject);
+procedure TMainForm.JvTFDays1DblClick(Sender: TObject);
 begin
   With JvTFDays1 do
     If ValidSelection Then
@@ -519,7 +519,7 @@ begin
         NewApptButtonClick(nil);
 end;
 
-procedure TPhotoOpMain.FormShow(Sender: TObject);
+procedure TMainForm.FormShow(Sender: TObject);
 var
   ResName : String;
 begin
@@ -574,7 +574,7 @@ begin
   TimeIncComboChange(nil);
 end;
 
-procedure TPhotoOpMain.PrintButtonClick(Sender: TObject);
+procedure TMainForm.PrintButtonClick(Sender: TObject);
 begin
   (********************  wp: deactivated due to stack overflow ************
   With JvTFDaysPrinter1 do
@@ -598,7 +598,7 @@ begin
     ************************)
 end;
 
-procedure TPhotoOpMain.JvTFDaysPrinter1ApptProgress(Sender: TObject;
+procedure TMainForm.JvTFDaysPrinter1ApptProgress(Sender: TObject;
   Current, Total: Integer);
 begin
   If Current > Total Then
@@ -609,7 +609,7 @@ begin
   PrintProgress.ProgressBar1.Position := Current;
 end;
 
-procedure TPhotoOpMain.JvTFDaysPrinter1AssembleProgress(Sender: TObject;
+procedure TMainForm.JvTFDaysPrinter1AssembleProgress(Sender: TObject;
   Current, Total: Integer);
 begin
   PrintProgress.Label2.Caption := 'Assembling page ' + IntToStr(Current) +
@@ -618,7 +618,7 @@ begin
   PrintProgress.ProgressBar1.Position := Current;
 end;
 
-procedure TPhotoOpMain.JvTFDaysPrinter1PrintProgress(Sender: TObject;
+procedure TMainForm.JvTFDaysPrinter1PrintProgress(Sender: TObject;
   Current, Total: Integer);
 begin
   PrintProgress.Label2.Caption := 'Printing page ' + IntToStr(Current) +
@@ -627,24 +627,24 @@ begin
   PrintProgress.ProgressBar1.Position := Current;
 end;
 
-procedure TPhotoOpMain.Label2Click(Sender: TObject);
+procedure TMainForm.Label2Click(Sender: TObject);
 begin
   OpenURL('https://icons8.com');
 end;
 
-procedure TPhotoOpMain.Label2MouseEnter(Sender: TObject);
+procedure TMainForm.Label2MouseEnter(Sender: TObject);
 begin
   Label2.Font.Style := Label2.Font.Style + [fsUnderline];
   Screen.Cursor := crHandPoint;
 end;
 
-procedure TPhotoOpMain.Label2MouseLeave(Sender: TObject);
+procedure TMainForm.Label2MouseLeave(Sender: TObject);
 begin
   Label2.Font.Style := Label2.Font.Style - [fsUnderline];
   Screen.Cursor := crDefault;
 end;
 
-procedure TPhotoOpMain.utfScheduleManager1LoadBatch(Sender: TObject;
+procedure TMainForm.utfScheduleManager1LoadBatch(Sender: TObject;
   BatchName: String; BatchStartDate, BatchEndDate: TDate);
 var
   Appt : TJvTFAppt;
@@ -699,7 +699,7 @@ begin
     End;
 end;
 
-procedure TPhotoOpMain.FormCreate(Sender: TObject);
+procedure TMainForm.FormCreate(Sender: TObject);
 var
   fn: String;
 begin

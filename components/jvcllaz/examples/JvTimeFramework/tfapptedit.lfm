@@ -1,11 +1,11 @@
 object ApptEdit: TApptEdit
   Left = 218
-  Height = 210
+  Height = 189
   Top = 152
   Width = 350
   AutoSize = True
   Caption = 'ApptEdit'
-  ClientHeight = 210
+  ClientHeight = 189
   ClientWidth = 350
   Color = clBtnFace
   Font.Color = clWindowText
@@ -165,16 +165,13 @@ object ApptEdit: TApptEdit
   end
   object Image2: TImage
     AnchorSideLeft.Control = Image1
-    AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Bevel2
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Image1
     AnchorSideRight.Side = asrBottom
-    Left = 14
+    Left = 6
     Height = 24
     Top = 115
     Width = 24
-    Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
     BorderSpacing.Bottom = 8

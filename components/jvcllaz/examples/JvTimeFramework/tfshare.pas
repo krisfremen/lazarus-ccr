@@ -26,17 +26,21 @@
 
 unit tfShare;
 
+{$mode objfpc}{$H+}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Buttons, checklst;
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, Buttons, checklst, ButtonPanel;
 
 type
+
+  { TShare }
+
   TShare = class(TForm)
+    ButtonPanel1: TButtonPanel;
     ResourcesCheckList: TCheckListBox;
-    OKButton: TBitBtn;
-    CancelButton: TBitBtn;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var TheAction: TCloseAction);
   private
@@ -61,12 +65,12 @@ var
   I : Integer;
 begin
   // First, get the selected appointment
-  Appt := PhotoOpMain.JvTFDays1.SelAppt;
+  Appt := MainForm.JvTFDays1.SelAppt;
 
   // now roll through the resource list and check all resources
   // that are found in the appointment's list of schedules.
-  With ResourcesCheckList do
-    For I := 0 to Items.Count - 1 do
+  with ResourcesCheckList do
+    for I := 0 to Items.Count - 1 do
       Checked[I] := Appt.IndexOfSchedule(Items[I]) > -1;
 end;
 
@@ -93,13 +97,13 @@ begin
         If TempList.Count > 0 Then
           // If at least one resource then change the appointment's
           // schedule list to match the temp list.
-          PhotoOpMain.JvTFDays1.SelAppt.AssignSchedules(TempList)
+          MainForm.JvTFDays1.SelAppt.AssignSchedules(TempList)
         Else
           If MessageDlg('You have removed this appointment from all schedules.' +
                         '  This will cause the appointment to be deleted.' + #13#10 +
                         'Are you sure this is what you want to do?',
                         mtConfirmation, [mbYes, mbNo], 0) = mrYes Then
-            With PhotoOpMain.JvTFDays1 do
+            With MainForm.JvTFDays1 do
               // Delete the appointment if that is what the user wants to do.
               ScheduleManager.dbDeleteAppt(SelAppt)
           Else
