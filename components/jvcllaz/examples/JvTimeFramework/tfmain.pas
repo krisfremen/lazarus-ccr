@@ -34,8 +34,9 @@ uses
   LCLIntf,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   Db, sqldb, sqlite3conn, //DBTables,
-  ComCtrls, StdCtrls, Buttons, ExtCtrls, ImgList, DateTimePicker, JvTFManager,
-  JvTFDays, JvTFGlance, JvTFGlanceTextViewer, JvTFMonths, JvTFWeeks;
+  ComCtrls, StdCtrls, Buttons, ExtCtrls, ImgList, DateTimePicker, PrintersDlgs,
+  JvTFManager, JvTFDays, JvTFGlance, JvTFGlanceTextViewer, JvTFMonths,
+  JvTFWeeks;
 
 type
 
@@ -44,9 +45,10 @@ type
   TMainForm = class(TForm)
     ImageList: TImageList;
     JvTFDaysPrinter1: TJvTFDaysPrinter;
-    Label1: TLabel;
-    Label2: TLabel;
+    IconsProvidedLabel: TLabel;
+    IconsLink: TLabel;
     Panel2: TPanel;
+    PrintDialog: TPrintDialog;
     utfScheduleManager1: TJvTFScheduleManager;
     StateImageList: TImageList;
     NeedApptsQuery: TSQLQuery;
@@ -81,12 +83,11 @@ type
     PrintButton: TBitBtn;
     dbUTF: TSQLite3Connection;
     SQLTransaction: TSQLTransaction;
-    procedure Label2Click(Sender: TObject);
-    procedure Label2MouseEnter(Sender: TObject);
-    procedure Label2MouseLeave(Sender: TObject);
-    procedure utfScheduleManager1PostAppt(Sender: TObject; Appt: TJvTFAppt);
-    procedure utfScheduleManager1DeleteAppt(Sender: TObject; Appt: TJvTFAppt);
-    procedure utfScheduleManager1RefreshAppt(Sender: TObject; Appt: TJvTFAppt);
+
+    procedure IconsLinkClick(Sender: TObject);
+    procedure IconsLinkMouseEnter(Sender: TObject);
+    procedure IconsLinkMouseLeave(Sender: TObject);
+
     procedure ModeComboChange(Sender: TObject);
     procedure ViewSchedsButtonClick(Sender: TObject);
     procedure HideSchedButtonClick(Sender: TObject);
@@ -103,10 +104,12 @@ type
     procedure NewApptButtonClick(Sender: TObject);
     procedure EditApptButtonClick(Sender: TObject);
     procedure DeleteApptButtonClick(Sender: TObject);
+
     procedure JvTFDays1DateChanging(Sender: TObject; var NewDate: TDate);
     procedure JvTFDays1DateChanged(Sender: TObject);
     procedure JvTFDays1GranularityChanged(Sender: TObject);
     procedure JvTFDays1DblClick(Sender: TObject);
+
     procedure JvTFDaysPrinter1ApptProgress(Sender: TObject; Current,
       Total: Integer);
     procedure JvTFDaysPrinter1AssembleProgress(Sender: TObject; Current,
@@ -116,11 +119,15 @@ type
 
     procedure utfScheduleManager1LoadBatch(Sender: TObject; BatchName: String;
       BatchStartDate, BatchEndDate: TDate);
+    procedure utfScheduleManager1DeleteAppt(Sender: TObject; Appt: TJvTFAppt);
+    procedure utfScheduleManager1PostAppt(Sender: TObject; Appt: TJvTFAppt);
+    procedure utfScheduleManager1RefreshAppt(Sender: TObject; Appt: TJvTFAppt);
 
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
     procedure PrintButtonClick(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -577,6 +584,9 @@ end;
 
 procedure TMainForm.PrintButtonClick(Sender: TObject);
 begin
+  if not PrintDialog.Execute then
+    exit;
+
   with JvTFDaysPrinter1 do
   begin
     // "Copy" the display properties from the JvTFDays control
@@ -626,20 +636,20 @@ begin
   PrintProgress.ProgressBar1.Position := Current;
 end;
 
-procedure TMainForm.Label2Click(Sender: TObject);
+procedure TMainForm.IconsLinkClick(Sender: TObject);
 begin
   OpenURL('https://icons8.com');
 end;
 
-procedure TMainForm.Label2MouseEnter(Sender: TObject);
+procedure TMainForm.IconsLinkMouseEnter(Sender: TObject);
 begin
-  Label2.Font.Style := Label2.Font.Style + [fsUnderline];
+  IconsLink.Font.Style := IconsLink.Font.Style + [fsUnderline];
   Screen.Cursor := crHandPoint;
 end;
 
-procedure TMainForm.Label2MouseLeave(Sender: TObject);
+procedure TMainForm.IconsLinkMouseLeave(Sender: TObject);
 begin
-  Label2.Font.Style := Label2.Font.Style - [fsUnderline];
+  IconsLink.Font.Style := IconsLink.Font.Style - [fsUnderline];
   Screen.Cursor := crDefault;
 end;
 

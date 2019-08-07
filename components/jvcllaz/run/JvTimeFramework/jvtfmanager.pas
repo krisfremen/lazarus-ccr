@@ -877,9 +877,7 @@ type
     FOnMarginError: TNotifyEvent;
     FTitle: string;
     FDirectPrint: Boolean;
-    { wp --- to do
-    function GetPage(Index: Integer): TMetafile;
-    }
+    function GetPage(Index: Integer): TBitmap;  //was: TMetafile;
     function GetBodyHeight: Integer; // always in pixels
     function GetBodyWidth: Integer; // always in pixels
     function GetBodyLeft: Integer; // always in pixels
@@ -921,15 +919,14 @@ type
     procedure NewDoc; dynamic;
     property DirectPrint: Boolean read FDirectPrint write SetDirectPrint
       default False;
-  public
 
+  public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
     property PageCount: Integer read GetPageCount;
-    { wp --- to do
-    property Pages[Index: Integer]: TMetafile read GetPage;
-    }
+    property Pages[Index: Integer]: TBitmap read GetPage;   // was: TMetaFile
+
     function ConvertMeasure(Value: Integer; FromMeasure,
       ToMeasure: TJvTFPrinterMeasure; Horizontal: Boolean): Integer;
     function ScreenToPrinter(Value: Integer; Horizontal: Boolean): Integer;
@@ -4564,18 +4561,16 @@ begin
   end;
 end;
 
-
-{ wp --- to do
-function TJvTFPrinter.GetPage(Index: Integer): TMetafile;
+function TJvTFPrinter.GetPage(Index: Integer): TBitmap;  // was: TMetafile;
 begin
   if DirectPrint then
     raise EJvTFPrinterError.CreateRes(@RsEDocumentPagesCannotBeAccessedIf);
 
   if State <> spsFinished then
     raise EJvTFPrinterError.CreateRes(@RsEDocumentPagesAreInaccessibleUntil);
-  Result := TMetafile(FPages.Objects[Index]);
+//  Result := TMetafile(FPages.Objects[Index]);
+  Result := TBitmap(FPages.Objects[Index]);
 end;
-}
 
 function TJvTFPrinter.GetPageCount: Integer;
 begin
@@ -4672,13 +4667,16 @@ var
   { wp --- to do
   aMetafile: TMetafile;
   }
+  aBitmap: TBitmap;
+
+
+
   aCanvas: TCanvas;
   HeaderRect, FooterRect: TRect;
 begin
   if Aborted then
     Exit;
 
-  { wp --- to do
   if DirectPrint then
   begin
     if PageCount > 0 then
@@ -4688,6 +4686,16 @@ begin
   end
   else
   begin
+    // Create a TBitmap for the page
+    aBitmap := TBitmap.Create;
+    aBitmap.SetSize(Printer.PaperSize.Width, Printer.PaperSize.Height);
+    aBitmap.Canvas.Brush.Color := clWhite;
+    aBitmap.Canvas.FillRect(0, 0, aBitmap.Width, aBitmap.Height);
+    FPages.AddObject('', aBitmap);
+    // Store the canvas in FBodies so we can retrieve it later to draw
+    // the header and footer.
+    aCanvas := aBitmap.Canvas;
+    {
     // Create a TMetafile for the page
     aMetafile := TMetafile.Create;
     FPages.AddObject('', aMetafile);
@@ -4695,22 +4703,27 @@ begin
     // Store the canvas in FBodies so we can retrieve it later to draw
     // the header and footer.
     aCanvas := TMetafileCanvas.Create(aMetafile, Printer.Handle);
+    }
   end;
   FBodies.AddObject('', aCanvas);
-  aCanvas.Font.PixelsPerInch := Windows.GetDeviceCaps(Printer.Handle,
-    LOGPIXELSX);
+  //aCanvas.Font.PixelsPerInch := Printer.XDPI;
+  FixFont(aCanvas.Font);
+  {
+  aCanvas.Font.PixelsPerInch := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSX);
+  }
 
-  Windows.SetViewPortOrgEx(aCanvas.Handle, BodyLeft, BodyTop, nil);
+  LCLIntf.SetViewportOrgEx(aCanvas.Handle, BodyLeft, BodyTop, nil);
+//  Windows.SetViewPortOrgEx(aCanvas.Handle, BodyLeft, BodyTop, nil);
   DrawBody(aCanvas, Rect(BodyLeft, BodyTop, BodyWidth - BodyLeft,
     BodyHeight - BodyTop), FPages.Count);
-  Windows.SetViewPortOrgEx(aCanvas.Handle, 0, 0, nil);
+  LCLIntf.SetViewPortOrgEx(aCanvas.Handle, 0, 0, nil);
+//  Windows.SetViewPortOrgEx(aCanvas.Handle, 0, 0, nil);
   if DirectPrint then
   begin
     GetHeaderFooterRects(HeaderRect, FooterRect);
     DrawHeader(aCanvas, HeaderRect, PageCount);
     DrawFooter(aCanvas, FooterRect, PageCount);
   end;
-  }
 end;
 
 procedure TJvTFPrinter.Print;

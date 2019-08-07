@@ -560,7 +560,7 @@ object MainForm: TMainForm
       Left = 198
       Height = 24
       Hint = 'New Appointment'
-      Top = 8
+      Top = 7
       Width = 24
       NumGlyphs = 2
       Images = ImageList
@@ -824,7 +824,7 @@ object MainForm: TMainForm
     ClientHeight = 25
     ClientWidth = 445
     TabOrder = 2
-    object Label1: TLabel
+    object IconsProvidedLabel: TLabel
       AnchorSideLeft.Control = Panel2
       AnchorSideTop.Control = Panel2
       Left = 5
@@ -835,10 +835,10 @@ object MainForm: TMainForm
       Caption = 'Icons provided by'
       ParentColor = False
     end
-    object Label2: TLabel
-      AnchorSideLeft.Control = Label1
+    object IconsLink: TLabel
+      AnchorSideLeft.Control = IconsProvidedLabel
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Label1
+      AnchorSideTop.Control = IconsProvidedLabel
       AnchorSideTop.Side = asrCenter
       Left = 103
       Height = 15
@@ -849,9 +849,9 @@ object MainForm: TMainForm
       Font.Color = clBlue
       ParentColor = False
       ParentFont = False
-      OnClick = Label2Click
-      OnMouseEnter = Label2MouseEnter
-      OnMouseLeave = Label2MouseLeave
+      OnClick = IconsLinkClick
+      OnMouseEnter = IconsLinkMouseEnter
+      OnMouseLeave = IconsLinkMouseLeave
     end
   end
   object utfScheduleManager1: TJvTFScheduleManager
@@ -871,7 +871,7 @@ object MainForm: TMainForm
   end
   object StateImageList: TImageList
     left = 112
-    top = 280
+    top = 248
     Bitmap = {
       4C69040000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1116,33 +1116,33 @@ object MainForm: TMainForm
     ShowStartEndTimeInHint = False
     LineSpacing = 2
     left = 304
-    top = 144
+    top = 136
   end
   object GlanceTextViewer2: TJvTFGlanceTextViewer
     ShowStartEndTimeInHint = False
     LineSpacing = 2
     ShowStartEnd = False
     left = 304
-    top = 200
+    top = 192
   end
   object dbUTF: TSQLite3Connection
     Connected = False
     LoginPrompt = False
     KeepConnection = False
     Transaction = SQLTransaction
-    left = 104
-    top = 384
+    left = 96
+    top = 328
   end
   object SQLTransaction: TSQLTransaction
     Active = False
     Action = caCommit
     Database = dbUTF
-    left = 100
-    top = 440
+    left = 96
+    top = 384
   end
   object ImageList: TImageList
     left = 112
-    top = 211
+    top = 192
     Bitmap = {
       4C69070000001000000010000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000000000005A3B261C0000
@@ -1546,7 +1546,11 @@ object MainForm: TMainForm
     OnApptProgress = JvTFDaysPrinter1ApptProgress
     GridStartTime = 0
     GridEndTime = 0
-    left = 304
-    top = 259
+    left = 352
+    top = 248
+  end
+  object PrintDialog: TPrintDialog
+    left = 256
+    top = 248
   end
 end

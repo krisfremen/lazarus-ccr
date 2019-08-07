@@ -2463,6 +2463,7 @@ begin
     if Txt <> '' then
     begin
       ACanvas.Font := Attr.TitleAttr.DayTxtAttr.Font;
+      FixFont(ACanvas.Font);
       DrawAngleText(ACanvas, AdjTitleRect, TextBounds,
         Attr.TitleAttr.DayTxtAttr.Rotation,
         Attr.TitleAttr.DayTxtAttr.AlignH,

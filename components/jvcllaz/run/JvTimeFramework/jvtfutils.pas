@@ -120,6 +120,9 @@ function IsClassByName(Obj: TObject; ClassName: string): Boolean;
 function StringsToStr(const List: TStrings; const Sep: string;
   const AllowEmptyString: Boolean = True): string;
 
+procedure FixFont(const AFont: TFont);
+
+
 implementation
 
 uses
@@ -823,5 +826,15 @@ begin
     Delete(Result, Length(Result) - L + 1, L);
   end;
 end;
+
+
+{ Fix Lazarus default font size of 0 }
+
+procedure FixFont(const AFont: TFont);
+begin
+  if AFont.Height = 0 then
+    AFont.Size := abs(GetFontData(AFont.Reference.Handle).Height) * 72 div AFont.PixelsPerInch;
+end;
+
 
 end.

@@ -5610,6 +5610,7 @@ begin
     try
       GetApptDrawInfo(DrawInfo, Appt, Attr);
       Font.Assign(DrawInfo.Font);
+      FixFont(Font);
       Brush.Color := DrawInfo.Color;
       Pen.Color := DrawInfo.FrameColor;
       Pen.Width := DrawInfo.FrameWidth;
@@ -6164,6 +6165,7 @@ begin
 
   ACanvas.Brush.Color := UseAttr.Color;
   ACanvas.Font.Assign(UseAttr.Font);
+  FixFont(ACanvas.Font);
 
   DrawTxt(ACanvas, Rect, Txt, taCenter, vaCenter);
 
@@ -6317,6 +6319,7 @@ begin
       ACanvas.Brush.Color := HdrAttr.Color;
       ACanvas.Font.Assign(HdrAttr.Font);
     end;
+    FixFont(ACanvas.Font);
 
     // All parameters now specified.  Now calc text height.
     Flags := DT_NOPREFIX or DT_WORDBREAK or DT_CENTER or DT_CALCRECT;
@@ -6615,6 +6618,7 @@ begin
           ACanvas.Font.Assign(SelFancyRowHdrAttr.MajorFont)
         else
           ACanvas.Font.Assign(FancyRowHdrAttr.MajorFont);
+        FixFont(ACanvas.Font);
 
         ACanvas.Brush.Style := bsClear;
 
@@ -6673,8 +6677,9 @@ begin
   TxtRect.Bottom := TxtRect.Bottom - 2;
 
   // now draw the LabelStr right aligned
-  ACanvas.Font.Assign(Attr.MinorFont);
   ACanvas.Brush.Style := bsClear;
+  ACanvas.Font.Assign(Attr.MinorFont);
+  FixFont(ACanvas.Font);
 
   // draw the focus rect if needed
   if (RowNum = FocusedRow) and Focused and ShowFocus then
@@ -6769,8 +6774,10 @@ begin
   try
     TempFont.Assign(Canvas.Font);
     Canvas.Font.Assign(FancyRowHdrAttr.MinorFont);
+    FixFont(Canvas.Font);
     Result := Canvas.TextWidth('22:22a') - 10;
     Canvas.Font.Assign(TempFont);
+    FixFont(Canvas.Font);
   finally
     TempFont.Free;
   end;
@@ -9341,6 +9348,7 @@ begin
     GetApptDrawInfo(DrawInfo, Appt, SelApptAttr);
     FrameOffset := DrawInfo.FrameWidth div 2 * 2;
     Canvas.Font := DrawInfo.Font;
+    FixFont(Canvas.Font);
     FEditor.Font := DrawInfo.Font;
     FEditor.Color := DrawInfo.Color;
   finally
@@ -10787,6 +10795,7 @@ begin
 
   ACanvas.Brush.Color := UseAttr.Color;
   ACanvas.Font.Assign(UseAttr.Font);
+  FixFont(ACanvas.Font);
 
   Flags := DT_NOPREFIX or DT_CENTER;
   case ColTitleStyle of
@@ -13054,6 +13063,7 @@ begin
         end;
 
         ACanvas.Font.Assign(FancyRowHdrAttr.MajorFont);
+        FixFont(ACanvas.Font);
         ACanvas.Brush.Style := bsClear;
 
         DrawText(ACanvas.Handle, PChar(Lbl), -1, ARect,
@@ -13164,6 +13174,7 @@ begin
 
   // now draw the LabelStr right aligned
   ACanvas.Font.Assign(FancyRowHdrAttr.MinorFont);
+  FixFont(ACanvas.Font);
   ACanvas.Brush.Style := bsClear;
 
   DrawText(ACanvas.Handle, PChar(LabelStr), -1, TxtRect,
@@ -13193,6 +13204,7 @@ begin
 
   ACanvas.Brush.Color := HdrAttr.Color;
   ACanvas.Font.Assign(HdrAttr.Font);
+  FixFont(ACanvas.Font);
 
   DrawTxt(ACanvas, ARect, Txt, taCenter, vaCenter);
 
@@ -13433,8 +13445,10 @@ begin
   try
     TempFont.Assign(ACanvas.Font);
     ACanvas.Font.Assign(FancyRowHdrAttr.MinorFont);
+    FixFont(ACanvas.Font);
     Result := ACanvas.TextWidth('22:22a');
     ACanvas.Font.Assign(TempFont);
+    FixFont(ACanvas.Font);
   finally
     TempFont.Free;
   end;
@@ -13935,6 +13949,7 @@ begin
 
   ACanvas.Brush.Color := UseAttr.Color;
   ACanvas.Font.Assign(UseAttr.Font);
+  FixFont(ACanvas.Font);
 
   Flags := DT_NOPREFIX or DT_CENTER;
   case ColTitleStyle of

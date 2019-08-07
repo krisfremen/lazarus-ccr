@@ -427,6 +427,7 @@ begin
     //Font.Assign(Viewer.Font);
     Font.Assign(DrawInfo.Font);
     Self.Canvas.Font.Assign(DrawInfo.Font);
+    FixFont(Self.Canvas.Font);
 
     RegBrushColor := Brush.Color;
     RegFontColor := Font.Color;
