@@ -436,9 +436,6 @@ type
   TJvTFApptDescEvent = procedure(Sender: TObject; Appt: TJvTFAppt;
     var Description: string) of object;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvTFScheduleManager = class(TComponent)
   private
     FAlwaysPost: Boolean;
@@ -960,9 +957,6 @@ type
     property Title: string read FTitle write SetTitle;
   end;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvTFUniversalPrinter = class(TJvTFPrinter)
   public
     procedure NewDoc; override;

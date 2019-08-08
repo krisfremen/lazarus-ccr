@@ -27,7 +27,6 @@ Known Issues:
 unit JvTFMonths;
 
 {$mode objfpc}{$H+}
-//{$mode delphi}
 
 interface
 

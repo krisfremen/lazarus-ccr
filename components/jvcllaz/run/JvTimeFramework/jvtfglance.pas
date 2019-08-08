@@ -32,7 +32,7 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, {Windows, Messages, } Graphics, Controls, Forms, Dialogs, ImgList,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ImgList,
   JvTFUtils, JvTFManager;
 
 type

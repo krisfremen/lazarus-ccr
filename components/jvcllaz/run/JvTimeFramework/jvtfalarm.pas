@@ -68,9 +68,6 @@ type
   TJvTFAlarmEvent = procedure(Sender: TObject; AAppt: TJvTFAppt;
     var SnoozeMins: Integer; var Dismiss: Boolean) of object;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvTFAlarm = class(TJvTFComponent)
   private
     FResources: TStringList;
