@@ -170,6 +170,7 @@ type
     FParser: TBufDatasetParser;
     function GetEncrypted: Boolean;
     function GetInputEncoding: String; inline;
+    function GetPrimaryKeyFieldCount: Integer;
     function GetTargetEncoding: String; inline;
     function GetVersion: String;
     function IsStoredTargetEncoding: Boolean;
@@ -216,6 +217,7 @@ type
     function GetFieldData(Field: TField; Buffer: Pointer): Boolean; override;
     procedure SetFieldData({%H-}Field: TField; {%H-}Buffer: Pointer); override;
     property Encrypted: Boolean read GetEncrypted;
+    property PrimaryKeyFieldCount: Integer read GetPrimaryKeyFieldCount;
   published
     property TableName: TFileName read FFileName write SetFileName;
     property TableLevel: String read GetVersion;
@@ -482,6 +484,14 @@ begin
     Result := GetDefaultTextEncoding
   else
     Result := FInputEncoding;
+end;
+
+function TParadoxDataset.GetPrimaryKeyFieldCount: Integer;
+begin
+  if FHeader <> nil then
+    Result := FHeader^.primaryKeyFields
+  else
+    Result := 0;
 end;
 
 function TParadoxDataset.GetRecNo: Integer;
