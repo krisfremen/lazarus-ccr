@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 212
+  Left = 568
   Height = 613
-  Top = 138
+  Top = 55
   Width = 445
   Caption = 'UTF Demo 1: PhotoOp'
   ClientHeight = 613

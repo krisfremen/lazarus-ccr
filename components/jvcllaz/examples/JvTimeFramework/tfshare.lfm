@@ -1,7 +1,7 @@
 object Share: TShare
-  Left = 738
+  Left = 672
   Height = 216
-  Top = 285
+  Top = 110
   Width = 271
   AutoSize = True
   Caption = 'Share'
@@ -9,8 +9,6 @@ object Share: TShare
   ClientWidth = 271
   Color = clBtnFace
   Font.Color = clWindowText
-  Font.Height = -13
-  Font.Name = 'MS Sans Serif'
   OnClose = FormClose
   OnShow = FormShow
   Position = poScreenCenter

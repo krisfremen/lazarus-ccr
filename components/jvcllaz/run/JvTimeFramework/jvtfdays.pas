@@ -69,6 +69,8 @@ const
   gcGroupHdr = -2;
   gcHdr = -1;
 
+  DEFAULT_PRIMETIME_COLOR = $00C4FFFF;
+
 type
   EJvTFDaysError = class(Exception);
 
@@ -205,7 +207,7 @@ type
   published
     property StartTime: TTime read FStartTime write SetStartTime;
     property EndTime: TTime read FEndTime write SetEndTime;
-    property Color: TColor read FColor write SetColor;
+    property Color: TColor read FColor write SetColor default DEFAULT_PRIMETIME_COLOR;
   end;
 
   TJvTFCreateQuickEntryEvent = procedure(Sender: TObject; var ApptID: string;
@@ -1278,7 +1280,7 @@ type
 
     function GetApptDispColor(Appt: TJvTFAppt; Selected: Boolean): TColor;
   published
-    property DitheredBackground: Boolean read FDitheredBackground write SetDitheredBackground default True;
+    property DitheredBackground: Boolean read FDitheredBackground write SetDitheredBackground default false;
 //    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsSingle;
     // grid layout properties
     property AutoSizeCols: Boolean read FAutoSizeCols write SetAutoSizeCols default True;
@@ -1746,6 +1748,7 @@ type
 implementation
 
 uses
+  FPCanvas,
   JvResources;
 
 //Type
@@ -2181,7 +2184,7 @@ begin
   FApptGrid := AApptGrid;
   FStartTime := EncodeTime(8, 0, 0, 0);
   FEndTime := EncodeTime(17, 0, 0, 0);
-  FColor := clYellow;
+  FColor := DEFAULT_PRIMETIME_COLOR;
   FFillPic := TBitmap.Create;
   FFillPic.Width := 16;
   FFillPic.Height := 16;
@@ -4090,7 +4093,7 @@ begin
   FFocusedCol := -1;
   FFocusedRow := -1;
   FGridLineColor := clGray;
-  FDitheredBackground := True;
+  FDitheredBackground := false;
 
   {$IFDEF Jv_TIMEBLOCKS}
   // all ok
@@ -4869,6 +4872,7 @@ end;
 procedure TJvTFDays.Paint;
 var
   I, J, lRightCol, lBottomRow: Integer;
+  w, h: Integer;
 begin
 { optimization incorrectly kicks in if control is only partially
   visible on the screen
@@ -4887,16 +4891,17 @@ begin
    end;
   }
 
+  w := ClientWidth;
+  h := ClientHeight;
   with PaintBuffer do
   begin
-    Width := ClientWidth;
-    Height := ClientHeight;
-
+    SetSize(w, h);
     with Canvas do
     begin
+      Pixels[0, 0] := clWhite;   // Workaround for Lazarus to avoid black background
       if FDitheredBackground then
         // added by TIM, 10/27/2001 10:36:03 PM:
-        DrawDither(Canvas, Classes.Rect(0, 0, Width, Height), Self.Color, clGray)
+        DrawDither(Canvas, Classes.Rect(0, 0, w, h), Self.Color, clGray)
       else
       begin
         Brush.Color := Self.Color;
@@ -4905,10 +4910,8 @@ begin
     end;
 
     DrawCorner(Canvas, agcTopLeft);
-
     if Cols.Count = 0 then
       DrawEmptyColHdr(Canvas);
-
     DrawGroupHdrs(Canvas);
 
     lRightCol := LeftCol + VisibleCols - 1;
@@ -10492,14 +10495,10 @@ procedure TJvTFDays.DrawDither(ACanvas: TCanvas; ARect: TRect;
 var
   DitherBitmap: TBitmap;
   I, J: Integer;
-//  TL: TPoint;
-//  ClipRgn: HRgn;
 begin
   DitherBitmap := TBitmap.Create;
   try
     // create dithered bitmap
-//    DitherBitmap.Width := RectWidth(ARect);
-//    DitherBitmap.Height := RectHeight(ARect);
     DitherBitmap.Width := 8;
     DitherBitmap.Height := 8;
     for I := 0 to DitherBitmap.Width - 1 do
@@ -10509,32 +10508,8 @@ begin
         else
           DitherBitmap.Canvas.Pixels[I, J] := Color2;
 
-    // copy bitmap into canvas
-//    ClipRgn := Windows.CreateRectRgn(ARect.Left, ARect.Top, ARect.Right + 1, ARect.Bottom + 1);
-//    try
-//      Windows.SelectClipRgn(ACanvas.Handle, ClipRgn);
-//      TL.X := ARect.Left;
-//      while (TL.X <= ARect.Right) do
-//      begin
-//        TL.Y := ARect.Top;
-//        while (TL.Y <= ARect.Bottom) do
-//        begin
-//          Windows.BitBlt(ACanvas.Handle, TL.X, TL.Y, DitherBitmap.Width, DitherBitmap.Height,
-//            DitherBitmap.Canvas.Handle, 0, 0, SRCCOPY);
-//          TL.Y := TL.Y + DitherBitmap.Height;
-//        end;
-//        TL.X := TL.X + DitherBitmap.Width;
-//      end;
-//    finally
-//      Windows.SelectClipRgn(ACanvas.Handle, 0);
-//      Windows.DeleteObject(ClipRgn);
-//    end;
-
     ACanvas.Brush.Bitmap := DitherBitmap;
     ACanvas.FillRect(ARect);
-
-//      Windows.BitBlt(ACanvas.Handle, ARect.Left, ARect.Top, DitherBitmap.Width, DitherBitmap.Height,
-//        DitherBitmap.Canvas.Handle, 0, 0, SRCCOPY);
   finally
     DitherBitmap.Free;
   end;

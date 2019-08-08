@@ -33,7 +33,7 @@ interface
 uses
   LCLIntf,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Db, sqldb, sqlite3conn, //DBTables,
+  db, sqldb, sqlite3conn,
   ComCtrls, StdCtrls, Buttons, ExtCtrls, ImgList, DateTimePicker, PrintersDlgs,
   JvTFManager, JvTFDays, JvTFGlance, JvTFGlanceTextViewer, JvTFMonths,
   JvTFWeeks;
