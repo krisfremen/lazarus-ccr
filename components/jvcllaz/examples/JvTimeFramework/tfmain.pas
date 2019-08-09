@@ -390,6 +390,7 @@ end;
 procedure TMainForm.NextDateButtonClick(Sender: TObject);
 begin
   JvTFDays1.NextDate;
+  JvTFMonths1.DisplayDate := JvTFDays1.CurrentDate;
 end;
 
 procedure TMainForm.GotoDatePickerChange(Sender: TObject);

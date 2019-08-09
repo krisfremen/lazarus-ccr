@@ -1238,6 +1238,7 @@ type
     {$ENDIF Jv_TIMEBLOCKS}
 
    // date navigation methods
+    function CurrentDate: TDate;
     procedure PrevDate;
     procedure NextDate;
     procedure GotoDate(aDate: TDate);
@@ -9676,6 +9677,16 @@ begin
     EndRow := RowCount - 1;
 end;
 
+function TJvTFDays.CurrentDate: TDate;
+begin
+  case Template.ActiveTemplate of
+    agtLinear:
+      Result := Template.LinearStartDate;
+    agtComparative:
+      Result := Template.CompDate;
+  end;
+end;
+
 procedure TJvTFDays.PrevDate;
 begin
   case Template.ActiveTemplate of
@@ -13735,6 +13746,11 @@ begin
   Grouping := aJvTFDays.Grouping;
   HdrAttr := aJvTFDays.HdrAttr;
 
+  FixFont(FancyRowHdrAttr.MajorFont);
+  FixFont(FancyRowHdrAttr.Minorfont);
+  FixFont(GroupHdrAttr.Font);
+  FixFont(HdrAttr.Font);
+
   MinColWidth := ConvertMeasure(ScreenToPrinter(aJvTFDays.MinColWidth, True),
     pmPixels, Measure, True);
 
@@ -14085,6 +14101,7 @@ begin
   DrawInfo.FrameColor := ApptAttr.FrameColor;
   DrawInfo.FrameWidth := ApptAttr.FrameWidth;
   DrawInfo.Font := ApptAttr.Font;
+  FixFont(DrawInfo.Font);
   DrawInfo.Visible := True;
 
   if Assigned(FOnGetApptDrawInfo) then

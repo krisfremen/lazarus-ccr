@@ -4658,13 +4658,7 @@ end;
 
 procedure TJvTFPrinter.NewPage;
 var
-  { wp --- to do
-  aMetafile: TMetafile;
-  }
-  aBitmap: TBitmap;
-
-
-
+  aBitmap: TBitmap;    // wp: was Metafile, but this is not supported by Lazarus
   aCanvas: TCanvas;
   HeaderRect, FooterRect: TRect;
 begin
@@ -4700,7 +4694,7 @@ begin
     }
   end;
   FBodies.AddObject('', aCanvas);
-  //aCanvas.Font.PixelsPerInch := Printer.XDPI;
+  aCanvas.Font.PixelsPerInch := Printer.XDPI;
   FixFont(aCanvas.Font);
   {
   aCanvas.Font.PixelsPerInch := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSX);
