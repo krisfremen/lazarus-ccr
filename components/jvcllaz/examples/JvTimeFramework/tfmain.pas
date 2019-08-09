@@ -1,3 +1,6 @@
+// todo -cTJvTimeFramework: Remove small square at left/top corner of screen; assosciated with Days/Months/Weeks
+// todo -cTJvTimeFramework: Fix text height when printing text with font size 0
+
 {******************************************************************
 
                        JEDI-VCL Demo

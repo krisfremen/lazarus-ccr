@@ -57,10 +57,8 @@ object MainForm: TMainForm
         TimeBlockProps.SelBlockHdrAttr.Font.Color = clBlack
         TimeBlockProps.SelBlockHdrAttr.ParentFont = False
         TimeBlockProps.SelBlockHdrAttr.FrameColor = clBlack
-        ApptAttr.Color = clWhite
         ApptAttr.Font.Color = clWindowText
         ApptAttr.ParentFont = False
-        SelApptAttr.Color = clWhite
         SelApptAttr.Font.Color = clWindowText
         SelApptAttr.ParentFont = False
         HdrAttr.Font.Color = clWindowText
@@ -80,7 +78,6 @@ object MainForm: TMainForm
         SelFancyRowHdrAttr.TickColor = clBlack
         PrimeTime.StartTime = 0.333333333333333
         PrimeTime.EndTime = 0.708333333333333
-        PrimeTime.Color = clYellow
         GroupHdrAttr.Font.Color = clWindowText
         GroupHdrAttr.ParentFont = False
         GroupHdrAttr.FrameColor = clBlack

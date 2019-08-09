@@ -677,7 +677,7 @@ type
     procedure Assign(Source: TPersistent); override;
     procedure ParentFontChanged; virtual;
   published
-    property Color: TColor read FColor write SetColor;
+    property Color: TColor read FColor write SetColor default clWindow;
     property Font: TFont read FFont write SetFont;
     property ParentFont: Boolean read FParentFont write SetParentFont default True;
     property FrameColor: TColor read FFrameColor write SetFrameColor default clBlack;
@@ -701,7 +701,7 @@ type
     constructor Create(AApptGrid: TJvTFDays);
     procedure Assign(Source: TPersistent); override;
   published
-    property Color: TColor read FColor write SetColor default clNavy;
+    property Color: TColor read FColor write SetColor default clHighlight;
     property FrameWidth: Integer read FFrameWidth write SetFrameWidth default 2;
     property Style: TJvTFSelCellStyle read FStyle write SetStyle default scsSolid;
   end;
@@ -3831,7 +3831,7 @@ begin
 
   FFrameWidth := 1;
   FFrameColor := clBlack;
-  FColor := clWhite;
+  FColor := clWindow;
 end;
 
 destructor TJvTFDaysApptAttr.Destroy;
@@ -3933,7 +3933,7 @@ begin
   inherited Create;
 
   FApptGrid := AApptGrid;
-  FColor := clNavy;
+  FColor := clHighlight;
   FStyle := scsSolid;
   FFrameWidth := 2;
 end;
