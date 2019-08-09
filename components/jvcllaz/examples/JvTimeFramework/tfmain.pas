@@ -385,12 +385,15 @@ end;
 procedure TMainForm.PrevDateButtonClick(Sender: TObject);
 begin
   JvTFDays1.PrevDate;
+  JvTFMonths1.DisplayDate := JvTFDays1.CurrentDate;
+  JvTFWeeks1.DisplayDate := JvTFDays1.CurrentDate;
 end;
 
 procedure TMainForm.NextDateButtonClick(Sender: TObject);
 begin
   JvTFDays1.NextDate;
   JvTFMonths1.DisplayDate := JvTFDays1.CurrentDate;
+  JvTFWeeks1.DisplayDate := JvTFDays1.CurrentDate;
 end;
 
 procedure TMainForm.GotoDatePickerChange(Sender: TObject);
@@ -398,7 +401,7 @@ begin
   // GotoDatePicker.OnCloseUp should also point to this handler
   JvTFDays1.GotoDate(GotoDatePicker.Date);
   JvTFWeeks1.DisplayDate := GotoDatePicker.Date;
-  JvTFWeeks1.DisplayDate := GotoDatePicker.Date;
+  JvTFMonths1.DisplayDate := GotoDatePicker.Date;
 end;
 
 procedure TMainForm.GotoDatePickerUserInput(Sender: TObject;

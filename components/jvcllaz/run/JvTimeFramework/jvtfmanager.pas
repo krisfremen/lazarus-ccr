@@ -4067,13 +4067,23 @@ procedure TJvTFControl.ReleaseSchedule(const SchedName: string;
 var
   SchedID: string;
 begin
+  if Assigned(ScheduleManager) then begin
+    SchedID := TJvTFScheduleManager.GetScheduleID(SchedName, SchedDate);
+    if FSchedules.IndexOf(SchedID) > -1 then
+      ScheduleManager.ReleaseSchedule(Self, SchedName, SchedDate)
+  end;
+
+{  wp:
+   original code - crashes sometimes at program end in GetScheduleID
+   when ScheduleManager is nil
+
   SchedID := TJvTFScheduleManager.GetScheduleID(SchedName, SchedDate);
   if FSchedules.IndexOf(SchedID) > -1 then
     if Assigned(ScheduleManager) then
       ScheduleManager.ReleaseSchedule(Self, SchedName, SchedDate)
     else
       raise EJvTFScheduleManagerError.CreateRes(@RsECouldNotReleaseSchedule);
-
+ }
 end;
 
 procedure TJvTFControl.ReleaseSchedules;
