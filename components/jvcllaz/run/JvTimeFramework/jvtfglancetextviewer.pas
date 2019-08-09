@@ -887,9 +887,16 @@ end;
 function TJvTFGVTextControl.ScrollUpBtnRect(aCellRect: TRect): TRect;
 var
   BtnLeft: Integer;
+  // h: Integer;
 begin
   if TopLine > 0 then
   begin
+    (*
+    h := RectHeight(Viewer.GlanceControl.TitleRect);
+    BtnLeft := aCellRect.Right - 10 - FScrollUpBtnBMP.Width;
+    Result := Rect(BtnLeft, aCellRect.Top - h, aCellRect.Right, aCellRect.Top);
+    *)
+
     Result := Rect(0, 0, FScrollUpBtnBMP.Width, FScrollUpBtnBMP.Height);
     BtnLeft := aCellRect.Right - 10 - RectWidth(Result);
     OffsetRect(Result, BtnLeft, aCellRect.Top);
