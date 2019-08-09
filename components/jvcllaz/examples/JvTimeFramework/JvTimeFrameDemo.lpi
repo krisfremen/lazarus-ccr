@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="JvTimeFrameDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -93,6 +93,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="tfPrintProgress"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="tfsettings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SettingsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="tfSettings"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

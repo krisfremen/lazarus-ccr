@@ -1,0 +1,71 @@
+object SettingsForm: TSettingsForm
+  Left = 548
+  Height = 299
+  Top = 283
+  Width = 403
+  Caption = 'SettingsForm'
+  ClientHeight = 299
+  ClientWidth = 403
+  OnClose = FormClose
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object ButtonPanel1: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 259
+    Width = 391
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    OKButton.OnClick = OKButtonClick
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 0
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 253
+    Top = 0
+    Width = 403
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 253
+    ClientWidth = 403
+    TabOrder = 1
+    object cbTimeFormat: TComboBox
+      AnchorSideTop.Control = Panel1
+      Left = 132
+      Height = 23
+      Top = 8
+      Width = 124
+      BorderSpacing.Top = 8
+      ItemHeight = 15
+      ItemIndex = 1
+      Items.Strings = (
+        '24 hours'
+        '12 hours am/pm'
+      )
+      Style = csDropDownList
+      TabOrder = 0
+      Text = '12 hours am/pm'
+    end
+    object lblTimeFormat: TLabel
+      AnchorSideTop.Control = cbTimeFormat
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = cbTimeFormat
+      Left = 59
+      Height = 15
+      Top = 12
+      Width = 65
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Time format'
+      FocusControl = cbTimeFormat
+      ParentColor = False
+    end
+  end
+end

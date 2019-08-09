@@ -51,6 +51,7 @@ type
     IconsProvidedLabel: TLabel;
     IconsLink: TLabel;
     Panel2: TPanel;
+    SettingsButton: TBitBtn;
     PrintDialog: TPrintDialog;
     utfScheduleManager1: TJvTFScheduleManager;
     StateImageList: TImageList;
@@ -87,11 +88,13 @@ type
     dbUTF: TSQLite3Connection;
     SQLTransaction: TSQLTransaction;
 
+    procedure FormDestroy(Sender: TObject);
     procedure IconsLinkClick(Sender: TObject);
     procedure IconsLinkMouseEnter(Sender: TObject);
     procedure IconsLinkMouseLeave(Sender: TObject);
 
     procedure ModeComboChange(Sender: TObject);
+    procedure SettingsButtonClick(Sender: TObject);
     procedure ViewSchedsButtonClick(Sender: TObject);
     procedure HideSchedButtonClick(Sender: TObject);
     procedure ResourceComboChange(Sender: TObject);
@@ -133,6 +136,10 @@ type
 
   private
     { Private declarations }
+    procedure ApplySettings;
+    procedure ReadIni;
+    procedure WriteIni;
+
   public
     { Public declarations }
   end;
@@ -143,9 +150,19 @@ var
 implementation
 
 uses
-  tfVisibleResources, tfShare, tfApptEdit, tfPrintProgress;
+  IniFiles,
+  tfVisibleResources, tfShare, tfApptEdit, tfPrintProgress, tfSettings;
 
 {$R *.lfm}
+
+procedure TMainForm.ApplySettings;
+begin
+  with GlobalSettings do begin
+    JvTFDays1.FancyRowHdrAttr.Hr2400 := Hr2400;
+    JvTFDays1.SelFancyRowHdrAttr.Hr2400 := Hr2400;
+    JvTFDaysPrinter1.FancyRowHdrAttr.Hr2400 := Hr2400;
+  end;
+end;
 
 procedure TMainForm.utfScheduleManager1PostAppt(Sender: TObject;
   Appt: TJvTFAppt);
@@ -336,6 +353,12 @@ begin
   JvTFMonths1.SchedNames.Clear;
   JvTFMonths1.SchedNames.Add(ResourceCombo.Text);
   JvTFMonths1.Refresh;
+end;
+
+procedure TMainForm.SettingsButtonClick(Sender: TObject);
+begin
+  if SettingsForm.ShowModal = mrOK then
+    ApplySettings;
 end;
 
 procedure TMainForm.DaysComboChange(Sender: TObject);
@@ -715,9 +738,41 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fn: String;
 begin
+  ReadIni;
+
   fn := Application.Location + 'data.sqlite';
   dbUTF.DatabaseName := fn;
   dbUTF.Connected := FileExists(fn);
+end;
+
+procedure TMainForm.FormDestroy(Sender: TObject);
+begin
+  WriteIni;
+end;
+
+procedure TMainForm.ReadIni;
+var
+  ini: TCustomIniFile;
+begin
+  ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  try
+    GlobalSettings.Hr2400 := ini.ReadBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
+    ApplySettings;
+  finally
+    ini.Free;
+  end;
+end;
+
+procedure TMainForm.WriteIni;
+var
+  ini: TCustomIniFile;
+begin
+  ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  try
+    ini.WriteBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
+  finally
+    ini.Free;
+  end;
 end;
 
 end.
