@@ -131,9 +131,9 @@ begin
   FExtraDayCellAttr := TJvTFGlanceCellAttr.Create(Self);
   FOffDayCellAttr := TJvTFGlanceCellAttr.Create(Self);
 
-  CellAttr.TitleAttr.Color := clWhite;
-  FExtraDayCellAttr.TitleAttr.Color := clWhite;
-  FOffDayCellAttr.TitleAttr.Color := clWhite;
+  //CellAttr.TitleAttr.Color := clWhite;
+  //FExtraDayCellAttr.TitleAttr.Color := clWhite;
+  //FOffDayCellAttr.TitleAttr.Color := clWhite;
 
   FDayFormat := 'd';
   FFirstDayOfMonthFormat := 'mmm d';

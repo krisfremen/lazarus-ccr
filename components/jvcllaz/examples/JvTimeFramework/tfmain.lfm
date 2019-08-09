@@ -22,9 +22,9 @@ object MainForm: TMainForm
     Height = 515
     Top = 73
     Width = 477
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Day View'
@@ -89,7 +89,7 @@ object MainForm: TMainForm
         OnDateChanging = JvTFDays1DateChanging
         OnDateChanged = JvTFDays1DateChanged
         OnGranularityChanged = JvTFDays1GranularityChanged
-        DateFormat = 'ddddd'
+        DateFormat = 'dddddd'
         TimeFormat = 't'
         Align = alClient
         Color = clWindow
@@ -151,14 +151,14 @@ object MainForm: TMainForm
         TitleAttr.TxtAttr.Font.Style = [fsBold]
         TitleAttr.Title = 'Week of Jan 14, 2002'
         CellAttr.Font.Color = clWindowText
-        CellAttr.TitleAttr.Color = clWhite
         CellAttr.TitleAttr.FrameAttr.Color = clGray
         CellAttr.TitleAttr.DayTxtAttr.Font.Color = clWindowText
-        CellAttr.DrawBottomLine = False
+        CellAttr.TitleAttr.DayTxtAttr.Font.Style = [fsBold]
+        CellAttr.DrawBottomLine = True
         SelCellAttr.Font.Color = clWindowText
-        SelCellAttr.TitleAttr.Color = clNavy
-        SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clWhite
-        SelCellAttr.DrawBottomLine = False
+        SelCellAttr.TitleAttr.Color = clHighlight
+        SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clHighlightText
+        SelCellAttr.DrawBottomLine = True
         CellPics = StateImageList
         Viewer = GlanceTextViewer1
         DateFormat = 'ddddd'
@@ -176,7 +176,6 @@ object MainForm: TMainForm
         DWNames.DWN_Friday = 'F'
         DWNames.DWN_Saturday = 'S'
         DWTitleAttr.Height = 20
-        DWTitleAttr.Visible = False
         DWTitleAttr.TxtAttr.Font.Color = clWindowText
         DWTitleAttr.TxtAttr.Font.Height = -11
         DWTitleAttr.TxtAttr.Font.Style = [fsBold]
@@ -185,21 +184,15 @@ object MainForm: TMainForm
     object TabSheet3: TTabSheet
       Caption = 'Month View'
       ClientHeight = 487
-      ClientWidth = 437
+      ClientWidth = 469
       ImageIndex = 2
       object JvTFMonths1: TJvTFMonths
         Left = 0
         Height = 487
         Top = 0
-        Width = 437
+        Width = 469
         ScheduleManager = utfScheduleManager1
         Cells = <        
-          item
-            Color = clBlack
-            CellDate = 37255
-            CellPics = <>
-            CanSelect = True
-          end        
           item
             Color = clBlack
             CellDate = 37256
@@ -445,6 +438,12 @@ object MainForm: TMainForm
             CellDate = 37296
             CellPics = <>
             CanSelect = True
+          end        
+          item
+            Color = clBlack
+            CellDate = 37297
+            CellPics = <>
+            CanSelect = True
           end>
         GapSize = 0
         TitleAttr.TxtAttr.Font.Color = clWindowText
@@ -452,13 +451,12 @@ object MainForm: TMainForm
         TitleAttr.TxtAttr.Font.Style = [fsBold]
         TitleAttr.Title = 'Januar 2002'
         CellAttr.Font.Color = clWindowText
-        CellAttr.TitleAttr.Color = clWhite
-        CellAttr.TitleAttr.DayTxtAttr.Font.Color = clWindowText
-        CellAttr.DrawBottomLine = False
+        CellAttr.TitleAttr.DayTxtAttr.Font.Style = [fsBold]
+        CellAttr.DrawBottomLine = True
         SelCellAttr.Font.Color = clWindowText
-        SelCellAttr.TitleAttr.Color = clNavy
-        SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clWhite
-        SelCellAttr.DrawBottomLine = False
+        SelCellAttr.TitleAttr.Color = clHighlight
+        SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clHighlightText
+        SelCellAttr.DrawBottomLine = True
         Viewer = GlanceTextViewer2
         DateFormat = 'ddddd'
         TimeFormat = 't'
@@ -475,18 +473,25 @@ object MainForm: TMainForm
         DWNames.DWN_Thursday = 'T'
         DWNames.DWN_Friday = 'F'
         DWNames.DWN_Saturday = 'S'
+        DWTitleAttr.Color = clBtnShadow
         DWTitleAttr.FrameAttr.Style = fs3DRaised
         DWTitleAttr.Height = 20
-        DWTitleAttr.TxtAttr.Font.Color = clWindowText
+        DWTitleAttr.TxtAttr.Font.Color = clBtnHighlight
         DWTitleAttr.TxtAttr.Font.Height = -11
+        DWTitleAttr.TxtAttr.Font.Style = [fsBold]
+        DWTitleAttr.TxtAttr.AlignH = taCenter
         ExtraDayCellAttr.Font.Color = clWindowText
-        ExtraDayCellAttr.TitleAttr.Color = clWhite
-        ExtraDayCellAttr.TitleAttr.DayTxtAttr.Font.Color = clWindowText
-        ExtraDayCellAttr.DrawBottomLine = False
+        ExtraDayCellAttr.TitleAttr.Color = clWindow
+        ExtraDayCellAttr.TitleAttr.FrameAttr.Color = clSilver
+        ExtraDayCellAttr.TitleAttr.DayTxtAttr.Font.Color = clSilver
+        ExtraDayCellAttr.TitleAttr.DayTxtAttr.Font.Style = [fsBold]
+        ExtraDayCellAttr.DrawBottomLine = True
         OffDayCellAttr.Font.Color = clWindowText
         OffDayCellAttr.TitleAttr.Color = clWhite
-        OffDayCellAttr.TitleAttr.DayTxtAttr.Font.Color = clWindowText
-        OffDayCellAttr.DrawBottomLine = False
+        OffDayCellAttr.TitleAttr.DayTxtAttr.Font.Color = clRed
+        OffDayCellAttr.TitleAttr.DayTxtAttr.Font.Style = [fsBold]
+        OffDayCellAttr.DrawBottomLine = True
+        StartOfWeek = dowMonday
         FirstDayOfMonthFormat = 'mmm d'
         DayFormat = 'd'
       end
@@ -723,7 +728,7 @@ object MainForm: TMainForm
         '2 mins'
         '1 min'
       )
-      OnClick = TimeIncComboChange
+      OnChange = TimeIncComboChange
       ParentShowHint = False
       ShowHint = True
       Style = csDropDownList
@@ -796,20 +801,22 @@ object MainForm: TMainForm
       Width = 105
       Anchors = [akTop, akLeft, akRight]
       ItemHeight = 15
+      ItemIndex = 0
       Items.Strings = (
-        '31 days'
-        '14 days'
-        '7 days'
-        '5 days'
-        '3 days'
-        '2 days'
         '1 day'
+        '2 days'
+        '3 days'
+        '5 days'
+        '7 days'
+        '14 days'
+        '31 days'
       )
       OnChange = DaysComboChange
       ParentShowHint = False
       ShowHint = True
       Style = csDropDownList
       TabOrder = 12
+      Text = '1 day'
     end
     object PrintButton: TBitBtn
       AnchorSideLeft.Control = DeleteApptButton

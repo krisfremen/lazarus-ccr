@@ -181,7 +181,6 @@ begin
   inherited Create(AOwner);
 
   GapSize := 4;
-  CellAttr.TitleAttr.Color := clWhite;
   CellAttr.TitleAttr.FrameAttr.Color := clGray;
 
   FDWNames := TJvTFDWNames.Create;

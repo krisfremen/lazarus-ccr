@@ -338,7 +338,7 @@ type
     procedure Assign(Source: TPersistent); override;
     property GlanceControl: TJvTFCustomGlance read FGlanceControl;
   published
-    property Color: TColor read FColor write SetColor default clWhite;
+    property Color: TColor read FColor write SetColor default clWindow;
     property Font: TFont read FFont write SetFont;
     property FrameAttr: TJvTFGlanceFrameAttr read FFrameAttr write SetFrameAttr;
     property TitleAttr: TJvTFGlanceTitleAttr read FTitleAttr write SetTitleAttr;
@@ -1311,8 +1311,8 @@ begin
   FCellAttr := TJvTFGlanceCellAttr.Create(Self);
   FCellAttr.TitleAttr.DayTxtAttr.AlignH := taLeftJustify;
   FSelCellAttr := TJvTFGlanceCellAttr.Create(Self);
-  FSelCellAttr.TitleAttr.Color := clNavy;
-  FSelCellAttr.TitleAttr.DayTxtAttr.Font.Color := clWhite;
+  FSelCellAttr.TitleAttr.Color := clHighlight;
+  FSelCellAttr.TitleAttr.DayTxtAttr.Font.Color := clHighlightText;
 
   //FSelOrder := soColMajor;
   FSelOrder := soRowMajor;
@@ -3247,11 +3247,12 @@ begin
   inherited Create;
   FGlanceControl := AOwner;
 
-  FColor := clWhite;
+  FColor := clWindow;
   FFrameAttr := TJvTFGlanceFrameAttr.Create(AOwner);
   FTitleAttr := TJvTFGlanceTitleAttr.Create(AOwner);
 
   FFont := TFont.Create;
+  FFont.Color := clWindowText;
   FFont.OnChange := @FontChange;
 end;
 

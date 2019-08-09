@@ -362,16 +362,27 @@ begin
 end;
 
 procedure TMainForm.DaysComboChange(Sender: TObject);
+var
+  s: String;
 begin
   Case DaysCombo.ItemIndex of
-    0 : JvTFDays1.Template.LinearDayCount := 31;
-    1 : JvTFDays1.Template.LinearDayCount := 14;
-    2 : JvTFDays1.Template.LinearDayCount := 7;
+    0 : JvTFDays1.Template.LinearDayCount := 1;
+    1 : JvTFDays1.Template.LinearDayCount := 2;
+    2 : JvTFDays1.Template.LinearDayCount := 3;
     3 : JvTFDays1.Template.LinearDayCount := 5;
-    4 : JvTFDays1.Template.LinearDayCount := 3;
-    5 : JvTFDays1.Template.LinearDayCount := 2;
-    6 : JvTFDays1.Template.LinearDayCount := 1;
+    4 : JvTFDays1.Template.LinearDayCount := 7;
+    5 : JvTFDays1.Template.LinearDayCount := 14;
+    6 : JvTFDays1.Template.LinearDayCount := 31;
   End;
+  if JvTFDays1.Template.LinearDayCount <= 2 then
+    JvTFDays1.DateFormat := DefaultFormatSettings.LongDateFormat
+  else
+  if JvTFDays1.Template.LinearDayCount <= 5 then
+    JvTFDays1.DateFormat := DefaultFormatSettings.ShortDateFormat
+  else begin
+    s := StringReplace(DefaultFormatSettings.ShortDateFormat, 'yyyy', 'yy', [rfIgnoreCase]);
+    JvTFDays1.DateFormat := s;
+  end;
 end;
 
 procedure TMainForm.ShareButtonClick(Sender: TObject);
@@ -565,12 +576,15 @@ begin
   //GotoDatePicker.Date := Date;
   GotoDatePicker.Date := EncodeDate(2002, 1, 1);
 
+  ReadIni;
+  (*
   // Initialize the granularity
   TimeIncCombo.ItemIndex := 1; // 30 mins
 
   // Initialize the mode
   ModeCombo.ItemIndex := 0; // Single mode
-  DaysCombo.ItemIndex := 6; // One day
+  DaysCombo.ItemIndex := 0; // One day
+  *)
 
   // Populate the resource related controls
   With SchedulesQuery do
@@ -742,8 +756,6 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fn: String;
 begin
-  ReadIni;
-
   fn := Application.Location + 'data.sqlite';
   dbUTF.DatabaseName := fn;
   dbUTF.Connected := FileExists(fn);
@@ -760,6 +772,12 @@ var
 begin
   ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
   try
+    PageControl1.ActivePageIndex := ini.ReadInteger('MainForm', 'PageIndex', 0);
+
+    ModeCombo.ItemIndex := ini.ReadInteger('MainForm', 'ModeCombo', 0);
+    TimeIncCombo.ItemIndex := ini.ReadInteger('MainForm', 'TimeIncCombo', 1);
+    DaysCombo.ItemIndex := ini.ReadInteger('MainForm', 'DaysCombo', 0);
+
     GlobalSettings.Hr2400 := ini.ReadBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
     ApplySettings;
   finally
@@ -773,6 +791,12 @@ var
 begin
   ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
   try
+    ini.WriteInteger('MainForm', 'PageIndex', PageControl1.ActivePageIndex);
+
+    ini.WriteInteger('MainForm', 'ModeCombo', ModeCombo.ItemIndex);
+    ini.WriteInteger('MainForm', 'TimeIncCombo', TimeIncCombo.ItemIndex);
+    ini.WriteInteger('MainForm', 'DaysCombo', DaysCombo.ItemIndex);
+
     ini.WriteBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
   finally
     ini.Free;
