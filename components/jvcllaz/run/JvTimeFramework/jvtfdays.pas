@@ -4875,24 +4875,6 @@ var
   I, J, lRightCol, lBottomRow: Integer;
   w, h: Integer;
 begin
-  // For printing, fix Lazarus default fonts having size 0
-  if not (csDesigning in ComponentState) then begin
-    FixFont(ApptAttr.Font);
-    FixFont(FancyRowHdrAttr.MajorFont);
-    FixFont(FancyRowHdrAttr.MinorFont);
-    FixFont(Font);
-    FixFont(GroupHdrAttr.Font);
-    FixFont(HdrAttr.Font);
-    FixFont(SelApptAttr.Font);
-    FixFont(SelFancyRowHdrAttr.MajorFont);
-    FixFont(SelFancyRowHdrAttr.MinorFont);
-    FixFont(SelGroupHdrAttr.Font);
-    FixFont(SelHdrAttr.Font);
-    FixFont(TimeBlockProps.BlockHdrAttr.Font);
-    FixFont(TimeBlockProps.SelBlockHdrAttr.Font);
-  end;
-
-
 { optimization incorrectly kicks in if control is only partially
   visible on the screen
   if not PaintBuffer.Empty and
