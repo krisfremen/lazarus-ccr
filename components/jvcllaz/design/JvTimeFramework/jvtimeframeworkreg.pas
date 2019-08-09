@@ -31,6 +31,12 @@ begin
   // deleted, or moved at design time... BAD THINGS HAPPEN
   RegisterPropertyEditor(TypeInfo(TJvTFGlanceCells), TJvTFMonths, 'Cells', nil);
 
+  // The LCL TTime property editor is not installed by default.
+  RegisterPropertyEditor(TypeInfo(TTime), TJvTFDaysPrimeTime, '', TTimePropertyEditor);
+  RegisterPropertyEditor(TypeInfo(TDate), TJvTFDaysTemplate, '', TDatePropertyEditor);
+  RegisterPropertyEditor(TypeInfo(TDate), TJvTFWeeks, 'DisplayDate', TDatePropertyEditor);
+  RegisterPropertyEditor(TypeInfo(TDate), TJvTFMonths, 'DisplayDate', TDatePropertyEditor);
+
   (*
 //  RegisterPropertyEditor(TypeInfo(string), TJvTFControl, 'Version', TutfVersionEditor);
 //  RegisterPropertyEditor(TypeInfo(string), TJvTFScheduleManager, 'Version', TutfVersionEditor);

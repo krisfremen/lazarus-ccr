@@ -37,12 +37,7 @@ object MainForm: TMainForm
         Width = 469
         ScheduleManager = utfScheduleManager1
         ColHdrHeight = 30
-        Cols = <        
-          item
-            SchedDate = 0
-            Title = ' - '
-            Width = 402
-          end>
+        Cols = <>
         Template.CompDate = 36406
         Template.LinearDayCount = 1
         Template.LinearEndDate = 36406
@@ -68,6 +63,7 @@ object MainForm: TMainForm
         HdrAttr.ParentFont = False
         HdrAttr.FrameColor = clBlack
         SelHdrAttr.Font.Color = clBlack
+        SelHdrAttr.Font.Style = [fsBold]
         SelHdrAttr.ParentFont = False
         SelHdrAttr.FrameColor = clBlack
         FancyRowHdrAttr.Hr2400 = False
@@ -79,6 +75,7 @@ object MainForm: TMainForm
         SelFancyRowHdrAttr.MajorFont.Color = clBlack
         SelFancyRowHdrAttr.MajorFont.Height = -21
         SelFancyRowHdrAttr.TickColor = clBlack
+        GridLineColor = clSilver
         PrimeTime.StartTime = 0.333333333333333
         PrimeTime.EndTime = 0.708333333333333
         GroupHdrAttr.Color = clWindow
@@ -90,7 +87,7 @@ object MainForm: TMainForm
         SelGroupHdrAttr.Font.Color = clBlack
         SelGroupHdrAttr.ParentFont = False
         SelGroupHdrAttr.FrameColor = clBlack
-        LeftCol = 0
+        LeftCol = -1
         OnDateChanging = JvTFDays1DateChanging
         OnDateChanged = JvTFDays1DateChanged
         OnGranularityChanged = JvTFDays1GranularityChanged
