@@ -926,6 +926,7 @@ begin
 
     with Canvas do
     begin
+      Pixels[0,0] := clBtnFace;
       Brush.Color := clBtnFace;
       FillRect(Rect(0, 0, Width, Height));
 
@@ -957,6 +958,7 @@ begin
 
     with Canvas do
     begin
+      Pixels[0,0] := clBtnFace;
       Brush.Color := clBtnFace;
       FillRect(Rect(0, 0, Width, Height));
 
