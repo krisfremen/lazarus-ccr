@@ -161,6 +161,13 @@ begin
     JvTFDays1.FancyRowHdrAttr.Hr2400 := Hr2400;
     JvTFDays1.SelFancyRowHdrAttr.Hr2400 := Hr2400;
     JvTFDaysPrinter1.FancyRowHdrAttr.Hr2400 := Hr2400;
+
+    JvTFWeeks1.StartOfWeek := FirstDayOfWeek;
+    JvTFMonths1.StartOfWeek := FirstDayOfWeek;
+
+    JvTFDays1.PrimeTime.StartTime := PrimeTimeStart;
+    JvTFDays1.PrimeTime.EndTime := PrimeTimeEnd;
+    JvTFDays1.PrimeTime.Color := PrimeTimeColor;
   end;
 end;
 
@@ -779,6 +786,10 @@ begin
     DaysCombo.ItemIndex := ini.ReadInteger('MainForm', 'DaysCombo', 0);
 
     GlobalSettings.Hr2400 := ini.ReadBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
+    GlobalSettings.FirstDayOfWeek := TTFDayofWeek(ini.ReadInteger('Settings', 'FirstDayOfWeek', ord(GlobalSettings.FirstDayOfWeek)));
+    GlobalSettings.PrimeTimeStart := ini.ReadTime('Settings', 'PrimeTimeStart', GlobalSettings.PrimeTimeStart);
+    GlobalSettings.PrimeTimeEnd := ini.ReadTime('Settings', 'PrimeTimeEnd', GlobalSettings.PrimeTimeEnd);
+    GlobalSettings.PrimeTimeColor := TColor(ini.ReadInteger('Settings', 'PrimeTimeColor', Integer(GlobalSettings.PrimeTimeColor)));
     ApplySettings;
   finally
     ini.Free;
@@ -798,6 +809,10 @@ begin
     ini.WriteInteger('MainForm', 'DaysCombo', DaysCombo.ItemIndex);
 
     ini.WriteBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
+    ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(GlobalSettings.FirstDayOfWeek));
+    ini.WriteTime('Settings', 'PrimeTimeStart', GlobalSettings.PrimeTimeStart);
+    ini.WriteTime('Settings', 'PrimeTimeEnd', GlobalSettings.PrimeTimeEnd);
+    ini.WriteInteger('Settings', 'PrimeTimeColor', GlobalSettings.PrimeTimeColor);
   finally
     ini.Free;
   end;

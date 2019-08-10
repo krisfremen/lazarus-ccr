@@ -7,7 +7,9 @@ object SettingsForm: TSettingsForm
   ClientHeight = 299
   ClientWidth = 403
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
+  Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ButtonPanel1: TButtonPanel
     Left = 6
@@ -36,6 +38,17 @@ object SettingsForm: TSettingsForm
     ClientHeight = 253
     ClientWidth = 403
     TabOrder = 1
+    object Bevel1: TBevel
+      AnchorSideTop.Control = edPrimeTimeStart
+      AnchorSideBottom.Control = edPrimeTimeEnd
+      AnchorSideBottom.Side = asrBottom
+      Left = 288
+      Height = 50
+      Top = 62
+      Width = 37
+      Anchors = [akTop, akLeft, akBottom]
+      Shape = bsSpacer
+    end
     object cbTimeFormat: TComboBox
       AnchorSideTop.Control = Panel1
       Left = 132
@@ -66,6 +79,109 @@ object SettingsForm: TSettingsForm
       Caption = 'Time format'
       FocusControl = cbTimeFormat
       ParentColor = False
+    end
+    object lblFirstDayOfWeek: TLabel
+      AnchorSideTop.Control = cbFirstDayOfWeek
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = lblTimeFormat
+      AnchorSideRight.Side = asrBottom
+      Left = 36
+      Height = 15
+      Top = 39
+      Width = 88
+      Anchors = [akTop, akRight]
+      Caption = 'First day of week'
+      FocusControl = cbFirstDayOfWeek
+      ParentColor = False
+    end
+    object cbFirstDayOfWeek: TComboBox
+      AnchorSideLeft.Control = cbTimeFormat
+      AnchorSideTop.Control = cbTimeFormat
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = cbTimeFormat
+      AnchorSideRight.Side = asrBottom
+      Left = 132
+      Height = 23
+      Top = 35
+      Width = 124
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      ItemHeight = 15
+      Style = csDropDownList
+      TabOrder = 1
+    end
+    object edPrimeTimeStart: TTimeEdit
+      AnchorSideLeft.Control = cbTimeFormat
+      AnchorSideTop.Control = cbFirstDayOfWeek
+      AnchorSideTop.Side = asrBottom
+      Left = 132
+      Height = 23
+      Top = 62
+      Width = 103
+      ButtonWidth = 23
+      BorderSpacing.Top = 4
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 2
+      Text = 'edPrimeTimeStart'
+    end
+    object edPrimeTimeEnd: TTimeEdit
+      AnchorSideLeft.Control = cbTimeFormat
+      AnchorSideTop.Control = edPrimeTimeStart
+      AnchorSideTop.Side = asrBottom
+      Left = 132
+      Height = 23
+      Top = 89
+      Width = 103
+      ButtonWidth = 23
+      BorderSpacing.Top = 4
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 3
+      Text = 'edPrimeTimeEnd'
+    end
+    object lblPrimeTimeStart: TLabel
+      AnchorSideTop.Control = edPrimeTimeStart
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = lblTimeFormat
+      AnchorSideRight.Side = asrBottom
+      Left = 40
+      Height = 15
+      Top = 66
+      Width = 84
+      Anchors = [akTop, akRight]
+      Caption = 'Prime time start'
+      ParentColor = False
+    end
+    object lblPrimeTimeEnd: TLabel
+      AnchorSideTop.Control = edPrimeTimeEnd
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = lblTimeFormat
+      AnchorSideRight.Side = asrBottom
+      Left = 43
+      Height = 15
+      Top = 93
+      Width = 81
+      Anchors = [akTop, akRight]
+      Caption = 'Prime time end'
+      ParentColor = False
+    end
+    object clbPrimeTimeColor: TColorButton
+      AnchorSideLeft.Control = edPrimeTimeStart
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Bevel1
+      AnchorSideTop.Side = asrCenter
+      Left = 239
+      Height = 25
+      Top = 75
+      Width = 104
+      BorderSpacing.Left = 4
+      BorderWidth = 2
+      ButtonColorAutoSize = False
+      ButtonColorSize = 16
+      ButtonColor = clBlack
+      Caption = 'Prime time'
+      Margin = 4
     end
   end
 end
