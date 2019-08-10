@@ -69,7 +69,14 @@ const
   gcGroupHdr = -2;
   gcHdr = -1;
 
+  DEFAULT_COL_HDR_HEIGHT = 28;
+  DEFAULT_DEF_COL_WIDTH = 100;
+  DEFAULT_GRANULARITY = 30;
+  DEFAULT_GROUP_HDR_HEIGHT = 28;
+  DEFAULT_MIN_ROW_HEIGHT = 12;
   DEFAULT_PRIMETIME_COLOR = $00C4FFFF;
+  DEFAULT_ROW_HDR_WIDTH = 60;
+  DEFAULT_ROW_HEIGHT = 20;
 
 type
   EJvTFDaysError = class(Exception);
@@ -1285,22 +1292,22 @@ type
 //    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsSingle;
     // grid layout properties
     property AutoSizeCols: Boolean read FAutoSizeCols write SetAutoSizeCols default True;
-    property Granularity: Integer read FGranularity write SetGranularity default 30;
-    property ColHdrHeight: Integer read FColHdrHeight write SetColHdrHeight default 25;
+    property Granularity: Integer read FGranularity write SetGranularity default DEFAULT_GRANULARITY;
+    property ColHdrHeight: Integer read FColHdrHeight write SetColHdrHeight default DEFAULT_COL_HDR_HEIGHT;
     property Cols: TJvTFDaysCols read FCols write SetCols;
-    property DefColWidth: Integer read FDefColWidth write FDefColWidth default 100;
+    property DefColWidth: Integer read FDefColWidth write FDefColWidth default DEFAULT_DEF_COL_WIDTH;
     property MinColWidth: Integer read FMinColWidth write SetMinColWidth default AbsMinColWidth;
-    property MinRowHeight: Integer read FMinRowHeight write SetMinRowHeight default 12;
+    property MinRowHeight: Integer read FMinRowHeight write SetMinRowHeight default DEFAULT_MIN_ROW_HEIGHT;
     property Options: TJvTFDaysOptions read FOptions write SetOptions
       default [agoSizeCols, agoSizeRows, agoSizeColHdr, agoSizeRowHdr,
       agoSizeAppt, agoMoveAppt, agoEditing, agoShowPics,
       agoShowText, agoShowApptHints, agoQuickEntry, agoShowSelHint];
-    property RowHdrWidth: Integer read FRowHdrWidth write SetRowHdrWidth default 50;
-    property RowHeight: Integer read FRowHeight write SetRowHeight default 19;
+    property RowHdrWidth: Integer read FRowHdrWidth write SetRowHdrWidth default DEFAULT_ROW_HDR_WIDTH;
+    property RowHeight: Integer read FRowHeight write SetRowHeight default DEFAULT_ROW_HEIGHT;
     property ShowFocus:Boolean read FShowFocus write SetShowFocus default True;
     property Template: TJvTFDaysTemplate read FTemplate write FTemplate;
     property Grouping: TJvTFDaysGrouping read FGrouping write SetGrouping;
-    property GroupHdrHeight: Integer read FGroupHdrHeight write SetGroupHdrHeight default 25;
+    property GroupHdrHeight: Integer read FGroupHdrHeight write SetGroupHdrHeight default DEFAULT_GROUP_HDR_HEIGHT;
 
     property GridStartTime: TTime read FGridStartTime write SetGridStartTime;
     property GridEndTime: TTime read FGridEndTime write SetGridEndTime;
@@ -1710,8 +1717,8 @@ type
     property MinRowHeight: Integer read FMinRowHeight write SetMinRowHeight;
     property PrimeTime: TJvTFDaysPrimeTime read FPrimeTime write SetPrimeTime;
     property RowHdrType: TJvTFRowHdrType read FRowHdrType write SetTFRowHdrType;
-    property RowHdrWidth: Integer read FRowHdrWidth write SetRowHdrWidth;
-    property RowHeight: Integer read FRowHeight write SetRowHeight;
+    property RowHdrWidth: Integer read FRowHdrWidth write SetRowHdrWidth default 0;
+    property RowHeight: Integer read FRowHeight write SetRowHeight default 0;
     property ShowPics: Boolean read FShowPics write SetShowPics;
     property ShowText: Boolean read FShowText write SetShowText;
     property Thresholds: TJvTFDaysThresholds read FThresholds
@@ -4067,20 +4074,20 @@ begin
 
   //set property defaults
 //  FBorderStyle := bsSingle;
-  FColHdrHeight := 30;
-  FGroupHdrHeight := 25;
-  FRowHdrWidth := 50;
-  FRowHeight := 19;
-  FGranularity := 30;
+  FColHdrHeight := DEFAULT_COL_HDR_HEIGHT;
+  FGroupHdrHeight := DEFAULT_GROUP_HDR_HEIGHT;
+  FRowHdrWidth := DEFAULT_ROW_HDR_WIDTH;
+  FRowHeight := DEFAULT_ROW_HEIGHT;
+  FGranularity := DEFAULT_GRANULARITY;
   FTopRow := 0;
   FFocusedRow := -1;
   FMinColWidth := AbsMinColWidth;
   FLeftCol := -1;
   FFocusedCol := -1;
-  FDefColWidth := 100;
+  FDefColWidth := DEFAULT_DEF_COL_WIDTH;
   FVisibleScrollBars := [];
   FAutoSizeCols := True;
-  FMinRowHeight := 12;
+  FMinRowHeight := DEFAULT_MIN_ROW_HEIGHT;
   ParentColor := False;
   Color := clSilver;
   FOptions := [agoSizeCols, agoSizeRows, agoSizeColHdr, agoSizeRowHdr,
@@ -6606,13 +6613,11 @@ begin
             Lbl := IntToStr(PrevHour - 12)
           else
             Lbl := IntToStr(PrevHour);
-
-{          if FirstMajor or (PrevHour = 0) or (PrevHour = 12) then
+          if (PrevHour = 0) or (PrevHour = 12) then
             if PrevHour < 12 then
               Lbl := Lbl + 'a'
             else
               Lbl := Lbl + 'p';
-}
         end;
 
         if PrevHrSel then
@@ -6647,7 +6652,7 @@ begin
   ACanvas.FillRect(ARect);
 
   MinorRect := ARect;
-  MinorRect.Left := (MinorRect.Right - GetMinorTickLength) div 2;
+  MinorRect.Left := MinorRect.Right - GetMinorTickLength;
 
   if Selected then
   begin
@@ -6681,10 +6686,12 @@ begin
   ACanvas.Font.Assign(Attr.MinorFont);
 
   // draw the focus rect if needed
-  if (RowNum = FocusedRow) and Focused and ShowFocus then
+  if (RowNum = FocusedRow) and Focused and ShowFocus and (LabelStr <> '') then
   begin
-    InflateRect(MinorRect, -2, -2);
-    MinorRect.Left := MinorRect.Right - ACanvas.TextWidth(LabelStr) - 2;
+    MinorRect := TxtRect;
+    InflateRect(MinorRect, 0, -1);
+    inc(MinorRect.Right, 2);
+    MinorRect.Left := TxtRect.Right - ACanvas.TextWidth(LabelStr) - 2;
     ManualFocusRect(ACanvas, MinorRect);
   end;
 
@@ -6699,7 +6706,7 @@ function TJvTFDays.GetMinorLabel(RowNum: Integer): string;
 const
   Full24 = 'h:nn';
   FullAP = 'h:nna/p';
-  MinOnly = ':nn';
+  MinOnly = 'nn';
 var
   FirstHourRow: Integer;
   TimeFmt: string;
@@ -6707,9 +6714,12 @@ var
 //  LastFullRow, LastHourStart: Integer;
 //  LastHour: Word;
 begin
-  if Granularity = 60 then
-    TimeFmt := Full24
-  else
+  if Granularity = 60 then begin
+    if FancyRowHdrAttr.Hr2400 then
+      TimeFmt := Full24
+    else
+      TimeFmt := FullAP
+  end else
     TimeFmt := MinOnly;
 //  else
 //  if (RowNum = TopRow) and (not RowStartsHour(RowNum) or (PossVisibleRows = 1)) then
@@ -6726,9 +6736,6 @@ begin
 //    else
 //      TimeFmt := MinOnly;
 //  end;
-
-  if (TimeFmt = Full24) and not FancyRowHdrAttr.Hr2400 then
-    TimeFmt := FullAP;
 
   // Get the Row Time
   RowTime := RowToTime(RowNum);
@@ -6773,7 +6780,7 @@ begin
   try
     TempFont.Assign(Canvas.Font);
     Canvas.Font.Assign(FancyRowHdrAttr.MinorFont);
-    Result := Canvas.TextWidth('22:22a') - 10;
+    Result := Canvas.TextWidth('00') + 6;
     Canvas.Font.Assign(TempFont);
   finally
     TempFont.Free;
@@ -13004,8 +13011,9 @@ begin
     begin
       if I <> PageInfo.StartRow + 1 then
       begin
-        ARect.Left := 1;  // Allow for a small margin on ARect.Left side
-        ARect.Right := RowHdrWidth; // No "cutting" before the end of the cell.
+        ARect.Left := ScreenToPrinter(2, true);  // Allow for a small margin on ARect.Left side
+        ARect.Right := RowHdrWidth - MinorTickLength;
+//        ARect.Right := RowHdrWidth; // No "cutting" before the end of the cell.
         ARect.Top := CellRect(-1, HourStartRow(PrevHour), PageInfo).Top;
 
           //group if ARect.Top < ColHdrHeight then
@@ -13043,7 +13051,7 @@ begin
         ACanvas.Brush.Style := bsClear;
 
         DrawText(ACanvas.Handle, PChar(Lbl), -1, ARect,
-          DT_NOPREFIX or DT_SINGLELINE or DT_LEFT or DT_VCENTER);
+          DT_NOPREFIX or DT_SINGLELINE or DT_CENTER or DT_VCENTER);
 
         if Assigned(FOnDrawMajorRowHdr) then
           FOnDrawMajorRowHdr(Self, ACanvas, ARect, I - 1, False);
@@ -13145,8 +13153,8 @@ begin
 
   // set up a 2 pel margin on the right and bottom sides
   TxtRect := ARect;
-  TxtRect.Right := TxtRect.Right - 2;
-  TxtRect.Bottom := TxtRect.Bottom - 2;
+  TxtRect.Right := TxtRect.Right - ScreenToPrinter(2, true);
+  TxtRect.Bottom := TxtRect.Bottom - ScreenToPrinter(2, true);
 
   // now draw the LabelStr right aligned
   ACanvas.Font.Assign(FancyRowHdrAttr.MinorFont);
@@ -13381,7 +13389,7 @@ function TJvTFDaysPrinter.GetMinorLabel(RowNum: Integer;
 const
   Full24 = 'h:nn';
   FullAP = 'h:nna/p';
-  MinOnly = ':nn';
+  MinOnly = 'nn';
 var
   TimeFmt: string;
   LastFullRow, LastHourStart: Integer;
@@ -13419,7 +13427,8 @@ begin
   try
     TempFont.Assign(ACanvas.Font);
     ACanvas.Font.Assign(FancyRowHdrAttr.MinorFont);
-    Result := ACanvas.TextWidth('22:22a');
+    Result := ACanvas.TextWidth('00') + ScreenToPrinter(6, true);
+//    Result := ACanvas.TextWidth('22:22a');
     ACanvas.Font.Assign(TempFont);
   finally
     TempFont.Free;

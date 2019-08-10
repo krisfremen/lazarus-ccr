@@ -4340,15 +4340,6 @@ const
 var
   PPI: Integer;
 begin
-  (**************** DONE
-  PPI := 300;  // wp -- just a workaround for next commented lines...
-  { wp --- to do
-  if Horizontal then
-    PPI := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSX)
-  else
-    PPI := Windows.GetDeviceCaps(Printer.Handle, LOGPIXELSY);
-  }
-  ******************)
   if Horizontal then
     PPI := Printer.XDPI
   else
@@ -4711,11 +4702,9 @@ begin
   }
 
   LCLIntf.SetViewportOrgEx(aCanvas.Handle, BodyLeft, BodyTop, nil);
-//  Windows.SetViewPortOrgEx(aCanvas.Handle, BodyLeft, BodyTop, nil);
   DrawBody(aCanvas, Rect(BodyLeft, BodyTop, BodyWidth - BodyLeft,
     BodyHeight - BodyTop), FPages.Count);
   LCLIntf.SetViewPortOrgEx(aCanvas.Handle, 0, 0, nil);
-//  Windows.SetViewPortOrgEx(aCanvas.Handle, 0, 0, nil);
   if DirectPrint then
   begin
     GetHeaderFooterRects(HeaderRect, FooterRect);
@@ -4742,7 +4731,7 @@ begin
 
   Printer.Title := Title;
   Printer.BeginDoc;
-  { wp --- to do ...
+
   if not Printer.Aborted then
     Printer.Canvas.Draw(0, 0, Pages[0]);
 
@@ -4762,7 +4751,7 @@ begin
       FOnPrintProgress(Self, I, PageCount);
     Application.ProcessMessages;
   end;
-  }
+
   if not Printer.Aborted then
     Printer.EndDoc;
 end;

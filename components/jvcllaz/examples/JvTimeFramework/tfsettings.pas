@@ -71,10 +71,8 @@ end;
 
 procedure TSettingsForm.SettingsToControls;
 begin
-  if GlobalSettings.Hr2400 then
-    cbTimeFormat.ItemIndex := 0
-  else
-    cbTimeFormat.ItemIndex := 1;
+  cbTimeFormat.ItemIndex := ord(not GlobalSettings.Hr2400);
+
   cbFirstDayOfWeek.ItemIndex := ord(GlobalSettings.FirstDayOfWeek);
   edPrimeTimeStart.Time := GlobalSettings.PrimeTimeStart;
   edPrimeTimeEnd.Time := GlobalSettings.PrimeTimeEnd;
