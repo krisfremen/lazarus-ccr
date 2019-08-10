@@ -1490,8 +1490,6 @@ begin
   end;
 end;
 
-
-
 function TJvTFCustomGlance.DateIsSelected(ADate: TDate): Boolean;
 begin
   Result := Sel.IndexOf(ADate) <> -1;

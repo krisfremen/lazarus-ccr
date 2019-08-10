@@ -121,6 +121,10 @@ type
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
 
+    // mouse wheel support
+    function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override ;
+    function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
+
     property Replicating: Boolean read FReplicating;
     procedure Paint; override;
     procedure DrawDDButton(ACanvas: TCanvas);
@@ -735,6 +739,25 @@ end;
 function TJvTFGVTextControl.RelToAbs(Rel: Integer): Integer;
 begin
   Result := Rel - TopLine;
+end;
+
+function TJvTFGVTextControl.DoMouseWheelDown(Shift: TShiftState;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited;
+  if not Result then begin
+    Scroll(+1);
+    Result := true;
+  end;
+end;
+
+function TJvTFGVTextControl.DoMouseWheelUp(Shift: TShiftState;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited;
+  if not Result then begin
+    Scroll(-1);
+  end;
 end;
 
 procedure TJvTFGVTextControl.DoViewerDblClick;

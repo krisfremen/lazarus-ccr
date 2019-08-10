@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 568
+  Left = 577
   Height = 613
-  Top = 55
+  Top = 179
   Width = 477
   Caption = 'UTF Demo 1: PhotoOp'
   ClientHeight = 613
@@ -22,9 +22,9 @@ object MainForm: TMainForm
     Height = 515
     Top = 73
     Width = 477
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Day View'
@@ -1207,6 +1207,7 @@ object MainForm: TMainForm
   object GlanceTextViewer1: TJvTFGlanceTextViewer
     ShowStartEndTimeInHint = False
     LineSpacing = 2
+    ShowLineDDButton = False
     left = 304
     top = 136
   end
@@ -1214,6 +1215,7 @@ object MainForm: TMainForm
     ShowStartEndTimeInHint = False
     LineSpacing = 2
     ShowStartEnd = False
+    ShowLineDDButton = False
     left = 304
     top = 192
   end
