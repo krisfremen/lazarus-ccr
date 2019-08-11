@@ -46,6 +46,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    WeeksCombo: TComboBox;
     ImageList: TImageList;
     JvTFDaysPrinter1: TJvTFDaysPrinter;
     IconsProvidedLabel: TLabel;
@@ -62,9 +63,9 @@ type
     DeleteApptQuery: TSQLQuery;
     SchedulesQuery: TSQLQuery;
     PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
+    pgDays: TTabSheet;
+    pgWeeks: TTabSheet;
+    pgMonths: TTabSheet;
     JvTFDays1: TJvTFDays;
     JvTFWeeks1: TJvTFWeeks;
     JvTFMonths1: TJvTFMonths;
@@ -94,6 +95,7 @@ type
     procedure IconsLinkMouseLeave(Sender: TObject);
 
     procedure ModeComboChange(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
     procedure SettingsButtonClick(Sender: TObject);
     procedure ViewSchedsButtonClick(Sender: TObject);
     procedure HideSchedButtonClick(Sender: TObject);
@@ -133,6 +135,7 @@ type
     procedure FormShow(Sender: TObject);
 
     procedure PrintButtonClick(Sender: TObject);
+    procedure WeeksComboChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -320,6 +323,11 @@ begin
   VisibleResources.ShowModal;
 end;
 
+procedure TMainForm.WeeksComboChange(Sender: TObject);
+begin
+  JvTFWeeks1.WeekCount := WeeksCombo.ItemIndex + 1;
+end;
+
 procedure TMainForm.HideSchedButtonClick(Sender: TObject);
 var
   I,
@@ -412,6 +420,13 @@ begin
   JvTFDays1.NextDate;
   JvTFMonths1.DisplayDate := JvTFDays1.CurrentDate;
   JvTFWeeks1.DisplayDate := JvTFDays1.CurrentDate;
+end;
+
+procedure TMainForm.PageControl1Change(Sender: TObject);
+begin
+  WeeksCombo.BoundsRect := DaysCombo.BoundsRect;
+  WeeksCombo.Visible := PageControl1.ActivePage = pgWeeks;
+  DaysCombo.Visible := PageControl1.ActivePage = pgDays;
 end;
 
 procedure TMainForm.GotoDatePickerChange(Sender: TObject);
@@ -779,11 +794,13 @@ var
 begin
   ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
   try
-    PageControl1.ActivePageIndex := ini.ReadInteger('MainForm', 'PageIndex', 0);
-
     ModeCombo.ItemIndex := ini.ReadInteger('MainForm', 'ModeCombo', 0);
     TimeIncCombo.ItemIndex := ini.ReadInteger('MainForm', 'TimeIncCombo', 1);
     DaysCombo.ItemIndex := ini.ReadInteger('MainForm', 'DaysCombo', 0);
+    WeeksCombo.ItemIndex := ini.ReadInteger('MainForm', 'WeeksCombo', 0);
+
+    PageControl1.ActivePageIndex := ini.ReadInteger('MainForm', 'PageIndex', 0);
+    PageControl1Change(nil);
 
     GlobalSettings.Hr2400 := ini.ReadBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
     GlobalSettings.FirstDayOfWeek := TTFDayofWeek(ini.ReadInteger('Settings', 'FirstDayOfWeek', ord(GlobalSettings.FirstDayOfWeek)));
@@ -807,6 +824,7 @@ begin
     ini.WriteInteger('MainForm', 'ModeCombo', ModeCombo.ItemIndex);
     ini.WriteInteger('MainForm', 'TimeIncCombo', TimeIncCombo.ItemIndex);
     ini.WriteInteger('MainForm', 'DaysCombo', DaysCombo.ItemIndex);
+    ini.WriteInteger('MainForm', 'WeeksCombo', WeeksCombo.ItemIndex);
 
     ini.WriteBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(GlobalSettings.FirstDayOfWeek));

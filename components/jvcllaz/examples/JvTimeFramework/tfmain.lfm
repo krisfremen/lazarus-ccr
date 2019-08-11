@@ -22,11 +22,12 @@ object MainForm: TMainForm
     Height = 515
     Top = 73
     Width = 477
-    ActivePage = TabSheet1
+    ActivePage = pgMonths
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
-    object TabSheet1: TTabSheet
+    OnChange = PageControl1Change
+    object pgDays: TTabSheet
       Caption = 'Day View'
       ClientHeight = 487
       ClientWidth = 469
@@ -43,7 +44,6 @@ object MainForm: TMainForm
         Template.LinearEndDate = 36406
         Template.LinearStartDate = 36406
         Grouping = grNone
-        GroupHdrHeight = 28
         GridStartTime = 0
         GridEndTime = 0
         TimeBlocks = <>
@@ -105,7 +105,7 @@ object MainForm: TMainForm
         OnDblClick = JvTFDays1DblClick
       end
     end
-    object TabSheet2: TTabSheet
+    object pgWeeks: TTabSheet
       Caption = 'Week View'
       ClientHeight = 487
       ClientWidth = 469
@@ -162,6 +162,7 @@ object MainForm: TMainForm
         TitleAttr.Title = 'Week of Jan 14, 2002'
         CellAttr.Font.Color = clWindowText
         CellAttr.FrameAttr.Color = clGray
+        CellAttr.TitleAttr.FrameAttr.Style = fsNone
         CellAttr.TitleAttr.FrameAttr.Color = clGray
         CellAttr.TitleAttr.DayTxtAttr.Font.Color = clWindowText
         CellAttr.TitleAttr.DayTxtAttr.Font.Style = [fsBold]
@@ -192,7 +193,7 @@ object MainForm: TMainForm
         DWTitleAttr.TxtAttr.Font.Style = [fsBold]
       end
     end
-    object TabSheet3: TTabSheet
+    object pgMonths: TTabSheet
       Caption = 'Month View'
       ClientHeight = 487
       ClientWidth = 469
@@ -901,6 +902,23 @@ object MainForm: TMainForm
       ShowHint = True
       Spacing = 0
       TabOrder = 14
+    end
+    object WeeksCombo: TComboBox
+      Left = 351
+      Height = 23
+      Top = 48
+      Width = 100
+      ItemHeight = 15
+      Items.Strings = (
+        '1 week'
+        '2 weeks'
+        '3 weeks'
+        '4 weeks'
+      )
+      OnChange = WeeksComboChange
+      Style = csDropDownList
+      TabOrder = 15
+      Visible = False
     end
   end
   object Panel2: TPanel
@@ -1697,8 +1715,6 @@ object MainForm: TMainForm
     PrimeTime.EndTime = 0.708333333333333
     PrimeTime.Color = clYellow
     RowHdrType = rhGrid
-    RowHdrWidth = 0
-    RowHeight = 0
     ShowPics = False
     ShowText = False
     TimeFormat = 't'
