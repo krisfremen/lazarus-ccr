@@ -171,6 +171,7 @@ object MainForm: TMainForm
         SelCellAttr.TitleAttr.Color = clHighlight
         SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clHighlightText
         SelCellAttr.DrawBottomLine = True
+        ScrollBtnAttr.DisabledArrowColor = clScrollBar
         CellPics = StateImageList
         Viewer = GlanceTextViewer1
         DateFormat = 'ddddd'
@@ -472,6 +473,7 @@ object MainForm: TMainForm
         SelCellAttr.TitleAttr.Color = clHighlight
         SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clHighlightText
         SelCellAttr.DrawBottomLine = True
+        ScrollBtnAttr.DisabledArrowColor = clScrollBar
         Viewer = GlanceTextViewer2
         DateFormat = 'ddddd'
         TimeFormat = 't'

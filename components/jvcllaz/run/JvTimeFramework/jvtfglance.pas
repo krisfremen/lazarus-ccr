@@ -258,6 +258,30 @@ type
     property AlignV: TJvTFVAlignment read FAlignV write SetAlignV default vaCenter;
   end;
 
+  TJvTFScrollBtnAttr = class(TPersistent)
+  private
+    FArrowColor: TColor;
+    FColor: TColor;
+    FDisabledArrowColor: TColor;
+    FFrameColor: TColor;
+    FOnChange: TNotifyEvent;
+    procedure SetColor(Value: TColor);
+    procedure SetArrowColor(Value: TColor);
+    procedure SetDisabledArrowColor(Value: TColor);
+    procedure SetFrameColor(Value: TColor);
+  protected
+    procedure DoChange;
+  public
+    constructor Create;
+    procedure Assign(Source: TPersistent); override;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+  published
+    property ArrowColor: TColor read FArrowColor write SetArrowColor default clWindowText;
+    property Color: TColor read FColor write SetColor default clWindow;
+    property DisabledArrowColor: TColor read FDisabledArrowColor write SetDisabledArrowColor default clScrollbar;
+    property FrameColor: TColor read FFrameColor write SetFrameColor default clActiveBorder;
+  end;
+
   TJvTFGlanceTitlePicAttr = class(TPersistent)
   private
     FAlignH: TAlignment;
@@ -447,6 +471,8 @@ type
     FSel: TJvTFGlanceSelList;
     FUpdatingSel: Boolean;
 
+    FScrollBtnAttr: TJvTFScrollBtnAttr;
+
     FViewer: TJvTFGlanceViewer;
 
     FOnConfigCells: TNotifyEvent;
@@ -480,6 +506,8 @@ type
     procedure SetHintProps(Value: TJvTFHintProps);
     procedure SetSchedNames(Value: TStrings);
 
+    procedure SetScrollBtnAttr(Value: TJvTFScrollBtnAttr);
+
     procedure SetSelAppt(Value: TJvTFAppt);
   protected
     // (rom) bad names
@@ -509,6 +537,7 @@ type
     procedure Notify(Sender: TObject; Code: TJvTFServNotifyCode); override;
 
     procedure GlanceTitleChange(Sender: TObject);
+    procedure ScrollBtnChange(Sender: TObject);
 
     // mouse routines
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -546,8 +575,10 @@ type
       Attr: TJvTFGlanceCellAttr);
     procedure DrawCellFrame(ACanvas: TCanvas; ARect: TRect;
       Attr: TJvTFGlanceCellAttr; ACell: TJvTFGlanceCell);
+    procedure DrawScrollButtons(ACanvas: TCanvas; ARect: TRect);
     procedure Draw3DFrame(ACanvas: TCanvas; ARect: TRect; TLColor,
       BRColor: TColor);
+
     function PicsToDraw(ACell: TJvTFGlanceCell): Boolean;
     procedure GetPicsWidthHeight(ACell: TJvTFGlanceCell; PicBuffer: Integer;
       Horz: Boolean; var PicsWidth, PicsHeight: Integer);
@@ -598,6 +629,7 @@ type
     function TitleRect: TRect;
     function CellTitleRect(ACell: TJvTFGlanceCell): TRect;
     function CellBodyRect(ACell: TJvTFGlanceCell): TRect;
+    function CellScrollBtnRect(const ATitleRect: TRect): TRect;
     function CalcCellTitleRect(ACell: TJvTFGlanceCell; Selected, Full: Boolean): TRect;
     function CalcCellBodyRect(ACell: TJvTFGlanceCell; Selected, Full: Boolean): TRect;
     function PtToCell(X, Y: Integer): TJvTFGlanceCoord;
@@ -624,6 +656,7 @@ type
     property TitleAttr: TJvTFGlanceMainTitle read FTitleAttr write SetTitleAttr;
     property CellAttr: TJvTFGlanceCellAttr read FCellAttr write SetCellAttr;
     property SelCellAttr: TJvTFGlanceCellAttr read FSelCellAttr write SetTFSelCellAttr;
+    property ScrollBtnAttr: TJvTFScrollBtnAttr read FScrollBtnAttr write SetScrollBtnAttr;
     property CellPics: TCustomImageList read FCellPics write SetCellPics;
     property Viewer: TJvTFGlanceViewer read FViewer write SetViewer;
     property HintProps: TJvTFHintProps read FHintProps write SetHintProps;
@@ -731,6 +764,9 @@ type
     function ScheduleCount: Integer;
     property Schedules[Index: Integer]: TJvTFSched read GetSchedule;
     function GetApptAt(X, Y: Integer): TJvTFAppt; virtual;
+
+    function CanScrollCell(ADir: TJvTFVScrollDir): Boolean; virtual;
+    procedure ScrollCell(ADelta: Integer); virtual;
   published
     property RepeatGrouped: Boolean read FRepeatGrouped write SetRepeatGrouped default True;
     property ShowSchedNamesInHint: Boolean read FShowSchedNamesInHint write SetShowSchedNamesInHint default True;
@@ -1303,7 +1339,6 @@ begin
   StartDate := Date;
 
   FTitleAttr := TJvTFGlanceMainTitle.Create(Self);
-
 // obones: Commented out, it goes against the default value in TJvTFGlanceMainTitle
 //  FTitleAttr.Visible := False; // not visible by default. (Tim)
   FTitleAttr.OnChange := @GlanceTitleChange;
@@ -1313,6 +1348,9 @@ begin
   FSelCellAttr := TJvTFGlanceCellAttr.Create(Self);
   FSelCellAttr.TitleAttr.Color := clHighlight;
   FSelCellAttr.TitleAttr.DayTxtAttr.Font.Color := clHighlightText;
+
+  FScrollBtnAttr := TJvTFScrollBtnAttr.Create;
+  FScrollBtnAttr.OnChange := @ScrollBtnChange;
 
   //FSelOrder := soColMajor;
   FSelOrder := soRowMajor;
@@ -1752,6 +1790,8 @@ procedure TJvTFCustomGlance.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
   Info: TJvTFGlanceCoord;
+  canScrollUp, canScrollDown: Boolean;
+  scrollBtnRect: TRect;
 begin
   inherited MouseDown(Button, Shift, X, Y);
 
@@ -1786,6 +1826,32 @@ begin
     begin
       if Assigned(Info.Cell) and Info.Cell.CanSelect then
         SelectCell(Info.Cell, True);
+
+      // Scroll up/down
+      scrollBtnRect := CellScrollBtnRect(CellTitleRect(info.Cell));
+      if PtInRect(scrollBtnRect, Point(X, Y)) then begin
+        Viewer.SetTo(Info.Cell);
+        canScrollUp := Viewer.CanScrollCell(sdUp);
+        canScrollDown := Viewer.CanScrollCell(sdDown);
+        if canScrollUp and (Y < (scrollBtnRect.Top + scrollBtnRect.Bottom) div 2) then
+          Viewer.ScrollCell(-1)
+        else
+        if canScrollDown and (Y > (scrollBtnRect.Top + scrollBtnRect.Bottom) div 2) then
+          Viewer.ScrollCell(+1);
+        {
+        if canScrollUp and canScrollDown then begin
+          if (Y < (scrollBtnRect.Top + scrollBtnRect.Bottom) div 2) then
+            Viewer.ScrollCell(-1)
+          else
+            Viewer.ScrollCell(+1);
+        end else
+        if canScrollUp then
+          Viewer.ScrollCell(-1)
+        else
+          Viewer.ScrollCell(+1);
+          }
+      end;
+
       SelAppt := Info.Appt;
       if Assigned(Info.Appt) then
         BeginDrag(False);
@@ -2086,6 +2152,11 @@ end;
 procedure TJvTFCustomGlance.SetTFSelCellAttr(Value: TJvTFGlanceCellAttr);
 begin
   FSelCellAttr.Assign(Value);
+end;
+
+procedure TJvTFCustomGlance.SetScrollBtnAttr(Value: TJvTFScrollBtnAttr);
+begin
+  FScrollBtnAttr.Assign(Value);
 end;
 
 procedure TJvTFCustomGlance.SetStartDate(Value: TDate);
@@ -2428,6 +2499,13 @@ begin
   Result := CalcCellBodyRect(ACell, CellIsSelected(ACell), True);
 end;
 
+function TJvTFCustomGlance.CellScrollBtnRect(const ATitleRect: TRect): TRect;
+begin
+  Result := ATitleRect;
+  InflateRect(Result, -2, -2);
+  Result.Left := Result.Right - RectHeight(Result)*3 div 4;
+end;
+
 function TJvTFCustomGlance.CellTitleRect(ACell: TJvTFGlanceCell): TRect;
 begin
   Result := CalcCellTitleRect(ACell, CellIsSelected(ACell), True);
@@ -2536,6 +2614,12 @@ begin
 
   // draw the title frame
   DrawCellTitleFrame(ACanvas, ATitleRect, Attr);
+
+  // Draw the scroll buttons
+  if Assigned(Cell) then begin
+    Viewer.SetTo(Cell);
+    DrawScrollButtons(ACanvas, CellScrollBtnRect(ATitleRect));
+  end;
 end;
 
 procedure TJvTFCustomGlance.DrawCellFrame(ACanvas: TCanvas; ARect: TRect;
@@ -2653,6 +2737,33 @@ begin
           end;
         end;
     end;
+  end;
+end;
+
+procedure TJvTFCustomGlance.DrawScrollButtons(ACanvas: TCanvas; ARect: TRect);
+var
+  canScrollUp, canScrollDown: Boolean;
+  colorUP, colorDOWN: TColor;
+begin
+  canScrollUp := Viewer.CanScrollCell(sdUp);
+  canScrollDown := Viewer.CanScrollCell(sdDown);
+  if canScrollUp or canScrollDown then begin
+    ACanvas.Brush.Color := ScrollBtnAttr.Color;
+    ACanvas.Pen.Color := ScrollBtnAttr.FrameColor;
+    ACanvas.Rectangle(ARect);
+    if canScrollUp and canScrollDown then begin
+      colorUP := ScrollBtnAttr.ArrowColor;
+      colorDOWN := ScrollBtnAttr.ArrowColor;
+    end else
+    if canScrollUp then begin
+      colorUP := ScrollBtnAttr.ArrowColor;
+      colorDOWN := ScrollBtnAttr.DisabledArrowColor;
+    end else
+    if canScrollDown then begin
+      colorUP := ScrollBtnAttr.DisabledArrowColor;
+      colorDown := ScrollBtnAttr.ArrowColor;
+    end;
+    DrawDblArrow(ACanvas, ARect, dirUpDown, colorUP, colorDOWN);
   end;
 end;
 
@@ -2998,6 +3109,11 @@ procedure TJvTFCustomGlance.GlanceTitleChange(Sender: TObject);
 begin
   if Assigned(Viewer) then
     Viewer.Realign;
+  Invalidate;
+end;
+
+procedure TJvTFCustomGlance.ScrollBtnChange(Sender: TObject);
+begin
   Invalidate;
 end;
 
@@ -3498,6 +3614,11 @@ begin
   end;
 end;
 
+function TJvTFGlanceViewer.CanScrollCell(ADir: TJvTFVScrollDir): Boolean;
+begin
+  Result := false;
+end;
+
 procedure TJvTFGlanceViewer.EnsureCol(ACol: Integer);
 begin
   GlanceControl.EnsureCol(ACol);
@@ -3608,6 +3729,11 @@ begin
     Result := Cell.ScheduleCount
   else
     Result := 0;
+end;
+
+procedure TJvTFGlanceViewer.ScrollCell(ADelta: Integer);
+begin
+  // to be overridden.
 end;
 
 procedure TJvTFGlanceViewer.SetGlanceControl(Value: TJvTFCustomGlance);
@@ -3931,6 +4057,75 @@ procedure TJvTFCellPic.SetPicPoint(X, Y: Integer);
 begin
   FPicPoint := Point(X, Y);
 end;
+
+
+//=== { TJvTFScrollBtnAttr } =================================================
+
+constructor TJvTFScrollBtnAttr.Create;
+begin
+  inherited Create;
+  FArrowColor := clWindowText;
+  FColor := clWindow;
+  FDisabledArrowColor := clScrollbar;
+  FFrameColor := clActiveBorder;
+end;
+
+procedure TJvTFScrollBtnAttr.Assign(Source: TPersistent);
+begin
+  if Source is TJvTFScrollBtnAttr then
+  begin
+    FArrowColor := TJvTFScrollBtnAttr(Source).ArrowColor;
+    FColor := TJvTFScrollBtnAttr(Source).Color;
+    FDisabledArrowColor := TJvTFScrollBtnAttr(Source).DisabledArrowColor;
+    FFrameColor := TJvTFScrollBtnAttr(Source).FrameColor;
+    DoChange;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+procedure TJvTFScrollBtnAttr.DoChange;
+begin
+  if Assigned(FOnChange) then
+    FOnChange(self);
+end;
+
+procedure TJvTFScrollBtnAttr.SetArrowColor(Value: TColor);
+begin
+  if Value <> FArrowColor then
+  begin
+    FArrowColor := Value;
+    DoChange;
+  end;
+end;
+
+procedure TJvTFScrolLBtnAttr.SetColor(Value: TColor);
+begin
+  if Value <> FColor then
+  begin
+    FColor := Value;
+    DoChange;
+  end;
+end;
+
+procedure TJvTFScrollBtnAttr.SetDisabledArrowColor(Value: TColor);
+begin
+  if Value <> FDisabledArrowColor then
+  begin
+    FDisabledArrowColor := Value;
+    DoChange;
+  end;
+end;
+
+procedure TJvTFScrollBtnAttr.SetFrameColor(Value: TColor);
+begin
+  if Value <> FFrameColor then
+  begin
+    FFrameColor := Value;
+    DoChange;
+  end;
+end;
+
 
 //=== { TJvTFGlanceTitlePicAttr } ============================================
 

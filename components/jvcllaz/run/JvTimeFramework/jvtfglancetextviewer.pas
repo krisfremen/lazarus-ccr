@@ -128,9 +128,10 @@ type
     property Replicating: Boolean read FReplicating;
     procedure Paint; override;
     procedure DrawDDButton(ACanvas: TCanvas);
-    procedure DrawArrow(ACanvas: TCanvas; aRect: TRect; Direction: TJvTFDirection);
+    {
     procedure DrawScrollUpBtn(ACanvas: TCanvas; aCellRect: TRect);
     procedure DrawScrollDnBtn(ACanvas: TCanvas; aCellRect: TRect);
+    }
     function GetStartEndString(Appt: TJvTFAppt): string;
 
     function CalcLineHeight: Integer;
@@ -253,6 +254,9 @@ type
     procedure SetTopLine(ACell: TJvTFGlanceCell; Value: Integer);
     function GetTopLine(ACell: TJvTFGlanceCell): Integer;
     function GetApptAt(X, Y: Integer): TJvTFAppt; override;
+
+    function CanScrollCell(ADir: TJvTFVScrollDir): Boolean; override;
+    procedure ScrollCell(ADelta: Integer); override;
 
     // editor management routines
     procedure EditAppt(ACell: TJvTFGlanceCell; RelLine: Integer; Appt: TJvTFAppt);
@@ -529,6 +533,7 @@ begin
        FMouseInControl and FShowDDButton then
       DrawDDButton(ACanvas);
 
+    (*     wp: looks ugly. Was replaced by scroll buttons in cell title...
     BtnRect := ScrollUpBtnRect(DrawInfo.aRect);
     if not IsRectEmpty(BtnRect) then
       DrawScrollUpBtn(ACanvas, DrawInfo.aRect);
@@ -536,16 +541,7 @@ begin
     BtnRect := ScrollDnBtnRect(DrawInfo.aRect);
     if not IsRectEmpty(BtnRect) then
       DrawScrollDnBtn(ACanvas, DrawInfo.aRect);
-
-    {
-    if TopLine > 0 then
-      DrawScrollUpBtn(ACanvas, DrawInfo.aRect);
-
-    BottomLine := TopLine + FullViewableLines - 1;
-    LastLine := LineCount - 1;
-    if BottomLine < LastLine then
-      DrawScrollDnBtn(ACanvas, DrawInfo.aRect);
-    }
+    *)
   end;
 end;
 
@@ -591,74 +587,6 @@ begin
     FMouseLine := Value;
     UpdateDDBtnRect;
     Invalidate;
-  end;
-end;
-
-procedure TJvTFGVTextControl.DrawArrow(ACanvas: TCanvas; aRect: TRect;
-  Direction: TJvTFDirection);
-var
-  I, ArrowHeight, ArrowWidth, BaseX, BaseY: Integer;
-begin
-  ArrowWidth := RectWidth(aRect) - 2;
-  if not Odd(ArrowWidth) then
-    Dec(ArrowWidth);
-  ArrowHeight := (ArrowWidth + 1) div 2;
-
-  case Direction of
-    dirUp:
-      begin
-        BaseX := aRect.Left + RectWidth(aRect) div 2 - ArrowWidth div 2;
-        BaseY := aRect.Top + RectHeight(aRect) div 2 + ArrowHeight div 2 - 1;
-
-        for I := ArrowHeight downto 1 do
-          with ACanvas do
-          begin
-            MoveTo(BaseX, BaseY);
-            LineTo(BaseX + I * 2 - 1, BaseY);
-            Inc(BaseX);
-            Dec(BaseY);
-          end;
-      end;
-    dirDown:
-      begin
-        BaseX := aRect.Left + RectWidth(aRect) div 2 - ArrowWidth div 2;
-        BaseY := aRect.Top + RectHeight(aRect) div 2 - ArrowHeight div 2 + 1;
-
-        for I := ArrowHeight downto 1 do
-        with ACanvas do
-          begin
-            MoveTo(BaseX, BaseY);
-            LineTo(BaseX + I * 2 - 1, BaseY);
-            Inc(BaseX);
-            Inc(BaseY);
-          end;
-      end;
-    dirLeft:
-      begin
-        BaseX := aRect.Left + RectWidth(aRect) div 2 + ArrowHeight div 2;
-        BaseY := aRect.Top + RectHeight(aRect) div 2 - ArrowWidth div 2;
-
-        for I := ArrowHeight downto 1 do
-          with ACanvas do
-          begin
-            MoveTo(BaseX, BaseY);
-            LineTo(BaseX, BaseY + I * 2 - 1);
-            Dec(BaseX);
-            Inc(BaseY);
-          end;
-      end;
-  else
-    BaseX := aRect.Left + RectWidth(aRect) div 2 - ArrowHeight div 2;
-    BaseY := aRect.Top + RectHeight(aRect) div 2 - ArrowWidth div 2;
-
-    for I := ArrowHeight downto 1 do
-      with ACanvas do
-      begin
-        MoveTo(BaseX, BaseY);
-        LineTo(BaseX, BaseY + I * 2 - 1);
-        Inc(BaseX);
-        Inc(BaseY);
-      end;
   end;
 end;
 
@@ -745,7 +673,7 @@ function TJvTFGVTextControl.DoMouseWheelDown(Shift: TShiftState;
   MousePos: TPoint): Boolean;
 begin
   Result := inherited;
-  if not Result then begin
+  if not Result and Viewer.CanScrollCell(sdDown) then begin
     Scroll(+1);
     Result := true;
   end;
@@ -755,8 +683,9 @@ function TJvTFGVTextControl.DoMouseWheelUp(Shift: TShiftState;
   MousePos: TPoint): Boolean;
 begin
   Result := inherited;
-  if not Result then begin
+  if not Result and Viewer.CanScrollCell(sdUp) then begin
     Scroll(-1);
+    Result := true;
   end;
 end;
 
@@ -1011,6 +940,7 @@ begin
   end;
 end;
 
+{
 procedure TJvTFGVTextControl.DrawScrollDnBtn(ACanvas: TCanvas; aCellRect: TRect);
 var
   aRect: TRect;
@@ -1028,15 +958,15 @@ begin
   BitBlt(ACanvas.Handle, aRect.Left, aRect.Top, RectWidth(aRect),
     RectHeight(aRect), FScrollUpBtnBMP.Canvas.Handle, 0, 0, SRCCOPY);
 end;
+}
 
 function TJvTFGVTextControl.FullViewableLines: Integer;
 var
-  aRect: TRect;
+  R: TRect;
 begin
-  aRect := GlanceControl.CalcCellBodyRect(Viewer.Cell,
-    GlanceControl.CellIsSelected(Viewer.Cell), False);
-
-  Result := RectHeight(aRect) div CalcLineHeight;
+  with GlanceControl do
+    R := CalcCellBodyRect(Viewer.Cell, CellIsSelected(Viewer.Cell), False);
+  Result := RectHeight(R) div CalcLineHeight;
 end;
 
 (*
@@ -1274,6 +1204,15 @@ begin
   inherited Destroy;
 end;
 
+function TJvTFGlanceTextViewer.CanScrollCell(ADir: TJvTFVScrollDir): Boolean;
+begin
+  with FViewControl do
+    case ADir of
+      sdUp: Result := TopLine > 0;
+      sdDown: Result := TopLine + FullViewableLines < LineCount;
+    end;
+end;
+
 procedure TJvTFGlanceTextViewer.Change;
 begin
   Refresh;
@@ -1373,13 +1312,25 @@ end;
 
 procedure TJvTFGlanceTextViewer.Refresh;
 begin
-  FViewControl.Invalidate;
+  if FViewControl.Parent <> nil then
+    FViewControl.Parent.Invalidate;
+  {
+  if FViewControl.Parent = nil then
+    FViewControl.Invalidate
+  else
+    FViewControl.Parent.Invalidate;
+    }
 end;
 
 procedure TJvTFGlanceTextViewer.ResetTopLines;
 begin
   FTopLines.Clear;
   GlanceControl.Invalidate;
+end;
+
+procedure TJvTFGlanceTextViewer.ScrollCell(ADelta: Integer);
+begin
+  FViewControl.Scroll(ADelta)
 end;
 
 procedure TJvTFGlanceTextViewer.SelApptAttrChange(Sender: TObject);

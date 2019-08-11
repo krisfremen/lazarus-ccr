@@ -44,7 +44,9 @@ type
 
   TJvTFVAlignment = (vaTop, vaCenter, vaBottom);
 
-  TJvTFDirection = (dirUp, dirDown, dirLeft, dirRight);
+  TJvTFDirection = (dirUp, dirDown, dirLeft, dirRight, dirUpDown);
+
+  TJvTFVScrollDir = (sdUp, sdDown);
 
 const
   DOW_WEEK: TTFDaysOfWeek = [dowSunday..dowSaturday];
@@ -111,6 +113,10 @@ function StringsToStr(const List: TStrings; const Sep: string;
   const AllowEmptyString: Boolean = True): string;
 
 procedure FixFont(const AFont: TFont);
+
+procedure DrawArrow(ACanvas: TCanvas; ARect: TRect; ADirection: TJvTFDirection);
+procedure DrawDblArrow(ACanvas: TCanvas; ARect: TRect; ADirection: TJvTFDirection;
+  AColor1, AColor2: TColor);
 
 
 implementation
@@ -826,5 +832,110 @@ begin
     AFont.Size := abs(GetFontData(AFont.Reference.Handle).Height) * 72 div AFont.PixelsPerInch;
 end;
 
+
+{ Draw an arrow }
+
+procedure DoDrawArrow(ACanvas: TCanvas; ARect: TRect; ADirection: TJvTFDirection;
+  AColor1, AColor2: TColor);
+var
+  I, ArrowHeight, ArrowWidth, BaseX, BaseY: Integer;
+begin
+  ArrowWidth := RectWidth(ARect) - 2;
+  if not Odd(ArrowWidth) then
+    Dec(ArrowWidth);
+  ArrowHeight := (ArrowWidth + 1) div 2;
+
+  ACanvas.Pen.Color := AColor1;
+  case ADirection of
+    dirUp:
+      begin
+        BaseX := ARect.Left + RectWidth(ARect) div 2 - ArrowWidth div 2;
+        BaseY := ARect.Top + RectHeight(ARect) div 2 + ArrowHeight div 2 - 1;
+        for I := ArrowHeight downto 1 do
+          with ACanvas do
+          begin
+            MoveTo(BaseX, BaseY);
+            LineTo(BaseX + I * 2 - 1, BaseY);
+            Inc(BaseX);
+            Dec(BaseY);
+          end;
+      end;
+    dirDown:
+      begin
+        BaseX := ARect.Left + RectWidth(ARect) div 2 - ArrowWidth div 2;
+        BaseY := ARect.Top + RectHeight(ARect) div 2 - ArrowHeight div 2 + 1;
+        for I := ArrowHeight downto 1 do
+        with ACanvas do
+          begin
+            MoveTo(BaseX, BaseY);
+            LineTo(BaseX + I * 2 - 1, BaseY);
+            Inc(BaseX);
+            Inc(BaseY);
+          end;
+      end;
+    dirUpDown:
+      begin
+        // UP arrow
+        BaseX := ARect.Left + RectWidth(ARect) div 2 - ArrowWidth div 2;
+        BaseY := ARect.Top + RectHeight(ARect) div 2 - 2;
+        for I := ArrowHeight downto 1 do
+        with ACanvas do
+          begin
+            MoveTo(BaseX, BaseY);
+            LineTo(BaseX + I * 2 - 2, BaseY);
+            Inc(BaseX);
+            Dec(BaseY);
+          end;
+
+        // down arrow
+        ACanvas.Pen.Color := AColor2;
+        BaseX := ARect.Left + RectWidth(ARect) div 2 - ArrowWidth div 2;
+        BaseY := ARect.Top + RectHeight(ARect) div 2 + 2;
+        for I := ArrowHeight downto 1 do
+        with ACanvas do
+          begin
+            MoveTo(BaseX, BaseY);
+            LineTo(BaseX + I * 2 - 2, BaseY);
+            Inc(BaseX);
+            Inc(BaseY);
+          end;
+      end;
+    dirLeft:
+      begin
+        BaseX := ARect.Left + RectWidth(ARect) div 2 + ArrowHeight div 2;
+        BaseY := ARect.Top + RectHeight(ARect) div 2 - ArrowWidth div 2;
+        for I := ArrowHeight downto 1 do
+          with ACanvas do
+          begin
+            MoveTo(BaseX, BaseY);
+            LineTo(BaseX, BaseY + I * 2 - 1);
+            Dec(BaseX);
+            Inc(BaseY);
+          end;
+      end;
+  else
+    BaseX := ARect.Left + RectWidth(ARect) div 2 - ArrowHeight div 2;
+    BaseY := ARect.Top + RectHeight(ARect) div 2 - ArrowWidth div 2;
+    for I := ArrowHeight downto 1 do
+      with ACanvas do
+      begin
+        MoveTo(BaseX, BaseY);
+        LineTo(BaseX, BaseY + I * 2 - 1);
+        Inc(BaseX);
+        Inc(BaseY);
+      end;
+  end;
+end;
+
+procedure DrawArrow(ACanvas: TCanvas; ARect: TRect; ADirection: TJvTFDirection);
+begin
+  DoDrawArrow(ACanvas, ARect, ADirection, ACanvas.Pen.Color, clNone);
+end;
+
+procedure DrawDblArrow(ACanvas: TCanvas; ARect: TRect;
+  ADirection: TJvTFDirection; AColor1, AColor2: TColor);
+begin
+  DoDrawArrow(ACanvas, ARect, ADirection, AColor1, AColor2);
+end;
 
 end.
