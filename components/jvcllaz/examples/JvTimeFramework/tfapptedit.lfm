@@ -13,7 +13,6 @@ object ApptEdit: TApptEdit
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '2.1.0.0'
-  Scaled = False
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Edit1

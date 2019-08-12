@@ -11,7 +11,6 @@ object VisibleResources: TVisibleResources
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '2.1.0.0'
-  Scaled = False
   object ResourcesCheckList: TCheckListBox
     Left = 8
     Height = 149
