@@ -9279,7 +9279,7 @@ begin
 
   Result.Left := VirtCellRect.Left + MakeUpWidth + BaseWidth;
   Result.Right := Result.Left + ApptWidth - ApptBuffer;
-  Result.Top := VirtCellRect.Top;
+  Result.Top := VirtCellRect.Top - 1;
   Result.Bottom := VirtualCellRect(Col, EndRow).Bottom;
 end;
 
