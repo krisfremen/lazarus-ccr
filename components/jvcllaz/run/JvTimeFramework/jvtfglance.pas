@@ -31,9 +31,13 @@ unit JvTFGlance;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType, LMessages, LCLVersion,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ImgList,
   JvTFUtils, JvTFManager;
+
+const
+  DEFAULT_GLANCE_TITLE_HEIGHT = 40;
+  DEFAULT_GLANCE_CELL_TITLE_HEIGHT = 20;
 
 type
   EJvTFGlanceError = class(Exception);
@@ -312,6 +316,7 @@ type
     FGlanceControl: TJvTFCustomGlance;
     FDayTxtAttr: TJvTFTextAttr;
     FPicAttr: TJvTFGlanceTitlePicAttr;
+    function IsStoredHeight: Boolean;
     procedure SetAlign(Value: TJvTFTitleAlign);
     //procedure SetDayFormat(Value: string);
     procedure SetColor(Value: TColor);
@@ -328,12 +333,14 @@ type
     constructor Create(AOwner: TJvTFCustomGlance);
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
+    procedure AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); virtual;
     property GlanceControl: TJvTFCustomGlance read FGlanceControl;
   published
     property Align: TJvTFTitleAlign read FAlign write SetAlign default alTop;
     //property DayFormat: string read FDayFormat write SetDayFormat;
     property Color: TColor read FColor write SetColor default clBtnFace;
-    property Height: Integer read FHeight write SetHeight default 20;
+    property Height: Integer read FHeight write SetHeight stored IsStoredHeight;
     property Visible: Boolean read FVisible write SetVisible default True;
     property FrameAttr: TJvTFGlanceFrameAttr read FFrameAttr write SetFrameAttr;
     property DayTxtAttr: TJvTFTextAttr read FDayTxtAttr write SetDayTxtAttr;
@@ -378,6 +385,7 @@ type
     FFrameAttr: TJvTFGlanceFrameAttr;
     FTxtAttr: TJvTFTextAttr;
     FOnChange: TNotifyEvent;
+    function IsStoredHeight: Boolean;
     procedure SetColor(Value: TColor);
     procedure SetHeight(Value: Integer);
     procedure SetVisible(Value: Boolean);
@@ -389,14 +397,15 @@ type
   public
     constructor Create(AOwner: TJvTFCustomGlance);
     destructor Destroy; override;
-
     procedure Assign(Source: TPersistent); override;
+    procedure AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); virtual;
     property GlanceControl: TJvTFCustomGlance read FGlanceControl;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
   published
     property Color: TColor read FColor write SetColor default clBtnFace;
     property FrameAttr: TJvTFGlanceFrameAttr read FFrameAttr write SetFrameAttr;
-    property Height: Integer read FHeight write SetHeight default 40;
+    property Height: Integer read FHeight write SetHeight stored IsStoredHeight;
     property Visible: Boolean read FVisible write SetVisible default True;
     property TxtAttr: TJvTFTextAttr read FTxtAttr write SetTxtAttr;
   end;
@@ -599,6 +608,14 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
 
     procedure SchedNamesChange(Sender: TObject);
+
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+    {$IFEND}
+
     property SelAppt: TJvTFAppt read FSelAppt write SetSelAppt;
     property AllowCustomDates: Boolean read FAllowCustomDates  write FAllowCustomDates;
     // configuration properties and events
@@ -1341,13 +1358,16 @@ begin
   FTitleAttr := TJvTFGlanceMainTitle.Create(Self);
 // obones: Commented out, it goes against the default value in TJvTFGlanceMainTitle
 //  FTitleAttr.Visible := False; // not visible by default. (Tim)
+  FTitleAttr.Height := Scale96ToFont(DEFAULT_GLANCE_TITLE_HEIGHT);
   FTitleAttr.OnChange := @GlanceTitleChange;
 
   FCellAttr := TJvTFGlanceCellAttr.Create(Self);
   FCellAttr.TitleAttr.DayTxtAttr.AlignH := taLeftJustify;
+  FCellAttr.TitleAttr.Height := Scale96ToFont(DEFAULT_GLANCE_CELL_TITLE_HEIGHT);
   FSelCellAttr := TJvTFGlanceCellAttr.Create(Self);
   FSelCellAttr.TitleAttr.Color := clHighlight;
   FSelCellAttr.TitleAttr.DayTxtAttr.Font.Color := clHighlightText;
+  FSelCellAttr.TitleAttr.Height := Scale96ToFont(DEFAULT_GLANCE_CELL_TITLE_HEIGHT);
 
   FScrollBtnAttr := TJvTFScrollBtnAttr.Create;
   FScrollBtnAttr.OnChange := @ScrollBtnChange;
@@ -1502,8 +1522,6 @@ begin
   end;
 end;
 
-
-
 procedure TJvTFCustomGlance.CMCtl3DChanged(var Msg: TLMessage);
 begin
   if FBorderStyle = bsSingle then
@@ -1542,6 +1560,36 @@ procedure TJvTFCustomGlance.Click;
 begin
   inherited Click;
 end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvTFCustomGlance.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    (*
+    if IsStoredColHdrHeight then
+      FColHdrHeight := round(FColHdrHeight * AYProportion);
+    if IsStoredDefColWidth then
+      FDefColWidth := round(FDefColWidth * AXProportion);
+    if IsStoredGroupHdrHeight then
+      FGroupHdrHeight := round(FGroupHdrHeight * AYProportion);
+    if IsStoredMinColWidth then
+      FMinColWidth := round(FMinColWidth * AXProportion);
+    if IsStoredMinRowHeight then
+      FMinRowHeight := round(FMinRowHeight * AYProportion);
+    if IsStoredRowHdrWidth then
+      FRowHdrWidth := round(FRowHdrWidth * AXProportion);
+    if IsStoredRowHeight then
+      FRowHeight := round(FRowHeight * AYProportion);
+    *)
+    FCellAttr.TitleAttr.AutoAdjustLayout(AMode, AXProportion, AYProportion);
+    FTitleAttr.AutoAdjustLayout(AMode, AXProportion, AYProportion);
+  end;
+end;
+{$IFEND}
 
 procedure TJvTFCustomGlance.DoConfigCells;
 begin
@@ -3180,6 +3228,28 @@ begin
   end;
 end;
 
+{$IF LCL_FullVersion >= 1080100}
+procedure TJvTFCustomGlance.ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(CellAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(CellAttr.TitleAttr.DayTxtAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(SelCellAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(SelCellAttr.TitleAttr.DayTxtAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(TitleAttr.TxtAttr.Font, AToPPI, AProportion);
+end;
+{$ELSEIF LCL_FullVersion >= 1080000}
+procedure TJvTFDays.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(CellAttr.Font, AProportion);
+  DoScaleFontPPI(CellAttr.TitleAttr.TxtAttr.Font, AProportion);
+  DoScaleFontPPI(SelCellAttr.Font, AProportion);
+  DoScaleFontPPI(SelCellAttr.TitleAttr.TxtAttr.Font, AProportion);
+  DoScaleFontPPI(TitleAttr.TxtAttr.Font, AProportion);
+end;
+{$IFEND}
+
 procedure TJvTFCustomGlance.SplitCell(ACell: TJvTFGlanceCell);
 begin
   ACell.Split;
@@ -3210,7 +3280,7 @@ begin
   FFrameAttr := TJvTFGlanceFrameAttr.Create(AOwner);
 
   FColor := clBtnFace;
-  FHeight := 40;
+  FHeight := DEFAULT_GLANCE_TITLE_HEIGHT;  // is scaled by GlanceControl
   FVisible := True;
 end;
 
@@ -3238,10 +3308,29 @@ begin
     inherited Assign(Source);
 end;
 
+procedure TJvTFGlanceTitle.AutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if IsStoredHeight then
+      FHeight := round(FHeight * AYProportion);
+  end;
+end;
+
 procedure TJvTFGlanceTitle.Change;
 begin
   if Assigned(FOnChange) then
     FOnChange(Self);
+end;
+
+function TJvTFGlanceTitle.IsStoredHeight: Boolean;
+begin
+  if Assigned(GlanceControl) then
+    Result := FHeight <> GlanceControl.Scale96ToFont(DEFAULT_GLANCE_TITLE_HEIGHT)
+  else
+    Result := true;
 end;
 
 procedure TJvTFGlanceTitle.SetColor(Value: TColor);
@@ -3447,7 +3536,7 @@ begin
   FAlign := alTop;
 
   FColor := clBtnFace;
-  FHeight := 20;
+  FHeight := FGlanceControl.Scale96ToFont(DEFAULT_GLANCE_CELL_TITLE_HEIGHT);
   FVisible := True;
   //FDayFormat := 'd';
 
@@ -3488,6 +3577,17 @@ begin
     inherited Assign(Source);
 end;
 
+procedure TJvTFGlanceTitleAttr.AutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if IsStoredHeight then
+      FHeight := round(FHeight * AYProportion);
+  end;
+end;
+
 procedure TJvTFGlanceTitleAttr.Change;
 begin
   if Assigned(GlanceControl) then
@@ -3496,6 +3596,14 @@ begin
       GlanceControl.Viewer.Realign;
     GlanceControl.Invalidate;
   end;
+end;
+
+function TJvTFGlanceTitleAttr.IsStoredHeight: Boolean;
+begin
+  if Assigned(GlanceControl) then
+    Result := FHeight <> GlanceControl.Scale96ToFont(DEFAULT_GLANCE_CELL_TITLE_HEIGHT)
+  else
+    Result := true;
 end;
 
 procedure TJvTFGlanceTitleAttr.PicAttrChange(Sender: TObject);

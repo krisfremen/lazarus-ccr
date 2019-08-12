@@ -2824,7 +2824,10 @@ var
   ApptGrid: TJvTFDays;
   absMinColWidth: Integer;
 begin
-  absMinColWidth := TJvTFDaysCols(Collection).ApptGrid.Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
+  if Assigned(ColCollection.ApptGrid) then
+    absMinColWidth := ColCollection.ApptGrid.Scale96ToFont(DEFAULT_MIN_COL_WIDTH)
+  else
+    absMinColWidth := DEFAULT_MIN_COL_WIDTH;
   if Value < absMinColWidth then
     Value := absMinColWidth;
 
@@ -2911,7 +2914,7 @@ procedure TJvTFDaysCol.AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
 begin
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if not IsStoredWidth then
+    if IsStoredWidth then
       FWidth := round(FWidth * AXProportion);
   end;
 end;
@@ -4254,16 +4257,16 @@ begin
   with FSelGroupHdrAttr do
   begin
     Color := clBtnFace;
-    Font.Color := clBlack;
+    Font.Color := clWindowText;
   end;
 
   FFancyRowHdrAttr := TJvTFDaysFancyRowHdrAttr.Create(Self);
   FSelFancyRowHdrAttr := TJvTFDaysFancyRowHdrAttr.Create(Self);
   with FSelFancyRowHdrAttr do
   begin
-    TickColor := clBlack;
-    MinorFont.Color := clBlack;
-    MajorFont.Color := clBlack;
+    TickColor := clWindowText;
+    MinorFont.Color := clWindowText;
+    MajorFont.Color := clWindowText;
   end;
 
   FSelCellAttr := TJvTFSelCellAttr.Create(Self);
@@ -4277,6 +4280,7 @@ begin
   // ok
   FTimeBlocks := TJvTFDaysTimeBlocks.Create(Self);
   FTimeBlockProps := TJvTFDaysBlockProps.Create(Self);
+  FTimeBlockProps.FBlockHdrWidth := Scale96ToFont(DEFAULT_BLOCK_HDR_WIDTH);
   {$ENDIF Jv_TIMEBLOCKS}
 
   FEditor := TJvTFInPlaceApptEditor.Create(Self);
@@ -14643,7 +14647,7 @@ procedure TJvTFDaysBlockProps.AutoAdjustLayout(const AMode: TLayoutAdjustmentPol
 begin
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if not IsStoredBlockHdrWidth then
+    if IsStoredBlockHdrWidth then
       FBlockHdrWidth := round(FBlockHdrWidth * AXProportion);
   end;
 end;

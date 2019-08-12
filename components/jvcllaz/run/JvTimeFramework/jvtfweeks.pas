@@ -31,7 +31,7 @@ unit JvTFWeeks;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType, LMessages, LCLVersion,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   JvTFManager, JvTFGlance, JvTFUtils;
 
@@ -67,6 +67,14 @@ type
 
     function GetSplitParentDay: TTFDayOfWeek;
     function GetCellTitleText(Cell: TJvTFGlanceCell): string; override;
+
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+{    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+      }
+    {$IFEND}
 
     // draws the DW Titles
     procedure DrawTitle(ACanvas: TCanvas); override;
@@ -190,8 +198,8 @@ begin
   with FDWTitleAttr do
   begin
     Assign(TitleAttr);
-    TxtAttr.Font.Size := 8;
-    Height := 20;
+//    TxtAttr.Font.Size := 8;
+    Height := Scale96ToFont(DEFAULT_GLANCE_CELL_TITLE_HEIGHT);
     OnChange := @GlanceTitleChange;
   end;
 
@@ -207,6 +215,19 @@ begin
   FDWTitleAttr.Free;
   inherited Destroy;
 end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvTFWeeks.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FDWTitleAttr.AutoAdjustLayout(AMode, AXProportion, AYProportion);
+  end;
+end;
+{$IFEND}
 
 function TJvTFWeeks.DisplayDayCount: Integer;
 var

@@ -169,7 +169,7 @@ object MainForm: TMainForm
         SelCellAttr.Font.Color = clWindowText
         SelCellAttr.TitleAttr.Color = clHighlight
         SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clHighlightText
-        SelCellAttr.DrawBottomLine = True
+        SelCellAttr.DrawBottomLine = False
         ScrollBtnAttr.DisabledArrowColor = clScrollBar
         CellPics = StateImageList
         Viewer = GlanceTextViewer1
@@ -471,7 +471,7 @@ object MainForm: TMainForm
         SelCellAttr.Font.Color = clWindowText
         SelCellAttr.TitleAttr.Color = clHighlight
         SelCellAttr.TitleAttr.DayTxtAttr.Font.Color = clHighlightText
-        SelCellAttr.DrawBottomLine = True
+        SelCellAttr.DrawBottomLine = False
         ScrollBtnAttr.DisabledArrowColor = clScrollBar
         Viewer = GlanceTextViewer2
         DateFormat = 'ddddd'
@@ -1694,6 +1694,7 @@ object MainForm: TMainForm
     Title = 'SIMPLDaysPrinter Demo'
     ApptAttr.Color = clLime
     ApptAttr.ParentFont = False
+    ApptBar.Width = 5
     ApptBuffer = 0
     ColHdrHeight = 0
     Color = clBlack
