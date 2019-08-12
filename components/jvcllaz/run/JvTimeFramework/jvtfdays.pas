@@ -58,21 +58,25 @@ unit JvTFDays;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Types,
+  LCLIntf, LCLType, LMessages, LCLVersion, Types,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ImgList,
   JvTFManager, JvTFSparseMatrix, JvTFUtils;
 
 const
-  AbsMinColWidth = 5;
+//  AbsMinColWidth = 5;
   SizingThreshold = 5;
   gcUndef = -3;
   gcGroupHdr = -2;
   gcHdr = -1;
 
+  DEFAULT_APPT_BAR_WIDTH = 5;
+  DEFAULT_BLOCK_HDR_WIDTH = 50;
   DEFAULT_COL_HDR_HEIGHT = 28;
   DEFAULT_DEF_COL_WIDTH = 100;
+  DEFAULT_GRAB_HANDLES_HEIGHT = 6;
   DEFAULT_GRANULARITY = 30;
   DEFAULT_GROUP_HDR_HEIGHT = 28;
+  DEFAULT_MIN_COL_WIDTH = 5;
   DEFAULT_MIN_ROW_HEIGHT = 12;
   DEFAULT_PRIMETIME_COLOR = $00C4FFFF;
   DEFAULT_ROW_HDR_WIDTH = 60;
@@ -438,6 +442,7 @@ type
     FDataDivColor: TColor;
     FSnapMove: Boolean;
     FDrawOffTime: Boolean;
+    function IsStoredBlockHdrWidth: Boolean;
     procedure SetBlockGran(Value: Integer);
     procedure SetDayStart(Value: TTime);
     procedure SetBlockHdrAttr(Value: TJvTFDaysHdrAttr);
@@ -450,12 +455,14 @@ type
     constructor Create(ADaysControl: TJvTFDays);
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
+    procedure AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); virtual;
     property DaysControl: TJvTFDays read FDaysControl;
     procedure Change;
   published
     property BlockGran: Integer read FBlockGran write SetBlockGran default 60;
     property BlockHdrAttr: TJvTFDaysHdrAttr read FBlockHdrAttr write SetBlockHdrAttr;
-    property BlockHdrWidth: Integer read FBlockHdrWidth write SetBlockHdrWidth default 50;
+    property BlockHdrWidth: Integer read FBlockHdrWidth write SetBlockHdrWidth stored IsStoredBlockHdrWidth;
     property DataDivColor: TColor read FDataDivColor write SetDataDivColor default clBlack;
     property DayStart: TTime read FDayStart write SetDayStart;
     property DrawOffTime: Boolean read FDrawOffTime write SetDrawOffTime default True;
@@ -641,6 +648,7 @@ type
     FWidth: Integer;
     FTimeStampStyle: TJvTFTimeStampStyle;
     FTimeStampColor: TColor;
+    function IsStoredWidth: Boolean;
     procedure SetColor(Value: TColor);
     procedure SetVisible(Value: Boolean);
     procedure SetWidth(Value: Integer);
@@ -652,9 +660,11 @@ type
   public
     constructor Create(AApptGrid: TJvTFDays);
     procedure Assign(Source: TPersistent); override;
+    procedure AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); virtual;
   published
     property Color: TColor read FColor write SetColor default clBlue;
-    property Width: Integer read FWidth write SetWidth default 5;
+    property Width: Integer read FWidth write SetWidth stored IsStoredWidth;
     property Visible: Boolean read FVisible write SetVisible default True;
     property TimeStampStyle: TJvTFTimeStampStyle read FTimeStampStyle
       write SetTFTimeStampStyle default tssBlock;
@@ -720,6 +730,7 @@ type
     FColor: TColor;
     FHeight: Integer;
     FStyle: TJvTFGrabStyle;
+    function IsStoredHeight: Boolean;
     procedure SetColor(Value: TColor);
     procedure SetHeight(Value: Integer);
     procedure SetStyle(Value: TJvTFGrabStyle);
@@ -730,8 +741,10 @@ type
   public
     constructor Create(AApptGrid: TJvTFDays);
     procedure Assign(Source: TPersistent); override;
+    procedure AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); virtual;
   published
-    property Height: Integer read FHeight write SetHeight default 6;
+    property Height: Integer read FHeight write SetHeight stored IsStoredHeight;
     property Color: TColor read FColor write SetColor default clBlue;
   end;
 
@@ -958,6 +971,15 @@ type
     procedure SetDitheredBackground(const Value: Boolean);
     procedure SetShowFocus(const Value: Boolean);
     {$ENDIF Jv_TIMEBLOCKS}
+
+    function IsStoredColHdrHeight: Boolean;
+    function IsStoredDefColWidth: Boolean;
+    function IsStoredGroupHdrHeight: Boolean;
+    function IsStoredMinColWidth: Boolean;
+    function IsStoredMinRowHeight: Boolean;
+    function IsStoredRowHdrWidth: Boolean;
+    function IsStoredRowHeight: Boolean;
+
   protected
     FState: TJvTFDaysState;
     FHint: TJvTFHint;
@@ -1159,6 +1181,13 @@ type
     { Lazarus }
     class function GetControlClassDefaultSize: TSize; override;
 
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+    {$IFEND}
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -1293,21 +1322,21 @@ type
     // grid layout properties
     property AutoSizeCols: Boolean read FAutoSizeCols write SetAutoSizeCols default True;
     property Granularity: Integer read FGranularity write SetGranularity default DEFAULT_GRANULARITY;
-    property ColHdrHeight: Integer read FColHdrHeight write SetColHdrHeight default DEFAULT_COL_HDR_HEIGHT;
+    property ColHdrHeight: Integer read FColHdrHeight write SetColHdrHeight stored IsStoredColHdrHeight; //default DEFAULT_COL_HDR_HEIGHT;
     property Cols: TJvTFDaysCols read FCols write SetCols;
-    property DefColWidth: Integer read FDefColWidth write FDefColWidth default DEFAULT_DEF_COL_WIDTH;
-    property MinColWidth: Integer read FMinColWidth write SetMinColWidth default AbsMinColWidth;
-    property MinRowHeight: Integer read FMinRowHeight write SetMinRowHeight default DEFAULT_MIN_ROW_HEIGHT;
+    property DefColWidth: Integer read FDefColWidth write FDefColWidth stored IsStoredDefColWidth; //default DEFAULT_DEF_COL_WIDTH;
+    property MinColWidth: Integer read FMinColWidth write SetMinColWidth stored IsStoredMinColWidth; //default AbsMinColWidth;
+    property MinRowHeight: Integer read FMinRowHeight write SetMinRowHeight stored IsStoredMinRowHeight; //default DEFAULT_MIN_ROW_HEIGHT;
     property Options: TJvTFDaysOptions read FOptions write SetOptions
       default [agoSizeCols, agoSizeRows, agoSizeColHdr, agoSizeRowHdr,
       agoSizeAppt, agoMoveAppt, agoEditing, agoShowPics,
       agoShowText, agoShowApptHints, agoQuickEntry, agoShowSelHint];
-    property RowHdrWidth: Integer read FRowHdrWidth write SetRowHdrWidth default DEFAULT_ROW_HDR_WIDTH;
-    property RowHeight: Integer read FRowHeight write SetRowHeight default DEFAULT_ROW_HEIGHT;
+    property RowHdrWidth: Integer read FRowHdrWidth write SetRowHdrWidth stored IsStoredRowHdrWidth; //default DEFAULT_ROW_HDR_WIDTH;
+    property RowHeight: Integer read FRowHeight write SetRowHeight stored IsStoredRowHeight; //default DEFAULT_ROW_HEIGHT;
     property ShowFocus:Boolean read FShowFocus write SetShowFocus default True;
     property Template: TJvTFDaysTemplate read FTemplate write FTemplate;
     property Grouping: TJvTFDaysGrouping read FGrouping write SetGrouping;
-    property GroupHdrHeight: Integer read FGroupHdrHeight write SetGroupHdrHeight default DEFAULT_GROUP_HDR_HEIGHT;
+    property GroupHdrHeight: Integer read FGroupHdrHeight write SetGroupHdrHeight stored IsStoredGroupHdrHeight;  //default DEFAULT_GROUP_HDR_HEIGHT;
 
     property GridStartTime: TTime read FGridStartTime write SetGridStartTime;
     property GridEndTime: TTime read FGridEndTime write SetGridEndTime;
@@ -1756,7 +1785,7 @@ type
 implementation
 
 uses
-  FPCanvas,
+  Math, FPCanvas,
   JvResources;
 
 //Type
@@ -2779,9 +2808,11 @@ end;
 procedure TJvTFDaysCol.SetWidth(Value: Integer);
 var
   ApptGrid: TJvTFDays;
+  absMinColWidth: Integer;
 begin
-  if Value < AbsMinColWidth then
-    Value := AbsMinColWidth;
+  absMinColWidth := TJvTFDaysCols(Collection).ApptGrid.Scale96ToForm(DEFAULT_MIN_COL_WIDTH);
+  if Value < absMinColWidth then
+    Value := absMinColWidth;
 
   if Assigned(ColCollection.ApptGrid) then
     if Value > ColCollection.ApptGrid.GetDataWidth then
@@ -3744,10 +3775,20 @@ begin
   inherited Create;
   FApptGrid := AApptGrid;
   FColor := clBlue;
-  FWidth := 5;
+  FWidth := DEFAULT_APPT_BAR_WIDTH;  // will be scaled by ApptGrid
   FVisible := True;
   FTimeStampStyle := tssBlock;
   FTimeStampColor := clBlue;
+end;
+
+procedure TJvTFDaysApptBar.AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if not IsStoredWidth then
+      FWidth := round(FWidth * AXProportion);
+  end;
 end;
 
 procedure TJvTFDaysApptBar.SetColor(Value: TColor);
@@ -3799,6 +3840,11 @@ begin
   end
   else
     inherited Assign(Source);
+end;
+
+function TJvTFDaysApptBar.IsStoredWidth: Boolean;
+begin
+  Result := FWidth <> FApptGrid.Scale96ToFont(DEFAULT_APPT_BAR_WIDTH);
 end;
 
 procedure TJvTFDaysApptBar.SetTimeStampColor(Value: TColor);
@@ -4000,7 +4046,23 @@ begin
   FApptGrid := AApptGrid;
   FStyle := gsFlat;
   FColor := clBlue;
-  FHeight := 6;
+  FHeight := DEFAULT_GRAB_HANDLES_HEIGHT;  // will be scaled by ApptGrid
+end;
+
+procedure TJvTFDaysGrabHandles.AutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if not IsStoredHeight then
+      FHeight := round(FHeight * AYProportion);
+  end;
+end;
+
+function TJvTFDaysGrabHandles.IsStoredHeight: Boolean;
+begin
+  Result := FHeight <> FApptGrid.Scale96ToFont(DEFAULT_GRAB_HANDLES_HEIGHT);
 end;
 
 procedure TJvTFDaysGrabHandles.SetColor(Value: TColor);
@@ -4074,20 +4136,20 @@ begin
 
   //set property defaults
 //  FBorderStyle := bsSingle;
-  FColHdrHeight := DEFAULT_COL_HDR_HEIGHT;
-  FGroupHdrHeight := DEFAULT_GROUP_HDR_HEIGHT;
-  FRowHdrWidth := DEFAULT_ROW_HDR_WIDTH;
-  FRowHeight := DEFAULT_ROW_HEIGHT;
+  FColHdrHeight := Scale96ToFont(DEFAULT_COL_HDR_HEIGHT);
+  FGroupHdrHeight := Scale96ToFont(DEFAULT_GROUP_HDR_HEIGHT);
+  FRowHdrWidth := Scale96ToFont(DEFAULT_ROW_HDR_WIDTH);
+  FRowHeight := Scale96ToFont(DEFAULT_ROW_HEIGHT);
   FGranularity := DEFAULT_GRANULARITY;
   FTopRow := 0;
   FFocusedRow := -1;
-  FMinColWidth := AbsMinColWidth;
+  FMinColWidth := Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
   FLeftCol := -1;
   FFocusedCol := -1;
-  FDefColWidth := DEFAULT_DEF_COL_WIDTH;
+  FDefColWidth := Scale96ToFont(DEFAULT_DEF_COL_WIDTH);
   FVisibleScrollBars := [];
   FAutoSizeCols := True;
-  FMinRowHeight := DEFAULT_MIN_ROW_HEIGHT;
+  FMinRowHeight := Scale96ToFont(DEFAULT_MIN_ROW_HEIGHT);
   ParentColor := False;
   Color := clSilver;
   FOptions := [agoSizeCols, agoSizeRows, agoSizeColHdr, agoSizeRowHdr,
@@ -4168,6 +4230,7 @@ begin
   FSelCellAttr := TJvTFSelCellAttr.Create(Self);
 
   FApptBar := TJvTFDaysApptBar.Create(Self);
+  FApptBar.Width := Scale96ToFont(DEFAULT_APPT_BAR_WIDTH);
 
   FCols := TJvTFDaysCols.Create(Self);
 
@@ -4193,6 +4256,7 @@ begin
   FTemplate := TJvTFDaysTemplate.Create(Self);
 
   FGrabHandles := TJvTFDaysGrabHandles.Create(Self);
+  FGrabHandles.Height := Scale96ToFont(DEFAULT_GRAB_HANDLES_HEIGHT);
 
   FHintProps := TJvTFHintProps.Create(Self);
   //FHint := TJvTFHint.Create(Self);
@@ -4254,6 +4318,80 @@ begin
     RecreateWnd;
   inherited;
 end;                                           }
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvTFDays.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if not IsStoredColHdrHeight then
+      FColHdrHeight := round(FColHdrHeight * AYProportion);
+    if not IsStoredDefColWidth then
+      FDefColWidth := round(FDefColWidth * AXProportion);
+    if not IsStoredGroupHdrHeight then
+      FGroupHdrHeight := round(FGroupHdrHeight * AYProportion);
+    if not IsStoredMinColWidth then
+      FMinColWidth := round(FMinColWidth * AXProportion);
+    if not IsStoredMinRowHeight then
+      FMinRowHeight := round(FMinRowHeight * AYProportion);
+    if not IsStoredRowHdrWidth then
+      FRowHdrWidth := round(FRowHdrWidth * AXProportion);
+    if not IsStoredRowHeight then
+      FRowHeight := round(FRowHeight * AYProportion);
+
+    FApptBar.AutoAdjustLayout(AMode, AXProportion, AYProportion);
+    FGrabHandles.AutoAdjustLayout(AMode, AXProportion, AYProportion);
+
+                                                           (*
+
+    {$IFDEF Jv_TIMEBLOCKS}
+    FWeekendFillPic.Height := 16;
+    FWeekendFillPic.Width := 16;
+    {$ENDIF Jv_TIMEBLOCKS}
+
+  *)
+
+  end;
+end;
+{$IFEND}
+
+{$IF LCL_FullVersion >= 1080100}
+procedure TJvTFDays.ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(ApptAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(FancyRowHdrAttr.MajorFont, AToPPI, AProportion);
+  DoScaleFontPPI(FancyRowHdrAttr.MinorFont, AToPPI, AProportion);
+  DoScaleFontPPI(GroupHdrAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(HdrAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(SelApptAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(SelFancyRowHdrAttr.MajorFont, AToPPI, AProportion);
+  DoScaleFontPPI(SelFancyRowHdrAttr.MinorFont, AToPPI, AProportion);
+  DoScaleFontPPI(SelGroupHdrAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(SelHdrAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(TimeBlockProps.BlockHdrAttr.Font, AToPPI, AProportion);
+  DoScaleFontPPI(TimeBlockProps.SelBlockHdrAttr.Font, AToPPI, AProportion);
+end;
+{$ELSEIF LCL_FullVersion >= 1080000}
+procedure TJvTFDays.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(ApptAttr.Font, AProportion);
+  DoScaleFontPPI(FancyRowHdrAttr.MajorFont, AProportion);
+  DoScaleFontPPI(FancyRowHdrAttr.MinorFont, AProportion);
+  DoScaleFontPPI(GroupHdrAttr.Font, AProportion);
+  DoScaleFontPPI(HdrAttr.Font, AProportion);
+  DoScaleFontPPI(SelApptAttr.Font, AProportion);
+  DoScaleFontPPI(SelFancyRowHdrAttr.MajorFont, AProportion);
+  DoScaleFontPPI(SelFancyRowHdrAttr.MinorFont, AProportion);
+  DoScaleFontPPI(SelGroupHdrAttr.Font, AProportion);
+  DoScaleFontPPI(SelHdrAttr.Font, AProportion);
+  DoScaleFontPPI(TimeBlockProps.BlockHdrAttr.Font, AProportion);
+  DoScaleFontPPI(TimeBlockProps.SelBlockHdrAttr.Font, AProportion);
+end;
+{$IFEND}
 
 procedure TJvTFDays.WMGetDlgCode(var Msg: TLMGetDlgCode);
 begin
@@ -4498,6 +4636,11 @@ begin
   end;
 end;
 
+function TJvTFDays.IsStoredColHdrHeight: Boolean;
+begin
+  Result := FColHdrHeight <> Scale96ToFont(DEFAULT_COL_HDR_HEIGHT);
+end;
+
 procedure TJvTFDays.SetRowHdrWidth(Value: Integer);
 begin
   if Value > RectWidth(GetAdjClientRect) then
@@ -4520,6 +4663,11 @@ begin
     CheckSBParams;
     Invalidate;
   end;
+end;
+
+function TJvTFDays.IsStoredRowHdrWidth: Boolean;
+begin
+  Result := FRowHdrWidth <> Scale96ToFont(DEFAULT_ROW_HDR_WIDTH);
 end;
 
 procedure TJvTFDays.SetRowHeight(Value: Integer);
@@ -4550,10 +4698,18 @@ begin
   end;
 end;
 
-procedure TJvTFDays.SetMinRowHeight(Value: Integer);
+function TJvTFDays.IsStoredRowHeight: Boolean;
 begin
-  if Value < AbsMinColWidth then
-    Value := AbsMinColWidth;
+  Result := FRowHeight <> Scale96ToFont(DEFAULT_ROW_HEIGHT);
+end;
+
+procedure TJvTFDays.SetMinRowHeight(Value: Integer);
+var
+  absMinColWidth: Integer;
+begin
+  absMinColWidth := Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
+  if Value < absMinColWidth then
+    Value := absMinColWidth;
 
   if Value <> FMinRowHeight then
   begin
@@ -4563,10 +4719,18 @@ begin
   end;
 end;
 
-procedure TJvTFDays.SetMinColWidth(Value: Integer);
+function TJvTFDays.IsStoredMinRowHeight: Boolean;
 begin
-  if Value < AbsMinColWidth then
-    Value := AbsMinColWidth;
+  Result := FMinRowHeight <> Scale96ToFont(DEFAULT_MIN_ROW_HEIGHT);
+end;
+
+procedure TJvTFDays.SetMinColWidth(Value: Integer);
+var
+  absMinColWidth: Integer;
+begin
+  absMinColWidth := Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
+  if Value < absMinColWidth then
+    Value := absMinColWidth;
 
   if Value <> FMinColWidth then
   begin
@@ -4574,6 +4738,16 @@ begin
     if not (csLoading in ComponentState) then
       Cols.EnsureMinColWidth;
   end;
+end;
+
+function TJvTFDays.IsStoredMinColWidth: Boolean;
+begin
+  Result := FMinColWidth <> Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
+end;
+
+function TJvTFDays.IsStoredDefColWidth: Boolean;
+begin
+  Result := FDefColWidth <> Scale96ToFont(DEFAULT_DEF_COL_WIDTH);
 end;
 
 procedure TJvTFDays.SetAutoSizeCols(Value: Boolean);
@@ -10596,6 +10770,11 @@ begin
   end;
 end;
 
+function TJvTFDays.IsStoredGroupHdrHeight: Boolean;
+begin
+  Result := FGroupHdrHeight <> Scale96ToFont(DEFAULT_GROUP_HDR_HEIGHT);
+end;
+
 procedure TJvTFDays.DrawGroupHdrs(ACanvas: TCanvas);
 var
   CurrGroup: string;
@@ -13686,10 +13865,13 @@ begin
 end;
 
 procedure TJvTFDaysPrinter.SetMinColWidth(Value: Integer);
+var
+  absMinColWidth: Integer;
 begin
   SetPropertyCheck;
-  if Value < AbsMinColWidth then
-    Value := AbsMinColWidth;
+  absMinColWidth := DEFAULT_MIN_COL_WIDTH;
+  if Value < absMinColWidth then
+    Value := absMinColWidth;
   FMinColWidth := Value;
 end;
 
@@ -14385,7 +14567,7 @@ begin
   inherited Create;
   FBlockGran := 60;
   FDaysControl := ADaysControl;
-  FBlockHdrWidth := 50;
+  FBlockHdrWidth := DEFAULT_BLOCK_HDR_WIDTH;   // will be scaled by FDaysControl
   FBlockHdrAttr := TJvTFDaysHdrAttr.Create(DaysControl);
   FSelBlockHdrAttr := TJvTFDaysHdrAttr.Create(DaysControl);
   FOffTimeColor := clGray;
@@ -14426,10 +14608,25 @@ begin
     inherited Assign(Source);
 end;
 
+procedure TJvTFDaysBlockProps.AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if not IsStoredBlockHdrWidth then
+      FBlockHdrWidth := round(FBlockHdrWidth * AXProportion);
+  end;
+end;
+
 procedure TJvTFDaysBlockProps.Change;
 begin
   if Assigned(DaysControl) then
     DaysControl.Invalidate;
+end;
+
+function TJvTFDaysBlockProps.IsStoredBlockHdrWidth: Boolean;
+begin
+  Result := FBlockHdrWidth <> FDaysControl.Scale96ToFont(DEFAULT_BLOCK_HDR_WIDTH);
 end;
 
 procedure TJvTFDaysBlockProps.SetBlockGran(Value: Integer);
