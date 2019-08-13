@@ -63,7 +63,6 @@ uses
   JvTFManager, JvTFSparseMatrix, JvTFUtils;
 
 const
-//  AbsMinColWidth = 5;
   SizingThreshold = 5;
   gcUndef = -3;
   gcGroupHdr = -2;
@@ -3552,13 +3551,14 @@ var
   I: Integer;
 begin
   for I := 0 to Count - 1 do
-   //Items[I].UpdateTitle;
     Items[I].UpdateTitles;
 end;
 
 //=== { TJvTFDaysFancyRowHdrAttr } ===========================================
 
 constructor TJvTFDaysFancyRowHdrAttr.Create(AOwner: TJvTFDays);
+var
+  h: Integer;
 begin
   inherited Create;
   FGrid := AOwner;
@@ -3569,11 +3569,17 @@ begin
   FMinorFont := TFont.Create;
   if Assigned(FGrid) then
     FMinorFont.Assign(FGrid.Font);
+  FMinorFont.PixelsPerInch := 96;
 
   FMajorFont := TFont.Create;
   if Assigned(FGrid) then
     FMajorFont.Assign(FGrid.Font);
-  FMajorFont.Size := FMajorFont.Size * 2;
+  if FMajorFont.Height = 0 then
+  begin
+    h := MulDiv(GetFontData(FMajorFont.Reference.Handle).Height, FMajorFont.PixelsPerInch, Screen.PixelsPerInch);
+    FMajorFont.Height := h*3 div 2;
+  end;
+  FMajorFont.PixelsPerInch := 96;
 
   FMinorFont.OnChange := @FontChange;
   FMajorFont.OnChange := @FontChange;
@@ -3677,7 +3683,9 @@ begin
   begin
     FFont.Assign(FApptGrid.Font);
     FParentFont := True;
-  end;
+  end else
+    FParentFont := False;
+  FFont.PixelsPerInch := 96;
   FFont.OnChange := @FontChange;
 
   FColor := clBtnFace;
@@ -3919,6 +3927,7 @@ begin
   end
   else
     FParentFont := False;
+  FFont.PixelsPerInch := 96;
 
   FFont.OnChange := @FontChange;
 
@@ -4165,33 +4174,25 @@ begin
   ControlStyle := ControlStyle +
     [csOpaque, csCaptureMouse, csClickEvents, csDoubleClicks];
 
-  (*
-  with GetControlClassDefaultSize do
-    SetInitialBounds(0, 0, CX, CY);
-    *)
-  {
-  Height := 300;
-  Width := 400;
-  }
-
   FSaveFocCol := -1;
 
   //set property defaults
 //  FBorderStyle := bsSingle;
   FColHdrHeight := Scale96ToFont(DEFAULT_COL_HDR_HEIGHT);
   FGroupHdrHeight := Scale96ToFont(DEFAULT_GROUP_HDR_HEIGHT);
+  FDefColWidth := Scale96ToFont(DEFAULT_DEF_COL_WIDTH);
+  FMinColWidth := Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
+  FMinRowHeight := Scale96ToFont(DEFAULT_MIN_ROW_HEIGHT);
   FRowHdrWidth := Scale96ToFont(DEFAULT_ROW_HDR_WIDTH);
   FRowHeight := Scale96ToFont(DEFAULT_ROW_HEIGHT);
+
   FGranularity := DEFAULT_GRANULARITY;
   FTopRow := 0;
   FFocusedRow := -1;
-  FMinColWidth := Scale96ToFont(DEFAULT_MIN_COL_WIDTH);
   FLeftCol := -1;
   FFocusedCol := -1;
-  FDefColWidth := Scale96ToFont(DEFAULT_DEF_COL_WIDTH);
   FVisibleScrollBars := [];
   FAutoSizeCols := True;
-  FMinRowHeight := Scale96ToFont(DEFAULT_MIN_ROW_HEIGHT);
   ParentColor := False;
   Color := clSilver;
   FOptions := [agoSizeCols, agoSizeRows, agoSizeColHdr, agoSizeRowHdr,
@@ -4247,7 +4248,7 @@ begin
   with FSelHdrAttr do
   begin
     Color := clBtnFace;
-    Font.Color := clBlack;
+    Font.Color := clWindowText;
   end;
 
   FGroupHdrAttr := TJvTFDaysHdrAttr.Create(Self);

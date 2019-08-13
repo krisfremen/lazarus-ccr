@@ -3456,6 +3456,7 @@ begin
 
   FFont := TFont.Create;
   FFont.Color := clWindowText;
+  FFont.PixelsPerInch := 96;
   FFont.OnChange := @FontChange;
 end;
 
@@ -3939,6 +3940,7 @@ begin
   inherited Create;
 
   FFont := TFont.Create;
+  FFont.PixelsPerInch := 96;
   FFont.OnChange := @FontChange;
   FAlignH := taLeftJustify;
   FAlignV := vaCenter;

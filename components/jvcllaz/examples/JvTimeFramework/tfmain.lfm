@@ -72,12 +72,11 @@ object MainForm: TMainForm
         FancyRowHdrAttr.Hr2400 = False
         FancyRowHdrAttr.MinorFont.Color = clWindowText
         FancyRowHdrAttr.MajorFont.Color = clWindowText
-        FancyRowHdrAttr.MajorFont.Height = -21
+        FancyRowHdrAttr.MajorFont.Height = -18
         FancyRowHdrAttr.TickColor = clSilver
         SelFancyRowHdrAttr.Hr2400 = True
         SelFancyRowHdrAttr.MinorFont.Color = clBlack
         SelFancyRowHdrAttr.MajorFont.Color = clBlack
-        SelFancyRowHdrAttr.MajorFont.Height = -21
         SelFancyRowHdrAttr.TickColor = clSilver
         GridLineColor = clSilver
         PrimeTime.StartTime = 0.333333333333333
