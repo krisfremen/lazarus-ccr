@@ -13573,7 +13573,7 @@ begin
   Result.Right := Result.Left + ApptWidth - ApptBuffer;
 
   // Printer bug, fixed
-  Result.Top := WorkTop;
+  Result.Top := WorkTop - 1;
 
   Result.Bottom := CellRect(Col, EndRow, PageInfo).Bottom;
 end;
