@@ -3,7 +3,8 @@ object SettingsForm: TSettingsForm
   Height = 299
   Top = 283
   Width = 403
-  Caption = 'SettingsForm'
+  AutoSize = True
+  Caption = 'Settings'
   ClientHeight = 299
   ClientWidth = 403
   OnClose = FormClose
@@ -16,6 +17,7 @@ object SettingsForm: TSettingsForm
     Height = 34
     Top = 259
     Width = 391
+    BorderSpacing.Top = 4
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
     OKButton.OnClick = OKButtonClick
@@ -30,12 +32,12 @@ object SettingsForm: TSettingsForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 253
+    Height = 249
     Top = 0
     Width = 403
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 253
+    ClientHeight = 249
     ClientWidth = 403
     TabOrder = 1
     object Bevel1: TBevel
@@ -90,6 +92,7 @@ object SettingsForm: TSettingsForm
       Top = 39
       Width = 88
       Anchors = [akTop, akRight]
+      BorderSpacing.Left = 36
       Caption = 'First day of week'
       FocusControl = cbFirstDayOfWeek
       ParentColor = False
@@ -176,12 +179,61 @@ object SettingsForm: TSettingsForm
       Top = 75
       Width = 104
       BorderSpacing.Left = 4
+      BorderSpacing.Right = 36
       BorderWidth = 2
       ButtonColorAutoSize = False
       ButtonColorSize = 16
       ButtonColor = clBlack
       Caption = 'Prime time'
       Margin = 4
+    end
+    object Bevel2: TBevel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = edPrimeTimeEnd
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 8
+      Height = 3
+      Top = 120
+      Width = 387
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      Shape = bsTopLine
+    end
+    object cbIconSet: TComboBox
+      AnchorSideLeft.Control = edPrimeTimeEnd
+      AnchorSideRight.Control = cbTimeFormat
+      AnchorSideRight.Side = asrBottom
+      Left = 132
+      Height = 23
+      Top = 128
+      Width = 124
+      Anchors = [akTop, akLeft, akRight]
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'Color'
+        'Stroke style'
+      )
+      Style = csDropDownList
+      TabOrder = 4
+      Text = 'Color'
+    end
+    object lblIconSet: TLabel
+      AnchorSideTop.Control = cbIconSet
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = lblTimeFormat
+      AnchorSideRight.Side = asrBottom
+      Left = 83
+      Height = 15
+      Top = 132
+      Width = 41
+      Anchors = [akTop, akRight]
+      Caption = 'Icon set'
+      ParentColor = False
     end
   end
 end

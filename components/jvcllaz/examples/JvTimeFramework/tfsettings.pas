@@ -15,6 +15,7 @@ type
     PrimeTimeStart: TTime;
     PrimeTimeEnd: TTime;
     PrimeTimeColor: TColor;
+    IconSet: Integer;
   end;
 
 var
@@ -24,6 +25,7 @@ var
     PrimeTimeStart: 8 * ONE_HOUR;
     PrimeTimeEnd: 17 * ONE_HOUR;
     PrimeTimeColor: $00C4FFFF;
+    IconSet: 0
   );
 
 type
@@ -31,10 +33,13 @@ type
 
   TSettingsForm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     ButtonPanel1: TButtonPanel;
     cbTimeFormat: TComboBox;
     cbFirstDayOfWeek: TComboBox;
     clbPrimeTimeColor: TColorButton;
+    cbIconSet: TComboBox;
+    lblIconSet: TLabel;
     lblPrimeTimeStart: TLabel;
     lblPrimeTimeEnd: TLabel;
     lblFirstDayOfWeek: TLabel;
@@ -67,6 +72,7 @@ begin
   GlobalSettings.PrimeTimeStart := frac(edPrimeTimeStart.Time);
   GlobalSettings.PrimeTimeEnd := frac(edPrimeTimeEnd.Time);
   GlobalSettings.PrimeTimeColor := clbPrimeTimeColor.ButtonColor;
+  GlobalSettings.IconSet := cbIconSet.ItemIndex;
 end;
 
 procedure TSettingsForm.SettingsToControls;
@@ -77,6 +83,7 @@ begin
   edPrimeTimeStart.Time := GlobalSettings.PrimeTimeStart;
   edPrimeTimeEnd.Time := GlobalSettings.PrimeTimeEnd;
   clbPrimeTimeColor.ButtonColor := GlobalSettings.PrimeTimeColor;
+  cbIconSet.ItemIndex := GlobalSettings.IconSet;
 end;
 
 procedure TSettingsForm.FormClose(Sender: TObject;

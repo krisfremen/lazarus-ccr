@@ -44,7 +44,7 @@ type
 
   TMainForm = class(TForm)
     WeeksCombo: TComboBox;
-    ImageList: TImageList;
+    StrokeImages: TImageList;
     JvTFDaysPrinter1: TJvTFDaysPrinter;
     IconsProvidedLabel: TLabel;
     IconsLink: TLabel;
@@ -52,7 +52,7 @@ type
     SettingsButton: TBitBtn;
     PrintDialog: TPrintDialog;
     utfScheduleManager1: TJvTFScheduleManager;
-    StateImageList: TImageList;
+    ColoredImages: TImageList;
     NeedApptsQuery: TSQLQuery;
     ApptSchedulesQuery: TSQLQuery;
     GetApptQuery: TSQLQuery;
@@ -86,7 +86,6 @@ type
     dbUTF: TSQLite3Connection;
     SQLTransaction: TSQLTransaction;
 
-    procedure FormDestroy(Sender: TObject);
     procedure IconsLinkClick(Sender: TObject);
     procedure IconsLinkMouseEnter(Sender: TObject);
     procedure IconsLinkMouseLeave(Sender: TObject);
@@ -129,6 +128,7 @@ type
     procedure utfScheduleManager1RefreshAppt(Sender: TObject; Appt: TJvTFAppt);
 
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
     procedure PrintButtonClick(Sender: TObject);
@@ -156,6 +156,8 @@ uses
 {$R *.lfm}
 
 procedure TMainForm.ApplySettings;
+var
+  images: Array[0..1] of TImageList;
 begin
   with GlobalSettings do begin
     JvTFDays1.FancyRowHdrAttr.Hr2400 := Hr2400;
@@ -168,6 +170,20 @@ begin
     JvTFDays1.PrimeTime.StartTime := PrimeTimeStart;
     JvTFDays1.PrimeTime.EndTime := PrimeTimeEnd;
     JvTFDays1.PrimeTime.Color := PrimeTimeColor;
+
+    images[0] := ColoredImages;
+    images[1] := StrokeImages;
+    PrevDateButton.Images := images[IconSet];
+    NextDateButton.Images := images[IconSet];
+    NewApptButton.Images := images[IconSet];
+    EditApptButton.Images := images[IconSet];
+    DeleteApptButton.Images := images[IconSet];
+    PrintButton.Images := images[IconSet];
+    SettingsButton.Images := images[IconSet];
+    ViewSchedsButton.Images := images[IconSet];
+    HideSchedButton.Images := images[IconSet];
+    ShareButton.Images := images[IconSet];
+    utfScheduleManager1.StateImages := images[IconSet];
   end;
 end;
 
@@ -775,6 +791,62 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fn: String;
 begin
+  with DefaultFormatSettings do begin
+    CurrencyFormat := 1;
+    NegCurrFormat := 5;
+    ThousandSeparator := ',';
+    DecimalSeparator := '.';
+    CurrencyDecimals := 2;
+    DateSeparator := '-';
+    TimeSeparator := ':';
+    ListSeparator := ',';
+    CurrencyString := '$';
+    ShortDateFormat := 'd/m/y';
+    LongDateFormat := 'dd" "mmmm" "yyyy';
+    TimeAMString := 'AM';
+    TimePMString := 'PM';
+    ShortTimeFormat := 'hh:nn';
+    LongTimeFormat := 'hh:nn:ss';
+    ShortMonthNames[1] := 'Jan';
+    ShortMonthNames[2] := 'Feb';
+    ShortMonthNames[3] := 'Mar';
+    ShortMonthNames[4] := 'Apr';
+    ShortMonthNames[5] := 'May';
+    ShortMonthNames[6] := 'Jun';
+    ShortMonthNames[7] := 'Jul';
+    ShortMonthNames[8] := 'Aug';
+    ShortMonthNames[9] := 'Sep';
+    ShortMonthNames[10] := 'Oct';
+    ShortMonthNames[11] := 'Nov';
+    ShortMonthNames[12] := 'Dec';
+    LongMonthNames[1] := 'January';
+    LongMonthNames[2] := 'February';
+    LongMonthNames[3] := 'March';
+    LongMonthNames[4] := 'April';
+    LongMonthNames[5] := 'May';
+    LongMonthNames[6] := 'June';
+    LongMonthNames[7] := 'July';
+    LongMonthNames[8] := 'August';
+    LongMonthNames[9] := 'September';
+    LongMonthNames[10] := 'October';
+    LongMonthNames[11] := 'November';
+    LongMonthNames[12] := 'December';
+    ShortDayNames[1] := 'Sun';
+    ShortDayNames[2] := 'Mon';
+    ShortDayNames[3] := 'Tue';
+    ShortDayNames[4] := 'Wed';
+    ShortDayNames[5] := 'Thu';
+    ShortDayNames[6] := 'Fri';
+    ShortDayNames[7] := 'Sat';
+    LongDayNames[1] := 'Sunday';
+    LongDayNames[2] := 'Monday';
+    LongDayNames[3] := 'Tuesday';
+    LongDayNames[4] := 'Wednesday';
+    LongDayNames[5] := 'Thursday';
+    LongDayNames[6] := 'Friday';
+    LongDayNames[7] := 'Saturday';
+  end;
+
   fn := Application.Location + 'data.sqlite';
   dbUTF.DatabaseName := fn;
   dbUTF.Connected := FileExists(fn);
@@ -804,6 +876,7 @@ begin
     GlobalSettings.PrimeTimeStart := ini.ReadTime('Settings', 'PrimeTimeStart', GlobalSettings.PrimeTimeStart);
     GlobalSettings.PrimeTimeEnd := ini.ReadTime('Settings', 'PrimeTimeEnd', GlobalSettings.PrimeTimeEnd);
     GlobalSettings.PrimeTimeColor := TColor(ini.ReadInteger('Settings', 'PrimeTimeColor', Integer(GlobalSettings.PrimeTimeColor)));
+    GlobalSettings.IconSet := ini.ReadInteger('Settings', 'IconSet', GlobalSettings.IconSet);
     ApplySettings;
   finally
     ini.Free;
@@ -828,6 +901,7 @@ begin
     ini.WriteTime('Settings', 'PrimeTimeStart', GlobalSettings.PrimeTimeStart);
     ini.WriteTime('Settings', 'PrimeTimeEnd', GlobalSettings.PrimeTimeEnd);
     ini.WriteInteger('Settings', 'PrimeTimeColor', GlobalSettings.PrimeTimeColor);
+    ini.WriteInteger('Settings', 'IconSet', GlobalSettings.IconSet);
   finally
     ini.Free;
   end;
