@@ -80,6 +80,7 @@ const
   DEFAULT_PRIMETIME_COLOR = $00C4FFFF;
   DEFAULT_ROW_HDR_WIDTH = 60;
   DEFAULT_ROW_HEIGHT = 20;
+  PIC_DIST = 2;
 
 type
   EJvTFDaysError = class(Exception);
@@ -5958,24 +5959,49 @@ var
   ImageList: TCustomImageList;
   ImageMap: TJvTFStateImageMap;
   CustomImageMap: TJvTFCustomImageMap;
+  w, h, d: Integer;
+  {$IF LCL_FullVersion >= 2000000}
+  PPI: Integer;
+  f: Double;
+  {$ENDIF}
 begin
   PicAdjust := 0;
   NextPicLeft := ARect.Left;
+
+  {$IF LCL_FullVersion >= 1080000}
+  d := Scale96ToForm(PIC_DIST);
+  {$ELSE}
+  d := ScaleX(PIC_DIST, Screen.PixelsPerInch);
+  {$ENDIF}
 
   if (agoShowPics in Options) and Assigned(ScheduleManager.CustomImages) then
   begin
     ImageList := ScheduleManager.CustomImages;
     CustomImageMap := Appt.ImageMap;
 
+    {$IF LCL_FullVersion >= 2000000}
+    PPI := Font.PixelsPerInch;
+    f := GetCanvasScaleFactor;
+    w := Imagelist.WidthForPPI[ImageList.Width, PPI];
+    h := round(ImageList.Height/ImageList.Width * w);
+    {$ELSE}
+    w := ImageList.Width;
+    h := ImageList.Height;
+    {$IFEND}
+
     for I := 0 to CustomImageMap.Count - 1 do
     begin
       ImageIndex := CustomImageMap[I];
+      {$IF LCL_FullVersion >= 2000000}
+      ImageList.DrawForPPI(ACanvas, NextPicLeft, ARect.Top, ImageIndex, 0, PPI, f);
+      {$ELSE}
       ImageList.Draw(ACanvas, NextPicLeft, ARect.Top, ImageIndex);
-      Inc(NextPicLeft, ImageList.Width + 2);
+      {$IFEND}
+      Inc(NextPicLeft, w + d);
     end;
 
     if CustomImageMap.Count > 0 then
-      PicAdjust := ImageList.Height + 2;
+      PicAdjust := h + d;
   end;
   CustomPicLeft := NextPicLeft;
 
@@ -5984,40 +6010,52 @@ begin
     ImageList := ScheduleManager.StateImages;
     ImageMap := ScheduleManager.StateImageMap;
 
+    {$IF LCL_FullVersion >= 2000000}
+    PPI := Font.PixelsPerInch;
+    f := GetCanvasScaleFactor;
+    w := Imagelist.WidthForPPI[ImageList.Width, PPI];
+    h := round(ImageList.Height/ImageList.Width * w);
+    {$ELSE}
+    w := ImageList.Width;
+    h := ImageList.Height;
+    {$IFEND}
+
     if Appt.AlarmEnabled then
-    begin
-      ImageIndex := ImageMap.AlarmEnabled;
-      if ImageIndex > -1 then
-      begin
-        ImageList.Draw(ACanvas, NextPicLeft, ARect.Top, ImageIndex);
-        Inc(NextPicLeft, ImageList.Width + 2);
-      end;
-    end
+      ImageIndex := ImageMap.AlarmEnabled
     else
-    begin
       ImageIndex := ImageMap.AlarmDisabled;
-      if ImageIndex > -1 then
-      begin
-        ImageList.Draw(ACanvas, NextPicLeft, ARect.Top, ImageIndex);
-        Inc(NextPicLeft, ImageList.Width + 2);
-      end;
+    if ImageIndex > -1 then begin
+      {$IF LCL_FullVersion >= 2000000}
+      ImageList.DrawForPPI(ACanvas, NextPicLeft, ARect.Top, ImageIndex, 0, PPI, f);
+      {$ELSE}
+      ImageList.Draw(ACanvas, NextPicLeft, ARect.Top, ImageIndex);
+      {$IFEND}
+      Inc(NextPicLeft, w + d);
     end;
 
     ImageIndex := ImageMap.Shared;
     if Appt.Shared and (ImageIndex > -1) then
     begin
+      {$IF LCL_FullVersion >= 2000000}
+      ImageList.DrawForPPI(ACanvas, NextPicLeft, ARect.Top, ImageIndex, 0, PPI, f);
+      {$ELSE}
       ImageList.Draw(ACanvas, NextPicLeft, ARect.Top, ImageIndex);
-      Inc(NextPicLeft, ImageList.Width + 2);
+      {$IFEND}
+      Inc(NextPicLeft, w + d);
     end;
 
     if Appt.Modified and (ImageMap.Modified > -1) then
     begin
+      {$IF LCL_FullVersion >= 2000000}
+      ImageList.DrawForPPI(ACanvas, NextPicLeft, ARect.Top, ImageMap.Modified, 0, PPI, f);
+      {$ELSE}
       ImageList.Draw(ACanvas, NextPicLeft, ARect.Top, ImageMap.Modified);
-      Inc(NextPicLeft, ImageList.Width + 2);
+      {$IFEND}
+      Inc(NextPicLeft, w + d);
     end;
 
-    if (NextPicLeft <> CustomPicLeft) and (ImageList.Height + 2 > PicAdjust) then
-      PicAdjust := ImageList.Height + 2;
+    if (NextPicLeft <> CustomPicLeft) and (h + d > PicAdjust) then
+      PicAdjust := h + d;
   end;
 
   Inc(ARect.Top, PicAdjust);
@@ -6030,6 +6068,11 @@ var
   ImageList: TCustomImageList;
   ImageMap: TJvTFStateImageMap;
   CustomImageMap: TJvTFCustomImageMap;
+  w, h, d: Integer;
+  {$IF LCL_FullVersion >= 2000000}
+  PPI: integer;
+  f: Double;
+  {$IFEND}
 
   procedure AddToList(AImageList: TCustomImageList; AImageIndex: Integer;
     AGlyph: TGraphic; APicLeft, APicTop: Integer);
@@ -6046,12 +6089,18 @@ var
   end;
 
 begin
+  {$IF LCL_FullVersion >= 1080000}
+  d := Scale96ToForm(PIC_DIST);
+  {$ELSE}
+  d := ScaleX(PIC_DIST, Screen.PixelsPerInch);
+  {$ENDIF}
+
   NextPicLeft := ARect.Left;
 
   if (agoShowPics in Options) and Assigned(Appt.Glyph.Graphic) and not Appt.Glyph.Graphic.Empty then
   begin
     AddToList(nil, -1, Appt.Glyph.Graphic, NextPicLeft, ARect.Top);
-    Inc(NextPicLeft, Appt.Glyph.Graphic.Width + 2);
+    Inc(NextPicLeft, Appt.Glyph.Graphic.Width + d);
   end;
 
   if (agoShowPics in Options) and Assigned(ScheduleManager.CustomImages) then
@@ -6059,11 +6108,21 @@ begin
     ImageList := ScheduleManager.CustomImages;
     CustomImageMap := Appt.ImageMap;
 
+    {$IF LCL_FullVersion >= 2000000}
+    PPI := Font.PixelsPerInch;
+    f := GetCanvasScaleFactor;
+    w := Imagelist.WidthForPPI[ImageList.Width, PPI];
+    h := round(ImageList.Height/ImageList.Width * w);
+    {$ELSE}
+    w := ImageList.Width;
+    h := ImageList.Height;
+    {$IFEND}
+
     for I := 0 to CustomImageMap.Count - 1 do
     begin
       ImageIndex := CustomImageMap[I];
       AddToList(ImageList, ImageIndex, nil, NextPicLeft, ARect.Top);
-      Inc(NextPicLeft, ImageList.Width + 2);
+      Inc(NextPicLeft, w + d);
     end;
   end;
 
@@ -6078,7 +6137,7 @@ begin
       if ImageIndex > -1 then
       begin
         AddToList(ImageList, ImageIndex, nil, NextPicLeft, ARect.Top);
-        Inc(NextPicLeft, ImageList.Width + 2);
+        Inc(NextPicLeft, w + d);
       end
     end
     else
@@ -6087,7 +6146,7 @@ begin
       if ImageIndex > -1 then
       begin
         AddToList(ImageList, ImageIndex, nil, NextPicLeft, ARect.Top);
-        Inc(NextPicLeft, ImageList.Width + 2);
+        Inc(NextPicLeft, w + d);
       end;
     end;
 
@@ -6095,7 +6154,7 @@ begin
     if Appt.Shared and (ImageIndex > -1) then
     begin
       AddToList(ImageList, ImageIndex, nil, NextPicLeft, ARect.Top);
-      Inc(NextPicLeft, ImageList.Width + 2);
+      Inc(NextPicLeft, w + 2);
     end;
 
     if Appt.Modified and (ImageMap.Modified > -1) then
@@ -6114,16 +6173,44 @@ var
   I, NextPicLeft: Integer;
   DrawIt: Boolean;
   DrawInfo: TJvTFDrawPicInfo;
+  d: Integer;
+  w, h: Integer;
+  {$IF LCL_FullVersion >=2000000}
+  PPI: Integer;
+  f: Double;
+  {$IFEND}
 begin
   PicsHeight := 0;
   PicsWidth := 0;
   if DrawList.Count = 0 then
     Exit;
 
+  {$IF LCL_FullVersion >= 2000000}
+  PPI := Font.PixelsPerInch;
+  f := GetCanvasScaleFactor;
+  {$IFEND}
+
+  {$IF LCL_FullVersion >= 1080000}
+  d := Scale96ToForm(PIC_DIST);
+  {$ELSE}
+  d := ScaleX(PIC_DIST, Screen.PixelsPerInch);
+  {$ENDIF}
+
   if Thresholds.PicsAllOrNone then
   begin
     DrawInfo := TJvTFDrawPicInfo(DrawList[DrawList.Count - 1]);
-    if DrawInfo.PicLeft + DrawInfo.ImageList.Width >= ARect.Right then
+
+    if Assigned(DrawInfo.ImageList) then begin
+      {$IF LCL_FullVersion >= 2000000}
+      w := DrawInfo.Imagelist.WidthForPPI[DrawInfo.ImageList.Width, PPI];
+      h := round(DrawInfo.ImageList.Height/DrawInfo.ImageList.Width * w);
+      {$ELSE}
+      w := DrawInfo.ImageList.Width;
+      h := DrawInfo.ImageList.Height;
+      {$IFEND}
+    end;
+
+    if DrawInfo.PicLeft + w >= ARect.Right then
     begin
       while DrawList.Count > 0 do
       begin
@@ -6148,15 +6235,22 @@ begin
 
       if DrawIt then
       begin
-        if Assigned(ImageList) then
-          PicsHeight := Greater(PicsHeight, ImageList.Height + 2)
-        else
-          PicsHeight := Greater(PicsHeight, Glyph.Height + 2);
+        if Assigned(ImageList) then begin
+          {$IF LCL_FullVersion >= 2000000}
+          w := Imagelist.WidthForPPI[ImageList.Width, PPI];
+          h := round(ImageList.Height/ImageList.Width * w);
+          {$ELSE}
+          w := ImageList.Width;
+          h := ImageList.Height;
+          {$IFEND}
+          PicsHeight := Greater(PicsHeight, h + d);
+        end else
+          PicsHeight := Greater(PicsHeight, Glyph.Height + d);
         PicLeft := NextPicLeft;
         if Assigned(ImageList) then
-          Inc(NextPicLeft, ImageList.Width + 2)
+          Inc(NextPicLeft, w + d)
         else
-          Inc(NextPicLeft, Glyph.Width + 2);
+          Inc(NextPicLeft, Glyph.Width + d);
           // Increment I to move onto next pic in list
         Inc(I);
       end
@@ -6187,14 +6281,27 @@ procedure TJvTFDays.DrawListPics(ACanvas: TCanvas; var ARect: TRect;
 var
   I: Integer;
   DrawInfo: TJvTFDrawPicInfo;
+  {$IF LCL_FullVersion >= 2000000}
+  f: Double;
+  PPI: Integer;
+  {$IFEND}
 begin
+  {$IF LCL_FullVersion >= 2000000}
+  PPI := Font.PixelsPerInch;
+  f := GetCanvasScaleFactor;
+  {$IFEND}
+
   for I := 0 to DrawList.Count - 1 do
   begin
     DrawInfo := TJvTFDrawPicInfo(DrawList[I]);
     with DrawInfo do
     begin
       if Assigned(ImageList) then
+        {$IF LCL_FullVersion >= 2000000}
+        ImageList.DrawForPPI(ACanvas, PicLeft, PicTop, ImageIndex, 0, PPI, f)
+        {$ELSE}
         ImageList.Draw(ACanvas, PicLeft, PicTop, ImageIndex)
+        {$IFEND}
       else
         ACanvas.Draw(PicLeft, PicTop, Glyph);
     end;
