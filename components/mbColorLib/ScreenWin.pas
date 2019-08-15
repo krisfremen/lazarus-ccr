@@ -86,6 +86,12 @@ end;
 
 procedure TScreenForm.FormCreate(Sender: TObject);
 begin
+  // The screen form is the same size of the screen and is transparent.
+  // Unfortunately it cannot be made fully transparent (AlphaBlendvalue=0)
+  // because it would not react on mouse event this way.
+  AlphaBlendValue := 1;  // range 0..255; 1 is "almost" transparent
+  AlphaBlend := true;
+
   Brush.Style := bsClear;
   Screen.Cursors[crPickerCursor] := LoadCursor(HInstance, 'PickerCursor');
   Cursor := crPickerCursor;
@@ -139,19 +145,25 @@ begin
   end;
 end;
 
-function TScreenForm.ReadScreenColor(const X, Y: Integer): TColor;
+function TScreenForm.ReadScreenColor(const X, Y: integer):TColor;
 var
-  c: TCanvas;
-  screenDC: HDC;
+  ScreenDC: HDC;
+  SaveBitmap: TBitmap;
 begin
-  c := TCanvas.Create;
+  SaveBitmap := TBitmap.Create;
   try
-    screenDC := GetDC(0);
-    c.Handle := screenDC;
-    Result := c.Pixels[X, Y];
+    SaveBitmap.SetSize(Screen.Width, Screen.Height);
+    ScreenDC := GetDC(0);
+    try
+      SaveBitmap.LoadFromDevice(ScreenDC);
+    finally
+      ReleaseDC(0, ScreenDC);
+    end;
+    Result := SaveBitmap.Canvas.Pixels[X, Y];
   finally
-    c.Free;
+    SaveBitmap.Free;
   end;
 end;
+
 
 end.
