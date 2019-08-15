@@ -134,6 +134,8 @@ type
     procedure utfScheduleManager1PostAppt(Sender: TObject; Appt: TJvTFAppt);
     procedure utfScheduleManager1RefreshAppt(Sender: TObject; Appt: TJvTFAppt);
 
+    procedure CreateDatabase(const AFileName: String);
+
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -142,6 +144,8 @@ type
     procedure WeeksComboChange(Sender: TObject);
 
   private
+    FNewDatabase: Boolean;
+
     { Private declarations }
     procedure ApplySettings;
     procedure ReadIni;
@@ -193,6 +197,12 @@ begin
     ShareButton.Images := images[IconSet];
     NewSchedButton.Images := images[IconSet];
     utfScheduleManager1.StateImages := images[IconSet];
+
+    if StartToday then
+      GotoDatePicker.Date := Date()
+    else
+      GotoDatePicker.Date := StartDate;
+    GotoDatePickerChange(nil);
   end;
 end;
 
@@ -634,18 +644,12 @@ var
   ResName : String;
 begin
   // Initialize the date
-  //GotoDatePicker.Date := Date;
-  GotoDatePicker.Date := EncodeDate(2002, 1, 1);
-
   ReadIni;
-  (*
-  // Initialize the granularity
-  TimeIncCombo.ItemIndex := 1; // 30 mins
 
-  // Initialize the mode
-  ModeCombo.ItemIndex := 0; // Single mode
-  DaysCombo.ItemIndex := 0; // One day
-  *)
+//  GotoDatePicker.Date := EncodeDate(2002, 1, 1);
+
+  if FNewDatabase then
+    NewSchedButtonClick(nil);
 
   // Populate the resource related controls
   With SchedulesQuery do
@@ -849,6 +853,35 @@ begin
     End;
 end;
 
+procedure TMainForm.CreateDatabase(const AFileName: String);
+var
+  sql: String;
+begin
+  dbUTF.Open;
+  SQLTransaction.Active := true;
+
+  sql := 'CREATE TABLE "GroupAppt" (' +
+    '"ApptID" STRING PRIMARY KEY,'+
+    '"StartDate" DATE,'+
+    '"StartTime" TIME,'+
+    '"EndDate" DATE,'+
+    '"EndTime" TIME,'+
+    '"Description" TEXT,'+
+    '"AlarmEnabled" BOOL,'+
+    '"AlarmAdvance" REAL);';
+  dbUTF.ExecuteDirect(sql);
+  SQLTransaction.Commit;
+
+  sql := 'CREATE TABLE "GroupLink" ('+
+    '"SchedName" String,'+
+    '"ApptID" String);';
+  dbUTF.ExecuteDirect(sql);
+  SQLTransaction.Commit;
+
+  FNewDatabase := true;
+end;
+
+
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   fn: String;
@@ -911,7 +944,11 @@ begin
 
   fn := Application.Location + 'data.sqlite';
   dbUTF.DatabaseName := fn;
-  dbUTF.Connected := FileExists(fn);
+  if FileExists(fn) then begin
+    dbUTF.Open;
+    SQLTransaction.Active := true;
+  end else
+    CreateDatabase(fn);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -933,6 +970,8 @@ begin
     PageControl1.ActivePageIndex := ini.ReadInteger('MainForm', 'PageIndex', 0);
     PageControl1Change(nil);
 
+    GlobalSettings.StartToday := ini.ReadBool('Settings', 'StartToday', GlobalSettings.StartToday);
+    GlobalSettings.StartDate := ini.ReadDate('Settings', 'StartDate', GlobalSettings.StartDate);
     GlobalSettings.Hr2400 := ini.ReadBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
     GlobalSettings.FirstDayOfWeek := TTFDayofWeek(ini.ReadInteger('Settings', 'FirstDayOfWeek', ord(GlobalSettings.FirstDayOfWeek)));
     GlobalSettings.PrimeTimeStart := ini.ReadTime('Settings', 'PrimeTimeStart', GlobalSettings.PrimeTimeStart);
@@ -958,6 +997,8 @@ begin
     ini.WriteInteger('MainForm', 'DaysCombo', DaysCombo.ItemIndex);
     ini.WriteInteger('MainForm', 'WeeksCombo', WeeksCombo.ItemIndex);
 
+    ini.WriteBool('Settings', 'StartToday', GlobalSettings.StartToday);
+    ini.WriteDate('Settings', 'StartDate', GlobalSettings.StartDate);
     ini.WriteBool('Settings', 'Hr2400', GlobalSettings.Hr2400);
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(GlobalSettings.FirstDayOfWeek));
     ini.WriteTime('Settings', 'PrimeTimeStart', GlobalSettings.PrimeTimeStart);

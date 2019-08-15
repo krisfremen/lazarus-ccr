@@ -10,6 +10,8 @@ uses
 
 type
   TGlobalSettings = record
+    StartToday: Boolean;
+    StartDate: TDate;
     Hr2400: Boolean;               // 24 hour or 12 hour AM/PM format
     FirstDayOfWeek: TTFDayOfWeek;
     PrimeTimeStart: TTime;
@@ -20,6 +22,8 @@ type
 
 var
   GlobalSettings: TGlobalSettings = (
+    StartToday: true;
+    StartDate: 0;
     Hr2400: false;
     FirstDayOfWeek: dowSunday;
     PrimeTimeStart: 8 * ONE_HOUR;
@@ -34,11 +38,14 @@ type
   TSettingsForm = class(TForm)
     Bevel1: TBevel;
     Bevel2: TBevel;
+    Bevel3: TBevel;
     ButtonPanel1: TButtonPanel;
     cbTimeFormat: TComboBox;
     cbFirstDayOfWeek: TComboBox;
     clbPrimeTimeColor: TColorButton;
     cbIconSet: TComboBox;
+    deStartDate: TDateEdit;
+    Label1: TLabel;
     lblIconSet: TLabel;
     lblPrimeTimeStart: TLabel;
     lblPrimeTimeEnd: TLabel;
@@ -47,6 +54,11 @@ type
     Panel1: TPanel;
     edPrimeTimeStart: TTimeEdit;
     edPrimeTimeEnd: TTimeEdit;
+    StartDatePanel: TPanel;
+    rbStartDate: TRadioButton;
+    rbStartToday: TRadioButton;
+    procedure deStartDateAcceptDate(Sender: TObject; var ADate: TDateTime;
+      var AcceptDate: Boolean);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -67,22 +79,37 @@ implementation
 
 procedure TSettingsForm.ControlsToSettings;
 begin
+  GlobalSettings.StartToday := rbStartToday.Checked;
+  GlobalSettings.StartDate := deStartDate.Date;
+
   GlobalSettings.Hr2400 := cbTimeFormat.ItemIndex = 0;
   GlobalSettings.FirstDayOfWeek := TTFDayOfWeek(cbFirstDayOfWeek.ItemIndex);
   GlobalSettings.PrimeTimeStart := frac(edPrimeTimeStart.Time);
   GlobalSettings.PrimeTimeEnd := frac(edPrimeTimeEnd.Time);
   GlobalSettings.PrimeTimeColor := clbPrimeTimeColor.ButtonColor;
+
   GlobalSettings.IconSet := cbIconSet.ItemIndex;
+end;
+
+procedure TSettingsForm.deStartDateAcceptDate(Sender: TObject;
+  var ADate: TDateTime; var AcceptDate: Boolean);
+begin
+  rbStartDate.Checked := true;
 end;
 
 procedure TSettingsForm.SettingsToControls;
 begin
-  cbTimeFormat.ItemIndex := ord(not GlobalSettings.Hr2400);
+  rbStartToday.Checked := GlobalSettings.StartToday;
+  deStartDate.Date := GlobalSettings.StartDate;
+  if not rbStartToday.Checked and (deStartDate.Date <> 0) then
+    rbStartDate.Checked := true;
 
+  cbTimeFormat.ItemIndex := ord(not GlobalSettings.Hr2400);
   cbFirstDayOfWeek.ItemIndex := ord(GlobalSettings.FirstDayOfWeek);
   edPrimeTimeStart.Time := GlobalSettings.PrimeTimeStart;
   edPrimeTimeEnd.Time := GlobalSettings.PrimeTimeEnd;
   clbPrimeTimeColor.ButtonColor := GlobalSettings.PrimeTimeColor;
+
   cbIconSet.ItemIndex := GlobalSettings.IconSet;
 end;
 

@@ -18,13 +18,14 @@ var
 begin
   Application.Scaled:=True;
   Application.Initialize;
-
+                               (*
   fn := Application.Location + 'data.sqlite';
   if not FileExists(fn) then begin
     MessageDlg('Database file "' + fn + '" not found. Copy it from the source directory to here.',
       mtError, [mbOK], 0);
     Halt;
-  end;
+  end;                           *)
+
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TVisibleResources, VisibleResources);
   Application.CreateForm(TShare, Share);
