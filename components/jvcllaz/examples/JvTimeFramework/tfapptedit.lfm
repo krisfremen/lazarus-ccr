@@ -320,9 +320,9 @@ object ApptEdit: TApptEdit
     Height = 23
     Top = 115
     Width = 37
+    Alignment = taRightJustify
     BorderSpacing.Left = 8
     BorderSpacing.Bottom = 8
-    ReadOnly = True
     TabOrder = 6
     Text = '0'
   end

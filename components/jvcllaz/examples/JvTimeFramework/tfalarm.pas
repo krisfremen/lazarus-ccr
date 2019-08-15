@@ -66,12 +66,16 @@ var
   deltaMins: Integer;
 begin
   EventLabel.Caption := AAppt.Description;
+  if AAppt.StartDate < Now() then begin
+    IsDueLabel.Caption := 'is OVERDUE: ';
+    TimeLabel.Caption := FormatDateTime('t', AAppt.StartTime);  // 't' = ShortTimeFormat
+  end else
   if AAppt.StartDate = Date() then begin
     IsDueLabel.caption := 'is due at ';
-    TimeLabel.Caption := FormatDateTime(FormatSettings.ShortTimeFormat, AAppt.StartTime);
+    TimeLabel.Caption := FormatDateTime('t', AAppt.StartTime);
   end else begin
     IsDueLabel.Caption := 'is due on ';
-    TimeLabel.Caption := FormatDateTime('dddddd', AAppt.StartDateTime);
+    TimeLabel.Caption := FormatDateTime('dddddd', AAppt.StartDateTime);  // LongDateFormat
   end;
 end;
 
