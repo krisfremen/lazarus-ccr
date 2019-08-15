@@ -29,6 +29,8 @@ type
   private
     FOnSelColorChange: TNotifyEvent;
     FOnKeyDown: TKeyEvent;
+    function GetDesktopColor(const X, Y: Integer): TColor;
+    function ReadScreenColor(const X, Y: Integer): TColor;
 
   protected
     procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
@@ -50,21 +52,6 @@ implementation
 
 uses
   HTMLColors;
-
-function GetDesktopColor(const X, Y: Integer): TColor;
-var
-  c: TCanvas;
-  screenDC: HDC;
-begin
-  c := TCanvas.Create;
-  try
-    screenDC := GetDC(0);
-    c.Handle := screenDC;
-    Result := c.Pixels[X, Y];
-  finally
-    c.Free;
-  end;
-end;
 
 
 { TScreenForm }
@@ -137,6 +124,34 @@ begin
   Height := Screen.Height;
   Left := 0;
   Top := 0;
+end;
+
+function TScreenForm.GetDesktopColor(const X, Y: Integer): TColor;
+var
+  savedAlphaBlendValue: Integer;
+begin
+  savedAlphaBlendValue := AlphablendValue;
+  try
+    AlphaBlendValue := 0;
+    Result := ReadScreenColor(X, Y);
+  finally
+    AlphaBlendValue := savedAlphaBlendValue;
+  end;
+end;
+
+function TScreenForm.ReadScreenColor(const X, Y: Integer): TColor;
+var
+  c: TCanvas;
+  screenDC: HDC;
+begin
+  c := TCanvas.Create;
+  try
+    screenDC := GetDC(0);
+    c.Handle := screenDC;
+    Result := c.Pixels[X, Y];
+  finally
+    c.Free;
+  end;
 end;
 
 end.
