@@ -44,6 +44,7 @@ type
 
   TMainForm = class(TForm)
     JvTFAlarm1: TJvTFAlarm;
+    NewSchedButton: TBitBtn;
     TodayButton: TSpeedButton;
     WeeksCombo: TComboBox;
     StrokeImages: TImageList;
@@ -95,6 +96,7 @@ type
       var SnoozeMins: Integer; var Dismiss: Boolean);
 
     procedure ModeComboChange(Sender: TObject);
+    procedure NewSchedButtonClick(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure SettingsButtonClick(Sender: TObject);
     procedure TodayButtonClick(Sender: TObject);
@@ -189,6 +191,7 @@ begin
     ViewSchedsButton.Images := images[IconSet];
     HideSchedButton.Images := images[IconSet];
     ShareButton.Images := images[IconSet];
+    NewSchedButton.Images := images[IconSet];
     utfScheduleManager1.StateImages := images[IconSet];
   end;
 end;
@@ -303,15 +306,18 @@ end;
 
 procedure TMainForm.ModeComboChange(Sender: TObject);
 begin
+  ResourceCombo.Visible := ModeCombo.ItemIndex = 0;
+  DaysCombo.Visible := (ModeCombo.ItemIndex = 0) and (PageControl1.ActivePage = pgDays);
+  WeeksCombo.Visible := (ModeCombo.ItemIndex = 0) and (PageControl1.ActivePage = pgWeeks);
+
+  NewSchedButton.Visible := ModeCombo.ItemIndex = 1;
+  ViewSchedsButton.Visible := ModeCombo.ItemIndex = 1;
+  HideSchedButton.Visible := ModeCombo.ItemIndex = 1;
+  ShareButton.Visible := ModeCombo.ItemIndex = 1;
+
   If ModeCombo.ItemIndex = 0 Then
     // Single mode
     Begin
-      // display the appropriate tool bar controls
-      ViewSchedsButton.Visible := False;
-      HideSchedButton.Visible := False;
-      ShareButton.Visible := False;
-      ResourceCombo.Visible := True;
-      DaysCombo.Visible := True;
       // synchronize the date
       JvTFDays1.Template.LinearStartDate := GotoDatePicker.Date;
       // "activate" the Linear template
@@ -322,12 +328,6 @@ begin
   Else
     // Group mode
     Begin
-      // display the appropriate tool bar controls
-      ViewSchedsButton.Visible := True;
-      HideSchedButton.Visible := True;
-      ShareButton.Visible := True;
-      ResourceCombo.Visible := False;
-      DaysCombo.Visible := False;
       // synchronize the date
       JvTFDays1.Template.CompDate := GotoDatePicker.Date;
       // "activate" the Comparative template
@@ -497,6 +497,20 @@ begin
   ApptEdit.ShowModal;
 end;
 
+procedure TMainForm.NewSchedButtonClick(Sender: TObject);
+var
+  s: String;
+  n: Integer;
+begin
+  s := InputBox('Add User', 'User name', '');
+  if s <> '' then begin
+    ResourceCombo.Items.Add(s);
+    n := VisibleResources.ResourcesCheckList.Items.Add(s);
+    Share.ResourcesCheckList.Items.Add(s);
+    VisibleResources.ResourcesCheckList.Checked[n] := True;
+  end;
+end;
+
 procedure TMainForm.EditApptButtonClick(Sender: TObject);
 begin
   If Assigned(JvTFDays1.SelAppt) Then
@@ -506,9 +520,8 @@ begin
       ApptEdit.Appt := JvTFDays1.SelAppt;
       ApptEdit.ShowModal;
     End
-  Else
-    MessageDlg('Please select an appointment to edit.', mtInformation,
-               [mbOK], 0);
+  else
+    MessageDlg('Please select an appointment to edit.', mtInformation, [mbOK], 0);
 end;
 
 procedure TMainForm.DeleteApptButtonClick(Sender: TObject);
@@ -660,10 +673,12 @@ begin
 
   // Initialize the resource related controls
   ResourceCombo.ItemIndex := 0;
-  VisibleResources.ResourcesCheckList.Checked[0] := True;
+  if VisibleResources.ResourcesCheckList.Items.Count > 0 then begin
+    VisibleResources.ResourcesCheckList.Checked[0] := True;
 
-  // Initialize the comparative template
-  JvTFDays1.Template.CompNames.Add(VisibleResources.ResourcesCheckList.Items[0]);
+    // Initialize the comparative template
+    JvTFDays1.Template.CompNames.Add(VisibleResources.ResourcesCheckList.Items[0]);
+  end;
 
   // Now run the events to synchronize JvTFDays, etc.
   ResourceComboChange(nil);
