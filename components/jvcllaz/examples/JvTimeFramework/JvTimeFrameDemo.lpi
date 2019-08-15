@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="8">
       <Unit0>
         <Filename Value="JvTimeFrameDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -101,6 +101,13 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="tfSettings"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="tfalarm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AlarmForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="tfAlarm"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -9,7 +9,7 @@ uses
   tfVisibleResources in 'VisibleResourcesUnit.pas' {VisibleResources},
   tfShare in 'ShareUnit.pas' {Share},
   tfApptEdit in 'ApptEditUnit.pas' {ApptEdit},
-  tfPrintProgress in 'PrintProgressUnit.pas', tfSettings {PrintProgress};
+  tfPrintProgress in 'PrintProgressUnit.pas', tfSettings, tfAlarm {PrintProgress};
 
 {$R *.res}
 
@@ -31,5 +31,6 @@ begin
   Application.CreateForm(TApptEdit, ApptEdit);
   Application.CreateForm(TPrintProgress, PrintProgress);
   Application.CreateForm(TSettingsForm, SettingsForm);
+  Application.CreateForm(TAlarmForm, AlarmForm);
   Application.Run;
 end.

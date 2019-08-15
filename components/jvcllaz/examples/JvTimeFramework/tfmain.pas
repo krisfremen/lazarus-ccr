@@ -36,13 +36,15 @@ uses
   db, sqldb, sqlite3conn,
   ComCtrls, StdCtrls, Buttons, ExtCtrls, ImgList, DateTimePicker, PrintersDlgs,
   JvTFManager, JvTFDays, JvTFGlance, JvTFGlanceTextViewer, JvTFMonths,
-  JvTFWeeks;
+  JvTFWeeks, JvTFAlarm;
 
 type
 
   { TMainForm }
 
   TMainForm = class(TForm)
+    JvTFAlarm1: TJvTFAlarm;
+    TodayButton: TSpeedButton;
     WeeksCombo: TComboBox;
     StrokeImages: TImageList;
     JvTFDaysPrinter1: TJvTFDaysPrinter;
@@ -89,10 +91,13 @@ type
     procedure IconsLinkClick(Sender: TObject);
     procedure IconsLinkMouseEnter(Sender: TObject);
     procedure IconsLinkMouseLeave(Sender: TObject);
+    procedure JvTFAlarm1Alarm(Sender: TObject; AAppt: TJvTFAppt;
+      var SnoozeMins: Integer; var Dismiss: Boolean);
 
     procedure ModeComboChange(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure SettingsButtonClick(Sender: TObject);
+    procedure TodayButtonClick(Sender: TObject);
     procedure ViewSchedsButtonClick(Sender: TObject);
     procedure HideSchedButtonClick(Sender: TObject);
     procedure ResourceComboChange(Sender: TObject);
@@ -151,7 +156,7 @@ implementation
 
 uses
   IniFiles,
-  tfVisibleResources, tfShare, tfApptEdit, tfPrintProgress, tfSettings;
+  tfVisibleResources, tfShare, tfApptEdit, tfPrintProgress, tfSettings, tfAlarm;
 
 {$R *.lfm}
 
@@ -175,6 +180,7 @@ begin
     images[1] := StrokeImages;
     PrevDateButton.Images := images[IconSet];
     NextDateButton.Images := images[IconSet];
+    TodayButton.Images := images[IconSet];
     NewApptButton.Images := images[IconSet];
     EditApptButton.Images := images[IconSet];
     DeleteApptButton.Images := images[IconSet];
@@ -476,6 +482,13 @@ begin
   End;
 end;
 
+procedure TMainForm.TodayButtonClick(Sender: TObject);
+begin
+  JvTFDays1.GotoDate(Date());
+  JvTFMonths1.DisplayDate := JvTFDays1.CurrentDate;
+  JvTFWeeks1.DisplayDate := JvTFDays1.CurrentDate;
+end;
+
 procedure TMainForm.NewApptButtonClick(Sender: TObject);
 begin
   // Simply open the EditAppt window.  The Appt var of the
@@ -731,6 +744,40 @@ begin
   IconsLink.Font.Style := IconsLink.Font.Style - [fsUnderline];
   Screen.Cursor := crDefault;
 end;
+
+procedure TMainForm.JvTFAlarm1Alarm(Sender: TObject; AAppt: TJvTFAppt;
+  var SnoozeMins: Integer; var Dismiss: Boolean);
+var
+  F: TAlarmForm;
+begin
+  F := TAlarmForm.Create(nil);
+  try
+    F.SetAppt(AAppt);
+    F.SnoozeMins := SnoozeMins;
+    F.ShowModal;
+    Dismiss := not F.Snooze;
+    SnoozeMins := F.SnoozeMins;
+  finally
+    F.Free;
+  end;
+end;
+
+{
+var
+  msg: String;
+  res: Integer;
+  s: String;
+begin
+  msg := Format('The event "%s" is due', [AAppt.Description]);
+  if AAppt.StartDate = Date then
+    msg := msg + ' at ' + TimeToStr(AAppt.StartTime)
+  else
+    msg := msg + ' on ' + FormatDateTime('dddddd', AAppt.StartTime);
+  msg := msg + LineEnding + 'Remind in ' + IntToStr(SnoozeMins) + ' minutes?';
+  res := MessageDlg(msg, mtInformation, [mbYes, mbNo], 0);
+  Dismiss := res = mrYes;
+end;
+ }
 
 procedure TMainForm.utfScheduleManager1LoadBatch(Sender: TObject;
   BatchName: String; BatchStartDate, BatchEndDate: TDate);
