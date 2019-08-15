@@ -2994,16 +2994,17 @@ var
   ExtraDesc: string = '';
   Handled: Boolean;
 begin
-  if Assigned(FViewer) and FViewer.ShowSchedNamesInHint then
-    ExtraDesc := StringsToStr(SchedNames, ', ', False);
-  ExtraDesc := ExtraDesc + #13#10;
-
   Handled := False;
   if Assigned(OnApptHint) then
     FOnApptHint(Self, Info.Appt, Handled);
-  if not Handled then
+  if not Handled then begin
+    if Assigned(FViewer) and FViewer.ShowSchedNamesInHint then
+      ExtraDesc := StringsToStr(SchedNames, ', ', False) + LineEnding
+    else
+      ExtraDesc := '';
     FHint.ApptHint(Info.Appt, Info.AbsX + 8, Info.AbsY + 8,
                    not Assigned(FViewer) or FViewer.ShowStartEndTimeInHint, True, False, ExtraDesc);
+  end;
 end;
 
 procedure TJvTFCustomGlance.CheckViewerApptHint(X, Y: Integer);
@@ -3697,6 +3698,7 @@ begin
   inherited Create(AOwner);
   FRepeatGrouped := True;
   FShowSchedNamesInHint := True;
+  FShowStartEndTimeInHint := True;
   FInplaceEdit := True;
 end;
 
