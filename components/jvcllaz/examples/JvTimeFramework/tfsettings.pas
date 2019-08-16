@@ -80,7 +80,10 @@ implementation
 procedure TSettingsForm.ControlsToSettings;
 begin
   GlobalSettings.StartToday := rbStartToday.Checked;
-  GlobalSettings.StartDate := deStartDate.Date;
+  if not GlobalSettings.StartToday and (GlobalSettings.StartDate = Date) then
+    GlobalSettings.StartDate := 0
+  else
+    GlobalSettings.StartDate := deStartDate.Date;
 
   GlobalSettings.Hr2400 := cbTimeFormat.ItemIndex = 0;
   GlobalSettings.FirstDayOfWeek := TTFDayOfWeek(cbFirstDayOfWeek.ItemIndex);
@@ -99,10 +102,14 @@ end;
 
 procedure TSettingsForm.SettingsToControls;
 begin
-  rbStartToday.Checked := GlobalSettings.StartToday;
-  deStartDate.Date := GlobalSettings.StartDate;
-  if not rbStartToday.Checked and (deStartDate.Date <> 0) then
+  if GlobalSettings.StartToday then
+    rbStartToday.Checked := true
+  else
     rbStartDate.Checked := true;
+  if GlobalSettings.StartDate = 0 then
+    deStartDate.Date := Date()
+  else
+    deStartDate.Date := GlobalSettings.StartDate;
 
   cbTimeFormat.ItemIndex := ord(not GlobalSettings.Hr2400);
   cbFirstDayOfWeek.ItemIndex := ord(GlobalSettings.FirstDayOfWeek);
@@ -128,7 +135,7 @@ begin
   try
     cbFirstDayOfWeek.Clear;
     for i:=1 to 7 do
-      cbFirstDayOfWeek.Items.Add(DefaultFormatSettings.LongDayNames[i]);
+      cbFirstDayOfWeek.Items.Add(FormatSettings.LongDayNames[i]);
   finally
     cbFirstDayOfWeek.Items.EndUpdate;
   end;

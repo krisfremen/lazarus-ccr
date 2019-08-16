@@ -258,12 +258,12 @@ object SettingsForm: TSettingsForm
       Left = 134
       Height = 23
       Top = 8
-      Width = 183
+      Width = 216
       AutoSize = True
       BorderSpacing.Top = 8
       BevelOuter = bvNone
       ClientHeight = 23
-      ClientWidth = 183
+      ClientWidth = 216
       TabOrder = 5
       object rbStartToday: TRadioButton
         AnchorSideLeft.Control = StartDatePanel
@@ -297,7 +297,7 @@ object SettingsForm: TSettingsForm
         Left = 80
         Height = 23
         Top = 0
-        Width = 103
+        Width = 136
         CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
         OnAcceptDate = deStartDateAcceptDate
         DefaultToday = True

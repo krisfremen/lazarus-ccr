@@ -688,7 +688,11 @@ begin
   ResourceComboChange(nil);
   DaysComboChange(nil);
   ModeComboChange(nil);
-  GotoDatePicker.Date := EncodeDate(2002, 1, 1);
+
+  if GlobalSettings.StartToday then
+    GotoDatePicker.Date := Date()
+  else
+    GotoDatePicker.Date := GlobalSettings.StartDate;
   GotoDatePickerChange(nil);
   TimeIncComboChange(nil);
 end;
@@ -886,17 +890,12 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   fn: String;
 begin
-  with DefaultFormatSettings do begin
-    CurrencyFormat := 1;
-    NegCurrFormat := 5;
+  with FormatSettings do begin
     ThousandSeparator := ',';
     DecimalSeparator := '.';
-    CurrencyDecimals := 2;
-    DateSeparator := '-';
+    DateSeparator := '/';
     TimeSeparator := ':';
-    ListSeparator := ',';
-    CurrencyString := '$';
-    ShortDateFormat := 'd/m/y';
+    ShortDateFormat := 'd/mm/yyyy';
     LongDateFormat := 'dd" "mmmm" "yyyy';
     TimeAMString := 'AM';
     TimePMString := 'PM';
