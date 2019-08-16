@@ -1005,9 +1005,12 @@ type
     FFromToSel: Boolean;
     FSaveFocCol: Integer;
 
+    FHScrollBar: TScrollBar;
+    FVScrolLBar: TScrollBar;
+    {
     FHScrollBar: TJvTFDaysScrollBar;
     FVScrollBar: TJvTFDaysScrollBar;
-
+    }
     FAutoScrollDir: TJvTFAutoScrollDir;
     FLiveTimer: Boolean;
 
@@ -4220,7 +4223,7 @@ begin
   {$ENDIF Jv_TIMEBLOCKS}
 
   // Create internal objects
-  FVScrollBar := TJvTFDaysScrollBar.Create(Self);
+  FVScrollBar := TScrollBar.Create(Self); //TJvTFDaysScrollBar.Create(Self);
   with FVScrollBar do
   begin
     Kind := sbVertical;
@@ -4231,7 +4234,7 @@ begin
     OnScroll := @ScrollBarScroll;
   end;
 
-  FHScrollBar := TJvTFDaysScrollBar.Create(Self);
+  FHScrollBar := TScrollBar.Create(Self);  //TJvTFDaysScrollBar.Create(Self);
   with FHScrollBar do
   begin
     Kind := sbHorizontal;
@@ -7292,7 +7295,7 @@ begin
   if vsbVert in VisibleScrollBars then
     with FVScrollBar do
     begin
-      Max := RowCount - 2;
+      Max := RowCount - FullVisibleRows; //RowCount - 2;
       LargeChange := FullVisibleRows;
     end;
 
