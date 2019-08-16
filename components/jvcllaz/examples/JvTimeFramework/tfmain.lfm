@@ -2242,6 +2242,7 @@ object MainForm: TMainForm
     }
   end
   object NeedApptsQuery: TSQLQuery
+    PacketRecords = -1
     FieldDefs = <>
     Database = dbUTF
     Transaction = SQLTransaction
@@ -2251,7 +2252,7 @@ object MainForm: TMainForm
       '    And (GroupLink.ApptID = GroupAppt.ApptID)'
       '    And ((StartDate >= :D1) and (EndDate <= :D2))'
     )
-    Options = [sqoAutoApplyUpdates, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <    
       item
         DataType = ftUnknown
@@ -2272,6 +2273,7 @@ object MainForm: TMainForm
     top = 328
   end
   object ApptSchedulesQuery: TSQLQuery
+    PacketRecords = -1
     FieldDefs = <>
     Database = dbUTF
     Transaction = SQLTransaction
@@ -2279,7 +2281,7 @@ object MainForm: TMainForm
       'Select * From GroupLink'
       '  Where ApptID = :ApptID'
     )
-    Options = [sqoAutoApplyUpdates, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <    
       item
         DataType = ftUnknown
@@ -2290,6 +2292,7 @@ object MainForm: TMainForm
     top = 384
   end
   object GetApptQuery: TSQLQuery
+    PacketRecords = -1
     FieldDefs = <>
     Database = dbUTF
     Transaction = SQLTransaction
@@ -2297,7 +2300,7 @@ object MainForm: TMainForm
       'Select * From GroupAppt'
       '  Where ApptID = :ApptID'
     )
-    Options = [sqoAutoApplyUpdates, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <    
       item
         DataType = ftUnknown
@@ -2308,6 +2311,7 @@ object MainForm: TMainForm
     top = 440
   end
   object DeleteApptLinkQuery: TSQLQuery
+    PacketRecords = -1
     FieldDefs = <>
     Database = dbUTF
     Transaction = SQLTransaction
@@ -2315,7 +2319,7 @@ object MainForm: TMainForm
       'Delete From GroupLink'
       '  Where ApptID = :ApptID'
     )
-    Options = [sqoAutoApplyUpdates, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <    
       item
         DataType = ftUnknown
@@ -2326,6 +2330,7 @@ object MainForm: TMainForm
     top = 440
   end
   object DeleteApptQuery: TSQLQuery
+    PacketRecords = -1
     FieldDefs = <>
     Database = dbUTF
     Transaction = SQLTransaction
@@ -2333,7 +2338,7 @@ object MainForm: TMainForm
       'Delete From GroupAppt'
       '  Where ApptID = :ApptID'
     )
-    Options = [sqoAutoApplyUpdates, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <    
       item
         DataType = ftUnknown
@@ -2344,13 +2349,14 @@ object MainForm: TMainForm
     top = 328
   end
   object SchedulesQuery: TSQLQuery
+    PacketRecords = -1
     FieldDefs = <>
     Database = dbUTF
     Transaction = SQLTransaction
     SQL.Strings = (
       'Select Distinct(SchedName) From GroupLink'
     )
-    Options = [sqoAutoApplyUpdates, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates, sqoAutoCommit]
     Params = <>
     left = 344
     top = 384
