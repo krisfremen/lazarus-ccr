@@ -126,10 +126,16 @@ end;
 
 procedure TScreenForm.FormShow(Sender: TObject);
 begin
+  Width := Screen.DesktopWidth;
+  Height := Screen.DesktopHeight;
+  Left := Screen.DesktopLeft;
+  Top := Screen.DesktopTop;
+{
   Width := Screen.Width;
   Height := Screen.Height;
   Left := 0;
   Top := 0;
+}
 end;
 
 function TScreenForm.GetDesktopColor(const X, Y: Integer): TColor;
