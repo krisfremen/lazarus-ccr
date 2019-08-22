@@ -1,0 +1,383 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: jsoneditor\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
+msgstr "Desactivar en OPM"
+
+#: tfrmmain.chk_disableinopm.hint
+msgid "Warning! This will disable installing or updating your package in OPM"
+msgstr "¡Advertencia! Esto deshabilitará la instalación o actualización de tu paquete en OPM"
+
+#: tfrmmain.cmd_addpackagefile.caption
+msgctxt "tfrmmain.cmd_addpackagefile.caption"
+msgid "Add"
+msgstr "Agregar"
+
+#: tfrmmain.cmd_addpackagefile.hint
+msgctxt "tfrmmain.cmd_addpackagefile.hint"
+msgid ""
+"Add Package File:\n"
+"The update zip can contain more than one lpk file\n"
+"deployed to the same place.\n"
+msgstr ""
+"Agregar archivo de paquete:\n"
+"El zip de actualización puede contener mas que un archivo lpk\n"
+"distribuido en el mismo lugar.\n"
+
+#: tfrmmain.cmd_close.caption
+msgid "&Close"
+msgstr "&Cerrar"
+
+#: tfrmmain.cmd_removelastpackagefile.caption
+msgctxt "tfrmmain.cmd_removelastpackagefile.caption"
+msgid "Remove"
+msgstr "Quitar"
+
+#: tfrmmain.cmd_removelastpackagefile.hint
+msgctxt "tfrmmain.cmd_removelastpackagefile.hint"
+msgid ""
+"Remove Package File:\n"
+"Deletes the last entry from the list\n"
+msgstr ""
+"Quitar archivo de paquete:\n"
+"Elimina la última entrada de la lista\n"
+
+#: tfrmmain.cmd_save.caption
+msgid "&Save"
+msgstr "&Guardar"
+
+#: tfrmmain.cmd_save.hint
+msgid ""
+"Save the current configuration to disk\n"
+"as a JSON update file\n"
+msgstr ""
+"Guardar la configuración actual en el disco\n"
+"como archivo de actualización JSON\n"
+
+#: tfrmmain.edt_downloadzipurl.hint
+msgctxt "tfrmmain.edt_downloadzipurl.hint"
+msgid ""
+"Download URL:\n"
+"Include the FULL url needed to download the package Zip file\n"
+msgstr ""
+"URL de Descarga:\n"
+"Incluye la url COMPLETA necesaria para descargar el archivo zip del paquete\n"
+
+#: tfrmmain.edt_updatezipname.hint
+msgctxt "tfrmmain.edt_updatezipname.hint"
+msgid ""
+"Update Zip Name:\n"
+"This is just the filename (not including the path)\n"
+"of your update zip. Type, or click the [...]\n"
+msgstr ""
+"Nombre del Zip de actualización:\n"
+"Este es solo el nombre (no incluye la ruta)\n"
+"de tu zip de actualización. Escribe o haz clic en [...]\n"
+
+#: tfrmmain.filemenu.caption
+msgid "File"
+msgstr "Archivo"
+
+#: tfrmmain.fileopen1.caption
+msgid "&Open ..."
+msgstr "&Abrir ..."
+
+#: tfrmmain.fileopen1.hint
+msgid "Open"
+msgstr "Abrir"
+
+#: tfrmmain.filesaveas1.caption
+msgid "&Save As ..."
+msgstr "&Guardar Como ..."
+
+#: tfrmmain.filesaveas1.hint
+msgid "Save As"
+msgstr "Guardar Como"
+
+#: tfrmmain.lbl_downloadzipurl.caption
+msgctxt "tfrmmain.lbl_downloadzipurl.caption"
+msgid "Download URL:"
+msgstr "URL de Descarga:"
+
+#: tfrmmain.lbl_packagefiles.caption
+msgctxt "tfrmmain.lbl_packagefiles.caption"
+msgid "Package Files:"
+msgstr "Archivos de Paquete:"
+
+#: tfrmmain.lbl_updatezipname.caption
+msgctxt "tfrmmain.lbl_updatezipname.caption"
+msgid "Update Zip Name:"
+msgstr "Nombre del Zip de actualización:"
+
+#: tfrmmain.loaditem.caption
+msgid "Load..."
+msgstr "Cargar..."
+
+#: tfrmmain.mnu_fileexit.caption
+msgid "E&xit"
+msgstr "&Salir"
+
+#: tfrmmain.mnu_filenew.caption
+msgid "New"
+msgstr "Nuevo"
+
+#: tfrmmain.mnu_filesave.caption
+msgid "Save"
+msgstr "Guardar"
+
+#: tfrmmain.mnu_help.caption
+msgid "&Help"
+msgstr "&Ayuda"
+
+#: tfrmmain.mnu_helpabout.caption
+msgid "About.."
+msgstr "Acerca de.."
+
+#: tfrmmain.mnu_helpautoloadlastfile.caption
+msgid "Autoload last file"
+msgstr ""
+
+#: tfrmmain.mnu_helpdisablewarnings.caption
+msgid "Disable warnings"
+msgstr "Deshabilitar advertencias"
+
+#: tfrmmain.mnu_helpshowhints.caption
+msgid "Show Popup Hints"
+msgstr "Mostrar consejos"
+
+#: tfrmmain.mnu_lang.caption
+msgid "Languages.."
+msgstr "Idiomas.."
+
+#: tfrmmain.mnu_lang_en.caption
+msgid "English"
+msgstr "English"
+
+#: tfrmmain.mnu_lang_es.caption
+msgid "Español"
+msgstr "Español"
+
+#: tfrmmain.saveasitem.caption
+msgid "Save As..."
+msgstr "Guardar Como..."
+
+#: tfrmmain.sb_editname.caption
+msgid "..."
+msgstr "..."
+
+#: tfrmmain.sb_editname.hint
+msgid ""
+"Update Zip Name:\n"
+"Click this to browse your system to find\n"
+" an existing Update Zip\n"
+msgstr ""
+"Nombre del zip de actualización:\n"
+"Haz clic aquí para explorar tu sistema para encontrar\n"
+" un zip de actualización existente\n"
+
+#: tfrmmain.spd_checkurl.caption
+msgid "Check URL"
+msgstr "Verificar URL"
+
+#: tfrmmain.spd_checkurl.hint
+msgid "Attempts to open the URL in your browser"
+msgstr "Intentando Abrir URL en el navegador"
+
+#: umain.rsabout
+msgid "About"
+msgstr "Acerca de"
+
+#: umain.rscheckthisify
+msgid "Check this if you don't want to increment the package version"
+msgstr "Marca esto si no quieres incrementar la versión del paquete"
+
+#: umain.rscompiledwith2
+msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
+msgstr "Compilado con FPC V:%s y Lazarus V:%d.%d%s para la plataforma %s - %s%s%s"
+
+#: umain.rsdownloadzipurld
+msgid "- Download URL does not contain the zipfile name"
+msgstr "- La URL de descarga no contiene el nombre del zip"
+
+#: umain.rsdownloadzipurli
+msgid "- Download URL is too short or missing"
+msgstr "- URL de descarga es muy corta o está vacía"
+
+#: umain.rsdownloadzipurli2
+msgid "- Download URL is incomplete"
+msgstr "- URL de descarga incompleta"
+
+#: umain.rsdownloadzipurls
+msgid "- Download URL should start with \"http\""
+msgstr "- URL de descarga debe empezar con \"http\""
+
+#: umain.rsfilemaybeuns
+msgid "JSON may be unsaved. Are you sure you want to quit?"
+msgstr "JSON puede estar sin guardar. ¿Está seguro que desea salir?"
+
+#: umain.rsfilename
+msgid "Filename: "
+msgstr "Archivo: "
+
+#: umain.rsfixthentryag
+msgid "Fix, then try again."
+msgstr "Arréglalo, luego intenta de nuevo."
+
+#: umain.rsformatisnnnn
+msgid "Package version:%sFormat is: n.n.n.n"
+msgstr "Versión del paquete:%sFormato es: n.n.n.n"
+
+#: umain.rshelpandinfor
+msgid "Help and Information"
+msgstr "Ayuda e Información"
+
+#: umain.rshttpwwwupdat
+msgid "http://www.updatesite.com/myupdate/mypackagename.zip"
+msgstr "http://www.sitioactualizacion.com/miactualizacion/nombredemipaquete.zip"
+
+#: umain.rsinternalvers
+msgid "Internal Version: "
+msgstr "Versión Interna: "
+
+#: umain.rsinternalvers2
+msgid "Internal version number should not be Zero%s"
+msgstr "La versión interna no debe ser cero%s"
+
+#: umain.rslanguagechan
+msgid "Language changed to \"%s\"."
+msgstr "Idioma cambiado a \"%s\"."
+
+#: umain.rsmypackagelpk
+msgctxt "umain.rsmypackagelpk"
+msgid "mypackagename.lpk"
+msgstr "nombredemipaquete.lpk"
+
+#: umain.rsmypackagenam
+msgctxt "umain.rsmypackagenam"
+msgid "mypackagename.zip"
+msgstr "nombredemipaquete.zip"
+
+#: umain.rsnotifyupdate
+msgid "Notify Update"
+msgstr "Notificar Actualización"
+
+#: umain.rsoneofthereq1
+msgid "One of the required fields is missing or wrong."
+msgstr "Uno de los campos requeridos esta vacío o mal."
+
+#: umain.rsoneofthereqn
+msgid "One or more of the required fields are missing or wrong."
+msgstr "Uno o mas de los capos requeridos esta vacío o mal."
+
+#: umain.rsopeningyourb
+msgid "Opening your browser..."
+msgstr "Abriendo tu navegador..."
+
+#: umain.rsoverwrite
+msgid "Overwrite"
+msgstr "Sobreescribir"
+
+#: umain.rspackagedinfo
+msgid "Package #%d Information"
+msgstr "Paquete #%d Información"
+
+#: umain.rssavedok
+msgid "Saved OK"
+msgstr "Guardado OK"
+
+#: umain.rssaveunsucces
+msgid "Save unsuccessful"
+msgstr "Guardado no satisfactorio"
+
+#: umain.rssorrycopyope
+msgid "Sorry - copy operation was unsuccessful"
+msgstr "Lo siento, operación de copia insatisfactoria"
+
+#: umain.rssorrythislan
+msgid "Sorry, this language is unavailable at this time."
+msgstr "Lo siento, este idioma no está disponible en este momento."
+
+#: umain.rsswassuccessf
+msgid "%s was successfully copied to the %s folder"
+msgstr "%s fue satisfactoriamente copiado a la carpeta %s"
+
+#: umain.rsthelpkentryd
+msgid "The .lpk entry #%d is missing the .lpk extension"
+msgstr "La entrada .lpk #%d no tiene la extensión .lpk"
+
+#: umain.rsthelpkentryd2
+msgid "The .lpk entry #%d is is absent"
+msgstr "La entrada .lpk #%d está vacía"
+
+#: umain.rsthepackagefi
+msgid "The package filename (No path e.g. package.lpk)"
+msgstr "El nombre del paquete (Sin ruta ej. paquete.lpk)"
+
+#: umain.rsthereareoneo
+msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
+msgstr "- Hay una o más entradas .lpk con el mismo nombre.%s- Cada entrada .lpk debe tener un nombre único."
+
+#: umain.rstherewasapro
+msgid "There was a problem loading \"%s\" - is it corrupted or in the wrong format?"
+msgstr "Hubo un problema cargando \"%s\" - está corrupto o el formato incorrecto?"
+
+#: umain.rsthisoptionsh
+msgid "This option should only be used for crucial updates or bug-fixed packages."
+msgstr "Esta opción debería solo ser usada para actualizaciones cruciales o paquetes con menos bugs."
+
+#: umain.rsthiswilldisa
+msgid "This will disable your package in Online Package Manager!%sAre you SURE you want to do this?"
+msgstr "¡Esto deshabilitará tu paquete en el Administrador de Paquetes en Línea!%s¿Seguro de que quieres hacer esto?"
+
+#: umain.rsturnhintsoff
+msgid "(You can toggle these hints on/off in the Help menu)"
+msgstr "(Puedes cambiar estos consejos en el menú Ayuda)"
+
+#: umain.rsupdate
+msgid "Update"
+msgstr "Actualización"
+
+#: umain.rsupdatejsonsf
+msgid "Update file \"%s\" failed to load correctly."
+msgstr "Archivo de actualización \"%s\" falló al cargarse."
+
+#: umain.rsupdatezipnam
+msgid "- Update zip name is too short or missing"
+msgstr "- El nombre del zip es muy corto o está vacío"
+
+#: umain.rsupdatezipnam2
+msgid "- Update zip name missing extension \".zip\""
+msgstr "- El nombre del zip no tiene la extensión \".zip\""
+
+#: umain.rsuseincombina
+msgid "Use in combination with"
+msgstr "Usar en combinación con"
+
+#: umain.rsversion
+msgid "Version: "
+msgstr "Versión: "
+
+#: umain.rsversionforpa
+msgid "Version for package %d is zero"
+msgstr "La versión para el paquete %d es cero"
+
+#: umain.rswouldyoulike
+msgid "Would you like to copy %s to the %s folder?"
+msgstr "¿Quieres copiar %s a la carpeta %s?"
+
+#: umain.rsyoumayneedto
+msgid "(You may need to restart the app to see the change)"
+msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
+

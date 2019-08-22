@@ -1,0 +1,27 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: ueverettrandom.rsfailedquantu
+msgid "Failed - Quantum server refused with code %d"
+msgstr ""
+
+#: ueverettrandom.rsfailedquantu2
+msgid "Failed - Quantum server refused with code %s"
+msgstr ""
+
+#: ueverettrandom.rsfailedtooman
+msgid "Failed - Too many requests to the Quantum server%s%s"
+msgstr ""
+
+#: ueverettrandom.rspleasewaitco
+msgid "Please wait. Contacting Quantum Server"
+msgstr ""
+
+#: ueverettrandom.rsquantumserve
+msgid "Quantum server did not deliver a valid array"
+msgstr ""
+
+#: ueverettrandom.rsssllibraries
+msgid "SSL libraries unavailable and/or unable to be downloaded on this system. Please fix."
+msgstr ""
+

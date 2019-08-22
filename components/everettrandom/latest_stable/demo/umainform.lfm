@@ -1,0 +1,136 @@
+object mainform: Tmainform
+  Left = 730
+  Height = 500
+  Top = 304
+  Width = 300
+  BorderIcons = []
+  Caption = 'mainform'
+  ClientHeight = 500
+  ClientWidth = 300
+  OnCreate = FormCreate
+  OnResize = FormResize
+  Position = poScreenCenter
+  LCLVersion = '2.0.3.0'
+  object pnlMain: TPanel
+    Left = 0
+    Height = 438
+    Top = 0
+    Width = 300
+    Align = alTop
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderStyle = bsSingle
+    ClientHeight = 434
+    ClientWidth = 296
+    TabOrder = 0
+    object rgSingleElement: TRadioGroup
+      Left = 1
+      Height = 127
+      Top = 1
+      Width = 168
+      AutoFill = True
+      Caption = 'Element Type'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 107
+      ClientWidth = 164
+      ItemIndex = 0
+      Items.Strings = (
+        'Byte (0-255)'
+        'Integer (0-65535)'
+        'Hex (00-FF)'
+      )
+      TabOrder = 0
+    end
+    object grpNumElements: TGroupBox
+      Left = 168
+      Height = 55
+      Top = 1
+      Width = 121
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'Number of Elements'
+      ClientHeight = 35
+      ClientWidth = 117
+      TabOrder = 1
+      object spArrayNumber: TSpinEdit
+        Left = 8
+        Height = 23
+        Top = 8
+        Width = 64
+        MaxValue = 1024
+        MinValue = 1
+        TabOrder = 0
+        Value = 1
+      end
+    end
+    object grpResults: TGroupBox
+      Left = 1
+      Height = 305
+      Top = 128
+      Width = 294
+      Align = alBottom
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      Caption = 'Result(s)'
+      ClientHeight = 285
+      ClientWidth = 290
+      TabOrder = 2
+      object lstResults: TListBox
+        Left = 8
+        Height = 271
+        Top = 8
+        Width = 272
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        ItemHeight = 0
+        TabOrder = 0
+      end
+    end
+    object grp_HexSize: TGroupBox
+      Left = 168
+      Height = 73
+      Top = 56
+      Width = 121
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'Hex Size'
+      ClientHeight = 53
+      ClientWidth = 117
+      TabOrder = 3
+      object spHexSize: TSpinEdit
+        Left = 8
+        Height = 23
+        Top = 8
+        Width = 64
+        MaxValue = 1024
+        MinValue = 1
+        TabOrder = 0
+        Value = 1
+      end
+    end
+  end
+  object cmdClose: TBitBtn
+    Left = 208
+    Height = 30
+    Top = 452
+    Width = 75
+    Anchors = [akRight, akBottom]
+    DefaultCaption = True
+    Kind = bkClose
+    ModalResult = 11
+    TabOrder = 1
+  end
+  object cmdSplit: TBitBtn
+    Left = 16
+    Height = 30
+    Top = 452
+    Width = 179
+    Anchors = [akLeft, akRight, akBottom]
+    Caption = 'Split the Universe!'
+    Default = True
+    ModalResult = 1
+    OnClick = cmdSplitClick
+    TabOrder = 2
+  end
+end
