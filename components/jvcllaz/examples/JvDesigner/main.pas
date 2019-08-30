@@ -1,3 +1,23 @@
+{ How to add a new design control type to the demo (example: add a TEdit):
+
+  -  In the Initialization section register the new class. Add the line
+       "RegisterClass(TEdit);"
+  -  Add the palette icon of the new class to the ImageList of the demo. You
+     can find the palette icons of the LCL components in the folder
+     "images/components" of your Lazarus installation. Select the one without
+     size appending, e.g. "tedit.png" (not "tedit_150.png") - this demo does
+     not support the LCL multi-size image list.
+  -  Add a new button to the toolbar. Set its ImageIndex to the index of the
+     correspondig icon in the image list. Each tool button has a Tag property.
+     Set the Tag of the new button to the next value - look at the other buttons
+     to see their Tag values.
+  -  Assign the handler "PaletteButtonClick" to the new button.
+  -  Go to "TMainForm.PaletteButtonClick" and add the name of the new class to
+     the array "oClasses". Don't forget to increment the upper array index.
+     Note that the array index is equal to the Tag of the corresponding
+     button.
+}
+
 unit main;
 
 {$mode objfpc}{$H+}
@@ -140,7 +160,7 @@ begin
   ioClass := DesignClass;
   if not StickyClass then
   begin
-      DesignClass := '';
+    DesignClass := '';
     SelectButton.Down  := true;
   end;
 end;
@@ -154,7 +174,7 @@ end;
 procedure TMainForm.PaletteButtonClick(Sender: TObject);
 const
   cClasses: array[0..4] of string = ( '', 'TButton', 'TLabel', 'TPanel',
-    'TImage' );
+    'TImage');
 begin
 // StickyClass := (GetKeyState(VK_SHIFT) < 0);
    StickyClass := False;
