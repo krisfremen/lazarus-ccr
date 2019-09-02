@@ -161,7 +161,8 @@ begin
   FBlinkTimer := TTimer.Create(nil);
   FBlinkTimer.OnTimer := @DoTimer;
   FBlinkTimer.Enabled := false;
-  if (csDesigning in ComponentState) then BitmapNeeded;
+  //if (csDesigning in ComponentState) then
+  BitmapNeeded;
 end;
 
 // destroy control
@@ -176,7 +177,12 @@ end;
 
 // loaded
 procedure TAdvLed.Loaded;
-  begin
+begin
+  inherited;
+  if FKind <> lkCustom then
+    BitmapNeeded;
+  {
+
    Try
       If (csDesigning in ComponentState) Then Exit ;
       // Load Bitmap if necessary
@@ -184,6 +190,7 @@ procedure TAdvLed.Loaded;
    Finally
       inherited Loaded;
    End;
+   }
 end;
 
 // timer
