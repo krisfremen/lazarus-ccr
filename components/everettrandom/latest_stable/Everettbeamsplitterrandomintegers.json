@@ -1,0 +1,31 @@
+{
+  "PackageData0" : {
+    "Name" : "latest_stable",
+    "DisplayName" : "Everett beam splitter random integers",
+    "Category" : "Science",
+    "CommunityDescription" : "Random integer(s) via an online quantum beam splitter.  Each call to the server splits the Universe accorsing to Everett's interpretation of quantum mechanics",
+    "RepositoryFileName" : "Everettbeamsplitterrandomintegers.zip",
+    "RepositoryFileSize" : 166326,
+    "RepositoryFileHash" : "4871b57bb5955c38a2244d9a820c635c",
+    "RepositoryDate" : 4.3721431447453702E+004,
+    "PackageBaseDir" : "latest_stable\\/",
+    "HomePageURL" : "https://wiki.freepascal.org/EverettRandom",
+    "DownloadURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/everettrandom/latest_stable/updates/everettrandom.json",
+    "SVNURL" : ""
+  },
+  "PackageFiles0" : [
+    {
+      "Name" : "everettrandom.lpk",
+      "Description" : "Random integer(s) via an online quantum beam splitter.  Each call to the server splits the Universe accorsing to Everett's interpretation of quantum mechanics",
+      "Author" : "minesadorada",
+      "License" : "LGPLV2",
+      "RelativeFilePath" : "",
+      "VersionAsString" : "0.1.3.0",
+      "LazCompatibility" : "1.6, 1.8, Trunk",
+      "FPCCompatibility" : "2.6.4, 3.0.0, 3.0.2, 3.0.4",
+      "SupportedWidgetSet" : "win32/64, gtk2, carbon",
+      "PackageType" : 3,
+      "DependenciesAsString" : "LCL, FCL"
+    }
+  ]
+}

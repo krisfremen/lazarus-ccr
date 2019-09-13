@@ -1,27 +1,38 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: everettrandom\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: ueverettrandom.rsfailedquantu
 msgid "Failed - Quantum server refused with code %d"
-msgstr ""
+msgstr "Failed - Quantum server refused with code %d"
 
 #: ueverettrandom.rsfailedquantu2
 msgid "Failed - Quantum server refused with code %s"
-msgstr ""
+msgstr "Failed - Quantum server refused with code %s"
 
 #: ueverettrandom.rsfailedtooman
 msgid "Failed - Too many requests to the Quantum server%s%s"
-msgstr ""
+msgstr "Failed - Too many requests to the Quantum server%s%s"
 
 #: ueverettrandom.rspleasewaitco
 msgid "Please wait. Contacting Quantum Server"
-msgstr ""
+msgstr "Please wait. Contacting Quantum Server"
 
 #: ueverettrandom.rsquantumserve
 msgid "Quantum server did not deliver a valid array"
-msgstr ""
+msgstr "Quantum server did not deliver a valid array"
 
 #: ueverettrandom.rsssllibraries
 msgid "SSL libraries unavailable and/or unable to be downloaded on this system. Please fix."
-msgstr ""
+msgstr "SSL libraries unavailable and/or unable to be downloaded on this system. Please fix."
 

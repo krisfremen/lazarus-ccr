@@ -1,0 +1,15 @@
+{
+  "UpdatePackageData" : {
+    "DisableInOPM" : false,
+    "DownloadZipURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/everettrandom/latest_stable/updates/everettrandom.zip",
+    "Name" : "everettrandom.zip"
+  },
+  "UpdatePackageFiles" : [
+    {
+      "ForceNotify" : false,
+      "InternalVersion" : 1,
+      "Name" : "everettrandom.lpk",
+      "Version" : "0.1.3.0"
+    }
+  ]
+}
