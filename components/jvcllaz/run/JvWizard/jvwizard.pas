@@ -2501,13 +2501,13 @@ end;
 procedure TJvWizardCustomPage.Done;
 begin
   Refresh; // !!! Force the page to repaint itself immediately.
-  if Assigned(FOnPage) and Enabled and not ([csDesigning, csDestroying] * ComponentState = []) then
+  if Assigned(FOnPage) and Enabled and ([csDesigning, csDestroying] * ComponentState = []) then
     FOnPage(Self);
 end;
 
 procedure TJvWizardCustomPage.Enter(const FromPage: TJvWizardCustomPage);
 begin
-  if Assigned(FOnEnterPage) and Enabled and not ([csDesigning, csDestroying] * ComponentState = []) then
+  if Assigned(FOnEnterPage) and Enabled and ([csDesigning, csDestroying] * ComponentState = []) then
     FOnEnterPage(Self, FromPage);
 end;
 
