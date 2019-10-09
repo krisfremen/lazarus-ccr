@@ -17,6 +17,7 @@ uses
   Classes, ImgList, Controls, LResources, PropEdits, GraphPropEdits, ComponentEditors,
   JvDsgnConsts,
   JvValidateEdit,
+  JvGammaPanel,
   JvOutlookBar, JvOutlookBarEditors,
 //  JvTabBar, JvTabBarXPPainter,
   JvThumbImage, JvThumbnails, JvThumbViews,
@@ -30,8 +31,8 @@ begin
 //    TJvTabBar, TJvModernTabBarPainter, TJvTabBarXPPainter,    // moved to PageComps
     TJvOutlookBar,
     TJvThumbView, TJvThumbnail, TJvThumbImage,
-    TJvTimeLine,
-    TJvTMTimeLine,
+    TJvTimeLine, TJvTMTimeLine,
+    TJvGammaPanel,
     TJvImagesViewer, TJvImageListViewer, TJvOwnerDrawViewer
   ]);
 
