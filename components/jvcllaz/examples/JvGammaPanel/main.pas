@@ -10,11 +10,11 @@ uses
 
 type
 
-  { TForm1 }
+  { TDemoForm }
 
-  TForm1 = class(TForm)
+  TDemoForm = class(TForm)
     JvGammaPanel1: TJvGammaPanel;
-    StaticText1: TLabel;
+    DemoLabel: TLabel;
     procedure JvGammaPanel1ChangeColor(Sender: TObject; Foreground,
       Background: TColor);
   private
@@ -24,19 +24,19 @@ type
   end;
 
 var
-  Form1: TForm1;
+  DemoForm: TDemoForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TDemoForm }
 
-procedure TForm1.JvGammaPanel1ChangeColor(Sender: TObject; Foreground,
+procedure TDemoForm.JvGammaPanel1ChangeColor(Sender: TObject; Foreground,
   Background: TColor);
 begin
-  StaticText1.Color := Background;
-  StaticText1.Font.Color := Foreground;
+  DemoLabel.Color := Background;
+  DemoLabel.Font.Color := Foreground;
 end;
 
 end.

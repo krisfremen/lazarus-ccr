@@ -1,4 +1,4 @@
-object Form1: TForm1
+object DemoForm: TDemoForm
   Left = 340
   Height = 393
   Top = 128
@@ -13,9 +13,12 @@ object Form1: TForm1
     AnchorSideTop.Control = Owner
     Left = 8
     Top = 8
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
     OnChangeColor = JvGammaPanel1ChangeColor
   end
-  object StaticText1: TLabel
+  object DemoLabel: TLabel
     AnchorSideLeft.Control = JvGammaPanel1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = JvGammaPanel1
@@ -25,7 +28,7 @@ object Form1: TForm1
     Top = 111
     Width = 214
     BorderSpacing.Left = 32
-    BorderSpacing.Right = 8
+    BorderSpacing.Right = 16
     Caption = ' This is a test... '
     Font.Height = -32
     ParentColor = False
