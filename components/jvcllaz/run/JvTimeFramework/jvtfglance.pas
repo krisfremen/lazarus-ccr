@@ -2664,7 +2664,7 @@ begin
   DrawCellTitleFrame(ACanvas, ATitleRect, Attr);
 
   // Draw the scroll buttons
-  if Assigned(Cell) then begin
+  if Assigned(Cell) and Assigned(Viewer) then begin
     Viewer.SetTo(Cell);
     DrawScrollButtons(ACanvas, CellScrollBtnRect(ATitleRect));
   end;
