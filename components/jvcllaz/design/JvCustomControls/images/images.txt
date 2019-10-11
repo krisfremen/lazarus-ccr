@@ -1,7 +1,9 @@
 tjvtabbar.bmp
 tjvmoderntabbarpainter.bmp
 tjvtabbarxppainter.bmp
-tjvgammapanel.bmp
+tjvgammapanel.png
+tjvgammapanel_150.png
+tjvgammapanel_200.png
 tjvoutlookbar.png
 tjvoutlookbar_150.png
 tjvoutlookbar_200.png
