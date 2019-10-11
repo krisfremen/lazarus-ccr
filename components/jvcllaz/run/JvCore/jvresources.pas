@@ -942,8 +942,8 @@ resourcestring
   RsGreenFormat = 'G : %3D';
   RsBlueFormat = 'B : %3D';
 
-  RsHint1 = 'Background Color';
-  RsHint2 = 'Foreground Color';
+  RsHintBg = 'Background Color';
+  RsHintFg = 'Foreground Color';
   RsXCaption = 'X';
   RsLabelHint = 'Exchange colors';
 
