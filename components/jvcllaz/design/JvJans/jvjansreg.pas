@@ -18,6 +18,7 @@ uses
   JvYearGrid,
   //JvCSVData, JvCSVBaseControls, //JvCsvBaseEditor,
   JvMarkupViewer, JvMarkupLabel,
+  JvGridFilter,
   JvSimScope, JvSimIndicator, JvSimPID, JvSimPIDLinker, JvSimLogic,
   JvJanLED, JvJanToggle;
 
@@ -38,6 +39,11 @@ begin
   // Markup components
   RegisterComponents(RsPaletteJvclVisual, [
     TJvMarkupViewer, TJvMarkupLabel
+  ]);
+
+  // Grid-related components
+  RegisterComponents(RsPaletteJvclVisual, [
+    TJvGridFilter
   ]);
 
                      (*
