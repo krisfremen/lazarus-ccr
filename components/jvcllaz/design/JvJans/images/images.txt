@@ -1,4 +1,3 @@
-tjvgridfilter.bmp
 tjvyeargrid.png
 tjvyeargrid_150.png
 tjvyeargrid_200.png
@@ -44,3 +43,6 @@ tjvmarkupviewer_200.png
 tjvmarkuplabel.png
 tjvmarkuplabel_150.png
 tjvmarkuplabel_200.png
+tjvgridfilter.png
+tjvgridfilter_150.png
+tjvgridfilter_200.png
