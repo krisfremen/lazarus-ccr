@@ -569,6 +569,7 @@ object MainForm: TMainForm
         Items.Strings = (
           'default'
           'RGBGraphics'
+          'BGRABitmap'
         )
         OnChange = CbDrawingEngineChange
         Style = csDropDownList
@@ -771,7 +772,7 @@ object MainForm: TMainForm
         Left = 6
         Height = 25
         Top = 216
-        Width = 92
+        Width = 93
         AutoSize = True
         BorderSpacing.Top = 8
         Caption = 'POI text font'
@@ -785,10 +786,10 @@ object MainForm: TMainForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = CbDrawingEngine
         AnchorSideRight.Side = asrBottom
-        Left = 153
+        Left = 154
         Height = 22
         Top = 217
-        Width = 108
+        Width = 107
         NoneColorColor = clWhite
         Style = [cbStandardColors, cbExtendedColors, cbIncludeNone, cbCustomColor, cbPrettyNames, cbCustomColors]
         Anchors = [akTop, akLeft, akRight]
@@ -802,7 +803,7 @@ object MainForm: TMainForm
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = BtnPOITextFont
         AnchorSideTop.Side = asrCenter
-        Left = 106
+        Left = 107
         Height = 15
         Top = 221
         Width = 39

@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons, IntfGraphics, ColorBox,
   mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine,
-  mvDE_RGBGraphics;
+  mvDE_RGBGraphics, mvDE_BGRA;
 
 type
 
@@ -101,6 +101,7 @@ type
 
   private
     FRGBGraphicsDrawingEngine: TMvRGBGraphicsDrawingEngine;
+    FBGRADrawingEngine: TMvBGRADrawingEngine;
     POIImage: TCustomBitmap;
     procedure ClearFoundLocations;
     procedure UpdateCoords(X, Y: Integer);
@@ -122,7 +123,7 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLType, IniFiles, Math, FPCanvas, FPImage, FpImgCanv, GraphType,
+  LCLType, IniFiles, Math, FPCanvas, FPImage, GraphType,
   mvEngine, mvGPX,
   globals, gpslistform;
 
@@ -259,6 +260,11 @@ begin
          if FRGBGraphicsDrawingEngine = nil then
            FRGBGraphicsDrawingEngine := TMvRGBGraphicsDrawingEngine.Create(self);
          MapView.DrawingEngine := FRGBGraphicsDrawingEngine;
+       end;
+    2: begin
+         if FBGRADrawingEngine = nil then
+           FBGRADrawingEngine := TMvBGRADrawingEngine.Create(self);
+         MapView.DrawingEngine := FBGRADrawingEngine;
        end;
   end;
 end;
