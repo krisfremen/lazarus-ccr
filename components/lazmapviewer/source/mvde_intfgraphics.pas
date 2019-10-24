@@ -166,24 +166,24 @@ begin
   try
     if UseAlphaChannel then begin
       for j := 0 to intfImg.Height - 1 do
-        for i := 0 to intfImg.Width - 1 do begin
-          cimg := intfImg.Colors[i, j];
-          alpha := cimg.Alpha / word($FFFF);
-          if not InRange(i + X, 0, FBuffer.Width-1) then
-            Continue;
-          if not InRange(j + Y, 0, FBuffer.Height-1) then
-            Continue;
-          cbuf := FBuffer.Colors[i + X, j + Y];
-          cbuf.Red := Round(alpha * cimg.Red + (1 - alpha) * cbuf.Red);
-          cbuf.Green := Round(alpha * cimg.Green + (1 - alpha) * cbuf.Green);
-          cbuf.Blue := Round(alpha * cimg.Blue + (1 - alpha) * cbuf.Blue);
-          FBuffer.Colors[i + X, j + Y] := cbuf;
-        end;
+        if InRange(j + Y, 0, FBuffer.Height - 1) then
+          for i := 0 to intfImg.Width - 1 do begin
+            cimg := intfImg.Colors[i, j];
+            alpha := cimg.Alpha / word($FFFF);
+            if InRange(i + X, 0, FBuffer.Width-1) then begin
+              cbuf := FBuffer.Colors[i + X, j + Y];
+              cbuf.Red := Round(alpha * cimg.Red + (1 - alpha) * cbuf.Red);
+              cbuf.Green := Round(alpha * cimg.Green + (1 - alpha) * cbuf.Green);
+              cbuf.Blue := Round(alpha * cimg.Blue + (1 - alpha) * cbuf.Blue);
+              FBuffer.Colors[i + X, j + Y] := cbuf;
+            end;
+          end;
     end else
       for j := 0 to intfImg.Height - 1 do
-        for i := 0 to intfImg.Width - 1 do
-          if InRange(i + x, 0, FBuffer.Width-1) and InRange(j + Y, 0, FBuffer.Height-1) then
-            FBuffer.Colors[i + X, j + Y] := intfImg.Colors[i, j];
+        if InRange(j + Y, 0, FBuffer.Height - 1) then
+          for i := 0 to intfImg.Width - 1 do
+            if InRange(i + x, 0, FBuffer.Width-1) then
+              FBuffer.Colors[i + X, j + Y] := intfImg.Colors[i, j];
   finally
     intfimg.Free;
   end;
