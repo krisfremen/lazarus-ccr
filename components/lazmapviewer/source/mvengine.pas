@@ -213,12 +213,12 @@ type
 
   { TEnvTile }
 
-  TEnvTile = Class
+  TEnvTile = Class(TBaseTile)
   private
     Tile: TTileId;
     Win: TMapWindow;
   public
-    constructor Create(const aTile: TTileId; const aWin: TMapWindow);
+    constructor Create(const aTile: TTileId; const aWin: TMapWindow);reintroduce;
   end;
 
 
@@ -279,17 +279,25 @@ end;
 procedure TLaunchDownloadJob.ExecuteTask(aTask: integer; FromWaiting: boolean);
 var
   iTile: integer;
+  lJob: TEventJob;
+  lTile: TEnvTile;
 begin
   iTile := aTask - 1;
-  Queue.AddUniqueJob(TEventJob.Create
+  lTile:=TEnvTile.Create(FTiles[iTile], Win);
+  lJob := TEventJob.Create
     (
       @Engine.evDownload,
-      TEnvTile.Create(FTiles[iTile], Win),
+      lTile,
       false,                                    // owns data
       Engine.GetTileName(FTiles[iTile])
-    ),
+    );
+  if not Queue.AddUniqueJob(lJob  ,
     Launcher
-  );
+  ) then
+     begin
+       FreeAndNil(lJob);
+       FreeAndNil(lTile);
+     end;
 end;
 
 function TLaunchDownloadJob.Running: boolean;
@@ -317,6 +325,7 @@ end;
 
 constructor TEnvTile.Create(const aTile: TTileId; const aWin: TMapWindow);
 begin
+  inherited Create(aWin.MapProvider);
   Tile := aTile;
   Win := aWin;
 end;

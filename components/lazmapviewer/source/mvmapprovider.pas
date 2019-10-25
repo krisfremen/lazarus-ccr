@@ -36,6 +36,18 @@ type
   TGetSvrStr = function (id: integer): string;
   TGetValStr = function (const Tile: TTileId): String;
 
+  TMapProvider = class;
+
+  {TBaseTile}
+  TBaseTile= class
+    FID:integer;
+    FMapProvider:TMapProvider;
+    Public
+      constructor Create(aProvider:TMapProvider);
+      destructor Destroy; override;
+      Property ID:integer read FID;
+  end;
+
   { TMapProvider }
 
   TMapProvider = class
@@ -51,12 +63,15 @@ type
       FGetZStr: Array of TGetValStr;
       FMinZoom: Array of integer;
       FMaxZoom: Array of integer;
+      FTiles:array of TBaseTile;
+      FTileHandling: TRTLCriticalSection;
       function GetLayerCount: integer;
       procedure SetLayer(AValue: integer);
-
     public
       constructor Create(AName: String);
       destructor Destroy; override;
+      function AppendTile(aTile: TBaseTile): integer;
+      procedure RemoveTile(aTile: TBaseTile);
       procedure AddURL(Url: String; NbSvr, aMinZoom, aMaxZoom: integer;
         GetSvrStr: TGetSvrStr; GetXStr: TGetValStr; GetYStr: TGetValStr;
         GetZStr: TGetValStr);
@@ -117,10 +132,27 @@ Begin
   result := IntToStr(Tile.Z + 1);
 end;
 
+{ TBaseTile }
+
+constructor TBaseTile.Create(aProvider: TMapProvider);
+begin
+  FMapProvider := aProvider;
+  if assigned(aProvider) then
+    FID:=aProvider.AppendTile(self);
+end;
+
+destructor TBaseTile.Destroy;
+begin
+  If assigned(FMapProvider) then
+    FMapProvider.RemoveTile(self);
+  FMapProvider:=nil;
+  inherited Destroy;
+end;
+
 
 { TMapProvider }
 
-function TMapProvider.getLayerCount: integer;
+function TMapProvider.GetLayerCount: integer;
 begin
   Result:=length(FUrl);
 end;
@@ -135,12 +167,15 @@ begin
   FLayer:=AValue;
 end;
 
-constructor TMapProvider.Create(aName: String);
+constructor TMapProvider.Create(AName: String);
 begin
   FName := aName;
+  InitCriticalSection(FTileHandling);
 end;
 
 destructor TMapProvider.Destroy;
+var
+  i: Integer;
 begin
   Finalize(idServer);
   Finalize(FName);
@@ -152,12 +187,50 @@ begin
   Finalize(FGetZStr);
   Finalize(FMinZoom);
   Finalize(FMaxZoom);
+  EnterCriticalSection(FTileHandling);
+  for i := high(FTiles) downto 1 do
+    try
+      freeandnil(FTiles[i]);
+    except
+      FTiles[i]:=nil;
+    end;
+  LeaveCriticalsection(FTileHandling);
+  DoneCriticalsection(FTileHandling);
   inherited;
 end;
 
-procedure TMapProvider.AddURL(Url: String; NbSvr: integer;
-  aMinZoom: integer; aMaxZoom: integer; GetSvrStr: TGetSvrStr;
-  GetXStr: TGetValStr; GetYStr: TGetValStr; GetZStr: TGetValStr);
+function TMapProvider.AppendTile(aTile: TBaseTile): integer;
+var
+  lNewID: Integer;
+begin
+  EnterCriticalSection(FTileHandling);
+  lNewID :=high(FTiles)+1;
+  setlength(FTiles,lNewID+1);
+  FTiles[lNewID]:=aTile;
+  LeaveCriticalsection(FTileHandling);
+  result := lNewID;
+end;
+
+procedure TMapProvider.RemoveTile(aTile: TBaseTile);
+var
+  lID, lMaxTile: Integer;
+begin
+  if (atile.ID <= high(FTiles)) and (atile.ID>0) and (FTiles[aTile.ID]=aTile) then
+    begin
+      EnterCriticalSection(FTileHandling);
+      lID := aTile.ID;
+      lMaxTile :=High(FTiles);
+      aTile.FID := -1;
+      FTiles[lID] := FTiles[lMaxTile];
+      FTiles[lID].FID := lID;
+      setlength(FTiles,lMaxTile);
+      LeaveCriticalsection(FTileHandling);
+    end;
+end;
+
+procedure TMapProvider.AddURL(Url: String; NbSvr, aMinZoom, aMaxZoom: integer;
+  GetSvrStr: TGetSvrStr; GetXStr: TGetValStr; GetYStr: TGetValStr;
+  GetZStr: TGetValStr);
 var
   nb: integer;
 begin
