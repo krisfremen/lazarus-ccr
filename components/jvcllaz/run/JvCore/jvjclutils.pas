@@ -47,7 +47,7 @@ interface
 
 uses
   LCLIntf, LCLType,
-  SysUtils, Classes, Graphics,
+  SysUtils, Classes, Graphics, SysConst,
   JvTypes;
 
 const
@@ -95,8 +95,18 @@ const
   NullDate: TDateTime = {-693594} 0;
   *)
 
-function JvSafeStrToFloatDef(const Str: string; Def: Extended; aDecimalSeparator: Char): Extended;
-function JvSafeStrToFloat(const Str: string; aDecimalSeparator: Char): Extended;
+  { there is a STrToIntDef provided by Delphi, but no "safe" versions of
+    StrToFloat or StrToCurr }
+  // Note: before using JvSafeStrToFloatDef, please be aware that it will ignore
+  // any character that is not a valid character for a float, which is different
+  // from what StrToFloatDef in Delphi 6 up is doing. This has been documented in Mantis
+  // issue# 2935: http://issuetracker.delphi-jedi.org/view.php?id=2935
+  // and in Mantis 4466: http://issuetracker.delphi-jedi.org/view.php?id=4466
+
+function JvSafeStrToFloatDef(const Str: string; Def: Extended;
+  aDecimalSeparator: Char = ' '): Extended;  // {NOTE: default value of Space is a magic wildcard}
+
+function JvSafeStrToFloat(const Str: string; aDecimalSeparator: Char = ' '): Extended; // {NOTE: default value of Space is a magic wildcard}
 
 (******************* NOT CONVERTED ******
 function USToLocalFloatStr(const Text: string): string;
@@ -1551,6 +1561,102 @@ begin
   raise EJvConvertError.CreateResFmt(ResString, Args); { will be also caught if you catch E:EConvertERror }
 end;
 
+{ _JvSafeStrToFloat:  [PRIVATE INTERNAL FUNCTION]
+     [ not to be called outside this unit, see below for public api ]
+    This is a refactored version of the internal guts of the former routine
+    StrToFloatDefIgnoreInvalidCharacters with some improvements made to decimal
+    separator handling.
+}
+function _JvSafeStrToFloat(const Str: string; aDecimalSeparator: Char; var OutValue: Extended): Boolean;
+var
+  LStr: String;
+  I: Integer;
+  CharSet: TSysCharSet;
+  LocalFormatSettings: TFormatSettings;
+begin
+  Result := false;
+  if Str = '' then
+    Exit; { hows this for a nice optimization?  WPostma. }
+
+  { Locale Handling logic October 2008 supercedes former StrToFloatUS functionality. }
+  {$IFDEF RTL150_UP}
+  LocalFormatSettings.ThousandSeparator := GetLocaleChar(LOCALE_USER_DEFAULT, LOCALE_STHOUSAND, '.');
+  LocalFormatSettings.DecimalSeparator := GetLocaleChar(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, '.');
+  {$ELSE}
+  LocalFormatSettings.DecimalSeparator := DecimalSeparator;
+  {$ENDIF RTL150_UP}
+  if aDecimalSeparator = ' ' then {magic mode}
+    aDecimalSeparator := LocalFormatSettings.DecimalSeparator { default case! use system defaults! }
+  else
+    LocalFormatSettings.DecimalSeparator := aDecimalSeparator; { custom format specified! }
+
+  { Cross-codepage safety feature:  Handed '1.2', a string without a comma,
+    but which is obviously a floating point number, convert it properly also.
+    This functionality is important for JvCsvDataSet and may be important in other
+    places. }
+  if (Pos(USDecimalSeparator, Str) > 0) and (Pos(aDecimalSeparator, Str) = 0) then
+  begin
+    aDecimalSeparator := USDecimalSeparator; { automatically works when US decimal values are encountered }
+    LocalFormatSettings.DecimalSeparator := aDecimalSeparator; { custom format specified! }
+  end;
+
+  LStr := '';
+  CharSet := ['0'..'9', '-', '+', 'e', 'E', AnsiChar(aDecimalSeparator)];
+
+  for I := 1 to Length(Str) do
+    if CharInSet(Str[I], CharSet) then
+      LStr := LStr + Str[I];
+
+  { the string '-' fails StrToFloat, but it can be interpreted as 0  }
+  if LStr = '-' then
+    LStr := '0';
+
+  if Length(LStr) > 0 then
+  try
+    { a string that ends in a '.' such as '12.' fails StrToFloat,
+     but as far as I am concerned, it may as well be interpreted as 12.0 }
+    if LStr[Length(LStr)] = aDecimalSeparator then
+      LStr := LStr + '0';
+
+    Result := TryStrToFloat(LStr, OutValue, LocalFormatSettings);
+  except
+    Result := False;
+  end;
+end;
+
+// JvSafeStrToFloatDef:
+//
+// Note: before using StrToFloatDef, please be aware that it will ignore
+// any character that is not a valid character for a float, which is different
+// from what the one in Delphi 6 up is doing. This has been documented in Mantis
+// issue# 2935: http://homepages.borland.com/jedi/issuetracker/view.php?id=2935
+//
+// This function was extended by WPostma, to allow specification of custom decimal
+// separators. This was required by JvCsvDataSet and may be required elsewhere in the
+// VCL wherever custom (fixed) non-current-region-settings floating point value
+// encoding must be supported.  We renamed this from StrToFloatDefIgnoreInvalidCharacters
+// to JvSafeStrToFloatDef because it has multiple "floating point runtime exception safety"
+// enhancements.
+function JvSafeStrToFloatDef(const Str: string; Def: Extended;
+  aDecimalSeparator: Char = ' '): Extended;
+begin
+  { one handy dandy api expects a Default value returned instead }
+  if not _JvSafeStrToFloat(Str, aDecimalSeparator, Result) then
+    Result := Def; { failed, use default }
+end;
+
+// New routine, same as JvSafeStrToFloatDef but it will raise a conversion exception,
+// for cases when you actually want to handle an EConvertError yourself and where
+// there is no convenient or possible float value for your case.
+function JvSafeStrToFloat(const Str: string;
+  aDecimalSeparator: Char = ' '): Extended;
+begin
+  { the other handy dandy api style expects us to raise an EConvertError. }
+  if not _JvSafeStrToFloat(Str, aDecimalSeparator, Result) then
+    JvStrConvertErrorFmt(@SInvalidFloat, [Str]); {failed, raise exception }
+end;
+
+(*
 function _JvSafeStrToFloat(const Str: String; aDecimalSeparator: Char; out AValue: Extended): Boolean;
 var
   LocalFormatSettings: TFormatSettings;
@@ -1591,6 +1697,7 @@ begin
   if not _JvSafeStrToFloat(Str, aDecimalSeparator, Result) then
     JvStrConvertErrorFmt(@SParInvalidFloat, [Str]); {failed, raise exception }
 end;
+      *)
 
 (******************** NOT CONVERTED ***
 function StrToFloatUSDef(const Text: string; Default: Extended): Extended;

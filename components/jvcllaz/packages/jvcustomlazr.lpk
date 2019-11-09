@@ -16,7 +16,7 @@
 TimeLine, OutlookBar, Thumbnail viewer, ImageViewer, ImageListViewer, OwnerDrawViewer"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="6"/>
-    <Files Count="13">
+    <Files Count="14">
       <Item1>
         <Filename Value="..\run\JvCustomControls\jvtimeline.pas"/>
         <UnitName Value="JvTimeLine"/>
@@ -69,6 +69,10 @@ TimeLine, OutlookBar, Thumbnail viewer, ImageViewer, ImageListViewer, OwnerDrawV
         <Filename Value="..\run\JvCustomControls\jvgammapanel.pas"/>
         <UnitName Value="JvGammaPanel"/>
       </Item13>
+      <Item14>
+        <Filename Value="..\run\JvCustomControls\jvchart.pas"/>
+        <UnitName Value="JvChart"/>
+      </Item14>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

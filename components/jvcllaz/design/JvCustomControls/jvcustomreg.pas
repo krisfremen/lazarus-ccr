@@ -22,7 +22,8 @@ uses
 //  JvTabBar, JvTabBarXPPainter,
   JvThumbImage, JvThumbnails, JvThumbViews,
   JvTimeLine, JvTMTimeLine, JvTimeLineEditor,
-  JvImagesViewer, JvImageListViewer, JvOwnerDrawViewer;
+  JvImagesViewer, JvImageListViewer, JvOwnerDrawViewer,
+  JvChart;
 
 procedure Register;
 begin
@@ -33,7 +34,8 @@ begin
     TJvThumbView, TJvThumbnail, TJvThumbImage,
     TJvTimeLine, TJvTMTimeLine,
     TJvGammaPanel,
-    TJvImagesViewer, TJvImageListViewer, TJvOwnerDrawViewer
+    TJvImagesViewer, TJvImageListViewer, TJvOwnerDrawViewer,
+    TJvChart
   ]);
 
   // Timeline
