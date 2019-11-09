@@ -54,6 +54,13 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="StatsClasses"/>
       </Unit>
+      <Unit>
+        <Filename Value="jvpeneditor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PenEditorForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="jvPenEditor"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -18,7 +18,6 @@ object JvChartDemoForm: TJvChartDemoForm
     Height = 398
     Top = 35
     Width = 625
-    Font.Height = -19
     Align = alClient
     Options.XAxisValuesPerDivision = 10
     Options.XAxisLabelAlignment = taLeftJustify
@@ -29,6 +28,7 @@ object JvChartDemoForm: TJvChartDemoForm
     Options.XGap = 0
     Options.XOrigin = 0
     Options.YOrigin = 0
+    Options.XStartOffset = 60
     Options.YStartOffset = 42
     Options.PrimaryYAxis.YMax = 20
     Options.PrimaryYAxis.YMin = 0
@@ -47,11 +47,13 @@ object JvChartDemoForm: TJvChartDemoForm
     Options.HeaderFont.Color = clWindowText
     Options.LegendFont.Color = clWindowText
     Options.AxisFont.Color = clWindowText
+    Options.AxisTitleFont.Height = -16
+    Options.AxisTitleFont.Orientation = 900
+    Options.AxisTitleFont.Style = [fsBold]
     Options.PaperColor = clWhite
     Options.AxisLineColor = clBlack
     Options.CursorColor = clBlack
     Options.CursorStyle = psDot
-    OnChartPaint = ChartChartPaint
     OnBeginFloatingMarkerDrag = ChartBeginFloatingMarkerDrag
     OnEndFloatingMarkerDrag = ChartEndFloatingMarkerDrag
   end
@@ -186,7 +188,7 @@ object JvChartDemoForm: TJvChartDemoForm
       ParentShowHint = False
     end
     object ButtonBarAve: TSpeedButton
-      Left = 31
+      Left = 32
       Height = 25
       Hint = 'Bar Chart with Average Line'
       Top = 5
@@ -354,6 +356,15 @@ object JvChartDemoForm: TJvChartDemoForm
       ShowHint = True
       ParentShowHint = False
     end
+    object SpinEdit1: TSpinEdit
+      Left = 656
+      Height = 24
+      Top = 6
+      Width = 66
+      MaxValue = 1000
+      OnChange = SpinEdit1Change
+      TabOrder = 0
+    end
   end
   object ListBox1: TListBox
     Left = 0
@@ -417,21 +428,84 @@ object JvChartDemoForm: TJvChartDemoForm
     top = 48
     object Demo1: TMenuItem
       Caption = '&Demo'
-      object mnuSetHeaderFont: TMenuItem
-        Caption = 'Set Header Font...'
-        OnClick = mnuSetHeaderFontClick
+      object MenuItem2: TMenuItem
+        Caption = '-'
       end
-      object mnuSetAxisTitlefont: TMenuItem
-        Caption = 'Set Axis Title Font...'
-        OnClick = mnuSetAxisTitlefontClick
+      object mnuSetXAxisHeader: TMenuItem
+        Caption = 'Set X Axis Header...'
+        OnClick = mnuSetXAxisHeaderClick
       end
-      object mnuSetAxisFont: TMenuItem
-        Caption = 'Set Axis Label Font...'
-        OnClick = mnuSetAxisFontClick
+      object mnuSetYAxisHeader: TMenuItem
+        Caption = 'Set Y Axis Header...'
+        OnClick = mnuSetYAxisHeaderClick
       end
-      object mnuSetLegendFont: TMenuItem
-        Caption = 'Set Legend Font...'
-        OnClick = mnuSetLegendFontClick
+      object mnuSetMarkerSize: TMenuItem
+        Caption = 'Set Marker Size...'
+        OnClick = mnuSetMarkerSizeClick
+      end
+      object MenuItem3: TMenuItem
+        Caption = '-'
+      end
+      object mnuFonts: TMenuItem
+        Caption = 'Fonts'
+        object mnuSetHeaderFont: TMenuItem
+          Caption = 'Set Header Font...'
+          OnClick = mnuSetHeaderFontClick
+        end
+        object mnuSetAxisTitlefont: TMenuItem
+          Caption = 'Set Axis Title Font...'
+          OnClick = mnuSetAxisTitlefontClick
+        end
+        object mnuSetAxisFont: TMenuItem
+          Caption = 'Set Axis Label Font...'
+          OnClick = mnuSetAxisFontClick
+        end
+        object mnuSetLegendFont: TMenuItem
+          Caption = 'Set Legend Font...'
+          OnClick = mnuSetLegendFontClick
+        end
+      end
+      object mnuColors: TMenuItem
+        Caption = 'Colors'
+        object mnuSetPaperColor: TMenuItem
+          Caption = 'Set Paper Color...'
+          OnClick = mnuSetPaperColorClick
+        end
+        object mnuSetDivisionLineColor: TMenuItem
+          Caption = 'Set Division Line Color...'
+          OnClick = mnuSetDivisionLineColorClick
+        end
+        object mnuSetShadowColor: TMenuItem
+          Caption = 'Set Shadow Color..'
+          OnClick = mnuSetShadowColorClick
+        end
+        object mnuSetCursorColor: TMenuItem
+          Caption = 'Set Cursor Color...'
+          OnClick = mnuSetCursorColorClick
+        end
+        object mnuSetHintColor: TMenuItem
+          Caption = 'Set Hint Color...'
+          OnClick = mnuSetHintColorClick
+        end
+      end
+      object mnuSetLineWidths: TMenuItem
+        Caption = 'Line Widths'
+        object mnuSetAxisLineWidth: TMenuItem
+          Caption = 'Set Axis Line Width...'
+          OnClick = mnuSetAxisLineWidthClick
+        end
+        object mnuSetPenLineWidth: TMenuItem
+          Caption = 'Set Pen Line Width...'
+          OnClick = mnuSetPenLineWidthClick
+        end
+      end
+      object mnuPens: TMenuItem
+        Caption = 'Pens...'
+        OnClick = mnuPensClick
+      end
+      object mnuSetXStartOffset: TMenuItem
+        Caption = 'X Start Offset...'
+        OnClick = mnuSetXStartOffsetClick
       end
       object N2: TMenuItem
         Caption = '-'

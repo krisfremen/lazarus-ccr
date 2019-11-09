@@ -112,6 +112,7 @@ const
   JvDefaultAvgLineColor = TColor($00EEDDDD);
   JvDefaultDivisionLineColor = clLtGray; //NEW!
   JvDefaultShadowColor = clLtGray; //NEW!
+  JvDefaultPaperColor = clWhite;
 
   JvDefaultYLegends = 20;
   MaxShowXValueInLegends = 10;
@@ -391,6 +392,7 @@ type
     function GetYLegends: TStrings;
     procedure SetYLegends(Value: TStrings);
     procedure SetYDivisions(AValue: Integer);
+    procedure SetYPixelGap(AValue: Double);
   public
     constructor Create(Owner: TJvChartOptions); virtual;
     destructor Destroy; override;
@@ -398,7 +400,7 @@ type
     procedure Normalize;
     procedure Clear;
     // runtime only properties
-    property YPixelGap: Double read FYPixelGap write FYPixelGap;
+    property YPixelGap: Double read FYPixelGap write SetYPixelGap;
     property Active: Boolean read FActive;
     property YGap: Double read FYGap;
     property YGap1: Double read FYGap1; // Gap multiplication factor for value scaling.
@@ -424,21 +426,15 @@ type
     function GetAverageValue(Index: Integer): Double;
     procedure SetAverageValue(Index: Integer; AValue: Double);
     function GetPenColor(Index: Integer): TColor;
-    procedure SetPenColor(Index: Integer; AColor: TColor);
     function GetPenStyle(Index: Integer): TPenStyle;
-    procedure SetPenStyle(Index: Integer; APenStyle: TPenStyle);
     function GetPenMarkerKind(Index: Integer): TJvChartPenMarkerKind;
     procedure SetPenMarkerKind(Index: Integer; AMarkKind: TJvChartPenMarkerKind);
-    procedure SetXStartOffset(Offset: Integer);
     function GetPenSecondaryAxisFlag(Index: Integer): Boolean;
     procedure SetPenSecondaryAxisFlag(Index: Integer; NewValue: Boolean);
     function GetPenValueLabels(Index: Integer): Boolean;
     procedure SetPenValueLabels(Index: Integer; NewValue: Boolean);
-    procedure SetPenCount(Count: Integer);
-    procedure SetChartKind(AKind: TJvChartKind);
     // TStrings<->TStringList transmogrifiers
     function GetPenLegends: TStrings;
-    procedure SetPenLegends(Value: TStrings);
     function GetPenUnit: TStrings;
     procedure SetPenUnit(Value: TStrings);
     function GetXLegends: TStrings;
@@ -446,13 +442,29 @@ type
     procedure SetHeaderFont(AFont: TFont);
     procedure SetLegendFont(AFont: TFont);
     procedure SetAxisFont(AFont: TFont);
-    procedure SetPaperColor(AColor: TColor);
     procedure SetPrimaryYAxis(AssignFrom: TJvChartYAxisOptions);
     procedure SetSecondaryYAxis(AssignFrom: TJvChartYAxisOptions);
     // Each pen can be associated with either the primary or secondary axis,
     // this function decides which axis to return depending on the pen configuration:
     function GetPenAxis(Index: Integer): TJvChartYAxisOptions;
+
+    procedure SetAxisLineWidth(const Value: Integer);
+    procedure SetAxisTitleFont(const Value: TFont);
+    procedure SetChartKind(AKind: TJvChartKind);
+    procedure SetDivisionLineColor(const AColor: TColor);
+    procedure SetMarkerSize(const Value: Integer);
+    procedure SetPaperColor(const AColor: TColor);
+    procedure SetPenColor(Index: Integer; AColor: TColor);
+    procedure SetPenCount(Count: Integer);
+    procedure SetPenLegends(Value: TStrings);
+    procedure SetPenLineWidth(const Value: Integer);
+    procedure SetPenStyle(Index: Integer; APenStyle: TPenStyle);
+    procedure SetShadowColor(const AColor: TColor);
     procedure SetXAxisDateTimeDivision(const Value: Double);
+    procedure SetXAxisHeader(const Value: String);
+    procedure SetXStartOffset(Offset: Integer);
+    procedure SetYAxisHeader(const Value: String);
+    procedure SetYStartOffset(Offset: Integer);
   protected
     FChartKind: TJvChartKind; // default JvChartLine
     {runtime pixel spacing multipliers}
@@ -461,6 +473,7 @@ type
     FHeaderFont: TFont;
     FLegendFont: TFont;
     FAxisFont: TFont;
+    FAxisTitleFont: TFont;
     FTitle: string;
     FNoDataMessage: string;
     FYAxisHeader: string;
@@ -570,8 +583,6 @@ type
     //NEW! NOV 2004. Optionally display this instead of fixed resource string rsNoData
 
     { X Axis Properties }
-    property YAxisHeader: string read FYAxisHeader write FYAxisHeader;
-    property YAxisDivisionMarkers: Boolean read FYAxisDivisionMarkers write FYAxisDivisionMarkers default True;
     // Do you want grid-paper look?
     { X Axis Properties }
     property XAxisDivisionMarkers: Boolean read FXAxisDivisionMarkers write FXAxisDivisionMarkers default True;
@@ -580,15 +591,14 @@ type
     // Number of Values (aka samples) in each vertical dotted lines that are divisision marker.
     property XAxisLabelAlignment: TAlignment read FXAxisLabelAlignment write FXAxisLabelAlignment;
     // New: Text alignment for X axis labels. Default is left alignment.
-
     property XAxisDateTimeMode: Boolean read FXAxisDateTimeMode write FXAxisDateTimeMode;
     // REWORKED LOGIC NEW IN 2007! See GraphXAxisDivisionMarkers
     property XAxisDateTimeDivision: Double read FXAxisDateTimeDivision write SetXAxisDateTimeDivision;
     // NEW 2007 : What is the nominal date/time division (1.0=day, 1.0/24=1 hour)
-
     property XAxisDateTimeFormat: string read FXAxisDateTimeFormat write FXAxisDateTimeFormat;
-    property XAxisHeader: string read FXAxisHeader write FXAxisHeader;
+    property XAxisHeader: string read FXAxisHeader write SetXAxisHeader;
     property XAxisLegendSkipBy: Integer read FXAxisLegendSkipBy write FXAxisLegendSkipBy default 1;
+
     property DateTimeFormat: string read FDateTimeFormat write FDateTimeFormat;
     // Usually a long date-time label, ISO standard yyyy-mm-dd hh:nn:ss is fine, as is Windows locale defaults.
     property PenCount: Integer read FPenCount write SetPenCount default 1;
@@ -596,10 +606,15 @@ type
     property XOrigin: Integer read FXOrigin write FXOrigin;
     property YOrigin: Integer read FYOrigin write FYOrigin; // Position of bottom of chart (not always the zero origin)
     property XStartOffset: Longint read FXStartOffset write SetXStartOffset default 45;
-    property YStartOffset: Longint read FYStartOffset write FYStartOffset default 10;
+    property YStartOffset: Longint read FYStartOffset write SetYStartOffset default 10;
+
+    { Y Axis Properties }
+    property YAxisHeader: string read FYAxisHeader write SetYAxisHeader;
+    property YAxisDivisionMarkers: Boolean read FYAxisDivisionMarkers write FYAxisDivisionMarkers default True;
+
     { Y Range }
     { plotting markers }
-    property MarkerSize: Integer read FMarkerSize write FMarkerSize default JvChartDefaultMarkerSize;
+    property MarkerSize: Integer read FMarkerSize write SetMarkerSize default JvChartDefaultMarkerSize;
     property FillUnderLine : Boolean read FFillUnderLine write FFillUnderLine default False;
     { !! New: Primary (left side) Y axis, and Secondary (right side) Y Axis !!}
     property PrimaryYAxis: TJvChartYAxisOptions read FPrimaryYAxis write SetPrimaryYAxis;
@@ -617,20 +632,21 @@ type
     property Legend: TJvChartLegend read FLegend write FLegend default clChartLegendNone;
     property LegendRowCount: Integer read FLegendRowCount write FLegendRowCount;
     property LegendWidth: Integer read FLegendWidth write FLegendWidth default 150;
-    property PenLineWidth: Integer read FPenLineWidth write FPenLineWidth default 1;
-    property AxisLineWidth: Integer read FAxisLineWidth write FAxisLineWidth default 2;
+    property PenLineWidth: Integer read FPenLineWidth write SetPenLineWidth default 1;
+    property AxisLineWidth: Integer read FAxisLineWidth write SetAxisLineWidth default 2;
     { more and more design time. these ones not sure about whether they are designtime or not.}
     property XValueCount: Integer read FXValueCount write FXValueCount default 10;
     {Font properties}
     property HeaderFont: TFont read FHeaderFont write SetHeaderFont;
     property LegendFont: TFont read FLegendFont write SetLegendFont;
     property AxisFont: TFont read FAxisFont write SetAxisFont;
+    property AxisTitleFont: TFont read FAxisTitleFont write SetAxisTitleFont;
     { Color properties}
-    property DivisionLineColor: TColor read FDivisionLineColor write FDivisionLineColor default
+    property DivisionLineColor: TColor read FDivisionLineColor write SetDivisionLineColor default
       JvDefaultDivisionLineColor; // NEW! Division line
-    property ShadowColor: TColor read FShadowColor write FShadowColor default JvDefaultShadowColor; // NEW! Shadow color
+    property ShadowColor: TColor read FShadowColor write SetShadowColor default JvDefaultShadowColor; // NEW! Shadow color
 
-    property PaperColor: TColor read FPaperColor write SetPaperColor;
+    property PaperColor: TColor read FPaperColor write SetPaperColor default clWhite;
     property AxisLineColor: TColor read FAxisLineColor write FAxisLineColor;
     property HintColor: TColor read FHintColor write FHintColor default JvDefaultHintColor;
     property AverageLineColor: TColor read FAverageLineColor write FAverageLineColor default JvDefaultAvgLineColor;
@@ -690,7 +706,7 @@ type
     FMouseDownY: Longint;
     FMouseValue: Integer;
     FMousePen: Integer;
-    FYFont: TFont; // Delphi Font object wrapper.
+//    FYFont: TFont; // Delphi Font object wrapper.
     //NEW:
     FXOrigin: Double; {was in TJvChart.PlotGraph}
     FYOrigin: Double; {was in TJvChart.PlotGraph}
@@ -703,10 +719,10 @@ type
     // over top of the TImage, so that we can just restore the TImage
     // without replotting the whole chart.
     // Y Axis Vertical Font
-    FYFontHandle: HFONT; // Y AXIS VERTICAL TEXT: Vertical Font Handle (remember to DeleteObject)
-    FYLogFont: TLogFont; // Y AXIS VERTICAL TEXT: Logical Font Options Record
-    procedure MakeVerticalFont; // Call GDI calls to get the Y Axis Vertical Font handle
-    procedure MyGraphVertFont(ACanvas: TCanvas); // vertical font handle
+  //  FYFontHandle: HFONT; // Y AXIS VERTICAL TEXT: Vertical Font Handle (remember to DeleteObject)
+//    FYLogFont: TLogFont; // Y AXIS VERTICAL TEXT: Logical Font Options Record
+//    procedure MakeVerticalFont; // Call GDI calls to get the Y Axis Vertical Font handle
+//    procedure MyGraphVertFont(ACanvas: TCanvas); // vertical font handle
     procedure PaintCursor; // called from Paint iif a Cursor is visible. does NOT modify FPicture!
   protected
     procedure DrawFloatingMarkers;
@@ -1776,6 +1792,14 @@ begin
   FOwner.NotifyOptionsChange;
 end;
 
+procedure TJvchartYAxisOptions.SetYPixelGap(AValue: Double);
+begin
+  if FYPixelGap = AValue then exit;
+  FYPixelGap := AValue;
+  FOwner.NotifyOptionsChange;
+end;
+
+
 //=== { TJvChartOptions } ====================================================
 
 constructor TJvChartOptions.Create(Owner: TJvChart);
@@ -1832,24 +1856,27 @@ begin
   FAverageLineColor := JvDefaultAvgLineColor;
   FDivisionLineColor := JvDefaultDivisionLineColor; // NEW!
   FShadowColor := JvDefaultShadowColor; //NEW!
+  FPaperColor := JvDefaultPaperColor;
+  FHintColor := JvDefaultHintColor;
 
   FHeaderFont := TFont.Create;
   FLegendFont := TFont.Create;
   FAxisFont := TFont.Create;
+  FAxisTitleFont := TFont.Create;
+  FAxisTitleFont.Orientation := 900;
 
   //FShowLegend := True;
   FMouseEdit := True;
   FMouseInfo := True;
   FLegendWidth := 150;
   FPenLineWidth := 1;
-  FAxisLineWidth := 3;
+  FAxisLineWidth := 2;
 
   FXValueCount := 10;
 
   FXAxisLegendSkipBy := 1;
   FXLegendHoriz := 0;
 
-  FHintColor := JvDefaultHintColor;
 end;
 
 destructor TJvChartOptions.Destroy;
@@ -1864,6 +1891,7 @@ begin
   FreeAndNil(FHeaderFont);
   FreeAndNil(FLegendFont);
   FreeAndNil(FAxisFont);
+  FreeAndNil(FAxisTitleFont);
 
   inherited Destroy;
 end;
@@ -1884,6 +1912,7 @@ begin
     FHeaderFont.Assign(src.HeaderFont);
     FLegendFont.Assign(src.LegendFont);
     FAxisFont.Assign(src.AxisFont);
+    FAxisTitleFont.Assign(src.AxisTitleFont);
     FPenLegends.Assign(src.PenLegends);
     FPenUnit.Assign(src.PenUnit);
     FXLegends.Assign(src.XLegends);
@@ -2002,12 +2031,6 @@ begin
     Result := FPrimaryYAxis; // default
 end;
 
-procedure TJvChartOptions.SetChartKind(AKind: TJvChartKind);
-begin
-  if AKind <> FChartKind then
-    FChartKind := AKind;
-end;
-
 function TJvChartOptions.GetPenMarkerKind(Index: Integer): TJvChartPenMarkerKind;
 begin
   if (Index >= 0) and (Index < Length(FPenMarkerKind)) then
@@ -2061,7 +2084,10 @@ begin
 
   if Index >= Length(FPenColors) then
     SetLength(FPenColors, Index + 1);
+
   FPenColors[Index] := AColor;
+  if Assigned(FOwner) then
+    FOwner.Invalidate;
 end;
 
 procedure TJvChartOptions.SetPenStyle(Index: Integer; APenStyle: TPenStyle);
@@ -2072,6 +2098,8 @@ begin
   if Index >= Length(FPenStyles) then
     SetLength(FPenStyles, Index + 1);
   FPenStyles[Index] := APenStyle;
+  if Assigned(FOwner) then
+    FOwner.Invalidate;
 end;
 
 function TJvChartOptions.GetPenStyle(Index: Integer): TPenStyle;
@@ -2151,11 +2179,6 @@ begin
   Result := TStrings(FPenLegends);
 end;
 
-procedure TJvChartOptions.SetPenLegends(Value: TStrings);
-begin
-  FPenLegends.Assign(Value);
-end;
-
 function TJvChartOptions.GetPenUnit: TStrings;
 begin
   Result := TStrings(FPenUnit);
@@ -2171,14 +2194,96 @@ begin
   Result := TStrings(FXLegends);
 end;
 
+procedure TJvChartOptions.SetAxisLineWidth(const Value: Integer);
+begin
+  if FAxisLineWidth = Value then exit;
+  FAxisLineWidth := Value;
+  NotifyOptionsChange;
+end;
+
+procedure TJvChartOptions.SetAxisTitleFont(const Value: TFont);
+begin
+  FAxisTitleFont.Assign(Value);
+  FAxisTitleFont.Orientation := 900;
+  NotifyOptionsChange;
+end;
+
+procedure TJvChartOptions.SetChartKind(AKind: TJvChartKind);
+begin
+  if AKind = FChartKind then exit;
+
+  FChartKind := AKind;
+  NotifyOptionsChange;
+end;
+
+procedure TJvChartOptions.SetDivisionLinecolor(const AColor: TColor);
+begin
+  if FDivisionLineColor = AColor then exit;
+  FDivisionLineColor := AColor;
+  if Assigned(FOwner) then
+    FOwner.Invalidate;
+end;
+
+procedure TJvChartOptions.SetMarkerSize(const Value: Integer);
+begin
+  if FMarkerSize = Value then exit;
+  FMarkerSize := Value;
+  NotifyOptionsChange;
+end;
+
+procedure TJvChartOptions.SetPaperColor(const AColor: TColor);
+begin
+  if AColor <> FPaperColor then
+  begin
+    FPaperColor := AColor;
+    if Assigned(FOwner) then
+      FOwner.Invalidate;
+  end;
+end;
+
+procedure TJvChartOptions.SetPenLegends(Value: TStrings);
+begin
+  FPenLegends.Assign(Value);
+  NotifyOptionsChange;
+end;
+
+procedure TJvChartOptions.SetPenLineWidth(const Value: Integer);
+begin
+  if FPenLineWidth = Value then exit;
+  FPenLineWidth := Value;
+  NotifyOptionsChange;
+end;
+
+procedure TJvChartOptions.SetShadowColor(const AColor: TColor);
+begin
+  if FShadowColor = AColor then exit;
+  FShadowColor := AColor;
+  if Assigned(FOwner) then
+    FOwner.Invalidate;
+end;
+
 procedure TJvChartOptions.SetXAxisDateTimeDivision(const Value: Double);
 begin
   FXAxisDateTimeDivision := Value;
 end;
 
+procedure TJvChartOptions.SetXAxisHeader(const Value: String);
+begin
+  if FXAxisHeader = Value then exit;
+  FXAxisHeader := Value;
+  NotifyOptionsChange;
+end;
+
 procedure TJvChartOptions.SetXLegends(Value: TStrings);
 begin
   FXLegends.Assign(Value);
+end;
+
+procedure TJvChartOptions.SetYAxisHeader(const Value: String);
+begin
+  if FYAxisHeader = Value then exit;
+  FYAxisHeader := Value;
+  NotifyOptionsChange;
 end;
 
 procedure TJvChartOptions.SetHeaderFont(AFont: TFont);
@@ -2206,23 +2311,25 @@ begin
   FSecondaryYAxis.Assign(AssignFrom);
 end;
 
-procedure TJvChartOptions.SetPaperColor(AColor: TColor);
-begin
-  if AColor <> FPaperColor then
-  begin
-    FPaperColor := AColor;
-    if Assigned(FOwner) then
-      FOwner.Invalidate;
-  end;
-end;
-
 procedure TJvChartOptions.SetXStartOffset(Offset: Integer);
 begin
   //if not PrintInSession then
   //  if (Offset < 10) or (Offset > (FOwner.Width div 2)) then
     //  raise ERangeError.CreateRes(@RsEChartOptionsXStartOffsetValueOutO);
+  if FXStartOffset = Offset then
+    exit;
   FXStartOffset := Offset;
+  NotifyOptionsChange;
 end;
+
+procedure TJvChartOptions.SetYStartOffset(Offset: Integer);
+begin
+  if FYStartOffset = Offset then
+    exit;
+  FYStartOffset := Offset;
+  NotifyOptionsChange;
+end;
+
 
 //=== { TJvChart } ===========================================================
 
@@ -2292,10 +2399,11 @@ destructor TJvChart.Destroy;
 begin
   {Add code for destroying my own data...here}
   FBitmap.Free;
+  {
   if Ord(FYFontHandle) <> 0 then
     DeleteObject(FYFontHandle); // vertical font object
   FreeAndNil(FYFont);
-
+  }
   FreeAndNil(FPicture);
   FreeAndNil(FAverageData);
   FreeAndNil(FOptions);
@@ -3198,7 +3306,9 @@ var
         if Options.PenStyle[I] <> psClear then
         begin
           if Options.XPixelGap < 3.0 then
-            ACanvas.Pen.Color := Options.PenColor[I]; // greek-out the borders
+            ACanvas.Pen.Color := Options.PenColor[I] // greek-out the borders
+          else
+            ACanvas.Pen.Color := clBlack;
           MyColorRectangle(ACanvas, I,
             Round((XOrigin + J * Options.XPixelGap) + (Options.XPixelGap / 6)),
             Round(YOrigin - YOldOrigin),
@@ -4461,7 +4571,8 @@ begin
     Exit;
   ACanvas.Brush.Color := Color;
   { !!warning: uses Win32 only font-handle stuff!!}
-  MyGraphVertFont(ACanvas); // Select Vertical Font Output.
+  ACanvas.Font.Assign(FOptions.AxisTitleFont);
+//  MyGraphVertFont(ACanvas); // Select Vertical Font Output.
   if Options.XStartOffset > 10 then
   begin
     {ht := MyTextHeight(StrText); }// not used (ahuser)
@@ -4884,8 +4995,8 @@ begin
     StrWidth := ACanvas.TextWidth(RsNoValuesHere);
     if StrWidth > nWidth then
       nWidth := StrWidth;
-    MyColorRectangle(ACanvas, jvChartHintColorIndex, X + 3, Y + 3, X + nWidth + 3 + 5, Y + nLineH + 3);
-    MyColorRectangle(ACanvas, jvChartPaperColorIndex, X, Y, X + nWidth + 5, Y + nLineH);
+    MyColorRectangle(ACanvas, jvChartShadowColorIndex, X + 3, Y + 3, X + nWidth + 3, Y + nLineH + 3);
+    MyColorRectangle(ACanvas, jvChartHintColorIndex, X, Y, X + nWidth, Y + nLineH);
     ACanvas.Font.Color := Self.Font.Color;
     MyLeftTextOutHint(ACanvas, X + 2, Y, RsNoValuesHere);
     FMouseLegend := True;
@@ -4903,7 +5014,7 @@ begin
     X := (Self.Width - nWidth);
 
   // Draw hint box:
-  MyColorRectangle(ACanvas, jvChartPaperColorIndex, X + 3, Y + 3, X + nWidth + 3, Y + nHeight + 3);
+  MyColorRectangle(ACanvas, jvChartShadowColorIndex, X + 3, Y + 3, X + nWidth + 3, Y + nHeight + 3);
   MyColorRectangle(ACanvas, jvChartHintColorIndex, X, Y, X + nWidth, Y + nHeight);
 
   //MyLeftTextOut( ACanvas, X + 3, Y + 3, 'Foo');
@@ -5227,7 +5338,7 @@ end;
 { or check for metafile output!                                              }
 {****************************************************************************}
 
-
+               (*
 { !!warning: uses Win32 only font-handle stuff!!}
 procedure TJvChart.MakeVerticalFont;
 begin
@@ -5270,6 +5381,7 @@ begin
   FYFont.Color := Options.AxisFont.Color;
   FYFont.Handle := FYFontHandle;
 end;
+*)
 
 
 procedure TJvChart.MyHeader(ACanvas: TCanvas; StrText: string);
@@ -5301,6 +5413,7 @@ begin
 end;
 
 
+(*
 { !!warning: uses Win32 only font-handle stuff!!}
 procedure TJvChart.MyGraphVertFont(ACanvas: TCanvas);
 begin
@@ -5313,7 +5426,7 @@ begin
   if not PrintInSession then
     Assert(ACanvas.Font.Handle = FYFontHandle);
 end;
-
+*)
 
 procedure TJvChart.MyHeaderFont(ACanvas: TCanvas);
 begin
@@ -5813,9 +5926,7 @@ begin
   if (Options.FGradientDirection = grNone) or (Options.PaperColor = Options.FGradientColor) then
     Exit;
   ACanvas := GetChartCanvas(false);
-  VC := Options.XValueCount;
-  if VC < 1 then
-    VC := 1;
+  VC := Max(1, Options.XValueCount);
   RawRect.Top := FOptions.YStartOffset;
   RawRect.Bottom := Trunc(YOrigin);
   RawRect.Left := Round(XOrigin);

@@ -6,7 +6,7 @@ uses
   Interfaces,
   Forms, printer4lazarus,
   JvChartDemoFm in 'JvChartDemoFm.pas' {JvChartDemoForm},
-  StatsClasses in 'StatsClasses.pas';
+  StatsClasses in 'StatsClasses.pas', jvPenEditor;
 
 {$R *.res}
 

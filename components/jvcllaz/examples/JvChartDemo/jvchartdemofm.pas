@@ -46,6 +46,23 @@ type
   { TJvChartDemoForm }
 
   TJvChartDemoForm = class(TForm)
+    mnuSetXStartOffset: TMenuItem;
+    mnuSetPenLineWidth: TMenuItem;
+    mnuSetAxisLineWidth: TMenuItem;
+    mnuSetLineWidths: TMenuItem;
+    mnuSetHintColor: TMenuItem;
+    mnuSetCursorColor: TMenuItem;
+    mnuPens: TMenuItem;
+    mnuSetPaperColor: TMenuItem;
+    mnuSetShadowColor: TMenuItem;
+    mnuFonts: TMenuItem;
+    mnuSetDivisionLineColor: TMenuItem;
+    mnuColors: TMenuItem;
+    MenuItem3: TMenuItem;
+    mnuSetMarkerSize: TMenuItem;
+    mnuSetYAxisHeader: TMenuItem;
+    mnuSetXAxisHeader: TMenuItem;
+    MenuItem2: TMenuItem;
     mnuSetAxisTitlefont: TMenuItem;
     mnuSetLegendFont: TMenuItem;
     mnuSetHeaderFont: TMenuItem;
@@ -76,6 +93,7 @@ type
     mnuSetAxisFont: TMenuItem;
     mnuScrolling: TMenuItem;
     ListBox1: TListBox;
+    SpinEdit1: TSpinEdit;
     Splitter1: TSplitter;
     Timer1: TTimer;
     ShowDataInListbox1: TMenuItem;
@@ -94,6 +112,11 @@ type
     procedure ButtonBarChartClick(Sender: TObject);
     procedure ButtonStackedBarAveClick(Sender: TObject);
     procedure ButtonStackedBarClick(Sender: TObject);
+    procedure mnuSetAxisLineWidthClick(Sender: TObject);
+    procedure mnuSetCursorColorClick(Sender: TObject);
+    procedure mnuSetHintColorClick(Sender: TObject);
+    procedure mnuSetPenLineWidthClick(Sender: TObject);
+    procedure mnuSetXStartOffsetClick(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
     procedure ButtonBarAveClick(Sender: TObject);
     procedure SpinEdit1Change(Sender: TObject);
@@ -120,6 +143,7 @@ type
 
     procedure PrintOptions1Click(Sender: TObject);
     procedure MenuSecondaryAxisModeClick(Sender: TObject);
+
     procedure ListBox1Click(Sender: TObject);
     procedure ListBox1DblClick(Sender: TObject);
 
@@ -127,6 +151,15 @@ type
     procedure mnuSetAxisTitlefontClick(Sender: TObject);
     procedure mnuSetHeaderFontClick(Sender: TObject);
     procedure mnuSetLegendFontClick(Sender: TObject);
+    procedure mnuSetMarkerSizeClick(Sender: TObject);
+    procedure mnuSetPaperColorClick(Sender: TObject);
+    procedure mnuPensClick(Sender: TObject);
+    procedure mnuSetShadowColorClick(Sender: TObject);
+    procedure mnuSetXAxisHeaderClick(Sender: TObject);
+    procedure mnuSetYAxisHeaderClick(Sender: TObject);
+
+    procedure mnuSetDivisionLineColorClick(Sender: TObject);
+    procedure mnuSetPenCountClick(Sender: TObject);
 
     procedure MenuNegValueTestClick(Sender: TObject);
     procedure SpeedButtonTestMouseOverClick(Sender: TObject);
@@ -134,7 +167,6 @@ type
       FloatingMarker: TJvChartFloatingMarker);
     procedure ChartBeginFloatingMarkerDrag(Sender: TJvChart;
       FloatingMarker: TJvChartFloatingMarker);
-    procedure ChartChartPaint(Sender: TJvChart; aCanvas: TCanvas);
     procedure NewFeaturesfor20071Click(Sender: TObject);
   private
 
@@ -150,6 +182,7 @@ type
     procedure _Generate;
     procedure _StoreValue(I: integer);
     function _QAProblemScatter: Integer;
+    procedure MakePensMenu;
 
   public
     procedure NewValues;
@@ -161,11 +194,16 @@ var
 implementation
 
 uses
-  LCLIntf,  // OpenURL
   LCLType,  // MB_OK
-  Math;     // Math:NaN handling, function isNan in D6 and higher.
+  Math,     // Math:NaN handling, function isNan in D6 and higher.
+  JvPenEditor;
 
 {$R *.lfm}
+
+const
+  TAG_PENCOLORS = 991;
+  MAX_PEN = 100;
+
 
 { Bogus vageuly sinusoidal signal generator }
 
@@ -472,7 +510,6 @@ procedure TJvChartDemoForm.ButtonBarChartClick(Sender: TObject);
 begin
   Chart.Options.ChartKind := ckChartBar;
   NewValues;
-  //Chart.PlotGraph;
 end;
 
 procedure TJvChartDemoForm.ButtonLineClick(Sender: TObject);
@@ -523,7 +560,6 @@ begin
   Chart.Options.ChartKind := ckChartBarAverage;
 
   NewValues;
-  //Chart.Plo
 end;
 
 procedure TJvChartDemoForm.ButtonPieClick(Sender: TObject);
@@ -540,6 +576,9 @@ end;
 
 procedure TJvChartDemoForm.SpinEdit1Change(Sender: TObject);
 begin
+//  Chart.Options.PrimaryYAxis.YPixelGap := SpinEdit1.Value;
+//  Chart.Options.YStartOffset := SpinEdit1.Value;
+  Chart.Options.XStartOffset := SpinEdit1.Value;
 //   Chart.Options.ColorScheme := SpinEdit1.Value;
 //   Chart.PlotGraph;
 end;
@@ -562,6 +601,8 @@ end;
 
 procedure TJvChartDemoForm.FormCreate(Sender: TObject);
 begin
+  MakePensMenu;
+
   FStatHgt := TStatArray.Create(10); // Initialize for rolling average of last 10 samples.
   FStatHg0 := TStatArray.Create(10);
 
@@ -600,6 +641,28 @@ begin
   Chart.GraphToClipboard;
 end;
 
+procedure TJvChartDemoForm.MakePensMenu;
+var
+  i: Integer;
+  mnu: TMenuItem;
+begin
+  for i := mnuPens.Count-1 downto 0 do begin
+    mnu := mnuPens.Items[i];
+    if (mnu <> nil) and (mnu.Tag >= TAG_PENCOLORS) and (mnu.tag < TAG_PENCOLORS + MAX_PEN) then
+      mnuPens.Delete(i);
+  end;
+                    (*
+  for i:=0 to Chart.Options.PenCount - 1do
+  begin
+    mnu := TMenuItem.Create(mnuPens);
+    mnu.Caption := 'Set Pen ' + IntToStr(i + 1);
+    mnu.Tag := TAG_PENCOLORS + i;
+    mnu.OnClick := @mnuSetPen;
+    mnuPens.Add(mnu);
+  end;
+  *)
+end;
+
 procedure TJvChartDemoForm.mnuSetAxisFontClick(Sender: TObject);
 begin
    {Get the current font for the axis label texts...}
@@ -609,19 +672,43 @@ begin
     {Set the font for the Header text...}
     Chart.Options.AxisFont := FontDialog1.Font;
   Chart.PlotGraph;
-//  Chart.Invalidate;
 end;
 
-procedure TJvChartDemoForm.mnuSetAxisTitlefontClick(Sender: TObject);
+procedure TJvChartDemoForm.mnuSetAxisLineWidthClick(Sender: TObject);
+var
+  s: String;
+  w: Integer;
+begin
+  s := InputBox('Set Axis Linewidth', 'Value:', IntToStr(Chart.Options.AxisLineWidth));
+  if TryStrToInt(s, w) and (w > 0) then
+    Chart.Options.AxisLineWidth := w
+  else
+    MessageDlg('No valid number for axis linewidth', mtError, [mbOk], 0);
+end;
+
+procedure TJvChartDemoForm.mnuSetAxisTitleFontClick(Sender: TObject);
 begin
   {Get the current font for the axis titles...}
- FontDialog1.Font.Assign(Chart.Font);
+  FontDialog1.Font.Assign(Chart.Options.AxisTitleFont);
 
- if FontDialog1.Execute then
-   {Set the font for the Header text...}
-   Chart.Font := FontDialog1.Font;
- Chart.PlotGraph;
-  Chart.Invalidate;
+  if FontDialog1.Execute then
+    {Set the font for the Header text...}
+    Chart.Options.AxisTitleFont := FontDialog1.Font;
+  Chart.PlotGraph;
+end;
+
+procedure TJvChartDemoForm.mnuSetCursorColorClick(Sender: TObject);
+begin
+  ColorDialog1.Color := Chart.Options.CursorColor;
+  if ColorDialog1.Execute then
+    Chart.Options.CursorColor := ColorDialog1.Color;
+end;
+
+procedure TJvChartDemoForm.mnuSetDivisionLineColorClick(Sender: TObject);
+begin
+  ColorDialog1.Color := Chart.Options.DivisionLineColor;
+  if ColorDialog1.Execute then
+    Chart.Options.DivisionLineColor := ColorDialog1.Color;
 end;
 
 procedure TJvChartDemoForm.mnuSetHeaderFontClick(Sender: TObject);
@@ -633,7 +720,13 @@ begin
     {Set the font for the Header text...}
     Chart.Options.HeaderFont := FontDialog1.Font;
   Chart.PlotGraph;
-//  Chart.Invalidate;
+end;
+
+procedure TJvChartDemoForm.mnuSetHintColorClick(Sender: TObject);
+begin
+  ColorDialog1.Color := Chart.Options.HintColor;
+  if ColorDialog1.Execute then
+    Chart.Options.HintColor := ColorDialog1.Color;
 end;
 
 procedure TJvChartDemoForm.mnuSetLegendFontClick(Sender: TObject);
@@ -645,7 +738,84 @@ begin
     {Set the font for the Header text...}
     Chart.Options.LegendFont := FontDialog1.Font;
   Chart.PlotGraph;
-//  Chart.Invalidate;
+end;
+
+procedure TJvChartDemoForm.mnuSetMarkerSizeClick(Sender: TObject);
+var
+  s: String;
+begin
+  s := InputBox('Set Marker Size', 'Value:', IntToStr(Chart.Options.MarkerSize));
+  Chart.Options.MarkerSize := StrToInt(s);
+end;
+
+procedure TJvChartDemoForm.mnuSetPaperColorClick(Sender: TObject);
+begin
+  ColorDialog1.Color := Chart.Options.PaperColor;
+  if ColorDialog1.Execute then
+    Chart.Options.PaperColor := ColorDialog1.Color;
+end;
+
+
+procedure TJvChartDemoForm.mnuSetPenCountClick(Sender: TObject);
+var
+  s: String;
+  n: Integer;
+begin
+  s := InputBox('Set pen count', 'Value:', IntToStr(Chart.Options.PenCount));
+  if TryStrToInt(s, n) then
+  begin
+    Chart.Options.PenCount := n;
+    //MakePenColorMenu;
+  end else
+    MessageDlg('No valid number of pens.', mtError, [mbOK], 0);
+
+end;
+
+procedure TJvChartDemoForm.mnuSetPenLineWidthClick(Sender: TObject);
+var
+  s: String;
+  w: Integer;
+begin
+  s := InputBox('Set Pen Linewidth', 'Value:', IntToStr(Chart.Options.PenLineWidth));
+  if TryStrToInt(s, w) and (w > 0) then
+    Chart.Options.PenLineWidth := w
+  else
+    MessageDlg('No valid number for pen linewidth', mtError, [mbOk], 0);
+end;
+
+procedure TJvChartDemoForm.mnuSetShadowColorClick(Sender: TObject);
+begin
+  ColorDialog1.Color := Chart.Options.ShadowColor;
+  if ColorDialog1.Execute then
+    Chart.Options.ShadowColor := ColorDialog1.Color;
+end;
+
+procedure TJvChartDemoForm.mnuSetXAxisHeaderClick(Sender: TObject);
+var
+  s: String;
+begin
+  s := InputBox('Set X Axis Title', 'Text:', Chart.Options.XAxisHeader);
+  Chart.Options.XAxisHeader := s;
+end;
+
+procedure TJvChartDemoForm.mnuSetXStartOffsetClick(Sender: TObject);
+var
+  s: String;
+  x: Integer;
+begin
+  s := InputBox('Set X Axis Start Offset', 'Value:', IntToStr(Chart.Options.XStartOffset));
+  if TryStrToInt(s, x) and (x >= 0) then
+    Chart.Options.XStartOffset := x
+  else
+    MessageDlg('No valid number for X Start Offset.', mtError, [mbOK], 0);
+end;
+
+procedure TJvChartDemoForm.mnuSetYAxisHeaderClick(Sender: TObject);
+var
+  s: String;
+begin
+  s := InputBox('Set Y Axis Title', 'Text:', Chart.Options.YAxisHeader);
+  Chart.Options.YAxisHeader := s;
 end;
 
 procedure TJvChartDemoForm.About1Click(Sender: TObject);
@@ -723,6 +893,20 @@ begin
   end
   else
     NewValues;
+end;
+
+procedure TJvChartDemoForm.mnuPensClick(Sender: TObject);
+var
+  F: TPenEditorForm;
+begin
+  F := TPenEditorForm.Create(nil);
+  try
+    F.UseChart(Chart);
+    if F.ShowModal = mrOK then
+      F.ApplyToChart(Chart);
+  finally
+    F.Free;
+  end;
 end;
 
 procedure TJvChartDemoForm.ListBox1DblClick(Sender: TObject);
@@ -812,14 +996,7 @@ begin
   draggableCursor.Caption := FloatToStrF( Chart.Data.Value[0,draggableCursor.XPosition], ffFixed, 6,4 );
   draggableCursor.Visible := true;
 
-
-
-
-
-
   Chart.PlotGraph;
-
-
 end;
 
 procedure TJvChartDemoForm.ChartEndFloatingMarkerDrag(Sender: TJvChart;
@@ -830,25 +1007,13 @@ begin
     FloatingMarker.YPosition :=  Chart.Data.Value[0, FloatingMarker.XPosition]
   else // update caption
     FloatingMarker.Caption := FloatToStrF( Chart.Data.Value[0,FloatingMarker.XPosition],ffFixed,6,4 );
-
-
 end;
 
 procedure TJvChartDemoForm.ChartBeginFloatingMarkerDrag(Sender: TJvChart;
   FloatingMarker: TJvChartFloatingMarker);
 begin
-    if FloatingMarker.Index=2 then
-        FloatingMarker.Caption := '?';
-
-end;
-
-procedure TJvChartDemoForm.ChartChartPaint(Sender: TJvChart;
-  aCanvas: TCanvas);
-begin
-  aCanvas.Pen.Color := clRed;
-  aCanvas.Pen.Style := psSolid;
-  aCanvas.MoveTo(0,0);
-  aCanvas.LineTo(100,100);
+  if FloatingMarker.Index = 2 then
+    FloatingMarker.Caption := '?';
 end;
 
 end.

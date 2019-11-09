@@ -1,0 +1,156 @@
+object PenEditorForm: TPenEditorForm
+  Left = 347
+  Height = 291
+  Top = 128
+  Width = 505
+  Caption = 'PenEditorForm'
+  ClientHeight = 291
+  ClientWidth = 505
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '2.1.0.0'
+  object btnPenColor: TButton
+    Left = 224
+    Height = 25
+    Top = 128
+    Width = 64
+    AutoSize = True
+    Caption = 'Color...'
+    OnClick = btnPenColorClick
+    TabOrder = 0
+  end
+  object rgPenStyle: TRadioGroup
+    Left = 224
+    Height = 80
+    Top = 40
+    Width = 265
+    AutoFill = True
+    Caption = 'Style'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 60
+    ClientWidth = 261
+    Columns = 3
+    Items.Strings = (
+      'Solid'
+      'Dash'
+      'Dot'
+      'Dash-dot'
+      'Dash-dot-dot'
+      'Clear'
+    )
+    OnClick = rgPenStyleClick
+    TabOrder = 1
+  end
+  object ButtonPanel1: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 251
+    Width = 493
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 2
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object lbPens: TListBox
+    Left = 8
+    Height = 200
+    Top = 8
+    Width = 200
+    ItemHeight = 0
+    OnDrawItem = lbPensDrawItem
+    OnSelectionChange = lbPensSelectionChange
+    Style = lbOwnerDrawFixed
+    TabOrder = 3
+  end
+  object btnAdd: TButton
+    Left = 11
+    Height = 25
+    Top = 216
+    Width = 48
+    AutoSize = True
+    Caption = 'Add'
+    OnClick = btnAddClick
+    TabOrder = 4
+  end
+  object btnDelete: TButton
+    Left = 64
+    Height = 25
+    Top = 216
+    Width = 59
+    AutoSize = True
+    Caption = 'Delete'
+    OnClick = btnDeleteClick
+    TabOrder = 5
+  end
+  object edPenLegend: TEdit
+    Left = 304
+    Height = 23
+    Top = 8
+    Width = 185
+    OnEditingDone = edPenLegendEditingDone
+    TabOrder = 6
+  end
+  object btnClear: TButton
+    Left = 128
+    Height = 25
+    Top = 216
+    Width = 53
+    AutoSize = True
+    Caption = 'Clear'
+    OnClick = btnClearClick
+    TabOrder = 7
+  end
+  object lblLegend: TLabel
+    Left = 224
+    Height = 15
+    Top = 8
+    Width = 39
+    Caption = 'Legend'
+    ParentColor = False
+  end
+  object ColorSample: TShape
+    Left = 304
+    Height = 25
+    Top = 128
+    Width = 25
+  end
+  object ColorDialog: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 243
+    top = 168
+  end
+end
