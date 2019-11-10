@@ -2,10 +2,10 @@ object JvChartDemoForm: TJvChartDemoForm
   Left = 436
   Height = 453
   Top = 278
-  Width = 789
+  Width = 785
   Caption = 'JEDI JvChart Demo'
   ClientHeight = 433
-  ClientWidth = 789
+  ClientWidth = 785
   Color = clWindow
   Menu = MainMenu1
   OnCreate = FormCreate
@@ -17,7 +17,7 @@ object JvChartDemoForm: TJvChartDemoForm
     Left = 164
     Height = 398
     Top = 35
-    Width = 625
+    Width = 621
     Align = alClient
     Options.XAxisValuesPerDivision = 10
     Options.XAxisLabelAlignment = taLeftJustify
@@ -61,10 +61,10 @@ object JvChartDemoForm: TJvChartDemoForm
     Left = 0
     Height = 35
     Top = 0
-    Width = 789
+    Width = 785
     Align = alTop
     ClientHeight = 35
-    ClientWidth = 789
+    ClientWidth = 785
     Font.CharSet = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -13

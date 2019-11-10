@@ -89,7 +89,8 @@ located at http://jvcl.delphi-jedi.org
 
 To do:
 - Drawing of legend at right (clChartLegendRight) not implemented
-- Print-out used screen coordinates
+- Printing uses screen coordinates.
+- Update to changes made in the object inspector.
 
 -----------------------------------------------------------------------------}
 // $Id$
@@ -2370,6 +2371,7 @@ begin
   if FYStartOffset <> Offset then
   begin
     FYStartOffset := Offset;
+    if Assigned(FOwner) then FOwner.CalcYEnd;
     NotifyOptionsChange;
   end;
 end;
