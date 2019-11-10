@@ -87,6 +87,10 @@ Last Modified:
 You may retrieve the latest version of this file at the Project JEDI's JVCL home page,
 located at http://jvcl.delphi-jedi.org
 
+To do:
+- Drawing of legend at right (clChartLegendRight) not implemented
+- Print-out used screen coordinates
+
 -----------------------------------------------------------------------------}
 // $Id$
 
@@ -428,7 +432,6 @@ type
     function GetPenColor(Index: Integer): TColor;
     function GetPenStyle(Index: Integer): TPenStyle;
     function GetPenMarkerKind(Index: Integer): TJvChartPenMarkerKind;
-    procedure SetPenMarkerKind(Index: Integer; AMarkKind: TJvChartPenMarkerKind);
     function GetPenSecondaryAxisFlag(Index: Integer): Boolean;
     procedure SetPenSecondaryAxisFlag(Index: Integer; NewValue: Boolean);
     function GetPenValueLabels(Index: Integer): Boolean;
@@ -452,14 +455,18 @@ type
     procedure SetAxisTitleFont(const Value: TFont);
     procedure SetChartKind(AKind: TJvChartKind);
     procedure SetDivisionLineColor(const AColor: TColor);
+    procedure SetFillUnderline(const AValue: Boolean);
+    procedure SetLegend(const ALegend: TJvChartLegend);
     procedure SetMarkerSize(const Value: Integer);
     procedure SetPaperColor(const AColor: TColor);
     procedure SetPenColor(Index: Integer; AColor: TColor);
     procedure SetPenCount(Count: Integer);
     procedure SetPenLegends(Value: TStrings);
     procedure SetPenLineWidth(const Value: Integer);
+    procedure SetPenMarkerKind(Index: Integer; AMarkKind: TJvChartPenMarkerKind);
     procedure SetPenStyle(Index: Integer; APenStyle: TPenStyle);
     procedure SetShadowColor(const AColor: TColor);
+    procedure SetTitle(const Value: String);
     procedure SetXAxisDateTimeDivision(const Value: Double);
     procedure SetXAxisHeader(const Value: String);
     procedure SetXStartOffset(Offset: Integer);
@@ -578,7 +585,7 @@ type
     property PenLegends: TStrings read GetPenLegends write SetPenLegends;
     property PenUnit: TStrings read GetPenUnit write SetPenUnit;
     property ChartKind: TJvChartKind read FChartKind write SetChartKind default ckChartLine;
-    property Title: string read FTitle write FTitle;
+    property Title: string read FTitle write SetTitle;
     property NoDataMessage: string read FNoDataMessage write FNoDataMessage;
     //NEW! NOV 2004. Optionally display this instead of fixed resource string rsNoData
 
@@ -615,7 +622,7 @@ type
     { Y Range }
     { plotting markers }
     property MarkerSize: Integer read FMarkerSize write SetMarkerSize default JvChartDefaultMarkerSize;
-    property FillUnderLine : Boolean read FFillUnderLine write FFillUnderLine default False;
+    property FillUnderLine : Boolean read FFillUnderLine write SetFillUnderLine default False;
     { !! New: Primary (left side) Y axis, and Secondary (right side) Y Axis !!}
     property PrimaryYAxis: TJvChartYAxisOptions read FPrimaryYAxis write SetPrimaryYAxis;
     property SecondaryYAxis: TJvChartYAxisOptions read FSecondaryYAxis write SetSecondaryYAxis;
@@ -629,7 +636,7 @@ type
     property MouseInfo: Boolean read FMouseInfo write FMouseInfo default True;
     //OLD:property ShowLegend: Boolean read FShowLegend write FShowLegend default True;
     //CHANGEDTO:
-    property Legend: TJvChartLegend read FLegend write FLegend default clChartLegendNone;
+    property Legend: TJvChartLegend read FLegend write SetLegend default clChartLegendNone;
     property LegendRowCount: Integer read FLegendRowCount write FLegendRowCount;
     property LegendWidth: Integer read FLegendWidth write FLegendWidth default 150;
     property PenLineWidth: Integer read FPenLineWidth write SetPenLineWidth default 1;
@@ -1906,9 +1913,7 @@ begin
   if (Source is TJvChartOptions) then begin
     src := Source as TJvChartOptions;
 
-
-    FLegend := src.Legend;//: TJvChartLegend;
-
+    FLegend := src.Legend;
     FHeaderFont.Assign(src.HeaderFont);
     FLegendFont.Assign(src.LegendFont);
     FAxisFont.Assign(src.AxisFont);
@@ -2039,16 +2044,6 @@ begin
     Result := pmkNone;
 end;
 
-procedure TJvChartOptions.SetPenMarkerKind(Index: Integer; AMarkKind: TJvChartPenMarkerKind);
-begin
-  if Index >= 0 then
-  begin
-    if Index >= Length(FPenMarkerKind) then
-      SetLength(FPenMarkerKind, Index + 1);
-    FPenMarkerKind[Index] := AMarkKind;
-  end;
-end;
-
 function TJvChartOptions.GetPenColor(Index: Integer): TColor;
 begin
   // Don't check for out of range values, since we use that on purpose in this
@@ -2075,31 +2070,6 @@ begin
     else
       Result := clNone; // I hope clNone is a good unknown value (ahuser). {{Good enough. -WP.}}
   end;
-end;
-
-procedure TJvChartOptions.SetPenColor(Index: Integer; AColor: TColor);
-begin
-  if (Index < 0) or (Index >= MAX_PEN) then
-    raise ERangeError.CreateRes(@RsEChartOptionsPenCountPenCountOutOf);
-
-  if Index >= Length(FPenColors) then
-    SetLength(FPenColors, Index + 1);
-
-  FPenColors[Index] := AColor;
-  if Assigned(FOwner) then
-    FOwner.Invalidate;
-end;
-
-procedure TJvChartOptions.SetPenStyle(Index: Integer; APenStyle: TPenStyle);
-begin
-  if (Index < 0) or (Index >= MAX_PEN) then
-    raise ERangeError.CreateRes(@RsEChartOptionsPenCountPenCountOutOf);
-
-  if Index >= Length(FPenStyles) then
-    SetLength(FPenStyles, Index + 1);
-  FPenStyles[Index] := APenStyle;
-  if Assigned(FOwner) then
-    FOwner.Invalidate;
 end;
 
 function TJvChartOptions.GetPenStyle(Index: Integer): TPenStyle;
@@ -2144,6 +2114,7 @@ begin
   if Index >= Length(FPenSecondaryAxisFlag) then
     SetLength(FPenSecondaryAxisFlag, Index + 1);
   FPenSecondaryAxisFlag[Index] := NewValue;
+  NotifyOptionsChange;
 end;
 
 function TJvChartOptions.GetPenValueLabels(Index: Integer): Boolean;
@@ -2196,39 +2167,62 @@ end;
 
 procedure TJvChartOptions.SetAxisLineWidth(const Value: Integer);
 begin
-  if FAxisLineWidth = Value then exit;
-  FAxisLineWidth := Value;
-  NotifyOptionsChange;
+  if FAxisLineWidth <> Value then
+  begin
+    FAxisLineWidth := Value;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetAxisTitleFont(const Value: TFont);
 begin
   FAxisTitleFont.Assign(Value);
-  FAxisTitleFont.Orientation := 900;
   NotifyOptionsChange;
 end;
 
 procedure TJvChartOptions.SetChartKind(AKind: TJvChartKind);
 begin
-  if AKind = FChartKind then exit;
-
-  FChartKind := AKind;
-  NotifyOptionsChange;
+  if AKind <> FChartKind then
+  begin
+    FChartKind := AKind;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetDivisionLinecolor(const AColor: TColor);
 begin
-  if FDivisionLineColor = AColor then exit;
-  FDivisionLineColor := AColor;
-  if Assigned(FOwner) then
-    FOwner.Invalidate;
+  if FDivisionLineColor <> AColor then
+  begin
+    FDivisionLineColor := AColor;
+    NotifyOptionsChange;
+  end;
+end;
+
+procedure TJvChartOptions.SetFillUnderLine(const AValue: Boolean);
+begin
+  if FFillUnderLine <> AValue then
+  begin
+    FFillUnderLine := AValue;
+    NotifyOptionsChange;
+  end;
+end;
+
+procedure TJvChartOptions.SetLegend(const ALegend: TJvChartLegend);
+begin
+  if FLegend <> ALegend then
+  begin
+    FLegend := ALegend;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetMarkerSize(const Value: Integer);
 begin
-  if FMarkerSize = Value then exit;
-  FMarkerSize := Value;
-  NotifyOptionsChange;
+  if FMarkerSize <> Value then
+  begin
+    FMarkerSize := Value;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetPaperColor(const AColor: TColor);
@@ -2236,9 +2230,20 @@ begin
   if AColor <> FPaperColor then
   begin
     FPaperColor := AColor;
-    if Assigned(FOwner) then
-      FOwner.Invalidate;
+    NotifyOptionsChange;
   end;
+end;
+
+procedure TJvChartOptions.SetPenColor(Index: Integer; AColor: TColor);
+begin
+  if (Index < 0) or (Index >= MAX_PEN) then
+    raise ERangeError.CreateRes(@RsEChartOptionsPenCountPenCountOutOf);
+
+  if Index >= Length(FPenColors) then
+    SetLength(FPenColors, Index + 1);
+
+  FPenColors[Index] := AColor;
+  NotifyOptionsChange;
 end;
 
 procedure TJvChartOptions.SetPenLegends(Value: TStrings);
@@ -2249,17 +2254,51 @@ end;
 
 procedure TJvChartOptions.SetPenLineWidth(const Value: Integer);
 begin
-  if FPenLineWidth = Value then exit;
-  FPenLineWidth := Value;
+  if FPenLineWidth <> Value then
+  begin
+    FPenLineWidth := Value;
+    NotifyOptionsChange;
+  end;
+end;
+
+procedure TJvChartOptions.SetPenMarkerKind(Index: Integer; AMarkKind: TJvChartPenMarkerKind);
+begin
+  if Index >= 0 then
+  begin
+    if Index >= Length(FPenMarkerKind) then
+      SetLength(FPenMarkerKind, Index + 1);
+    FPenMarkerKind[Index] := AMarkKind;
+    NotifyOptionsChange;
+  end;
+end;
+
+procedure TJvChartOptions.SetPenStyle(Index: Integer; APenStyle: TPenStyle);
+begin
+  if (Index < 0) or (Index >= MAX_PEN) then
+    raise ERangeError.CreateRes(@RsEChartOptionsPenCountPenCountOutOf);
+
+  if Index >= Length(FPenStyles) then
+    SetLength(FPenStyles, Index + 1);
+  FPenStyles[Index] := APenStyle;
   NotifyOptionsChange;
 end;
 
 procedure TJvChartOptions.SetShadowColor(const AColor: TColor);
 begin
-  if FShadowColor = AColor then exit;
-  FShadowColor := AColor;
-  if Assigned(FOwner) then
-    FOwner.Invalidate;
+  if FShadowColor <> AColor then
+  begin
+    FShadowColor := AColor;
+    NotifyOptionsChange;
+  end;
+end;
+
+procedure TJvchartOptions.SetTitle(const Value: String);
+begin
+  if FTitle <> Value then
+  begin
+    FTitle := Value;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetXAxisDateTimeDivision(const Value: Double);
@@ -2269,9 +2308,11 @@ end;
 
 procedure TJvChartOptions.SetXAxisHeader(const Value: String);
 begin
-  if FXAxisHeader = Value then exit;
-  FXAxisHeader := Value;
-  NotifyOptionsChange;
+  if FXAxisHeader <> Value then
+  begin
+    FXAxisHeader := Value;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetXLegends(Value: TStrings);
@@ -2281,9 +2322,11 @@ end;
 
 procedure TJvChartOptions.SetYAxisHeader(const Value: String);
 begin
-  if FYAxisHeader = Value then exit;
-  FYAxisHeader := Value;
-  NotifyOptionsChange;
+  if FYAxisHeader <> Value then
+  begin
+    FYAxisHeader := Value;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetHeaderFont(AFont: TFont);
@@ -2313,21 +2356,20 @@ end;
 
 procedure TJvChartOptions.SetXStartOffset(Offset: Integer);
 begin
-  //if not PrintInSession then
-  //  if (Offset < 10) or (Offset > (FOwner.Width div 2)) then
-    //  raise ERangeError.CreateRes(@RsEChartOptionsXStartOffsetValueOutO);
-  if FXStartOffset = Offset then
-    exit;
-  FXStartOffset := Offset;
-  NotifyOptionsChange;
+  if FXStartOffset <> Offset then
+  begin
+    FXStartOffset := Offset;
+    NotifyOptionsChange;
+  end;
 end;
 
 procedure TJvChartOptions.SetYStartOffset(Offset: Integer);
 begin
-  if FYStartOffset = Offset then
-    exit;
-  FYStartOffset := Offset;
-  NotifyOptionsChange;
+  if FYStartOffset <> Offset then
+  begin
+    FYStartOffset := Offset;
+    NotifyOptionsChange;
+  end;
 end;
 
 
@@ -4181,8 +4223,6 @@ begin
      DefaultXAxisLegendMode;
   end;
   DrawChartLegendBelow(ACanvas);
-
-
 end;
 
 procedure TJvChart.DrawPenColorBox(ACanvas: TCanvas; NColor, W, H, X, Y: Integer);
@@ -4190,6 +4230,7 @@ begin
   MyColorRectangle(ACanvas, NColor, X, Y, X + W, Y + H);
   SetRectangleColor(ACanvas, jvChartPaperColorIndex);
 end;
+
 
 {**************************************************************************}
 { call this function :                                                     }
@@ -4319,14 +4360,13 @@ begin
 
   // external picture mode?
   if Assigned(FExtPicture) and Assigned(FExtPicture.Graphic) then begin
-      if FExtPicture.Graphic is TBitmap then begin
-          result :=  TBitmap(FExtPicture.Graphic).Canvas;
-          exit;
-      end else begin
-          raise EInvalidOperation.Create(RsEUnableToGetCanvas);
-      end;
+    if FExtPicture.Graphic is TBitmap then begin
+      Result :=  TBitmap(FExtPicture.Graphic).Canvas;
+      exit;
+    end else begin
+      raise EInvalidOperation.Create(RsEUnableToGetCanvas);
+    end;
   end;
-
 
   { printer canvas }
   if PrintInSession then
@@ -4339,10 +4379,9 @@ begin
 
   { Floating marker draw but not external picture mode:}
   if isFloating then begin
-      Result := Self.Canvas;
-      exit;
+    Result := Self.Canvas;
+    exit;
   end;
-
 
   { FPicture.Graphic -bitmap canvas - normal display method. }
   if FPicture.Graphic = nil then
@@ -4374,15 +4413,18 @@ begin
     Result := Width;
     Exit;
   end;
+
   if Assigned(FExtPicture) then begin
     result := FExtPicture.Graphic.Width;
     exit;
   end;
+
   if PrintInSession then
   begin
     Result := Printer.PageWidth;
     Exit;
   end;
+
   if Assigned(FPicture) then
     Result := FPicture.Width
   else
@@ -4397,6 +4439,7 @@ begin
     Result := Self.Height;
     Exit;
   end;
+
   if Assigned(FExtPicture) then begin
     result := FExtPicture.Graphic.Height;
     exit;
@@ -4418,7 +4461,7 @@ end;
 
 procedure TJvChart.CalcYEnd;
 var
- aHeight:Integer;
+  aHeight: Integer;
 begin
   if Assigned(FExtPicture) then begin
     aHeight := FExtPicture.Bitmap.Height;
@@ -4427,16 +4470,16 @@ begin
     aHeight := FBitmap.Height;
   end;
 
-    Options.YEnd := aHeight - 2 * Options.YStartOffset; {canvas size, excluding margin}
+  Options.YEnd := aHeight - 2 * Options.YStartOffset; {canvas size, excluding margin}
 end;
+
+
 {**************************************************************************}
 { call this function :                                                     }
 {  a) when you resize the canvas for the AABsoftGraph                      }
 {  b) at program startup before drawing the first graph                    }
 {**************************************************************************}
-
 // ResizeChartCanvas/PlotGraph endless recursion loop fixed. --WP
-
 procedure TJvChart.ResizeChartCanvas;
 var
  awidth:Integer;
@@ -4491,7 +4534,6 @@ begin
 end;
 
 {This procedure is called when user clicks on the main header}
-
 procedure TJvChart.EditHeader;
 var
   StrString: string;
@@ -4506,7 +4548,6 @@ begin
 end;
 
 {This procedure is called when user clicks on the X-axis header}
-
 procedure TJvChart.EditXHeader;
 var
   StrString: string;
@@ -4542,7 +4583,6 @@ end;
 
 // NEW: X Axis Header has to move to make room if there is a horizontal
 // X axis legend:
-
 procedure TJvChart.MyXHeader(ACanvas: TCanvas; StrText: string);
 var
   X, Y, H: Integer;
@@ -4558,14 +4598,15 @@ begin
   end
   else
   begin
-    X := Options.XStartOffset + (Options.XEnd div 2);
+    X := (Options.XStartOffset + Options.XEnd) div 2;
     MyCenterTextOut(ACanvas, X, Y, StrText);
   end;
 end;
 
 procedure TJvChart.MyYHeader(ACanvas: TCanvas; StrText: string);
 var
-  {ht,}WD, Vert, Horiz: Integer; // not used (ahuser)
+  {ht,}                     // not used (ahuser)
+  WD, Vert, Horiz: Integer;
 begin
   if Length(StrText) = 0 then
     Exit;
@@ -4577,10 +4618,8 @@ begin
   begin
     {ht := MyTextHeight(StrText); }// not used (ahuser)
     WD := ACanvas.TextWidth(StrText);
-    // Kindof a fudge, but we'll work out something better later... :-) -WAP.
-    Vert := Options.YStartOffset * 2 + Height div 2 - WD div 2;
-    if Vert < 0 then
-      Vert := 0;
+    //Vert := Options.YStartOffset + WD; // top-aligned
+    Vert := Max(0, Options.YStartOffset + (Options.YEnd + WD) div 2);     // centered
     Horiz := 2;
     // NOTE: Because of the logical font selected, this time TextOut goes vertical.
     // If this doesn't go vertical, it may be because the font selection above failed.
@@ -4589,6 +4628,7 @@ begin
   MyAxisFont(ACanvas);
   //   Self.MyLeftTextOut(Horiz, Vert+50, '*');
 end;
+
 
 {***************************************************************************}
 { MOUSE FUNCTIONS AND PROCEDURES                                            }

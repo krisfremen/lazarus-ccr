@@ -10,9 +10,9 @@ object PenEditorForm: TPenEditorForm
   OnDestroy = FormDestroy
   LCLVersion = '2.1.0.0'
   object btnPenColor: TButton
-    Left = 224
+    Left = 232
     Height = 25
-    Top = 128
+    Top = 216
     Width = 64
     AutoSize = True
     Caption = 'Color...'
@@ -21,9 +21,9 @@ object PenEditorForm: TPenEditorForm
   end
   object rgPenStyle: TRadioGroup
     Left = 224
-    Height = 80
+    Height = 160
     Top = 40
-    Width = 265
+    Width = 121
     AutoFill = True
     Caption = 'Style'
     ChildSizing.LeftRightSpacing = 6
@@ -32,10 +32,9 @@ object PenEditorForm: TPenEditorForm
     ChildSizing.ShrinkHorizontal = crsScaleChilds
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 3
-    ClientHeight = 60
-    ClientWidth = 261
-    Columns = 3
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 140
+    ClientWidth = 117
     Items.Strings = (
       'Solid'
       'Dash'
@@ -123,8 +122,34 @@ object PenEditorForm: TPenEditorForm
   object ColorSample: TShape
     Left = 304
     Height = 25
-    Top = 128
+    Top = 216
     Width = 25
+  end
+  object rgMarker: TRadioGroup
+    Left = 376
+    Height = 160
+    Top = 40
+    Width = 112
+    AutoFill = True
+    Caption = 'Marker'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 140
+    ClientWidth = 108
+    Items.Strings = (
+      'None'
+      'Diamond'
+      'Circle'
+      'Square'
+      'Cross'
+    )
+    OnClick = rgMarkerClick
+    TabOrder = 8
   end
   object ColorDialog: TColorDialog
     Color = clBlack
@@ -150,7 +175,7 @@ object PenEditorForm: TPenEditorForm
       'ColorS=F0FBFF'
       'ColorT=A4A0A0'
     )
-    left = 243
-    top = 168
+    left = 144
+    top = 88
   end
 end

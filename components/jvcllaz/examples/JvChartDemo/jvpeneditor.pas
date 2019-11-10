@@ -14,6 +14,7 @@ type
     Legend: String;
     Color: TColor;
     Style: TPenStyle;
+    Marker: TJvChartPenMarkerKind;
   end;
 
   { TPenEditorForm }
@@ -28,6 +29,7 @@ type
     edPenLegend: TEdit;
     lblLegend: TLabel;
     lbPens: TListBox;
+    rgMarker: TRadioGroup;
     rgPenStyle: TRadioGroup;
     ColorSample: TShape;
     procedure btnAddClick(Sender: TObject);
@@ -40,6 +42,7 @@ type
     procedure lbPensDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure lbPensSelectionChange(Sender: TObject; User: boolean);
+    procedure rgMarkerClick(Sender: TObject);
     procedure rgPenStyleClick(Sender: TObject);
   private
     FPens: TObjectList;
@@ -78,6 +81,7 @@ begin
     AChart.Options.PenLegends.Add(pen.Legend);
     AChart.Options.PenColor[i] := pen.Color;
     AChart.Options.PenStyle[i] := pen.Style;
+    AChart.Options.PenMarkerKind[i] := pen.Marker;
   end;
 end;
 
@@ -89,6 +93,7 @@ begin
   pen.Legend := '';
   pen.Style := psSolid;
   pen.Color := clBlack;
+  pen.Marker := pmkNone;
   FPens.Add(pen);
   lbPens.Items.Add('');
 end;
@@ -134,6 +139,7 @@ begin
     pen.Style := psClear
   else
     pen.Style := TPenStyle(rgPenStyle.ItemIndex);
+  pen.Marker := TJvChartPenMarkerKind(rgMarker.ItemIndex);
   pen.Color := ColorSample.Brush.Color;
 end;
 
@@ -171,9 +177,12 @@ procedure TPenEditorForm.lbPensDrawItem(Control: TWinControl; Index: Integer;
 var
   R: TRect;
   pen: TPenObj;
+  x, y, dx, dy: Integer;
 begin
   pen := TPenObj(FPens[Index]);
   lbPens.Canvas.Font.Assign(lbPens.Font);
+
+  // Background
   if [odSelected, odFocused] * State <> [] then
   begin
     lbPens.Canvas.Brush.Color := clHighlight;
@@ -184,13 +193,52 @@ begin
     lbPens.Canvas.Font.Color := lbPens.Font.Color;
   end;
   lbPens.Canvas.FillRect(ARect);
+
+  // Line
   R := ARect;
   R.Right := R.Left + 50;
-  InflateRect(R, -2, 0);
+  InflateRect(R, -2, -2);
   lbPens.Canvas.Pen.Style := pen.Style;
   lbPens.Canvas.Pen.Color := pen.Color;
   lbPens.Canvas.Line(R.Left, (R.Top + R.Bottom) div 2, R.Right, (R.Top + R.Bottom) div 2);
+
+  // Marker
+  x := (R.Left + R.Right) div 2;
+  y := (R.Top + R.Bottom) div 2;
+  dx := (R.Bottom - R.Top) div 2;
+  dy := dx;
+  lbPens.Canvas.Pen.Style := psSolid;
+  case pen.Marker of
+    pmkNone: ;
+    pmkDiamond:
+      begin
+        lbPens.Canvas.Brush.Color := pen.Color;
+        lbPens.Canvas.Brush.Style := bsSolid;
+        lbPens.Canvas.Polygon([Point(x, y-dy), Point(x-dx, y), Point(x, y+dy), Point(x+dx, y)]);
+      end;
+    pmkCircle:
+      begin
+        lbPens.Canvas.Brush.Style := bsClear;
+        lbPens.Canvas.Ellipse(x-dx, y-dy, x+dx, y+dy);
+      end;
+    pmkSquare:
+      begin
+        lbPens.Canvas.Brush.Style := bsClear;
+        lbPens.Canvas.Rectangle(x-dx, y-dy, x+dx, y+dy);
+      end;
+    pmkCross:
+      begin
+        lbPens.Canvas.Line(x-dx, y, x+dx, y);
+        lbPens.Canvas.Line(x, y-dy, x, y+dy);
+      end;
+    else
+      raise Exception.Create('Marker style not supported.');
+  end;
+
+  // Text
   lbPens.Canvas.TextOut(R.Right + 2, (R.Top + R.Bottom - lbPens.Canvas.TextHeight('Rg')) div 2, pen.Legend);
+
+  // Focus rect
   if odFocused in State then
     lbPens.Canvas.DrawFocusRect(ARect);
 end;
@@ -213,12 +261,25 @@ begin
     rgPenStyle.ItemIndex := rgPenStyle.Items.Count-1
   else
     rgPenStyle.ItemIndex := ord(pen.Style);
+  rgMarker.ItemIndex := ord(pen.Marker);
   ColorSample.Brush.Color := pen.Color;
 
   edPenLegend.Enabled := true;
   rgPenStyle.Enabled := true;
+  rgMarker.Enabled := true;
   btnPenColor.Enabled := true;
   ColorSample.Visible := true;
+end;
+
+procedure TPenEditorForm.rgMarkerClick(Sender: TObject);
+var
+  pen: TPenObj;
+begin
+  pen := GetCurrentPen;
+  if pen = nil then
+    exit;
+  pen.Marker := TJvChartPenMarkerKind(rgMarker.ItemIndex);
+  lbPens.Invalidate;
 end;
 
 procedure TPenEditorForm.rgPenStyleClick(Sender: TObject);
@@ -251,12 +312,14 @@ begin
     pen.Legend := AChart.Options.PenLegends[i];
     pen.Color := AChart.Options.PenColor[i];
     pen.Style := AChart.Options.PenStyle[i];
+    pen.Marker := AChart.Options.PenMarkerKind[i];
     FPens.Add(pen);
     lbPens.Items.Add('');
   end;
 
   edPenLegend.Enabled := false;
-  rgpenStyle.Enabled := false;
+  rgPenStyle.Enabled := false;
+  rgMarker.Enabled := false;
   btnPenColor.Enabled := false;
   ColorSample.Visible := false;
 end;

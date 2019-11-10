@@ -46,6 +46,12 @@ type
   { TJvChartDemoForm }
 
   TJvChartDemoForm = class(TForm)
+    mnuSetTitle: TMenuItem;
+    mnuFillUnderLine: TMenuItem;
+    mnuLegendNone: TMenuItem;
+    mnuLegendRight: TMenuItem;
+    mnuLegendBelow: TMenuItem;
+    mnuLegend: TMenuItem;
     mnuSetXStartOffset: TMenuItem;
     mnuSetPenLineWidth: TMenuItem;
     mnuSetAxisLineWidth: TMenuItem;
@@ -112,10 +118,13 @@ type
     procedure ButtonBarChartClick(Sender: TObject);
     procedure ButtonStackedBarAveClick(Sender: TObject);
     procedure ButtonStackedBarClick(Sender: TObject);
+    procedure mnuFillUnderLineClick(Sender: TObject);
+    procedure mnuLegenClick(Sender: TObject);
     procedure mnuSetAxisLineWidthClick(Sender: TObject);
     procedure mnuSetCursorColorClick(Sender: TObject);
     procedure mnuSetHintColorClick(Sender: TObject);
     procedure mnuSetPenLineWidthClick(Sender: TObject);
+    procedure mnuSetTitleClick(Sender: TObject);
     procedure mnuSetXStartOffsetClick(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
     procedure ButtonBarAveClick(Sender: TObject);
@@ -490,7 +499,7 @@ begin
       PenUnit.Add('%'); // Optional Pen in percentage scale.
 
     //ShowLegend := TRUE;
-    Legend := clChartLegendBelow;
+//    Legend := clChartLegendBelow;
 
     //ChartKind := ckChartLine;
   end;
@@ -651,16 +660,6 @@ begin
     if (mnu <> nil) and (mnu.Tag >= TAG_PENCOLORS) and (mnu.tag < TAG_PENCOLORS + MAX_PEN) then
       mnuPens.Delete(i);
   end;
-                    (*
-  for i:=0 to Chart.Options.PenCount - 1do
-  begin
-    mnu := TMenuItem.Create(mnuPens);
-    mnu.Caption := 'Set Pen ' + IntToStr(i + 1);
-    mnu.Tag := TAG_PENCOLORS + i;
-    mnu.OnClick := @mnuSetPen;
-    mnuPens.Add(mnu);
-  end;
-  *)
 end;
 
 procedure TJvChartDemoForm.mnuSetAxisFontClick(Sender: TObject);
@@ -790,6 +789,14 @@ begin
     Chart.Options.ShadowColor := ColorDialog1.Color;
 end;
 
+procedure TJvChartDemoForm.mnuSetTitleClick(Sender: TObject);
+var
+  s: String;
+begin
+  s := InputBox('Set Chart Title', 'Text:', Chart.Options.Title);
+  Chart.Options.Title := s;
+end;
+
 procedure TJvChartDemoForm.mnuSetXAxisHeaderClick(Sender: TObject);
 var
   s: String;
@@ -893,6 +900,25 @@ begin
   end
   else
     NewValues;
+end;
+
+procedure TJvChartDemoForm.mnuFillUnderLineClick(Sender: TObject);
+begin
+  mnuFillUnderLine.Checked := not mnuFillUnderLine.Checked;
+  Chart.Options.FillUnderLine := mnuFillUnderLine.Checked;
+end;
+
+procedure TJvChartDemoForm.mnuLegenClick(Sender: TObject);
+begin
+  mnuLegendNone.Checked := (Sender = mnuLegendNone);
+  mnuLegendBelow.Checked := (Sender = mnuLegendBelow);
+  mnuLegendRight.Checked := (Sender = mnuLegendRight);
+  if mnuLegendNone.Checked then
+    Chart.Options.Legend := clChartLegendNone
+  else if mnuLegendRight.Checked then
+    Chart.Options.Legend := clChartLegendRight
+  else if mnuLegendBelow.Checked then
+    Chart.Options.Legend := clChartLegendBelow;
 end;
 
 procedure TJvChartDemoForm.mnuPensClick(Sender: TObject);

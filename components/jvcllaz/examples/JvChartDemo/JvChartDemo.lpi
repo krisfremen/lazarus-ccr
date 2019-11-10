@@ -58,6 +58,7 @@
         <Filename Value="jvpeneditor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="PenEditorForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="jvPenEditor"/>
       </Unit>

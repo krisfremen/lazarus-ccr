@@ -431,6 +431,10 @@ object JvChartDemoForm: TJvChartDemoForm
       object MenuItem2: TMenuItem
         Caption = '-'
       end
+      object mnuSetTitle: TMenuItem
+        Caption = 'Set Title...'
+        OnClick = mnuSetTitleClick
+      end
       object mnuSetXAxisHeader: TMenuItem
         Caption = 'Set X Axis Header...'
         OnClick = mnuSetXAxisHeaderClick
@@ -438,10 +442,6 @@ object JvChartDemoForm: TJvChartDemoForm
       object mnuSetYAxisHeader: TMenuItem
         Caption = 'Set Y Axis Header...'
         OnClick = mnuSetYAxisHeaderClick
-      end
-      object mnuSetMarkerSize: TMenuItem
-        Caption = 'Set Marker Size...'
-        OnClick = mnuSetMarkerSizeClick
       end
       object MenuItem3: TMenuItem
         Caption = '-'
@@ -502,6 +502,33 @@ object JvChartDemoForm: TJvChartDemoForm
       object mnuPens: TMenuItem
         Caption = 'Pens...'
         OnClick = mnuPensClick
+      end
+      object mnuSetMarkerSize: TMenuItem
+        Caption = 'Marker Size...'
+        OnClick = mnuSetMarkerSizeClick
+      end
+      object mnuFillUnderLine: TMenuItem
+        Caption = 'Fill under line'
+        OnClick = mnuFillUnderLineClick
+      end
+      object mnuLegend: TMenuItem
+        Caption = 'Legend'
+        object mnuLegendNone: TMenuItem
+          Caption = 'None'
+          GroupIndex = 113
+          OnClick = mnuLegenClick
+        end
+        object mnuLegendRight: TMenuItem
+          Caption = 'Right'
+          GroupIndex = 113
+          OnClick = mnuLegenClick
+        end
+        object mnuLegendBelow: TMenuItem
+          Caption = 'Below'
+          Checked = True
+          GroupIndex = 113
+          OnClick = mnuLegenClick
+        end
       end
       object mnuSetXStartOffset: TMenuItem
         Caption = 'X Start Offset...'
