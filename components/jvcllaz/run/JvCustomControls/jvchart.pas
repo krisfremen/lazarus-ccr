@@ -5425,9 +5425,11 @@ begin
   Assert(Assigned(ACanvas.Brush));
 
   MyHeaderFont(ACanvas);
-  MyCenterTextOut(ACanvas, Options.XStartOffset + Round(Options.XEnd / 2),
-    (Options.YStartOffset div 2) - (MyTextHeight(ACanvas, StrText) div 2),
-    StrText);
+  MyCenterTextOut(ACanvas,
+    (Options.XStartOffset + Round(Options.XEnd)) div 2,
+    (Options.YStartOffset - MyTextHeight(ACanvas, StrText)) div 2,
+    StrText
+  );
   MyAxisFont(ACanvas);
 end;
 
