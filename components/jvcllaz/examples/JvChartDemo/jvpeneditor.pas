@@ -15,6 +15,7 @@ type
     Color: TColor;
     Style: TPenStyle;
     Marker: TJvChartPenMarkerKind;
+    SecondaryAxis: Boolean;
   end;
 
   { TPenEditorForm }
@@ -29,6 +30,7 @@ type
     edPenLegend: TEdit;
     lblLegend: TLabel;
     lbPens: TListBox;
+    rgAxis: TRadioGroup;
     rgMarker: TRadioGroup;
     rgPenStyle: TRadioGroup;
     ColorSample: TShape;
@@ -42,6 +44,7 @@ type
     procedure lbPensDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure lbPensSelectionChange(Sender: TObject; User: boolean);
+    procedure rgAxisClick(Sender: TObject);
     procedure rgMarkerClick(Sender: TObject);
     procedure rgPenStyleClick(Sender: TObject);
   private
@@ -62,7 +65,7 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLType;
+  Math, LCLType;
 
 
 { TPenEditorForm }
@@ -94,6 +97,7 @@ begin
   pen.Style := psSolid;
   pen.Color := clBlack;
   pen.Marker := pmkNone;
+  pen.SecondaryAxis := false;
   FPens.Add(pen);
   lbPens.Items.Add('');
 end;
@@ -141,6 +145,7 @@ begin
     pen.Style := TPenStyle(rgPenStyle.ItemIndex);
   pen.Marker := TJvChartPenMarkerKind(rgMarker.ItemIndex);
   pen.Color := ColorSample.Brush.Color;
+  pen.SecondaryAxis := rgAxis.ItemIndex = 1;
 end;
 
 procedure TPenEditorForm.edPenLegendEditingDone(Sender: TObject);
@@ -257,19 +262,32 @@ begin
     exit;
 
   pen := TPenObj(FPens[AIndex]);
+
   edPenLegend.Text := pen.Legend;
   if pen.Style = psClear then
     rgPenStyle.ItemIndex := rgPenStyle.Items.Count-1
   else
     rgPenStyle.ItemIndex := ord(pen.Style);
   rgMarker.ItemIndex := ord(pen.Marker);
+  rgAxis.ItemIndex := IfThen(pen.SecondaryAxis, 1, 0);
   ColorSample.Brush.Color := pen.Color;
 
   edPenLegend.Enabled := true;
   rgPenStyle.Enabled := true;
   rgMarker.Enabled := true;
+  rgAxis.Enabled := true;
   btnPenColor.Enabled := true;
   ColorSample.Visible := true;
+end;
+
+procedure TPenEditorForm.rgAxisClick(Sender: TObject);
+var
+  pen: TPenObj;
+begin
+  pen := GetCurrentPen;
+  if pen = nil then
+    exit;
+  pen.SecondaryAxis := rgAxis.ItemIndex = 1;
 end;
 
 procedure TPenEditorForm.rgMarkerClick(Sender: TObject);
@@ -314,6 +332,7 @@ begin
     pen.Color := AChart.Options.PenColor[i];
     pen.Style := AChart.Options.PenStyle[i];
     pen.Marker := AChart.Options.PenMarkerKind[i];
+    pen.SecondaryAxis := AChart.Options.PenSecondaryAxisFlag[i];;
     FPens.Add(pen);
     lbPens.Items.Add('');
   end;
@@ -321,6 +340,7 @@ begin
   edPenLegend.Enabled := false;
   rgPenStyle.Enabled := false;
   rgMarker.Enabled := false;
+  rgAxis.Enabled := false;
   btnPenColor.Enabled := false;
   ColorSample.Visible := false;
 end;

@@ -37,9 +37,9 @@ unit JvChartDemoFm;
 interface
 
 uses
-  Windows, SysUtils, Messages, Classes, Graphics, Controls,
+  SysUtils, Classes, Graphics, Controls, Menus,
   Forms, Dialogs, ExtCtrls, StdCtrls, Buttons, Spin, PrintersDlgs, 
-  JvChart, JvComponent, JvExControls, StatsClasses, Menus;
+  JvChart, StatsClasses;
 
 type
 
@@ -109,7 +109,7 @@ type
     PrintOptions1: TMenuItem;
     PrinterSetupDialog1: TPrinterSetupDialog;
     PrintDialog1: TPrintDialog;
-    MenuSecondaryAxisMode: TMenuItem;
+    mnuSecondaryAxisMode: TMenuItem;
     MenuNegValueTest: TMenuItem;
     SpeedButtonTestMouseOver: TSpeedButton;
     NewFeaturesfor20071: TMenuItem;
@@ -151,7 +151,7 @@ type
     procedure FormDestroy(Sender: TObject);
 
     procedure PrintOptions1Click(Sender: TObject);
-    procedure MenuSecondaryAxisModeClick(Sender: TObject);
+    procedure mnuSecondaryAxisModeClick(Sender: TObject);
 
     procedure ListBox1Click(Sender: TObject);
     procedure ListBox1DblClick(Sender: TObject);
@@ -203,6 +203,7 @@ var
 implementation
 
 uses
+  LCLIntf,  // OpenURL
   LCLType,  // MB_OK
   Math,     // Math:NaN handling, function isNan in D6 and higher.
   JvPenEditor;
@@ -289,7 +290,7 @@ begin
     // if Chart.Options.XAxisDateTimeMode was also set.
     Chart.Options.XLegends.Add(FormatDateTime('hh:nn:ss', Fds));
 
-  if MenuSecondaryAxisMode.Checked then
+  if mnuSecondaryAxisMode.Checked then
   begin
     if I = 1 then
       Chart.Data.Value[3, I] := 100
@@ -461,7 +462,7 @@ begin
     PenStyle[1] := psDash;
     PenStyle[2] := psDot;
 
-    if MenuSecondaryAxisMode.Checked then
+    if mnuSecondaryAxisMode.Checked then
     begin
       PenCount := 4; // Add a pen for right side demo.
       SecondaryYAxis.YMax := 140; // Example shows Q/A percentage. Experimental results
@@ -488,14 +489,14 @@ begin
     PenLegends.Add('HgT');
     PenLegends.Add('Hg0');
     PenLegends.Add('Hg2+');
-    if MenuSecondaryAxisMode.Checked then
+    if mnuSecondaryAxisMode.Checked then
       PenLegends.Add('Quality%');
 
     PenUnit.Clear;
     PenUnit.Add('ug/m3');
     PenUnit.Add('ug/m3');
     PenUnit.Add('ug/m3');
-    if MenuSecondaryAxisMode.Checked then
+    if mnuSecondaryAxisMode.Checked then
       PenUnit.Add('%'); // Optional Pen in percentage scale.
 
     //ShowLegend := TRUE;
@@ -586,8 +587,8 @@ end;
 procedure TJvChartDemoForm.SpinEdit1Change(Sender: TObject);
 begin
 //  Chart.Options.PrimaryYAxis.YPixelGap := SpinEdit1.Value;
-//  Chart.Options.YStartOffset := SpinEdit1.Value;
-  Chart.Options.XStartOffset := SpinEdit1.Value;
+  Chart.Options.YStartOffset := SpinEdit1.Value;
+//  Chart.Options.XStartOffset := SpinEdit1.Value;
 //   Chart.Options.ColorScheme := SpinEdit1.Value;
 //   Chart.PlotGraph;
 end;
@@ -622,7 +623,8 @@ end;
 
 procedure TJvChartDemoForm.Panel2DblClick(Sender: TObject);
 begin
-  ShellExecute(HWND(nil), 'show', 'http://jvcl.delphi-jedi.org/', nil, nil, SW_SHOW);
+  OpenURL('http://jvcl.delphi-jedi.org/');
+//  ShellExecute(HWND(nil), 'show', 'http://jvcl.delphi-jedi.org/', nil, nil, SW_SHOW);
 end;
 
 procedure TJvChartDemoForm.ShowgapinLineChart1Click(Sender: TObject);
@@ -679,7 +681,7 @@ var
   w: Integer;
 begin
   s := InputBox('Set Axis Linewidth', 'Value:', IntToStr(Chart.Options.AxisLineWidth));
-  if TryStrToInt(s, w) and (w > 0) then
+  if TryStrToInt(s, w) and (w >= 0) then
     Chart.Options.AxisLineWidth := w
   else
     MessageDlg('No valid number for axis linewidth', mtError, [mbOk], 0);
@@ -889,11 +891,11 @@ begin
   PrinterSetupDialog1.Execute;
 end;
 
-procedure TJvChartDemoForm.MenuSecondaryAxisModeClick(Sender: TObject);
+procedure TJvChartDemoForm.mnuSecondaryAxisModeClick(Sender: TObject);
 begin
-  MenuSecondaryAxisMode.Checked := not MenuSecondaryAxisMode.Checked;
+  mnuSecondaryAxisMode.Checked := not mnuSecondaryAxisMode.Checked;
 
-  if MenuSecondaryAxisMode.Checked then
+  if mnuSecondaryAxisMode.Checked then
   begin
     ButtonLine.Down := true;
     ButtonLineClick(Sender);

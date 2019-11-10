@@ -1,10 +1,11 @@
 object PenEditorForm: TPenEditorForm
   Left = 347
-  Height = 291
+  Height = 302
   Top = 128
   Width = 505
+  BorderStyle = bsDialog
   Caption = 'PenEditorForm'
-  ClientHeight = 291
+  ClientHeight = 302
   ClientWidth = 505
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -13,7 +14,7 @@ object PenEditorForm: TPenEditorForm
   object btnPenColor: TButton
     Left = 232
     Height = 25
-    Top = 216
+    Top = 232
     Width = 64
     AutoSize = True
     Caption = 'Color...'
@@ -22,7 +23,7 @@ object PenEditorForm: TPenEditorForm
   end
   object rgPenStyle: TRadioGroup
     Left = 224
-    Height = 160
+    Height = 168
     Top = 40
     Width = 121
     AutoFill = True
@@ -34,7 +35,7 @@ object PenEditorForm: TPenEditorForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 140
+    ClientHeight = 148
     ClientWidth = 117
     Items.Strings = (
       'Solid'
@@ -50,7 +51,7 @@ object PenEditorForm: TPenEditorForm
   object ButtonPanel1: TButtonPanel
     Left = 6
     Height = 34
-    Top = 251
+    Top = 262
     Width = 493
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -65,7 +66,7 @@ object PenEditorForm: TPenEditorForm
   end
   object lbPens: TListBox
     Left = 8
-    Height = 200
+    Height = 216
     Top = 8
     Width = 200
     ItemHeight = 0
@@ -77,7 +78,7 @@ object PenEditorForm: TPenEditorForm
   object btnAdd: TButton
     Left = 11
     Height = 25
-    Top = 216
+    Top = 232
     Width = 48
     AutoSize = True
     Caption = 'Add'
@@ -87,7 +88,7 @@ object PenEditorForm: TPenEditorForm
   object btnDelete: TButton
     Left = 64
     Height = 25
-    Top = 216
+    Top = 232
     Width = 59
     AutoSize = True
     Caption = 'Delete'
@@ -105,7 +106,7 @@ object PenEditorForm: TPenEditorForm
   object btnClear: TButton
     Left = 128
     Height = 25
-    Top = 216
+    Top = 232
     Width = 53
     AutoSize = True
     Caption = 'Clear'
@@ -123,12 +124,12 @@ object PenEditorForm: TPenEditorForm
   object ColorSample: TShape
     Left = 304
     Height = 25
-    Top = 216
+    Top = 232
     Width = 25
   end
   object rgMarker: TRadioGroup
     Left = 376
-    Height = 160
+    Height = 136
     Top = 40
     Width = 112
     AutoFill = True
@@ -140,7 +141,7 @@ object PenEditorForm: TPenEditorForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 140
+    ClientHeight = 116
     ClientWidth = 108
     Items.Strings = (
       'None'
@@ -151,6 +152,29 @@ object PenEditorForm: TPenEditorForm
     )
     OnClick = rgMarkerClick
     TabOrder = 8
+  end
+  object rgAxis: TRadioGroup
+    Left = 376
+    Height = 64
+    Top = 192
+    Width = 113
+    AutoFill = True
+    Caption = 'y Axis'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 44
+    ClientWidth = 109
+    Items.Strings = (
+      'Primary'
+      'Secondary'
+    )
+    OnClick = rgAxisClick
+    TabOrder = 9
   end
   object ColorDialog: TColorDialog
     Color = clBlack

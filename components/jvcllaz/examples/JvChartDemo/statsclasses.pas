@@ -33,55 +33,45 @@ Known Issues:
 
 unit StatsClasses;
 
-
 interface
-
 
 type
 
-TStatArray = class
+  TStatArray = class
   protected
    //FFirst:Boolean;
-   FGrows:Boolean; // false=rolling average (circular buffer mode), true=average or sd of any number of samples (array grows without limit)
-   FValues:Array of Double;
-   FLength, // Array absolute size (may still be no data even if this is >0)
-   FIndex,  // Where will the next sample be stored into the array?
-   FCount:  // How many valid samples are in the array right now?
-      Integer;
-
-
-   procedure SetLen(aLength:Integer);
-
-
+    FGrows: Boolean; // false=rolling average (circular buffer mode), true=average or sd of any number of samples (array grows without limit)
+    FValues: Array of Double;
+    FLength: Integer; // Array absolute size (may still be no data even if this is >0)
+    FIndex: Integer;  // Where will the next sample be stored into the array?
+    FCount: Integer;  // How many valid samples are in the array right now?
+    procedure SetLen(aLength:Integer);
   public
-    procedure AddValue(aValue:Double);
-
-    function Average:Double;
-
-    function StandardDeviation:Double;
-
-    property Grows:Boolean read FGrows write FGrows; // false=rolling average, true=average ALL samples (grows to fit)
-
-    property Length:Integer read FLength write SetLen;
-    property Count:Integer read FCount;
-    //property First:Boolean read FFirst;
-
-    procedure Reset; // Clear everything!
-
     constructor Create; overload;
     constructor Create(initialLength:Integer); overload;
     destructor Destroy; override;
+
+    procedure AddValue(aValue:Double);
+    function Average:Double;
+    function StandardDeviation:Double;
+
+    property Grows:Boolean read FGrows write FGrows; // false=rolling average, true=average ALL samples (grows to fit)
+    property Length:Integer read FLength write SetLen;
+    property Count:Integer read FCount;
+    //property First:Boolean read FFirst;
+    procedure Reset; // Clear everything!
 end;
+
 
 implementation
 
-uses  //Windows, // OutputDebugString
-      SysUtils, // FloatToStr
-      Math;  //  VCL's statistics routines. StdDev, etc.
+uses
+  SysUtils, // FloatToStr
+  Math;  //  VCL's statistics routines. StdDev, etc.
 
 // Begin Rolling Average
 
-constructor  TStatArray.Create; // overload;
+constructor TStatArray.Create; // overload;
 begin
    //FFirst := true;
    FLength := 0;
@@ -123,24 +113,24 @@ begin
 end;
 
 
-function     TStatArray.Average:Double;
+function TStatArray.Average:Double;
 var
- last,i:Integer;
- sum:Double;
+  last,i:Integer;
+  sum:Double;
 begin
- if FCount <= 0 then begin
+  if FCount <= 0 then begin
     result := 0;
- end else begin
+  end else begin
     sum := 0;
     if (FCount>FLength) then
-        last :=FLength-1
+      last :=FLength-1
     else
-        last :=FCount-1;
+      last :=FCount-1;
     for i := 0 to last do begin
-       sum := sum + FValues[i];
+      sum := sum + FValues[i];
     end;
     result := sum / (last+1);
- end;
+  end;
 end;
 
 function TStatArray.StandardDeviation:Double;

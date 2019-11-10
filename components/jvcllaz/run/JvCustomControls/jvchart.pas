@@ -98,7 +98,7 @@ unit JvChart;
 
 {$MODE OBJFPC}{$H+}
 {$DEFINE TJVCHART_ARRAY_OF_ARRAY}
-//{$I jvcl.inc}
+{.$DEFINE TEXT_BOX}
 
 interface
 
@@ -112,8 +112,8 @@ const
 
   JvDefaultHintColor = TColor($00DDFBFA);
   JvDefaultAvgLineColor = TColor($00EEDDDD);
-  JvDefaultDivisionLineColor = clLtGray; //NEW!
-  JvDefaultShadowColor = clDkGray; //NEW!
+  JvDefaultDivisionLineColor = clLtGray;
+  JvDefaultShadowColor = clDkGray;
   JvDefaultPaperColor = clWhite;
 
   JvDefaultYLegends = 20;
@@ -749,12 +749,13 @@ type
     procedure MyYHeader(ACanvas: TCanvas; StrText: string); // NEW
     procedure MyHeaderFont(ACanvas: TCanvas);
     procedure MyAxisFont(ACanvas: TCanvas);
+    procedure MyAxisTitleFont(ACanvas: TCanvas; Vertical: Boolean);
     procedure MySmallGraphFont(ACanvas: TCanvas);
     function MyTextHeight(ACanvas: TCanvas; StrText: string): Longint;
     { TEXTOUT stuff }
     procedure MyRightTextOut(ACanvas: TCanvas; X, Y: Integer; const AText: string); // RIGHT TEXT
     procedure MyCenterTextOut(ACanvas: TCanvas; X, Y: Integer; const AText: string); // CENTER TEXT
-    procedure MyLeftTextOut(ACanvas: TCanvas; X, Y: Integer; const AText: string); // LEFT ALIGN TEXT
+    procedure MyLeftTextOut(ACanvas: TCanvas; X, Y: Integer; const AText: string; Vertical: Boolean = false); // LEFT ALIGN TEXT
 
     // Use HintColor:
     procedure MyLeftTextOutHint(ACanvas: TCanvas; X, Y: Integer; const AText: string);
@@ -808,6 +809,7 @@ type
     procedure GraphYAxis;
     procedure GraphYAxisDivisionMarkers;
     procedure GraphXAxisDivisionMarkers; // new.
+    function  CalcXAxisTextHeight: Integer;  // calculate height of x axis labels and title;
     procedure CalcYEnd; // Determine where the below-the bottom axis area starts
 
     function GetChartCanvas(isFloating:Boolean): TCanvas; // Get Picture.Bitmap Canvas.
@@ -986,6 +988,9 @@ const
   DEFAULT_MARKER_SIZE = 3;
   DEFAULT_VALUE_COUNT = 100;
   // By Default TJvChartData holds 100 values per pen. Grows autofragellisticexpialidociously. :-)
+
+  X_TITLE_LABEL_DISTANCE = 4;
+  TITLE_MARGIN = 4;
 
 // NEW 2007:
 
@@ -1868,7 +1873,6 @@ begin
   FLegendFont := TFont.Create;
   FAxisFont := TFont.Create;
   FAxisTitleFont := TFont.Create;
-  FAxisTitleFont.Orientation := 900;
 
   //FShowLegend := True;
   FMouseEdit := True;
@@ -3785,11 +3789,11 @@ begin { Enough local functions for ya? -WP }
   begin
     MyHeaderFont(ACanvas);
     // nOldY := Options.YStartOffset;
-    nMaxTextHeight := CanvasMaxTextHeight(ACanvas) + 8;
+    nMaxTextHeight := CanvasMaxTextHeight(ACanvas) + 2 * TITLE_MARGIN;
     // Bump bottom margins if the fonts don't fit!
-    if Options.YStartOffset < 2 * nMaxTextHeight then
+    if Options.YStartOffset < nMaxTextHeight then
     begin
-      Options.YStartOffset := nMaxTextHeight * 2;
+      Options.YStartOffset := nMaxTextHeight;
       //Options.YEnd := Options.YEnd + (nOldY - Options.YStartOffset);
       CalcYEnd;
       Options.PrimaryYAxis.Normalize;
@@ -3898,20 +3902,17 @@ end;
 
 procedure TJvChart.DrawChartLegendBelow(ACanvas: TCanvas); {accidentally deleted during Jedi_new to Jedi_2009 branch. Restored by WP June 2009}
 var
- I,Y,nTextHeight:Integer;
- BoxWidth:Integer;
- LLabel:String;
+  I,Y,nTextHeight:Integer;
+  BoxWidth:Integer;
+  LLabel:String;
 begin
+  if (Options.Legend <> clChartLegendBelow) then exit;
 
- if (Options.Legend <> clChartLegendBelow) then exit;
+  if (Options.YStartOffset<=0) or  (Options.XStartOffset<=0) then exit;
 
- if (Options.YStartOffset<=0) or  (Options.XStartOffset<=0) then exit;
-
- // space-saving pen-legend below chart
- MySmallGraphFont(ACanvas);
-
-    {10 % extra space for line height}
-    nTextHeight := Round(CanvasMaxTextHeight(ACanvas) * 1.01);
+  // space-saving pen-legend below chart
+  MySmallGraphFont(ACanvas);
+  nTextHeight := CanvasMaxTextHeight(ACanvas);
 
     //BoxHeight := nTextHeight - 2;
 
@@ -3922,7 +3923,7 @@ begin
         if Options.GetPenMarkerKind(I) = pmkNone then
           Continue; // Skip invisible pens.
 
-      Y := Options.YStartOffset + Options.YEnd + (nTextHeight div 2);
+      Y := Options.YStartOffset + Options.YEnd + X_TITLE_LABEL_DISTANCE; //(nTextHeight div 2);
 
       // If chart has X legends:
       if (Options.XLegends.Count > 0) or Options.XAxisDateTimeMode then
@@ -3944,7 +3945,7 @@ begin
           BoxWidth - 2, {width}
           nTextHeight - 2, {height}
           Options.FXLegendHoriz, {X=}
-          Y + 4); {Y=}
+          Y + 2); {Y=}
       end;
 
       //SetFontColor(ACanvas, jvChartAxisColorIndex); XXX
@@ -3997,6 +3998,8 @@ var
 
   { draw x axis text at various alignments:}
   function LeftXAxisText: Boolean;
+  var
+    Y: Integer;
   begin
     Result := True;
     // Don't exceed right margin - causes some undesirable clipping. removed. -wpostma.
@@ -4022,9 +4025,8 @@ var
     begin
       if Options.FXLegendHoriz < XOverlap then
         Exit; // would overlap, don't draw it.
-      MyLeftTextOut(ACanvas, Options.FXLegendHoriz,
-        {bottom:}FXAxisPosition + Options.AxisLineWidth {top: Round(YTempOrigin - Options.PrimaryYAxis.YPixelGap)},
-        Options.XLegends[I]);
+      Y := FXAxisPosition + Options.AxisLineWidth div 2;
+      MyLeftTextOut(ACanvas, Options.FXLegendHoriz, Y, Options.XLegends[I]);
       XOverlap := Options.FXLegendHoriz + ACanvas.TextWidth(Options.XLegends[I]);
     end
     else
@@ -4032,6 +4034,8 @@ var
   end;
 
   function RightXAxisText: Boolean;
+  var
+    Y: Integer;
   begin
     Result := True;
     // Label X axis above or below?
@@ -4039,17 +4043,18 @@ var
     begin
       if I < Options.XLegends.Count then // fix exception. June 23, 2004- WPostma.
         MyRightTextOut(ACanvas, Options.FXLegendHoriz, Options.YEnd + 3, Options.XLegends[I])
-    end
-    else
+    end else
     if I < Options.XLegends.Count then
-      MyRightTextOut(ACanvas, Options.FXLegendHoriz,
-        {bottom:}FXAxisPosition + Options.AxisLineWidth {top: Round(YTempOrigin - Options.PrimaryYAxis.YPixelGap)},
-        Options.XLegends[I])
-    else
+    begin
+      Y := FXAxisPosition + Options.AxisLineWidth div 2;
+      MyRightTextOut(ACanvas, Options.FXLegendHoriz, Y, Options.XLegends[I]);
+    end else
       Result := False;
   end;
 
   function CenterXAxisText: Boolean;
+  var
+    Y: Integer;
   begin
     Result := True;
     // Label X axis above or below?
@@ -4060,16 +4065,17 @@ var
     end
     else
     if I < Options.XLegends.Count then
-      MyCenterTextOut(ACanvas, Options.FXLegendHoriz,
-        {bottom:}FXAxisPosition + Options.AxisLineWidth {top: Round(YTempOrigin - Options.PrimaryYAxis.YPixelGap)},
-        Options.XLegends[I])
-    else
+    begin
+      Y := FXAxisPosition + Options.AxisLineWidth div 2;
+      MyCenterTextOut(ACanvas, Options.FXLegendHoriz, Y, Options.XLegends[I]);
+    end else
       Result := False;
   end;
 
   procedure XAxisDateTimeModeLabels1; // Classic mode [REFACTORED 2007]
   var
     L: Integer;
+    Y: Integer;
   begin
     // classic JvChart XAxisDateTime mode labels painting code.
 
@@ -4095,10 +4101,8 @@ var
       // Check if writing this label would collide with previous label, if not, plot it
       if (Options.FXLegendHoriz - (ACanvas.TextWidth(TimestampStr) div 2)) > XOverlap then
       begin
-        MyCenterTextOut(ACanvas, Options.FXLegendHoriz,
-          {bottom:}FXAxisPosition + Options.AxisLineWidth
-          {top: Round(YTempOrigin - Options.PrimaryYAxis.YPixelGap)},
-          TimestampStr);
+        Y := FXAxisPosition + Options.AxisLineWidth div 2;
+        MyCenterTextOut(ACanvas, Options.FXLegendHoriz, Y, TimeStampStr);
 
         // draw a ticky-boo (technical term used by scientists the world over)
         // so that we can see where on the chart the X axis datetime is pointing to.
@@ -4119,7 +4123,7 @@ var
   procedure XAxisDateTimeModeLabels2; // [NEW 2007]
   var
     L: Integer;
-    X: Integer;
+    X, Y: Integer;
     DivPixels: Integer;
     TextWidth: Integer;
     Modn: Integer;
@@ -4158,9 +4162,8 @@ var
       if X = Options.XStartOffset then
         Continue; // don't draw dotted line right at X Axis.
 
-      MyCenterTextOut(ACanvas, X,
-        {bottom:}FXAxisPosition + Options.AxisLineWidth,
-        TimestampStr);
+      Y := FXAxisPosition + Options.AxisLineWidth div 2;
+      MyCenterTextOut(ACanvas, X, Y, TimeStampStr);
 
       ACanvas.Pen.Color := Options.GetPenColor(jvChartDivisionLineColorIndex);
       MyDrawDotLine(ACanvas, X, Options.YStartOffset + 1, X, FXAxisPosition - 1);
@@ -4169,8 +4172,8 @@ var
 
   procedure DefaultXAxisLegendMode;
   var
-   count:Integer;
-   K:Integer;
+    count: Integer;
+    K: Integer;
   begin
       {default X axis legend mode: use text legends}
     if Options.FXAxisLegendSkipBy < 1 then
@@ -4185,12 +4188,9 @@ var
       Options.FXLegendHoriz := Round(Options.XStartOffset + Options.XPixelGap * I );
 
       case Options.FXAxisLabelAlignment of
-           taLeftJustify:
-                if not leftXAxisText then break;
-           taRightJustify:
-                if not rightXAxisText then break;
-           taCenter:
-                if not centerXAxisText then break;
+        taLeftJustify: if not leftXAxisText then break;
+        taRightJustify: if not rightXAxisText then break;
+        taCenter: if not centerXAxisText then break;
       end;
     end; {for K}
   end; {default mode}
@@ -4457,6 +4457,27 @@ begin
     Result := Self.Height;
 end;
 
+function TJvChart.CalcXAxisTextHeight: Integer;
+var
+  lCanvas: TCanvas;
+begin
+  lCanvas := GetChartCanvas(false);
+
+  Result := TITLE_MARGIN;
+
+  if FOptions.XLegends.Count > 0 then
+  begin
+    MyAxisFont(lCanvas);
+    Result := Result + lCanvas.TextHeight('Tg')
+  end;
+
+  if FOptions.XAxisHeader <> '' then
+  begin
+    MyAxisTitleFont(lCanvas, false);
+    Result := Result + lCanvas.TextHeight('Tg') + X_TITLE_LABEL_DISTANCE;
+  end;
+end;
+
 procedure TJvChart.CalcYEnd;
 var
   aHeight: Integer;
@@ -4468,7 +4489,8 @@ begin
     aHeight := FBitmap.Height;
   end;
 
-  Options.YEnd := aHeight - 2 * Options.YStartOffset; {canvas size, excluding margin}
+//  Options.YEnd := aHeight - 2 * Options.YStartOffset; {canvas size, excluding margin}
+  Options.YEnd := aHeight - Options.YStartOffset - CalcXAxisTextHeight;
 end;
 
 
@@ -4588,9 +4610,11 @@ begin
   if StrText = '' then
     exit;
 
-  H := ACanvas.TextHeight(StrText);
   MyAxisFont(ACanvas);
-  Y := Options.YStartOffset + Options.YEnd + Round(1.6 * H);
+  H := ACanvas.TextHeight(StrText);  // Height of labels
+
+  MyAxisTitleFont(ACanvas, false);
+  Y := Options.YStartOffset + Options.YEnd + H + X_TITLE_LABEL_DISTANCE;
   if Options.Legend = clChartLegendBelow then
   begin
     { left aligned X Axis Title, right after the legend itself}
@@ -4611,17 +4635,19 @@ var
 begin
   if Length(StrText) = 0 then
     Exit;
+
   ACanvas.Brush.Color := Color;
-  ACanvas.Font.Assign(FOptions.AxisTitleFont);
+  MyAxisTitleFont(ACanvas, true);
+
   if Options.XStartOffset > 10 then
   begin
     WD := ACanvas.TextWidth(StrText);
     //Vert := Options.YStartOffset + WD; // top-aligned
     Vert := Max(0, Options.YStartOffset + (Options.YEnd + WD) div 2);     // centered
     Horiz := 2;
-    MyLeftTextOut(ACanvas, Horiz, Vert, StrText);
+    MyLeftTextOut(ACanvas, Horiz, Vert, StrText, true);
   end;
-  MyAxisFont(ACanvas);
+//  MyAxisFont(ACanvas);
 end;
 
 
@@ -5427,7 +5453,7 @@ begin
   MyHeaderFont(ACanvas);
   MyCenterTextOut(ACanvas,
     (Options.XStartOffset + Round(Options.XEnd)) div 2,
-    (Options.YStartOffset - MyTextHeight(ACanvas, StrText)) div 2,
+    TITLE_MARGIN,
     StrText
   );
   MyAxisFont(ACanvas);
@@ -5447,6 +5473,19 @@ begin
   Assert(Assigned(Options));
   ACanvas.Brush.Color := Options.PaperColor; // was hard coded to clWhite.
   ACanvas.Font.Assign(Options.AxisFont);
+end;
+
+procedure TJvChart.MyAxisTitleFont(ACanvas: TCanvas; Vertical: Boolean);
+const
+  ORIENTATION: Array[boolean] of Integer = (0, 900);
+begin
+  Assert(Assigned(ACanvas));
+  Assert(Assigned(ACanvas.Brush));
+  Assert(Assigned(ACanvas.Font));
+  Assert(Assigned(Options));
+  ACanvas.Brush.Color := Options.PaperColor; // was hard coded to clWhite.
+  ACanvas.Font.Assign(Options.AxisTitleFont);
+  ACanvas.Font.Orientation := ORIENTATION[Vertical];
 end;
 
 
@@ -5498,11 +5537,20 @@ end;
 
 { Text Left Aligned to X,Y boundary }
 
-procedure TJvChart.MyLeftTextOut(ACanvas: TCanvas; X, Y: Integer; const AText: string);
+procedure TJvChart.MyLeftTextOut(ACanvas: TCanvas; X, Y: Integer;
+  const AText: string; Vertical: Boolean = false);
 begin
   Assert(Assigned(ACanvas));
   Assert(Assigned(ACanvas.Brush));
   ACanvas.Brush.Color := Options.PaperColor; // non default paper color.
+  {$IFDEF TEXT_BOX}
+  ACanvas.Brush.Style := bsSolid;
+  if Vertical then
+    ACanvas.Rectangle(X, Y, X + ACanvas.TextHeight(AText), Y - ACanvas.TextWidth(AText))
+  else
+    ACanvas.Rectangle(X, Y, X + ACanvas.TextWidth(AText), Y + ACanvas.TextHeight(AText));
+  ACanvas.Brush.Style := bsClear;
+  {$ENDIF}
   ACanvas.TextOut(X, Y + 1, AText);
 end;
 
@@ -5511,6 +5559,11 @@ begin
   Assert(Assigned(ACanvas));
   Assert(Assigned(ACanvas.Brush));
   ACanvas.Brush.Color := Options.HintColor;
+  {$IFDEF TEXT_BOX}
+  ACanvas.Brush.Style := bsSolid;
+  ACanvas.Rectangle(X, Y, X + ACanvas.TextWidth(AText), Y + ACanvas.TextHeight(AText));
+  ACanvas.Brush.Style := bsClear;
+  {$ENDIF}
   ACanvas.TextOut(X, Y + 1, AText);
 end;
 
@@ -5519,7 +5572,14 @@ begin
   Assert(Assigned(ACanvas));
   Assert(Assigned(ACanvas.Brush));
   ACanvas.Brush.Color := Options.PaperColor; // non default paper color.
-  ACanvas.TextOut(X - Round(ACanvas.TextWidth(AText) / 2), Y + 1, AText);
+  X := X - ACanvas.TextWidth(AText) div 2;
+  Y := Y + 1;
+  {$IFDEF TEXT_BOX}
+  ACanvas.Brush.Style := bsSolid;
+  ACanvas.Rectangle(X, Y, X + ACanvas.TextWidth(AText), Y + ACanvas.TextHeight(AText));
+  ACanvas.Brush.Style := bsClear;
+  {$ENDIF}
+  ACanvas.TextOut(X, Y, AText);
 end;
 
 procedure TJvChart.MyRightTextOut(ACanvas: TCanvas; X, Y: Integer; const AText: string);
@@ -5527,11 +5587,14 @@ begin
   Assert(Assigned(ACanvas));
   Assert(Assigned(ACanvas.Brush));
   ACanvas.Brush.Color := Options.PaperColor; // non default paper color.
-  ACanvas.TextOut(
-    X - ACanvas.TextWidth(AText),
-    Y - Round(ACanvas.TextHeight(AText) / 2),
-    AText
-  );
+  X := X - ACanvas.TextWidth(AText);
+  Y := Y - ACanvas.TextHeight(AText) div 2;
+  {$IFDEF TEXT_BOX}
+  ACanvas.Brush.Style := bsSolid;
+  ACanvas.Rectangle(X, Y, X + ACanvas.TextWidth(AText), Y + ACanvas.TextHeight(AText));
+  ACanvas.Brush.Style := bsClear;
+  {$ENDIF}
+  ACanvas.TextOut(X, Y, AText);
 end;
 
 procedure TJvChart.MyRectangle(ACanvas: TCanvas; X, Y, X2, Y2: Integer);

@@ -29,10 +29,8 @@ object JvChartDemoForm: TJvChartDemoForm
     Options.XOrigin = 0
     Options.YOrigin = 0
     Options.XStartOffset = 60
-    Options.YStartOffset = 42
     Options.PrimaryYAxis.YMax = 20
     Options.PrimaryYAxis.YMin = 0
-    Options.PrimaryYAxis.YDivisions = 20
     Options.PrimaryYAxis.YLegendDecimalPlaces = 1
     Options.SecondaryYAxis.YMax = 140
     Options.SecondaryYAxis.YMin = 0
@@ -41,8 +39,6 @@ object JvChartDemoForm: TJvChartDemoForm
     Options.MouseDragObjects = False
     Options.Legend = clChartLegendBelow
     Options.LegendRowCount = 1
-    Options.PenLineWidth = 2
-    Options.AxisLineWidth = 3
     Options.XValueCount = 20
     Options.HeaderFont.Color = clWindowText
     Options.LegendFont.Color = clWindowText
@@ -50,8 +46,6 @@ object JvChartDemoForm: TJvChartDemoForm
     Options.AxisTitleFont.Height = -16
     Options.AxisTitleFont.Orientation = 900
     Options.AxisTitleFont.Style = [fsBold]
-    Options.PaperColor = clWhite
-    Options.AxisLineColor = clBlack
     Options.CursorColor = clBlack
     Options.CursorStyle = psDot
     OnBeginFloatingMarkerDrag = ChartBeginFloatingMarkerDrag
@@ -578,9 +572,9 @@ object JvChartDemoForm: TJvChartDemoForm
         Caption = 'Use Positive and Negative Demo Values (-20..+20)'
         OnClick = MenuNegValueTestClick
       end
-      object MenuSecondaryAxisMode: TMenuItem
+      object mnuSecondaryAxisMode: TMenuItem
         Caption = '&Plot Markers+Values using Alternate Scale (0-120%)'
-        OnClick = MenuSecondaryAxisModeClick
+        OnClick = mnuSecondaryAxisModeClick
       end
       object N4: TMenuItem
         Caption = '-'
