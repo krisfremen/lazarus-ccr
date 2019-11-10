@@ -103,8 +103,6 @@ unit JvChart;
 interface
 
 uses
-  {
-  Windows, Messages, }
   LCLType, LCLIntf,
   Classes, Types, Graphics, Controls, Contnrs,
   JvComponent;
@@ -115,7 +113,7 @@ const
   JvDefaultHintColor = TColor($00DDFBFA);
   JvDefaultAvgLineColor = TColor($00EEDDDD);
   JvDefaultDivisionLineColor = clLtGray; //NEW!
-  JvDefaultShadowColor = clLtGray; //NEW!
+  JvDefaultShadowColor = clDkGray; //NEW!
   JvDefaultPaperColor = clWhite;
 
   JvDefaultYLegends = 20;
@@ -4587,6 +4585,9 @@ procedure TJvChart.MyXHeader(ACanvas: TCanvas; StrText: string);
 var
   X, Y, H: Integer;
 begin
+  if StrText = '' then
+    exit;
+
   H := ACanvas.TextHeight(StrText);
   MyAxisFont(ACanvas);
   Y := Options.YStartOffset + Options.YEnd + Round(1.6 * H);
@@ -4598,6 +4599,7 @@ begin
   end
   else
   begin
+    { center title within range covered by x axis }
     X := (Options.XStartOffset + Options.XEnd) div 2;
     MyCenterTextOut(ACanvas, X, Y, StrText);
   end;
@@ -4605,28 +4607,21 @@ end;
 
 procedure TJvChart.MyYHeader(ACanvas: TCanvas; StrText: string);
 var
-  {ht,}                     // not used (ahuser)
   WD, Vert, Horiz: Integer;
 begin
   if Length(StrText) = 0 then
     Exit;
   ACanvas.Brush.Color := Color;
-  { !!warning: uses Win32 only font-handle stuff!!}
   ACanvas.Font.Assign(FOptions.AxisTitleFont);
-//  MyGraphVertFont(ACanvas); // Select Vertical Font Output.
   if Options.XStartOffset > 10 then
   begin
-    {ht := MyTextHeight(StrText); }// not used (ahuser)
     WD := ACanvas.TextWidth(StrText);
     //Vert := Options.YStartOffset + WD; // top-aligned
     Vert := Max(0, Options.YStartOffset + (Options.YEnd + WD) div 2);     // centered
     Horiz := 2;
-    // NOTE: Because of the logical font selected, this time TextOut goes vertical.
-    // If this doesn't go vertical, it may be because the font selection above failed.
     MyLeftTextOut(ACanvas, Horiz, Vert, StrText);
   end;
   MyAxisFont(ACanvas);
-  //   Self.MyLeftTextOut(Horiz, Vert+50, '*');
 end;
 
 

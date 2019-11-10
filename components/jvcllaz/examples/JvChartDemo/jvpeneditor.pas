@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Spin, ButtonPanel,Contnrs,
-  JvChart, Types;
+  ButtonPanel, Contnrs, Types,
+  JvChart;
 
 type
   TPenObj = class
@@ -236,6 +236,7 @@ begin
   end;
 
   // Text
+  lbPens.Canvas.Brush.Style := bsClear;
   lbPens.Canvas.TextOut(R.Right + 2, (R.Top + R.Bottom - lbPens.Canvas.TextHeight('Rg')) div 2, pen.Legend);
 
   // Focus rect

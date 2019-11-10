@@ -8,6 +8,7 @@ object PenEditorForm: TPenEditorForm
   ClientWidth = 505
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  Position = poScreenCenter
   LCLVersion = '2.1.0.0'
   object btnPenColor: TButton
     Left = 232

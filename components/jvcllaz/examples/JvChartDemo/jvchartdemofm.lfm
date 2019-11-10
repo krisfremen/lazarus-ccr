@@ -569,9 +569,9 @@ object JvChartDemoForm: TJvChartDemoForm
         ShortCut = 16455
         OnClick = ShowgapinLineChart1Click
       end
-      object DateTimeAxisMode: TMenuItem
+      object mnuDateTimeAxisMode: TMenuItem
         Caption = 'Date/Time Axis Mode'
-        OnClick = DateTimeAxisModeClick
+        OnClick = mnuDateTimeAxisModeClick
       end
       object MenuNegValueTest: TMenuItem
         AutoCheck = True
