@@ -132,7 +132,7 @@ const
 
   /// <summary>Pane padding?</summary>
   TOOLBAR_BORDER_WIDTH = 1;
-  TOOLBAR_CORNER_RADIUS = 3;
+  TOOLBAR_CORNER_RADIUS = 0;  //was: 3;
   /// <summary>Tab caption height</summary>
   TOOLBAR_TAB_CAPTIONS_HEIGHT = 22;
   /// <summary>Tab caption horizontal padding</summary>
