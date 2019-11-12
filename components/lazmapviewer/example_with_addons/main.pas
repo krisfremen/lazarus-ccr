@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, Types, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, Buttons, IntfGraphics, ColorBox,
-  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine;
+  mvGeoNames, mvMapViewer, mvTypes, mvGpsObj, mvDrawingEngine,
+  mvDE_RGBGraphics, mvDE_BGRA;
 
 type
 
@@ -29,6 +30,7 @@ type
     CbMouseCoords: TGroupBox;
     CbDistanceUnits: TComboBox;
     CbDebugTiles: TCheckBox;
+    CbDrawingEngine: TComboBox;
     CbShowPOIImage: TCheckBox;
     cbPOITextBgColor: TColorBox;
     FontDialog: TFontDialog;
@@ -42,6 +44,7 @@ type
     InfoBtnGPSPoints: TLabel;
     GPSPointInfo: TLabel;
     InfoViewportWidth: TLabel;
+    Label1: TLabel;
     LblPOITextBgColor: TLabel;
     LblSelectLocation: TLabel;
     LblCenterLatitude: TLabel;
@@ -70,6 +73,7 @@ type
     procedure BtnSaveToFileClick(Sender: TObject);
     procedure BtnPOITextFontClick(Sender: TObject);
     procedure CbDebugTilesChange(Sender: TObject);
+    procedure CbDrawingEngineChange(Sender: TObject);
     procedure CbDoubleBufferChange(Sender: TObject);
     procedure CbFoundLocationsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
@@ -96,6 +100,8 @@ type
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
+    FRGBGraphicsDrawingEngine: TMvRGBGraphicsDrawingEngine;
+    FBGRADrawingEngine: TMvBGRADrawingEngine;
     POIImage: TCustomBitmap;
     procedure ClearFoundLocations;
     procedure UpdateCoords(X, Y: Integer);
@@ -244,6 +250,23 @@ end;
 procedure TMainForm.CbDebugTilesChange(Sender: TObject);
 begin
   MapView.DebugTiles := CbDebugTiles.Checked;
+end;
+
+procedure TMainForm.CbDrawingEngineChange(Sender: TObject);
+begin
+  case CbDrawingEngine.ItemIndex of
+    0: MapView.DrawingEngine := nil;
+    1: begin
+         if FRGBGraphicsDrawingEngine = nil then
+           FRGBGraphicsDrawingEngine := TMvRGBGraphicsDrawingEngine.Create(self);
+         MapView.DrawingEngine := FRGBGraphicsDrawingEngine;
+       end;
+    2: begin
+         if FBGRADrawingEngine = nil then
+           FBGRADrawingEngine := TMvBGRADrawingEngine.Create(self);
+         MapView.DrawingEngine := FBGRADrawingEngine;
+       end;
+  end;
 end;
 
 procedure TMainForm.CbDoubleBufferChange(Sender: TObject);
