@@ -15,6 +15,7 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    lblTabCornerRadius: TLabel;
     SmallImages: TImageList;
     LargeImages: TImageList;
     Images_150: TImageList;
@@ -26,6 +27,7 @@ type
     ItemHSpacer: TBevel;
     edPaneHotTrackBrightnessChange: TSpinEdit;
     edItemHotTrackBrightnessChange: TSpinEdit;
+    edTabCornerRadius: TSpinEdit;
     TabVSpacer: TBevel;
     bInactiveTabHeaderFontColor: TSpeedButton;
     bItemActiveInnerDarkColor: TSpeedButton;
@@ -103,7 +105,7 @@ type
     pTabGradientTo: TPanel;
     cbTabGradientKind: TComboBox;
     Label5: TLabel;
-    Label6: TLabel;
+    lblTabHeaderFont: TLabel;
     pTabHeaderFont: TPanel;
     Label8: TLabel;
     pPaneBorderDark: TPanel;
@@ -222,6 +224,7 @@ type
 
     procedure edItemHotTrackBrightnessChangeChange(Sender: TObject);
     procedure edPaneHotTrackBrightnessChangeChange(Sender: TObject);
+    procedure edTabCornerRadiusChange(Sender: TObject);
 
     procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -842,6 +845,13 @@ begin
   tbPreview.Invalidate;
 end;
 
+procedure TfrmAppearanceEditWindow.edTabCornerRadiusChange(Sender: TObject);
+begin
+  with tbPreview.Appearance.Tab do
+    CornerRadius := (Sender as TSpinEdit).Value;
+  tbPreview.Invalidate;
+end;
+
 procedure TfrmAppearanceEditWindow.FormActivate(Sender: TObject);
 begin
   UpdateImages;
@@ -888,6 +898,7 @@ begin
       SetPanelFont(pTabHeaderFont, TabHeaderFont);
       SetPanelColor(pActiveTabHeaderFont, TabHeaderFont.Color);
       SetPanelColor(pInactiveTabHeaderFont, InactiveTabHeaderFontColor);
+      edTabCornerRadius.Value := CornerRadius;
     end;
 
     with Pane do

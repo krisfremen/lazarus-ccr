@@ -1340,7 +1340,7 @@ procedure TSpkToolbar.ValidateBuffer;
                           {$ELSE}
       Create2DIntRect(0, ToolbarTabCaptionsHeight, self.Width - 1, self.Height - 1),
                           {$ENDIF}
-      ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius,
       FocusedAppearance.Tab.GradientFromColor,
       FocusedAppearance.Tab.GradientToColor,
       FocusedAppearance.Tab.GradientType);
@@ -1351,57 +1351,57 @@ procedure TSpkToolbar.ValidateBuffer;
                               {$ELSE}
       Create2DIntPoint(0, ToolbarTabCaptionsHeight),
                               {$ENDIF}
-      ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius,
       cpLeftTop,
       FocusedAppearance.Tab.BorderColor);
 
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(self.Width - ToolbarCornerRadius, ToolbarTabCaptionsHeight),
+      T2DIntPoint.Create(self.Width - FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight),
                               {$ELSE}
-      Create2DIntPoint(self.Width - ToolbarCornerRadius, ToolbarTabCaptionsHeight),
+      Create2DIntPoint(self.Width - FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight),
                               {$ENDIF}
-      ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius,
       cpRightTop,
       FocusedAppearance.Tab.BorderColor);
 
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(0, self.Height - ToolbarCornerRadius),
+      T2DIntPoint.Create(0, self.Height - FocusedAppearance.Tab.CornerRadius),
                               {$ELSE}
-      Create2DIntPoint(0, self.Height - ToolbarCornerRadius),
+      Create2DIntPoint(0, self.Height - FocusedAppearance.Tab.CornerRadius),
                               {$ENDIF}
-      ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius,
       cpLeftBottom,
       FocusedAppearance.Tab.BorderColor);
 
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(self.Width - ToolbarCornerRadius, self.Height - ToolbarCornerRadius),
+      T2DIntPoint.Create(self.Width - FocusedAppearance.Tab.CornerRadius, self.Height - FocusedAppearance.Tab.CornerRadius),
                               {$ELSE}
-      Create2DIntPoint(self.Width - ToolbarCornerRadius, self.Height - ToolbarCornerRadius),
+      Create2DIntPoint(self.Width - FocusedAppearance.Tab.CornerRadius, self.Height - FocusedAppearance.Tab.CornerRadius),
                               {$ENDIF}
-      ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius,
       cpRightBottom,
       FocusedAppearance.Tab.BorderColor);
 
     TGuiTools.DrawVLine(FBuffer, 0, ToolbarTabCaptionsHeight +
-      ToolbarCornerRadius, self.Height - ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius, self.Height - FocusedAppearance.Tab.CornerRadius,
       FocusedAppearance.Tab.BorderColor);
 
-    TGuiTools.DrawHLine(FBuffer, ToolbarCornerRadius, self.Width - ToolbarCornerRadius,
+    TGuiTools.DrawHLine(FBuffer, FocusedAppearance.Tab.CornerRadius, self.Width - FocusedAppearance.Tab.CornerRadius,
       self.Height - 1, FocusedAppearance.Tab.BorderColor);
 
     TGuiTools.DrawVLine(FBuffer, self.Width - 1, ToolbarTabCaptionsHeight +
-      ToolbarCornerRadius, self.Height - ToolbarCornerRadius,
+      FocusedAppearance.Tab.CornerRadius, self.Height - FocusedAppearance.Tab.CornerRadius,
       FocusedAppearance.Tab.BorderColor);
 
     if not (AtLeastOneTabVisible) then
     begin
 
       //If there are no tabs then the horizontal line will be drawn
-      TGuiTools.DrawHLine(FBuffer, ToolbarCornerRadius, self.Width -
-        ToolbarCornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
+      TGuiTools.DrawHLine(FBuffer, FocusedAppearance.Tab.CornerRadius, self.Width -
+        FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
     end
     else
     begin
@@ -1412,9 +1412,9 @@ procedure TSpkToolbar.ValidateBuffer;
         Dec(i);
 
       //Only right part, the rest will be drawn with tabs
-      if FTabRects[i].Right < self.Width - ToolbarCornerRadius - 1 then
+      if FTabRects[i].Right < self.Width - FocusedAppearance.Tab.CornerRadius - 1 then
         TGuiTools.DrawHLine(FBuffer, FTabRects[i].Right + 1, self.Width -
-          ToolbarCornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
+          FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
     end;
   end;
 
@@ -1451,7 +1451,7 @@ procedure TSpkToolbar.ValidateBuffer;
     end;
 
     procedure DrawTab(index: integer;
-      Border, GradientFrom, GradientTo: TColor);
+      Border, GradientFrom, GradientTo: TColor; ATabCornerRadius: Integer);
     var
       TabRect: T2DIntRect;
       TabRegion: HRGN;
@@ -1463,36 +1463,36 @@ procedure TSpkToolbar.ValidateBuffer;
 
       //Middle rectangle
       TabRegion := CreateRectRgn(
-        TabRect.Left + TabCornerRadius - 1,
-        TabRect.Top + TabCornerRadius,
-        TabRect.Right - TabCornerRadius + 1 + 1,
+        TabRect.Left + ATabCornerRadius - 1,
+        TabRect.Top + ATabCornerRadius,
+        TabRect.Right - ATabCornerRadius + 1 + 1,
         TabRect.Bottom + 1
       );
 
       //Top part with top convex curves
       TmpRegion := CreateRectRgn(
-        TabRect.Left + 2 * TabCornerRadius - 1,
+        TabRect.Left + 2 * ATabCornerRadius - 1,
         TabRect.Top,
-        TabRect.Right - 2 * TabCornerRadius + 1 + 1,
-        TabRect.Top + TabCornerRadius
+        TabRect.Right - 2 * ATabCornerRadius + 1 + 1,
+        TabRect.Top + ATabCornerRadius
       );
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
       TmpRegion := CreateEllipticRgn(
-        TabRect.Left + TabCornerRadius - 1,
+        TabRect.Left + ATabCornerRadius - 1,
         TabRect.Top,
-        TabRect.Left + 3 * TabCornerRadius,
-        TabRect.Top + 2 * TabCornerRadius + 1
+        TabRect.Left + 3 * ATabCornerRadius,
+        TabRect.Top + 2 * ATabCornerRadius + 1
       );
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
       TmpRegion := CreateEllipticRgn(
-        TabRect.Right - 3 * TabCornerRadius + 2,
+        TabRect.Right - 3 * ATabCornerRadius + 2,
         TabRect.Top,
-        TabRect.Right - TabCornerRadius + 3,
-        TabRect.Top + 2 * TabCornerRadius + 1
+        TabRect.Right - ATabCornerRadius + 3,
+        TabRect.Top + 2 * ATabCornerRadius + 1
       );
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
@@ -1500,24 +1500,24 @@ procedure TSpkToolbar.ValidateBuffer;
       //Bottom part with bottom convex curves
       TmpRegion := CreateRectRgn(
         TabRect.Left,
-        TabRect.Bottom - TabCornerRadius,
+        TabRect.Bottom - ATabCornerRadius,
         TabRect.Right + 1,
         TabRect.Bottom + 1
       );
 
       TmpRegion2 := CreateEllipticRgn(
-        TabRect.Left - TabCornerRadius,
-        TabRect.Bottom - 2 * TabCornerRadius + 1,
-        TabRect.Left + TabCornerRadius + 1,
+        TabRect.Left - ATabCornerRadius,
+        TabRect.Bottom - 2 * ATabCornerRadius + 1,
+        TabRect.Left + ATabCornerRadius + 1,
         TabRect.Bottom + 2
       );
       CombineRgn(TmpRegion, TmpRegion, TmpRegion2, RGN_DIFF);
       DeleteObject(TmpRegion2);
 
       TmpRegion2 := CreateEllipticRgn(
-        TabRect.Right - TabCornerRadius + 1,
-        TabRect.Bottom - 2 * TabCornerRadius + 1,
-        TabRect.Right + TabCornerRadius + 2,
+        TabRect.Right - ATabCornerRadius + 1,
+        TabRect.Bottom - 2 * ATabCornerRadius + 1,
+        TabRect.Right + ATabCornerRadius + 2,
         TabRect.Bottom + 2
       );
       CombineRgn(TmpRegion, TmpRegion, TmpRegion2, RGN_DIFF);
@@ -1538,20 +1538,20 @@ procedure TSpkToolbar.ValidateBuffer;
       // Frame
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.left, TabRect.bottom - TabCornerRadius + 1),
+        T2DIntPoint.Create(TabRect.left, TabRect.bottom - ATabCornerRadius + 1),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.left, TabRect.bottom - TabCornerRadius + 1),
+        Create2DIntPoint(TabRect.left, TabRect.bottom - ATabCornerRadius + 1),
                                 {$ENDIF}
-        TabCornerRadius,
+        ATabCornerRadius,
         cpRightBottom,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.right - TabCornerRadius + 1, TabRect.bottom - TabCornerRadius + 1),
+        T2DIntPoint.Create(TabRect.right - ATabCornerRadius + 1, TabRect.bottom - ATabCornerRadius + 1),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.right - TabCornerRadius + 1, TabRect.bottom - TabCornerRadius + 1),
+        Create2DIntPoint(TabRect.right - ATabCornerRadius + 1, TabRect.bottom - ATabCornerRadius + 1),
                                 {$ENDIF}
         TabCornerRadius,
         cpLeftBottom,
@@ -1559,44 +1559,44 @@ procedure TSpkToolbar.ValidateBuffer;
         FTabClipRect);
 
       TGuiTools.DrawVLine(FBuffer,
-        TabRect.left + TabCornerRadius - 1,
-        TabRect.top + TabCornerRadius,
-        TabRect.Bottom - TabCornerRadius + 1,
+        TabRect.left + ATabCornerRadius - 1,
+        TabRect.top + ATabCornerRadius,
+        TabRect.Bottom - ATabCornerRadius + 1,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawVLine(FBuffer,
-        TabRect.Right - TabCornerRadius + 1,
-        TabRect.top + TabCornerRadius,
-        TabRect.Bottom - TabCornerRadius + 1,
+        TabRect.Right - ATabCornerRadius + 1,
+        TabRect.top + ATabCornerRadius,
+        TabRect.Bottom - ATabCornerRadius + 1,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.Left + TabCornerRadius - 1, 0),
+        T2DIntPoint.Create(TabRect.Left + ATabCornerRadius - 1, 0),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.Left + TabCornerRadius - 1, 0),
+        Create2DIntPoint(TabRect.Left + ATabCornerRadius - 1, 0),
                                 {$ENDIF}
-        TabCornerRadius,
+        ATabCornerRadius,
         cpLeftTop,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.Right - 2 * TabCornerRadius + 2, 0),
+        T2DIntPoint.Create(TabRect.Right - 2 * ATabCornerRadius + 2, 0),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.Right - 2 * TabCornerRadius + 2, 0),
+        Create2DIntPoint(TabRect.Right - 2 * ATabCornerRadius + 2, 0),
                                 {$ENDIF}
-        TabCornerRadius,
+        ATabCornerRadius,
         cpRightTop,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawHLine(FBuffer,
-        TabRect.Left + 2 * TabCornerRadius - 1,
-        TabRect.Right - 2 * TabCornerRadius + 2,
+        TabRect.Left + 2 * ATabCornerRadius - 1,
+        TabRect.Right - 2 * ATabCornerRadius + 2,
         0,
         Border,
         FTabClipRect);
@@ -1659,7 +1659,8 @@ procedure TSpkToolbar.ValidateBuffer;
                 CurrentAppearance.Tab.BorderColor,
                 TColorTools.Brighten(TColorTools.Brighten(
                   CurrentAppearance.Tab.GradientFromColor, delta), delta),
-                CurrentAppearance.Tab.GradientFromColor);
+                CurrentAppearance.Tab.GradientFromColor,
+                CurrentAppearance.Tab.CornerRadius);
             end
             else
             begin
@@ -1667,7 +1668,8 @@ procedure TSpkToolbar.ValidateBuffer;
                 CurrentAppearance.Tab.BorderColor,
                 TColorTools.Brighten(
                   CurrentAppearance.Tab.GradientFromColor, delta),
-                CurrentAppearance.Tab.GradientFromColor);
+                CurrentAppearance.Tab.GradientFromColor,
+                CurrentAppearance.Tab.CornerRadius);
             end;
 
             DrawTabText(i, CurrentAppearance.Tab.TabHeaderFont);
@@ -1682,7 +1684,8 @@ procedure TSpkToolbar.ValidateBuffer;
                 TColorTools.Shade(self.color,
                   TColorTools.Brighten(CurrentAppearance.Tab.GradientFromColor, delta), 50),
                 TColorTools.Shade(
-                  self.color, CurrentAppearance.Tab.GradientFromColor, 50) );
+                  self.color, CurrentAppearance.Tab.GradientFromColor, 50),
+                CurrentAppearance.Tab.CornerRadius);
             end;
 
             // Bottom line
@@ -1778,7 +1781,7 @@ begin
         FBuffer.Canvas.Font.Assign(TabAppearance.Tab.TabHeaderFont);
 
         TabWidth := 2 +  // Frame
-          2 * TabCornerRadius +
+          2 * TabAppearance.Tab.CornerRadius +
           // Curves
           2 * ToolbarTabCaptionsTextHPadding +
           // Internal margins
