@@ -191,7 +191,7 @@ type
     property ShadowColor: TColor read FShadowColor write FShadowColor;
     property ShowShadow: Boolean read FShowShadow write FShowShadow;
     property Size: TPercent read FPercent write SetPercent;
-    property Sorted: Boolean read FSorted write SetSorted;
+    property Sorted: Boolean read FSorted write SetSorted default true;
     property ThumbBevelInner: TPanelBevel
       read FThumbBevelInner write SetThumbBevelInner default bvNone;
     property ThumbBevelOuter: TPanelBevel
@@ -323,6 +323,12 @@ begin
   Thb.OnDblClick := OnDblClick;
   Thb.Photo.OnDblClick := OnDblClick;
   Thb.MinimizeMemory := MinMemory;
+  Thb.BevelInner := ThumbBevelInner;
+  Thb.BevelOuter := ThumbBevelouter;
+  Thb.BorderStyle := ThumbBorderStyle;
+  Thb.TitleBevelOuter := ThumbTitleBevelOuter;
+  Thb.TitleBevelInner := ThumbTitleBevelInner;
+  Thb.TitleBorderStyle := ThumbTitleBorderStyle;
   if FThumbColor = clDefault then
   begin
     Thb.Color := Self.Color;
@@ -363,8 +369,15 @@ begin
   Thb.OnClick := OnClick;
   Thb.Photo.OnClick := OnClick;
   Thb.OnDblClick := OnDblClick;
+  Thb.MinimizeMemory := MinMemory;
   Thb.Title := aTitle;
   Thb.Photo.OnDblClick := OnDblClick;
+  Thb.BevelInner := ThumbBevelInner;
+  Thb.BevelOuter := ThumbBevelouter;
+  Thb.BorderStyle := ThumbBorderStyle;
+  Thb.TitleBevelOuter := ThumbTitleBevelOuter;
+  Thb.TitleBevelInner := ThumbTitleBevelInner;
+  Thb.TitleBorderStyle := ThumbTitleBorderStyle;
   if FThumbColor = clDefault then
   begin
     Thb.Color := Self.Color;
@@ -403,6 +416,12 @@ begin
   Thb.Photo.OnDblClick := OnDblClick;
   Thb.MinimizeMemory := MinMemory;
   Thb.Title := ATitle;
+  Thb.BevelInner := ThumbBevelInner;
+  Thb.BevelOuter := ThumbBevelouter;
+  Thb.BorderStyle := ThumbBorderStyle;
+  Thb.TitleBevelOuter := ThumbTitleBevelOuter;
+  Thb.TitleBevelInner := ThumbTitleBevelInner;
+  Thb.TitleBorderStyle := ThumbTitleBorderStyle;
   if FThumbColor = clDefault then
   begin
     Thb.Color := Self.Color;
@@ -891,10 +910,13 @@ begin
     thumb := FThumbList.Thumbnail[I]; //TJvThumbnail(FThumbList.Objects[I]);
     if thumb <> nil then
     begin
+      thumb.SetBounds(CalculateXPos(I + 1), CalculateYPos(I + 1), FThumbSize.X, FThumbSize.Y);
+      {
       thumb.Left := CalculateXPos(I + 1);
       thumb.Top := CalculateYPos(I + 1);
       thumb.Width := FThumbSize.X;
       thumb.Height := FThumbSize.Y;
+      }
     end;
   end;
   HorzScrollBar.Position := Tmp2;
@@ -1196,9 +1218,9 @@ begin
   if Value <> FSorted then
   begin
     FSorted := Value;
+    FThumbList.Sorted := FSorted;
     if not FPainted then
       Exit;
-    FThumbList.Sorted := FSorted;
     SetDirectory(FDirectory); // force reread
     Invalidate;
   end;
