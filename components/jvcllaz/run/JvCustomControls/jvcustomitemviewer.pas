@@ -202,7 +202,7 @@ type
     FItemSize: TSize;
     FOnDrawItem: TJvViewerItemDrawEvent;
     FDragImages: TDragImageList;
-    FUpdateCount, FCols, FRows, FTempSelected, FSelectedIndex, FLastHotTrack: Integer;
+    FCols, FRows, FTempSelected, FSelectedIndex, FLastHotTrack: Integer;
     //FBorderStyle: TBorderStyle;
     FTopLeftIndex: Integer;
     FBottomRightIndex: Integer;
@@ -239,6 +239,7 @@ type
     procedure SetSelected(Item: TJvViewerItem; const Value: Boolean);
     procedure StopScrollTimer;
   protected
+    FUpdateCount: Integer;
     procedure MouseLeave{(Control: TControl)}; override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;

@@ -114,6 +114,7 @@ type
     FOnLoadProgress: TJvImageViewerLoadProgress;
     FOnLoadBegin: TNotifyEvent;
     FOnLoadEnd: TNotifyEvent;
+    FOnLoadImage: TJvImageLoadEvent;
     procedure SetDirectory(const Value: String);
     procedure SetFileMask(const Value: String);
     function GetItems(Index: Integer): TJvPictureItem;
@@ -126,16 +127,18 @@ type
     function GetOptionsClass: TJvItemViewerOptionsClass; override;
     function LoadErrorHandled(E: Exception; const FileName: String): Boolean;
     procedure DoLoadBegin; virtual;
-    procedure DoLoadProgress(Item: TJvPictureItem; Stage: TProgressStage; PercentDone: Byte;
-      RedrawNow: Boolean; const R: TRect; const Msg: String);
+    procedure DoLoadProgress(Item: TJvPictureItem; Stage: TProgressStage;
+      PercentDone: Byte; RedrawNow: Boolean; const R: TRect; const Msg: String);
     procedure DoLoadEnd; virtual;
     procedure DrawItem(Index: Integer; State: TCustomDrawState; ACanvas: TCanvas;
       AItemRect, TextRect: TRect); override;
   public
     constructor Create(AOwner: TComponent); override;
-    function AddImageFromFile(const AFileName: String): Integer; virtual;
-    function LoadImages: Boolean;virtual;
+    function AddImageFromFile(const AFileName: String;
+      const ACaption: String = ''): Integer; virtual;
+    function LoadImages: Boolean; virtual;
     procedure CustomSort(Compare: TListSortCompare); override;
+    procedure SortByCaption;
 
     property Items[Index: Integer]: TJvPictureItem read GetItems;
     property Count;
@@ -148,6 +151,7 @@ type
     property OnLoadBegin: TNotifyEvent read FOnLoadBegin write FOnLoadBegin;
     property OnLoadEnd: TNotifyEvent read FOnLoadEnd write FOnLoadEnd;
     property OnLoadError: TJvImageLoadErrorEvent read FOnLoadError write FOnLoadError;
+    property OnLoadImage: TJvImageLoadEvent read FOnLoadImage write FOnLoadImage;
     property OnLoadProgress: TJvImageViewerLoadProgress read FOnLoadProgress write FOnLoadProgress;
     property OnDrawItem;
     property OnOptionsChanged;
@@ -284,7 +288,10 @@ begin
     S := ExpandUNCFileName(FileName);
     if (S <> '') and FileExists(S) then
     try
-      FPicture.LoadFromFile(S);
+      if Assigned(TJvImagesViewer(Owner).OnLoadImage) then
+        TJvImagesViewer(Owner).OnLoadImage(Owner, self)
+      else
+        FPicture.LoadFromFile(S);
       if FPicture.Graphic <> nil then
         FPicture.Graphic.Transparent := TJvImagesViewer(Owner).Options.Transparent;
     except
@@ -376,7 +383,8 @@ begin
   Color := clWindow;
 end;
 
-function TJvImagesViewer.AddImageFromFile(const AFileName: String): Integer;
+function TJvImagesViewer.AddImageFromFile(const AFileName: String;
+  const ACaption: String = ''): Integer;
 var
   item: TJvViewerItem;
   c: TJvViewerItemClass;
@@ -386,9 +394,17 @@ begin
     raise Exception.Create('TJvImagesViewer can only handle TJvPictureItem objects');
 
   item := c.Create(self);
-  TJvPictureItem(item).FileName := AFileName;
+  with TJvPictureItem(item) do
+  begin
+    FileName := AFileName;
+    Caption := ACaption;
+  end;
   Result := Add(item);
-  Invalidate;
+  if FUpdateCount = 0 then
+  begin
+    UpdateAll;
+    Invalidate;
+  end;
 end;
 
 function TJvImagesViewer.ScaleRect(ARect, RefRect: TRect): TRect;
@@ -700,7 +716,7 @@ begin
   inherited Options := Value;
 end;
 
-function SortByFilename(Item1, Item2:Pointer):integer;
+function DoSortByFilename(Item1, Item2:Pointer):integer;
 begin
   Result := AnsiCompareFileName(TJvPictureItem(Item1).Filename, TJvPictureItem(Item2).Filename);
 end;
@@ -710,8 +726,30 @@ begin
   if Assigned(Compare) then
     inherited CustomSort(Compare)
   else
-    inherited CustomSort(@SortByFilename);
+    inherited CustomSort(@DoSortByFilename);
   Invalidate;
+end;
+
+function DoSortByCaption(Item1, Item2: Pointer): Integer;
+var
+  s1, s2: String;
+begin
+  if TJvPictureItem(Item1).Caption = '' then
+    s1 := ExtractFileName(TJvPictureItem(Item1).FileName)
+  else
+    s1 := TJvPictureItem(Item1).Caption;
+
+  if TJvPictureItem(Item2).Caption = '' then
+    s2 := ExtractFileName(TJvPictureItem(Item2).FileName)
+  else
+    s2 := TJvPictureItem(Item2).Caption;
+
+  Result := AnsiCompareStr(s1, s2);
+end;
+
+procedure TJvImagesViewer.SortByCaption;
+begin
+  CustomSort(@DoSortByCaption);
 end;
 
 end.
