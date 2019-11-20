@@ -174,23 +174,23 @@ type
     property ThumbList: TJvThumbList read FThumbList write FThumbList;
 
   published
-    property AlignView: TViewType read FAlignView write SetAlignView;
-    property AsButtons: Boolean read FAsButtons write SetAsButton;
-    property AutoHandleKeyb: Boolean read FAutoHandleKeyb write FAutoHandleKeyb;
-    property AutoScrolling: Boolean read FAutoScrolling write FAutoScrolling;
+    property AlignView: TViewType read FAlignView write SetAlignView default vtNormal;
+    property AsButtons: Boolean read FAsButtons write SetAsButton default false;
+    property AutoHandleKeyb: Boolean read FAutoHandleKeyb write FAutoHandleKeyb default true;
+    property AutoScrolling: Boolean read FAutoScrolling write FAutoScrolling default true;
     //property BufferFile : String Read FBufferFile write SetBufferFile;
     property Count: Word read GetCount default 0;
     property Directory: string read FDirectory write SetDirectory;
     property Filter: string read FFilter write FFilter;
     property MaxHeight: Longint read GetMaxHeight write SetMaxHeight;
     property MaxWidth: Longint read GetMaxWidth write SetMaxWidth;
-    property MinMemory: Boolean read FMinMemory write FMinMemory;
-    property ScrollMode: TScrollMode read FScrollMode write SetScrollMode;
+    property MinMemory: Boolean read FMinMemory write FMinMemory default true;
+    property ScrollMode: TScrollMode read FScrollMode write SetScrollMode default smHorizontal;
     property Selected: Longint read FSelected write SetSelected default -1;
     property SelectedFile: string read GetSelectedFile write SetSelectedFile;
-    property ShadowColor: TColor read FShadowColor write FShadowColor;
-    property ShowShadow: Boolean read FShowShadow write FShowShadow;
-    property Size: TPercent read FPercent write SetPercent;
+    property ShadowColor: TColor read FShadowColor write FShadowColor default clBlack;
+    property ShowShadow: Boolean read FShowShadow write FShowShadow default false;
+    property Size: TPercent read FPercent write SetPercent default 100;
     property Sorted: Boolean read FSorted write SetSorted default true;
     property ThumbBevelInner: TPanelBevel
       read FThumbBevelInner write SetThumbBevelInner default bvNone;
