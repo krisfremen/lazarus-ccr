@@ -133,6 +133,7 @@ type
       AItemRect, TextRect: TRect); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function AddImageFromFile(const AFileName: String): Integer; virtual;
     function LoadImages: Boolean;virtual;
     procedure CustomSort(Compare: TListSortCompare); override;
 
@@ -364,6 +365,7 @@ begin
   FreeAndNil(FPicture);
 end;
 
+
 //=== { TJvImagesViewer } ====================================================
 
 constructor TJvImagesViewer.Create(AOwner: TComponent);
@@ -372,6 +374,21 @@ begin
   //  FDirectory := GetCurrentDir;
   FFileMask := Graphics.GraphicFileMask(TGraphic);
   Color := clWindow;
+end;
+
+function TJvImagesViewer.AddImageFromFile(const AFileName: String): Integer;
+var
+  item: TJvViewerItem;
+  c: TJvViewerItemClass;
+begin
+  c := GetItemClass;
+  if (c <> TJvPictureItem) then
+    raise Exception.Create('TJvImagesViewer can only handle TJvPictureItem objects');
+
+  item := c.Create(self);
+  TJvPictureItem(item).FileName := AFileName;
+  Result := Add(item);
+  Invalidate;
 end;
 
 function TJvImagesViewer.ScaleRect(ARect, RefRect: TRect): TRect;
