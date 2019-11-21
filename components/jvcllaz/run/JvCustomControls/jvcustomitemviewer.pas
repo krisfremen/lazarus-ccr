@@ -37,12 +37,18 @@ unit JvCustomItemViewer;
 interface
 
 uses
-  Contnrs, LMessages, Classes, Graphics, Controls, Forms, StdCtrls, ComCtrls,
+  LMessages, LCLVersion,
+  Classes, Graphics, Contnrs, Controls, Forms, StdCtrls, ComCtrls,
   ExtCtrls, JvConsts, Types, LCLType;
 
 const
   CM_UNSELECTITEMS = WM_USER + 1;
   CM_DELETEITEM = WM_USER + 2;
+
+  DEFAULT_ITEMVIEWEROPTIONS_WIDTH = 120;
+  DEFAULT_ITEMVIEWEROPTIONS_HEIGHT = 120;
+  DEFAULT_ITEMVIEWEROPTIONS_HORZSPACING = 4;
+  DEFAULT_ITEMVIEWEROPTIONS_VERTSPACING = 4;
 
 type
   TJvItemViewerScrollBar = (tvHorizontal, tvVertical);
@@ -94,6 +100,10 @@ type
     FRightClickSelect: Boolean;
     FReduceMemoryUsage: Boolean;
     FDragAutoScroll: Boolean;
+    function IsHeightStored: Boolean;
+    function IsHorzSpacingStored: Boolean;
+    function IsVertSpacingStored: Boolean;
+    function IsWidthStored: Boolean;
     procedure SetRightClickSelect(const Value: Boolean);
     procedure SetShowCaptions(const Value: Boolean);
     procedure SetAlignment(const Value: TAlignment);
@@ -113,6 +123,10 @@ type
     procedure SetReduceMemoryUsage(const Value: Boolean);
   protected
     procedure Change; virtual;
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); virtual;
+    {$IFEND}
   public
     constructor Create(AOwner: TJvCustomItemViewer); virtual;
     destructor Destroy; override;
@@ -122,10 +136,10 @@ type
     property Alignment: TAlignment read FAlignment write SetAlignment default taCenter;
     property DragAutoScroll: Boolean read FDragAutoScroll write FDragAutoScroll default True;
     property Layout: TTextLayout read FLayout write SetLayout default tlBottom;
-    property Width: Integer read FWidth write SetWidth default 120;
-    property Height: Integer read FHeight write SetHeight default 120;
-    property VertSpacing: Integer read FVertSpacing write SetVertSpacing default 4;
-    property HorzSpacing: Integer read FHorzSpacing write SetHorzSpacing default 4;
+    property Width: Integer read FWidth write SetWidth stored IsWidthStored;
+    property Height: Integer read FHeight write SetHeight stored IsHeightStored;
+    property VertSpacing: Integer read FVertSpacing write SetVertSpacing stored IsVertSpacingStored;
+    property HorzSpacing: Integer read FHorzSpacing write SetHorzSpacing stored IsHorzSpacingStored;
     property ScrollBar: TJvItemViewerScrollBar read FScrollBar write SetScrollBar default tvVertical;
     property ShowCaptions: Boolean read FShowCaptions write SetShowCaptions default True;
     property LazyRead: Boolean read FLazyRead write SetLazyRead default True;
@@ -294,6 +308,11 @@ type
     procedure CustomSort(Compare:TListSortCompare);virtual;
 
     function ClientDisplayRect: TRect;
+    class function GetControlClassDefaultSize: TSize; override;
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$IFEND}
 
     property TopLeftIndex: Integer read FTopLeftIndex;
     property BottomRightIndex: Integer read FBottomRightIndex;
@@ -549,10 +568,10 @@ constructor TJvCustomItemViewerOptions.Create(AOwner: TJvCustomItemViewer);
 begin
   inherited Create;
   FOwner := AOwner;
-  FWidth := 120;
-  FHeight := 120;
-  FVertSpacing := 4;
-  FHorzSpacing := 4;
+  FWidth := FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_WIDTH);
+  FHeight := FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_HEIGHT);
+  FVertSpacing := FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_VERTSPACING);
+  FHorzSpacing := FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_HORZSPACING);
   FScrollBar := tvVertical;
   FSmooth := False;
   FTracking := True;
@@ -600,6 +619,46 @@ procedure TJvCustomItemViewerOptions.Change;
 begin
   if FOwner <> nil then
     FOwner.OptionsChanged;
+end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvCustomItemViewerOptions.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if IsWidthStored then
+      FWidth := Round(FWidth * AXProportion);
+    if IsHeightStored then
+      FHeight := Round(FHeight * AYProportion);
+    if IsHorzSpacingStored then
+      FHorzSpacing := Round(FHorzSpacing * AXProportion);
+    if IsVertSpacingStored then
+      FVertSpacing := Round(FVertSpacing * AYProportion);
+    Change;
+  end;
+end;
+{$IFEND}
+
+function TJvCustomItemViewerOptions.IsHeightStored: Boolean;
+begin
+  Result := FHeight <> FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_HEIGHT);
+end;
+
+function TJvCustomItemViewerOptions.IsHorzSpacingStored: Boolean;
+begin
+  Result := FHorzSpacing <> FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_HORZSPACING);
+end;
+
+function TJvCustomItemViewerOptions.IsVertSpacingStored: Boolean;
+begin
+  Result := FVertSpacing <> FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_VERTSPACING);
+end;
+
+function TJvCustomItemViewerOptions.IsWidthStored: Boolean;
+begin
+  Result := FWidth <> FOwner.Scale96ToFont(DEFAULT_ITEMVIEWEROPTIONS_WIDTH);
 end;
 
 procedure TJvCustomItemViewerOptions.SetAlignment(const Value: TAlignment);
@@ -829,9 +888,11 @@ begin
   VertScrollBar.Tracking := Options.Tracking;
   DoubleBuffered := True;
   BorderStyle := bsSingle;
-  Width := 185;
-  Height := 150;
+//  Width := 185;
+//  Height := 150;
   TabStop := True;
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
 end;
 
 destructor TJvCustomItemViewer.Destroy;
@@ -871,6 +932,25 @@ begin
   if FBottomRightIndex >= Count then
     FBottomRightIndex := Count - 1;
   DoReduceMemory;
+end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvCustomItemViewer.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FOptions.DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  end;
+end;
+{$IFEND}
+
+class function TJvCustomItemViewer.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 185;
+  Result.CY := 150;
 end;
 
 procedure TJvCustomItemViewer.OptionsChanged;
