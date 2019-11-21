@@ -308,12 +308,16 @@ procedure TMainForm.LoadThumbnail;
 var
   ms: TMemoryStream;
 begin
-  if (FImgInfo.ExifData = nil) or (not FImgInfo.Exifdata.HasThumbnail) then
+  if not FImgInfo.HasThumbnail then
     exit;
+
+  //if (FImgInfo.ExifData = nil) or (not FImgInfo.Exifdata.HasThumbnail) then
+  //  exit;
 
   ms := TMemoryStream.Create;
   try
-    FImgInfo.ExifData.SaveThumbnailToStream(ms);
+    FImgInfo.SaveThumbnailToStream(ms);
+//    FImgInfo.ExifData.SaveThumbnailToStream(ms);
     ms.Position := 0;
     Thumbnail.Picture.LoadfromStream(ms);
   finally

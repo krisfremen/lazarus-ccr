@@ -130,7 +130,7 @@ object MainForm: TMainForm
       Left = 312
       Height = 19
       Top = 10
-      Width = 128
+      Width = 127
       BorderSpacing.Left = 8
       Caption = 'Truncate binary tags'
       Checked = True
@@ -143,7 +143,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CbVerbosity
       AnchorSideTop.Side = asrCenter
-      Left = 448
+      Left = 447
       Height = 19
       Top = 10
       Width = 123
@@ -233,7 +233,7 @@ object MainForm: TMainForm
     Left = 620
     Height = 15
     Top = 347
-    Width = 19
+    Width = 18
     Anchors = [akLeft, akBottom]
     BorderSpacing.Bottom = 4
     Caption = 'Tag'

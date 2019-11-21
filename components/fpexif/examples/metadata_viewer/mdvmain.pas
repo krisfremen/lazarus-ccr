@@ -320,10 +320,10 @@ begin
         end;
       end;
 
-      if FImgInfo.HasThumbnail and Assigned(FImgInfo.ExifData) then begin
+      if FImgInfo.HasThumbnail then begin
         ms := TMemoryStream.Create;
         try
-          FImgInfo.ExifData.SaveThumbnailToStream(ms);
+          FImgInfo.SaveThumbnailToStream(ms);
           ms.Position := 0;
           PreviewImage.Picture.LoadFromStream(ms);
           RotateBitmap(PreviewImage.Picture.Bitmap, FImageOrientation);

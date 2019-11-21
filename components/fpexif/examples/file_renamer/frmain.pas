@@ -179,17 +179,17 @@ begin
   imgInfo := TImgInfo.Create;
   try
     imgInfo.LoadFromFile(ShellTreeView.Path + Item.Caption);
-    if not (imgInfo.HasExif and imgInfo.HasThumbnail) then begin
+    if not (imgInfo.HasThumbnail) then begin
       ThumbImg.Picture.LoadFromFile(ShellTreeView.Path + Item.Caption);
       exit;
     end;
 
     ms := TMemoryStream.Create;
     try
-      imgInfo.ExifData.SaveThumbnailToStream(ms);
+      imgInfo.SaveThumbnailToStream(ms);
       if ms.Size > 0 then begin
         ms.Position := 0;
-        ThumbImg.Picture.LoadfromStream(ms);
+        ThumbImg.Picture.LoadFromStream(ms);
       end else
         ThumbImg.Picture.Clear;
     finally

@@ -58,6 +58,7 @@ type
     FWarnings: TStrings;
     FMetadataKinds: TMetadataKinds;
     FHeaderSegment: TBytes;
+    FJFXXThumbnail: TBytes;
     FComment: String;
   private
     FExifData: TExifData;
@@ -80,6 +81,7 @@ type
     procedure LoadFromStream(AStream: TStream);
     procedure Save;
     procedure SaveToFile(const AFileName: String; AImgFile: String = '');
+    procedure SaveThumbnailToStream(AStream: TStream);
 
     function CreateExifData(ABigEndian: Boolean = false): TExifData;
     function CreateIptcData: TIptcData;
@@ -131,6 +133,13 @@ type
     ThumbnailHeight: Byte;           // ... and height
   end;
   PJpegJFIFSegment = ^TJpegJFIFSegment;
+
+  TJpegJFXXSegment = packed record
+    Identifier: packed array[0..4] of AnsiChar;   // 'JFXX'#0
+    ThumbnailFormat: byte;   // 10: JPEG, 11: 1 byte-per-pixel palettized, 12: 3 byte-per-pixel RGB
+  end;
+  // ThumbnailData are following
+  PJpegJFXXSegment = ^TJpegJFXXSegment;
 
   TJpegSOF0Segment = packed record
     DataPrecision: Byte;
@@ -331,7 +340,8 @@ end;
 
 function TImgInfo.HasThumbnail: boolean;
 begin
-  Result := (FExifData <> nil) and FExifData.HasThumbnail;
+  Result := ((FExifData <> nil) and FExifData.HasThumbnail)
+         or (Length(FJFXXThumbnail) > 0);
 end;
 
 function TImgInfo.HasWarnings: boolean;
@@ -433,6 +443,9 @@ begin
 end;
 
 procedure TImgInfo.ReadJpeg(AStream: TStream);
+const
+  sJFIF: String[5] = 'JFIF'#0;
+  sJFXX: String[5] = 'JFXX'#0;
 var
   marker: Byte;
   size: Word;
@@ -441,6 +454,7 @@ var
   buf: TBytes;
   reader: TBasicMetadataReader;
   bigEndian: Boolean;
+  hdr: TBytes;
  {$IFNDEF FPC}
   sa: ansistring;
  {$ENDIF}
@@ -517,17 +531,32 @@ begin
         end;
       M_JFIF:
         begin
-          SetLength(FHeaderSegment, size);
-          AStream.Read(FHeaderSegment[0], size);
-          with PJpegJFIFSegment(@FHeaderSegment[0])^ do begin
-            if not (
-              (Identifier[0]='J') and (Identifier[1]='F') and
-              (Identifier[2]='I') and (Identifier[3]='F') and
-              (Identifier[4]=#0) )
-            then
-              exit;
-            if (JFIFVersion[0] <> 1) then
-              exit;
+          SetLength(hdr, size);
+          AStream.Read(hdr[0], size);
+          with PJpegJFIFSegment(@hdr[0])^ do begin
+            if CompareMem(@Identifier[0], @sJFIF[1], Length(sJFIF)) then
+            begin
+              // JFIF APP0 marker segment
+              SetLength(FHeaderSegment, size);
+              Move(hdr[0], FHeaderSegment[0], size);
+              if (JFIFVersion[0] <> 1) then
+                exit;
+            end else
+            if CompareMem(@Identifier[0], @sJFXX[1], Length(sJFXX)) then
+            begin
+              // JFXX extension APP0 marker segment  (optional)
+              // alternative location of a thumbnail image:
+              // https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format#JFIF_extension_APP0_marker_segment
+              {
+              // --- not supported at the moment.
+              SetLength(FJFXXHeaderSegment, size);
+              Move(hdr[0], FJFXXHeaderSegment[0], size);
+              }
+              // --- not working... not a valid jpeg structure.
+
+              SetLength(FJFXXThumbnail, size - SizeOf(TJpegJFXXSegment)); //(AStream.Position - p));
+              Move(hdr[SizeOf(TJpegJFXXSegment)], FJFXXThumbnail[0], Length(FJFXXThumbnail));
+            end;
           end;
         end;
       M_SOF0:
@@ -571,6 +600,15 @@ end;
 procedure TImgInfo.Save;
 begin
   SaveToFile(FFileName);
+end;
+
+procedure TImgInfo.SaveThumbnailToStream(AStream: TStream);
+begin
+  if (FExifData <> nil) and ExifData.HasThumbnail then
+    FExifData.SaveThumbnailToStream(AStream)
+  else
+  if Length(FJFXXThumbnail) > 0 then
+    AStream.Write(FJFXXThumbnail[0], Length(FJFXXThumbnail));
 end;
 
 procedure TImgInfo.SaveToFile(const AFileName: String; AImgFile: String = '');
