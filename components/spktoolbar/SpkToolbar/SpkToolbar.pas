@@ -317,6 +317,9 @@ type
     { Setter for toolbar style, i.e. quick selection of new appearance theme }
     procedure SetStyle(const Value: TSpkStyle);
 
+    { Calculates the height of the entire toolbar }
+    function CalcToolbarHeight: Integer;
+
     { LCL Scaling }
     {$IF lcl_fullversion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
@@ -565,7 +568,7 @@ begin
   if (AOwner is TForm) then
     SpkInitLayoutConsts(96); // This default dpi value is ignored for LCL scaling
 
-  Height := ToolbarHeight;
+//  Height := CalcToolbarHeight;
 
   //inherited Doublebuffered:=true;
 
@@ -611,6 +614,13 @@ begin
   FDelayRunTimer.Enabled := False;
   FDelayRunTimer.OnTimer := DelayRunTimer
  {$ENDIF}
+
+  Height := CalcToolbarHeight;
+end;
+
+function TSpkToolbar.CalcToolbarHeight: Integer;
+begin
+  Result := FAppearance.Tab.CalcCaptionHeight + TabHeight;
 end;
 
 {$IFDEF DELAYRUNTIMER}
@@ -1081,8 +1091,10 @@ end;
 
 procedure TSpkToolbar.DoOnResize;
 begin
+  {
   if Height <> ToolbarHeight then
     Height := ToolbarHeight;
+  }
 
  {$IFDEF DELAYRUNTIMER}
   FDelayRunTimer.Enabled := False;
@@ -1326,6 +1338,7 @@ procedure TSpkToolbar.ValidateBuffer;
   var
     FocusedAppearance: TSpkToolbarAppearance;
     i: integer;
+    tabHeight: Integer;
   begin
     //Loading appearance of selected tab
     //or FToolbarAppearance if selected tab has no set OverrideAppearance
@@ -1334,11 +1347,13 @@ procedure TSpkToolbar.ValidateBuffer;
     else
       FocusedAppearance := FAppearance;
 
+    tabHeight := FocusedAppearance.Tab.CalcCaptionHeight;
+
     TGuiTools.DrawRoundRect(FBuffer.Canvas,
                           {$IFDEF EnhancedRecordSupport}
-      T2DIntRect.Create(0, ToolbarTabCaptionsHeight, self.Width - 1, self.Height - 1),
+      T2DIntRect.Create(0, tabHeight, self.Width - 1, self.Height - 1),
                           {$ELSE}
-      Create2DIntRect(0, ToolbarTabCaptionsHeight, self.Width - 1, self.Height - 1),
+      Create2DIntRect(0, tabHeight, self.Width - 1, self.Height - 1),
                           {$ENDIF}
       FocusedAppearance.Tab.CornerRadius,
       FocusedAppearance.Tab.GradientFromColor,
@@ -1347,9 +1362,9 @@ procedure TSpkToolbar.ValidateBuffer;
 
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(0, ToolbarTabCaptionsHeight),
+      T2DIntPoint.Create(0, tabHeight),
                               {$ELSE}
-      Create2DIntPoint(0, ToolbarTabCaptionsHeight),
+      Create2DIntPoint(0, tabHeight),
                               {$ENDIF}
       FocusedAppearance.Tab.CornerRadius,
       cpLeftTop,
@@ -1357,9 +1372,9 @@ procedure TSpkToolbar.ValidateBuffer;
 
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(self.Width - FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight),
+      T2DIntPoint.Create(self.Width - FocusedAppearance.Tab.CornerRadius, tabHeight),
                               {$ELSE}
-      Create2DIntPoint(self.Width - FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight),
+      Create2DIntPoint(self.Width - FocusedAppearance.Tab.CornerRadius, tabHeight),
                               {$ENDIF}
       FocusedAppearance.Tab.CornerRadius,
       cpRightTop,
@@ -1385,15 +1400,18 @@ procedure TSpkToolbar.ValidateBuffer;
       cpRightBottom,
       FocusedAppearance.Tab.BorderColor);
 
-    TGuiTools.DrawVLine(FBuffer, 0, ToolbarTabCaptionsHeight +
-      FocusedAppearance.Tab.CornerRadius, self.Height - FocusedAppearance.Tab.CornerRadius,
+    TGuiTools.DrawVLine(FBuffer, 0,
+      tabHeight + FocusedAppearance.Tab.CornerRadius,
+      self.Height - FocusedAppearance.Tab.CornerRadius,
       FocusedAppearance.Tab.BorderColor);
 
-    TGuiTools.DrawHLine(FBuffer, FocusedAppearance.Tab.CornerRadius, self.Width - FocusedAppearance.Tab.CornerRadius,
+    TGuiTools.DrawHLine(FBuffer, FocusedAppearance.Tab.CornerRadius,
+      self.Width - FocusedAppearance.Tab.CornerRadius,
       self.Height - 1, FocusedAppearance.Tab.BorderColor);
 
-    TGuiTools.DrawVLine(FBuffer, self.Width - 1, ToolbarTabCaptionsHeight +
-      FocusedAppearance.Tab.CornerRadius, self.Height - FocusedAppearance.Tab.CornerRadius,
+    TGuiTools.DrawVLine(FBuffer, self.Width - 1,
+      tabHeight + FocusedAppearance.Tab.CornerRadius,
+      self.Height - FocusedAppearance.Tab.CornerRadius,
       FocusedAppearance.Tab.BorderColor);
 
     if not (AtLeastOneTabVisible) then
@@ -1401,7 +1419,7 @@ procedure TSpkToolbar.ValidateBuffer;
 
       //If there are no tabs then the horizontal line will be drawn
       TGuiTools.DrawHLine(FBuffer, FocusedAppearance.Tab.CornerRadius, self.Width -
-        FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
+        FocusedAppearance.Tab.CornerRadius, tabHeight, FocusedAppearance.Tab.BorderColor);
     end
     else
     begin
@@ -1414,7 +1432,7 @@ procedure TSpkToolbar.ValidateBuffer;
       //Only right part, the rest will be drawn with tabs
       if FTabRects[i].Right < self.Width - FocusedAppearance.Tab.CornerRadius - 1 then
         TGuiTools.DrawHLine(FBuffer, FTabRects[i].Right + 1, self.Width -
-          FocusedAppearance.Tab.CornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
+          FocusedAppearance.Tab.CornerRadius, tabHeight, FocusedAppearance.Tab.BorderColor);
     end;
   end;
 
@@ -1746,9 +1764,12 @@ begin
 
   FBuffer.Free;
   FBuffer := TBitmap.Create;
-  FBuffer.SetSize(self.Width, self.Height);
+  FBuffer.SetSize(self.Width, CalcToolbarHeight); //Height);
+  SetBounds(Left, Top, FBuffer.Width, FBuffer.Height);
 
   // *** Tabs ***
+
+  TabAppearance := FAppearance;
 
   // Cliprect of tabs (containg top frame of component)
 {$IFDEF EnhancedRecordSupport}
@@ -1756,13 +1777,13 @@ begin
     ToolbarCornerRadius,
     0,
     self.Width - ToolbarCornerRadius - 1,
-    ToolbarTabCaptionsHeight);
+    TabAppearance.Tab.CalcCaptionHeight);
 {$ELSE}
   FTabClipRect.Create(
     ToolbarCornerRadius,
     0,
     self.Width - ToolbarCornerRadius - 1,
-    ToolbarTabCaptionsHeight);
+    TabAppearance.Tab.CalcCaptionHeight);
 {$ENDIF}
 
   // Rects of tabs headings (containg top frame of component)
@@ -1792,7 +1813,7 @@ begin
         FTabRects[i].Left := x;
         FTabRects[i].Right := x + TabWidth - 1;
         FTabRects[i].Top := 0;
-        FTabRects[i].Bottom := ToolbarTabCaptionsHeight;
+        FTabRects[i].Bottom := TabAppearance.Tab.CalcCaptionHeight;
 
         x := FTabRects[i].right + 1;
       end
@@ -1813,12 +1834,12 @@ begin
     // Rect of tab region
    {$IFDEF EnhancedRecordSupport}
     FTabContentsClipRect := T2DIntRect.Create(ToolbarBorderWidth + TabPaneLeftPadding,
-      ToolbarTabCaptionsHeight + ToolbarBorderWidth + TabPaneTopPadding,
+      TabAppearance.Tab.CalcCaptionHeight + ToolbarBorderWidth + TabPaneTopPadding,
       self.Width - 1 - ToolbarBorderWidth - TabPaneRightPadding,
       self.Height - 1 - ToolbarBorderWidth - TabPaneBottomPadding);
    {$ELSE}
     FTabContentsClipRect.Create(ToolbarBorderWidth + TabPaneLeftPadding,
-      ToolbarTabCaptionsHeight + ToolbarBorderWidth + TabPaneTopPadding,
+      TabAppearance.Tab.CalcCaptionHeight + ToolbarBorderWidth + TabPaneTopPadding,
       self.Width - 1 - ToolbarBorderWidth - TabPaneRightPadding,
       self.Height - 1 - ToolbarBorderWidth - TabPaneBottomPadding);
    {$ENDIF}
@@ -1892,10 +1913,10 @@ begin
 
   ToolbarBorderWidth := round(TOOLBAR_BORDER_WIDTH * AXProportion);
   ToolbarCornerRadius := TOOLBAR_CORNER_RADIUS;
-  ToolbarTabCaptionsHeight := round(TOOLBAR_TAB_CAPTIONS_HEIGHT * AYProportion);
+//  ToolbarTabCaptionsHeight := round(TOOLBAR_TAB_CAPTIONS_HEIGHT * AYProportion);
   ToolbarTabCaptionsTextHPadding := round(TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING * AXProportion);
   ToolbarMinTabCaptionWidth := round(TOOLBAR_MIN_TAB_CAPTION_WIDTH * AXProportion);
-  ToolbarHeight := ToolbarTabCaptionsHeight + TabHeight;
+//  ToolbarHeight := ToolbarTabCaptionsHeight + TabHeight;
 
   // scaling radius if not square
   if LargeButtonRadius > 1 then

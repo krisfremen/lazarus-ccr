@@ -46,9 +46,11 @@ type
     FGradientType: TBackgroundKind;
     FInactiveHeaderFontColor: TColor;
     FCornerRadius: Integer;
+    FCaptionHeight: Integer;
     // Getter & setter methods
     procedure SetHeaderFont(const Value: TFont);
     procedure SetBorderColor(const Value: TColor);
+    procedure SetCaptionHeight(const Value: Integer);
     procedure SetCornerRadius(const Value: Integer);
     procedure SetGradientFromColor(const Value: TColor);
     procedure SetGradientToColor(const Value: TColor);
@@ -65,6 +67,7 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
 
+    function CalcCaptionHeight: Integer;
     procedure LoadFromXML(Node: TSpkXMLNode);
     procedure SaveToPascal(AList: TStrings);
     procedure SaveToXML(Node: TSpkXMLNode);
@@ -73,6 +76,7 @@ type
   published
     property TabHeaderFont: TFont read FTabHeaderFont write SetHeaderFont;
     property BorderColor: TColor read FBorderColor write SetBorderColor;
+    property CaptionHeight: Integer read FCaptionHeight write SetCaptionHeight default -1;
     property CornerRadius: Integer read FCornerRadius write SetCornerRadius;
     property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
     property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
@@ -304,6 +308,7 @@ constructor TSpkTabAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
 begin
   inherited Create;
   FDispatch := ADispatch;
+  FCaptionHeight := -1;
   FCornerRadius := 0;
   FTabHeaderFont := TFont.Create;
   FTabHeaderFont.OnChange := TabHeaderFontChange;
@@ -325,6 +330,7 @@ begin
      SrcAppearance := TSpkTabAppearance(Source);
      FTabHeaderFont.Assign(SrcAppearance.TabHeaderFont);
      FBorderColor := SrcAppearance.BorderColor;
+     FCaptionHeight := SrcAppearance.CaptionHeight;
      FCornerRadius := SrcAppearance.CornerRadius;
      FGradientFromColor := SrcAppearance.GradientFromColor;
      FGradientToColor := SrcAppearance.GradientToColor;
@@ -335,6 +341,22 @@ begin
         FDispatch.NotifyAppearanceChanged;
   end else
     raise AssignException.Create('TSpkToolbarAppearance.Assign: Cannot assign the object '+Source.ClassName+' to TSpkToolbarAppearance!');
+end;
+
+function TSpkTabAppearance.CalcCaptionHeight: Integer;
+var
+  h: Integer;
+begin
+  if FCaptionHeight < 0 then
+  begin
+     if FTabHeaderFont.Size = 0 then
+       h := GetFontData(FTabHeaderFont.Handle).Height
+     else
+       h := FTabHeaderFont.Height;
+     Result := abs(h) + 10;
+  end
+  else
+    Result := FCaptionHeight;
 end;
 
 procedure TSpkTabAppearance.LoadFromXML(Node: TSpkXMLNode);
@@ -351,6 +373,10 @@ begin
   Subnode := Node['BorderColor',false];
   if Assigned(Subnode) then
     FBorderColor := Subnode.TextAsColor;
+
+  SubNode := Node['CaptionHeight', false];
+  if Assigned(SubNode) then
+    FCaptionHeight := SubNode.TextAsInteger;
 
   SubNode := Node['CornerRadius', false];
   if Assigned(SubNode) then
@@ -382,6 +408,7 @@ begin
       begin
         FTabHeaderFont.Color := rgb(21, 66, 139);
         FBorderColor := rgb(141, 178, 227);
+        FCaptionHeight := -1;
         FCornerRadius := spkt_Const.TabCornerRadius;
         FGradientFromColor := rgb(222, 232, 245);
         FGradientToColor := rgb(199, 216, 237);
@@ -395,6 +422,7 @@ begin
         FTabHeaderFont.Style := [];
         FTabHeaderFont.Color := $007A534C;
         FBorderColor := $00BEBEBE;
+        FCaptionHeight := -1;
         FCornerRadius := spkt_Const.TabCornerRadius;
         FGradientFromColor := $00F4F2F2;
         FGradientToColor := $00EFE6E1;
@@ -407,6 +435,7 @@ begin
         FTabHeaderFont.Style := [];
         FTabHeaderFont.Color := $0095572A;
         FBorderColor := $00D2D0CF;
+        FCaptionHeight := -1;
         FCornerRadius := 0;
         FGradientFromColor := $00F1F1F1;
         FGradientToColor := $00F1F1F1;
@@ -419,6 +448,7 @@ begin
         FTabHeaderFont.Style := [];
         FTabHeaderFont.Color := $00FFFFFF;
         FBorderColor := $00000000;
+        FCaptionHeight := -1;
         FCornerRadius := 0;
         FGradientFromColor := $00464646;
         FGradientToColor := $00464646;
@@ -434,6 +464,7 @@ begin
     Add('  with Tab do begin');
     SaveFontToPascal(AList, FTabHeaderFont, '    TabHeaderFont');
     Add('    BorderColor := $' + IntToHex(FBorderColor, 8) + ';');
+    Add('    CaptionHeight := ' + IntToStr(FCaptionHeight) + ';');
     Add('    CornerRadius := ' + IntToStr(FCornerRadius) + ';');
     Add('    GradientFromColor := $' + IntToHex(FGradientFromColor, 8) + ';');
     Add('    GradientToColor := $' + IntToHex(FGradientToColor, 8) + ';');
@@ -456,6 +487,9 @@ begin
   Subnode := Node['BorderColor',true];
   Subnode.TextAsColor := FBorderColor;
 
+  SubNode := Node['CaptionHeight', true];
+  SubNode.TextAsInteger := FCaptionHeight;
+
   SubNode := Node['CornerRadius',true];
   SubNode.TextAsInteger := FCornerRadius;
 
@@ -475,6 +509,13 @@ end;
 procedure TSpkTabAppearance.SetBorderColor(const Value: TColor);
 begin
   FBorderColor := Value;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkTabAppearance.SetCaptionHeight(const Value: Integer);
+begin
+  if Value < -1 then FCaptionHeight := -1 else FCaptionHeight := Value;
   if FDispatch <> nil then
     FDispatch.NotifyAppearanceChanged;
 end;

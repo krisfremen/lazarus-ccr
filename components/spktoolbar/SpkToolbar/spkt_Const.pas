@@ -134,7 +134,7 @@ const
   TOOLBAR_BORDER_WIDTH = 1;
   TOOLBAR_CORNER_RADIUS = 0;  //was: 3;
   /// <summary>Tab caption height</summary>
-  TOOLBAR_TAB_CAPTIONS_HEIGHT = 22;
+//  TOOLBAR_TAB_CAPTIONS_HEIGHT = 22;
   /// <summary>Tab caption horizontal padding</summary>
   TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING = 4;
   /// <summary>Min tab caption width</summary>
@@ -259,12 +259,12 @@ var
   ToolbarBorderWidth: Integer;
   ToolbarCornerRadius: Integer;
   /// <summary>Tab caption height</summary>
-  ToolbarTabCaptionsHeight: Integer;
+//  ToolbarTabCaptionsHeight: Integer;
   /// <summary>Tab caption horizontal padding</summary>
   ToolbarTabCaptionsTextHPadding: Integer;
   ToolbarMinTabCaptionWidth: Integer;
   /// <summary>Toolbar total height</summary>
-  ToolbarHeight: Integer;
+  //ToolbarHeight: Integer;
 
 
 implementation
@@ -338,10 +338,10 @@ begin
 
   ToolbarBorderWidth := SpkScaleX(TOOLBAR_BORDER_WIDTH, FromDPI, ToDPI);
   ToolbarCornerRadius := TOOLBAR_CORNER_RADIUS;
-  ToolbarTabCaptionsHeight := SpkScaleY(TOOLBAR_TAB_CAPTIONS_HEIGHT, FromDPI, ToDPI);
+//  ToolbarTabCaptionsHeight := SpkScaleY(TOOLBAR_TAB_CAPTIONS_HEIGHT, FromDPI, ToDPI);
   ToolbarTabCaptionsTextHPadding := SpkScaleX(TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING, FromDPI, ToDPI);
   ToolbarMinTabCaptionWidth := SpkScaleX(TOOLBAR_MIN_TAB_CAPTION_WIDTH, FromDPI, ToDPI);
-  ToolbarHeight := ToolbarTabCaptionsHeight + TabHeight;
+//  ToolbarHeight := ToolbarTabCaptionsHeight + TabHeight;
 
   // scaling radius if not square
   if LargeButtonRadius > 1 then
