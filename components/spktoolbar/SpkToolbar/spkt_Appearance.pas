@@ -15,7 +15,7 @@ unit spkt_Appearance;
 interface
 
 uses
-  Graphics, Classes, Forms, SysUtils,
+  Graphics, Classes, Forms, SysUtils, LCLVersion,
   SpkGUITools, SpkXMLParser, SpkXMLTools,
   spkt_Dispatch, spkt_Exceptions;
 
@@ -47,7 +47,9 @@ type
     FInactiveHeaderFontColor: TColor;
     FCornerRadius: Integer;
     FCaptionHeight: Integer;
+
     // Getter & setter methods
+    function IsCaptionHeightStored: Boolean;
     procedure SetHeaderFont(const Value: TFont);
     procedure SetBorderColor(const Value: TColor);
     procedure SetCaptionHeight(const Value: Integer);
@@ -73,10 +75,14 @@ type
     procedure SaveToXML(Node: TSpkXMLNode);
     procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
 
+    {$IF lcl_fullversion >= 1080000}
+    procedure AutoAdjustLayout(const AXProportion, AYProportion: Double);
+    {$IFEND}
+
   published
     property TabHeaderFont: TFont read FTabHeaderFont write SetHeaderFont;
     property BorderColor: TColor read FBorderColor write SetBorderColor;
-    property CaptionHeight: Integer read FCaptionHeight write SetCaptionHeight default -1;
+    property CaptionHeight: Integer read FCaptionHeight write SetCaptionHeight stored IsCaptionHeightStored;
     property CornerRadius: Integer read FCornerRadius write SetCornerRadius;
     property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
     property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
@@ -308,7 +314,7 @@ constructor TSpkTabAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
 begin
   inherited Create;
   FDispatch := ADispatch;
-  FCaptionHeight := -1;
+  FCaptionHeight := TOOLBAR_TAB_CAPTIONS_HEIGHT;
   FCornerRadius := 0;
   FTabHeaderFont := TFont.Create;
   FTabHeaderFont.OnChange := TabHeaderFontChange;
@@ -357,6 +363,20 @@ begin
   end
   else
     Result := FCaptionHeight;
+end;
+
+{$IF lcl_fullversion >= 1080000}
+procedure TSpkTabAppearance.AutoAdjustLayout(
+  const AXProportion, AYProportion: Double);
+begin
+  if IsCaptionHeightStored then
+    FCaptionHeight := round(FCaptionHeight * AYProportion);
+end;
+{$IFEND}
+
+function TSpkTabAppearance.IsCaptionHeightStored: Boolean;
+begin
+  Result := FCaptionHeight <> TOOLBAR_TAB_CAPTIONS_HEIGHT;
 end;
 
 procedure TSpkTabAppearance.LoadFromXML(Node: TSpkXMLNode);

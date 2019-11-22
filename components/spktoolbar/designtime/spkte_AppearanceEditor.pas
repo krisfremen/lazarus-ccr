@@ -15,7 +15,9 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    edTabCaptionHeight: TSpinEdit;
     lblTabCornerRadius: TLabel;
+    lblTabCaptionHeight: TLabel;
     SmallImages: TImageList;
     LargeImages: TImageList;
     Images_150: TImageList;
@@ -174,6 +176,8 @@ type
     Label17: TLabel;
     LbAppearanceStyle: TListbox;
 
+    procedure bActiveTabHeaderFontColorClick(Sender: TObject);
+    procedure bCopyToClipboardClick(Sender: TObject);
     procedure bExportToPascalClick(Sender: TObject);
     procedure bExportToXMLClick(Sender: TObject);
     procedure bImportClick(Sender: TObject);
@@ -207,8 +211,6 @@ type
     procedure bTabBorderColorClick(Sender: TObject);
     procedure bTabGradientFromColorClick(Sender: TObject);
     procedure bTabGradientToColorClick(Sender: TObject);
-    procedure bActiveTabHeaderFontColorClick(Sender: TObject);
-    procedure bCopyToClipboardClick(Sender: TObject);
 
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
@@ -224,6 +226,7 @@ type
 
     procedure edItemHotTrackBrightnessChangeChange(Sender: TObject);
     procedure edPaneHotTrackBrightnessChangeChange(Sender: TObject);
+    procedure edTabCaptionHeightChange(Sender: TObject);
     procedure edTabCornerRadiusChange(Sender: TObject);
 
     procedure FormActivate(Sender: TObject);
@@ -845,6 +848,13 @@ begin
   tbPreview.Invalidate;
 end;
 
+procedure TfrmAppearanceEditWindow.edTabCaptionHeightChange(Sender: TObject);
+begin
+  with tbPreview.Appearance.Tab do
+    CaptionHeight := (Sender as TSpinEdit).Value;
+  tbPreview.Invalidate;
+end;
+
 procedure TfrmAppearanceEditWindow.edTabCornerRadiusChange(Sender: TObject);
 begin
   with tbPreview.Appearance.Tab do
@@ -899,6 +909,7 @@ begin
       SetPanelColor(pActiveTabHeaderFont, TabHeaderFont.Color);
       SetPanelColor(pInactiveTabHeaderFont, InactiveTabHeaderFontColor);
       edTabCornerRadius.Value := CornerRadius;
+      edTabCaptionHeight.Value := CaptionHeight;
     end;
 
     with Pane do

@@ -35,6 +35,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       Appearance.Tab.TabHeaderFont.Height = -13
       Appearance.Tab.TabHeaderFont.Name = 'Calibri'
       Appearance.Tab.BorderColor = 14922381
+      Appearance.Tab.CornerRadius = 4
       Appearance.Tab.GradientFromColor = 16115934
       Appearance.Tab.GradientToColor = 15587527
       Appearance.Tab.GradientType = bkConcave
@@ -86,6 +87,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Tab.TabHeaderFont.Height = -13
         CustomAppearance.Tab.TabHeaderFont.Name = 'Calibri'
         CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.CornerRadius = 4
         CustomAppearance.Tab.GradientFromColor = 16115934
         CustomAppearance.Tab.GradientToColor = 15587527
         CustomAppearance.Tab.GradientType = bkConcave
@@ -224,6 +226,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Tab.TabHeaderFont.Height = -13
         CustomAppearance.Tab.TabHeaderFont.Name = 'Calibri'
         CustomAppearance.Tab.BorderColor = 14922381
+        CustomAppearance.Tab.CornerRadius = 4
         CustomAppearance.Tab.GradientFromColor = 16115934
         CustomAppearance.Tab.GradientToColor = 15587527
         CustomAppearance.Tab.GradientType = bkConcave
@@ -376,7 +379,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 0
+        TabOrder = 1
         OnClick = pTabFrameClick
       end
       object pTabGradientFrom: TPanel
@@ -394,7 +397,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 1
+        TabOrder = 2
         OnClick = pTabGradientFromClick
       end
       object pTabGradientTo: TPanel
@@ -412,7 +415,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 2
+        TabOrder = 3
         OnClick = pTabGradientToClick
       end
       object cbTabGradientKind: TComboBox
@@ -437,7 +440,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         OnChange = cbTabGradientKindChange
         Style = csDropDownList
-        TabOrder = 3
+        TabOrder = 4
         Text = 'None'
       end
       object pTabHeaderFont: TPanel
@@ -455,7 +458,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Font'
-        TabOrder = 4
+        TabOrder = 7
         OnClick = pTabHeaderFontClick
       end
       object pActiveTabHeaderFont: TPanel
@@ -488,7 +491,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BorderSpacing.Top = 4
         Caption = 'Link with pane and idle item'
         OnClick = cbLinkTabClick
-        TabOrder = 6
+        TabOrder = 0
       end
       object Label18: TLabel
         AnchorSideTop.Control = pActiveTabHeaderFont
@@ -532,7 +535,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Caption = 'Color'
         Color = clBtnFace
         ParentColor = False
-        TabOrder = 7
+        TabOrder = 6
         OnClick = pInactiveTabHeaderFontClick
       end
       object bTabFrameColor: TSpeedButton
@@ -668,6 +671,33 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Caption = 'Tab corner radius'
         ParentColor = False
       end
+      object lblTabCaptionHeight: TLabel
+        AnchorSideTop.Control = edTabCaptionHeight
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblTabHeaderFont
+        AnchorSideRight.Side = asrBottom
+        Left = 73
+        Height = 15
+        Top = 294
+        Width = 98
+        Anchors = [akTop, akRight]
+        Caption = 'Tab caption height'
+        ParentColor = False
+      end
+      object edTabCaptionHeight: TSpinEdit
+        AnchorSideLeft.Control = pTabHeaderFont
+        AnchorSideTop.Control = lblTabCornerRadius
+        AnchorSideTop.Side = asrBottom
+        Left = 191
+        Height = 23
+        Top = 290
+        Width = 82
+        BorderSpacing.Top = 10
+        MaxValue = 999
+        MinValue = -1
+        OnChange = edTabCaptionHeightChange
+        TabOrder = 9
+      end
     end
     object TabSheet2: TTabSheet
       Caption = 'Pane'
@@ -794,7 +824,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 0
+        TabOrder = 1
         OnClick = pPaneBorderDarkClick
       end
       object pPaneBorderLight: TPanel
@@ -812,7 +842,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 1
+        TabOrder = 2
         OnClick = pPaneBorderLightClick
       end
       object pPaneGradientFrom: TPanel
@@ -830,7 +860,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 2
+        TabOrder = 3
         OnClick = pPaneGradientFromClick
       end
       object pPaneGradientTo: TPanel
@@ -848,7 +878,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 3
+        TabOrder = 4
         OnClick = pPaneGradientToClick
       end
       object cbPaneGradientKind: TComboBox
@@ -873,7 +903,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         OnChange = cbPaneGradientKindChange
         Style = csDropDownList
-        TabOrder = 4
+        TabOrder = 5
         Text = 'None'
       end
       object pPaneCaptionBackground: TPanel
@@ -891,7 +921,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 5
+        TabOrder = 6
         OnClick = pPaneCaptionBackgroundClick
       end
       object pPaneCaptionFont: TPanel
@@ -909,7 +939,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Font'
-        TabOrder = 6
+        TabOrder = 9
         OnClick = pPaneCaptionFontClick
       end
       object pPaneCaptionFontColor: TPanel
@@ -927,7 +957,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 7
+        TabOrder = 8
         OnClick = pPaneCaptionFontColorClick
       end
       object cbLinkPane: TCheckBox
@@ -942,7 +972,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BorderSpacing.Top = 4
         Caption = 'Link with tab and idle item'
         OnClick = cbLinkPaneClick
-        TabOrder = 8
+        TabOrder = 0
       end
       object cbPaneStyle: TComboBox
         AnchorSideLeft.Control = pPaneCaptionFont
@@ -969,7 +999,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         OnChange = cbPaneStyleChange
         Style = csDropDownList
-        TabOrder = 9
+        TabOrder = 10
         Text = 'Rectangle etched'
       end
       object Label12: TLabel
@@ -1141,7 +1171,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BorderSpacing.Top = 6
         MinValue = -100
         OnChange = edPaneHotTrackBrightnessChangeChange
-        TabOrder = 10
+        TabOrder = 7
       end
       object Label16: TLabel
         AnchorSideLeft.Control = edPaneHotTrackBrightnessChange
@@ -1343,7 +1373,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Font'
-        TabOrder = 0
+        TabOrder = 22
         OnClick = pItemFontClick
       end
       object cbItemIdleGradientKind: TComboBox
@@ -1368,7 +1398,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         OnChange = cbItemIdleGradientKindChange
         Style = csDropDownList
-        TabOrder = 1
+        TabOrder = 10
         Text = 'None'
       end
       object pItemIdleGradientTo: TPanel
@@ -1386,7 +1416,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 2
+        TabOrder = 7
         OnClick = pItemIdleGradientToClick
       end
       object pItemIdleGradientFrom: TPanel
@@ -1404,7 +1434,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 3
+        TabOrder = 4
         OnClick = pItemIdleGradientFromClick
       end
       object pItemIdleFrame: TPanel
@@ -1419,7 +1449,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 4
+        TabOrder = 1
         OnClick = pItemIdleFrameClick
       end
       object pItemIdleCaptionColor: TPanel
@@ -1437,7 +1467,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 5
+        TabOrder = 13
         OnClick = pItemIdleCaptionColorClick
       end
       object pItemIdleInnerDark: TPanel
@@ -1455,7 +1485,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 6
+        TabOrder = 16
         OnClick = pItemIdleInnerDarkClick
       end
       object pItemIdleInnerLight: TPanel
@@ -1473,7 +1503,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 7
+        TabOrder = 19
         OnClick = pItemIdleInnerLightClick
       end
       object cbItemHottrackGradientKind: TComboBox
@@ -1498,7 +1528,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         OnChange = cbItemHottrackGradientKindChange
         Style = csDropDownList
-        TabOrder = 8
+        TabOrder = 11
         Text = 'None'
       end
       object pItemHottrackGradientTo: TPanel
@@ -1518,7 +1548,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 9
+        TabOrder = 8
         OnClick = pItemHottrackGradientToClick
       end
       object pItemHottrackGradientFrom: TPanel
@@ -1538,7 +1568,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 10
+        TabOrder = 5
         OnClick = pItemHottrackGradientFromClick
       end
       object pItemHottrackFrame: TPanel
@@ -1556,7 +1586,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 11
+        TabOrder = 2
         OnClick = pItemHottrackFrameClick
       end
       object pItemHottrackCaptionColor: TPanel
@@ -1576,7 +1606,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 12
+        TabOrder = 14
         OnClick = pItemHottrackCaptionColorClick
       end
       object pItemHottrackInnerDark: TPanel
@@ -1596,7 +1626,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 13
+        TabOrder = 17
         OnClick = pItemHottrackInnerDarkClick
       end
       object pItemHottrackInnerLight: TPanel
@@ -1616,7 +1646,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 14
+        TabOrder = 20
         OnClick = pItemHottrackInnerLightClick
       end
       object cbItemActiveGradientKind: TComboBox
@@ -1641,7 +1671,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         )
         OnChange = cbItemActiveGradientKindChange
         Style = csDropDownList
-        TabOrder = 15
+        TabOrder = 12
         Text = 'None'
       end
       object pItemActiveGradientTo: TPanel
@@ -1661,7 +1691,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 16
+        TabOrder = 9
         OnClick = pItemActiveGradientToClick
       end
       object pItemActiveGradientFrom: TPanel
@@ -1681,7 +1711,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 17
+        TabOrder = 6
         OnClick = pItemActiveGradientFromClick
       end
       object pItemActiveFrame: TPanel
@@ -1699,7 +1729,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 18
+        TabOrder = 3
         OnClick = pItemActiveFrameClick
       end
       object pItemActiveCaptionColor: TPanel
@@ -1719,7 +1749,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 19
+        TabOrder = 15
         OnClick = pItemActiveCaptionColorClick
       end
       object pItemActiveInnerDark: TPanel
@@ -1739,7 +1769,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
-        TabOrder = 20
+        TabOrder = 18
         OnClick = pItemActiveInnerDarkClick
       end
       object pItemActiveInnerLight: TPanel
@@ -1774,7 +1804,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BorderSpacing.Top = 4
         Caption = 'Link with tab and pane'
         OnClick = cbLinkItemClick
-        TabOrder = 22
+        TabOrder = 0
       end
       object bItemIdleFrameColor: TSpeedButton
         AnchorSideLeft.Control = pItemIdleFrame
@@ -2191,14 +2221,14 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet4: TTabSheet
       Caption = 'Import / export'
-      ClientHeight = 355
+      ClientHeight = 354
       ClientWidth = 544
       ImageIndex = 3
       object bImport: TButton
         AnchorSideLeft.Control = bExportToXML
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet4
-        Left = 250
+        Left = 252
         Height = 25
         Top = 4
         Width = 118
@@ -2207,16 +2237,16 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BorderSpacing.Top = 4
         Caption = 'Import from XML'
         OnClick = bImportClick
-        TabOrder = 0
+        TabOrder = 2
       end
       object bExportToXML: TButton
         AnchorSideLeft.Control = bExportToPascal
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet4
-        Left = 146
+        Left = 147
         Height = 25
         Top = 4
-        Width = 100
+        Width = 101
         AutoSize = True
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
@@ -2233,7 +2263,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Control = TabSheet4
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 318
+        Height = 317
         Top = 33
         Width = 536
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2246,7 +2276,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Font.Name = 'Courier New'
         ParentFont = False
         ScrollBars = ssAutoBoth
-        TabOrder = 2
+        TabOrder = 4
       end
       object bExportToPascal: TButton
         AnchorSideLeft.Control = TabSheet4
@@ -2254,13 +2284,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Left = 4
         Height = 25
         Top = 4
-        Width = 138
+        Width = 139
         AutoSize = True
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         Caption = 'Export to Pascal code'
         OnClick = bExportToPascalClick
-        TabOrder = 3
+        TabOrder = 0
       end
       object bCopyToClipboard: TButton
         AnchorSideTop.Control = TabSheet4
@@ -2276,12 +2306,12 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         BorderSpacing.Right = 4
         Caption = 'Copy'
         OnClick = bCopyToClipboardClick
-        TabOrder = 4
+        TabOrder = 3
       end
     end
     object TabSheet5: TTabSheet
       Caption = 'Tools'
-      ClientHeight = 357
+      ClientHeight = 354
       ClientWidth = 544
       ImageIndex = 4
       object Label17: TLabel

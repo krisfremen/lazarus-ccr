@@ -1933,6 +1933,8 @@ begin
 
   if ToolbarCornerRadius > 1 then
     ToolbarCornerRadius := round(ToolbarCornerRadius * AXProportion);
+
+  Appearance.Tab.AutoAdjustLayout(AXProportion, AYProportion);
 end;
 
 {$IF lcl_fullversion < 1080100}
