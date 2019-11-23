@@ -258,6 +258,8 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
 
+    procedure Loaded; override;
+
     //procedure GetDlgCode(var Code: TDlgCodes); override;
     procedure BoundsChanged; override;
     //procedure FocusSet(PrevWnd: THandle); override;
@@ -888,11 +890,7 @@ begin
   VertScrollBar.Tracking := Options.Tracking;
   DoubleBuffered := True;
   BorderStyle := bsSingle;
-//  Width := 185;
-//  Height := 150;
   TabStop := True;
-  with GetControlClassDefaultSize do
-    SetInitialBounds(0, 0, CX, CY);
 end;
 
 destructor TJvCustomItemViewer.Destroy;
@@ -949,8 +947,8 @@ end;
 
 class function TJvCustomItemViewer.GetControlClassDefaultSize: TSize;
 begin
-  Result.CX := 185;
-  Result.CY := 150;
+  Result.CX := 200; //185;
+  Result.CY := 200; //150;
 end;
 
 procedure TJvCustomItemViewer.OptionsChanged;
@@ -1576,16 +1574,13 @@ end;
 
 procedure TJvCustomItemViewer.SetSelectedIndex(const Value: Integer);
 begin
-  //  if (FSelectedIndex <> Value) then
-  begin
-    if (FSelectedIndex >= 0) and (FSelectedIndex < Count) and (cdsSelected in Items[FSelectedIndex].State) then
-      Items[FSelectedIndex].State := Items[FSelectedIndex].State - [cdsSelected];
+  if (FSelectedIndex >= 0) and (FSelectedIndex < Count) and (cdsSelected in Items[FSelectedIndex].State) then
+    Items[FSelectedIndex].State := Items[FSelectedIndex].State - [cdsSelected];
 
-    FSelectedIndex := Value;
+  FSelectedIndex := Value;
 
-    if (Value >= 0) and (Value < Count) and not (cdsSelected in Items[Value].State) then
-      Items[Value].State := Items[Value].State + [cdsSelected];
-  end;
+  if (Value >= 0) and (Value < Count) and not (cdsSelected in Items[Value].State) then
+    Items[Value].State := Items[Value].State + [cdsSelected];
 end;
 
 procedure TJvCustomItemViewer.ToggleSelection(Index: Integer;
@@ -1666,7 +1661,11 @@ procedure TJvCustomItemViewer.UpdateAll;
 begin
   if (csDestroying in ComponentState) or (Parent = nil) then
     Exit;
-  HandleNeeded;
+
+  { wp: Don't call HandleNeeded here!. If the viewer is inserted into a
+    PageControl all following pages will be hidden. }
+  // HandleNeeded;
+
   if not HandleAllocated then
     Exit;
 
@@ -1764,6 +1763,13 @@ begin
   InvalidateClipRect(ClientDisplayRect);
   if Assigned(FOnScroll) then
     FOnScroll(Self);
+end;
+
+procedure TJvCustomItemViewer.Loaded;
+begin
+  inherited;
+  HandleNeeded;
+  UpdateAll;
 end;
 
 procedure TJvCustomItemViewer.MouseDown(Button: TMouseButton; Shift: TShiftState;
