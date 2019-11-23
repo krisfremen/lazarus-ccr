@@ -280,7 +280,6 @@ type
 
     procedure CheckHotTrack;
     procedure InvalidateClipRect(R: TRect);
-    function ItemRect(Index: Integer; IncludeSpacing: Boolean): TRect;
     function ColRowToIndex(ACol, ARow: Integer): Integer;
     procedure OptionsChanged;
     procedure Changed;
@@ -353,6 +352,7 @@ type
     procedure Delete(Index: Integer);
     function IndexOf(Item: TJvViewerItem): Integer;
     function ItemAtPos(X, Y: Integer; Existing: Boolean): Integer; virtual;
+    function ItemRect(Index: Integer; IncludeSpacing: Boolean): TRect;
     property BorderStyle default bsSingle;
   end;
 
