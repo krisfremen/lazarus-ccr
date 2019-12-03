@@ -75,12 +75,15 @@ type
   {$IFDEF CLR}
   [StructLayout(LayoutKind.Sequential)]
   {$ENDIF CLR}
+  ***************************)
+
   TJvRGBTriple = packed record
     rgbBlue: Byte;
     rgbGreen: Byte;
     rgbRed: Byte;
   end;
 
+  (**************************
 const
   NullHandle = 0;
   // (rom) deleted fbs constants. They are already in JvConsts.pas.
@@ -184,7 +187,6 @@ type
     Result: Longint;
   end;
 
-(********************
   PJvRGBArray = ^TJvRGBArray;
   TJvRGBArray = array [0..MaxPixelCount] of TJvRGBTriple;
   PRGBQuadArray = ^TRGBQuadArray;
@@ -192,6 +194,7 @@ type
   PRGBPalette = ^TRGBPalette;
   TRGBPalette = array [Byte] of TRGBQuad;
 
+(********************
   { (rom) unused
   TJvPoint = class(TPersistent)
   protected

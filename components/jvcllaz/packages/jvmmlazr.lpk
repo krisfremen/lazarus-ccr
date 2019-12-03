@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="JvMMLazR"/>
     <Author Value="Various authors - see header of each unit for original author."/>
@@ -16,7 +16,7 @@
     <Description Value="JVCL Multimedia and image components (Run-time package): bmp animator, id3v1 and id3v2 tags,  full color components and dialogs, gradient, gradient header, special progress bar, animated image"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="6"/>
-    <Files Count="17">
+    <Files Count="18">
       <Item1>
         <Filename Value="..\run\JvMM\jvspecialprogress.pas"/>
         <UnitName Value="JvSpecialProgress"/>
@@ -85,6 +85,10 @@
         <Filename Value="..\run\JvMM\jvpicclip.pas"/>
         <UnitName Value="JvPicClip"/>
       </Item17>
+      <Item18>
+        <Filename Value="..\run\JvMM\jvspecialimage.pas"/>
+        <UnitName Value="JvSpecialImage"/>
+      </Item18>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

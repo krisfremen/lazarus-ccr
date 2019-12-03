@@ -1,3 +1,7 @@
+tjvspecialimage.png
+tjvspecialimage_150.png
+tjvspecialimage_200.png
+
 tjvid3v1.png
 tjvid3v1_150.png
 tjvid3v1_200.png
