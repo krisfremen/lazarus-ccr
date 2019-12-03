@@ -1,3 +1,7 @@
+tjvimagetransform.png
+tjvimagetransform_150.png
+tjvimagetransform_200.png
+
 tjvspecialimage.png
 tjvspecialimage_150.png
 tjvspecialimage_200.png
