@@ -34,6 +34,7 @@ Known Issues:
 unit JvDBLookup;
 
 {.$I jvcl.inc}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -344,14 +345,18 @@ type
     property OnKeyPress;
     property OnKeyUp;
     property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
     property OnMouseMove;
     property OnMouseUp;
     property OnStartDrag;
     property OnContextPopup;
+    property OnMouseWheel;
     property OnMouseWheelDown;
     property OnMouseWheelUp;
     property OnEndDock;
     property OnStartDock;
+    property OnUTF8KeyPress;
   end;
 
   //TJvPopupDataListWindow = class;
@@ -380,6 +385,9 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure DoShow; override;
     procedure DoClose(var CloseAction: TCloseAction); override;
+    {$IFDEF WINDOWS}
+    procedure WMActivate(var Message: TLMActivate); message LM_ACTIVATE;
+    {$ENDIF}
   public
     constructor CreateNew(AOwner: TComponent; Num: Integer = 0); override;
   end;
@@ -438,6 +446,8 @@ type
   protected
     procedure CreateWnd; override;
     procedure SetReadOnly(AValue: Boolean); override;
+    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer;
+      Raw: boolean = false; WithThemeSpace: boolean = true); override;
     function GetDropDownButtonRect: TRect;
     procedure InvalidateFrame;
     procedure InvalidateDropDownButton;
@@ -485,6 +495,8 @@ type
     property KeyValue;
   published
     property Align;
+    property AutoSize;
+    property DoubleBuffered;
     property BorderSpacing;
     property BorderStyle default bsSingle;
     property DropDownAlign: TDropDownAlign read FDropDownAlign write FDropDownAlign default daLeft;
@@ -522,6 +534,7 @@ type
     property LookupFormat;
     property LookupSource;
     property ParentColor;
+    property ParentDoubleBuffered;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
@@ -544,17 +557,21 @@ type
     property OnGetImage;
     property OnGetImageIndex;
     property OnKeyDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
     property OnKeyPress;
     property OnKeyUp;
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
+    property OnMouseWheel;
     property OnMouseWheelDown;
     property OnMouseWheelUp;
     property OnStartDrag;
     property OnContextPopup;
     property OnEndDock;
     property OnStartDock;
+    property OnUTF8KeyPress;
   end;
 
 (*  TJvPopupDataWindow = class(TJvPopupDataList)
@@ -2497,6 +2514,15 @@ begin
   Application.RemoveOnDeactivateHandler(@AppDeactivate);
 end;
 
+{$IFDEF WINDOWS}
+procedure TJvPopupDataListForm.WMActivate(var Message: TLMActivate);
+begin
+  if (Message.Active <> WA_INACTIVE) and Assigned(Self.GetRealPopupParent) then
+    SendMessage(Self.GetRealPopupParent.Handle, LM_NCACTIVATE, WPARAM(True), -1);
+  inherited;
+end;
+{$ENDIF}
+
 procedure TJvPopupDataListForm.AppDeactivate(Sender: TObject);
 begin
   if Assigned(FCombo) and (FCombo is TJvDBLookupCombo) then
@@ -2521,7 +2547,12 @@ begin
   ShowInTaskBar := stNever;
   BorderStyle := bsNone;
   FormStyle := fsStayOnTop;
+  {$IFDEF WINDOWS}
+  PopupMode := pmExplicit;
+  PopupParent := GetParentForm(TControl(AOwner));
+  {$ELSE}
   PopupMode := pmAuto;
+  {$ENDIF}
   KeyPreview := True;
   AutoSize := True;
   FList := TJvPopupDataList.Create(Self);
@@ -2612,7 +2643,7 @@ begin
     if ParentFormVisible(Self) and CanFocus then
       SetFocus;
     ListValue := FDataListForm.FList.Value;
-    FDataListForm.Visible := False;
+    FDataListForm.Close;
     FListVisible := False;
     FDataListForm.FList.LookupSource := nil;
     InvalidateDropDownButton;
@@ -2840,7 +2871,7 @@ end;
 
 function TJvDBLookupCombo.GetMinHeight: Integer;
 begin
-  Result := DefaultTextHeight + GetBorderSize + 3;
+  Result := DefaultTextHeight + GetBorderSize {+ 3};
 end;
 
 procedure TJvDBLookupCombo.UpdateFieldText;
@@ -3214,9 +3245,17 @@ begin
   InvalidateFrame;
 end;
 
+procedure TJvDBLookupCombo.GetPreferredSize(var PreferredWidth,
+  PreferredHeight: integer; Raw: boolean; WithThemeSpace: boolean);
+begin
+  inherited GetPreferredSize(PreferredWidth, PreferredHeight, Raw,
+    WithThemeSpace);
+  Height := GetMinHeight;
+end;
+
 function TJvDBLookupCombo.GetDropDownButtonRect: TRect;
 begin
-  Result := Rect(ClientWidth - (FButtonWidth - (Width - ClientWidth) div 2), 0, Width, ClientHeight);
+  Result := Rect(ClientWidth - FButtonWidth - Round((Width - ClientWidth) / 2), 0, Width, ClientHeight);
 end;
 
 procedure TJvDBLookupCombo.InvalidateFrame;
@@ -3285,6 +3324,7 @@ var
   I, LastIndex, TxtWidth: Integer;
   X, W, ATop, ARight: Integer;
   S: string;
+  TStyle: TTextStyle;
 begin
   if ColorToRGB(Self.Color) <> ColorToRGB(clBtnFace) then
     ACanvas.Pen.Color := clBtnFace
@@ -3292,7 +3332,7 @@ begin
     ACanvas.Pen.Color := clBtnShadow;
   LastIndex := FDisplayValues.Count - 1;
   TxtWidth := ACanvas.TextWidth('M');
-  ATop := Max(0, (RectHeight(R) - CanvasMaxTextHeight(ACanvas)) div 2);
+  ATop := 0;
   ARight := R.Right;
   Inc(R.Left, ALeft);
   for I := 0 to LastIndex do
@@ -3311,6 +3351,9 @@ begin
       taCenter:
         X := (W - ACanvas.TextWidth(S)) div 2;
     end;
+    TStyle := ACanvas.TextStyle;
+    TStyle.Layout := tlCenter;
+    ACanvas.TextStyle := TStyle;
     ACanvas.TextRect(R, R.Left + Max(0, X), ATop, S);
     Inc(R.Left, W);
     if I < LastIndex then
@@ -3369,6 +3412,7 @@ var
   Alignment: TAlignment;
   State: TThemedComboBox;
   Details: TThemedElementDetails;
+  TStyle: TTextStyle;
 begin
   if csDestroying in ComponentState then
     Exit;
@@ -3451,7 +3495,7 @@ begin
 
   if W > 4 then
   begin
-    R := Rect(1, 1, W - 1, ClientHeight - 1);
+    R := Rect({1}0, {1}0, W - 2, ClientHeight {- 1});
     if TextMargin > 0 then
       Inc(TextMargin);
     X := 4 + TextMargin;
@@ -3488,7 +3532,12 @@ begin
         PaintDisplayValues(Canvas, ImageRect, TextMargin);
     end
     else
-      Canvas.TextRect(ImageRect, X, R.Top + Max(0, (RectHeight(R) - Canvas.TextHeight(AText)) div 2), AText);
+    begin
+      TStyle := Canvas.TextStyle;
+      TStyle.Layout := tlCenter;
+      Canvas.TextStyle := TStyle;
+      Canvas.TextRect(ImageRect, X, R.Top, AText);
+    end;
 
     if Image <> nil then
     begin
