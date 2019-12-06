@@ -446,8 +446,6 @@ type
   protected
     procedure CreateWnd; override;
     procedure SetReadOnly(AValue: Boolean); override;
-    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer;
-      Raw: boolean = false; WithThemeSpace: boolean = true); override;
     function GetDropDownButtonRect: TRect;
     procedure InvalidateFrame;
     procedure InvalidateDropDownButton;
@@ -483,6 +481,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure GetPreferredSize(var PreferredWidth, PreferredHeight: integer;
+      Raw: boolean = false; WithThemeSpace: boolean = true); override;
     procedure CloseUp(Accept: Boolean); dynamic;
     procedure DropDown; virtual;
     procedure ResetField; override;
@@ -2752,6 +2752,10 @@ begin
     if Assigned(FOnDropDown) then
       FOnDropDown(Self);
     SelValue := Value; // backup before anything invokes a OnDataChange event
+
+    {$IFDEF WINDOWS}
+    FDataListForm.PopupParent := GetParentForm(Self);
+    {$ENDIF}
 
     FDataListForm.FList.Color := Color;
     FDataListForm.FList.Font := Font;
