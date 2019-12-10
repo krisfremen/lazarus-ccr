@@ -39,6 +39,7 @@ unit JvDBLookup;
 interface
 
 uses
+  {$IFDEF WINDOWS}Windows,{$ENDIF}
   Variants, Classes, Graphics, Controls, Forms, DB, DBCtrls,
   LMessages, LCLType, LCLIntf, LCLProc, EditBtn, Themes,
   JvThemes, JvDBUtils;
@@ -386,6 +387,7 @@ type
     procedure DoShow; override;
     procedure DoClose(var CloseAction: TCloseAction); override;
     {$IFDEF WINDOWS}
+    procedure CreateWnd; override;
     procedure WMActivate(var Message: TLMActivate); message LM_ACTIVATE;
     {$ENDIF}
   public
@@ -2515,6 +2517,13 @@ begin
 end;
 
 {$IFDEF WINDOWS}
+procedure TJvPopupDataListForm.CreateWnd;
+begin
+  inherited CreateWnd;
+  SetClassLong(WindowHandle, GCL_STYLE,
+    GetClassLong(WindowHandle, GCL_STYLE) or CS_DROPSHADOW);
+end;
+
 procedure TJvPopupDataListForm.WMActivate(var Message: TLMActivate);
 begin
   if (Message.Active <> WA_INACTIVE) and Assigned(Self.GetRealPopupParent) then
