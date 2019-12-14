@@ -31,8 +31,14 @@ unit JvRuler;
 interface
 
 uses
-  LCLIntf, LCLType,
-  Classes, SysUtils, Graphics, Controls, JvComponent;
+  LCLIntf, LCLType, LCLVersion, Types,
+  Classes, SysUtils, Graphics, Controls,
+  JvComponent;
+
+const
+  DEFAULT_JVRULER_MAJOR_TICKLENGTH = 8;
+  DEFAULT_JVRULER_MINOR_TICKLENGTH = 3;
+  DEFAULT_JVRULER_MARKER_SIZE = 6;
 
 type
   TJvRulerUnit = (ruCentimeters, ruInches, ruPixels);
@@ -43,27 +49,62 @@ type
     FUseUnit: TJvRulerUnit;
     FOrientation: TJvRulerOrientation;
     FPosition: Double;
+    FTickColor: TColor;
+    FMarkerColor: TColor;
+    FMarkerFilled: Boolean;
+    FMarkerSize: Integer;
+    FMajorTickLength: Integer;
+    FMinorTickCount: Integer;
+    FMinorTickLength: Integer;
+    FShowBaseline: Boolean;
+    FShowPositionMarker: Boolean;
+    function IsStoredMarkerSize: Boolean;
+    function IsStoredMajorTickLength: Boolean;
+    function IsStoredMinorTickLength: Boolean;
+    procedure SetMarkerColor(const Value: TColor);
+    procedure SetMarkerFilled(const Value: Boolean);
+    procedure SetMarkerSize(const Value: Integer);
+    procedure SetMajorTickLength(const Value: Integer);
+    procedure SetMinorTickCount(const Value: Integer);
+    procedure SetMinorTickLength(const Value: Integer);
+    procedure SetOrientation(const Value: TJvRulerOrientation);
     procedure SetPosition(const Value: Double);
-    procedure SetOrientation(Value: TJvRulerOrientation);
-    procedure SetUseUnit(Value: TJvRulerUnit);
+    procedure SetShowBaseline(const Value: Boolean);
+    procedure SetShowPositionMarker(const Value: Boolean);
+    procedure SetTickColor(const Value: TColor);
+    procedure SetUseUnit(const Value: TJvRulerUnit);
   protected
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$IFEND}
+    class function GetControlClassDefaultSize: TSize; override;
     procedure Paint; override;
   public
     constructor Create(AOwner: TComponent); override;
   published
     property Align;
+    property BorderSpacing;
     property Font;
-    property Height default 25;
-    property Width default 300;
+    property MarkerColor: TColor read FMarkerColor write SetMarkerColor default clBlack;
+    property MarkerFilled: Boolean read FMarkerFilled write SetMarkerFilled default true;
+    property MarkerSize: Integer read FMarkerSize write SetMarkerSize stored IsStoredMarkerSize;
+    property MajorTickLength: Integer read FMajorTickLength write SetMajorTickLength stored IsStoredMajorTickLength;
+    property MinorTickCount: Integer read FMinorTickCount write SetMinorTickCount default 1;
+    property MinorTickLength: Integer read FMinorTickLength write SetMinorTicklength stored IsStoredMinorTickLength;
     property Orientation: TJvRulerOrientation read FOrientation write SetOrientation  default roHorizontal;
     property Position: Double read FPosition write SetPosition;
+    property ShowBaseline: Boolean read FShowBaseline write SetShowBaseLine default false;
+    property ShowPositionMarker: Boolean read FShowPositionMarker write SetShowPositionMarker default false;
+    property TickColor: TColor read FTickColor write SetTickColor default clBlack;
     property UseUnit: TJvRulerUnit read FUseUnit write SetUseUnit default ruCentimeters;
-
-    property BorderSpacing;
   end;
 
 
 implementation
+
+uses
+  Math;
 
 const
   LogPixels: array [Boolean] of Integer = (LOGPIXELSY, LOGPIXELSX);
@@ -78,6 +119,14 @@ begin
   Result := Round(Value * GetDeviceCaps(DC, LogPixels[IsHorizontal]) / 2.54);
 end;
 
+function IsMultipleOf(a, b: Double): Boolean;
+var
+  c: Double;
+begin
+  c := a / b;
+  Result := SameValue(c, round(c));
+end;
+
 
 //=== { TJvRuler } ===========================================================
 
@@ -85,14 +134,64 @@ constructor TJvRuler.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FOrientation := roHorizontal;
+  FTickColor := clBlack;
   FUseUnit := ruCentimeters;
-  Width := 300;
-  Height := 25;
+  FMarkerFilled := true;
+  FMarkerSize := Scale96ToFont(DEFAULT_JVRULER_MARKER_SIZE);
+  FMajorTickLength := Scale96ToFont(DEFAULT_JVRULER_MAJOR_TICKLENGTH);
+  FMinorTickLength := Scale96ToFont(DEFAULT_JVRULER_MINOR_TICKLENGTH);
+  FMinorTickCount := 1;
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
+end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvRuler.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+var
+  proportion: Double;
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    case FOrientation of
+      roHorizontal: proportion := AYProportion;
+      roVertical: proportion := AXProportion;
+    end;
+    if not IsStoredMarkerSize then
+      FMarkerSize := round(FMarkerSize * proportion);
+    if not IsStoredMajorTickLength then
+      FMajorTickLength := round(FMajorTickLength * proportion);
+    if not IsStoredMinorTickLength then
+      FMinorTicklength := round(FMinorTickLength * proportion);
+  end;
+end;
+{$IFEND}
+
+class function TJvRuler.GetControlClassDefaultSize: TSize;
+begin
+  Result.CX := 380;
+  Result.CY := 25;
+end;
+
+function TJvRuler.IsStoredMarkerSize: Boolean;
+begin
+  Result := FMarkerSize <> Scale96ToFont(DEFAULT_JVRULER_MARKER_SIZE);
+end;
+
+function TJvRuler.IsStoredMajorTickLength: Boolean;
+begin
+  Result := FMajorTickLength <> Scale96ToFont(DEFAULT_JVRULER_MAJOR_TICKLENGTH);
+end;
+
+function TJvRuler.IsStoredMinorTickLength: Boolean;
+begin
+  Result := FMinorTickLength <> Scale96ToFont(DEFAULT_JVRULER_MINOR_TICKLENGTH);
 end;
 
 procedure TJvRuler.Paint;
 const
-  Offset: array[Boolean] of Integer = (3, 8);
+  MAJOR_DIST: array[TJvRulerUnit] of Double = (1.0, 1.0, 100.0);
 var
   X, Y: Double;
   PX, PY, Pos: Integer;
@@ -100,94 +199,225 @@ var
   R: TRect;
   ts: TTextStyle;
   h, w: Integer;
+  delta: Double;
+  isLabeledTick: Boolean;
+  isLongTick: Boolean;
+  tickLength: Integer;
+  baselineOffset: Integer;
+  markerSizeL, markerSizeS: Integer;
+  Pts: array[0..2] of TPoint;
 begin
   w := inherited Width;
   h := inherited Height;
+  ts := Canvas.TextStyle;
+  ts.SingleLine := true;
   Canvas.Font := Font;
+  Canvas.Pen.Style := psSolid;
+  Canvas.Pen.Color := FTickColor;
   X := 0;
   Y := 0;
-  repeat
-    X := X + 0.5;
-    Y := Y + 0.5;
+  delta := MAJOR_DIST[FUseUnit] / (FMinorTickCount + 1);
+  case FUseUnit of
+    ruInches: Pos := InchesToPixels(Canvas.Handle, Position, Orientation = roHorizontal);
+    ruCentimeters: Pos := CentimetersToPixels(Canvas.Handle, Position, Orientation = roHorizontal);
+    ruPixels: Pos := Round(Position);
+  end;
+
+  // Draw baseline
+  baseLineOffset := 0;
+  if FShowBaseLine then
+  begin
+    case FOrientation of
+      roHorizontal: Canvas.Line(0, h-1, w, h-1);
+      roVertical: Canvas.Line(w-1, 0, w-1, h);
+    end;
+    baseLineOffset := 1;
+  end;
+
+  // Draw labels and ticks
+  while true do begin
     case FUseUnit of
       ruInches:
         begin
           PX := InchesToPixels(Canvas.Handle, X, True);
           PY := InchesToPixels(Canvas.Handle, Y, False);
-          Pos := InchesToPixels(Canvas.Handle, Position, Orientation = roHorizontal);
         end;
       ruCentimeters:
         begin
           PX := CentimetersToPixels(Canvas.Handle, X, True);
           PY := CentimetersToPixels(Canvas.Handle, Y, False);
-          Pos := CentimetersToPixels(Canvas.Handle, Position, Orientation = roHorizontal);
         end;
-    else // ruPixels
-      PX := Round(X * 50);
-      PY := Round(Y * 50);
-      Pos := Round(Position);
+      ruPixels:
+        begin
+          PX := Round(X * delta);
+          PY := Round(Y * delta);
+          Pos := Round(Position);
+        end;
+      else
+        raise Exception.Create('Units not supported.');
     end;
 
-    SetBkMode(Canvas.Handle, TRANSPARENT);
-    if (PX < w) or (PY < h) then
-      with Canvas do begin
-        ts := TextStyle;
-        ts.SingleLine := true;
-        Pen.Style := psSolid;
-        Pen.Color := clBlack;
-        if Orientation = roHorizontal then
-        begin
-          if X = Trunc(X) then
-          begin
-            R := Rect(PX - 10, 0, PX + 10, h);
-            if UseUnit = ruPixels then
-              S := IntToStr(PX)
-            else
-              S := IntToStr(Trunc(X));
-            R := Rect(PX - TextWidth(S), 0, PX + TextWidth(S), h);
-            ts.Alignment := taCenter;
-            TextRect(R, R.Left, R.Top, S, ts);
-            //Windows.DrawText(Handle, PChar(S), Length(S), R, DT_SINGLELINE or DT_CENTER);
-          end;
-          MoveTo(PX, h - Offset[X = Trunc(X)]);
-          LineTo(PX, h);
-        end
-        else
-        begin
-          if Y = Trunc(Y) then
-          begin
-            if UseUnit = ruPixels then
-              S := IntToStr(PY)
-            else
-              S := IntToStr(Trunc(Y));
-            R := Rect(0, PY - TextHeight(S), w, PY + TextHeight(S));
-            ts.Layout := tlCenter;
-            TextRect(R, R.Left, R.Top, S, ts);
-            //Windows.DrawText(Handle, PChar(S), Length(S), R, DT_SINGLELINE or DT_VCENTER);
-          end;
-          MoveTo(w - Offset[Y = Trunc(Y)], PY);
-          LineTo(w, PY);
-        end;
-      end;
-  until ((Orientation = roHorizontal) and (PX > w)) or
-    ((Orientation = roVertical) and (PY > h));
+    case Orientation of
+      roHorizontal: if PX > w then break;
+      roVertical: if PY > h then break;
+    end;
 
-  if Position > 0.0 then
-    with Canvas do
+    //SetBkMode(Canvas.Handle, TRANSPARENT);
+    with Canvas do begin
       if Orientation = roHorizontal then
       begin
-        MoveTo(Pos - 2, h - 4);
-        LineTo(Pos + 2, h - 4);
-        LineTo(Pos, h);
-        LineTo(Pos - 2, h - 4);
-      end
-      else
+        isLabeledTick := IsMultipleOf(X, MAJOR_DIST[FUseUnit]) and (X <> 0);
+        if isLabeledTick then
+        begin
+          //R := Rect(PX - 10, 0, PX + 10, h);
+          if UseUnit = ruPixels then
+            S := IntToStr(PX)
+          else
+            S := IntToStr(Trunc(X));
+          R := Rect(PX - TextWidth(S), 0, PX + TextWidth(S), h);
+          ts.Alignment := taCenter;
+          TextRect(R, R.Left, R.Top, S, ts);
+          //Windows.DrawText(Handle, PChar(S), Length(S), R, DT_SINGLELINE or DT_CENTER);
+        end;
+        isLongTick := isLabeledTick or (IsMultipleOf(2*X, MAJOR_DIST[FUseUnit]) and (FMinorTickCount > 1));
+        tickLength := IfThen(isLongTick, FMajorTickLength, FMinorTickLength);
+        MoveTo(PX, h - baselineOffset - tickLength);
+        LineTo(PX, h - baselineOffset);
+      end else
       begin
-        MoveTo(w - 4, Pos - 2);
-        LineTo(w - 4, Pos + 2);
-        LineTo(w, Pos);
-        LineTo(w - 4, Pos - 2);
+        isLabeledTick := IsMultipleOf(Y, MAJOR_DIST[FUseUnit]) and (Y <> 0);
+        if isLabeledTick then
+        begin
+          if UseUnit = ruPixels then
+            S := IntToStr(PY)
+          else
+            S := IntToStr(Trunc(Y));
+          R := Rect(0, PY - TextHeight(S), w, PY + TextHeight(S));
+          ts.Layout := tlCenter;
+          TextRect(R, R.Left, R.Top, S, ts);
+          //Windows.DrawText(Handle, PChar(S), Length(S), R, DT_SINGLELINE or DT_VCENTER);
+        end;
+        isLongTick := isLabeledTick or (IsMultipleOf(2*Y, MAJOR_DIST[FUseUnit]) and (FMinorTickCount > 1));
+        tickLength := IfThen(isLongTick, FMajorTickLength, FMinorTickLength);
+        MoveTo(w - baselineOffset - tickLength, PY);
+        LineTo(w - baselineOffset, PY);
       end;
+      X := X + delta;
+      Y := Y + delta;
+    end;
+  end;
+
+  // Draw Position marker
+  if FShowPositionMarker and (Position > 0.0) then
+  begin
+    markerSizeL := FMarkerSize;
+    markerSizeS := FMarkerSize div 2;
+    case Orientation of
+      roHorizontal:
+        begin
+          Pts[0] := Point(Pos - markerSizeS, h - markerSizeL - baseLineOffset);
+          Pts[1] := Point(Pos + markerSizeS, h - markerSizeL - baseLineOffset);
+          Pts[2] := Point(Pos, h - baselineOffset);
+        end;
+      roVertical:
+        begin
+          Pts[0] := Point(w - markerSizeL - baselineOffset, Pos - markerSizeS);
+          Pts[1] := Point(w - markerSizeL - baselineOffset, Pos + markerSizeS);
+          Pts[2] := Point(w - baselineOffset, Pos);
+        end;
+    end;
+    with Canvas do
+    begin
+      Pen.Color := FMarkerColor;
+      Brush.Color := FMarkerColor;
+      if FMarkerFilled then
+        Brush.Style := bsSolid
+      else
+        Brush.Style := bsClear;
+      Polygon(Pts);
+    end;
+    {
+
+      if Orientation = roHorizontal then
+      begin
+        MoveTo(Pos - markerSizeS, h - markerSizeL - baselineOffset);
+        LineTo(Pos + markerSizeS, h - markerSizeL - baselineOffset);
+        LineTo(Pos, h - baselineOffset);
+        LineTo(Pos - markerSizeS, h - markerSizeL - baselineOffset);
+      end else
+      begin
+        MoveTo(w - markerSizeL - baselineOffset, Pos - markerSizeS);
+        LineTo(w - markerSizeL - baselineOffset, Pos + markerSizeS);
+        LineTo(w - baselineOffset, Pos);
+        LineTo(w - markerSizeL - baselineOffset, Pos - markersizeS);
+      end;
+      }
+  end;
+end;
+
+procedure TJvRuler.SetMarkerColor(const Value: TColor);
+begin
+  if FMarkerColor <> Value then
+  begin
+    FMarkerColor := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetMarkerFilled(const Value: Boolean);
+begin
+  if FMarkerFilled <> Value then
+  begin
+    FMarkerFilled := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetMarkerSize(const Value: Integer);
+begin
+  if FMarkerSize <> Value then
+  begin
+    FMarkerSize := abs(Value);
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetMajorTickLength(const Value: Integer);
+begin
+  if FMajorTickLength <> Value then
+  begin
+    FMajorTickLength := abs(Value);
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetMinorTickCount(const Value: Integer);
+begin
+  if FMinorTickCount <> Value then
+  begin
+    FMinorTickCount := abs(Value);
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetMinorTickLength(const Value: Integer);
+begin
+  if FMinorTickLength <> Value then
+  begin
+    FMinorTickLength := abs(Value);
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetOrientation(const Value: TJvRulerOrientation);
+begin
+  if FOrientation <> Value then
+  begin
+    FOrientation := Value;
+    if csDesigning in ComponentState then
+      SetBounds(Left, Top, Height, Width);
+    Invalidate;
+  end;
 end;
 
 procedure TJvRuler.SetPosition(const Value: Double);
@@ -199,18 +429,34 @@ begin
   end;
 end;
 
-procedure TJvRuler.SetOrientation(Value: TJvRulerOrientation);
+procedure TJvRuler.SetShowBaseline(const Value: Boolean);
 begin
-  if FOrientation <> Value then
+  if FShowBaseLine <> Value then
   begin
-    FOrientation := Value;
-    if csDesigning in ComponentState then
-      SetBounds(Left, Top, Height, Width);
+    FShowBaseLine := Value;
     Invalidate;
   end;
 end;
 
-procedure TJvRuler.SetUseUnit(Value: TJvRulerUnit);
+procedure TJvRuler.SetShowPositionMarker(const Value: Boolean);
+begin
+  if FShowPositionMarker <> Value then
+  begin
+    FShowPositionMarker := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetTickColor(const Value: TColor);
+begin
+  if FTickColor <> Value then
+  begin
+    FTickColor := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TJvRuler.SetUseUnit(const Value: TJvRulerUnit);
 begin
   if FUseUnit <> Value then
   begin
