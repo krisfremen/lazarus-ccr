@@ -158,11 +158,11 @@ begin
       roHorizontal: proportion := AYProportion;
       roVertical: proportion := AXProportion;
     end;
-    if not IsStoredMarkerSize then
+    if IsStoredMarkerSize then
       FMarkerSize := round(FMarkerSize * proportion);
-    if not IsStoredMajorTickLength then
+    if IsStoredMajorTickLength then
       FMajorTickLength := round(FMajorTickLength * proportion);
-    if not IsStoredMinorTickLength then
+    if IsStoredMinorTickLength then
       FMinorTicklength := round(FMinorTickLength * proportion);
   end;
 end;
@@ -273,7 +273,7 @@ begin
           if UseUnit = ruPixels then
             S := IntToStr(PX)
           else
-            S := IntToStr(Trunc(X));
+            S := IntToStr(Round(X));
           R := Rect(PX - TextWidth(S), 0, PX + TextWidth(S), h);
           ts.Alignment := taCenter;
           TextRect(R, R.Left, R.Top, S, ts);
@@ -291,7 +291,7 @@ begin
           if UseUnit = ruPixels then
             S := IntToStr(PY)
           else
-            S := IntToStr(Trunc(Y));
+            S := IntToStr(Round(Y));
           R := Rect(0, PY - TextHeight(S), w, PY + TextHeight(S));
           ts.Layout := tlCenter;
           TextRect(R, R.Left, R.Top, S, ts);
