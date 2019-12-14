@@ -249,8 +249,8 @@ begin
         end;
       ruPixels:
         begin
-          PX := Round(X * delta);
-          PY := Round(Y * delta);
+          PX := Round(X);
+          PY := Round(Y);
           Pos := Round(Position);
         end;
       else
