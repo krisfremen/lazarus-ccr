@@ -1,5 +1,5 @@
 unit mandocking; 
-{$APPTYPE CONSOLE}
+
 {$mode objfpc}{$H+}
 
 interface
@@ -111,9 +111,6 @@ begin
 end;
 
 function TManualDocker.DoChangeDocking(DockingEnabled:Boolean):Boolean;
-var
-  i : Integer;
-  wnd : TSourceEditorWindowInterface;
 begin
   if DockingEnabled then begin
     Result:=False;
@@ -270,8 +267,6 @@ begin
 end;
 
 procedure TManualDocker.SourceWindowDestroyed(Sender: TObject);
-var
-  i : Integer;
 begin
   if FCurrentSrcWin <> Sender then Exit;
   DoChangeDocking(False);
@@ -285,25 +280,31 @@ end;
 
 procedure TManualDocker.LoadState(cfg: TXMLConfig; var Astate: TDockState;
   const StateName: string);
+var
+  nm : UnicodeString;
 begin
-  AState.Docked := cfg.GetValue(StateName+'/docked', False);
-  AState.FloatRect.Left := cfg.GetValue(StateName+'/float/left', -1);
-  AState.FloatRect.Top := cfg.GetValue(StateName+'/float/top', -1);
-  AState.FloatRect.Right := cfg.GetValue(StateName+'/float/right', -1);
-  AState.FloatRect.Bottom := cfg.GetValue(StateName+'/float/bottom', -1);
-  AState.DockSize.cx := cfg.GetValue(StateName+'/docked/cx', 30);
-  AState.DockSize.cy := cfg.GetValue(StateName+'/docked/cy', 50);
+  nm := UTF8Decode(StateName);
+  AState.Docked := cfg.GetValue(nm+'/docked', False);
+  AState.FloatRect.Left := cfg.GetValue(nm+'/float/left', -1);
+  AState.FloatRect.Top := cfg.GetValue(nm+'/float/top', -1);
+  AState.FloatRect.Right := cfg.GetValue(nm+'/float/right', -1);
+  AState.FloatRect.Bottom := cfg.GetValue(nm+'/float/bottom', -1);
+  AState.DockSize.cx := cfg.GetValue(nm+'/docked/cx', 30);
+  AState.DockSize.cy := cfg.GetValue(nm+'/docked/cy', 50);
 end;
 
 procedure TManualDocker.SaveState(cfg: TXMLConfig; const Astate: TDockState; const StateName: string);
+var
+  nm : UnicodeString;
 begin
-  cfg.SetValue(StateName+'/docked', AState.Docked);
-  cfg.SetValue(StateName+'/float/left', AState.FloatRect.Left);
-  cfg.SetValue(StateName+'/float/top', AState.FloatRect.Top);
-  cfg.SetValue(StateName+'/float/right', AState.FloatRect.Right);
-  cfg.SetValue(StateName+'/float/bottom', AState.FloatRect.Bottom);
-  cfg.SetValue(StateName+'/docked/cx', AState.DockSize.cx);
-  cfg.SetValue(StateName+'/docked/cy', AState.DockSize.cy)
+  nm:=UTF8Decode(StateName);
+  cfg.SetValue(nm+'/docked', AState.Docked);
+  cfg.SetValue(nm+'/float/left', AState.FloatRect.Left);
+  cfg.SetValue(nm+'/float/top', AState.FloatRect.Top);
+  cfg.SetValue(nm+'/float/right', AState.FloatRect.Right);
+  cfg.SetValue(nm+'/float/bottom', AState.FloatRect.Bottom);
+  cfg.SetValue(nm+'/docked/cx', AState.DockSize.cx);
+  cfg.SetValue(nm+'/docked/cy', AState.DockSize.cy)
 end;
 
 procedure TManualDocker.LoadStates;
