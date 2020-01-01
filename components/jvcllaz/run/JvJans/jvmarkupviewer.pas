@@ -149,9 +149,13 @@ var
 //  tm: TEXTMETRIC;
   s: string;
 begin
+  if csLoading in ComponentState then
+    exit;
+
   C := FElementStack.Count;
   if C = 0 then
     Exit;
+
   for I := 0 to C - 1 do
   begin
     Element := TJvHTMLElement(FElementStack.Items[I]);
