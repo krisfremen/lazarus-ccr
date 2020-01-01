@@ -45,7 +45,7 @@ type
     FMarginTop: Integer;
     FAlignment: TAlignment;
     FText: TCaption;
-    procedure Refresh;
+    procedure RefreshLabel;
     procedure ParseHTML(S: string);
     procedure RenderHTML;
     procedure HTMLClearBreaks;
@@ -57,6 +57,7 @@ type
 //    procedure DoReadBackColor(Reader: TReader);
   protected
 //    procedure FontChanged; override;
+    procedure Loaded; override;
     procedure SetText(const Value: TCaption);
     procedure SetAutoSize(Value: Boolean);  override;
 //    procedure DefineProperties(Filer: TFiler); override;
@@ -176,8 +177,11 @@ begin
   end;
 end;
 
-procedure TJvMarkupLabel.Refresh;
+procedure TJvMarkupLabel.RefreshLabel;
 begin
+  if csLoading in ComponentState then
+    exit;
+
   ParseHTML(FText);
   HTMLElementDimensions;
   Invalidate;
@@ -192,9 +196,15 @@ end;
 procedure TJvMarkupLabel.FontChanged;
 begin
   inherited FontChanged;
-  Refresh;
+  RefreshLabel;
 end;
 }
+
+procedure TJvMarkupLabel.Loaded;
+begin
+  inherited;
+  RefreshLabel;
+end;
 
 procedure TJvMarkupLabel.ParseHTML(S: string);
 var
@@ -610,7 +620,7 @@ begin
   S := StringReplace(S, SLineBreak, ' ', [rfReplaceAll]);
   S := TrimRight(S);
   FText := S;
-  Refresh;
+  RefreshLabel;
 end;
 
 {function TJvMarkupLabel.GetBackColor: TColor;
