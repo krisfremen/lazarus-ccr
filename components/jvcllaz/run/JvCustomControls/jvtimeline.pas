@@ -342,9 +342,10 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure CreateWnd; override;
     function GetDragImages: TDragImageList; override;
+    procedure SetHint(const Value: TTranslateString); override;
+
     property Align default alTop;
     property Color default clWindow;
-    procedure SetHint(const Value: TTranslateString); override;
 
     { new properties }
     property Year: Word read GetYear write SetYear;
@@ -606,6 +607,8 @@ end;
 
 procedure TJvTimeItem.Update;
 begin
+  if not FParent.FTimeLine.HandleAllocated then
+    exit;
   LCLIntf.InvalidateRect(FParent.FTimeLine.Handle, @FRect, True);
   FParent.FTimeLine.UpdateItem(Index, FParent.FTimeLine.Canvas);
   LCLIntf.InvalidateRect(FParent.FTimeLine.Handle, @FRect, True);
@@ -2143,6 +2146,8 @@ procedure TJvCustomTimeLine.UpdateItems;
 var
   I: Integer;
 begin
+  if not HandleAllocated then
+    exit;
   if csDestroying in ComponentState then
     Exit;
   FNewHeight := 0;
@@ -2953,6 +2958,5 @@ begin
     Invalidate;
   end;
 end;
-
 
 end.
