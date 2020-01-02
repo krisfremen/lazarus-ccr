@@ -1342,7 +1342,7 @@ var
   NewWidth, NewHeight: Integer;
   tmp: Integer;
 begin
-  if not (csReading in ComponentState) and FAutoSize then
+  if not (csLoading in ComponentState) and FAutoSize then
   begin
     UpdateAllSizes;
     if aoGrid in AutoSizeOptions then
