@@ -41,7 +41,7 @@ type
     procedure ButtonFillClick(Sender: TObject);
     procedure ButtonSolveClick(Sender: TObject);
     procedure StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
-      aState: TGridDrawState);
+      {%H-}aState: TGridDrawState);
     procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
       const Value: string);
   private
