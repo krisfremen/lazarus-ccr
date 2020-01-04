@@ -49,8 +49,6 @@ type
       {%H-}aState: TGridDrawState);
     procedure SGridSelectEditor(Sender: TObject; {%H-}aCol, {%H-}aRow: Integer;
       var Editor: TWinControl);
-    procedure SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
-      const Value: string);
   private
     { private declarations }
     theValues: TValues;
@@ -145,15 +143,6 @@ begin
   end;
 end;
 
-procedure TForm1.SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
-  const Value: string);
-begin
-  if (Length(Value) >= 1) and (Value[1] in ['1'..'9']) then begin
-    theValues[ACol + 1, ARow + 1] := StrToInt(Value[1]);
-  end else begin
-    theValues[ACol + 1, ARow + 1] := 0;
-  end;
-end;
 
 function TForm1.SolveSudoku: Boolean;
 var

@@ -28,7 +28,6 @@ object Form1: TForm1
     TabOrder = 2
     OnPrepareCanvas = SGridPrepareCanvas
     OnSelectEditor = SGridSelectEditor
-    OnSetEditText = SGridSetEditText
   end
   object ButtonFill: TButton
     Left = 16
