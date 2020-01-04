@@ -40,13 +40,13 @@ type
   TForm1 = class(TForm)
     ButtonSolve: TButton;
     ButtonFill: TButton;
-    StringGrid1: TStringGrid;
+    SGrid: TStringGrid;
     procedure ButtonFillClick(Sender: TObject);
     procedure ButtonSolveClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
+    procedure SGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
       {%H-}aState: TGridDrawState);
-    procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
+    procedure SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
       const Value: string);
   private
     { private declarations }
@@ -70,16 +70,16 @@ procedure TForm1.ButtonFillClick(Sender: TObject);
 var
   c, r: Integer;
 begin
-  for c := 0 to pred(StringGrid1.ColCount) do
-    for r := 0 to pred(StringGrid1.RowCount) do
-      StringGrid1.Cells[c, r] := '';
-  StringGrid1.Options := StringGrid1.Options + [goEditing];
-  StringGrid1.SetFocus;
+  for c := 0 to pred(SGrid.ColCount) do
+    for r := 0 to pred(SGrid.RowCount) do
+      SGrid.Cells[c, r] := '';
+  SGrid.Options := SGrid.Options + [goEditing];
+  SGrid.SetFocus;
 end;
 
 procedure TForm1.ButtonSolveClick(Sender: TObject);
 begin
-  StringGrid1.Options := StringGrid1.Options - [goEditing];
+  SGrid.Options := SGrid.Options - [goEditing];
   SolveSudoku;
   ShowSolution;
 end;
@@ -87,12 +87,12 @@ end;
 procedure TForm1.FormActivate(Sender: TObject);
 begin
   Self.OnActivate := nil;
-  StringGrid1.ClientWidth := 9 * StringGrid1.DefaultColWidth;
-  StringGrid1.ClientHeight := 9 * StringGrid1.DefaultRowHeight;
-  ClientWidth := 2 * StringGrid1.Left + StringGrid1.Width;
+  SGrid.ClientWidth := 9 * SGrid.DefaultColWidth;
+  SGrid.ClientHeight := 9 * SGrid.DefaultRowHeight;
+  ClientWidth := 2 * SGrid.Left + SGrid.Width;
 end;
 
-procedure TForm1.StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
+procedure TForm1.SGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
   aState: TGridDrawState);
 var
   NeedsColor: Boolean;
@@ -116,7 +116,7 @@ begin
     (Sender as TStringGrid).Canvas.Brush.Color := $00EEEEEE;
 end;
 
-procedure TForm1.StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
+procedure TForm1.SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
   const Value: string);
 begin
   if (Length(Value) >= 1) and (Value[1] in ['1'..'9']) then begin
@@ -134,9 +134,9 @@ var
 begin
   for Col := 0 to 8 do begin
     for Row := 0 to 8 do begin
-      if Length(StringGrid1.Cells[Col, Row]) >= 1 then
+      if Length(SGrid.Cells[Col, Row]) >= 1 then
       begin
-        theValues[Col + 1, Row + 1] := StringGrid1.Cells[Col, Row][1];
+        theValues[Col + 1, Row + 1] := SGrid.Cells[Col, Row][1];
       end
       else
       begin
@@ -165,7 +165,7 @@ begin
       Ch := theValues[Col + 1, Row + 1];
       if Ch = '0' then
         Ch := #32;
-      StringGrid1.Cells[Col, Row] := Ch;
+      SGrid.Cells[Col, Row] := Ch;
     end;
   end;
 end;
