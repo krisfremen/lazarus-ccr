@@ -28,7 +28,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, Grids,
-  Buttons, StdCtrls, sudokutype;
+  Buttons, StdCtrls, SudokuType;
 
 type
 
@@ -47,7 +47,8 @@ type
   private
     { private declarations }
     theValues: TValues;
-    procedure SolveSudoku;
+    function SolveSudoku: Boolean;
+    procedure ShowSolution;
   public
     { public declarations }
   end; 
@@ -73,19 +74,10 @@ begin
 end;
 
 procedure TForm1.ButtonSolveClick(Sender: TObject);
-var
-  c, r: Integer;
 begin
   StringGrid1.Options := StringGrid1.Options - [goEditing];
   SolveSudoku;
-  StringGrid1.Clean;
-  for c := 1 to 9 do begin
-    for r := 1 to 9 do begin
-      StringGrid1.Cells[c - 1, r - 1] := theValues[c, r];
-      if StringGrid1.Cells[c - 1, r - 1] = '0' then
-        StringGrid1.Cells[c - 1, r - 1] := ' ';
-    end;
-  end;
+  ShowSolution;
 end;
 
 
@@ -123,25 +115,48 @@ begin
   end;
 end;
 
-procedure TForm1.SolveSudoku;
+function TForm1.SolveSudoku: Boolean;
 var
   aSudoku: TSudoku;
-  c, r: Integer;
-  Stappen: Integer;
+  Col, Row: Integer;
+  Steps: Integer;
 begin
-  for c := 0 to 8 do begin
-    for r := 0 to 8 do begin
-      if Length(StringGrid1.Cells[c, r]) >= 1 then begin
-        theValues[c + 1, r + 1] := StringGrid1.Cells[c, r][1];
-      end else begin
-        theValues[c + 1, r + 1] := ' ';
+  for Col := 0 to 8 do begin
+    for Row := 0 to 8 do begin
+      if Length(StringGrid1.Cells[Col, Row]) >= 1 then
+      begin
+        theValues[Col + 1, Row + 1] := StringGrid1.Cells[Col, Row][1];
+      end
+      else
+      begin
+        theValues[Col + 1, Row + 1] := ' ';
       end;
     end;
   end;
   aSudoku := TSudoku.Create;
-  Stappen := aSudoku.GiveSolution(theValues);
+  Result := aSudoku.GiveSolution(theValues, Steps);
   aSudoku.Free;
-  ShowMessage('Sudoku solved in ' + IntToStr(Stappen) + ' steps.');
+  if Result then
+    ShowMessage(Format('Sudoku solved in %d steps.', [Steps]))
+  else
+    ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
+end;
+
+procedure TForm1.ShowSolution;
+var
+  Col, Row: Integer;
+  Ch: Char;
+begin
+  for Col := 0 to 8 do
+  begin
+    for Row := 0 to 8 do
+    begin
+      Ch := theValues[Col + 1, Row + 1];
+      if Ch = '0' then
+        Ch := #32;
+      StringGrid1.Cells[Col, Row] := Ch;
+    end;
+  end;
 end;
 
 end.

@@ -1,4 +1,4 @@
-unit sudokutype;
+unit SudokuType;
 
 {
  ***************************************************************************
@@ -41,7 +41,7 @@ type
   { TSudoku }
 
   TSudoku = class(TObject)
-    function GiveSolution(var Values: TValues): Integer;
+    function GiveSolution(var Values: TValues; out ASteps: Integer): Boolean;
   private
     Grid : Array[1..9, 1..9] of TSquare;
     Steps: Integer;
@@ -51,7 +51,7 @@ type
     procedure CheckBlock(c, r: Integer);
     procedure CheckDigits(d: Integer);
     procedure Fill(Values: TValues);
-    procedure Solve;
+    function Solve: Boolean;
     function Solved: Boolean;
   end;
 
@@ -95,7 +95,7 @@ begin
   end;
 end;
 
-procedure TSudoku.Solve;
+function TSudoku.Solve: Boolean;
 var
   c, r: Integer;
 begin
@@ -113,21 +113,22 @@ begin
     end;
     for c := 1 to 9 do CheckDigits(c);
     CalculateValues;
-  until Solved or (Steps > 50);
+    Result := Solved;
+  until Result or (Steps > 50);
 end;
 
-function TSudoku.GiveSolution(var Values: TValues): Integer;
+function TSudoku.GiveSolution(var Values: TValues; out ASteps: Integer): Boolean;
 var
   c, r: Integer;
 begin
   Fill(Values);
-  Solve;
+  Result := Solve;
   for c := 1 to 9 do begin
     for r := 1 to 9 do begin
       Values[c, r] := Grid[c, r].Value;
     end;
   end;
-  Result := Steps;
+  ASteps := Steps;
 end;
 
 procedure TSudoku.CalculateValues;
