@@ -1,0 +1,63 @@
+object Form1: TForm1
+  Left = 571
+  Height = 281
+  Top = 355
+  Width = 272
+  HorzScrollBar.Page = 271
+  VertScrollBar.Page = 280
+  ActiveControl = ButtonFill
+  Caption = 'Form1'
+  ClientHeight = 281
+  ClientWidth = 272
+  PixelsPerInch = 75
+  object Label1: TLabel
+    Left = 44
+    Height = 13
+    Top = 8
+    Width = 39
+    Caption = 'Label1'
+    Color = clNone
+    ParentColor = False
+  end
+  object StringGrid1: TStringGrid
+    Left = 44
+    Height = 182
+    Top = 40
+    Width = 182
+    ColCount = 9
+    DefaultColWidth = 20
+    FixedColor = clBtnFace
+    FixedCols = 0
+    FixedRows = 0
+    GridLineWidth = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+    RowCount = 9
+    ScrollBars = ssAutoBoth
+    TabOrder = 2
+    TabStop = True
+    VisibleColCount = 9
+    VisibleRowCount = 9
+    OnDrawCell = StringGrid1DrawCell
+    OnSetEditText = StringGrid1SetEditText
+  end
+  object ButtonFill: TButton
+    Left = 44
+    Height = 25
+    Top = 228
+    Width = 75
+    BorderSpacing.InnerBorder = 2
+    Caption = 'Fill'
+    OnClick = ButtonFillClick
+    TabOrder = 0
+  end
+  object ButtonSolve: TButton
+    Left = 151
+    Height = 25
+    Top = 228
+    Width = 75
+    BorderSpacing.InnerBorder = 2
+    Caption = 'Solve'
+    OnClick = ButtonSolveClick
+    TabOrder = 1
+  end
+end
