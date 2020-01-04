@@ -7,6 +7,7 @@
         <LRSInOutputDirectory Value="False"/>
         <CompatibilityMode Value="True"/>
       </Flags>
+      <SessionStorage Value="InProjectDir"/>
       <ResourceType Value="res"/>
     </General>
     <BuildModes Count="1">
@@ -33,14 +34,10 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="3">
       <Unit0>
         <Filename Value="sudoku.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos Y="26"/>
-        <UsageCount Value="241"/>
-        <LoadedDesigner Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="sudokumain.pas"/>
@@ -48,67 +45,12 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="121"/>
-        <CursorPos Y="150"/>
-        <UsageCount Value="241"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="sudokutype.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="89"/>
-        <CursorPos Y="119"/>
-        <UsageCount Value="241"/>
-        <Loaded Value="True"/>
       </Unit2>
-      <Unit3>
-        <Filename Value="origineel/sudokutype.pas"/>
-        <TopLine Value="166"/>
-        <CursorPos Y="202"/>
-        <UsageCount Value="5"/>
-      </Unit3>
-      <Unit4>
-        <Filename Value="home/matthijs/Projecten/Lazarus/suntime/SunTime.pas"/>
-        <TopLine Value="121"/>
-        <CursorPos X="30" Y="133"/>
-        <UsageCount Value="12"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="home/matthijs/Projecten/Lazarus/suntime/suntime_com.pas"/>
-        <TopLine Value="197"/>
-        <CursorPos X="9" Y="218"/>
-        <UsageCount Value="10"/>
-      </Unit5>
     </Units>
-    <JumpHistory Count="6" HistoryIndex="5">
-      <Position1>
-        <Filename Value="sudokutype.pas"/>
-        <Caret Line="45" TopLine="21"/>
-      </Position1>
-      <Position2>
-        <Filename Value="sudokutype.pas"/>
-        <Caret Line="24"/>
-      </Position2>
-      <Position3>
-        <Filename Value="sudokumain.pas"/>
-        <Caret Line="73" Column="59" TopLine="58"/>
-      </Position3>
-      <Position4>
-        <Filename Value="sudokumain.pas"/>
-        <Caret Line="81" Column="59" TopLine="66"/>
-      </Position4>
-      <Position5>
-        <Filename Value="sudokumain.pas"/>
-        <Caret Line="16" TopLine="16"/>
-      </Position5>
-      <Position6>
-        <Filename Value="sudokumain.pas"/>
-        <Caret Line="61" Column="2" TopLine="45"/>
-      </Position6>
-    </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
