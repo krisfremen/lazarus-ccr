@@ -7,6 +7,7 @@
         <LRSInOutputDirectory Value="False"/>
         <CompatibilityMode Value="True"/>
       </Flags>
+      <ResourceType Value="res"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="default" Default="True"/>
@@ -36,10 +37,9 @@
       <Unit0>
         <Filename Value="sudoku.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <CursorPos Y="26"/>
         <UsageCount Value="241"/>
-        <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit0>
       <Unit1>
@@ -49,9 +49,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="66"/>
-        <CursorPos X="59" Y="81"/>
+        <TopLine Value="121"/>
+        <CursorPos Y="150"/>
         <UsageCount Value="241"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -59,7 +58,9 @@
       <Unit2>
         <Filename Value="sudokutype.pas"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos Y="24"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="89"/>
+        <CursorPos Y="119"/>
         <UsageCount Value="241"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -82,7 +83,7 @@
         <UsageCount Value="10"/>
       </Unit5>
     </Units>
-    <JumpHistory Count="4" HistoryIndex="3">
+    <JumpHistory Count="6" HistoryIndex="5">
       <Position1>
         <Filename Value="sudokutype.pas"/>
         <Caret Line="45" TopLine="21"/>
@@ -97,8 +98,16 @@
       </Position3>
       <Position4>
         <Filename Value="sudokumain.pas"/>
-        <Caret Line="81" Column="26" TopLine="66"/>
+        <Caret Line="81" Column="59" TopLine="66"/>
       </Position4>
+      <Position5>
+        <Filename Value="sudokumain.pas"/>
+        <Caret Line="16" TopLine="16"/>
+      </Position5>
+      <Position6>
+        <Filename Value="sudokumain.pas"/>
+        <Caret Line="61" Column="2" TopLine="45"/>
+      </Position6>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

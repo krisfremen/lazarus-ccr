@@ -58,8 +58,7 @@ var
 
 implementation
 
-// Voor delphi is de volgende regel noodzakelijk. Spatie tussen { en $ verwijderen
-{ $R *.dfm }
+{$R *.lfm }
 
 { TForm1 }
 
@@ -148,8 +147,5 @@ begin
   ShowMessage('Sudoku solved in ' + IntToStr(Stappen) + ' steps.');
 end;
 
-initialization
-// Voor lazarus is deze regel nodig.
-  {$I sudokumain.lrs}
 end.
 
