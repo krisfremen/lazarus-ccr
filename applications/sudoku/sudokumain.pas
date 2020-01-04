@@ -4,6 +4,9 @@ unit sudokumain;
  ***************************************************************************
  *   Copyright (C) 2006  Matthijs Willemstein                              *
  *                                                                         *
+ *   Note: the original code by Matthijs was checked in as revision 7217   *
+ *   in Lazarus-CCR subversion repository                                  *
+ *                                                                         *
  *   This source is free software; you can redistribute it and/or modify   *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
