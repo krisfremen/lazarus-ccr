@@ -43,9 +43,12 @@ type
     SGrid: TStringGrid;
     procedure ButtonFillClick(Sender: TObject);
     procedure ButtonSolveClick(Sender: TObject);
+    procedure EditorKeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
     procedure SGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
       {%H-}aState: TGridDrawState);
+    procedure SGridSelectEditor(Sender: TObject; {%H-}aCol, {%H-}aRow: Integer;
+      var Editor: TWinControl);
     procedure SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
       const Value: string);
   private
@@ -84,6 +87,19 @@ begin
   ShowSolution;
 end;
 
+procedure TForm1.EditorKeyPress(Sender: TObject; var Key: char);
+var
+  Ed: TStringCellEditor;
+begin
+  if (Sender is TStringCellEditor) then
+  begin
+    Ed := TStringCellEditor(Sender);
+    Ed.SelectAll; //Key will now overwrite selection, in effect allowing to enter only 1 key
+    if not (Key in [#8, '1'..'9']) then Key := #0;
+  end;
+end;
+
+
 procedure TForm1.FormActivate(Sender: TObject);
 begin
   Self.OnActivate := nil;
@@ -91,6 +107,7 @@ begin
   SGrid.ClientHeight := 9 * SGrid.DefaultRowHeight;
   ClientWidth := 2 * SGrid.Left + SGrid.Width;
 end;
+
 
 procedure TForm1.SGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
   aState: TGridDrawState);
@@ -114,6 +131,18 @@ begin
   end;
   if NeedsColor then
     (Sender as TStringGrid).Canvas.Brush.Color := $00EEEEEE;
+end;
+
+procedure TForm1.SGridSelectEditor(Sender: TObject; aCol, aRow: Integer;
+  var Editor: TWinControl);
+var
+  Ed: TStringCellEditor;
+begin
+  if Editor is TStringCellEditor then
+  begin
+    Ed := TStringCellEditor(Editor);
+    Ed.OnKeyPress := @EditorKeyPress;
+  end;
 end;
 
 procedure TForm1.SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
@@ -152,6 +181,7 @@ begin
   else
     ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
 end;
+
 
 procedure TForm1.ShowSolution;
 var
