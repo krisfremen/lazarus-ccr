@@ -9,14 +9,13 @@ object Form1: TForm1
   Caption = 'Form1'
   ClientHeight = 281
   ClientWidth = 272
-  PixelsPerInch = 75
+  LCLVersion = '2.1.0.0'
   object Label1: TLabel
     Left = 44
-    Height = 13
+    Height = 15
     Top = 8
-    Width = 39
+    Width = 34
     Caption = 'Label1'
-    Color = clNone
     ParentColor = False
   end
   object StringGrid1: TStringGrid
@@ -26,17 +25,12 @@ object Form1: TForm1
     Width = 182
     ColCount = 9
     DefaultColWidth = 20
-    FixedColor = clBtnFace
     FixedCols = 0
     FixedRows = 0
     GridLineWidth = 0
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
     RowCount = 9
-    ScrollBars = ssAutoBoth
     TabOrder = 2
-    TabStop = True
-    VisibleColCount = 9
-    VisibleRowCount = 9
     OnDrawCell = StringGrid1DrawCell
     OnSetEditText = StringGrid1SetEditText
   end

@@ -70,7 +70,7 @@ begin
   for c := 0 to pred(StringGrid1.ColCount) do
     for r := 0 to pred(StringGrid1.RowCount) do
       StringGrid1.Cells[c, r] := '';
-  Include(StringGrid1.Options, goEditing);
+  StringGrid1.Options := StringGrid1.Options + [goEditing];
   StringGrid1.SetFocus;
 end;
 
@@ -78,7 +78,7 @@ procedure TForm1.ButtonSolveClick(Sender: TObject);
 var
   c, r: Integer;
 begin
-  Exclude(StringGrid1.Options, goEditing);
+  StringGrid1.Options := StringGrid1.Options - [goEditing];
   SolveSudoku;
   StringGrid1.Clean;
   for c := 1 to 9 do begin
