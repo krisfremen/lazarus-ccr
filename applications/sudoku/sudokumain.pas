@@ -161,6 +161,7 @@ var
   NeedsColor: Boolean;
   GridTextStyle: TTextStyle;
 begin
+  GridTextStyle := (Sender as TStringGrid).Canvas.TextStyle;
   GridTextStyle.Alignment := taCenter;
   GridTextStyle.Layout := tlCenter;
   (Sender as TStringGrid).Canvas.TextStyle := GridTextStyle;
