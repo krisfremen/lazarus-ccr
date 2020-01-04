@@ -41,8 +41,8 @@ type
     StringGrid1: TStringGrid;
     procedure ButtonFillClick(Sender: TObject);
     procedure ButtonSolveClick(Sender: TObject);
-    procedure StringGrid1DrawCell(Sender: TObject; Col, Row: Integer;
-      aRect: TRect; aState: TGridDrawState);
+    procedure StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
+      aState: TGridDrawState);
     procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
       const Value: string);
   private
@@ -89,31 +89,29 @@ begin
   end;
 end;
 
-procedure TForm1.StringGrid1DrawCell(Sender: TObject; Col, Row: Integer;
-  aRect: TRect; aState: TGridDrawState);
+
+procedure TForm1.StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
+  aState: TGridDrawState);
 var
-  Kleur: Boolean;
+  NeedsColor: Boolean;
 begin
-  Kleur := False;
-  if Col in [0..2, 6..8] then begin
-    if Row in [0..2, 6..8] then begin
-      Kleur := True;
+  NeedsColor := False;
+  if aCol in [0..2, 6..8] then
+  begin
+    if aRow in [0..2, 6..8] then
+    begin
+      NeedsColor := True;
     end;
-  end else begin
-    if Row in [3..5] then begin
-      Kleur := True;
+  end
+  else
+  begin
+    if aRow in [3..5] then
+    begin
+      NeedsColor := True;
     end;
   end;
-  if Kleur then begin
-    inc(aRect.Top, 1);
-    inc(aRect.Left, 1);
-    dec(aRect.Bottom, 1);
-    dec(aRect.Right, 1);
-    StringGrid1.Canvas.Brush.Color := clLtGray;
-    StringGrid1.Canvas.FillRect(aRect);
-// Volgende regel is alleen in Delphi noodzakelijk.
-//    StringGrid1.Canvas.TextOut(aRect.Left, aRect.Top, StringGrid1.Cells[Col, Row]);
-  end;
+  if NeedsColor then
+    (Sender as TStringGrid).Canvas.Brush.Color := $00EEEEEE;
 end;
 
 procedure TForm1.StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;

@@ -31,7 +31,7 @@ object Form1: TForm1
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
     RowCount = 9
     TabOrder = 2
-    OnDrawCell = StringGrid1DrawCell
+    OnPrepareCanvas = StringGrid1PrepareCanvas
     OnSetEditText = StringGrid1SetEditText
   end
   object ButtonFill: TButton
