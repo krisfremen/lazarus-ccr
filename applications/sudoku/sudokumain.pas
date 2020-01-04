@@ -38,11 +38,13 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
-    ButtonSolve: TButton;
-    ButtonFill: TButton;
+    btnClear: TButton;
+    btnSolve: TButton;
+    btnEdit: TButton;
     SGrid: TStringGrid;
-    procedure ButtonFillClick(Sender: TObject);
-    procedure ButtonSolveClick(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);
+    procedure btnEditClick(Sender: TObject);
+    procedure btnSolveClick(Sender: TObject);
     procedure EditorKeyPress(Sender: TObject; var Key: char);
     procedure FormActivate(Sender: TObject);
     procedure SGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
@@ -67,18 +69,18 @@ implementation
 
 { TForm1 }
 
-procedure TForm1.ButtonFillClick(Sender: TObject);
-var
-  c, r: Integer;
+procedure TForm1.btnEditClick(Sender: TObject);
 begin
-  for c := 0 to pred(SGrid.ColCount) do
-    for r := 0 to pred(SGrid.RowCount) do
-      SGrid.Cells[c, r] := '';
   SGrid.Options := SGrid.Options + [goEditing];
   SGrid.SetFocus;
 end;
 
-procedure TForm1.ButtonSolveClick(Sender: TObject);
+procedure TForm1.btnClearClick(Sender: TObject);
+begin
+  SGrid.Clean;
+end;
+
+procedure TForm1.btnSolveClick(Sender: TObject);
 begin
   SGrid.Options := SGrid.Options - [goEditing];
   SolveSudoku;

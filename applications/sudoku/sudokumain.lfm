@@ -5,7 +5,7 @@ object Form1: TForm1
   Width = 333
   HorzScrollBar.Page = 271
   VertScrollBar.Page = 280
-  ActiveControl = ButtonFill
+  ActiveControl = btnEdit
   BorderStyle = bsDialog
   Caption = 'Sudoku Solver'
   ClientHeight = 359
@@ -29,24 +29,33 @@ object Form1: TForm1
     OnPrepareCanvas = SGridPrepareCanvas
     OnSelectEditor = SGridSelectEditor
   end
-  object ButtonFill: TButton
+  object btnEdit: TButton
     Left = 16
     Height = 25
     Top = 312
     Width = 75
     BorderSpacing.InnerBorder = 2
-    Caption = 'Fill'
-    OnClick = ButtonFillClick
+    Caption = 'Edit'
+    OnClick = btnEditClick
     TabOrder = 0
   end
-  object ButtonSolve: TButton
-    Left = 151
+  object btnSolve: TButton
+    Left = 208
     Height = 25
     Top = 312
     Width = 75
     BorderSpacing.InnerBorder = 2
     Caption = 'Solve'
-    OnClick = ButtonSolveClick
+    OnClick = btnSolveClick
     TabOrder = 1
+  end
+  object btnClear: TButton
+    Left = 96
+    Height = 25
+    Top = 312
+    Width = 75
+    Caption = 'Clear'
+    OnClick = btnClearClick
+    TabOrder = 3
   end
 end
