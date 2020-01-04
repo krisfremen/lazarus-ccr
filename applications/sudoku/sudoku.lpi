@@ -49,6 +49,7 @@
       <Unit2>
         <Filename Value="sudokutype.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="SudokuType"/>
       </Unit2>
     </Units>
   </ProjectOptions>

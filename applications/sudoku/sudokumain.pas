@@ -43,6 +43,7 @@ type
     StringGrid1: TStringGrid;
     procedure ButtonFillClick(Sender: TObject);
     procedure ButtonSolveClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
       {%H-}aState: TGridDrawState);
     procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
@@ -83,6 +84,13 @@ begin
   ShowSolution;
 end;
 
+procedure TForm1.FormActivate(Sender: TObject);
+begin
+  Self.OnActivate := nil;
+  StringGrid1.ClientWidth := 9 * StringGrid1.DefaultColWidth;
+  StringGrid1.ClientHeight := 9 * StringGrid1.DefaultRowHeight;
+  ClientWidth := 2 * StringGrid1.Left + StringGrid1.Width;
+end;
 
 procedure TForm1.StringGrid1PrepareCanvas(sender: TObject; aCol, aRow: Integer;
   aState: TGridDrawState);
