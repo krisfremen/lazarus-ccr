@@ -149,9 +149,9 @@ procedure TForm1.SGridSetEditText(Sender: TObject; ACol, ARow: Integer;
   const Value: string);
 begin
   if (Length(Value) >= 1) and (Value[1] in ['1'..'9']) then begin
-    theValues[ACol + 1, ARow + 1] := Value[1];
+    theValues[ACol + 1, ARow + 1] := StrToInt(Value[1]);
   end else begin
-    theValues[ACol + 1, ARow + 1] := ' ';
+    theValues[ACol + 1, ARow + 1] := 0;
   end;
 end;
 
@@ -159,17 +159,15 @@ function TForm1.SolveSudoku: Boolean;
 var
   aSudoku: TSudoku;
   Col, Row: Integer;
-  Steps: Integer;
+  Steps, AValue: Integer;
 begin
+  theValues := Default(TValues); //initialize all to zero
   for Col := 0 to 8 do begin
     for Row := 0 to 8 do begin
       if Length(SGrid.Cells[Col, Row]) >= 1 then
       begin
-        theValues[Col + 1, Row + 1] := SGrid.Cells[Col, Row][1];
-      end
-      else
-      begin
-        theValues[Col + 1, Row + 1] := ' ';
+        if TryStrToInt(SGrid.Cells[Col, Row][1], AValue) then
+          theValues[Col + 1, Row + 1] := AValue;
       end;
     end;
   end;
@@ -192,7 +190,7 @@ begin
   begin
     for Row := 0 to 8 do
     begin
-      Ch := theValues[Col + 1, Row + 1];
+      Ch := IntToStr(theValues[Col + 1, Row + 1])[1];
       if Ch = '0' then
         Ch := #32;
       SGrid.Cells[Col, Row] := Ch;

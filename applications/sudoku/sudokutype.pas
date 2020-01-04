@@ -32,11 +32,11 @@ uses
 type
   Digits = set of 1..9;
   TSquare = record
-    Value: Char;   // The value of this square.
+    Value: Integer;   // The value of this square.
     Locked: Boolean;  // Wether or not the value is known.
     DigitsPossible: Digits;
   end;
-  TValues = Array[1..9,1..9] of char;
+  TValues = Array[1..9,1..9] of Integer;
 
   { TSudoku }
 
@@ -82,13 +82,13 @@ var
 begin
   for c := 1 to 9 do begin
     for r := 1 to 9 do begin
-      if Values[c, r] in ['1'..'9'] then begin
+      if Values[c, r] in [1..9] then begin
         Grid[c, r].Locked := True;
         Grid[c, r].Value := Values[c, r];
-        Grid[c, r].DigitsPossible := [StrToInt(Values[c, r])];
+        Grid[c, r].DigitsPossible := [(Values[c, r])];
       end else begin
         Grid[c, r].Locked := False;
-        Grid[c, r].Value := '0';
+        Grid[c, r].Value := 0;
         Grid[c, r].DigitsPossible := [1, 2, 3, 4, 5, 6, 7, 8, 9];
       end;
     end;
@@ -140,7 +140,7 @@ begin
     for r := 1 to 9 do begin
       if Grid[c, r].Locked then Continue;
       if CountSetMembers(Grid[c, r].DigitsPossible, Value) = 1 then begin
-        Grid[c, r].Value := IntToStr(Value)[1];
+        Grid[c, r].Value := Value;
         Grid[c, r].Locked := True;
       end;
     end;
@@ -154,7 +154,7 @@ begin
   for i := 1 to 9 do begin
     if i = r then continue;
     for d := 1 to 9 do begin
-      if StrToInt(Grid[c, i].Value) = d then exclude(Grid[c, r].DigitsPossible, d);
+      if Grid[c, i].Value = d then exclude(Grid[c, r].DigitsPossible, d);
     end;
   end;
 end;
@@ -166,7 +166,7 @@ begin
   for i := 1 to 9 do begin
     if i = c then continue;
     for d := 1 to 9 do begin
-      if StrToInt(Grid[i, r].Value) = d then exclude(Grid[c, r].DigitsPossible, d);
+      if Grid[i, r].Value = d then exclude(Grid[c, r].DigitsPossible, d);
     end;
   end;
 end;
@@ -179,7 +179,7 @@ begin
     for j := cmin[r] to cmax[r] do begin
       if not ((i = c) and (j = r)) then begin
         for d := 1 to 9 do begin
-          if StrToInt(Grid[i, j].Value) = d then exclude(Grid[c, r].DigitsPossible, d);
+          if Grid[i, j].Value = d then exclude(Grid[c, r].DigitsPossible, d);
         end;
       end;
     end;
