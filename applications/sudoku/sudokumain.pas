@@ -159,7 +159,11 @@ procedure TForm1.SGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
   aState: TGridDrawState);
 var
   NeedsColor: Boolean;
+  GridTextStyle: TTextStyle;
 begin
+  GridTextStyle.Alignment := taCenter;
+  GridTextStyle.Layout := tlCenter;
+  (Sender as TStringGrid).Canvas.TextStyle := GridTextStyle;
   NeedsColor := False;
   if aCol in [0..2, 6..8] then
   begin
