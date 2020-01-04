@@ -37,7 +37,6 @@ type
   TForm1 = class(TForm)
     ButtonSolve: TButton;
     ButtonFill: TButton;
-    Label1: TLabel;
     StringGrid1: TStringGrid;
     procedure ButtonFillClick(Sender: TObject);
     procedure ButtonSolveClick(Sender: TObject);
