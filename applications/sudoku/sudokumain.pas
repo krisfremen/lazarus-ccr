@@ -31,7 +31,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, Grids,
-  Buttons, StdCtrls, SudokuType;
+  Buttons, StdCtrls, SudokuType, ScratchPad;
 
 type
 
@@ -60,9 +60,12 @@ type
       var Editor: TWinControl);
   private
     { private declarations }
-    theValues: TValues;
-    function SolveSudoku: Boolean;
-    procedure ShowSolution;
+    //theValues: TValues;
+    procedure OnCopyBackValues(Sender: TObject; Values: TValues);
+    function SolveSudoku(out Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
+    procedure GridToValues(out Values: TValues);
+    procedure ValuesToGrid(const Values: TValues);
+    procedure ShowScratchPad(RawData: TRawGrid);
     procedure LoadSudokuFromFile(const Fn: String);
     procedure SaveSudokuToFile(const Fn: String);
     function IsValidSudokuFile(Lines: TStrings): Boolean;
@@ -121,10 +124,22 @@ begin
 end;
 
 procedure TForm1.btnSolveClick(Sender: TObject);
+var
+  Res: Boolean;
+  RawData: TRawGrid;
+  Values: TValues;
+  Steps: Integer;
 begin
   SGrid.Options := SGrid.Options - [goEditing];
-  SolveSudoku;
-  ShowSolution;
+  Res := SolveSudoku(Values, RawData, Steps);
+  ValuesToGrid(Values);
+  if Res then
+    ShowMessage(Format('Sudoku solved in %d steps.', [Steps]))
+  else
+  begin
+    ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
+    ShowScratchPad(RawData);
+  end;
 end;
 
 procedure TForm1.EditorKeyPress(Sender: TObject; var Key: char);
@@ -193,35 +208,45 @@ begin
 end;
 
 
-function TForm1.SolveSudoku: Boolean;
+function TForm1.SolveSudoku(out Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
 var
   aSudoku: TSudoku;
-  Col, Row: Integer;
-  Steps, AValue: Integer;
 begin
-  theValues := Default(TValues); //initialize all to zero
+  GridToValues(Values);
+  RawData := Default(TRawGrid);
+  aSudoku := TSudoku.Create;
+  Result := aSudoku.GiveSolution(Values, RawData, Steps);
+  aSudoku.Free;
+end;
+
+procedure TForm1.GridToValues(out Values: TValues);
+var
+  Col, Row: Integer;
+  S: String;
+  AValue: Longint;
+begin
+  Values := Default(TValues); //initialize all to zero
   for Col := 0 to 8 do
   begin
     for Row := 0 to 8 do
     begin
-      if Length(SGrid.Cells[Col, Row]) >= 1 then
+      S := Trim(SGrid.Cells[Col, Row]);
+      if Length(S) = 1 then
       begin
-        if TryStrToInt(SGrid.Cells[Col, Row][1], AValue) then
-          theValues[Col + 1, Row + 1] := AValue;
+        if TryStrToInt(S, AValue) then
+          Values[Col + 1, Row + 1] := AValue;
       end;
     end;
   end;
-  aSudoku := TSudoku.Create;
-  Result := aSudoku.GiveSolution(theValues, Steps);
-  aSudoku.Free;
-  if Result then
-    ShowMessage(Format('Sudoku solved in %d steps.', [Steps]))
-  else
-    ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
+end;
+
+procedure TForm1.OnCopyBackValues(Sender: TObject; Values: TValues);
+begin
+  ValuesToGrid(Values);
 end;
 
 
-procedure TForm1.ShowSolution;
+procedure TForm1.ValuesToGrid(const Values: TValues);
 var
   Col, Row: Integer;
   Ch: Char;
@@ -230,12 +255,21 @@ begin
   begin
     for Row := 0 to 8 do
     begin
-      Ch := IntToStr(theValues[Col + 1, Row + 1])[1];
+      Ch := IntToStr(Values[Col + 1, Row + 1])[1];
       if Ch = '0' then
         Ch := VisualEmptyChar;
       SGrid.Cells[Col, Row] := Ch;
     end;
   end;
+end;
+
+procedure TForm1.ShowScratchPad(RawData: TRawGrid);
+begin
+  ScratchForm.OnCopyValues := @OnCopyBackValues;
+  ScratchForm.RawData := RawData;
+  ScratchForm.ScratchGrid.Options := SGrid.Options + [goEditing];
+  ScratchForm.ScratchGrid.OnPrepareCanvas := @Self.SGridPrepareCanvas;
+  ScratchForm.Show;
 end;
 
 procedure TForm1.LoadSudokuFromFile(const Fn: String);

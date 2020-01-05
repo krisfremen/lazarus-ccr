@@ -27,11 +27,12 @@ program sudoku;
 uses
   Interfaces, // this includes the LCL widgetset
   Forms
-  { add your units here }, sudokumain;
+  { add your units here }, sudokumain, scratchpad;
 
 begin
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TScratchForm, ScratchForm);
   Application.Run;
 end.
 

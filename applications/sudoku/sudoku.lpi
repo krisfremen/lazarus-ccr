@@ -60,7 +60,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="3">
+    <Units Count="4">
       <Unit0>
         <Filename Value="sudoku.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -77,15 +77,17 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="SudokuType"/>
       </Unit2>
+      <Unit3>
+        <Filename Value="scratchpad.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ScratchForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ScratchPad"/>
+      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
-    <Parsing>
-      <SyntaxOptions>
-        <UseAnsiStrings Value="False"/>
-      </SyntaxOptions>
-    </Parsing>
     <Linking>
       <Options>
         <Win32>

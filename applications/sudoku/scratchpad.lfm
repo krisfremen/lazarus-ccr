@@ -1,0 +1,40 @@
+object ScratchForm: TScratchForm
+  Left = 755
+  Height = 545
+  Top = 113
+  Width = 799
+  Caption = 'ScratchPad'
+  ClientHeight = 545
+  ClientWidth = 799
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  LCLVersion = '2.1.0.0'
+  object ScratchGrid: TStringGrid
+    Left = 16
+    Height = 283
+    Top = 13
+    Width = 736
+    ColCount = 9
+    DefaultColWidth = 80
+    DefaultRowHeight = 30
+    FixedCols = 0
+    FixedRows = 0
+    RowCount = 9
+    ScrollBars = ssNone
+    TabOrder = 0
+  end
+  object btnCopy: TButton
+    AnchorSideLeft.Control = ScratchGrid
+    AnchorSideTop.Control = ScratchGrid
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 25
+    Top = 306
+    Width = 253
+    AutoSize = True
+    BorderSpacing.Top = 10
+    Caption = 'Copy values back and close the ScratchPad'
+    OnClick = btnCopyClick
+    TabOrder = 1
+  end
+end

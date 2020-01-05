@@ -43,7 +43,7 @@ type
   { TSudoku }
 
   TSudoku = class(TObject)
-    function GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
+    function GiveSolution(var Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
   private
     Grid: TRawGrid;
     procedure CalculateValues(out IsSolved: Boolean);
@@ -132,7 +132,7 @@ begin
   until Result or (Steps > 50);
 end;
 
-function TSudoku.GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
+function TSudoku.GiveSolution(var Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
 var
   c, r: Integer;
 begin
@@ -145,6 +145,7 @@ begin
       Values[c, r] := Grid[c, r].Value;
     end;
   end;
+  RawData := Grid;
 end;
 
 procedure TSudoku.CalculateValues(out IsSolved: Boolean);
