@@ -30,26 +30,28 @@ uses
   Classes, SysUtils, StdCtrls;
   
 type
-  Digits = set of 1..9;
+  TDigits = 1..9;
+  TDigitSet = set of TDigits;
   TSquare = record
     Value: Integer;   // The value of this square.
     Locked: Boolean;  // Wether or not the value is known.
-    DigitsPossible: Digits;
+    DigitsPossible: TDigitSet;
   end;
   TValues = Array[1..9,1..9] of Integer;
+  TRawGrid = Array[1..9, 1..9] of TSquare;
 
   { TSudoku }
 
   TSudoku = class(TObject)
     function GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
   private
-    Grid : Array[1..9, 1..9] of TSquare;
+    Grid: TRawGrid;
     procedure CalculateValues(out IsSolved: Boolean);
-    procedure CheckRow(c, r: Integer);
-    procedure CheckCol(c, r: Integer);
-    procedure CheckBlock(c, r: Integer);
-    procedure CheckDigits(d: Integer);
-    procedure Fill(Values: TValues);
+    procedure CheckRow(Col, Row: Integer);
+    procedure CheckCol(Col, Row: Integer);
+    procedure CheckBlock(Col, Row: Integer);
+    procedure CheckDigits(ADigit: Integer);
+    procedure FillGridFromValues(Values: TValues);
     function Solve(out Steps: Integer): Boolean;
     //function Solved: Boolean;
   end;
@@ -61,10 +63,10 @@ const
   cmax : Array[1..9] of Integer = (3, 3, 3, 6, 6, 6, 9, 9, 9);
 
 {
-Counts the number of digits in ASet.
+Counts the number of TDigitSet in ASet.
 aValue only has meaning if Result = 1 (which means this cell is solved)
 }
-function CountSetMembers(const ASet: Digits; out aValue: Integer): Integer;
+function CountSetMembers(const ASet: TDigitSet; out aValue: Integer): Integer;
 var
   D: Integer;
 begin
@@ -80,7 +82,7 @@ end;
 
 { TSudoku }
 
-procedure TSudoku.Fill(Values: TValues);
+procedure TSudoku.FillGridFromValues(Values: TValues);
 var
   c, r: Integer;
 begin
@@ -124,7 +126,7 @@ function TSudoku.GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
 var
   c, r: Integer;
 begin
-  Fill(Values);
+  FillGridFromValues(Values);
   Result := Solve(Steps);
   for c := 1 to 9 do begin
     for r := 1 to 9 do begin
@@ -159,46 +161,46 @@ begin
   IsSolved := Count = 9 * 9;
 end;
 
-procedure TSudoku.CheckCol(c, r: Integer);
+procedure TSudoku.CheckCol(Col, Row: Integer);
 var
   i, d: Integer;
 begin
   for i := 1 to 9 do begin
-    if i = r then continue;
+    if i = Row then continue;
     for d := 1 to 9 do begin
-      if Grid[c, i].Value = d then exclude(Grid[c, r].DigitsPossible, d);
+      if Grid[Col, i].Value = d then exclude(Grid[Col, Row].DigitsPossible, d);
     end;
   end;
 end;
 
-procedure TSudoku.CheckRow(c, r: Integer);
+procedure TSudoku.CheckRow(Col, Row: Integer);
 var
   i, d: Integer;
 begin
   for i := 1 to 9 do begin
-    if i = c then continue;
+    if i = Col then continue;
     for d := 1 to 9 do begin
-      if Grid[i, r].Value = d then exclude(Grid[c, r].DigitsPossible, d);
+      if Grid[i, Row].Value = d then exclude(Grid[Col, Row].DigitsPossible, d);
     end;
   end;
 end;
 
-procedure TSudoku.CheckBlock(c, r: Integer);
+procedure TSudoku.CheckBlock(Col, Row: Integer);
 var
   i, j, d: Integer;
 begin
-  for i := cmin[c] to cmax[c] do begin
-    for j := cmin[r] to cmax[r] do begin
-      if not ((i = c) and (j = r)) then begin
+  for i := cmin[Col] to cmax[Col] do begin
+    for j := cmin[Row] to cmax[Row] do begin
+      if not ((i = Col) and (j = Row)) then begin
         for d := 1 to 9 do begin
-          if Grid[i, j].Value = d then exclude(Grid[c, r].DigitsPossible, d);
+          if Grid[i, j].Value = d then exclude(Grid[Col, Row].DigitsPossible, d);
         end;
       end;
     end;
   end;
 end;
 
-procedure TSudoku.CheckDigits(d: Integer);
+procedure TSudoku.CheckDigits(ADigit: Integer);
 var
   OtherPossible: Boolean;
   c, r: Integer;
@@ -209,22 +211,22 @@ begin
     for r := 1 to 9 do begin
       if Grid[c, r].Locked
         or (CountSetMembers(Grid[c, r].DigitsPossible, Value) = 1) then continue;
-      if d in Grid[c, r].DigitsPossible then begin
+      if ADigit in Grid[c, r].DigitsPossible then begin
         OtherPossible := False;
         for i := 1 to 9 do begin
-          if i <> c then OtherPossible := (d in Grid[i, r].DigitsPossible);
+          if i <> c then OtherPossible := (ADigit in Grid[i, r].DigitsPossible);
           if OtherPossible then Break;
         end;
         if not OtherPossible then begin
-          Grid[c, r].DigitsPossible := [d];
+          Grid[c, r].DigitsPossible := [ADigit];
         end else begin
           OtherPossible := False;
           for i := 1 to 9 do begin
-            if i <> r then OtherPossible := (d in Grid[c, i].DigitsPossible);
+            if i <> r then OtherPossible := (ADigit in Grid[c, i].DigitsPossible);
             if OtherPossible then Break;
           end;
           if not OtherPossible then begin
-            Grid[c, r].DigitsPossible := [d];
+            Grid[c, r].DigitsPossible := [ADigit];
           end;
         end;
       end;
