@@ -72,8 +72,10 @@ var
 begin
   Result := 0;
   aValue := 0;
-  for D := 1 to 9 do begin
-    if D in ASet then begin
+  for D := 1 to 9 do
+  begin
+    if D in ASet then
+    begin
       Inc(Result);
       aValue := D;
     end;
@@ -86,13 +88,18 @@ procedure TSudoku.FillGridFromValues(Values: TValues);
 var
   c, r: Integer;
 begin
-  for c := 1 to 9 do begin
-    for r := 1 to 9 do begin
-      if Values[c, r] in [1..9] then begin
+  for c := 1 to 9 do
+  begin
+    for r := 1 to 9 do
+    begin
+      if Values[c, r] in [1..9] then
+      begin
         Grid[c, r].Locked := True;
         Grid[c, r].Value := Values[c, r];
         Grid[c, r].DigitsPossible := [(Values[c, r])];
-      end else begin
+      end
+      else
+      begin
         Grid[c, r].Locked := False;
         Grid[c, r].Value := 0;
         Grid[c, r].DigitsPossible := [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -108,9 +115,12 @@ begin
   Steps := 0;
   repeat
     inc(Steps);
-    for c := 1 to 9  do begin
-      for r := 1 to 9 do begin
-        if not Grid[c, r].Locked then begin
+    for c := 1 to 9  do
+    begin
+      for r := 1 to 9 do
+      begin
+        if not Grid[c, r].Locked then
+        begin
           CheckRow(c, r);
           CheckCol(c, r);
           CheckBlock(c, r);
@@ -128,8 +138,10 @@ var
 begin
   FillGridFromValues(Values);
   Result := Solve(Steps);
-  for c := 1 to 9 do begin
-    for r := 1 to 9 do begin
+  for c := 1 to 9 do
+  begin
+    for r := 1 to 9 do
+    begin
       Values[c, r] := Grid[c, r].Value;
     end;
   end;
@@ -165,9 +177,11 @@ procedure TSudoku.CheckCol(Col, Row: Integer);
 var
   i, d: Integer;
 begin
-  for i := 1 to 9 do begin
+  for i := 1 to 9 do
+  begin
     if i = Row then continue;
-    for d := 1 to 9 do begin
+    for d := 1 to 9 do
+    begin
       if Grid[Col, i].Value = d then exclude(Grid[Col, Row].DigitsPossible, d);
     end;
   end;
@@ -177,9 +191,11 @@ procedure TSudoku.CheckRow(Col, Row: Integer);
 var
   i, d: Integer;
 begin
-  for i := 1 to 9 do begin
+  for i := 1 to 9 do
+  begin
     if i = Col then continue;
-    for d := 1 to 9 do begin
+    for d := 1 to 9 do
+    begin
       if Grid[i, Row].Value = d then exclude(Grid[Col, Row].DigitsPossible, d);
     end;
   end;
@@ -189,10 +205,14 @@ procedure TSudoku.CheckBlock(Col, Row: Integer);
 var
   i, j, d: Integer;
 begin
-  for i := cmin[Col] to cmax[Col] do begin
-    for j := cmin[Row] to cmax[Row] do begin
-      if not ((i = Col) and (j = Row)) then begin
-        for d := 1 to 9 do begin
+  for i := cmin[Col] to cmax[Col] do
+  begin
+    for j := cmin[Row] to cmax[Row] do
+    begin
+      if not ((i = Col) and (j = Row)) then
+      begin
+        for d := 1 to 9 do
+        begin
           if Grid[i, j].Value = d then exclude(Grid[Col, Row].DigitsPossible, d);
         end;
       end;
@@ -207,25 +227,34 @@ var
   i: Integer;
   value: Integer;
 begin
-  for c := 1 to 9 do begin
-    for r := 1 to 9 do begin
+  for c := 1 to 9 do
+  begin
+    for r := 1 to 9 do
+    begin
       if Grid[c, r].Locked
         or (CountSetMembers(Grid[c, r].DigitsPossible, Value) = 1) then continue;
-      if ADigit in Grid[c, r].DigitsPossible then begin
+      if ADigit in Grid[c, r].DigitsPossible then
+      begin
         OtherPossible := False;
-        for i := 1 to 9 do begin
+        for i := 1 to 9 do
+        begin
           if i <> c then OtherPossible := (ADigit in Grid[i, r].DigitsPossible);
           if OtherPossible then Break;
         end;
-        if not OtherPossible then begin
+        if not OtherPossible then
+        begin
           Grid[c, r].DigitsPossible := [ADigit];
-        end else begin
+        end
+        else
+        begin
           OtherPossible := False;
-          for i := 1 to 9 do begin
+          for i := 1 to 9 do
+          begin
             if i <> r then OtherPossible := (ADigit in Grid[c, i].DigitsPossible);
             if OtherPossible then Break;
           end;
-          if not OtherPossible then begin
+          if not OtherPossible then
+          begin
             Grid[c, r].DigitsPossible := [ADigit];
           end;
         end;

@@ -169,16 +169,12 @@ begin
   if aCol in [0..2, 6..8] then
   begin
     if aRow in [0..2, 6..8] then
-    begin
       NeedsColor := True;
-    end;
   end
   else
   begin
     if aRow in [3..5] then
-    begin
       NeedsColor := True;
-    end;
   end;
   if NeedsColor then
     (Sender as TStringGrid).Canvas.Brush.Color := $00EEEEEE;
@@ -204,8 +200,10 @@ var
   Steps, AValue: Integer;
 begin
   theValues := Default(TValues); //initialize all to zero
-  for Col := 0 to 8 do begin
-    for Row := 0 to 8 do begin
+  for Col := 0 to 8 do
+  begin
+    for Row := 0 to 8 do
+    begin
       if Length(SGrid.Cells[Col, Row]) >= 1 then
       begin
         if TryStrToInt(SGrid.Cells[Col, Row][1], AValue) then
