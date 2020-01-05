@@ -262,6 +262,7 @@ var
 begin
   SL := TStringList.Create;
   try
+    SL.SkipLastLineBreak := True;
     GridToLines(SL);
     {$if fpc_fullversion >= 30200}
     SL.WriteBom := False;
