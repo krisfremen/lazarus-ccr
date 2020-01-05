@@ -33,6 +33,9 @@
               <UseHeaptrc Value="True"/>
             </Debugging>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FaLazLogger,LCLExceptionStacktrace"/>
+          </Other>
         </CompilerOptions>
       </Item2>
     </BuildModes>
