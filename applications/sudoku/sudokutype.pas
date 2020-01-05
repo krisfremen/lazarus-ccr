@@ -41,17 +41,16 @@ type
   { TSudoku }
 
   TSudoku = class(TObject)
-    function GiveSolution(var Values: TValues; out ASteps: Integer): Boolean;
+    function GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
   private
     Grid : Array[1..9, 1..9] of TSquare;
-    Steps: Integer;
     procedure CalculateValues;
     procedure CheckRow(c, r: Integer);
     procedure CheckCol(c, r: Integer);
     procedure CheckBlock(c, r: Integer);
     procedure CheckDigits(d: Integer);
     procedure Fill(Values: TValues);
-    function Solve: Boolean;
+    function Solve(out Steps: Integer): Boolean;
     function Solved: Boolean;
   end;
 
@@ -61,11 +60,16 @@ const
   cmin : Array[1..9] of Integer = (1, 1, 1, 4, 4, 4, 7, 7, 7);
   cmax : Array[1..9] of Integer = (3, 3, 3, 6, 6, 6, 9, 9, 9);
 
-function CountSetMembers(const ASet: Digits; var aValue: Integer): Integer;
+{
+Counts the number of digits in ASet.
+aValue only has meaning if Result = 1 (which means this cell is solved)
+}
+function CountSetMembers(const ASet: Digits; out aValue: Integer): Integer;
 var
   D: Integer;
 begin
   Result := 0;
+  aValue := 0;
   for D := 1 to 9 do begin
     if D in ASet then begin
       Inc(Result);
@@ -95,7 +99,7 @@ begin
   end;
 end;
 
-function TSudoku.Solve: Boolean;
+function TSudoku.Solve(out Steps: Integer): Boolean;
 var
   c, r: Integer;
 begin
@@ -117,23 +121,22 @@ begin
   until Result or (Steps > 50);
 end;
 
-function TSudoku.GiveSolution(var Values: TValues; out ASteps: Integer): Boolean;
+function TSudoku.GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
 var
   c, r: Integer;
 begin
   Fill(Values);
-  Result := Solve;
+  Result := Solve(Steps);
   for c := 1 to 9 do begin
     for r := 1 to 9 do begin
       Values[c, r] := Grid[c, r].Value;
     end;
   end;
-  ASteps := Steps;
 end;
 
 procedure TSudoku.CalculateValues;
 var
-  c, r, d: Integer;
+  c, r: Integer;
   Value: Integer;
 begin
   for c := 1 to 9 do begin
