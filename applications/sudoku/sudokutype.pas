@@ -44,14 +44,14 @@ type
     function GiveSolution(var Values: TValues; out Steps: Integer): Boolean;
   private
     Grid : Array[1..9, 1..9] of TSquare;
-    procedure CalculateValues;
+    procedure CalculateValues(out IsSolved: Boolean);
     procedure CheckRow(c, r: Integer);
     procedure CheckCol(c, r: Integer);
     procedure CheckBlock(c, r: Integer);
     procedure CheckDigits(d: Integer);
     procedure Fill(Values: TValues);
     function Solve(out Steps: Integer): Boolean;
-    function Solved: Boolean;
+    //function Solved: Boolean;
   end;
 
 implementation
@@ -116,8 +116,7 @@ begin
       end;
     end;
     for c := 1 to 9 do CheckDigits(c);
-    CalculateValues;
-    Result := Solved;
+    CalculateValues(Result);
   until Result or (Steps > 50);
 end;
 
@@ -134,20 +133,30 @@ begin
   end;
 end;
 
-procedure TSudoku.CalculateValues;
+procedure TSudoku.CalculateValues(out IsSolved: Boolean);
 var
   c, r: Integer;
-  Value: Integer;
+  Value, Count: Integer;
 begin
-  for c := 1 to 9 do begin
-    for r := 1 to 9 do begin
-      if Grid[c, r].Locked then Continue;
-      if CountSetMembers(Grid[c, r].DigitsPossible, Value) = 1 then begin
-        Grid[c, r].Value := Value;
-        Grid[c, r].Locked := True;
+  Count := 0;
+  for c := 1 to 9 do
+  begin
+    for r := 1 to 9 do
+    begin
+      if Grid[c, r].Locked then
+        Inc(Count)
+      else
+      begin
+        if CountSetMembers(Grid[c, r].DigitsPossible, Value) = 1 then
+        begin
+          Grid[c, r].Value := Value;
+          Grid[c, r].Locked := True;
+          Inc(Count);
+        end;
       end;
     end;
   end;
+  IsSolved := Count = 9 * 9;
 end;
 
 procedure TSudoku.CheckCol(c, r: Integer);
@@ -223,21 +232,21 @@ begin
   end;
 end;
 
-function TSudoku.Solved: Boolean;
-var
-  c, r: Integer;
-begin
-  result := True;
-  for c := 1 to 9 do begin
-    for r := 1 to 9 do begin
-      if not Grid[c, r].Locked then begin
-        Result := False;
-        Break;
-      end;
-    end;
-    if not result then Break;
-  end;
-end;
+//function TSudoku.Solved: Boolean;
+//var
+//  c, r: Integer;
+//begin
+//  result := True;
+//  for c := 1 to 9 do begin
+//    for r := 1 to 9 do begin
+//      if not Grid[c, r].Locked then begin
+//        Result := False;
+//        Break;
+//      end;
+//    end;
+//    if not result then Break;
+//  end;
+//end;
 
 end.
 
