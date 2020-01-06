@@ -56,11 +56,36 @@ type
     //function Solved: Boolean;
   end;
 
+function DbgS(ASet: TDigitSet): String; overload;
+function DbgS(ASquare: TSquare): String; overload;
+
 implementation
 
 const
   cmin : Array[1..9] of Integer = (1, 1, 1, 4, 4, 4, 7, 7, 7);
   cmax : Array[1..9] of Integer = (3, 3, 3, 6, 6, 6, 9, 9, 9);
+
+function DbgS(ASet: TDigitSet): String; overload;
+var
+  D: TDigits;
+begin
+  Result := '[';
+  for D in ASet do
+  begin
+    Result := Result + IntToStr(D) + ',';
+  end;
+  if (Result[Length(Result)] = ',') then System.Delete(Result, Length(Result), 1);
+  Result := Result + ']';
+end;
+
+function DbgS(ASquare: TSquare): String; overload;
+const
+  BoolStr: Array[Boolean] of String = ('False','True');
+begin
+  Result := '[Value: ' + IntToStr(ASquare.Value) + ', ';
+  Result := Result + 'Locked: ' + BoolStr[ASquare.Locked] + ', ';
+  Result := Result + 'DigitsPossible: ' + DbgS(ASquare.DigitsPossible) + ']';
+end;
 
 {
 Counts the number of TDigitSet in ASet.

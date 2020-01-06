@@ -38,28 +38,6 @@ implementation
 
 {$R *.lfm}
 
-function DbgS( ASet: TDigitSet): String; overload;
-var
-  D: TDigits;
-begin
-  Result := '[';
-  for D in ASet do
-  begin
-    Result := Result + IntToStr(D) + ',';
-  end;
-  if (Result[Length(Result)] = ',') then System.Delete(Result, Length(Result), 1);
-  Result := Result + ']';
-end;
-
-function DbgS(ASquare: TSquare): String; overload;
-const
-  BoolStr: Array[Boolean] of String = ('False','True');
-begin
-  Result := '[Value: ' + IntToStr(ASquare.Value) + ', ';
-  Result := Result + 'Locked: ' + BoolStr[ASquare.Locked] + ', ';
-  Result := Result + 'DigitsPossible: ' + DbgS(ASquare.DigitsPossible) + ']';
-end;
-
 { TScratchForm }
 
 procedure TScratchForm.FormActivate(Sender: TObject);
