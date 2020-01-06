@@ -22,6 +22,8 @@ object ScratchForm: TScratchForm
     RowCount = 9
     ScrollBars = ssNone
     TabOrder = 0
+    OnClick = ScratchGridClick
+    OnPrepareCanvas = ScratchGridPrepareCanvas
   end
   object btnCopy: TButton
     AnchorSideLeft.Control = ScratchGrid

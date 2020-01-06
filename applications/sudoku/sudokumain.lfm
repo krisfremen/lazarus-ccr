@@ -23,7 +23,7 @@ object Form1: TForm1
     DefaultRowHeight = 30
     FixedCols = 0
     FixedRows = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
     RowCount = 9
     ScrollBars = ssNone
     TabOrder = 2

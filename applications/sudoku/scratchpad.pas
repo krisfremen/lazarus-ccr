@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids, StdCtrls,
-  SudokuType;
+  Math,
+  SudokuType, DigitSetEditor;
 
 type
 
@@ -20,12 +21,16 @@ type
     procedure btnCopyClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure ScratchGridClick(Sender: TObject);
+    procedure ScratchGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
+      {%H-}aState: TGridDrawState);
   private
     FRawData: TRawGrid;
     FOnCopyValues: TCopyValuesEvent;
     procedure SetRawData(Data: TRawGrid);
     procedure GridToValues(out Values: TValues);
     procedure KeepInView;
+    procedure EditCell(ACol, ARow: Integer);
   public
     property RawData: TRawGrid write SetRawData;
     property OnCopyValues: TCopyValuesEvent read FOnCopyValues write FOnCopyValues;
@@ -38,6 +43,51 @@ implementation
 
 {$R *.lfm}
 
+function DigitSetToStr(ASet: TDigitSet): String;
+  function Get(D: Integer): Char;
+  begin
+    if (D in ASet) then
+      Result := Char(Ord('0') + D)
+    else
+      Result := 'x';//#32;
+  end;
+begin
+  Result := Format('%s-%s-%s'+LineEnding+'%s-%s-%s'+LineEnding+'%s-%s-%s',[Get(1),Get(2),Get(3),Get(4),Get(5),Get(6),Get(7),Get(8),Get(9)]);
+end;
+
+function StrToDigitSet(const S: String): TDigitSet;
+var
+  Ch: Char;
+begin
+  Result := [];
+  for Ch in S do
+    if (Ch in ['1'..'9']) then
+      Include(Result, Ord(Ch) - Ord('0'));
+end;
+
+{
+
+}
+function TryCellTextToDigit(const AText: String; out Value: TDigits): Boolean;
+var
+  Ch: Char;
+  S: String;
+begin
+  Result := False;
+  S := '';
+  for Ch in AText do
+    if (Ch in ['1'..'9']) then S := S + Ch;
+  if (Length(S) = 1) then
+  begin
+    Ch := S[1];
+    if (Ch in ['1'..'9']) then
+    begin
+      Value := Ord(Ch) - Ord('0');
+      Result := True;
+    end;
+  end;
+end;
+
 { TScratchForm }
 
 procedure TScratchForm.FormActivate(Sender: TObject);
@@ -45,8 +95,14 @@ begin
   Self.OnActivate := nil;
   ScratchGrid.ClientWidth := 9 * ScratchGrid.DefaultColWidth;
   ScratchGrid.ClientHeight := 9 * ScratchGrid.DefaultRowHeight;
+  //writeln(format('ScratchGrid: %d x %d',[ScratchGrid.ClientWidth,ScratchGrid.ClientHeight]));
   ClientWidth := 2 * ScratchGrid.Left + ScratchGrid.Width;
-  ClientHeight := btnCopy.Top + btnCopy.Height + 10;
+  //writeln(format('btnCopy.Top: %d, btnCopy.Height: %d',[btnCopy.Top,btnCopy.Height]));
+  Self.ReAlign;
+  //ClientHeight := btnCopy.Top + btnCopy.Height + 10;
+  //Above doesn't work: at this time btnCopy.Top still holds designtime value, even when it's top is anchored to the grid
+  ClientHeight := ScratchGrid.Top + ScratchGrid.Height + 10 + btnCopy.Height + 10;
+  //writeln(format('ClientHeight: %d',[ClientHeight]));
   KeepInView;
 end;
 
@@ -61,8 +117,54 @@ begin
 end;
 
 procedure TScratchForm.FormCreate(Sender: TObject);
+var
+  DefWH: Integer;
 begin
-  ScratchGrid.DefaultColWidth := ScratchGrid.Canvas.TextWidth(' [1,2,3,4,5,6,7,8,9] ') + 8;
+  DefWH := Max(ScratchGrid.Canvas.TextWidth(' 8-8-8 '), 3 * ScratchGrid.Canvas.TextHeight('8')) + 10;
+  ScratchGrid.DefaultColWidth := DefWH;
+  ScratchGrid.DefaultRowHeight := DefWH;
+end;
+
+procedure TScratchForm.ScratchGridClick(Sender: TObject);
+var
+  Col, Row: Integer;
+begin
+  Col := ScratchGrid.Col;
+  Row := ScratchGrid.Row;
+  if not FRawData[Col+1,Row+1].Locked then
+    EditCell(Col, Row);
+end;
+
+procedure TScratchForm.ScratchGridPrepareCanvas(sender: TObject; aCol, aRow: Integer; aState: TGridDrawState);
+var
+  NeedsColor: Boolean;
+  GridTextStyle: TTextStyle;
+begin
+  GridTextStyle := (Sender as TStringGrid).Canvas.TextStyle;
+  GridTextStyle.Alignment := taCenter;
+  GridTextStyle.Layout := tlCenter;
+  GridTextStyle.SingleLine := False;
+  (Sender as TStringGrid).Canvas.TextStyle := GridTextStyle;
+  NeedsColor := False;
+  if aCol in [0..2, 6..8] then
+  begin
+    if aRow in [0..2, 6..8] then
+      NeedsColor := True;
+  end
+  else
+  begin
+    if aRow in [3..5] then
+      NeedsColor := True;
+  end;
+  if NeedsColor then
+    (Sender as TStringGrid).Canvas.Brush.Color := $00EEEEEE;
+  //if (aRow=0) and (aCol=0) then
+  if FRawData[aCol+1, aRow+1].Locked then
+  begin
+    (Sender as TStringGrid).Canvas.Brush.Color := $00F8E3CB; // $00F1CEA3;
+    (Sender as TStringGrid).Canvas.Font.Color := clRed;
+    (Sender as TStringGrid).Canvas.Font.Style := [fsBold]
+  end;
 end;
 
 procedure TScratchForm.SetRawData(Data: TRawGrid);
@@ -79,7 +181,8 @@ begin
       if Data[Col,Row].Locked then
         S := IntToStr(Data[Col,Row].Value)
       else
-        S := DbgS(Data[Col,Row].DigitsPossible);
+        //S := DbgS(Data[Col,Row].DigitsPossible);
+        S := DigitSetToStr(Data[Col,Row].DigitsPossible);
       ScratchGrid.Cells[Col-1,Row-1] := S;
     end;
   end;
@@ -88,7 +191,7 @@ end;
 procedure TScratchForm.GridToValues(out Values: TValues);
 var
   Col, Row: Integer;
-  AValue: Longint;
+  AValue: TDigits;
   S: String;
 begin
   Values := Default(TValues);
@@ -97,9 +200,10 @@ begin
     for Row := 0 to 8 do
     begin
       S := ScratchGrid.Cells[Col, Row];
+      //DigitSet := StrToDigitSet(S);
       if Length(S) >= 1 then
       begin
-        if TryStrToInt(S, AValue) then
+        if TryCellTextToDigit(S, AValue) then
           Values[Col + 1, Row + 1] := AValue;
       end;
     end;
@@ -117,6 +221,23 @@ begin
   if (Diff > 0) then FL := Left - Diff;
   if (FL < 0) then FL := 0;
   Left := FL;
+end;
+
+procedure TScratchForm.EditCell(ACol, ARow: Integer);
+var
+  S: String;
+  DigitSet: TDigitSet;
+begin
+  S := ScratchGrid.Cells[ACol, ARow];
+  DigitSet := StrToDigitSet(S);
+  DigitSetEditorForm.DigitSet := DigitSet;
+  DigitSetEditorForm.Top := Top;
+  DigitSetEditorForm.PreferredRight := Left;
+  if (DigitSetEditorForm.ShowModal = mrOK) then
+  begin
+    S := DigitSetToStr(DigitSetEditorForm.DigitSet);
+    ScratchGrid.Cells[ACol, ARow] := S;
+  end;
 end;
 
 end.

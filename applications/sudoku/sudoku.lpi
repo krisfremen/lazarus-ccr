@@ -15,11 +15,6 @@
       <Item2 Name="Debug">
         <CompilerOptions>
           <Version Value="11"/>
-          <Parsing>
-            <SyntaxOptions>
-              <UseAnsiStrings Value="False"/>
-            </SyntaxOptions>
-          </Parsing>
           <CodeGeneration>
             <Checks>
               <IOChecks Value="True"/>
@@ -60,7 +55,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="sudoku.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -71,6 +66,7 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SudokuMain"/>
       </Unit1>
       <Unit2>
         <Filename Value="sudokutype.pas"/>
@@ -85,6 +81,13 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ScratchPad"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="digitseteditor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DigitSetEditorForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DigitSetEditor"/>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

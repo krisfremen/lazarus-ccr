@@ -1,4 +1,4 @@
-unit sudokumain;
+unit SudokuMain;
 
 {
  ***************************************************************************
@@ -267,8 +267,8 @@ procedure TForm1.ShowScratchPad(RawData: TRawGrid);
 begin
   ScratchForm.OnCopyValues := @OnCopyBackValues;
   ScratchForm.RawData := RawData;
-  ScratchForm.ScratchGrid.Options := SGrid.Options + [goEditing];
-  ScratchForm.ScratchGrid.OnPrepareCanvas := @Self.SGridPrepareCanvas;
+  ScratchForm.ScratchGrid.Options := SGrid.Options - [goEditing];
+  ScratchForm.Left := Left + Width + 10;
   ScratchForm.Show;
 end;
 
