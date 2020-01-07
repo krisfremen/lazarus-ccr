@@ -3,6 +3,7 @@
   <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="JvPascalInterpreterR"/>
+    <Author Value="See header of the units. Lazarus port by Werner Pamler."/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -11,33 +12,35 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
+    <Description Value="Pascal scripting engine of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code)
+"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="6"/>
-    <Files Count="4">
-      <Item1>
+    <Files>
+      <Item>
         <Filename Value="..\run\JvPascalInterpreter\JvInterpreter.pas"/>
         <UnitName Value="JvInterpreter"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <Filename Value="..\run\JvPascalInterpreter\JvInterpreterConst.pas"/>
         <UnitName Value="JvInterpreterConst"/>
-      </Item2>
-      <Item3>
+      </Item>
+      <Item>
         <Filename Value="..\run\JvPascalInterpreter\JvInterpreterParser.pas"/>
         <UnitName Value="JvInterpreterParser"/>
-      </Item3>
-      <Item4>
+      </Item>
+      <Item>
         <Filename Value="..\run\JvPascalInterpreter\JvInterpreterFm.pas"/>
         <UnitName Value="JvInterpreterFm"/>
-      </Item4>
+      </Item>
     </Files>
-    <RequiredPkgs Count="2">
-      <Item1>
+    <RequiredPkgs>
+      <Item>
         <PackageName Value="JvCoreLazR"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <PackageName Value="FCL"/>
-      </Item2>
+      </Item>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

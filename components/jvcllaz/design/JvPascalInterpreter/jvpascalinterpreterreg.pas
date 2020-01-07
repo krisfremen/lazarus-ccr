@@ -18,7 +18,7 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvclVisual, [TJvInterpreterProgram]); //, TJvInterpreterFm]);
+  RegisterComponents(RsPaletteJvclNonVisual, [TJvInterpreterProgram]); //, TJvInterpreterFm]);
 end;
 
 end.
