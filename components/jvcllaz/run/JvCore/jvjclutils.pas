@@ -78,6 +78,8 @@ type
 {$ENDIF}
   EJvConvertError = Class(EConvertError);  { subclass EConvertError raised by some non-Def versions of floating point conversion routine }
 
+  TDynByteArray = array of byte;
+
   (******************** NOT CONVERTED
 {$IFDEF UNIX}
   TFileTime = Integer;
@@ -116,6 +118,7 @@ function StrToFloatUSDef(const Text: string; Default: Extended): Extended;
 
 function VarIsInt(Value: Variant): Boolean;
  // VarIsInt returns VarIsOrdinal-[varBoolean]
+****************************)
 
 { PosIdx returns the index of the first appearance of SubStr in Str. The search
   starts at index "Index". }
@@ -123,6 +126,8 @@ function PosIdx(const SubStr, S: string; Index: Integer = 0): Integer;
 {$IFNDEF CLR}
 function PosIdxW(const SubStr, S: WideString; Index: Integer = 0): Integer;
 {$ENDIF !CLR}
+(*****************************
+
 function PosLastCharIdx(Ch: Char; const S: string; Index: Integer = 0): Integer;
 
 { GetWordOnPos returns Word from string, S, on the cursor position, P}
@@ -146,9 +151,10 @@ procedure GetEndPosCaretW(const Text: WideString; CaretX, CaretY: Integer;
   var X, Y: Integer);
 { GetEndPosCaret returns the caret position of the last char. For the position
   after the last char of Text you must add 1 to the returned X value. }
-
+***********************)
 { SubStrBySeparator returns substring from string, S, separated with Separator string}
 function SubStrBySeparator(const S: string; const Index: Integer; const Separator: string; StartIndex: Integer = 1): string;
+(*************************
 {$IFNDEF CLR}
 function SubStrBySeparatorW(const S: WideString; const Index: Integer; const Separator: WideString; StartIndex: Integer = 1): WideString;
 {$ENDIF !CLR}
@@ -161,9 +167,13 @@ function SubWord(P: string; var P2: string): string;
 function SubWord(P: PChar; var P2: PChar): string;
 {$ENDIF CLR}
 //  function CurrencyByWord(Value: Currency): string;
+****************************)
+
 { GetLineByPos returns the Line number, there
   the symbol Pos is pointed. Lines separated with #13 symbol }
 function GetLineByPos(const S: string; const Pos: Integer): Integer;
+
+(********************
 { GetXYByPos is same as GetLineByPos, but returns X position in line as well}
 procedure GetXYByPos(const S: string; const Pos: Integer; var X, Y: Integer);
 procedure GetXYByPosW(const S: WideString; const Pos: Integer; var X, Y: Integer);
@@ -291,13 +301,19 @@ function HasSubFolder(APath: TFileName): Boolean;
 { IsEmptyFolder returns True, if there are no files or
   folders in given folder, APath}
 function IsEmptyFolder(APath: TFileName): Boolean;
+**************************)
+
 { AddSlash returns string with added slash Char to Dir parameter, if needed }
-function AddSlash(const Dir: TFileName): string; {$IFDEF SUPPORTS_INLINE} inline; {$ENDIF SUPPORTS_INLINE}
+function AddSlash(const Dir: TFileName): string; inline;
+
+(**********************************
 { AddPath returns FileName with Path, if FileName not contain any path }
 function AddPath(const FileName, Path: TFileName): TFileName;
 function AddPaths(const PathList, Path: string): string;
 function ParentPath(const Path: TFileName): TFileName;
+********************)
 function FindInPath(const FileName, PathList: string): TFileName;
+(************************
 { DeleteReadOnlyFile clears R/O file attribute and delete file }
 function DeleteReadOnlyFile(const FileName: TFileName): Boolean;
 { HasParam returns True, if program running with specified parameter, Param }
@@ -412,9 +428,13 @@ function ResSaveToString(Instance: HINST; const Typ, Name: string;
   This function reads ALL strings from specified section.
   Note: TIninFile.ReadSection function reads only strings with '=' symbol.}
 function IniReadSection(const IniFileName: TFileName; const Section: string; Ss: TStrings): Boolean;
+****************************)
+
 { LoadTextFile load text file, FileName, into string }
 function LoadTextFile(const FileName: TFileName): string;
 procedure SaveTextFile(const FileName: TFileName; const Source: string);
+
+(****************************
 { ReadFolder reads files list from disk folder, Folder,
   that are equal to mask, Mask, into strings, FileList}
 function ReadFolder(const Folder, Mask: TFileName; FileList: TStrings): Integer;
@@ -470,8 +490,11 @@ procedure ClipBoardToMemStream(MemStream: TMemoryStream; const Format: Word);
 function GetPropType(Obj: TObject; const PropName: string): TTypeKind;
 function GetPropStr(Obj: TObject; const PropName: string): string;
 function GetPropOrd(Obj: TObject; const PropName: string): Integer;
+***********************)
+
 function GetPropMethod(Obj: TObject; const PropName: string): TMethod;
 
+(***********************
 procedure PrepareIniSection(Ss: TStrings);
 { following functions are not documented because
   they are don't work properly, so don't use them }
@@ -1277,7 +1300,7 @@ function FindUnusedFileName(FileName: string; const FileExt: string; NumberPrefi
 implementation
 
 uses
-  Math, Variants, LazFileUtils, LclStrConsts,
+  Math, Variants, LazFileUtils, typinfo, LclStrConsts,
   JvConsts;
 
 (******************** NOT CONVERTED
@@ -1313,12 +1336,11 @@ const
 
 resourcestring
   RsEPivotLessThanZero = 'JvJCLUtils.MakeYear4Digit: Pivot < 0';
-
-(******************* NOT CONVERTED ****
   // (p3) duplicated from JvConsts since this unit should not rely on JVCL at all
   RsEPropertyNotExists = 'Property "%s" does not exist';
   RsEInvalidPropertyType = 'Property "%s" has invalid type';
 
+(******************* NOT CONVERTED ****
 {$IFDEF NO_JCL}
 
   // These are the replacement functions for the JCL.
@@ -1713,6 +1735,7 @@ begin
     {$ENDIF COMPILER6_UP}
     varSmallint, varInteger];
 end;
+***********************************)
 
 function PosIdx(const SubStr, S: string; Index: Integer = 0): Integer;
 {$IFDEF CLR}
@@ -1831,6 +1854,7 @@ begin
 end;
 {$ENDIF CLR}
 
+(******************************
 function PosLastCharIdx(Ch: Char; const S: string; Index: Integer = 0): Integer;
 begin
   if (Index = 0) or (Index > Length(S)) then
@@ -1840,7 +1864,7 @@ begin
       Exit;
   Result := 0;
 end;
-
+***********************************)
 
 function GetLineByPos(const S: string; const Pos: Integer): Integer;
 var
@@ -1861,6 +1885,7 @@ begin
   end;
 end;
 
+(*********************************
 procedure GetXYByPos(const S: string; const Pos: Integer; var X, Y: Integer);
 var
   I, iB: Integer;
@@ -2171,7 +2196,7 @@ begin
   Dec(X);
   Inc(Y, CaretY);
 end;
-
+*********************)
 function SubStrBySeparator(const S: string; const Index: Integer; const Separator: string; StartIndex: Integer): string;
 { Returns a substring. Substrings are divided by a separator character }
 var
@@ -2204,6 +2229,7 @@ begin
     Result := '';
 end;
 
+(**********************
 {$IFNDEF CLR}
 function SubStrBySeparatorW(const S: WideString; const Index: Integer; const Separator: WideString; StartIndex: Integer): WideString;
 { Returns a substring. Substrings are divided by a separator character }
@@ -2725,6 +2751,7 @@ begin
       Result := IntToStr(D) + ' ' + Day[D2D[StrToInt(IntToStr(D)[Length(IntToStr(D))])]] + ' назад' // ago
   end;
 end;
+*****************************)
 
 function AddSlash(const Dir: TFileName): string;
 begin
@@ -2733,6 +2760,7 @@ begin
     Result := Dir + PathDelim;
 end;
 
+(****************************
 function AddPath(const FileName, Path: TFileName): TFileName;
 begin
   if ExtractFileDrive(FileName) = '' then
@@ -2764,6 +2792,7 @@ begin
     Delete(Result, Length(Result), 1);
   Result := ExtractFilePath(Result);
 end;
+***************************)
 
 function FindInPath(const FileName, PathList: string): TFileName;
 var
@@ -2783,6 +2812,7 @@ begin
   Result := '';
 end;
 
+(************************
 {$IFNDEF CLR}
 {$IFDEF MSWINDOWS}
 function GetComputerID: string;
@@ -3548,6 +3578,7 @@ begin
     Free;
   end;
 end;
+***************************)
 
 procedure SaveTextFile(const FileName: TFileName; const Source: string);
 begin
@@ -3571,6 +3602,7 @@ begin
   end;
 end;
 
+(********************************
 function ReadFolder(const Folder, Mask: TFileName; FileList: TStrings): Integer;
 var
   SearchRec: TSearchRec;
@@ -4238,16 +4270,16 @@ begin
   end;
 end;
 {$ENDIF !CLR}
-
+*******************)
 function GetPropTypeKind(PropInf: PPropInfo): TTypeKind;
 begin
   {$IFDEF CLR}
   Result := PropInf.TypeKind;
   {$ELSE}
-  Result := PropInf.PropType^.Kind;
+  Result := PropInf^.PropType^.Kind;
   {$ENDIF CLR}
 end;
-
+(***************************
 function GetPropType(Obj: TObject; const PropName: string): TTypeKind;
 var
   PropInf: PPropInfo;
@@ -4298,6 +4330,7 @@ begin
     {$ENDIF CLR}
   Result := GetOrdProp(Obj, PropInf);
 end;
+**************************)
 
 function GetPropMethod(Obj: TObject; const PropName: string): TMethod;
 var
@@ -4319,6 +4352,7 @@ begin
   Result := GetMethodProp(Obj, PropInf);
 end;
 
+(***********************
 procedure PrepareIniSection(Ss: TStrings);
 var
   I: Integer;

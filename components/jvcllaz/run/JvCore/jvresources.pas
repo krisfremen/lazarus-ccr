@@ -355,6 +355,7 @@ resourcestring
   RsENotifyErrorFmt = '%0:s:' + sLineBreak + '%1:s';
 
 //=== JvChart.pas ============================================================
+(************************ NOT CONVERTED ***
 resourcestring
   RsChartDesigntimeLabel = ': JEDI JVCL Charting Component';
   RsNoData = 'No data. (Data.ValueCount=0)';
@@ -374,6 +375,7 @@ resourcestring
   RsEChartOptionsPenCountPenCountOutOf = 'JvChart.Options.PenCount - PenCount out of range';
   RsEChartOptionsXStartOffsetValueOutO = 'JvChart.Options.XStartOffset  - value out of range';
   RsEUnableToGetCanvas = 'Unable to get canvas';
+************************)
 
 //=== JvCheckedMaskEdit.pas ==================================================
 resourcestring

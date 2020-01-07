@@ -1,179 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <ProjectGroup FileVersion="1">
-    <Targets Count="43">
-      <Target0 FileName="JvBmpAnimator\BmpAnimDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target0>
-      <Target1 FileName="JvCheckBox\JvCheckBoxDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target1>
-      <Target2 FileName="JvComboListBox\JvComboListBoxDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target2>
-      <Target3 FileName="JvDBLookup\JvDBLookupDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target3>
-      <Target4 FileName="JvDBLookupTreeView\JvDBLookupTreeViewDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target4>
-      <Target5 FileName="JvDBSearchEdit\JvSearchEditDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target5>
-      <Target6 FileName="JvDBTreeView\JVDBTreeViewDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target6>
-      <Target7 FileName="JvDesigner\jvDesignerDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target7>
-      <Target8 FileName="JvDialButton\JvDialButtonDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target8>
-      <Target9 FileName="JvFormAnimations\JvFormAnimations_Demo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target9>
-      <Target10 FileName="JvFormWallper\JvFormWallpaper_Demo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target10>
-      <Target11 FileName="JvFullColorCircleDialog\JvFullColorCircleDialogPrj.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target11>
-      <Target12 FileName="JvFullColorDialog\JvFullColorDialogPrj.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target12>
-      <Target13 FileName="JvHTControls\JvHTCtrlsDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target13>
-      <Target14 FileName="JvHTML\JvHTMLTest.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target14>
-      <Target15 FileName="JvHTMLParser\JvHtmlParserProj.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target15>
-      <Target16 FileName="JvID3v1\JvID3v1Demo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target16>
-      <Target17 FileName="JvID3v2\JvId3v2Demo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target17>
-      <Target18 FileName="JvInstallLabel\Install2LabelDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target18>
-      <Target19 FileName="JvItemViewer\JvItemViewerDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target19>
-      <Target20 FileName="JvLED\JvLEDDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target20>
-      <Target21 FileName="JvLookupAutoComplete\JvLookupAutoCompleteDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target21>
-      <Target22 FileName="JvMarkup\MarkupDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target22>
-      <Target23 FileName="JvNavigationPane\JvNavPaneDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="default"/>
-      </Target23>
-      <Target24 FileName="JvOutlookBar\OLBarDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target24>
-      <Target25 FileName="JvOutlookBarCustomDraw\JvOutlookBarCustomDrawDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target25>
-      <Target26 FileName="JvPicClip\JvPicClipDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target26>
-      <Target27 FileName="JvProfiler32\ProfilerDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target27>
-      <Target28 FileName="JvRollOut\JvRollOutDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target28>
-      <Target29 FileName="JvSimScope\JvSimScopeDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target29>
-      <Target30 FileName="JvSpecialProgress\specialprogress_demo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target30>
-      <Target31 FileName="JvSpellChecker\JvSpellCheckerDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target31>
-      <Target32 FileName="JvTabBar\JvTabBarDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target32>
-      <Target33 FileName="JvTabBar_NotebookPages\JvTabBarDemo_NotebookPages.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target33>
-      <Target34 FileName="JvThumbnail\JvThumbnailDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target34>
-      <Target35 FileName="JVTimeLine\TimeLineDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target35>
-      <Target36 FileName="JvTMTimeLine\SimpleTLTest1.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target36>
-      <Target37 FileName="JvValidateEdit\JvFormatEditDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target37>
-      <Target38 FileName="JvValidators\JvValidatorsDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target38>
-      <Target39 FileName="JvWizard\JvWizardDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target39>
-      <Target40 FileName="JvXPBar\XPBarDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target40>
-      <Target41 FileName="JvXPCtrls\SimpleDemo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target41>
-      <Target42 FileName="JvYearGrid\YearGrid_Demo.lpi">
-        <BuildModes Count="1"/>
-        <Mode1 Name="Default"/>
-      </Target42>
+  <ProjectGroup FileVersion="2">
+    <Targets>
+      <Target FileName="JvBmpAnimator\BmpAnimDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvCheckBox\JvCheckBoxDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvComboListBox\JvComboListBoxDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvDBLookup\JvDBLookupDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvDBLookupTreeView\JvDBLookupTreeViewDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvDBSearchEdit\JvSearchEditDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvDBTreeView\JVDBTreeViewDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvDesigner\jvDesignerDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvDialButton\JvDialButtonDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvFormAnimations\JvFormAnimations_Demo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvFormWallper\JvFormWallpaper_Demo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvFullColorCircleDialog\JvFullColorCircleDialogPrj.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvFullColorDialog\JvFullColorDialogPrj.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvHTControls\JvHTCtrlsDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvHTML\JvHTMLTest.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvHTMLParser\JvHtmlParserProj.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvID3v1\JvID3v1Demo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvID3v2\JvId3v2Demo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvInstallLabel\Install2LabelDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvItemViewer\JvItemViewerDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvLED\JvLEDDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvLookupAutoComplete\JvLookupAutoCompleteDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvMarkup\MarkupDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvNavigationPane\JvNavPaneDemo.lpi">
+        <BuildModes>
+          <Mode Name="default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvOutlookBar\OLBarDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvOutlookBarCustomDraw\JvOutlookBarCustomDrawDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvPicClip\JvPicClipDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvProfiler32\ProfilerDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvRollOut\JvRollOutDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvSimScope\JvSimScopeDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvSpecialProgress\specialprogress_demo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvSpellChecker\JvSpellCheckerDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvTabBar\JvTabBarDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvTabBar_NotebookPages\JvTabBarDemo_NotebookPages.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvThumbnail\JvThumbnailDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JVTimeLine\TimeLineDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvTMTimeLine\SimpleTLTest1.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvValidateEdit\JvFormatEditDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvValidators\JvValidatorsDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvWizard\JvWizardDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvXPBar\XPBarDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvXPCtrls\SimpleDemo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvYearGrid\YearGrid_Demo.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvInterpreterDemos\JvInterpreterCallFunction\JvInterpreterCallFunction.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="JvInterpreterDemos\JvInterpreterSimple\JvInterpreterSimpleExpression.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
     </Targets>
   </ProjectGroup>
 </CONFIG>
