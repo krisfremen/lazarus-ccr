@@ -261,10 +261,7 @@ const
 implementation
 
 uses
-  {$IFNDEF COMPILER12_UP}
-  JvJCLUtils,
-  {$ENDIF ~COMPILER12_UP}
-  JvInterpreter, JvInterpreterConst, JvConsts, Windows;
+  JvJCLUtils, JvInterpreter, JvInterpreterConst, JvConsts;
 
 const
   K = '''';
