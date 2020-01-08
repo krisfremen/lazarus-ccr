@@ -226,16 +226,17 @@ end;
 procedure TScratchForm.EditCell(ACol, ARow: Integer);
 var
   S: String;
-  DigitSet: TDigitSet;
+  CurrentDigitSet: TDigitSet;
 begin
   S := ScratchGrid.Cells[ACol, ARow];
-  DigitSet := StrToDigitSet(S);
-  DigitSetEditorForm.DigitSet := DigitSet;
+  CurrentDigitSet := StrToDigitSet(S);
+  DigitSetEditorForm.OriginalDigitsPossible := FRawData[ACol+1,ARow+1].DigitsPossible; //always set this first
+  DigitSetEditorForm.CurrentDigitSet := CurrentDigitSet;
   DigitSetEditorForm.Top := Top;
   DigitSetEditorForm.PreferredRight := Left;
   if (DigitSetEditorForm.ShowModal = mrOK) then
   begin
-    S := DigitSetToStr(DigitSetEditorForm.DigitSet);
+    S := DigitSetToStr(DigitSetEditorForm.CurrentDigitSet);
     ScratchGrid.Cells[ACol, ARow] := S;
   end;
 end;

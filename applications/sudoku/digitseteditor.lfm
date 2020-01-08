@@ -20,8 +20,10 @@ object DigitSetEditorForm: TDigitSetEditorForm
     AutoFill = True
     Caption = 'Digits'
     ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
     ChildSizing.VerticalSpacing = 6
     ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
     ChildSizing.ShrinkHorizontal = crsScaleChilds
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
@@ -40,6 +42,7 @@ object DigitSetEditorForm: TDigitSetEditorForm
       '8'
       '9'
     )
+    OnItemClick = DigitCGItemClick
     ParentBiDiMode = False
     TabOrder = 0
     Data = {
