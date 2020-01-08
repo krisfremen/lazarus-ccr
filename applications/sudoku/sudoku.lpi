@@ -85,6 +85,7 @@
         <Filename Value="digitseteditor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="DigitSetEditorForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="DigitSetEditor"/>
       </Unit4>

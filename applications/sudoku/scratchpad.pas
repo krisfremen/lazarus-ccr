@@ -49,10 +49,10 @@ function DigitSetToStr(ASet: TDigitSet): String;
     if (D in ASet) then
       Result := Char(Ord('0') + D)
     else
-      Result := 'x';//#32;
+      Result := #32;//'x'
   end;
 begin
-  Result := Format('%s-%s-%s'+LineEnding+'%s-%s-%s'+LineEnding+'%s-%s-%s',[Get(1),Get(2),Get(3),Get(4),Get(5),Get(6),Get(7),Get(8),Get(9)]);
+  Result := Format('%s %s %s'+LineEnding+'%s %s %s'+LineEnding+'%s %s %s',[Get(1),Get(2),Get(3),Get(4),Get(5),Get(6),Get(7),Get(8),Get(9)]);
 end;
 
 function StrToDigitSet(const S: String): TDigitSet;
