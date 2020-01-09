@@ -60,6 +60,8 @@ type
       var Editor: TWinControl);
   private
     { private declarations }
+  const
+    MaxSteps = 50;
     //theValues: TValues;
     procedure OnCopyBackValues(Sender: TObject; Values: TValues);
     function SolveSudoku(out Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
@@ -131,14 +133,21 @@ var
   Steps: Integer;
 begin
   SGrid.Options := SGrid.Options - [goEditing];
-  Res := SolveSudoku(Values, RawData, Steps);
-  ValuesToGrid(Values);
-  if Res then
-    ShowMessage(Format('Sudoku solved in %d steps.', [Steps]))
-  else
-  begin
-    ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
-    ShowScratchPad(RawData);
+  try
+    Res := SolveSudoku(Values, RawData, Steps);
+    ValuesToGrid(Values);
+    if Res then
+      ShowMessage(Format('Sudoku solved in %d steps.', [Steps]))
+    else
+    begin
+      if (Steps < MaxSteps) then
+        ShowMessage(Format('Unable to solve sudoku (no progress after step %d).',[Steps-1]))
+      else
+        ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
+      ShowScratchPad(RawData);
+    end;
+  except
+    on E: ESudoku do ShowMessage(E.Message);
   end;
 end;
 
@@ -215,8 +224,11 @@ begin
   GridToValues(Values);
   RawData := Default(TRawGrid);
   aSudoku := TSudoku.Create;
-  Result := aSudoku.GiveSolution(Values, RawData, Steps);
-  aSudoku.Free;
+  try
+    Result := aSudoku.GiveSolution(Values, RawData, Steps);
+  finally
+    aSudoku.Free;
+  end;
 end;
 
 procedure TForm1.GridToValues(out Values: TValues);

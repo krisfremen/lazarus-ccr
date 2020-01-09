@@ -43,18 +43,28 @@ type
   { TSudoku }
 
   TSudoku = class(TObject)
-    function GiveSolution(var Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
   private
+    FMaxSteps: Integer;
     Grid: TRawGrid;
     procedure CalculateValues(out IsSolved: Boolean);
     procedure CheckRow(Col, Row: Integer);
     procedure CheckCol(Col, Row: Integer);
     procedure CheckBlock(Col, Row: Integer);
     procedure CheckDigits(ADigit: Integer);
-    procedure FillGridFromValues(Values: TValues);
+    procedure CheckInput(Values: TValues);
+    procedure ValuesToGrid(Values: TValues);
+    function GridToValues: TValues;
     function Solve(out Steps: Integer): Boolean;
-    //function Solved: Boolean;
+  public
+    constructor Create;
+    function GiveSolution(var Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
+    property MaxSteps: Integer read FMaxSteps write FMaxSteps default 50;
   end;
+
+  ESudoku = class(Exception);
+
+const
+  AllDigits: TDigitSet = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function DbgS(ASet: TDigitSet): String; overload;
 function DbgS(ASquare: TSquare): String; overload;
@@ -107,9 +117,27 @@ begin
   end;
 end;
 
+function IsEqualGrid(const A, B: TRawGrid): Boolean;
+var
+  Col, Row: Integer;
+begin
+  Result := False;
+  for Col := 1 to 9 do
+  begin
+    for Row := 1 to 9 do
+    begin
+      if (A[Col,Row].DigitsPossible <> B[Col,Row].DigitsPossible) or
+         (A[Col,Row].Locked <> B[Col,Row].Locked) or
+         (A[Col,Row].Value <> B[Col,Row].Value) then
+         Exit;
+    end;
+  end;
+  Result := True;
+end;
+
 { TSudoku }
 
-procedure TSudoku.FillGridFromValues(Values: TValues);
+procedure TSudoku.ValuesToGrid(Values: TValues);
 var
   c, r: Integer;
 begin
@@ -127,8 +155,21 @@ begin
       begin
         Grid[c, r].Locked := False;
         Grid[c, r].Value := 0;
-        Grid[c, r].DigitsPossible := [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        Grid[c, r].DigitsPossible := AllDigits;
       end;
+    end;
+  end;
+end;
+
+function TSudoku.GridToValues: TValues;
+var
+  Col, Row: Integer;
+begin
+  for Col := 1 to 9 do
+  begin
+    for Row := 1 to 9 do
+    begin
+      Result[Col, Row] := Grid[Col, Row].Value;
     end;
   end;
 end;
@@ -136,10 +177,12 @@ end;
 function TSudoku.Solve(out Steps: Integer): Boolean;
 var
   c, r: Integer;
+  OldState: TRawGrid;
 begin
   Steps := 0;
   repeat
     inc(Steps);
+    OldState := Grid;
     for c := 1 to 9  do
     begin
       for r := 1 to 9 do
@@ -154,22 +197,25 @@ begin
     end;
     for c := 1 to 9 do CheckDigits(c);
     CalculateValues(Result);
-  until Result or (Steps > 50);
+
+    //if IsConsole then
+    //  writeln('Steps = ',Steps,', IsEqualGrid(OldState, Grid) = ',IsEqualGrid(OldState, Grid));
+
+  until Result or (Steps >= FMaxSteps) or (IsEqualGrid(OldState, Grid));
+end;
+
+constructor TSudoku.Create;
+begin
+  inherited Create;
+  FMaxSteps := 50;
 end;
 
 function TSudoku.GiveSolution(var Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
-var
-  c, r: Integer;
 begin
-  FillGridFromValues(Values);
+  CheckInput(Values);
+  ValuesToGrid(Values);
   Result := Solve(Steps);
-  for c := 1 to 9 do
-  begin
-    for r := 1 to 9 do
-    begin
-      Values[c, r] := Grid[c, r].Value;
-    end;
-  end;
+  Values := GridToValues;
   RawData := Grid;
 end;
 
@@ -289,21 +335,87 @@ begin
   end;
 end;
 
-//function TSudoku.Solved: Boolean;
-//var
-//  c, r: Integer;
-//begin
-//  result := True;
-//  for c := 1 to 9 do begin
-//    for r := 1 to 9 do begin
-//      if not Grid[c, r].Locked then begin
-//        Result := False;
-//        Break;
-//      end;
-//    end;
-//    if not result then Break;
-//  end;
-//end;
+procedure TSudoku.CheckInput(Values: TValues);
+  procedure CheckColValues;
+  var
+    Col, Row: Integer;
+    DigitSet: TDigitSet;
+    D: Integer;
+  begin
+    for Col :=  1 to 9 do
+    begin
+      DigitSet := [];
+      for Row := 1 to 9 do
+      begin
+        D := Values[Col, Row];
+        if (D <> 0) then
+        begin
+          if (D in DigitSet) then
+            Raise ESudoku.CreateFmt('Duplicate value ("%d") in Col %d',[D, Col]);
+          Include(DigitSet, D);
+        end;
+      end;
+    end;
+  end;
+
+  procedure CheckRowValues;
+  var
+    Col, Row: Integer;
+    DigitSet: TDigitSet;
+    D: Integer;
+  begin
+    for Row :=  1 to 9 do
+    begin
+      DigitSet := [];
+      for Col := 1 to 9 do
+      begin
+        D := Values[Col, Row];
+        if (D <> 0) then
+        begin
+          if (D in DigitSet) then
+            Raise ESudoku.CreateFmt('Duplicate value ("%d") in Row %d',[D, Row]);
+          Include(DigitSet, D);
+        end;
+      end;
+    end;
+  end;
+
+  procedure CheckBlockValues(StartCol, StartRow: Integer);
+  var
+    Col, Row: Integer;
+    DigitSet: TDigitSet;
+    D: Integer;
+  begin
+    DigitSet := [];
+    for Col := StartCol to StartCol + 2 do
+    begin
+      for Row := StartRow to StartRow + 2 do
+      begin
+        D := Values[Col,Row];
+        if (D <> 0) then
+        begin
+          if (D in DigitSet) then
+            Raise ESudoku.CreateFmt('Duplicate value ("%d") in block at Row: %d, Col: %d',[D, Row, Col]);
+          Include(DigitSet, D);
+        end;
+      end;
+    end;
+  end;
+
+begin
+  CheckRowValues;
+  CheckColValues;
+  CheckBlockValues(1,1);
+  CheckBlockValues(1,4);
+  CheckBlockValues(1,7);
+  CheckBlockValues(4,1);
+  CheckBlockValues(4,4);
+  CheckBlockValues(4,7);
+  CheckBlockValues(7,1);
+  CheckBlockValues(7,4);
+  CheckBlockValues(7,7);
+end;
+
 
 end.
 
