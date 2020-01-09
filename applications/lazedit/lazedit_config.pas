@@ -278,7 +278,6 @@ end;
 function GetDefaultIniDir: String;
 begin
   Result := ExcludeTrailingPathDelimiter(GetAppConfigDirUTF8(False, True));
-  writeln('GetDefaultIniDir -> ',Result);
 end;
 
 function GetApplicationName: String;
