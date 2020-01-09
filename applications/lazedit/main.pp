@@ -43,6 +43,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   LCLProc, Menus, ActnList, ClipBrd, LclIntf,
+  LazFileUtils, LazUtf8,
   LMessages, {for overridden IsShortCut}
   SynEdit, SynEditTypes,
   EditorPageControl,
@@ -1629,7 +1630,7 @@ begin
     _PCP := ExcludeTrailingPathdelimiter(ExpandFileName(_PCP));
     //MyGetOpt returns parameters as UTF8
     //inifiles uses system-encoding
-    ConfigFileDir := Utf8ToSys(_PCP);
+    ConfigFileDir := Utf8ToWinCP(_PCP);
   end;
   {$endif}
 end;

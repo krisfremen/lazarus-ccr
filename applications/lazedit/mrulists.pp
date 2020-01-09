@@ -34,7 +34,7 @@ unit MruLists;
 interface
 
 uses
-  SysUtils, Classes, Controls, {Registry, IniFiles,} FileUtil;
+  SysUtils, Classes, Controls, {Registry, IniFiles,} LazFileUtils, LazUtf8;
 
 
 {$if defined(Windows) or defined(darwin)}
@@ -324,7 +324,7 @@ end;
 
 procedure TMruList.AddAnsi(AnsiItem: String; const DoNormalizeName: Boolean);
 begin
-  Add(SysToUtf8(AnsiItem), DoNormalizeName);
+  Add(WinCPToUtf8(AnsiItem), DoNormalizeName);
 end;
 
 procedure TMruList.Delete(const Index: Integer);

@@ -38,6 +38,7 @@ interface
 uses
   Classes, SysUtils, Controls, Graphics, {StdCtrls,} ComCtrls, Types, LCLProc, LclType, StrUtils,
   FileUtil, Forms {for Application object needed in TEditorPageControl.ClosePage()}, Menus,
+  LazUtf8, LazFileUtils,
   SynEdit, {SynMemo,} SynEditTypes, SynEditHighlighter,
   SynGutter, {SynGutterMarks,} SynGutterChanges, SynGutterLineNumber, {SynGutterCodeFolding,}
   SynHighlighterPas,  SynHighlighterCpp, SynHighlighterPerl, SynHighlighterHTML, SynHighlighterXML,
@@ -645,7 +646,7 @@ end;
 //SynEdit deafults to UTF8 filenames when using LoadFromFile !!
 procedure TEditor.LoadFromFileAnsi(const AnsiFn: String; const AsTemplate: Boolean = False);
 begin
-  LoadFromFileUtf8(SysToUtf8(AnsiFn), AsTemplate);
+  LoadFromFileUtf8(WinCPToUTF8(AnsiFn), AsTemplate);
 end;
 
 procedure TEditor.LoadFromFileUtf8(const Utf8Fn: String; const AsTemplate: Boolean = False);
@@ -675,7 +676,7 @@ end;
 
 procedure TEditor.SaveToFileAnsi(const AnsiFn: String);
 begin
-  SaveToFileAnsi(SysToUtf8(AnsiFn));
+  SaveToFileAnsi(WinCPToUtf8(AnsiFn));
 end;
 
 procedure TEditor.SaveToFileUtf8(const Utf8Fn: String);

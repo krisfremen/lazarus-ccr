@@ -14,7 +14,7 @@ object LazEditMainForm: TLazEditMainForm
   OnDestroy = FormDestroy
   OnDropFiles = FormDropFiles
   OnShow = FormShow
-  LCLVersion = '1.3'
+  LCLVersion = '2.1.0.0'
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
@@ -68,7 +68,7 @@ object LazEditMainForm: TLazEditMainForm
       Action = acFileSaveAll
     end
     object CopyBtn: TToolButton
-      Left = 126
+      Left = 124
       Top = 2
       Action = acEditCopy
     end
@@ -79,37 +79,37 @@ object LazEditMainForm: TLazEditMainForm
     end
     object tbSep1: TToolButton
       Left = 116
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep1'
       Style = tbsSeparator
     end
     object PasteBtn: TToolButton
-      Left = 149
+      Left = 147
       Top = 2
       Action = acEditPaste
     end
     object FindBtn: TToolButton
-      Left = 182
+      Left = 178
       Top = 2
       Action = acEditFind
     end
     object tbSep2: TToolButton
-      Left = 172
+      Left = 170
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep2'
       Style = tbsSeparator
     end
     object tbSep3: TToolButton
-      Left = 205
+      Left = 201
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep3'
       Style = tbsSeparator
     end
     object InfoBtn: TToolButton
-      Left = 215
+      Left = 209
       Top = 2
       Action = acAbout
     end
@@ -137,52 +137,52 @@ object LazEditMainForm: TLazEditMainForm
       Action = acInsertPicture
     end
     object UListBtn: TToolButton
-      Left = 57
+      Left = 55
       Top = 2
       Action = acInsertUList
     end
     object NListBtn: TToolButton
-      Left = 80
+      Left = 78
       Top = 2
       Action = acInsertNlist
     end
     object ListItemBtn: TToolButton
-      Left = 103
+      Left = 101
       Top = 2
       Action = acInsertListItem
     end
     object TableBtn: TToolButton
-      Left = 136
+      Left = 132
       Top = 2
       Action = acInsertTable
     end
     object BoldBtn: TToolButton
-      Left = 169
+      Left = 163
       Top = 2
       Action = acLayoutBold
     end
     object ItalicBtn: TToolButton
-      Left = 192
+      Left = 186
       Top = 2
       Action = acLayoutItalic
     end
     object UnderlineBtn: TToolButton
-      Left = 215
+      Left = 209
       Top = 2
       Action = acLayoutUnderline
     end
     object SupBtn: TToolButton
-      Left = 284
+      Left = 278
       Top = 2
       Action = acLayoutSup
     end
     object SubBtn: TToolButton
-      Left = 307
+      Left = 301
       Top = 2
       Action = acLayoutSub
     end
     object HeadingBtn: TToolButton
-      Left = 340
+      Left = 332
       Hint = 'Heading (H1..H6)'
       Top = 2
       DropdownMenu = HeadingDropDownMenu
@@ -190,89 +190,89 @@ object LazEditMainForm: TLazEditMainForm
       Style = tbsDropDown
     end
     object LeftAlignBtn: TToolButton
-      Left = 385
+      Left = 375
       Top = 2
       Action = acLayoutAlignLeft
     end
     object RightAlignBtn: TToolButton
-      Left = 408
+      Left = 398
       Top = 2
       Action = acLayoutAlignRight
     end
     object CenterAlignBtn: TToolButton
-      Left = 431
+      Left = 421
       Top = 2
       Action = acLayoutAlignCenter
     end
     object JustifyAlignBtn: TToolButton
-      Left = 454
+      Left = 444
       Top = 2
       Action = acLayoutAlignJustify
     end
     object ParaBtn: TToolButton
-      Left = 487
+      Left = 475
       Top = 2
       Action = acGroupingParagraph
     end
     object tbSep4: TToolButton
       Left = 47
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep4'
       Style = tbsSeparator
     end
     object tbSep5: TToolButton
-      Left = 126
+      Left = 124
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep5'
       Style = tbsSeparator
     end
     object tbSep6: TToolButton
-      Left = 159
+      Left = 155
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep6'
       Style = tbsSeparator
     end
     object tbSep7: TToolButton
-      Left = 330
+      Left = 324
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep7'
       Style = tbsSeparator
     end
     object tbSep8: TToolButton
-      Left = 375
+      Left = 367
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep8'
       Style = tbsSeparator
     end
     object tbSep9: TToolButton
-      Left = 477
+      Left = 467
+      Height = 22
       Top = 2
-      Width = 10
       Caption = 'tbSep9'
       Style = tbsSeparator
     end
     object DivBtn: TToolButton
-      Left = 510
+      Left = 498
       Top = 2
       Action = acGroupingDiv
     end
     object SpanBtn: TToolButton
-      Left = 533
+      Left = 521
       Top = 2
       Action = acGroupingSpan
     end
     object EmBtn: TToolButton
-      Left = 238
+      Left = 232
       Top = 2
       Action = acLayoutEmphasis
     end
     object StrongBtn: TToolButton
-      Left = 261
+      Left = 255
       Top = 2
       Action = acLayoutStrong
     end
@@ -1866,42 +1866,6 @@ object LazEditMainForm: TLazEditMainForm
     top = 224
     object mnuEditPopupCopy: TMenuItem
       Action = acEditCopy
-      Bitmap.Data = {
-        36040000424D3604000000000000360000002800000010000000100000000100
-        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00C57342C1C67545E6C87545FEC775
-        45F3C87545F3C77545F3C77545F3C87546F4C57444E8CA7F53F1FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00C77949EDFCF3ECFFFAF1E8FFFAF0
-        E7FFFBF1E9FFFBF2EAFFFBF2EAFFFBF2EBFFFDF4EEFFCA8054F9FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00CF8253FFEFF1E7FFFFE9D9FFFFEA
-        DBFFFFE9D9FFFFE7D7FFFFE5D2FFFFE2CBFFEFF2E8FFCE8156FFFFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00CC8352FBFBF5EEFFFFE9D9FFFFEA
-        DBFFFFE9D9FFFFE7D7FFFFE5D2FFFFE2CBFFFBF6EFFFCC8355FEC7794AB9C879
-        4BCEC87545DDC77545D4C87545D4C77545D4CA8452FFFFF7F1FFFFE9D9FFFFEA
-        DBFFFFE9D9FFFFE7D7FFFFE5D2FFFFE2CBFFFFF7F1FFCB8555FEC87C4ED3FCF3
-        ECDEFAF1E8DEFAF0E7DEFBF1E9DEFBF2EADEE4BA91FFFFF7F0FFFFE7D5FFFDE7
-        D6FFFDE6D4FFFCE4D0FFFBE3CBFFFADCC2FFFEF3E8FFCC8656FECF8253DEEFF1
-        E7DEFFE9D9DEFFEADBDEFFE9D9DEFFE7D7DEE4BB91FFFFF7F2FFFEE7D5FFFEE7
-        D5FFFDE5D1FFFAE0CAFFF9DEC4FFF7D9BCFFFDF2E7FFCC8757FECC8352DBFBF5
-        EEDEFFE9D9DEFFEADBDEFFE9D9DEFFE7D7DEE4BB92FFFEF7F1FFFCE5D2FFFCE4
-        D1FFFBE2CCFFF9DDC4FFF6D7BBFFF3D1AFFFFAEFE4FFCC8758FECA8452DBFFF7
-        F1DEFFE9D9DEFFEADBDEFFE9D9DEFFE7D7DEE4BB92FFFEF6F0FFFCE2CDFFFCE3
-        CDFFFADFC8FFF7D9BCFFF5E9DDFFFAF3EBFFFBF8F3FFCA8353FECB8553DBFFF7
-        F0DEFFE7D5DEFDE7D6DEFDE6D4DEFCE4D0DEE4BB93FFFEF5EDFFFCDEC5FFFBE0
-        C7FFF9DCC2FFF5D3B4FFFEF9F3FFFAE2C4FFECC193FFC37D4893CB8654DBFFF7
-        F2DEFEE7D5DEFEE7D5DEFDE5D1DEFAE0CADEE5BE96FFFFFFFEFFFDF3E9FFFDF3
-        EAFFFCF2E8FFFAEFE3FFFAF2E7FFEABB88FFCF8555B3B4693D0CCB8655DBFEF7
-        F1DEFCE5D2DEFCE4D1DEFBE2CCDEF9DDC4DEEAC39DFFE6BF96FFE4BB92FFE4BB
-        92FFD1A06CF5D09E6DF6CC965FDAC479427EB2673C09FFFFFF00CB8655DBFEF6
-        F0DEFCE2CDDEFCE3CDDEFADFC8DEF7D9BCDEF5E9DDDEFAF3EBDEFBF8F3DECD95
-        65DCFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00CB8656DAFEF5
-        EDDEFCDEC5DEFBE0C7DEF9DCC2DEF5D3B4DEFEF9F3DEFAE2C4DEECC193DEC37D
-        4880FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00CA8554D0FFFF
-        FF00FDF3E9DEFDF3EADEFCF2E8DEFAEFE3DEFAF2E7DEEABB88DECF85559CB469
-        3D0AFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00C77947AACC86
-        55CECC8857DECB8856DBCC8856DBCB8757DBCA8350D0C479426EB2673C08FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
-      }
     end
     object mnuEditPopupCut: TMenuItem
       Caption = '&Knippen'
@@ -1909,42 +1873,6 @@ object LazEditMainForm: TLazEditMainForm
     end
     object mnuEditPopupPaste: TMenuItem
       Action = acEditPaste
-      Bitmap.Data = {
-        36040000424D3604000000000000360000002800000010000000100000000100
-        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF005E5E5E025B5B5B775858588A5555558A5252
-        528A4F4F4F8A4C4C4C8A4A4A4A8A4848488A4646468A444444662063984A2063
-        98CF206398FF206398FF206398FF246395FF587388FFF7F7F7FFF0F0F0FFF0F0
-        F0FFF0F0F0FFF0F0F0FFF0F0F0FFF0F0F0FFF3F3F3FA46464684206398C262A5
-        D7FF65A8DAFF64A6D9FF62A4D8FF629FD1FF758EA4FFEFEFEFFFE7E7E7FFE7E7
-        E7FFE7E7E7FFE7E7E7FFE6E6E6FFE6E6E6FFECECECFA49494984206398FF68AB
-        DCFF488ECFFF468BCEFF4387CDFF4484C6FF6885A1FFF0F0F0FFB4B4B4FFB4B4
-        B4FFB4B4B4FFB4B4B4FFB4B4B4FFB3B3B3FFEDEDEDFA4C4C4C84206398FF69AE
-        DCFF4A93D1FF488FD0FF468BCEFF4788C7FF6C88A3FFF0F0F0FFE8E8E8FFE8E8
-        E8FFE7E7E7FFE7E7E7FFE7E7E7FFE7E7E7FFEDEDEDFA4F4F4F84206398FF6BB1
-        DEFF4D97D3FF4B93D2FF488FD0FF4A8CC9FF6F8BA5FFF1F1F1FFB6B6B6FFB5B5
-        B5FFB5B5B5FFB4B4B4FFB4B4B4FFB4B4B4FFEDEDEDFA53535384206398FF6DB3
-        DFFF509CD5FF4E98D3FF4B94D1FF4C91CBFF708EA7FFF1F1F1FFE9E9E9FFE9E9
-        E9FFE8E8E8FFE8E8E8FFE8E8E8FFE7E7E7FFEDEDEDFA56565684206398FF70B5
-        E0FF529FD7FF509CD6FF4E98D4FF4F95CDFF7391AAFFF1F1F1FFB7B7B7FFB6B6
-        B6FFB6B6B6FFB6B6B6FFB5B5B5FFB5B5B5FFEEEEEEFA5A5A5A84206398FF73B7
-        E1FF57A3D7FF53A0D7FF509DD5FF5299CFFF7594ACFFF8F8F8FFF2F2F2FFF2F2
-        F2FFF2F2F2FFF2F2F2FFF2F2F2FFF1F1F1FFF4F4F4FA5E5E5E84206398FF76B9
-        E2FF5CA7D9FF58A4D8FF53A0D7FF539ED5FF618BA9FF6488A1FF6487A1FF6386
-        A0FF69879FFF4A6881FF6A6A6A8A6868688A6565658A62626263206398FF7ABB
-        E3FF61AADBFF5AA5D9FF53A0D7FF529FD7FF529FD7FF529FD7FF529FD7FF529F
-        D7FF62A3D8FF206398FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00206398FF7CBD
-        E4FF65AEDDFF62ABDCFF5EA8DAFF5CA7D9FF5CA7D9FF5CA7D9FF5CA7D9FF529F
-        D7FF62A3D8FF206398FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00206398FF7FBF
-        E4FF69B2DEFF4A9BDAFF4497DCFF4396DCFF4296DCFF4295DCFF4195DBFF519E
-        D6FF6CB2DEFF206398FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00206398E071B3
-        DBFE7EBFE4FF4E9DDFFFB5EEFDFF75D4F0FF75D4F0FFB5EEFDFF4B9BDEFF6EB4
-        E0FF6DB3DFF9206398F3FFFFFF00FFFFFF00FFFFFF00FFFFFF00206398322063
-        98B2206398FF3775A4FFB6EFFEFF80DBF3FF80DBF3FFB6EFFEFF2E6EA1FF2063
-        98FF206398A520639853FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-        FF002063982A206398FF206398FF206398FF206398FF206398FF206398F0FFFF
-        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
-      }
     end
     object mnuEditPopupSelectAll: TMenuItem
       Caption = '&Alles selecteren'

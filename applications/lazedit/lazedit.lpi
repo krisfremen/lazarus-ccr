@@ -1,11 +1,13 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="9"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="lazedit"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -14,9 +16,6 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <BuildModes Count="2">
       <Item1 Name="Debug" Default="True"/>
       <Item2 Name="Release">
@@ -32,8 +31,8 @@
           </SearchPaths>
           <CodeGeneration>
             <Optimizations>
-              <VariablesInRegisters Value="True"/>
               <OptimizationLevel Value="2"/>
+              <VariablesInRegisters Value="True"/>
             </Optimizations>
           </CodeGeneration>
           <Linking>
@@ -49,24 +48,17 @@
               </Win32>
             </Options>
           </Linking>
-          <Other>
-            <CompilerMessages>
-              <UseMsgFile Value="True"/>
-            </CompilerMessages>
-            <CompilerPath Value="$(CompPath)"/>
-          </Other>
         </CompilerOptions>
       </Item2>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
-      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
-      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
     </PublishOptions>
     <RunParams>
-      <local>
-        <FormatVersion Value="1"/>
-      </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
@@ -80,7 +72,6 @@
       <Unit0>
         <Filename Value="lazedit.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="lazedit"/>
       </Unit0>
       <Unit1>
         <Filename Value="main.pp"/>
@@ -88,12 +79,10 @@
         <ComponentName Value="LazEditMainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="main"/>
       </Unit1>
       <Unit2>
         <Filename Value="test_ed.pp"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_ed"/>
       </Unit2>
       <Unit3>
         <Filename Value="editorpagecontrol.pp"/>
@@ -103,12 +92,10 @@
       <Unit4>
         <Filename Value="lazedit_constants.pp"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="lazedit_constants"/>
       </Unit4>
       <Unit5>
         <Filename Value="lazedit_config.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="lazedit_config"/>
       </Unit5>
       <Unit6>
         <Filename Value="htmlcharmap.pp"/>
@@ -158,7 +145,6 @@
       <Unit13>
         <Filename Value="lazedit_translations.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="lazedit_translations"/>
       </Unit13>
       <Unit14>
         <Filename Value="lazedit_about.pas"/>
@@ -194,12 +180,6 @@
         <UseHeaptrc Value="True"/>
       </Debugging>
     </Linking>
-    <Other>
-      <CompilerMessages>
-        <UseMsgFile Value="True"/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">
