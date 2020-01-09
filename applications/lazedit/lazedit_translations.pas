@@ -201,6 +201,7 @@ type
     // Other main.pp constants
     SLine, SCol, SModified, SIns, SOvr,
      msgOpenError, msgSaveError, msgSaveAllError, msgFileIsNotText,
+     msgFileCreateError, msgAskCreateFile,
      msgFileNotFound, msgModifiedSave, msgMruIndexOutOfBound,
      msgFileTypeNotForBrowser, msgFileHasNoName, msgErrorBrowser,
      msgTextNotFound: string;
@@ -348,6 +349,8 @@ begin
   msgSaveAllError := 'The following save all error has occured:'^m'%s';
   msgFileIsNotText := 'The selected file '^m'%s'^m' does not seam to be a text file.';
   msgFileNotFound := 'File not found:'^m'%s';
+  msgFileCreateError := 'Error creating file: '^m'%s';
+  msgAskCreateFile := MsgFileNotFound + ^m^m'Create file?';
   msgModifiedSave := 'The following file was modified:'^m'%s'^m'Should it be saved?';
   msgMruIndexOutOfBound := 'Index out of bounds [%d]'^m;
   msgFileTypeNotForBrowser := 'The file type is not suited for a browser.'^m+'Continue anyway?';
@@ -507,6 +510,8 @@ begin
   msgSaveAllError := 'De volgende bestanden zijn niet opgeslagen:'^m'%s';
   msgFileIsNotText := 'Dit bestand lijkt geen tekstbestand te zijn'^m'%s'^m'Wilt u het toch openen?';
   msgFileNotFound := 'Bestand niet gevonden:'^m'%s';
+  msgFileCreateError := 'Fout bij aanmaken van bestand: '^m'%s';
+  msgAskCreateFile := MsgFileNotFound + ^m^m'Bestand aanmaken?';
   msgModifiedSave := 'Bestand is gewijzigd:'^m'%s'^m'Bestand opslaan?';
   msgMruIndexOutOfBound := 'Index voor recent geopende bestanden ligt buiten de grenzen [%d]'^m+
                           'Dit is uiteraard een fout van de programmeur';

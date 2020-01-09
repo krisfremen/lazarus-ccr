@@ -467,10 +467,12 @@ type
     function TryMarkSelection(const Pre, Post: String): Boolean;
   public
     //File procedures
+    function AskCreateFile(const Fn: String): Boolean;
     function AskFileNameOpen: String;
     function AskFileNameOpenTemplate: String;
     function AskFileNameSave(const Fn: String; const FileType: TEditorFileType): String;
     function AskFileNameSaveTemplate: String;
+    function TryCreateEmptyFile(const Fn: String): Boolean;
     function TryFileOpen(const Fn: String; const AsTemplate: Boolean = False): Boolean;
     function TryFileSave(Editor: TEditor; Fn: String): TIoResult;
     function CloseCurrentEditor: Boolean;
@@ -1600,9 +1602,26 @@ begin
       S := ExpandFileNameUtf8(S); //we want full filename here, e.g. for filename in statusbar
       if FileExistsUtf8(S) then
       begin
-        if not TryFileOpen(S) then ShowError(Format(vTranslations.msgOpenError,[S]));
+        if not TryFileOpen(S) then
+          ShowError(Format(vTranslations.msgOpenError,[S]))
+        else
+          Inc(Count);
       end
-      else ShowError(Format(vTranslations.msgFileNotFound,[S]));
+      else
+      begin
+        if AskCreateFile(S) then
+        begin
+          if TryCreateEmptyFile(S) then
+          begin
+            if not TryFileOpen(S) then
+              ShowError(Format(vTranslations.msgOpenError,[S]))
+            else
+              Inc(Count);
+          end
+          else
+            ShowError(Format(vTranslations.msgFileCreateError,[S]));
+        end;
+      end;
     end;
   end;
   //Start with blank page if no files are specified on commandline
@@ -1987,6 +2006,11 @@ begin
   else Result := False;
 end;
 
+function TLazEditMainForm.AskCreateFile(const Fn: String): Boolean;
+begin
+  Result := MessageDlg(AppName, Format(vTranslations.msgAskCreateFile,[Fn]), mtConfirmation, [mbYes, mbNo],0) = mrYes;
+end;
+
 
 
 
@@ -2060,6 +2084,15 @@ begin
     AppOptions.MainForm.InitialDir := ExtractFileDir(SaveDialog.FileName);
   end
   else Result := EmptyStr;
+end;
+
+function TLazEditMainForm.TryCreateEmptyFile(const Fn: String): Boolean;
+var
+  H: THandle;
+begin
+  H := FileCreate(Fn, fmOpenWrite);
+  Result := H <> feInvalidHandle; //THandle(-1)
+  if Result then FileClose(H);
 end;
 
 function TLazEditMainForm.TryFileOpen(const Fn: String; const AsTemplate: Boolean = False): Boolean;
