@@ -45,7 +45,7 @@ uses
   LCLProc, Menus, ActnList, ClipBrd, LclIntf,
   LazFileUtils, LazUtf8,
   LMessages, {for overridden IsShortCut}
-  SynEdit, SynEditTypes,
+  SynEdit, SynEditTypes, SynHighLighterHtml {because we need the type TSynHTMLSyn in code somewhere},
   EditorPageControl,
   lazedit_config, HtmlCode, HtmlDialogs, lazedit_constants,
   lazedit_translations, lazedit_about, mrulists;
@@ -454,7 +454,7 @@ type
     procedure GatherAppOptions(var Options: TLazEditOptions);
 
     procedure TagMenuItemsAndActions;
-    procedure UpdateMenuItems;
+    procedure UpdateMenuItemsAndActions;
     procedure CreateMruMenuItemsArray;
     function TryHlMenuTagToFileType(ATag: PtrInt; out AFileType: TEditorFileType): Boolean;
     function TryLangMenuTagToLangId(ATag: PtrInt; out ALangId: TLanguageIds): Boolean;
@@ -523,6 +523,7 @@ type
 
     //NoteBook and Editor Events
     procedure OnEditorStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+    procedure OnPageChange(Sender: TObject);
     procedure OnBeforeCloseEditor(Sender: TTabSheet; var Cancel: Boolean);
     procedure OnCharsetChange(Sender: TEditor; const OldCharset, NewCharset: String; const LineNr: Integer);
     procedure OnMruListChange(Sender: TObject);
@@ -546,11 +547,13 @@ const pXY  = 0;   //Panels constanten
       pIns = 2;
       pName = 3;
 
+      //Initial text for FileNew commands+      //High(Tag) = 7FFFFFFF [01111111111111111111111111111111]
+      // 1 shl (8+0..15) used for Highlighter menu
       tgNeedsEditor     = $01;
       tgNeedsSelection  = $02;
       tgNeedsClipPaste  = $04;
+      tgHtmlOnly        = (1 shl 3) or tgNeedsEditor;
 
-      //Initial text for FileNew commands
       itXml = '<?xml version="1.0"?>';
       itBat = '@echo off';
       itUnixShellScript = '#!/bin/bash';
@@ -741,7 +744,7 @@ end;
 
 procedure TLazEditMainForm.TopLevelMenuClick(Sender: TObject);
 begin
-  UpdateMenuItems;
+  UpdateMenuItemsAndActions;
 end;
 
 procedure TLazEditMainForm.mnuEditCutClick(Sender: TObject);
@@ -1146,6 +1149,7 @@ begin
   NoteBook.OnStatusChange := @OnEditorStatusChange;
   NoteBook.OnBeforeCloseEditor := @OnBeforeCloseEditor;
   NoteBook.OnEditorCharsetChange := @OnCharsetChange;
+  NoteBook.OnChange := @OnPageChange;
   NoteBook.EditorPopUpMenu := EditorPopupMenu;
 
   //Creating dialogs
@@ -1720,13 +1724,14 @@ begin
     if (C is TAction) or (C is TMenuItem) then
     begin
       C.Tag := 0;  //initialize all Tags to 0
-      //Things that need an open editor
-      if Pos('LAYOUT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
+      //Things that need an open editor and maybe OnlyHtml
+      if Pos('LAYOUT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgHtmlOnly;
+      if Pos('INSERT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgHtmlOnly;
       if Pos('EDIT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
       if Pos('INSERT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
       if Pos('FILESAVE',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
       if Pos('CURRENT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
-      if Pos('GROUPING',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
+      if Pos('GROUPING',UpperCase(N)) > 0 then C.Tag := C.Tag or tgHtmlOnly;
       if Pos('HIGHLIGHTER',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
       if Pos('FONT',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
       if Pos('VIEWHL',UpperCase(N)) > 0 then
@@ -1766,6 +1771,8 @@ begin
       //needs to be _after_ 'OPEN'
       if Pos('BROWSER',UpperCase(N)) > 0 then C.Tag := C.Tag or tgNeedsEditor;
     end;
+    mnuFileOpenInBrowser.Tag := tgHtmlOnly;
+
     //Top level menus
     mnuFile.Tag := 0;
     mnuEdit.Tag := 0;
@@ -1773,6 +1780,7 @@ begin
     mnuGrouping.Tag := 0;
     mnuView.Tag := 0;
     mnuAbout.Tag := 0;
+    mnuLayout.Tag := 0;
 
     {
     if (C is TMenuItem) or (C is TAction) then
@@ -1788,12 +1796,12 @@ begin
   acEditCopy.Caption := 'Kopiëren';
 end;
 
-procedure TLazEditMainForm.UpdateMenuItems;
+procedure TLazEditMainForm.UpdateMenuItemsAndActions;
 var
   i: Integer;
   C: TComponent;
   HasEditor, HasSelection, HasClipPaste: Boolean;
-  NeedsEditor, NeedsSelection, NeedsClipPaste: Boolean;
+  NeedsEditor, NeedsSelection, NeedsClipPaste, HtmlOnly, DoEnable: Boolean;
   AFileType: TEditorFileType;
   Ed: TEditor;
 begin
@@ -1804,14 +1812,20 @@ begin
   for i := 0 to ComponentCount - 1 do
   begin
     C := Components[i];
-    if (C is TMenuItem) then
+    if (C is TMenuItem) or (C is TAction) then
     begin
       NeedsEditor := (C.Tag and tgNeedsEditor) > 0;
       NeedsSelection := (C.Tag and tgNeedsSelection) > 0;
       NeedsClipPaste := (C.Tag and tgNeedsClipPaste) > 0;
-      TMenuItem(C).Enabled := ((NeedsEditor and HasEditor) or (not NeedsEditor)) and
-                              ((NeedsSelection and HasSelection) or (not NeedsSelection)) and
-                              ((NeedsClipPaste and HasClipPaste) or (not NeedsClipPaste));
+      HtmlOnly := (C.Tag and tgHtmlOnly) = tgHtmlOnly;
+      DoEnable := ((NeedsEditor and HasEditor) or (not NeedsEditor)) and
+                  ((HtmlOnly and HasEditor and ((Ed.FileType=eftHtml) or (Ed.Highlighter is TSynHTMLSyn))) or (not HtmlOnly)) and
+                  ((NeedsSelection and HasSelection) or (not NeedsSelection)) and
+                  ((NeedsClipPaste and HasClipPaste) or (not NeedsClipPaste));
+      if (C is TMenuItem) then
+        TMenuItem(C).Enabled := DoEnable
+      else
+        TAction(C).Enabled := DoEnable;
 
       if  HasEditor and (Pos('MNUVIEWHL', UpperCase(C.Name)) = 1) then
       begin
@@ -1891,6 +1905,11 @@ begin
       StatusBar.Panels[pName].Text := FileName;
     end;
   end;
+end;
+
+procedure TLazEditMainForm.OnPageChange(Sender: TObject);
+begin
+  UpdateMenuItemsAndActions;
 end;
 
 procedure TLazEditMainForm.OnCharsetChange(Sender: TEditor; const OldCharset, NewCharset: String; const LineNr: Integer);
@@ -2073,6 +2092,7 @@ begin
       Result := False;
       //OnEditorStatusChange(nil, scAll);
     end;
+    UpdateMenuItemsAndActions;
   end
   else Result := False;
 end;
@@ -2095,6 +2115,7 @@ begin
       Result := IoFail;
       //OnEditorStatusChange(nil, scAll);
     end;
+    UpdateMenuItemsAndActions;
   end
   else Result := IoFail;
 end;
@@ -2107,6 +2128,8 @@ begin
 
   Idx := NoteBook.ActivePageIndex;
   Result := NoteBook.ClosePage(Idx);
+  if Result then
+    UpdateMenuItemsAndActions;
 end;
 
 function TLazEditMainForm.TryFileSaveAll(out Failures: String): Boolean;
@@ -2237,6 +2260,7 @@ begin
       Ed.TextBetweenPoints[Point(0,0),Point(0,0)] := InitialText
     else
       Ed.Modified := False;
+    UpdateMenuItemsAndActions;
   end;
 end;
 
