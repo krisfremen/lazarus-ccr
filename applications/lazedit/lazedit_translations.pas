@@ -347,7 +347,7 @@ begin
   msgOpenError := 'The following open file error has occured:'^m'%s';
   msgSaveError := 'The following save file error has occured:'^m'%s';
   msgSaveAllError := 'The following save all error has occured:'^m'%s';
-  msgFileIsNotText := 'The selected file '^m'%s'^m' does not seam to be a text file.';
+  msgFileIsNotText := 'The selected file '^m'%s'^m' does not seem to be an ASCII or Utf8 encoded textfile.'^m^m'Open it anyway?';
   msgFileNotFound := 'File not found:'^m'%s';
   msgFileCreateError := 'Error creating file: '^m'%s';
   msgAskCreateFile := MsgFileNotFound + ^m^m'Create file?';
@@ -508,7 +508,7 @@ begin
   msgOpenError := 'Fout bij openen van bestand:'^m'%s';
   msgSaveError := 'Fout bij opslaan van bestand:'^m'%s';
   msgSaveAllError := 'De volgende bestanden zijn niet opgeslagen:'^m'%s';
-  msgFileIsNotText := 'Dit bestand lijkt geen tekstbestand te zijn'^m'%s'^m'Wilt u het toch openen?';
+  msgFileIsNotText := 'Dit bestand lijkt geen tekstbestand te zijn'^m'%s'^m^m'Wilt u het toch openen?';
   msgFileNotFound := 'Bestand niet gevonden:'^m'%s';
   msgFileCreateError := 'Fout bij aanmaken van bestand: '^m'%s';
   msgAskCreateFile := MsgFileNotFound + ^m^m'Bestand aanmaken?';

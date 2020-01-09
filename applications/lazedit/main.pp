@@ -43,7 +43,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   LCLProc, Menus, ActnList, ClipBrd, LclIntf,
-  LazFileUtils, LazUtf8,
+  LazFileUtils, LazUtf8, LazUtf16, LazUtf8Classes,
   LMessages, {for overridden IsShortCut}
   SynEdit, SynEditTypes, SynHighLighterHtml {because we need the type TSynHTMLSyn in code somewhere},
   EditorPageControl,
@@ -53,6 +53,7 @@ uses
 type
 
   TIoResult = (ioSuccess, ioFail, ioCancel);
+  TTextFileType = (tftUnknown, tftASCII, tftANSI, tftUTF8, tftUCS2LE, tftUCS2BE);
 
   { TLazEditMainForm }
 
@@ -487,6 +488,7 @@ type
     procedure DoFileNewByType(const AFileType: TEditorFileType; const InitialText: String = '');
     procedure DoFileNewHtml;
     procedure FileOpenInBrowser;
+    function GetTextFileType(const Fn: String): TTextFileType;
 
     //Edit procedures
     procedure EditUndo;
@@ -2100,15 +2102,15 @@ var
   Ed: TEditor;
 begin
   //Return False only on Errors
-  {if not IsASCIIFileUtf8(Fn) then
+  if not (GetTextFileType(Fn) in [tftASCII, tftUtf8]) then
   begin
-    if MessageDlg(AppName, Format(msgFileIsNotText,[Fn]),
+    if MessageDlg(AppName, Format(vTranslations.msgFileIsNotText,[Fn]),
          mtConfirmation, [mbYes, mbNo], 0, mbNo) <> mrYes then
     begin
       Result := True; //not an Error
       Exit;
     end;
-  end;}
+  end;
   //If available, open new file in unused open Tab (if that is the current active one)
   if (Assigned(NoteBook.CurrentEditor) and (NoteBook.CurrentEditor.IsUnused)) then
     Ed := NoteBook.CurrentEditor
@@ -2321,6 +2323,98 @@ begin
         Exit;
     end;
     if not OpenUrl(Ed.FileName) then ShowError(Format(vTranslations.msgErrorBrowser, [Ed.FileName]));
+  end;
+end;
+
+function TLazEditMainForm.GetTextFileType(const Fn: String): TTextFileType;
+const
+  BufLen = 1024*16; //must be even number
+  WordBufLen = BufLen shr 1;
+  ControlChars = [#0..#31] - [#9,#10,#13,#26];
+  //Alle ASCII chars below space, excluding #0, Tab, LineFeed, CarriageReturn, EOF
+var
+  Buf: array[0..BufLen-1] of Byte;
+  WordBuf: array[0..WordBufLen] of Word absolute Buf;
+  FS: TFileStreamUTF8;
+  Len, WordLen, i: LongInt;
+  S: AnsiString;
+  U: UnicodeString;
+  NotASCII: Boolean;
+begin
+  Result := tftUnknown;
+  try
+    FS := TFileStreamUtf8.Create(Fn, fmOpenRead or fmShareDenyNone);
+    try
+      Len := FS.Read({%H-}Buf[0], BufLen);
+      WordLen := Len div 2;
+      if (Len > 2) and (Buf[0]=$EF) and (Buf[1]=$BB) and (Buf[2]=$BF) then
+      begin
+        //UTF8 BOM
+        Result := tftUtf8;
+        SetLength(S, Len-3);
+        Move(Buf[3], S[1], Len-3);
+        if not (FindInvalidUTF8Codepoint(PChar(S), Length(S), True) = -1) then
+          Result := tftUnknown;
+      end
+      else if (Len > 1) and (Buf[0]=$FF) and (Buf[1]=$FE) then
+      begin
+        // ucs-2le BOM FF FE
+        Result := tftUCS2LE;
+        SetLength(U, WordLen-1);
+        for i := 1 to WordLen-1 do
+        begin
+          U[i] := WideChar(LEtoN(WordBuf[i]));
+        end;
+        if not IsUTF16StringValid(U) then
+          Result := tftUnknown;
+      end
+      else if (Len > 1) and (Buf[0]=$FE) and (Buf[1]=$FF) then
+      begin
+        // ucs-2be BOM FE FF
+        Result := tftUCS2BE;
+        SetLength(U, WordLen-1);
+        for i := 1 to WordLen-1 do
+        begin
+          U[i] := WideChar(BEtoN(WordBuf[i]));
+        end;
+        if not IsUTF16StringValid(U) then
+          Result := tftUnknown;
+      end
+      else
+      begin//no BOM found
+        NotASCII := False;
+        SetLength(S, Len);
+        Move(Buf, S[1], Len);
+        for i := 1 to Len do
+        begin
+          if (S[i] in ControlChars) then
+          begin
+            Result := tftUnknown;
+            Exit;
+          end;
+          if (Ord(S[i]) > 127) then
+          begin
+            NotASCII := True;
+          end;
+        end;
+        if NotASCII then
+        begin
+          if (FindInvalidUTF8Codepoint(PChar(S), Length(S), True) > -1) then
+            Result := tftANSI
+          else
+            Result := tftUtf8;
+        end
+        else
+          Result := tftASCII;
+      end;
+    finally
+      FS.Free;
+    end;
+  Except
+    on E: EStreamError do
+    begin
+      //Could not open/read file, ignore
+    end;
   end;
 end;
 
