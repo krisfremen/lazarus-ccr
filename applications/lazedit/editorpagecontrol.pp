@@ -723,22 +723,61 @@ end;
 
 procedure TEditor.MarkSelection(const Pre, Post: String);
 var
-  SLen: Integer;
-  OldSelMode: TSynSelectionMode;
+  BB, BE, LC: TPoint;
+  BackwardsSel, HadSelection: Boolean;
 begin
-  //this only works with SelectionMode := scNormal
-  OldSelMode := SelectionMode;
-  SelectionMode := smNormal;
-  //Using SelEnd - SelStart doesn't work correctly when selecting across lines
-  //SynEdit internally works with byte positions, therefore use Length(), not Utf8Length()
-  SLen := {Utf8}Length(Seltext); //SelStart - SelEnd;
-  SelText := Pre + SelText + Post;
-  //SelStart now is after Post, place it before the original selection
-  SelStart := SelStart - {Utf8}Length(Post) - SLen;
-  SelEnd := SelStart + SLen;
-  SelectionMode :=  OldSelMode;
+  //Putting all this in BeginUpdate/EndUpdate ensures that all actions taken here
+  //can be undone in one undo operation (otherwise it would take 2 or 3)
+  BeginUpdate;
+  try
+    //Using SetTextBetweenPoints is faster (and according to Martin Friebe) more reliable
+    //than using SelStart and SelLength (like the old code did)
+    BB := BlockBegin;
+    BE := BlockEnd;
+    BackwardsSel := IsBackwardSel;
+    //In an newly create TSynEdit without any text SetTextBetweenPoints does not
+    //adjust BlockBegin/BlockEnd at all, so force a line and set the caret at the top
+    if (Lines.Count = 0) then   //fixed in trunk, remove after 2.2 release
+    begin
+      Lines.Add('');
+      LogicalCaretXY := Point(1,1);
+    end;
+
+    HadSelection := SelAvail;
+
+    //BB is always before BE even if IsBackwardSel=TRUE
+    //move caret to the end of the selection
+    LogicalCaretXY := BlockEnd;
+    //SetLogicalCaret clears the selection, so restore it
+    BlockBegin := BB;
+    BlockEnd := BE;
+
+    //Insert Pre at blockbegin, so in front of the selection: block moves to the right, blockbegin.x and blockend.x will increase
+    //scamAdjust: move the cursor with the block
+    SetTextBetweenPoints(BB, BB, Pre, [setMoveBlock], scamAdjust{scamIgnore}, smaMoveUp, smNormal);
+    //if not text was selected SetTextBetweenPoints adjusts BlockEnd, but it does not move BlockBegin and since these point to the same point:
+
+    if not HadSelection then   //fixed in trunk, remove after 2.2 release
+      BlockBegin := BlockEnd;
+    BB := BlockBegin;
+    BE := BlockEnd;
+
+    //Insert Post at blockend, the block does NOT move, so this should NOT affect the value of blockbegin or blockend
+    SetTextBetweenPoints(BE, BE, Post, [setMoveBlock], scamIgnore, smaMoveUp, smNormal);
+    //if no text was selected SetTextBetweenPoints adjusts BlockEnd, but it should not have done so, the block is not moved at all,
+    //so restore:
+    if not HadSelection then  //fixed in trunk, remove after 2.2 release
+    begin
+      BlockBegin := BB;
+      BlockEnd := BB;
+    end;
+
+  finally
+    EndUpdate;
+  end;
   SetFocus;
 end;
+
 
 constructor TEditor.Create(TheOwner: TComponent);
 begin
