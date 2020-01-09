@@ -41,7 +41,7 @@ interface
 
 uses
   SysUtils, Classes, EditorPageControl, lazedit_constants, lazedit_translations,
-  Forms, IniFiles, LCLProc;
+  Forms, IniFiles, LCLProc, LazFileUtils;
 
 type
   //globale type for all configurable options
@@ -277,8 +277,21 @@ end;
 
 function GetDefaultIniDir: String;
 begin
-  Result := ExcludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName));
+  Result := ExcludeTrailingPathDelimiter(GetAppConfigDirUTF8(False, True));
+  writeln('GetDefaultIniDir -> ',Result);
 end;
+
+function GetApplicationName: String;
+begin
+  {$ifdef windows}
+  Result := 'LazEdit';
+  {$else}
+  Result := 'lazedit';
+  {$endif}
+end;
+
+initialization
+  OnGetApplicationName := @GetApplicationName;
 
 end.
 
