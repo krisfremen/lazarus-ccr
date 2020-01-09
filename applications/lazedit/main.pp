@@ -2432,7 +2432,7 @@ begin
 
     FindText := Dlg.FindText;
 
-    if Ed.SearchReplace(FindText,'',FindOptions) = 0 then
+    if Ed.SearchReplace(FindText,'',ReplaceOptions) = 0 then
       ShowError(Format(vTranslations.msgTextNotFound,[FindText]));
 
   end;
