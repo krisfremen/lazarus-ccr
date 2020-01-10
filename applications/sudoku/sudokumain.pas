@@ -62,19 +62,29 @@ type
     { private declarations }
   const
     MaxSteps = 50;
+  private
     //theValues: TValues;
+    FSolveUsesRawData: Boolean;
+    FRawData: TRawGrid;
     procedure OnCopyBackValues(Sender: TObject; Values: TValues);
+    procedure OnCopyBackRawData(Sender: TObject; RawData: TRawGrid);
+    procedure SetSolveUsesRawData(AValue: Boolean);
     function SolveSudoku(out Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
+    function SolveSudoku(var RawData: TRawGrid; out Values: TValues; out Steps: Integer): Boolean;
     procedure GridToValues(out Values: TValues);
     procedure ValuesToGrid(const Values: TValues);
+    procedure RawDataToGrid(const RawData: TRawGrid);
     procedure ShowScratchPad(RawData: TRawGrid);
     procedure LoadSudokuFromFile(const Fn: String);
     procedure SaveSudokuToFile(const Fn: String);
     function IsValidSudokuFile(Lines: TStrings): Boolean;
     procedure LinesToGrid(Lines: TStrings);
     procedure GridToLines(Lines: TStrings);
+    procedure EnableEdit;
+    procedure DisableEdit;
   public
     { public declarations }
+    property SolveUsesRawData: Boolean read FSolveUsesRawData write SetSolveUsesRawData default False;
   end;
 
   ESudokuFile = Class(Exception);
@@ -96,7 +106,7 @@ const
 
 procedure TForm1.btnEditClick(Sender: TObject);
 begin
-  SGrid.Options := SGrid.Options + [goEditing];
+  EnableEdit;
   SGrid.SetFocus;
 end;
 
@@ -105,6 +115,7 @@ begin
   if OpenDialog.Execute then
   try
     LoadSudokuFromFile(OpenDialog.Filename);
+    SolveUsesRawData := False;
   except
     on E: Exception do ShowMessage(E.Message);
   end;
@@ -128,13 +139,15 @@ end;
 procedure TForm1.btnSolveClick(Sender: TObject);
 var
   Res: Boolean;
-  RawData: TRawGrid;
   Values: TValues;
   Steps: Integer;
 begin
-  SGrid.Options := SGrid.Options - [goEditing];
+  DisableEdit;
   try
-    Res := SolveSudoku(Values, RawData, Steps);
+    if not FSolveUsesRawData then
+      Res := SolveSudoku(Values, FRawData, Steps)
+    else
+      Res := SolveSudoku(FRawData, Values, Steps);
     ValuesToGrid(Values);
     if Res then
       ShowMessage(Format('Sudoku solved in %d steps.', [Steps]))
@@ -144,7 +157,7 @@ begin
         ShowMessage(Format('Unable to solve sudoku (no progress after step %d).',[Steps-1]))
       else
         ShowMessage(Format('Unable to completely solve sudoku (tried %d steps).',[Steps]));
-      ShowScratchPad(RawData);
+      ShowScratchPad(FRawData);
     end;
   except
     on E: ESudoku do ShowMessage(E.Message);
@@ -174,6 +187,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  SolveUsesRawData := False;
   OpenDialog.Filter := SudokuFileFilter;
   SaveDialog.Filter := SudokuFileFilter;
 end;
@@ -231,6 +245,18 @@ begin
   end;
 end;
 
+function TForm1.SolveSudoku(var RawData: TRawGrid; out Values: TValues; out Steps: Integer): Boolean;
+var
+  aSudoku: TSudoku;
+begin
+  aSudoku := TSudoku.Create;
+  try
+    Result := aSudoku.GiveSolution(RawData, Values, Steps);
+  finally
+    aSudoku.Free;
+  end;
+end;
+
 procedure TForm1.GridToValues(out Values: TValues);
 var
   Col, Row: Integer;
@@ -255,6 +281,26 @@ end;
 procedure TForm1.OnCopyBackValues(Sender: TObject; Values: TValues);
 begin
   ValuesToGrid(Values);
+  SolveUsesRawData := False;
+end;
+
+procedure TForm1.OnCopyBackRawData(Sender: TObject; RawData: TRawGrid);
+begin
+  FRawData := RawData;
+  RawDataToGrid(RawData);
+  SolveUsesRawData := True;
+end;
+
+procedure TForm1.SetSolveUsesRawData(AValue: Boolean);
+begin
+  if FSolveUsesRawData = AValue then Exit;
+  FSolveUsesRawData := AValue;
+  if FSolveUsesRawData then
+    DisableEdit
+  else
+    EnableEdit;
+  btnEdit.Enabled := not FSolveUsesRawData;
+  btnClear.Enabled := not FSolveUsesRawData;
 end;
 
 
@@ -275,13 +321,32 @@ begin
   end;
 end;
 
+procedure TForm1.RawDataToGrid(const RawData: TRawGrid);
+var
+  Col, Row: Integer;
+  Ch: Char;
+begin
+  for Col := 0 to 8 do
+  begin
+    for Row := 0 to 8 do
+    begin
+      Ch := IntToStr(RawData[Col + 1, Row + 1].Value)[1];
+      if Ch = '0' then
+        Ch := VisualEmptyChar;
+      SGrid.Cells[Col, Row] := Ch;
+    end;
+  end;
+end;
+
 procedure TForm1.ShowScratchPad(RawData: TRawGrid);
 begin
   ScratchForm.OnCopyValues := @OnCopyBackValues;
+  ScratchForm.OnCopyRawData := @OnCopyBackRawData;
   ScratchForm.RawData := RawData;
   ScratchForm.ScratchGrid.Options := SGrid.Options - [goEditing];
   ScratchForm.Left := Left + Width + 10;
-  ScratchForm.Show;
+  if (ScratchForm.ShowModal <> mrOK) then
+    SolveUsesRawData := False;
 end;
 
 procedure TForm1.LoadSudokuFromFile(const Fn: String);
@@ -394,6 +459,16 @@ begin
     end;
     Lines.Add(ALine);
   end;
+end;
+
+procedure TForm1.EnableEdit;
+begin
+  SGrid.Options := SGrid.Options + [goEditing];
+end;
+
+procedure TForm1.DisableEdit;
+begin
+  SGrid.Options := SGrid.Options - [goEditing];
 end;
 
 end.

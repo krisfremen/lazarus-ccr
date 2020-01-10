@@ -58,6 +58,7 @@ type
   public
     constructor Create;
     function GiveSolution(var Values: TValues; out RawData: TRawGrid; out Steps: Integer): Boolean;
+    function GiveSolution(var RawData: TRawGrid; out Values: TValues; out Steps: Integer): Boolean;
     property MaxSteps: Integer read FMaxSteps write FMaxSteps default 50;
   end;
 
@@ -217,6 +218,17 @@ begin
   Result := Solve(Steps);
   Values := GridToValues;
   RawData := Grid;
+end;
+
+{
+Note: no sanity check on RawData is performed!
+}
+function TSudoku.GiveSolution(var RawData: TRawGrid; out Values: TValues; out Steps: Integer): Boolean;
+begin
+  Grid := RawData;
+  Result := Solve(Steps);
+  RawData := Grid;
+  Values := GridToValues;
 end;
 
 procedure TSudoku.CalculateValues(out IsSolved: Boolean);

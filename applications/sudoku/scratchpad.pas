@@ -14,11 +14,14 @@ type
   { TScratchForm }
 
   TCopyValuesEvent = procedure(Sender: TObject; Values: TValues) of Object;
+  TCopyRawDataEvent = procedure(Sender: TObject; RawData: TRawGrid) of Object;
 
   TScratchForm = class(TForm)
     btnCopy: TButton;
+    btnCopyRaw: TButton;
     ScratchGrid: TStringGrid;
     procedure btnCopyClick(Sender: TObject);
+    procedure btnCopyRawClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ScratchGridClick(Sender: TObject);
@@ -27,6 +30,8 @@ type
   private
     FRawData: TRawGrid;
     FOnCopyValues: TCopyValuesEvent;
+    FOnCopyRawData: TCopyRawDataEvent;
+    procedure GridToRawData(out RawData: TRawGrid);
     procedure SetRawData(Data: TRawGrid);
     procedure GridToValues(out Values: TValues);
     procedure KeepInView;
@@ -34,6 +39,7 @@ type
   public
     property RawData: TRawGrid write SetRawData;
     property OnCopyValues: TCopyValuesEvent read FOnCopyValues write FOnCopyValues;
+    property OnCopyRawData: TCopyRawDataEvent read FOnCopyRawData write FOnCopyRawData;
   end;
 
 var
@@ -101,7 +107,9 @@ begin
   Self.ReAlign;
   //ClientHeight := btnCopy.Top + btnCopy.Height + 10;
   //Above doesn't work: at this time btnCopy.Top still holds designtime value, even when it's top is anchored to the grid
-  ClientHeight := ScratchGrid.Top + ScratchGrid.Height + 10 + btnCopy.Height + 10;
+  ClientHeight := ScratchGrid.Top + ScratchGrid.Height + 10 + btnCopy.Height + 10 + btnCopyRaw.Height + 10;
+  btnCopy.AutoSize := False;
+  btnCopy.Width := btnCopyRaw.Width;
   //writeln(format('ClientHeight: %d',[ClientHeight]));
   KeepInView;
 end;
@@ -110,10 +118,26 @@ procedure TScratchForm.btnCopyClick(Sender: TObject);
 var
   Values: TValues;
 begin
-  if not Assigned(FOnCopyValues) then Exit;
-  GridToValues(Values);
-  FOnCopyValues(Self, Values);
-  Close;
+  if Assigned(FOnCopyValues) then
+  begin
+    GridToValues(Values);
+    FOnCopyValues(Self, Values);
+    ModalResult := mrOk;
+    //Close;
+  end;
+end;
+
+procedure TScratchForm.btnCopyRawClick(Sender: TObject);
+var
+  ARawData: TRawGrid;
+begin
+  if Assigned(FOnCopyRawData) then
+  begin
+    GridToRawData(ARawData);
+    FOnCopyRawData(Self, ARawData);
+    ModalResult := mrOk;
+    //Close;
+  end;
 end;
 
 procedure TScratchForm.FormCreate(Sender: TObject);
@@ -184,6 +208,35 @@ begin
         //S := DbgS(Data[Col,Row].DigitsPossible);
         S := DigitSetToStr(Data[Col,Row].DigitsPossible);
       ScratchGrid.Cells[Col-1,Row-1] := S;
+    end;
+  end;
+end;
+
+procedure TScratchForm.GridToRawData(out RawData: TRawGrid);
+var
+  Col, Row: Integer;
+  ADigit: TDigits;
+  DigitSet: TDigitSet;
+  S: String;
+begin
+  for Col := 0 to 8 do
+  begin
+    for Row := 0 to 8 do
+    begin
+      S := ScratchGrid.Cells[Col, Row];
+      if TryCellTextToDigit(S, ADigit) then
+      begin
+        RawData[Col+1,Row+1].Value := ADigit;
+        RawData[Col+1,Row+1].DigitsPossible := [];
+        RawData[Col+1,Row+1].Locked := True;
+      end
+      else
+      begin
+        DigitSet := StrToDigitSet(S);
+        RawData[Col+1,Row+1].Value := 0;
+        RawData[Col+1,Row+1].DigitsPossible := DigitSet;
+        RawData[Col+1,Row+1].Locked := False;
+      end;
     end;
   end;
 end;

@@ -3,6 +3,7 @@ object ScratchForm: TScratchForm
   Height = 545
   Top = 113
   Width = 799
+  BorderIcons = [biSystemMenu]
   Caption = 'ScratchPad'
   ClientHeight = 545
   ClientWidth = 799
@@ -29,14 +30,30 @@ object ScratchForm: TScratchForm
     AnchorSideLeft.Control = ScratchGrid
     AnchorSideTop.Control = ScratchGrid
     AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = btnCopyRaw
+    AnchorSideRight.Side = asrBottom
     Left = 16
     Height = 25
     Top = 306
-    Width = 253
+    Width = 279
     AutoSize = True
     BorderSpacing.Top = 10
-    Caption = 'Copy values back and close the ScratchPad'
+    Caption = 'Copy only values back and close the ScratchPad'
     OnClick = btnCopyClick
     TabOrder = 1
+  end
+  object btnCopyRaw: TButton
+    AnchorSideLeft.Control = btnCopy
+    AnchorSideTop.Control = btnCopy
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 25
+    Top = 341
+    Width = 354
+    AutoSize = True
+    BorderSpacing.Top = 10
+    Caption = 'Copy values and possible digits back and close the ScratchPad'
+    OnClick = btnCopyRawClick
+    TabOrder = 2
   end
 end
