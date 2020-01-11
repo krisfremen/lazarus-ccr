@@ -3,7 +3,7 @@
 {$mode objfpc}{$H+}
 
 uses
-  Forms, datetimectrls, Interfaces,
+  Forms, Interfaces, LCLVersion,
   TimelineNotesFormU in 'TimelineNotesFormU.pas' {TimelineNotesForm},
   TimelineMainFormU in 'TimelineMainFormU.pas' {TimelineMainForm};
 

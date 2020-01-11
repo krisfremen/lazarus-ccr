@@ -26,12 +26,14 @@
 
 {$mode objfpc}{$H+}
 
+{$I TimelineDemo.inc}
+
 unit TimelineMainFormU;
 
 interface
 
 uses
-  LCLIntf, LCLType,
+  LCLIntf, LCLType, LCLVersion,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, DateTimePicker,
   ComCtrls, StdCtrls, ExtCtrls, Menus, ImgList, ComboEx, JvTimeLine;
 
@@ -42,14 +44,12 @@ type
   TTimelineMainForm = class(TForm)
     Bevel1: TBevel;
     CbImgIndex: TComboBoxEx;
-    ImageList1: TImageList;
     Splitter1: TSplitter;
     PopupMenu1: TPopupMenu;
     Changecaption1: TMenuItem;
     remove1: TMenuItem;
     Move1: TMenuItem;
     N1: TMenuItem;
-    ImageList2: TImageList;
     StatusBar1: TStatusBar;
     Notes1: TMenuItem;
     N2: TMenuItem;
@@ -104,6 +104,9 @@ type
     procedure chkMultiClick(Sender: TObject);
     procedure btnFontClick(Sender: TObject);
     procedure btnYrFontClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure TimeLine1Click(Sender: TObject);
     procedure Changecaption1Click(Sender: TObject);
@@ -121,7 +124,6 @@ type
     procedure udItemHeightClick(Sender: TObject; Button: TUDBtnType);
     procedure chkOwnerDrawClick(Sender: TObject);
     procedure Notes1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure TimeLine1SaveItem(Sender: TObject; Item: TJvTimeItem; Stream: TStream);
     procedure TimeLine1LoadItem(Sender: TObject; Item: TJvTimeItem; Stream: TStream);
     procedure TimeLine1DrawItem(Sender: TObject; ACanvas: TCanvas;
@@ -133,7 +135,6 @@ type
     procedure btnAutoClick(Sender: TObject);
     procedure btnLoadClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure chkFlatClick(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure chkHelpYearClick(Sender: TObject);
@@ -160,7 +161,13 @@ var
 
 implementation
 
-uses TimelineNotesFormU;
+uses
+  {$IFDEF HIGH_RES_IMAGELIST}
+  TimelineImageModuleU,
+  {$ELSE}
+  TimelineImageModule_old,
+  {$ENDIF}
+  TimelineNotesFormU;
 
 {$R *.lfm}
 
@@ -172,7 +179,8 @@ type
   end;
 
 procedure TTimelineMainForm.btnAddClick(Sender: TObject);
-var aItem: TJvTimeItem;
+var
+  aItem: TJvTimeItem;
 begin
   aItem := TimeLine1.Items.Add;
   aItem.Caption := edCaption.Text;
@@ -318,21 +326,27 @@ begin
 end;
 
 procedure TTimelineMainForm.chkLargeClick(Sender: TObject);
+var
+  itemHeight: Integer;
 begin
   if chkNoImages.Checked then
     Exit;
   if chkLarge.Checked then
   begin
-    TimeLine1.Images := ImageList2;
-    TimeLine1.ItemHeight := 60;
-    udItemHeight.Position := 60;
+    TimeLine1.Images := ImageModule.ImageList2;
+    itemHeight := 60;
   end
   else
   begin
-    TimeLine1.Images := ImageList1;
-    TimeLine1.ItemHeight := 40;
-    udItemHeight.Position := 40;
+    TimeLine1.Images := ImageModule.ImageList1;
+    itemHeight := 40;
   end;
+  {$IF LCL_FullVersion >= 1080000}
+  TimeLine1.ItemHeight := Scale96ToFont(itemHeight);
+  {$ELSE}
+  TimeLine1.ItemHeight := itemHeight;
+  {$IFEND}
+  udItemHeight.Position := TimeLine1.ItemHeight;
 end;
 
 procedure TTimelineMainForm.udYrSizeClick(Sender: TObject; Button: TUDBtnType);
@@ -395,6 +409,12 @@ procedure TTimelineMainForm.FormCreate(Sender: TObject);
 var
   i: Integer;
 begin
+  if ImageModule = nil then
+    Application.CreateForm(TImageModule, ImageModule);
+
+  TimeLine1.Images := ImageModule.ImageList1;
+  CbImgIndex.Images := ImageModule.ImageList1;
+
   FCurColor := TimeLine1.Color;
   cbDragging.ItemIndex := 0;
   TimelineNotesForm := TTimelineNotesForm.Create(nil);
@@ -403,9 +423,10 @@ begin
   TimeLine1.ShowSelection := false;
   TimeLine1.DoubleBuffered := false;
 
-  for i := 0 to ImageList1.Count-1 do
+  for i := 0 to ImageModule.ImageList1.Count-1 do
     CbImgIndex.Add(IntToStr(i), 0, i);
   CbImgIndex.ItemIndex := 0;
+
 end;
 
 
@@ -595,6 +616,12 @@ end;
 procedure TTimelineMainForm.Exit1Click(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TTimelineMainForm.FormActivate(Sender: TObject);
+begin
+  udYrSize.Position := TimeLine1.YearWidth;
+  udItemHeight.Position := TimeLine1.ItemHeight;
 end;
 
 procedure TTimelineMainForm.chkHelpYearClick(Sender: TObject);
