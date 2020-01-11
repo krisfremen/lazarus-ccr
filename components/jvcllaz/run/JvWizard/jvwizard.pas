@@ -714,14 +714,20 @@ type
     procedure Done; virtual;
     { called just before the page is hidden. Page: To page }
     procedure ExitPage(const ToPage: TJvWizardCustomPage); virtual; // renamed from Exit() to ExitPage
-    { adaption of dimensions to screen dpi }
+
+  { lcl scaling }
+  {$IF LCL_FullVersion >= 1080000}
+  protected
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
+  public
     {$IF LCL_FullVersion >= 1080100}
     procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSEIF LCL_FullVersion >= 1080000}
+    {$ELSE}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
+  {$IFEND}
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -766,9 +772,11 @@ type
     FWaterMark: TJvWizardWaterMark;
   protected
     procedure AdjustClientRect(var Rect: TRect); override;
+    procedure DrawPage(ACanvas: TCanvas; var ARect: TRect); override;
+  {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
-    procedure DrawPage(ACanvas: TCanvas; var ARect: TRect); override;
+  {$IFEND}
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -2217,21 +2225,6 @@ begin
     FImage.PaintTo(ACanvas, R);
   end;
 end;
-      (*
-procedure TJvWizardWaterMark.DoAutoAdjustLayout(
-  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double);
-begin
-  inherited;
-  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
-  begin
-    BeginUpdate;
-    try
-      FWidth := Round(FWidth * AXProportion);
-    finally
-      EndUpdate;
-    end;
-  end;
-end;*)
 
 procedure TJvWizardWaterMark.ImageChanged(Sender: TObject);
 begin
@@ -2573,6 +2566,7 @@ begin
   Header.Title := Value;
 end;
 
+{$IF LCL_FullVersion >= 1080000}
 procedure TJvWizardCustomPage.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
 begin
@@ -2598,6 +2592,7 @@ begin
       FPanel.BorderWidth := Round(FPanel.BorderWidth * AXProportion);
   end;
 end;
+{$IFEND}
 
 {$IF LCL_FullVersion >= 1080100}
 procedure TJvWizardCustomPage.ScaleFontsPPI(const AToPPI: Integer;
@@ -2649,6 +2644,7 @@ begin
   end;
 end;
 
+{$IF LCL_FullVersion >= 1080000}
 procedure TJvWizardWelcomePage.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
 begin
@@ -2661,6 +2657,7 @@ begin
       FWatermark.BorderWidth := Round(FWaterMark.BorderWidth * AXProportion);
   end;
 end;
+{$IFEND}
 
 procedure TJvWizardWelcomePage.DrawPage(ACanvas: TCanvas; var ARect: TRect);
 begin
@@ -3383,21 +3380,5 @@ procedure TJvWizard.SetNavigateButtons(Index: Integer; Value: TJvWizardNavigateB
 begin
   FNavigateButtons[TJvWizardButtonKind(Index)] := Value;
 end;
-
-(*
-procedure TJvWizard.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
-  const AXProportion, AYProportion: Double);
-begin
-  inherited;
-  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
-  begin
-    BeginUpdate;
-    try
-    finally
-      EndUpdate;
-    end;
-  end;
-end;
-  *)
 
 end.

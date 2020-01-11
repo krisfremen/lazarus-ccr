@@ -34,7 +34,7 @@ unit JvGammaPanel;
 interface
 
 uses
-  Types, SysUtils, Classes, Graphics, Controls, Dialogs, ExtCtrls, StdCtrls,
+  SysUtils, Classes, Graphics, Controls, Dialogs, ExtCtrls, StdCtrls,
   JvTypes;
   
 type
@@ -56,8 +56,8 @@ type
     FOnChangeColor: TJvChangeColorEvent;
     procedure BgColorClick(Sender: TObject);
     procedure ChangeColor(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure ColorSeek(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+      {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
+    procedure ColorSeek(Sender: TObject; {%H-}Shift: TShiftState; X, Y: Integer);
     procedure Exchange(Sender: TObject);
     procedure FgColorClick(Sender: TObject);
     function GetBackgroundColor: TColor;
@@ -380,7 +380,6 @@ var
   imgSize: Integer;
   p: Integer;
   m: Integer;
-  hx: Integer;
 begin
   inherited;
   if FPanel3 = nil then

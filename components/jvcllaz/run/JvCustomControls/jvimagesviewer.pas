@@ -345,7 +345,7 @@ procedure TJvPictureItem.DoLoadProgress(Sender: TObject;
   Stage: TFPImgProgressStage; PercentDone: Byte; RedrawNow: Boolean;
   const R: TRect; const Msg: AnsiString; var Continue: Boolean);
 begin
-  if Owner is TJvImagesViewer then
+  if Continue and (Owner is TJvImagesViewer) then
     TJvImagesViewer(Owner).DoLoadProgress(Self, Stage, PercentDone, RedrawNow, R, Msg);
 end;
 

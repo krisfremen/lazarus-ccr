@@ -309,7 +309,6 @@ type
     procedure CustomSort(Compare:TListSortCompare);virtual;
 
     function ClientDisplayRect: TRect;
-    class function GetControlClassDefaultSize: TSize; override;
     {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
@@ -353,6 +352,7 @@ type
     function IndexOf(Item: TJvViewerItem): Integer;
     function ItemAtPos(X, Y: Integer; Existing: Boolean): Integer; virtual;
     function ItemRect(Index: Integer; IncludeSpacing: Boolean): TRect;
+    class function GetControlClassDefaultSize: TSize; override;
     property BorderStyle default bsSingle;
   end;
 
