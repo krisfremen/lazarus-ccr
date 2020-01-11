@@ -75,6 +75,7 @@ type
     FObjects: TStringlist;
     FLeftBtn: TSpeedButton;
     FRightBtn: TSpeedButton;
+    FButtonWidth: Integer;
     FMonthFont: TFont;
     FBtnDown: TJvBtnDown;
     FReadOnly: Boolean;
@@ -101,10 +102,11 @@ type
     FLineColor: TColor;
     FShift: TShiftState;
     FShowTodayIcon: Boolean;
-    function ButtonWidthStored: Boolean;
-    function DayWidthStored: Boolean;
-    function IconDayDistStored: Boolean;
-    function GetButtonWidth: Integer;
+    function IsStoredMaxDate: Boolean;
+    function IsStoredMinDate: Boolean;
+    function IsStoredButtonWidth: Boolean;
+    function IsStoredDayWidth: Boolean;
+    function IsStoredIconDayDist: Boolean;
     function GetDayWidth: Integer;
     function GetIconDayDist: Integer;
     function GetRectForDate(ADate: TDate): TRect;
@@ -155,14 +157,11 @@ type
     procedure StopTimer;
     function DateHasImage(ADate: TDateTime): Boolean;
     procedure SetShowTodayIcon(const Value: Boolean);
+
   protected
 //    procedure GetDlgCode(var Code: TDlgCodes); override;   <--- wp
 //    procedure CursorChanged; override;   <--- wo
     procedure Change; virtual;
-    {$IF LCL_FullVersion >= 1080000}
-    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
-      const AXProportion, AYProportion: Double); override;
-    {$IFEND}
     function DoMouseWheelDown(Shift: TShiftState;  MousePos: TPoint): Boolean; override;
     function DoMouseWheelUp(Shift: TShiftState;  MousePos: TPoint): Boolean; override;
     procedure EnabledChanged; override;
@@ -171,6 +170,7 @@ type
     function GetVisibleDays: Integer;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure LoadObject(Stream: TStream; var AObject: TObject); virtual;
+    procedure MonthFontChanged(Sender: TObject);
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -179,22 +179,22 @@ type
     procedure SaveObject(Stream: TStream; const AObject: TObject); virtual;
     procedure SetBorderStyle(Value: TBorderStyle); override;
 
-    property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle;
-    property ButtonWidth: Integer read GetButtonWidth write SetButtonWidth stored ButtonWidthStored;
+    property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle default bsSingle;
+    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth stored IsStoredButtonWidth;
     property Cursor;
-    property DayWidth: Integer read GetDayWidth write SetDayWidth stored DayWidthStored;
+    property DayWidth: Integer read GetDayWidth write SetDayWidth stored IsStoredDayWidth;
     property ObjectsFontStyle: TFontStyles read FObjectsFontStyle write SetObjectsFontStyle default [fsUnderline];
-    property IconDayDistance: Integer read GetIconDayDist write SetIconDayDist stored IconDayDistStored;
+    property IconDayDistance: Integer read GetIconDayDist write SetIconDayDist stored IsStoredIconDayDist;
     property ImageCursor: TCursor read FImageCursor write SetImageCursor default crHandPoint;
     property Images: TImageList read FImages write SetImages;
     property LargeChange: Word read FLargeChange write SetLargeChange default 30;
     property Date: TDate read FDate write SetFirstDate;
     property SelDate: TDate read FSelDate write SetSelDate;
-    property MaxDate: TDate read FMaxDate write SetMaxDate;
-    property MinDate: TDate read FMinDate write SetMinDate;
+    property MaxDate: TDate read FMaxDate write SetMaxDate stored IsStoredMaxDate;
+    property MinDate: TDate read FMinDate write SetMinDate stored IsStoredMinDate;
     property MonthFont: TFont read FMonthFont write SetMonthFont;
-    property ReadOnly: Boolean read FReadOnly write SetReadOnly;
-    property RightClickSelect: Boolean read FRightClickSelect write SetRightClickSelect;
+    property ReadOnly: Boolean read FReadOnly write SetReadOnly default false;
+    property RightClickSelect: Boolean read FRightClickSelect write SetRightClickSelect default false;
     property SmallChange: Word read FSmallChange write SetSmallChange default 7;
     property Selection: TJvTLSelFrame read FSelection write SetSelection;
     property TodayColor: TColor read FTodayColor write SetTodayColor default clAqua;
@@ -213,6 +213,19 @@ type
     property OnReadObject: TJvObjectReadEvent read FOnReadObject write FOnReadObject;
     property OnWriteObject: TJvObjectWriteEvent read FOnWriteObject write FOnWriteObject;
     property Align default alTop;
+
+  { lcl scaling }
+  {$IF LCL_FullVersion >= 1080000}
+  protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+  public
+    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+    {$IF LCL_FullVersion >= 2010000}
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
+    {$IFEND}
+  {$IFEND}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -235,9 +248,6 @@ type
     property Objects[ADate: TDate]: TObject read GetObjects write SetObjects;
   end;
 
-  {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
-  {$ENDIF RTL230_UP}
   TJvTMTimeline = class(TJvCustomTMTimeline)
   public
     property RightButton;
@@ -441,6 +451,7 @@ begin
   FMonthFont.Style := [fsItalic, fsBold];
   FMonthFont.Name := 'Times New Roman';
   FMonthFont.Size := 18;
+  FMonthFont.OnChange := @MonthFontChanged;
 
   FObjectsFontStyle := [fsUnderline];
   FDayWidth := -1;
@@ -459,11 +470,13 @@ begin
   Font.Size := 0;
   Font.Name := 'default';
 
+  FButtonWidth := Scale96ToFont(cTMTimeLineButtonWidth);
+
   FLeftBtn := TSpeedButton.Create(Self);
   with FLeftBtn do
   begin
     Align := alLeft;
-    Width := cTMTimeLineButtonWidth;
+    Width := FButtonWidth;
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
@@ -475,7 +488,6 @@ begin
     finally
       png.Free;
     end;
-
     OnMouseDown := @DoLMouseDown;
     OnMouseUp := @DoMouseUp;
     //    OnClick := LeftClick;
@@ -485,7 +497,7 @@ begin
   with FRightBtn do
   begin
     Align := alRight;
-    Width := cTMTimeLineButtonWidth;
+    Width := FButtonWidth;
     Parent := Self;
     Transparent := False;
     Layout := blGlyphTop;
@@ -497,12 +509,12 @@ begin
     finally
       png.Free;
     end;
-
     OnMouseDown := @DoRMouseDown;
     OnMouseUp := @DoMouseUp;
   end;
   FLeftBtn.SetSubComponent(True);
   FRightBtn.SetSubComponent(True);
+
   Height := 64;
   BevelInner := bvNone;
   BevelOuter := bvNone;
@@ -880,7 +892,7 @@ end;
 procedure TJvCustomTMTimeline.SetMonthFont(const Value: TFont);
 begin
   FMonthFont.Assign(Value);
-  Invalidate;
+  //Invalidate;
 end;
 
 procedure TJvCustomTMTimeline.SetSelDate(const Value: TDate);
@@ -904,24 +916,29 @@ begin
   end;
 end;
 
-function TJvCustomTMTimeLine.ButtonWidthStored: Boolean;
+function TJvCustomTMTimeLine.IsStoredMaxDate: Boolean;
+begin
+  Result := FMaxDate <> 0;
+end;
+
+function TJvCustomTMTimeLine.IsStoredMinDate: Boolean;
+begin
+  Result := FMinDate <> 0;
+end;
+
+function TJvCustomTMTimeLine.IsStoredButtonWidth: Boolean;
 begin
   Result := ButtonWidth <> Scale96ToFont(cTMTimeLineButtonWidth);
 end;
 
-function TJvCustomTMTimeLine.DayWidthStored: Boolean;
+function TJvCustomTMTimeLine.IsStoredDayWidth: Boolean;
 begin
   Result := FDayWidth >= 0;
 end;
 
-function TJvCustomTMTimeLine.GetButtonWidth: Integer;
-begin
-  Result := FLeftBtn.Width;
-end;
-
 function TJvCustomTMTimeLine.GetDayWidth: Integer;
 begin
-  if DayWidthStored then
+  if IsStoredDayWidth then
     Result := FDayWidth
   else
     Result := Scale96ToFont(cTMTimeLineDayWidth);
@@ -929,13 +946,13 @@ end;
 
 function TJvCustomTMTimeLine.GetIconDayDist: Integer;
 begin
-  if IconDayDistStored then
+  if IsStoredIconDayDist then
     Result := FIconDayDist
   else
     Result := Scale96ToFont(cTMTimelineIconDayDist);
 end;
 
-function TJvCustomTMTimeLine.IconDayDistStored: Boolean;
+function TJvCustomTMTimeLine.IsStoredIconDayDist: Boolean;
 begin
   Result := FIconDayDist >= 0;
 end;
@@ -947,6 +964,11 @@ begin
     FDayWidth := Value;
     Invalidate;
   end;
+end;
+
+procedure TJvCustomTMTimeline.MonthFontChanged(Sender: TObject);
+begin
+  Invalidate;
 end;
 
 procedure TJvCustomTMTimeline.MouseDown(Button: TMouseButton;
@@ -1059,12 +1081,35 @@ begin
 
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if DayWidthStored then
+    if IsStoredDayWidth then
       FDayWidth := Round(FDayWidth * AXProportion);
-    if IconDayDistStored then
+    if IsStoredIconDayDist then
       FIconDayDist := Round(FIconDayDist * AYProportion);
+    if IsStoredButtonWidth then begin
+      FButtonWidth := Round(FButtonWidth * AXProportion);
+      FLeftBtn.Width := FButtonWidth;
+      FRightBtn.Width := FButtonWidth;
+    end;
     Invalidate;
   end;
+end;
+{$IFEND}
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvCustomTMTimeLine.ScaleFontsPPI(
+  {$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FMonthFont, AToPPI, AProportion);
+end;
+{$IFEND}
+
+{$IF LCL_FullVersion >= 2010000}
+procedure TJvCustomTMTimeLine.FixDesignFontsPPI(const ADesignTimePPI: Integer);
+begin
+  inherited;
+  DoFixDesignFontPPI(FMonthFont, ADesignTimePPI);
 end;
 {$IFEND}
 
@@ -1237,10 +1282,11 @@ end;
 
 procedure TJvCustomTMTimeline.SetButtonWidth(const Value: Integer);
 begin
-  if (GetButtonWidth <> Value) and (Value > 0) then
+  if (FButtonWidth <> Value) and (Value > 0) then
   begin
-    FLeftBtn.Width := ButtonWidth;
-    FRightBtn.Width := ButtonWidth;
+    FButtonWidth := Value;
+    FLeftBtn.Width := Value;
+    FRightBtn.Width := Value;
     Invalidate;
   end;
 end;
