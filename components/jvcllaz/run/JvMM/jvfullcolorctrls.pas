@@ -3701,11 +3701,12 @@ end;
 
 procedure TJvFullColorGroup.Paint;
 var
-  Index, IndexX, IndexY, XMaj: Integer;
+  Index: Integer;
+  //IndexX, IndexY, XMaj: Integer;
   XOffset, YOffset, XInc, YInc: Integer;
   X, Y: Integer;
   lEdge: TJvFullColorEdge;
-  lClipRect: TRect;
+  //lClipRect: TRect;
 
   procedure BevelRect(const R: TRect; Style: TJvFullColorEdge;
     FillStyle: TBrushStyle; FillColor: TColor);
@@ -3752,7 +3753,7 @@ begin
 
   Y := YOffset;
   X := XOffset;
-  lClipRect := Canvas.ClipRect;
+  //lClipRect := Canvas.ClipRect;
 
   Index := 0;
   while Index < Items.Count do

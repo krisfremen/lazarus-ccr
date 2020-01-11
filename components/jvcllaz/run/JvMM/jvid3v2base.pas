@@ -2935,12 +2935,15 @@ begin
     (Text = '') and (Description = '');
 end;
 
-function HasNonISO_8859_1Chars(const S: WideString): Boolean;
+//function HasNonISO_8859_1Chars(const S: WideString): Boolean;
+function HasNonISO_8859_1Chars(const S: String): Boolean;
 var
   I: Integer;
+  ws: WideString;
 begin
-  for I := 1 to Length(S) do
-    if Ord(S[I]) > $FF then
+  ws := UTF8Decode(S);
+  for I := 1 to Length(ws) do
+    if Ord(ws[I]) > $FF then
     begin
       Result := True;
       Exit;

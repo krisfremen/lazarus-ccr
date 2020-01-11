@@ -31,7 +31,7 @@ unit JvTFWeeks;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, LCLVersion,
+  LCLIntf, LCLType, LCLVersion,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   JvTFManager, JvTFGlance, JvTFUtils;
 
@@ -71,9 +71,8 @@ type
     {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
-{    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
-      const AProportion: Double); override;
-      }
+    // procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+    //   const AProportion: Double); override;
     {$IFEND}
 
     // draws the DW Titles

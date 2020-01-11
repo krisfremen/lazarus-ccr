@@ -508,7 +508,7 @@ type
       Code: TJvTFServNotifyCode);
 
     procedure RetrieveSchedule(const SchedName: string; SchedDate: TDate;
-      var Schedule: TJvTFSched; var LoadedNow: Boolean);
+      out Schedule: TJvTFSched; out LoadedNow: Boolean);
 
     procedure NeedAppts(Schedule: TJvTFSched); virtual;
     procedure AddAppt(Appt: TJvTFAppt);
@@ -907,7 +907,7 @@ type
     procedure CreateLayout; virtual;
     procedure SetPropertyCheck; dynamic;
 
-    procedure GetHeaderFooterRects(var HeaderRect, FooterRect: TRect);
+    procedure GetHeaderFooterRects(out HeaderRect, FooterRect: TRect);
 
     // document management methods
     procedure CreateDoc; dynamic;
@@ -2716,7 +2716,7 @@ begin
 end;
 
 procedure TJvTFScheduleManager.RetrieveSchedule(const SchedName: string; SchedDate: TDate;
-  var Schedule: TJvTFSched; var LoadedNow: Boolean);
+  out Schedule: TJvTFSched; out LoadedNow: Boolean);
 var
   SchedID: string;
   I: Integer;
@@ -3003,6 +3003,7 @@ function TJvTFScheduleManager.RequestSchedule(Comp: TJvTFComponent;
 var
   ApptsNeeded: Boolean;
 begin
+  Result := nil;
   RetrieveSchedule(SchedName, SchedDate, Result, ApptsNeeded);
 
   if Assigned(Comp) then
@@ -3023,6 +3024,7 @@ end;
 function TJvTFScheduleManager.RequestSchedule(Comp: TJvTFComponent;
   const SchedName: string; SchedDate: TDate; var LoadedNow: Boolean): TJvTFSched;
 begin
+  Result := nil;
   RetrieveSchedule(SchedName, SchedDate, Result, LoadedNow);
 
   if Assigned(Comp) then
@@ -3178,7 +3180,7 @@ end;
 
 function TJvTFScheduleManager.dbNewAppt(const ID: string): TJvTFAppt;
 var
-  New: Boolean;
+  New: Boolean = false;  // to silence the compiler
 begin
   Result := nil;
   RequestAppt(ID, Result, New);
@@ -4527,7 +4529,7 @@ begin
   Result := FDocDateTime;
 end;
 
-procedure TJvTFPrinter.GetHeaderFooterRects(var HeaderRect, FooterRect: TRect);
+procedure TJvTFPrinter.GetHeaderFooterRects(out HeaderRect, FooterRect: TRect);
 begin
   HeaderRect.Left := FMarginOffsets.Left;
   HeaderRect.Top := FMarginOffsets.Top;
@@ -4777,8 +4779,8 @@ begin
 end;
 
 procedure TJvTFPrinter.SaveDocToFiles(BaseFileName: TFileName);
-var
-  I: Integer;
+{var
+  I: Integer; }
 begin
   if State <> spsFinished then
     raise EJvTFPrinterError.CreateRes(@RsEDocumentMustBeFinishedToSaveToFile);

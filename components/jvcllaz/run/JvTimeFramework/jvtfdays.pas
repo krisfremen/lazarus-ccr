@@ -456,7 +456,7 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
     procedure AutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
-      const AXProportion, AYProportion: Double); virtual;
+      const AXProportion, {%H-}AYProportion: Double); virtual;
     property DaysControl: TJvTFDays read FDaysControl;
     procedure Change;
   published
@@ -1043,7 +1043,7 @@ type
     procedure DrawPics(ACanvas: TCanvas; var ARect: TRect; Appt: TJvTFAppt);
     procedure CreatePicDrawList(ARect: TRect; Appt: TJvTFAppt; DrawList: TList);
     procedure FilterPicDrawList(ARect: TRect; DrawList: TList;
-      var PicsHeight: Integer; var PicsWidth: Integer);
+      out PicsHeight, PicsWidth: Integer);
     procedure ClearPicDrawList(DrawList: TList);
     procedure DrawListPics(ACanvas: TCanvas; var ARect: TRect; DrawList: TList);
     procedure DrawGrabLines(ACanvas: TCanvas; LineTop, LineLeft,
@@ -1070,7 +1070,7 @@ type
     procedure DrawAppts(ACanvas: TCanvas; DrawAll: Boolean);
     procedure AdjustForMargins(var ARect: TRect);
     procedure CanDrawWhat(ACanvas: TCanvas; ApptRect: TRect; PicsHeight: Integer;
-      var CanDrawText, CanDrawPics: Boolean);
+      out CanDrawText, CanDrawPics: Boolean);
     procedure ManualFocusRect(ACanvas: TCanvas; ARect: TRect);
    // Fancy painting routines
     procedure DrawFancyRowHdrs(ACanvas: TCanvas);
@@ -1145,9 +1145,9 @@ type
     procedure ContinueDragging(Coord: TJvTFDaysCoord; Appt: TJvTFAppt);
     procedure EndDragging(Coord: TJvTFDaysCoord; Appt: TJvTFAppt);
     function CanDragWhat(Coord: TJvTFDaysCoord): TJvTFDaysState;
-    procedure CalcSizeEndTime(Appt: TJvTFAppt; var NewEndDT: TDateTime);
+    procedure CalcSizeEndTime(Appt: TJvTFAppt; out NewEndDT: TDateTime);
     procedure CalcMoveStartEnd(Appt: TJvTFAppt; Coord: TJvTFDaysCoord;
-      KeepDates, KeepTimes: Boolean; var StartDT, EndDT: TDateTime);
+      KeepDates, KeepTimes: Boolean; out StartDT, EndDT: TDateTime);
 
     procedure KillAutoScrollTimer;
 
@@ -1190,12 +1190,15 @@ type
     { Lazarus }
     class function GetControlClassDefaultSize: TSize; override;
 
-    {$IF LCL_FullVersion >= 1080000}
+  { lcl scaling }
+  {$IF LCL_FullVersion >= 1080000}
+  protected
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
+  public
     procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
       const AProportion: Double); override;
-    {$IFEND}
+  {$IFEND}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -1229,14 +1232,14 @@ type
    // ok
     function RowToTimeBlock(ARow: Integer): Integer;
    // ok
-    procedure GetTimeBlockStartEnd(ATimeBlock: Integer; var BlockStart,
-      BlockEnd: Integer);
+    procedure GetTimeBlockStartEnd(ATimeBlock: Integer;
+      out BlockStart, BlockEnd: Integer);
    // ok
     function CalcBlockHdrWidth: Integer;
    // ok
     function CalcBlockRowHdrsWidth: Integer;
    // ok
-    procedure GetBlockStartEndRows(Row: Integer; var StartRow, EndRow: Integer);
+    procedure GetBlockStartEndRows(Row: Integer; out StartRow, EndRow: Integer);
    // ok
     function VirtualBlockHdrRect(Row: Integer): TRect;
     {$ENDIF Jv_TIMEBLOCKS}
@@ -1275,7 +1278,7 @@ type
 
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
     procedure CalcStartEndRows(AAppt: TJvTFAppt; SchedDate: TDate;
-      var StartRow, EndRow: Integer);
+      out StartRow, EndRow: Integer);
 
     {$IFDEF Jv_TIMEBLOCKS}
    // ok
@@ -1678,9 +1681,9 @@ type
 
     procedure CreatePicDrawList(ARect: TRect; Appt: TJvTFAppt; DrawList: TList);
     procedure FilterPicDrawList(ARect: TRect; DrawList: TList;
-      var PicsHeight: Integer; var PicsWidth: Integer);
+      out PicsHeight, PicsWidth: Integer);
     procedure CanDrawWhat(ACanvas: TCanvas; ApptRect: TRect;
-      PicsHeight, PicsWidth: Integer; var CanDrawText, CanDrawPics: Boolean);
+      PicsHeight, PicsWidth: Integer; out CanDrawText, CanDrawPics: Boolean);
     procedure DrawListPics(ACanvas: TCanvas; var ARect: TRect; DrawList: TList);
     procedure ClearPicDrawList(DrawList: TList);
 
@@ -1690,9 +1693,9 @@ type
     procedure CreateLayout; override;
     procedure ClearPageInfo;
     procedure CalcPageInfo; dynamic;
-    procedure CalcPageRowInfo(ShowColHdrs: Boolean; var CalcRowsPerPage,
+    procedure CalcPageRowInfo(ShowColHdrs: Boolean; out CalcRowsPerPage,
       CalcRowHeight: Integer);
-    procedure CalcPageColInfo(ShowRowHdrs: Boolean; var CalcColsPerPage,
+    procedure CalcPageColInfo(ShowRowHdrs: Boolean; out CalcColsPerPage,
       CalcColWidth: Integer);
     function GetPageLayout: TJvTFDaysPrinterPageLayout;
     procedure SetPageLayout(Value: TJvTFDaysPrinterPageLayout);
@@ -1718,7 +1721,7 @@ type
       PageInfo: TJvTFDaysPageInfo): TRect;
     function GetApptDispColor(Appt: TJvTFAppt): TColor;
     procedure CalcStartEndRows(AAppt: TJvTFAppt; SchedDate: TDate;
-      var StartRow, EndRow: Integer);
+      out StartRow, EndRow: Integer);
     procedure Prepare; dynamic;
     property ApptCount: Integer read GetApptCount;
     property PageInfo[PageNum: Integer]: TJvTFDaysPageInfo read GetPageInfo;
@@ -1794,7 +1797,7 @@ type
 implementation
 
 uses
-  Math, FPCanvas,
+  FPCanvas,
   JvResources;
 
 //Type
@@ -2368,7 +2371,9 @@ end;
 
 procedure TJvTFApptMap.Add(Appt: TJvTFAppt);
 var
-  StartRow, EndRow, MapRow, MapCol: Integer;
+  StartRow: Integer = -1;      // to silence the compiler
+  EndRow: Integer = -1;        // dto.
+  MapRow, MapCol: Integer;
   Empty: Boolean;
   ApptGrid: TJvTFDays;
 begin
@@ -2545,7 +2550,9 @@ end;
 
 function TJvTFApptMap.HasAppt(Appt: TJvTFAppt): Boolean;
 var
-  MapRow, MapCol, StartRow, EndRow, ApptsExamined: Integer;
+  StartRow: Integer = -1;     // to silence the compiler
+  EndRow: Integer = -1;       // dto.
+  MapRow, MapCol, ApptsExamined: Integer;
   Test: NativeInt;
   ApptGrid: TJvTFDays;
 begin
@@ -2751,7 +2758,7 @@ begin
   if not HandleAllocated then
     exit;
 
-  FillChar(Info, SizeOf(Info), 0);
+  FillChar(Info{%H-}, SizeOf(Info), 0);
   with Info do
   begin
     cbsize := SizeOf(Info);
@@ -5046,8 +5053,10 @@ begin
 end;
 
 procedure TJvTFDays.CreateParams(var Params: TCreateParams);
+{
 const
   BorderStyles: array [TBorderStyle] of DWORD = (0, WS_BORDER);
+}
 begin
   inherited CreateParams(Params);
   {
@@ -5372,9 +5381,11 @@ end;
 // ok
 procedure TJvTFDays.DrawDataCell(ACanvas: TCanvas; ColIndex, RowIndex: Integer);
 var
+  BlockStart: Integer = -1;  // to silence the compiler
+  BlockEnd: Integer = -1;    // dto.
   SelFrameRect, FocusRect, Rect: TRect;
   I, PrimeStartRow, PrimeEndRow: Integer;
-  FrameOffset, BlockStart, BlockEnd, TimeBlockIndex: Integer;
+  FrameOffset, TimeBlockIndex: Integer;
   IsPrimeTimeCell: Boolean;
   CellColor: TColor;
   // col buffer start
@@ -6071,10 +6082,11 @@ var
   ImageList: TCustomImageList;
   ImageMap: TJvTFStateImageMap;
   CustomImageMap: TJvTFCustomImageMap;
-  w, h, d: Integer;
+  //h,
+  w, d: Integer;
   {$IF LCL_FullVersion >= 2000000}
   PPI: integer;
-  f: Double;
+  //f: Double;
   {$IFEND}
 
   procedure AddToList(AImageList: TCustomImageList; AImageIndex: Integer;
@@ -6113,12 +6125,12 @@ begin
 
     {$IF LCL_FullVersion >= 2000000}
     PPI := Font.PixelsPerInch;
-    f := GetCanvasScaleFactor;
     w := Imagelist.WidthForPPI[ImageList.Width, PPI];
-    h := round(ImageList.Height/ImageList.Width * w);
+    //h := round(ImageList.Height/ImageList.Width * w);
+    //f := GetCanvasScaleFactor;
     {$ELSE}
     w := ImageList.Width;
-    h := ImageList.Height;
+    //h := ImageList.Height;
     {$IFEND}
 
     for I := 0 to CustomImageMap.Count - 1 do
@@ -6171,7 +6183,7 @@ begin
 end;
 
 procedure TJvTFDays.FilterPicDrawList(ARect: TRect; DrawList: TList;
-  var PicsHeight: Integer; var PicsWidth: Integer);
+  out PicsHeight, PicsWidth: Integer);
 var
   I, NextPicLeft: Integer;
   DrawIt: Boolean;
@@ -6180,7 +6192,7 @@ var
   w, h: Integer;
   {$IF LCL_FullVersion >=2000000}
   PPI: Integer;
-  f: Double;
+  //f: Double;
   {$IFEND}
 begin
   PicsHeight := 0;
@@ -6190,7 +6202,7 @@ begin
 
   {$IF LCL_FullVersion >= 2000000}
   PPI := Font.PixelsPerInch;
-  f := GetCanvasScaleFactor;
+  //f := GetCanvasScaleFactor;
   {$IFEND}
 
   {$IF LCL_FullVersion >= 1080000}
@@ -6766,7 +6778,7 @@ begin
 end;
 
 procedure TJvTFDays.CanDrawWhat(ACanvas: TCanvas; ApptRect: TRect;
-  PicsHeight: Integer; var CanDrawText, CanDrawPics: Boolean);
+  PicsHeight: Integer; out CanDrawText, CanDrawPics: Boolean);
 //var
 //  TextHeightThreshold,
 //    TextWidthThreshold: Integer;
@@ -7069,17 +7081,17 @@ begin
       while (FirstHourRow < BottomRow) and (ExtractMins(RowToTime(FirstHourRow)) <> 0) do
         Inc(FirstHourRow);
       if RowTime = 0 then
-        Result := {$IFDEF RTL220_UP}FormatSettings.{$ENDIF RTL220_UP}TimeAMString
+        Result := FormatSettings.TimeAMString
       else
       if RowTime = 0.50 then
-        Result := {$IFDEF RTL220_UP}FormatSettings.{$ENDIF RTL220_UP}TimePMString
+        Result := FormatSettings.TimePMString
       else
       if (RowNum = FirstHourRow) and (ExtractMins(RowTime) = 0) then
       begin
         if RowTime < 0.50 then
-          Result := {$IFDEF RTL220_UP}FormatSettings.{$ENDIF RTL220_UP}TimeAMString
+          Result := FormatSettings.TimeAMString
         else
-          Result := {$IFDEF RTL220_UP}FormatSettings.{$ENDIF RTL220_UP}TimePMString;
+          Result := FormatSettings.TimePMString;
       end
       else
         Result := FormatDateTime(TimeFmt, RowTime);
@@ -8184,7 +8196,7 @@ begin
   end;
 end;
 
-procedure TJvTFDays.CalcSizeEndTime(Appt: TJvTFAppt; var NewEndDT: TDateTime);
+procedure TJvTFDays.CalcSizeEndTime(Appt: TJvTFAppt; out NewEndDT: TDateTime);
 var
   TimeOffset: TTime;
   Sched: TJvTFSched;
@@ -8247,7 +8259,7 @@ end;
 {$IFDEF Jv_TIMEBLOCKS}
 // ok
 procedure TJvTFDays.CalcMoveStartEnd(Appt: TJvTFAppt; Coord: TJvTFDaysCoord;
-  KeepDates, KeepTimes: Boolean; var StartDT, EndDT: TDateTime);
+  KeepDates, KeepTimes: Boolean; out StartDT, EndDT: TDateTime);
 var
   NewStart, NewEnd: TDateTime;
   TimeBlockIndex, BlockStartRow, BlockEndRow: Integer;
@@ -8628,7 +8640,9 @@ end;
 // ok
 procedure TJvTFDays.SetSelStart(Value: TPoint);
 var
-  TimeBlock, StartRow, EndRow: Integer;
+  TimeBlock: Integer;
+  StartRow: Integer = -1;   // to silence the compiler
+  EndRow: Integer = -1;     // dto.
 begin
   TimeBlock := RowToTimeBlock(Value.Y);
   if (TimeBlock = -1) and (TimeBlocks.Count > 0) then
@@ -9356,6 +9370,8 @@ var
   I: Integer;
   VisGrpHdrRect: TRect;
 begin
+  Result := EmptyRect;
+
   if (Col = gcGroupHdr) and (Row > gcHdr) then
   begin
     VisGrpHdrRect := Classes.Rect(0, CalcGroupColHdrsHeight, CalcBlockRowHdrsWidth,
@@ -9699,7 +9715,7 @@ begin
   if CanDrawPics then
     Inc(ApptRect.Left, PicsHeight);
 
-  IntersectRect(EditorRect, GetDataAreaRect, ApptRect);
+  IntersectRect(EditorRect{%H-}, GetDataAreaRect, ApptRect);
 
 // Commented out by Tim - No longer required since no editor failure.
 //  EditHeightThreshold := CanvasMaxTextHeight(Canvas) * Thresholds.EditHeight;
@@ -9972,7 +9988,7 @@ begin
 end;
 
 procedure TJvTFDays.CalcStartEndRows(AAppt: TJvTFAppt; SchedDate: TDate;
-  var StartRow, EndRow: Integer);
+  out StartRow, EndRow: Integer);
 begin
   if Trunc(AAppt.StartDate) = Trunc(SchedDate) then
     StartRow := TimeToRow(AAppt.StartTime)
@@ -10953,7 +10969,9 @@ end;
 
 function TJvTFDays.VirtualGroupHdrRect(Col: Integer): TRect;
 var
-  I, GroupStartCol, GroupEndCol, GroupWidth: Integer;
+  GroupStartCol: Integer = -1;    // to silence the compiler
+  GroupEndCol: Integer = -1;      // dto.
+  I, GroupWidth: Integer;
 begin
   EnsureCol(Col);
 
@@ -11058,7 +11076,9 @@ end;
 
 function TJvTFDays.GroupHdrIsSelected(ACol: Integer): Boolean;
 var
-  I, GroupStartCol, GroupEndCol: Integer;
+  I: Integer;
+  GroupStartCol: Integer = -1;   // to silence the compiler
+  GroupEndCol: Integer = -1;     // dto.
 begin
   GetGroupStartEndCols(ACol, GroupStartCol, GroupEndCol);
   Result := False;
@@ -11250,8 +11270,9 @@ end;
 
 procedure TJvTFDays.DrawBlockHdr(ACanvas: TCanvas; BlockIndex: Integer);
 var
+  StartRow: Integer = -1;
+  EndRow: Integer = -1;
   ARect, HdrPicRect, TxtBounds: TRect;
-  StartRow, EndRow: Integer;
   ClipIt: Boolean;
   Attr: TJvTFDaysHdrAttr;
   TimeBlock: TJvTFDaysTimeBlock;
@@ -11313,7 +11334,8 @@ end;
 procedure TJvTFDays.FillBlockHdrDeadSpace(ACanvas: TCanvas);
 var
   ARect: TRect;
-  StartRow, EndRow: Integer;
+  StartRow: Integer = -1;
+  EndRow: Integer = -1;
 
   procedure FillIt;
   begin
@@ -11510,7 +11532,9 @@ end;
 
 function TJvTFDays.RowToTimeBlock(ARow: Integer): Integer;
 var
-  I, BlockStart, BlockEnd: Integer;
+  I: Integer;
+  BlockStart: Integer = -1;
+  BlockEnd: Integer = -1;
 begin
   Result := -1;
   if TimeBlocks.Count = 0 then
@@ -11526,7 +11550,7 @@ begin
 end;
 
 procedure TJvTFDays.GetTimeBlockStartEnd(ATimeBlock: Integer;
-  var BlockStart, BlockEnd: Integer);
+  out BlockStart, BlockEnd: Integer);
 var
   I: Integer;
 begin
@@ -11563,14 +11587,16 @@ begin
 end;
 
 procedure TJvTFDays.GetBlockStartEndRows(Row: Integer;
-  var StartRow, EndRow: Integer);
+  out StartRow, EndRow: Integer);
 begin
   GetTimeBlockStartEnd(RowToTimeBlock(Row), StartRow, EndRow);
 end;
 
 function TJvTFDays.VirtualBlockHdrRect(Row: Integer): TRect;
 var
-  BlockStartRow, BlockEndRow, BlockHeight: Integer;
+  BlockStartRow: Integer = -1;
+  BlockEndRow: Integer = -1;
+  BlockHeight: Integer;
 begin
   EnsureRow(Row);
 
@@ -11591,7 +11617,9 @@ end;
 
 function TJvTFDays.BlockHdrIsSelected(ARow: Integer): Boolean;
 var
-  I, StartRow, EndRow: Integer;
+  I: Integer;
+  StartRow: Integer = -1;
+  EndRow: Integer = -1;
 begin
   GetBlockStartEndRows(ARow, StartRow, EndRow);
   Result := False;
@@ -11920,6 +11948,7 @@ var
 begin
   if Assigned(GridCoord.Appt) and not Editing and (agoShowApptHints in Options) then
   begin
+    VisApptRect := EmptyRect;
     ApptRect := GetApptRect(GridCoord.Col, GridCoord.Appt);
     IntersectRect(VisApptRect, ApptRect, GetDataAreaRect);
     FHint.ApptHint(GridCoord.Appt, VisApptRect.Left + 2,
@@ -12111,7 +12140,7 @@ begin
 end;
 
 procedure TJvTFDaysPrinter.CalcPageColInfo(ShowRowHdrs: Boolean;
-  var CalcColsPerPage, CalcColWidth: Integer);
+  out CalcColsPerPage, CalcColWidth: Integer);
 var
   DataWidth, TargetColsPerPage: Integer;
 begin
@@ -12215,7 +12244,7 @@ begin
 end;
 
 procedure TJvTFDaysPrinter.CalcPageRowInfo(ShowColHdrs: Boolean;
-  var CalcRowsPerPage, CalcRowHeight: Integer);
+  out CalcRowsPerPage, CalcRowHeight: Integer);
 var
   DataHeight, TargetRowsPerPage: Integer;
 begin
@@ -12232,7 +12261,7 @@ begin
 end;
 
 procedure TJvTFDaysPrinter.CalcStartEndRows(AAppt: TJvTFAppt;
-  SchedDate: TDate; var StartRow, EndRow: Integer);
+  SchedDate: TDate; out StartRow, EndRow: Integer);
 begin
   if Trunc(AAppt.StartDate) = Trunc(SchedDate) then
     StartRow := TimeToRow(AAppt.StartTime)
@@ -12246,7 +12275,7 @@ begin
 end;
 
 procedure TJvTFDaysPrinter.CanDrawWhat(ACanvas: TCanvas; ApptRect: TRect;
-  PicsHeight, PicsWidth: Integer; var CanDrawText, CanDrawPics: Boolean);
+  PicsHeight, PicsWidth: Integer; out CanDrawText, CanDrawPics: Boolean);
 var
   TextHeightThreshold, TextWidthThreshold: Integer;
 begin
@@ -12285,6 +12314,8 @@ function TJvTFDaysPrinter.CellRect(Col, Row: Integer;
 var
   VisGrpHdrRect: TRect;
 begin
+  Result := EmptyRect;
+
   if (Row = gcGroupHdr) and (Col > gcHdr) then
   begin
     VisGrpHdrRect := Classes.Rect(RowHdrWidth, 0,
@@ -12512,13 +12543,14 @@ end;
 
 procedure TJvTFDaysPrinter.PrintBitmap(ACanvas: TCanvas; SourceRect,
   DestRect: TRect; aBitmap: TBitmap);
+{
 var
   BitmapHeader: pBitmapInfo;
   BitmapImage: POINTER;
 
   HeaderSize: LongWord;
   ImageSize: LongWord;
-
+}
 begin
   { wp --- to do (GetDIBSizes not in LCL)
   GetDIBSizes(aBitmap.Handle, HeaderSize, ImageSize);
@@ -13527,7 +13559,7 @@ begin
 end;
 
 procedure TJvTFDaysPrinter.FilterPicDrawList(ARect: TRect;
-  DrawList: TList; var PicsHeight: Integer; var PicsWidth: Integer);
+  DrawList: TList; out PicsHeight, PicsWidth: Integer);
 var
   I, NextPicLeft, PicRight, PicBottom: Integer;
   DrawIt: Boolean;
@@ -14352,7 +14384,9 @@ end;
 function TJvTFDaysPrinter.VirtualGroupHdrRect(Col: Integer;
   APageInfo: TJvTFDaysPageInfo): TRect;
 var
-  I, GroupStartCol, GroupEndCol, GroupWidth: Integer;
+  I, GroupWidth: Integer;
+  GroupStartCol: Integer = 0;  // to silence the compiler
+  GroupEndCol: Integer = 0;    // dto.
 begin
   Result.Top := 0;
   Result.Bottom := CalcGroupHdrHeight;

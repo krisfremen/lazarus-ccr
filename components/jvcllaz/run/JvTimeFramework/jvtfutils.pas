@@ -92,8 +92,8 @@ function BorlToDOW(BorlDOW: Integer): TTFDayOfWeek;
 function DateToDOW(ADate: TDateTime): TTFDayOfWeek;
 
 procedure CalcTextPos(ACanvas: TCanvas;
-  HostRect: TRect; var TextLeft, TextTop: Integer;
-  var TextBounds: TRect; AFont: TFont; AAngle: Integer;
+  HostRect: TRect; out TextLeft, TextTop: Integer;
+  out TextBounds: TRect; AFont: TFont; AAngle: Integer;
   HAlign: TAlignment; VAlign: TJvTFVAlignment; ATxt: String);
 {
 procedure CalcTextPos(HostRect: TRect; var TextLeft, TextTop: Integer;
@@ -101,7 +101,7 @@ procedure CalcTextPos(HostRect: TRect; var TextLeft, TextTop: Integer;
   HAlign: TAlignment; VAlign: TJvTFVAlignment; ATxt: string);
 }
 procedure DrawAngleText(ACanvas: TCanvas; HostRect: TRect;
-  var TextBounds: TRect; AAngle: Integer; HAlign: TAlignment;
+  out TextBounds: TRect; AAngle: Integer; HAlign: TAlignment;
   VAlign: TJvTFVAlignment; ATxt: string);
 
 function RectWidth(ARect: TRect): Integer;
@@ -442,8 +442,8 @@ begin
   Result := BorlToDOW(BorlDOW);
 end;
 
-procedure CalcTextPos(ACanvas: TCanvas; HostRect: TRect; var TextLeft, TextTop: Integer;
-  var TextBounds: TRect; AFont: TFont; AAngle: Integer;
+procedure CalcTextPos(ACanvas: TCanvas; HostRect: TRect; out TextLeft, TextTop: Integer;
+  out TextBounds: TRect; AFont: TFont; AAngle: Integer;
   HAlign: TAlignment; VAlign: TJvTFVAlignment; ATxt: String);
 var
   sinAngle, cosAngle: Extended;
@@ -671,14 +671,14 @@ begin
 end;      *)
 
 procedure DrawAngleText(ACanvas: TCanvas; HostRect: TRect;
-  var TextBounds: TRect; AAngle: Integer; HAlign: TAlignment;
+  out TextBounds: TRect; AAngle: Integer; HAlign: TAlignment;
   VAlign: TJvTFVAlignment; ATxt: string);
 var
 //  LogFont: TLogFont;
   TxtRect: TRect;
-  Flags: UINT;
-  PTxt: PChar;
-  ClipRgn: HRgn;
+//  Flags: UINT;
+//  PTxt: PChar;
+//  ClipRgn: HRgn;
   TextLeft, TextTop: Integer;
   ts: TTextStyle;
 begin
@@ -726,49 +726,6 @@ begin
   //ARect := TxtRect;
 end;
 
-(*
-procedure DrawAngleText(ACanvas: TCanvas; HostRect: TRect;
-  var TextBounds: TRect; AAngle: Integer; HAlign: TAlignment;
-  VAlign: TJvTFVAlignment; ATxt: string);
-var
-  LogFont: TLogFont;
-  TxtRect: TRect;
-  Flags: UINT;
-  PTxt: PChar;
-  ClipRgn: HRgn;
-  TextLeft,
-    TextTop: Integer;
-begin
-  //TxtRect := ARect;
-  //CalcTextPos(TxtRect, ACanvas.Font, AAngle, HAlign, VAlign, ATxt);
-  CalcTextPos(HostRect, TextLeft, TextTop, TextBounds, ACanvas.Font, AAngle,
-    HAlign, VAlign, ATxt);
-  Windows.GetObject(ACanvas.Font.Handle, SizeOf(LogFont), @LogFont);
-  LogFont.lfEscapement := AAngle;
-  LogFont.lfOrientation := LogFont.lfEscapement;
-  ACanvas.Font.Handle := CreateFontIndirect(LogFont);
-  Flags := DT_NOPREFIX or DT_LEFT or DT_TOP or DT_NOCLIP or DT_SINGLELINE;
-
-  PTxt := StrAlloc((Length(ATxt) + 4) * SizeOf(Char));
-  StrPCopy(PTxt, ATxt);
-  //ClipRgn := Windows.CreateRectRgn(ARect.Left, ARect.Top,
-    //                               ARect.Right, ARect.Bottom);
-  ClipRgn := Windows.CreateRectRgn(HostRect.Left, HostRect.Top,
-    HostRect.Right, HostRect.Bottom);
-  Windows.SelectClipRgn(ACanvas.Handle, ClipRgn);
-
-  //Windows.DrawText(ACanvas.Handle, PTxt, -1, TxtRect, Flags);
-  TxtRect := Rect(TextLeft, TextTop, TextLeft + 1, TextTop + 1);
-  Windows.DrawText(ACanvas.Handle, PTxt, -1, TxtRect, Flags);
-
-  Windows.SelectClipRgn(ACanvas.Handle, 0);
-  Windows.DeleteObject(ClipRgn);
-  StrDispose(PTxt);
-  ACanvas.Font.Handle := 0;
-
-  //ARect := TxtRect;
-end;
-*)
 function RectWidth(ARect: TRect): Integer;
 begin
   Result := ARect.Right - ARect.Left;

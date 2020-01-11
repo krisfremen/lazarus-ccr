@@ -431,9 +431,11 @@ begin
 end;
 
 function TJvTFGantt.ClientCursorPos: TPoint;
+var
+  P: TPoint = (X:0; Y:0);
 begin
-  GetCursorPos(Result);
-  Result := ScreenToClient(Result);
+  GetCursorPos(P);
+  Result := ScreenToClient(P);
 end;
 
 function TJvTFGantt.ValidMouseAtDesignTime: Boolean;
@@ -534,7 +536,7 @@ procedure TJvTFGanttScrollBar.UpdateRange;
 var
   Info: TScrollInfo;
 begin
-  FillChar(Info, SizeOf(Info), 0);
+  FillChar(Info{%H-}, SizeOf(Info), 0);
   with Info do
   begin
     cbSize := SizeOf(Info);

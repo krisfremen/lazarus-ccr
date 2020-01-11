@@ -31,7 +31,7 @@ unit JvTFMonths;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType, //LMessages,
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   JvTFGlance, JvTFUtils, JvTFManager;
 

@@ -54,7 +54,7 @@ type
     procedure Put(Row, Col: Integer; Data: NativeInt);
     function Get(Row, Col: Integer): NativeInt;
     function FindQuantum(Row, Col: Integer;
-      var Prev, Curr: PSMQuantum; var RowExists: Boolean): Boolean;
+      out Prev, Curr: PSMQuantum; out RowExists: Boolean): Boolean;
   public
     destructor Destroy; override;
     procedure Clear;
@@ -81,7 +81,7 @@ procedure TJvTFSparseMatrix.Clear;
 var
   P, CurrRow, CurrCol: PSMQuantum;
 begin
-  CurrRow := PSMQuantum(FMatrix.Data);
+  CurrRow := {%H-}PSMQuantum(FMatrix.Data);
 
   while CurrRow <> nil do
   begin
@@ -94,7 +94,7 @@ begin
     end;
 
     P := CurrRow;
-    CurrRow := PSMQuantum(CurrRow^.Data);
+    CurrRow := {%H-}PSMQuantum(CurrRow^.Data);
     Dispose(P);
   end;
 
@@ -108,7 +108,7 @@ begin
   DestMatrix.Clear;
   DestMatrix.NullValue := NullValue;
 
-  CurrRow := PSMQuantum(FMatrix.Data);
+  CurrRow := {%H-}PSMQuantum(FMatrix.Data);
 
   while CurrRow <> nil do
   begin
@@ -119,7 +119,7 @@ begin
       CurrCol := CurrCol^.Link;
     end;
 
-    CurrRow := PSMQuantum(CurrRow^.Data);
+    CurrRow := {%H-}PSMQuantum(CurrRow^.Data);
   end;
 end;
 
@@ -128,7 +128,7 @@ var
   CurrRow, CurrCol: PSMQuantum;
 begin
   DumpList.Clear;
-  CurrRow := PSMQuantum(FMatrix.Data);
+  CurrRow := {%H-}PSMQuantum(FMatrix.Data);
   DumpList.BeginUpdate;
   try
     while CurrRow <> nil do
@@ -141,7 +141,7 @@ begin
           IntToStr(CurrCol^.Data));
         CurrCol := CurrCol^.Link;
       end;
-      CurrRow := PSMQuantum(CurrRow^.Data);
+      CurrRow := {%H-}PSMQuantum(CurrRow^.Data);
     end;
   finally
     DumpList.EndUpdate;
@@ -149,18 +149,18 @@ begin
 end;
 
 function TJvTFSparseMatrix.FindQuantum(Row, Col: Integer;
-  var Prev, Curr: PSMQuantum; var RowExists: Boolean): Boolean;
+  out Prev, Curr: PSMQuantum; out RowExists: Boolean): Boolean;
 begin
-  Prev := @FMatrix;
-  Curr := PSMQuantum(FMatrix.Data);
   Result := False;
+  Prev := @FMatrix;
+  Curr := {%H-}PSMQuantum(FMatrix.Data);
   RowExists := False;
 
   // Find Row Header
   while (Curr <> nil) and (Curr^.Index < Row) do
   begin
     Prev := Curr;
-    Curr := PSMQuantum(Curr^.Data);
+    Curr := {%H-}PSMQuantum(Curr^.Data);
   end;
 
   // If Row Header found, then find col
@@ -217,7 +217,7 @@ begin
       P^.Index := Row;
       P^.Link := nil;
       P^.Data := Prev^.Data;
-      PSMQuantum(Prev^.Data) := P;
+      {%H-}PSMQuantum(Prev^.Data) := P;
       Prev := P;
     end;
 
@@ -246,7 +246,7 @@ procedure TJvTFSparseMatrix.Pack;
 var
   P, Prev, CurrRow: PSMQuantum;
 begin
-  CurrRow := PSMQuantum(FMatrix.Data);
+  CurrRow := {%H-}PSMQuantum(FMatrix.Data);
   Prev := @FMatrix;
 
   while CurrRow <> nil do
@@ -254,14 +254,14 @@ begin
     if CurrRow^.Link <> nil then
     begin
       Prev := CurrRow;
-      CurrRow := PSMQuantum(CurrRow^.Data);
+      CurrRow := {%H-}PSMQuantum(CurrRow^.Data);
     end
     else
     begin
       P := CurrRow;
       Prev^.Data := CurrRow^.Data;
       Dispose(P);
-      CurrRow := PSMQuantum(Prev^.Data);
+      CurrRow := {%H-}PSMQuantum(Prev^.Data);
     end;
   end;
 end;

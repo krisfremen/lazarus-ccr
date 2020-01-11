@@ -539,7 +539,7 @@ type
     function ValidCell(Col, Row: Integer): Boolean;
 
     procedure WMEraseBkgnd(var Msg: TLMessage); message LM_ERASEBKGND;
-    procedure CMCtl3DChanged(var Msg: TLMessage); message CM_CTL3DCHANGED;
+//    procedure CMCtl3DChanged(var Msg: TLMessage); message CM_CTL3DCHANGED;
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ImageListChange(Sender: TObject);
@@ -590,7 +590,7 @@ type
 
     function PicsToDraw(ACell: TJvTFGlanceCell): Boolean;
     procedure GetPicsWidthHeight(ACell: TJvTFGlanceCell; PicBuffer: Integer;
-      Horz: Boolean; var PicsWidth, PicsHeight: Integer);
+      Horz: Boolean; out PicsWidth, PicsHeight: Integer);
     function ValidPicIndex(PicIndex: Integer): Boolean;
 
     // Drawing event dispatch methods
@@ -609,13 +609,6 @@ type
 
     procedure SchedNamesChange(Sender: TObject);
 
-    {$IF LCL_FullVersion >= 1080000}
-    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
-      const AXProportion, AYProportion: Double); override;
-    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
-      const AProportion: Double); override;
-    {$IFEND}
-
     property SelAppt: TJvTFAppt read FSelAppt write SetSelAppt;
     property AllowCustomDates: Boolean read FAllowCustomDates  write FAllowCustomDates;
     // configuration properties and events
@@ -625,6 +618,17 @@ type
     property OriginDate: TDate read FOriginDate write SetOriginDate;
     property OnConfigCells: TNotifyEvent read FOnConfigCells write FOnConfigCells;
     property StartOfWeek: TTFDayOfWeek read FStartOfWeek write SetStartOfWeek default dowSunday;
+
+    { lcl scaling }
+  {$IF LCL_FullVersion >= 1080000}
+  protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+  public
+    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+  {$IFEND}
+
   public
     function GetTFHintClass: TJvTFHintClass; dynamic;
 
@@ -640,7 +644,7 @@ type
     function GetDataWidth: Integer; dynamic;
     function GetDataHeight: Integer; dynamic;
 
-    procedure SplitRects(Col, Row: Integer; var ParentRect, SubRect: TRect);
+    procedure SplitRects(Col, Row: Integer; out ParentRect, SubRect: TRect);
     function CellRect(ACell: TJvTFGlanceCell): TRect;
     function WholeCellRect(Col, Row: Integer): TRect;
     function TitleRect: TRect;
@@ -753,7 +757,7 @@ type
     procedure ParentReconfig; virtual;
     procedure EnsureCol(ACol: Integer);
     procedure EnsureRow(ARow: Integer);
-    procedure MouseAccel(X, Y: Integer); virtual;
+    procedure MouseAccel({%H-}X, {%H-}Y: Integer); virtual;
     procedure GetDistinctAppts(ApptList: TStringList);
 
     procedure FinishEditAppt; virtual;
@@ -780,10 +784,10 @@ type
     property Appts[Index: Integer]: TJvTFAppt read GetAppt;
     function ScheduleCount: Integer;
     property Schedules[Index: Integer]: TJvTFSched read GetSchedule;
-    function GetApptAt(X, Y: Integer): TJvTFAppt; virtual;
+    function GetApptAt({%H-}X, {%H-}Y: Integer): TJvTFAppt; virtual;
 
-    function CanScrollCell(ADir: TJvTFVScrollDir): Boolean; virtual;
-    procedure ScrollCell(ADelta: Integer); virtual;
+    function CanScrollCell({%H-}ADir: TJvTFVScrollDir): Boolean; virtual;
+    procedure ScrollCell({%H-}ADelta: Integer); virtual;
   published
     property RepeatGrouped: Boolean read FRepeatGrouped write SetRepeatGrouped default True;
     property ShowSchedNamesInHint: Boolean read FShowSchedNamesInHint write SetShowSchedNamesInHint default True;
@@ -1522,6 +1526,7 @@ begin
   end;
 end;
 
+(******************** NOT CONVERTED ***
 procedure TJvTFCustomGlance.CMCtl3DChanged(var Msg: TLMessage);
 begin
   if FBorderStyle = bsSingle then
@@ -1529,6 +1534,7 @@ begin
     RecreateWnd(self);
   inherited;
 end;
+************************************)
 
 procedure TJvTFCustomGlance.CreateParams(var Params: TCreateParams);
 const
@@ -2832,7 +2838,7 @@ begin
 end;
 
 procedure TJvTFCustomGlance.GetPicsWidthHeight(ACell: TJvTFGlanceCell;
-  PicBuffer: Integer; Horz: Boolean; var PicsWidth, PicsHeight: Integer);
+  PicBuffer: Integer; Horz: Boolean; out PicsWidth, PicsHeight: Integer);
 var
   I, PicIndex: Integer;
 begin
@@ -3190,7 +3196,7 @@ begin
 end;
 
 procedure TJvTFCustomGlance.SplitRects(Col, Row: Integer;
-  var ParentRect, SubRect: TRect);
+  out ParentRect, SubRect: TRect);
 var
   ACell: TJvTFGlanceCell;
   WorkRect: TRect;

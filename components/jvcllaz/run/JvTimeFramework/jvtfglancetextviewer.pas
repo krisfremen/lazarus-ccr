@@ -414,7 +414,7 @@ end;
 procedure TJvTFGVTextControl.PaintTo(ACanvas: TCanvas; DrawInfo: TJvTFGlTxtVwDrawInfo);
 var
   I, NextLineTop, LastLine, lLine: Integer;
-  aRect, lLineRect, TxtRect, BtnRect: TRect;
+  aRect, lLineRect, TxtRect: TRect;
   Flags: UINT;
   Txt: string;
   Appt: TJvTFAppt;
@@ -573,7 +573,7 @@ begin
   // If the control is being moved, we keep track of when this happened.
   // See in MouseUp for details of usage of this value.
   if (Left <> ALeft) or (Top <> ATop) then
-    FWasMovedTicks := GetTickCount
+    FWasMovedTicks := GetTickCount64
   else
     FWasMovedTicks := 0;
 
@@ -763,7 +763,7 @@ begin
       // the change of location in SetBounds and if we get a MouseUp event
       // in less than the double click time, we know it's a because of a
       // double click and we trigger the appropriate event.
-      ticks := GetTickCount;
+      ticks := GetTickCount64;
       if (ticks - FWasMovedTicks < GetDoubleClickTime) then
       begin
         DoViewerDblClick;

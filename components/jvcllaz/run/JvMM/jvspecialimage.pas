@@ -123,7 +123,6 @@ var
   C, C2: TFPColor;
   Dest: TBitmap;
   Val: Integer;
-  Tmp: TFPColor;
   IntfImg: TLazIntfImage;
 begin
   if FWorking or (csLoading in ComponentState) or (csDestroying in ComponentState) then
