@@ -296,6 +296,8 @@ type
     property Action;
     property Align default alTop;
     property Anchors;
+    property BorderSpacing;
+    property Color;
     property Constraints;
     property Cursor;
     property Enabled;
@@ -309,7 +311,6 @@ type
     property ShowHint;
     property TabOrder;
     property TabStop;
-    property Color;
     // triggered when the display is scrolled or when the left-most date changes
     property OnChange;
     // triggered when the control is clicked
