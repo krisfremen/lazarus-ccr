@@ -1652,10 +1652,7 @@ begin
   end;
   if (_PCP <> EmptyStr) then
   begin
-    _PCP := ExcludeTrailingPathdelimiter(ExpandFileName(_PCP));
-    //MyGetOpt returns parameters as UTF8
-    //inifiles uses system-encoding
-    ConfigFileDir := Utf8ToWinCP(_PCP);
+    ConfigFileDir := ExcludeTrailingPathdelimiter(ExpandFileName(_PCP));
   end;
   {$endif}
 end;
