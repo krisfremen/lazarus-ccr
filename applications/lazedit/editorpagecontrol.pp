@@ -81,7 +81,7 @@ type
     procedure SetEditorOptions(AValue: TEditorOptions);
     procedure UpdateEditorOptions(Sender: TObject);
     function GetUniquePageCaption(const AName: String): String;
-    procedure SetFileName(const Utf8Fn: String; const UpdateFileType: Boolean);
+    procedure SetFileName(const Fn: String; const UpdateFileType: Boolean);
     //function ExtToFileType(const Ext: String): TEditorFileType;
     function GuessFileType: TEditorFileType;
     function GuessSyntaxFromString(S: String): TEditorFileType;
@@ -96,10 +96,8 @@ type
     property EditorOptions: TEditorOptions read FEditorOptions write SetEditorOptions;
   public
     procedure SetDefaultKeyStrokes; override; // is public in parent class
-    procedure LoadFromFileAnsi(const AnsiFn: String; const AsTemplate: Boolean = False);
-    procedure LoadFromFileUtf8(const Utf8Fn: String; const AsTemplate: Boolean = False);
-    procedure SaveToFileAnsi(const AnsiFn: String);
-    procedure SaveToFileUtf8(const Utf8Fn: String);
+    procedure LoadFromFile(const Fn: String; const AsTemplate: Boolean = False);
+    procedure SaveToFile(const Fn: String);
     function IsUnused: Boolean;
     procedure SetHighlighterByFileType(const AFileType: TEditorFileType; const Permanent: Boolean = False);
     procedure MarkSelection(const Pre, Post: String);
@@ -227,14 +225,14 @@ end;
 
 {TEditor}
 
-procedure TEditor.SetFileName(const Utf8Fn: String; const UpdateFileType: Boolean);
+procedure TEditor.SetFileName(const Fn: String; const UpdateFileType: Boolean);
 begin
-  //debugln('TEditor.SetFileName: Utf8Fn = ',Utf8ToSys(Utf8Fn));
-  if (FFileName = Utf8Fn) and (Utf8Fn <> EmptyStr) then Exit;
-  FFileName := Utf8Fn;
+  //debugln('TEditor.SetFileName: Fn = ',Fn);
+  if (FFileName = Fn) and (Fn <> EmptyStr) then Exit;
+  FFileName := Fn;
   if Assigned(FPage) then
   begin
-    FPage.Caption := GetUniquePageCaption(Utf8Fn);
+    FPage.Caption := GetUniquePageCaption(Fn);
     //Debugln('TEditor.SetFileName: setting FPageCaption to ',FPage.Caption);
   end;
   //Unless you change ReadOnly, the scFileName will be removed from Changes in TSynEdit.DoOnStatuschange
@@ -643,20 +641,14 @@ begin
 end;
 
 
-//SynEdit deafults to UTF8 filenames when using LoadFromFile !!
-procedure TEditor.LoadFromFileAnsi(const AnsiFn: String; const AsTemplate: Boolean = False);
+procedure TEditor.LoadFromFile(const Fn: String; const AsTemplate: Boolean = False);
 begin
-  LoadFromFileUtf8(WinCPToUTF8(AnsiFn), AsTemplate);
-end;
-
-procedure TEditor.LoadFromFileUtf8(const Utf8Fn: String; const AsTemplate: Boolean = False);
-begin
-  //DebugLn('TEditor.LoadFromFile: Utf8Fn = ',Utf8ToSys(Utf8Fn));
+  //DebugLn('TEditor.LoadFromFile: Fn = ',Fn);
   try
-    Lines.LoadFromFile(Utf8Fn);
+    Lines.LoadFromFile(Fn);
     Modified := False;
     FNoFileTypeChangeOnSave := False;
-    SetFileName(Utf8Fn, AutoFileTypeDetection);
+    SetFileName(Fn, AutoFileTypeDetection);
     if AsTemplate then
     begin//blank out internal filename and update caption
       FFileName := EmptyStr;
@@ -674,12 +666,7 @@ begin
 end;
 
 
-procedure TEditor.SaveToFileAnsi(const AnsiFn: String);
-begin
-  SaveToFileAnsi(WinCPToUtf8(AnsiFn));
-end;
-
-procedure TEditor.SaveToFileUtf8(const Utf8Fn: String);
+procedure TEditor.SaveToFile(const Fn: String);
 var
   Attr: LongInt;
 begin
@@ -688,16 +675,16 @@ begin
     //TFileStreamUtf8.Create fails on hidden files on Windows,
     //because it uses FILE_ATTRIBUTE_NORMAL
     //see http://msdn.microsoft.com/en-us/library/windows/desktop/aa363858%28v=vs.85%29.aspx
-    Attr := FileGetAttrUTF8(Utf8Fn);
+    Attr := FileGetAttrUTF8(Fn);
     if (Attr = LongInt(feInvalidHandle)) then Attr := 0;
-    if ((Attr and faHidden) = faHidden) then FileSetAttrUtf8(Utf8Fn, Attr and (not faHidden));
+    if ((Attr and faHidden{%H-}) = faHidden{%H-}) then FileSetAttrUtf8(Fn, Attr and (not faHidden{%H-}));
     {$endif}
-    Lines.SaveToFile(Utf8Fn);
+    Lines.SaveToFile(Fn);
     {$ifdef windows}
-    if ((Attr and faHidden) = faHidden) then FileSetAttrUtf8(Utf8Fn, Attr or faHidden or faArchive);
+    if ((Attr and faHidden{%H-}) = faHidden{%H-}) then FileSetAttrUtf8(Fn, Attr or faHidden{%H-} or faArchive);
     {$endif}
     Modified := False;
-    SetFileName(Utf8Fn, AutoFileTypeDetection and (not FNoFileTypeChangeOnSave));
+    SetFileName(Fn, AutoFileTypeDetection and (not FNoFileTypeChangeOnSave));
   except
     Modified := True;
     SetFileName(EmptyStr, AutoFileTypeDetection and (not FNoFileTypeChangeOnSave));
@@ -723,8 +710,8 @@ end;
 
 procedure TEditor.MarkSelection(const Pre, Post: String);
 var
-  BB, BE, LC: TPoint;
-  BackwardsSel, HadSelection: Boolean;
+  BB, BE: TPoint;
+  HadSelection: Boolean;
 begin
   //Putting all this in BeginUpdate/EndUpdate ensures that all actions taken here
   //can be undone in one undo operation (otherwise it would take 2 or 3)
@@ -734,7 +721,6 @@ begin
     //than using SelStart and SelLength (like the old code did)
     BB := BlockBegin;
     BE := BlockEnd;
-    BackwardsSel := IsBackwardSel;
     //In an newly create TSynEdit without any text SetTextBetweenPoints does not
     //adjust BlockBegin/BlockEnd at all, so force a line and set the caret at the top
     if (Lines.Count = 0) then   //fixed in trunk, remove after 2.2 release

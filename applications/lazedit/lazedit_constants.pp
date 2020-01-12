@@ -45,7 +45,7 @@ Uses Classes, SysUtils, LCLProc;
 const
   AppName = 'LazEdit';
   AboutTitle = 'About ' + AppName;
-  AppVersion = 'Version 2.2';
+  AppVersion = 'Version 2.3';
   CopyLeftStatement = 'Copyright (c) 2011, 2020 by Bart Broersma, FlyingSheep Inc. and'+ LineEnding +
                       'Felipe Monteiro de Carvalho';
   MetaGeneratorName = AppName + #32 + AppVersion;

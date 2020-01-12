@@ -358,7 +358,7 @@ type
     procedure acLayoutUnderlineExecute(Sender: TObject);
     procedure FindReplaceDialogClose(Sender: TObject);
 
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormClose(Sender: TObject; var {%H-}CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -566,7 +566,6 @@ const pXY  = 0;   //Panels constanten
       opt_long_prefix = '--';
       opt_short_prefix = '-';
       opt_long_PCP = 'pcp';  //--pcp=path/to/configfile
-      opt_short_blankpage = 'n';
 
 
 { TLazEditMainForm }
@@ -2116,7 +2115,7 @@ begin
   if Assigned(Ed) then
   begin
     try
-      Ed.LoadFromFileUtf8(Fn, AsTemplate);
+      Ed.LoadFromFile(Fn, AsTemplate);
       //OnEditorStatusChange(Ed, scAll);
       MruList.Add(Fn);
       Result := True;
@@ -2139,7 +2138,7 @@ begin
       if (Fn = EmptyStr) then Exit(IoCancel);
     end;
     try
-      Editor.SaveToFileUtf8(Fn);
+      Editor.SaveToFile(Fn);
       //OnEditorStatusChange(Editor, scAll);
       MruList.Add(Fn);
       Result := IoSuccess;
