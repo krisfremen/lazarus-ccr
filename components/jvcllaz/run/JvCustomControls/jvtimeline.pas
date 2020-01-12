@@ -51,6 +51,20 @@ uses
   Graphics, Controls, Forms, StdCtrls, ExtCtrls, ImgList,
   JvConsts, JvComponent;
 
+const
+  DEFAULT_TL_ITEM_MARGIN = 2;
+  DEFAULT_TL_ITEM_WIDTH = 50;
+  DEFAULT_TL_DAY_LINELENGTH = 4;
+  DEFAULT_TL_DAY_TEXT_TOP = 5;
+  DEFAULT_TL_MONTH_LINELENGTH = 10;
+  DEFAULT_TL_MONTH_TEXT_TOP = 24;
+  DEFAULT_TL_TOP_OFFSET = 21;
+  DEFAULT_TL_YEAR_WIDTH = 140;
+  DEFAULT_TL_YEAR_LINELENGTH = 24;
+  DEFAULT_TL_YEAR_FONT_SIZE = 18;
+  DEFAULT_TL_YEAR_TEXT_TOP = 32;
+  DEFAULT_TL_SCROLL_EDGE_OFFSET = 8;
+
 type
   TJvTimeItems = class;
   TJvCustomTimeLine = class;
@@ -77,7 +91,6 @@ type
     FSelected: Boolean;
     FEnabled: Boolean;
     FOnDestroy: TNotifyEvent;
-    function IsStoredWidth: Boolean;
     procedure SetEnabled(Value: Boolean);
     procedure SetImageOffset(Value: Integer);
     procedure SetStyle(Value: TJvTimeItemType);
@@ -115,7 +128,7 @@ type
     property Selected: Boolean read FSelected write SetSelected default False;
     property TextColor: TColor read FTextColor write SetTextColor default clBlack;
     property WidthAs: TJvTimeItemType read FStyle write SetStyle default asPixels;
-    property Width: Integer read FWidth write SetWidth stored IsStoredWidth;
+    property Width: Integer read FWidth write SetWidth default DEFAULT_TL_ITEM_WIDTH;
     property OnDestroy: TNotifyEvent read FOnDestroy write FOnDestroy;
   end;
 
@@ -191,7 +204,6 @@ type
     FList: TList;
     FBmp: TBitmap;
     FYearWidth: TJvYearWidth;
-//    FBorderStyle: TBorderStyle;
     FUpdate: Integer;
     FMonthWidth: Extended;
     FTopOffset: Integer;
@@ -257,13 +269,9 @@ type
     FShowSelection: Boolean;
     FOnItemMouseMove: TJvItemMouseMove;
     FSupportsColor: TColor;
-    function IsStoredTopOffset: Boolean;
-    function IsStoredYearFont: Boolean;
-    function IsStoredYearWidth: Boolean;
     procedure SetHelperYears(Value: Boolean);
     procedure SetFlat(Value: Boolean);
     procedure SetScrollArrows(Value: TJvScrollArrows);
-//    procedure SetBorderStyle(Value: TBorderStyle);
     procedure SetYearFont(Value: TFont);
     procedure SetYearWidth(Value: TJvYearWidth);
     procedure SetFirstDate(Value: TDate);
@@ -370,10 +378,6 @@ type
     property Selected: TJvTimeItem read FSelectedItem write SetSelectedItem;
     property ShowHiddenItemHints: Boolean read FShowHiddenItemHints write
       SetShowHiddenItemHints default True;
-    {
-    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle
-      default bsSingle;
-      }
     property DragLine: Boolean read FDragLine write FDragLine default True;
     property ShowItemHint: Boolean read FShowItemHint write FShowItemHint default False;
     property AutoSize: Boolean read FAutoSize write SetAutoSize default False;
@@ -381,9 +385,9 @@ type
     property MultiSelect: Boolean read FMultiSelect write SetMultiSelect default False;
     property Flat: Boolean read FFlat write SetFlat default False;
 //    property Hint: TTranslateString read GetHint write SetHint;
-    property YearFont: TFont read FYearFont write SetYearFont stored IsStoredYearFont;
-    property YearWidth: TJvYearWidth read FYearWidth write SetYearWidth stored IsStoredYearWidth;
-    property TopOffset: Integer read FTopOffset write SetTopOffset stored IsStoredTopOffset;
+    property YearFont: TFont read FYearFont write SetYearFont;
+    property YearWidth: TJvYearWidth read FYearWidth write SetYearWidth default DEFAULT_TL_YEAR_WIDTH;
+    property TopOffset: Integer read FTopOffset write SetTopOffset default DEFAULT_TL_TOP_OFFSET;
     property ShowMonthNames: Boolean read FShowMonths write SetShowMonths;
     property ShowSelection: Boolean read FShowSelection write SetShowSelection default False;
     property ShowDays: Boolean read FShowDays write SetShowDays default False;
@@ -416,7 +420,6 @@ type
     property OnItemMoving: TJvItemMovingEvent read FOnItemMoving write FOnItemMoving;
 
   { LCL scaling }
-  {$IF LCL_FullVersion >= 1080000}
   protected
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
@@ -426,7 +429,6 @@ type
     {$IF LCL_FullVersion >= 2010000}
     procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
     {$IFEND}
-  {$IFEND}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -539,20 +541,6 @@ uses
   Math, Types, DateUtils, Themes,
   JvJCLUtils, JvJVCLUtils;
 
-const
-  DEFAULT_ITEM_MARGIN = 2;
-  DEFAULT_ITEM_WIDTH = 50;
-  DEFAULT_DAY_LINELENGTH = 4;
-  DEFAULT_DAY_TEXT_TOP = 5;
-  DEFAULT_MONTH_LINELENGTH = 10;
-  DEFAULT_MONTH_TEXT_TOP = 24;
-  DEFAULT_TOP_OFFSET = 21;
-  DEFAULT_YEAR_WIDTH = 140;
-  DEFAULT_YEAR_LINELENGTH = 24;
-  DEFAULT_YEAR_FONT_SIZE = 18;
-  DEFAULT_YEAR_TEXT_TOP = 32;
-  DEFAULT_SCROLL_EDGE_OFFSET = 8;
-
 var
   FInitRepeatPause: Cardinal = 140;
   FRepeatPause: Cardinal = 30;
@@ -604,7 +592,7 @@ begin
   FSelected := False;
   FImageIndex := ACollection.Count - 1;
   FLevel := FImageIndex;
-  FWidth := DEFAULT_ITEM_WIDTH;    // will be scaled by TimeLine
+  FWidth := DEFAULT_TL_ITEM_WIDTH;    // will be scaled by TimeLine
   FStyle := asPixels;
   FImageOffset := 0;
   Update;
@@ -743,12 +731,6 @@ begin
   end;
 end;
 
-function TJvTimeItem.IsStoredWidth: Boolean;
-begin
-  Result := (WidthAs = asDays) or
-    (FWidth <> FParent.FTimeLine.Scale96ToFont(DEFAULT_ITEM_WIDTH));
-end;
-
 procedure TJvTimeItem.SetWidth(Value: Integer);
 begin
   if FWidth <> Value then
@@ -813,8 +795,6 @@ end;
 function TJvTimeItems.Add: TJvTimeItem;
 begin
   Result := TJvTimeItem(inherited Add);
-  if Result.WidthAs = asPixels then
-    Result.Width := FTimeLine.Scale96ToFont(Result.Width);
   Update(Result);
 end;
 
@@ -1150,15 +1130,12 @@ begin
   FBmp := TBitmap.Create;
   FList := TList.Create;
   FHelperYears := True;
-  ControlStyle := [csOpaque, csClickEvents, csDoubleClicks,
-    csCaptureMouse, csDisplayDragImage];
-//  FBorderStyle := bsSingle;
+  ControlStyle := [csOpaque, csClickEvents, csDoubleClicks, csCaptureMouse, csDisplayDragImage];
   Color := clWhite;
   SetLength(FYearList, 0);
-//  FYearList := TList.Create;
   FScrollArrows := [scrollLeft..scrollDown];
   FSupportLines := False;
-  FTopOffset := Scale96ToFont(DEFAULT_TOP_OFFSET);
+  FTopOffset := DEFAULT_TL_TOP_OFFSET;
   FShowDays := False;
   FItemHeight := 0;
   FTopLevel := 0;
@@ -1166,10 +1143,10 @@ begin
   FShowItemHint := False;
   FShowHiddenItemHints := True;
   FFlat := False;
-  FYearWidth := Scale96ToFont(DEFAULT_YEAR_WIDTH);
-  FYearTextTop := Scale96ToFont(DEFAULT_YEAR_TEXT_TOP);
-  FMonthTextTop := Scale96ToFont(DEFAULT_MONTH_TEXT_TOP);
-  FDayTextTop := Scale96ToFont(DEFAULT_DAY_TEXT_TOP);
+  FYearWidth := DEFAULT_TL_YEAR_WIDTH;
+  FYearTextTop := DEFAULT_TL_YEAR_TEXT_TOP;
+  FMonthTextTop := DEFAULT_TL_MONTH_TEXT_TOP;
+  FDayTextTop := DEFAULT_TL_DAY_TEXT_TOP;
   FMonthWidth := FYearWidth / 12;
   FMultiSelect := False;
   FDragLine := True;
@@ -1177,15 +1154,15 @@ begin
   FImageChangeLink := TChangeLink.Create;
   FImageChangeLink.OnChange := @ImagesChanged;
   FYearFont := TFont.Create;
-  FYearFont.Size := DEFAULT_YEAR_FONT_SIZE;    // is scaled automatically
+  FYearFont.Size := DEFAULT_TL_YEAR_FONT_SIZE;
   FYearFont.OnChange := @DoYearFontChange;
-  FYearLineLength := Scale96ToFont(DEFAULT_YEAR_LINELENGTH);
-  FMonthLineLength := Scale96ToFont(DEFAULT_MONTH_LINELENGTH);
-  FDayLineLength := Scale96ToFont(DEFAULT_DAY_LINELENGTH);
-  FItemMargin := Scale96ToFont(DEFAULT_ITEM_MARGIN);
+  FYearLineLength := DEFAULT_TL_YEAR_LINELENGTH;
+  FMonthLineLength := DEFAULT_TL_MONTH_LINELENGTH;
+  FDayLineLength := DEFAULT_TL_DAY_LINELENGTH;
+  FItemMargin := DEFAULT_TL_ITEM_MARGIN;
   FNewHeight := 0;
   FAutoSize := False;
-  FScrollEdgeOffset := Scale96ToFont(DEFAULT_SCROLL_EDGE_OFFSET);
+  FScrollEdgeOffset := DEFAULT_TL_SCROLL_EDGE_OFFSET;
   FScrollWidth := GetSystemMetrics(SM_CXHSCROLL);
   FScrollHeight := GetSystemMetrics(SM_CXVSCROLL);
   UpdateOffset;
@@ -1199,7 +1176,6 @@ begin
   SetLength(FYearList, 0);
   FDragImages.Free;
   FCanvas.Free;
-//  FYearList.Free;
   FBmp.Free;
   FList.Free;
   FTimeItems.Free;
@@ -1209,7 +1185,6 @@ begin
   inherited Destroy;
 end;
 
-{$IF LCL_FullVersion >= 1080000}
 procedure TJvCustomTimeLine.DoAutoAdjustLayout(
   const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
@@ -1220,29 +1195,26 @@ begin
   inherited;
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if FItemHeight <> 0 then
-      FItemHeight := round(FItemHeight * AYProportion);
-    if IsStoredTopOffset then
-      FTopOffset := round(FTopOffset * AYProportion);
-    if IsStoredYearWidth then
-      FYearWidth := round(FYearWidth * AYProportion);
+    FItemHeight := round(FItemHeight * AYProportion);
+    SetTopOffset(round(FTopOffset * AYProportion));
+    SetYearWidth(round(FYearWidth * AXProportion));
 
     for i := 0 to FTimeItems.Count - 1 do
     begin
       item := TJvTimeItem(FTimeItems[i]);
-      if item.IsStoredWidth and (item.WidthAs = asPixels) then
+      if (item.WidthAs = asPixels) then
         item.Width := round(item.Width * AXProportion);
     end;
 
     // geometries, not stored
-    FYearLineLength := round(DEFAULT_YEAR_LINELENGTH * AYProportion);
-    FMonthLineLength := round(DEFAULT_MONTH_LINELENGTH * AYProportion);
-    FDayLineLength := round(DEFAULT_DAY_LINELENGTH * AYProportion);
-    FYearTextTop := round(DEFAULT_YEAR_TEXT_TOP * AYProportion);
-    FMonthTextTop := round(DEFAULT_MONTH_TEXT_TOP * AYProportion);
-    FDayTextTop := round(DEFAULT_DAY_TEXT_TOP * AYProportion);
-    FScrollEdgeOffset := round(DEFAULT_SCROLL_EDGE_OFFSET * AXProportion);
-    FItemMargin := round(DEFAULT_ITEM_MARGIN * AXProportion);
+    FYearLineLength := round(DEFAULT_TL_YEAR_LINELENGTH * AYProportion);
+    FMonthLineLength := round(DEFAULT_TL_MONTH_LINELENGTH * AYProportion);
+    FDayLineLength := round(DEFAULT_TL_DAY_LINELENGTH * AYProportion);
+    FYearTextTop := round(DEFAULT_TL_YEAR_TEXT_TOP * AYProportion);
+    FMonthTextTop := round(DEFAULT_TL_MONTH_TEXT_TOP * AYProportion);
+    FDayTextTop := round(DEFAULT_TL_DAY_TEXT_TOP * AYProportion);
+    FScrollEdgeOffset := round(DEFAULT_TL_SCROLL_EDGE_OFFSET * AXProportion);
+    FItemMargin := round(DEFAULT_TL_ITEM_MARGIN * AXProportion);
   end;
 end;
 
@@ -1261,7 +1233,6 @@ begin
   inherited;
   DoScaleFontPPI(FYearFont, AToPPI, AProportion);
 end;
-{$IFEND}
 
 procedure TJvCustomTimeLine.DoYearFontChange(Sender: TObject);
 begin
@@ -1339,21 +1310,6 @@ begin
   FArrows[scrollDown].Visible :=
     (scrollDown in ScrollArrows) and (FNewHeight >= Height)  and not AutoSize;
 end;
-                 {
-procedure TJvCustomTimeLine.SetBorderStyle(Value: TBorderStyle);
-begin
-  inherited;
-  exit;
-
-  if FBorderStyle <> Value then
-  begin
-    FBorderStyle := Value;
-//    Invalidate;
-    CreateWnd;
-//     RecreateWnd;   -- wp: Invalidate instead of RecreateWnd
-  end;
-end;
-}
 
 procedure TJvCustomTimeLine.SetTopLevel(Value: Integer);
 begin
@@ -1815,7 +1771,7 @@ begin
   if csDestroying in ComponentState then
     Exit;
   ACanvas.Pen.Width := 1;
-  if (FYearWidth >= 140) or (M mod 3 = 1) then
+  if (FYearWidth >= DEFAULT_TL_YEAR_WIDTH) or (M mod 3 = 1) then
     { draw every month only if it fits }
   begin
     ACanvas.MoveTo(StartAt, FTopOffset);
@@ -1989,9 +1945,9 @@ begin
     if M <> 1 then
     begin { not a new year, so it's a month }
       DrawMonth(ACanvas, I, M);
-      if FSupportLines and ((FYearWidth >= 140) or (M mod 3 = 1)) then
+      if FSupportLines and ((FYearWidth >= DEFAULT_TL_YEAR_WIDTH) or (M mod 3 = 1)) then
         DrawVertSupport(ACanvas, I);
-      if FShowMonths and (FYearWidth >= 140) then
+      if FShowMonths and (FYearWidth >= DEFAULT_TL_YEAR_WIDTH) then
         DrawMonthName(ACanvas, M, I);
       if FShowDays and (FYearWidth >= 1200) then
         DrawDays(ACanvas, MonthDays[IsLeapYear(Y), M], I);
@@ -2766,21 +2722,6 @@ begin
     if Items[I].Left >= ClientWidth - 8 then
       Exit;
   Result := False;
-end;
-
-function TJvCustomTimeLine.IsStoredTopOffset: Boolean;
-begin
-  Result := FTopOffset <> Scale96ToFont(DEFAULT_TOP_OFFSET);
-end;
-
-function TJvCustomTimeLine.IsStoredYearFont: Boolean;
-begin
-  Result := true;
-end;
-
-function TJvCustomTimeLine.IsStoredYearWidth: Boolean;
-begin
-  Result := FYearWidth <> Scale96ToFont(DEFAULT_YEAR_WIDTH);
 end;
 
 procedure TJvCustomTimeLine.SetHorzSupport(const Value: Boolean);
