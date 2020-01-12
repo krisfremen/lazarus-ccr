@@ -104,11 +104,6 @@ type
     FShowTodayIcon: Boolean;
     function IsStoredMaxDate: Boolean;
     function IsStoredMinDate: Boolean;
-    function IsStoredButtonWidth: Boolean;
-    function IsStoredDayWidth: Boolean;
-    function IsStoredIconDayDist: Boolean;
-    function GetDayWidth: Integer;
-    function GetIconDayDist: Integer;
     function GetRectForDate(ADate: TDate): TRect;
     function DateFromPos(APos: Integer): TDate;
     procedure DoTimer(Sender: TObject);
@@ -180,11 +175,11 @@ type
     procedure SetBorderStyle(Value: TBorderStyle); override;
 
     property BorderStyle: TBorderStyle read GetBorderStyle write SetBorderStyle default bsSingle;
-    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth stored IsStoredButtonWidth;
+    property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default cTMTimeLineButtonWidth;
     property Cursor;
-    property DayWidth: Integer read GetDayWidth write SetDayWidth stored IsStoredDayWidth;
+    property DayWidth: Integer read FDayWidth write SetDayWidth default cTMTimeLineDayWidth;
     property ObjectsFontStyle: TFontStyles read FObjectsFontStyle write SetObjectsFontStyle default [fsUnderline];
-    property IconDayDistance: Integer read GetIconDayDist write SetIconDayDist stored IsStoredIconDayDist;
+    property IconDayDistance: Integer read FIconDayDist write SetIconDayDist default cTMTimeLineIconDayDist;
     property ImageCursor: TCursor read FImageCursor write SetImageCursor default crHandPoint;
     property Images: TImageList read FImages write SetImages;
     property LargeChange: Word read FLargeChange write SetLargeChange default 30;
@@ -215,7 +210,6 @@ type
     property Align default alTop;
 
   { lcl scaling }
-  {$IF LCL_FullVersion >= 1080000}
   protected
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
@@ -225,7 +219,6 @@ type
     {$IF LCL_FullVersion >= 2010000}
     procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
     {$IFEND}
-  {$IFEND}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -454,8 +447,8 @@ begin
   FMonthFont.OnChange := @MonthFontChanged;
 
   FObjectsFontStyle := [fsUnderline];
-  FDayWidth := -1;
-  FIconDayDist := -1;
+  FDayWidth := cTMTimeLineDayWidth;
+  FIconDayDist := cTMTimeLineIconDayDist;
   FDate := SysUtils.Date - 7;
   FSelDate := FDate - 1;
   FImageCursor := crHandPoint;
@@ -470,7 +463,7 @@ begin
   Font.Size := 0;
   Font.Name := 'default';
 
-  FButtonWidth := Scale96ToFont(cTMTimeLineButtonWidth);
+  FButtonWidth := cTMTimeLineButtonWidth;
 
   FLeftBtn := TSpeedButton.Create(Self);
   with FLeftBtn do
@@ -926,40 +919,9 @@ begin
   Result := FMinDate <> 0;
 end;
 
-function TJvCustomTMTimeLine.IsStoredButtonWidth: Boolean;
-begin
-  Result := ButtonWidth <> Scale96ToFont(cTMTimeLineButtonWidth);
-end;
-
-function TJvCustomTMTimeLine.IsStoredDayWidth: Boolean;
-begin
-  Result := FDayWidth >= 0;
-end;
-
-function TJvCustomTMTimeLine.GetDayWidth: Integer;
-begin
-  if IsStoredDayWidth then
-    Result := FDayWidth
-  else
-    Result := Scale96ToFont(cTMTimeLineDayWidth);
-end;
-
-function TJvCustomTMTimeLine.GetIconDayDist: Integer;
-begin
-  if IsStoredIconDayDist then
-    Result := FIconDayDist
-  else
-    Result := Scale96ToFont(cTMTimelineIconDayDist);
-end;
-
-function TJvCustomTMTimeLine.IsStoredIconDayDist: Boolean;
-begin
-  Result := FIconDayDist >= 0;
-end;
-
 procedure TJvCustomTMTimeline.SetDayWidth(const Value: Integer);
 begin
-  if (FDayWidth <> Value) and (Value <> 0) and (Value >= -1) then
+  if (FDayWidth <> Value) and (Value > 0) then
   begin
     FDayWidth := Value;
     Invalidate;
@@ -1072,7 +1034,6 @@ begin
     FOnChange(Self);
 end;
 
-{$IF LCL_FullVersion >= 1080000}
 procedure TJvCustomTMTimeLine.DoAutoAdjustLayout(
   const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
@@ -1081,19 +1042,11 @@ begin
 
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if IsStoredDayWidth then
-      FDayWidth := Round(FDayWidth * AXProportion);
-    if IsStoredIconDayDist then
-      FIconDayDist := Round(FIconDayDist * AYProportion);
-    if IsStoredButtonWidth then begin
-      FButtonWidth := Round(FButtonWidth * AXProportion);
-      FLeftBtn.Width := FButtonWidth;
-      FRightBtn.Width := FButtonWidth;
-    end;
-    Invalidate;
+    FDayWidth := Round(FDayWidth * AXProportion);
+    FIconDayDist := Round(FIconDayDist * AYProportion);
+    SetButtonWidth(Round(FButtonWidth * AXProportion));
   end;
 end;
-{$IFEND}
 
 {$IF LCL_FullVersion >= 1080000}
 procedure TJvCustomTMTimeLine.ScaleFontsPPI(
