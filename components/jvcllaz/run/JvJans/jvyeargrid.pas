@@ -173,6 +173,7 @@ type
     procedure DrawTextInCell(aCol, aRow: Integer; aRect: TRect; {%H-}aState: TGridDrawState); override;
     function SelectCell(ACol, ARow: Integer): Boolean; override;
     procedure DblClick; override;
+    procedure FontChanged(Sender: TObject); override;
     procedure DoPrepareCanvas(aCol,aRow:Integer; {%H-}aState: TGridDrawState); override;
     procedure SetAutoSize(Value: Boolean); override;
     procedure UpdateAllSizes;
@@ -188,6 +189,10 @@ type
     procedure ReadGridYear(Reader: TReader);
     procedure WriteGridYear({%H-}Writer: TWriter);
     procedure DefineProperties(Filer: TFiler); override;
+
+    { LCL scaling }
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -264,6 +269,7 @@ type
     property BorderSpacing;
     property BorderStyle;
     property Flat read GetFlat write SetFlat default true;
+    property Font;
     property ScrollBars;
     property TitleStyle;
   end;
@@ -1003,6 +1009,13 @@ begin
       mnuEditClick(nil);
 end;
 
+procedure TJvYearGrid.FontChanged(Sender: TObject);
+begin
+  UpdateAllSizes;
+  AdjustBounds;
+  Invalidate;
+end;
+
 procedure TJvYearGrid.SetBorderColor(const Value: TColor);
 begin
   if Value <> FBorderColor then
@@ -1291,6 +1304,7 @@ var
 begin
   if AutoSize then
   begin
+    Canvas.Font.Assign(Font);
     Canvas.Font.Style := [fsBold];
     if aoFirstRow in AutoSizeOptions then
       RowHeights[0] := GetHighestTextInRow(0) + CellMargins.Top + CellMargins.Bottom;
@@ -1530,6 +1544,7 @@ begin
 
   with Canvas do
   begin
+    Font.Assign(Self.Font);
     Font.Color := clBlack;
     if (ACol = 0) and (ARow = 0) then
       Font.Style := Font.Style + [fsBold]
@@ -1611,6 +1626,19 @@ begin
     ts := TextStyle;
     ts.Layout := tlCenter;
     TextRect(ARect, textLeft, (ARect.Top + ARect.Bottom - SExt.CY) div 2, S, ts);
+  end;
+end;
+
+procedure TJvYearGrid.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FCellMargins.Left := round(FCellMargins.Left * AXProportion);
+    FCellMargins.Right := round(FCellMargins.Right * AXProportion);
+    FCellMargins.Top := round(FCellMargins.Top * AYProportion);
+    FCellMargins.Bottom := round(FCellMargins.Bottom * AYProportion);
   end;
 end;
 
