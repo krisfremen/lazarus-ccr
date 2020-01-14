@@ -226,6 +226,17 @@ type
     property OnCollapse: TNotifyEvent read FOnCollapse write FOnCollapse;
     property OnExpand: TNotifyEvent read FOnExpand write FOnExpand;
 
+    { LCL scaling }
+  protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+  public
+    {$IF LCL_FullVersion >= 2010000}
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
+    {$IFEND}
+    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -1609,6 +1620,40 @@ begin
     end;
   end;
 end;
+
+{ LCL scaling }
+
+procedure TJvCustomRollOut.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FButtonHeight := round(FButtonHeight * AYProportion);
+    FChildOffset := round(FChildOffset * AXProportion);
+    FCWidth := round(FCWidth * AXProportion);
+    FCHeight := round(FCHeight * AYProportion);
+    FAWidth := round(FAWidth * AXProportion);
+    FAHeight := round(FAHeight * AYProportion);
+  end;
+end;
+
+{$IF LCL_FullVersion >= 2010000}
+procedure TJvCustomRollOut.FixDesignFontsPPI(const ADesignTimePPI: Integer);
+begin
+  inherited;
+  DoFixDesignFontPPI(FButtonFont, ADesignTimePPI);
+end;
+{$IFEND}
+
+procedure TJvCustomRollOut.ScaleFontsPPI(
+  {$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FButtonFont, AToPPI, AProportion);
+end;
+
 
 //=== { TJvRollOutAction } ===================================================
 
