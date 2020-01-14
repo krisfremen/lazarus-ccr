@@ -25,9 +25,12 @@ type
     FInCap: string;
     FOutCap: string;
     FButtonStyle: TButtonStyle;
+    FWidthChanged: Boolean;
+    FHeightChanged: Boolean;
     procedure DoToggleChange;
+    function IsStoredInCap: Boolean;
+    function IsStoredOutCap: Boolean;
     procedure SetToggleState(const AValue: boolean);
-{    procedure keepsize(Sender: TObject);}
     procedure SetIncolor(const AValue: TToggleColor);
     procedure SetOutColor(const AValue: TToggleColor);
     procedure SetBackLit(const AValue: boolean);
@@ -35,12 +38,17 @@ type
     procedure SetMarking(const AValue: boolean);
     procedure SetToggleStyle(const AValue: TToggleStyle);
     procedure MakeStyle;
+    procedure SetButtonStyle(const AValue: TButtonStyle);
     procedure SetInCap(const AValue: string);
     procedure SetOutCap(const AValue: string);
-    procedure SetButtonStyle(const AValue: TButtonStyle);
 
   protected
-   procedure Paint; override;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    procedure FontChanged(Sender: TObject); override;
+    procedure Paint; override;
+    procedure Resize; override;
+    procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -49,18 +57,20 @@ type
       AShift: TShiftState; X, Y: Integer);
 
   published
-    property ToggleState: Boolean read FToggleState write SetToggleState;
-    property ToggleStyle: TToggleStyle read FToggleStyle write SetToggleStyle;
-    property ButtonStyle: TButtonStyle read FButtonstyle
-      write SetButtonstyle default bsSquare;
+    property ToggleState: Boolean read FToggleState write SetToggleState default false;
+    property ToggleStyle: TToggleStyle read FToggleStyle write SetToggleStyle default tsVertical;
+    property ButtonStyle: TButtonStyle read FButtonstyle write SetButtonstyle default bsSquare;
     property BackLit: boolean read FBackLit write SetBackLit default false;
     property Marking: boolean read FMarking write SetMarking default true;
     property InColor: TToggleColor read FInColor write SetInColor default tcRed;
-    property InCap: string read FInCap write SetInCap;
+    property InCap: string read FInCap write SetInCap stored IsStoredInCap;
     property OutColor: TToggleColor read FOutColor write SetOutColor default tcGreen;
-    property OutCap: string read FOutCap write SetOutCap;
+    property OutCap: string read FOutCap write SetOutCap stored IsStoredOutCap;
 
     property OnToggleChange: TOnToggleChange read FOnToggleChange write FOnToggleChange;
+
+    property BorderSpacing;
+    property Font;
   end;
 
 
@@ -71,11 +81,16 @@ implementation
 constructor TJvJanToggle.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  Width := 24;
+  Height := 48;
+  {
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, CX, CY);
+    }
   ControlStyle := ControlStyle + [csReplicatable];
   FButtonStyle := bsSquare;
   MakeStyle;
   OnMouseDown := @ToggleMouseDown;
-//  onresize:=keepsize;
   FInColor := tcRed;
   FoutColor := tcGreen;
   FBackLit := false;
@@ -84,11 +99,34 @@ begin
   FOutCap := 'O';
 end;
 
-
 destructor TJvJanToggle.Destroy;
 begin
  //mycode
   inherited Destroy;
+end;
+
+procedure TJvJanToggle.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+    MakeStyle;
+end;
+
+procedure TJvJanToggle.FontChanged(Sender: TObject);
+begin
+  inherited;
+  Invalidate;
+end;
+
+function TJvJanToggle.IsStoredInCap: Boolean;
+begin
+  Result := FInCap <> 'I';
+end;
+
+function TJvJanToggle.IsStoredOutCap: Boolean;
+begin
+  Result := FOutCap <> 'O';
 end;
 
 procedure TJvJanToggle.MakeStyle;
@@ -96,20 +134,29 @@ begin
   case FToggleStyle of
     tsVertical:
       begin
-        Width := 24;
-        Height := 48;
+        if FWidthChanged then
+          SetBounds(Left, Top, Width, Width * 2)
+        else
+        if FHeightChanged then
+          Setbounds(Left, Top, Height div 2, Height)
+        else
+          exit;
         FIn := Rect(1, 1, Width-1, Width-2);
         FOut := Rect(1, Width, Width-2, Height-2);
       end;
     tsHorizontal:
       begin
-        Width := 48;
-        Height := 24;
+        if FWidthChanged then
+          SetBounds(Left, Top, Width, Width div 2)
+        else if FHeightChanged then
+          SetBounds(Left, Top, Height * 2, Height)
+        else
+          exit;
         FIn := Rect(1, 1, Height-2, Height-2);
         FOut := Rect(Height, 1, Width-2, Height-2);
       end;
   end;
-  Refresh;
+  Invalidate; //Refresh;
 end;
 
 procedure TJvJanToggle.DoToggleChange;
@@ -203,11 +250,12 @@ procedure TJvJanToggle.Paint;
     x, y, w, h: integer;
   begin
     with Canvas do begin
+      Font.Assign(Self.Font);
+      Font.Style := Font.Style + [fsBold];
       w := TextWidth(s);
       h := TextHeight(s);
       x := (R.Right - R.Left - w + 1) div 2;
       y := (R.Bottom - R.Top - h) div 2;
-      Font.Style := Font.Style + [fsBold];
       Pen.Color := clBlack;
       Brush.Style := bsClear;
       if FBacklit then
@@ -290,7 +338,7 @@ procedure TJvJanToggle.Paint;
           end;
       end;
       if FBackLit then DoLit(ARect, AColor, false);
-      if FMarking then btncap(ARect, s, AColor, false);
+      if FMarking then BtnCap(ARect, s, AColor, false);
     end;
   end;
 
@@ -298,7 +346,7 @@ begin
   with Canvas do begin
     Brush.Color := clSilver;
     Pen.Color := clBlack;
-    case FButtonstyle of
+    case FButtonStyle of
       bssquare: Rectangle(0, 0, Width, Height);
     end;
     if FToggleState then begin
@@ -310,6 +358,19 @@ begin
       BtnDown(FOut, FOutCap, FOutColor);
     end;
   end;
+end;
+
+procedure TJvJanToggle.Resize;
+begin
+  inherited;
+  MakeStyle;
+end;
+
+procedure TJvJanToggle.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
+begin
+  FWidthChanged := AWidth <> Width;
+  FHeightChanged := AHeight <> Height;
+  inherited;
 end;
 
 procedure TJvJanToggle.SetToggleState(const AValue: boolean);
@@ -353,12 +414,6 @@ begin
     Refresh;
   end;
 end;
-
-{
-procedure TJvJanToggle.keepsize(Sender: TObject);
-begin
- makestyle;
-end; }
 
 procedure TJvJanToggle.SetToggleStyle(const AValue: TToggleStyle);
 begin
