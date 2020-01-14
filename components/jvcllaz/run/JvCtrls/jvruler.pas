@@ -30,15 +30,15 @@ unit JvRuler;
 
 interface
 
-uses
+uses                                  lazlogger,
   LCLIntf, LCLType, LCLVersion, Types,
   Classes, SysUtils, Graphics, Controls,
   JvComponent;
 
 const
-  DEFAULT_JVRULER_MAJOR_TICKLENGTH = 8;
-  DEFAULT_JVRULER_MINOR_TICKLENGTH = 3;
-  DEFAULT_JVRULER_MARKER_SIZE = 6;
+  DEFAULT_JVR_MAJOR_TICKLENGTH = 8;
+  DEFAULT_JVR_MINOR_TICKLENGTH = 3;
+  DEFAULT_JVR_MARKER_SIZE = 6;
 
 type
   TJvRulerUnit = (ruCentimeters, ruInches, ruPixels);
@@ -58,9 +58,6 @@ type
     FMinorTickLength: Integer;
     FShowBaseline: Boolean;
     FShowPositionMarker: Boolean;
-    function IsStoredMarkerSize: Boolean;
-    function IsStoredMajorTickLength: Boolean;
-    function IsStoredMinorTickLength: Boolean;
     procedure SetMarkerColor(const Value: TColor);
     procedure SetMarkerFilled(const Value: Boolean);
     procedure SetMarkerSize(const Value: Integer);
@@ -74,10 +71,8 @@ type
     procedure SetTickColor(const Value: TColor);
     procedure SetUseUnit(const Value: TJvRulerUnit);
   protected
-    {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
-    {$IFEND}
     class function GetControlClassDefaultSize: TSize; override;
     procedure Paint; override;
   public
@@ -88,10 +83,10 @@ type
     property Font;
     property MarkerColor: TColor read FMarkerColor write SetMarkerColor default clBlack;
     property MarkerFilled: Boolean read FMarkerFilled write SetMarkerFilled default true;
-    property MarkerSize: Integer read FMarkerSize write SetMarkerSize stored IsStoredMarkerSize;
-    property MajorTickLength: Integer read FMajorTickLength write SetMajorTickLength stored IsStoredMajorTickLength;
+    property MarkerSize: Integer read FMarkerSize write SetMarkerSize default DEFAULT_JVR_MARKER_SIZE;
+    property MajorTickLength: Integer read FMajorTickLength write SetMajorTickLength default DEFAULT_JVR_MAJOR_TICKLENGTH;
     property MinorTickCount: Integer read FMinorTickCount write SetMinorTickCount default 1;
-    property MinorTickLength: Integer read FMinorTickLength write SetMinorTicklength stored IsStoredMinorTickLength;
+    property MinorTickLength: Integer read FMinorTickLength write SetMinorTicklength default DEFAULT_JVR_MINOR_TICKLENGTH;
     property Orientation: TJvRulerOrientation read FOrientation write SetOrientation  default roHorizontal;
     property Position: Double read FPosition write SetPosition;
     property ShowBaseline: Boolean read FShowBaseline write SetShowBaseLine default false;
@@ -137,15 +132,14 @@ begin
   FTickColor := clBlack;
   FUseUnit := ruCentimeters;
   FMarkerFilled := true;
-  FMarkerSize := Scale96ToFont(DEFAULT_JVRULER_MARKER_SIZE);
-  FMajorTickLength := Scale96ToFont(DEFAULT_JVRULER_MAJOR_TICKLENGTH);
-  FMinorTickLength := Scale96ToFont(DEFAULT_JVRULER_MINOR_TICKLENGTH);
+  FMarkerSize := DEFAULT_JVR_MARKER_SIZE;
+  FMajorTickLength := DEFAULT_JVR_MAJOR_TICKLENGTH;
+  FMinorTickLength := DEFAULT_JVR_MINOR_TICKLENGTH;
   FMinorTickCount := 1;
   with GetControlClassDefaultSize do
     SetInitialBounds(0, 0, CX, CY);
 end;
 
-{$IF LCL_FullVersion >= 1080000}
 procedure TJvRuler.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
 var
@@ -158,35 +152,16 @@ begin
       roHorizontal: proportion := AYProportion;
       roVertical: proportion := AXProportion;
     end;
-    if IsStoredMarkerSize then
-      FMarkerSize := round(FMarkerSize * proportion);
-    if IsStoredMajorTickLength then
-      FMajorTickLength := round(FMajorTickLength * proportion);
-    if IsStoredMinorTickLength then
-      FMinorTicklength := round(FMinorTickLength * proportion);
+    FMarkerSize := round(FMarkerSize * proportion);
+    FMajorTickLength := round(FMajorTickLength * proportion);
+    FMinorTicklength := round(FMinorTickLength * proportion);
   end;
 end;
-{$IFEND}
 
 class function TJvRuler.GetControlClassDefaultSize: TSize;
 begin
   Result.CX := 380;
   Result.CY := 25;
-end;
-
-function TJvRuler.IsStoredMarkerSize: Boolean;
-begin
-  Result := FMarkerSize <> Scale96ToFont(DEFAULT_JVRULER_MARKER_SIZE);
-end;
-
-function TJvRuler.IsStoredMajorTickLength: Boolean;
-begin
-  Result := FMajorTickLength <> Scale96ToFont(DEFAULT_JVRULER_MAJOR_TICKLENGTH);
-end;
-
-function TJvRuler.IsStoredMinorTickLength: Boolean;
-begin
-  Result := FMinorTickLength <> Scale96ToFont(DEFAULT_JVRULER_MINOR_TICKLENGTH);
 end;
 
 procedure TJvRuler.Paint;
@@ -414,7 +389,7 @@ begin
   if FOrientation <> Value then
   begin
     FOrientation := Value;
-    if csDesigning in ComponentState then
+    if ([csDesigning, csLoading] * ComponentState = [csDesigning]) then
       SetBounds(Left, Top, Height, Width);
     Invalidate;
   end;
