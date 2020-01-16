@@ -39,7 +39,7 @@ uses
   ExtCtrls, InterfaceBase, LCLType, LCLVersion, AboutPoweredbyunit;
 
 const
-  C_VERSIONSTRING = '1.0.4.0';
+  C_VERSIONSTRING = '1.2.0.0';
   C_WIDGETSET_GTK = 'GTK widget set';
   C_WIDGETSET_GTK2 = 'GTK 2 widget set';
   C_WIDGETSET_GTK3 = 'GTK 3 widget set';
@@ -104,7 +104,7 @@ procedure Register;
 
 implementation
 
-uses {$IF (lcl_major > 0) and (lcl_minor > 6)}LCLPlatformDef {$ENDIF};
+Uses {$IF ((lcl_major = 1) and (lcl_minor > 6)) or (lcl_major > 1))} LCLPlatformDef {$ENDIF};
 
 procedure Register;
 begin
@@ -223,7 +223,8 @@ Choices are:
 begin
   Result := False;
   case WidgetSet.LCLPlatform of
-    lpWin32, lpQT: Result := True;
+    lpWin32: Result := True;
+//    lpWin32, lpQT: Result := True;
     else
       Result := False;
   end;
@@ -298,6 +299,7 @@ begin
       // BackGround image - load from resource
       with img_background do
       begin
+
         Align := alClient;
         Stretch := True;
         Parent := fPoweredByForm;
@@ -311,6 +313,7 @@ begin
       // Set form properties
       with fPoweredByForm do
       begin
+        // PixelFormat:=pf32bit;
         position := poScreenCenter;
         borderstyle := bsnone;
         bordericons:=[];
@@ -320,7 +323,9 @@ begin
         Scaled:=True;
         if CanShowRoundedGraphic then
         begin
+          {$IFDEF WINDOWS}
           MakeTransparentWindow(fPoweredByForm,img_background);
+          {$ENDIF}
         end
         else
         begin
