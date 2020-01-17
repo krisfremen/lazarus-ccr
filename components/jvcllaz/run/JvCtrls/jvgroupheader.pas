@@ -74,13 +74,15 @@ type
     procedure SetBevelSpace(Value: Integer);
 //    procedure SetLabelOptions(Value: TJvGroupHeaderOptions);
   protected
-    procedure StyleChanged(Sender: TObject); virtual;
     procedure BevelLine(C: TColor; X, Y, AWidth: Integer); virtual;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     procedure DoDrawText(var Rect: TRect; Flags: Longint); virtual;
+    procedure FontChanged; override;
     function GetLabelText: string; virtual;
     procedure Paint; override;
+    procedure StyleChanged(Sender: TObject); virtual;
     procedure TextChanged; override;
-    procedure FontChanged; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -254,6 +256,18 @@ begin
   FBevelOptions.Free;
 //  FLabelOptions.Free;
   inherited Destroy;
+end;
+
+procedure TJvGroupHeader.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FBevelSpace := round(FBevelSpace * AXProportion);
+    FPositionOffset := round(FPositionOffset * AXProportion);
+  end;
 end;
 
 function TJvGroupHeader.GetLabelText: string;
