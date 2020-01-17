@@ -30,16 +30,22 @@ unit JvGradientHeaderPanel;
 interface
 
 uses
-  LMessages,
+  LMessages, LCLVersion,
   SysUtils, Classes, Graphics, Controls, StdCtrls,
   JvGradient, JvTypes, JvComponent;
 
 type
+
+  { TJvGradientHeaderPanel }
+
   TJvGradientHeaderPanel = class(TJvCustomControl)
   private
     FGradient: TJvGradient;
     FLabel: TLabel;
     FLabelLeft: Integer;
+    FLabelTop: Integer;
+    FLabelRight: Integer;
+    FLabelBottom: Integer;
     FHint: Boolean;
     FOldLabelFontChange: TNotifyEvent;
     function GetGradientCursor: TCursor;
@@ -52,10 +58,10 @@ type
     procedure SetGradientEndColor(Value: TColor);
     function GetGradientSteps: Integer;
     procedure SetGradientSteps(Value: Integer);
-    function GetLabelLeft: Integer;
     procedure SetLabelLeft(Value: Integer);
-    function GetLabelTop: Integer;
     procedure SetLabelTop(Value: Integer);
+    procedure SetLabelRight(Value: Integer);
+    procedure SetLabelBottom(Value: Integer);
     function GetLabelCursor: TCursor;
     procedure SetLabelCursor(Value: TCursor);
     function GetLabelHint: string;
@@ -71,13 +77,20 @@ type
     procedure SetGradientStyle(const Value: TJvGradientStyle);
     function GetLabelAlignment: TAlignment;
     procedure SetLabelAlignment(const Value: TAlignment);
-    procedure AdjustLabelWidth;
+    function GetLabelLayout: TTextLayout;
+    procedure SetLabelLayout(const Value: TTextLayout);
+    function GetLabelWordwrap: Boolean;
+    procedure SetLabelWordwrap(const Value: Boolean);
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
   protected
+    procedure AdjustLabel;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
 //    function DoEraseBackground(Canvas: TCanvas; Param: LPARAM): Boolean; override;
     procedure DoLabelFontChange(Sender: TObject);
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -88,8 +101,10 @@ type
     property GradientEndColor: TColor read GetGradientEndColor write SetGradientEndColor default clWhite;
     property GradientSteps: Integer read GetGradientSteps write SetGradientSteps default 100;
     property GradientStyle: TJvGradientStyle read GetGradientStyle write SetGradientStyle default grHorizontal;
-    property LabelLeft: Integer read GetLabelLeft write SetLabelLeft default 10;
-    property LabelTop: Integer read GetLabelTop write SetLabelTop default 8;
+    property LabelLeft: Integer read FLabelLeft write SetLabelLeft default 10;
+    property LabelTop: Integer read FLabelTop write SetLabelTop default 8;
+    property LabelRight: Integer read FLabelRight write SetLabelRight default 10;
+    property LabelBottom: Integer read FLabelBottom write SetLabelBottom default 8;
     property LabelCursor: TCursor read GetLabelCursor write SetLabelCursor default crDefault;
     property LabelHint: string read GetLabelHint write SetLabelHint;
     property LabelCaption: string read GetLabelCaption write SetLabelCaption;
@@ -97,8 +112,10 @@ type
     // To get a transparent text background, set LabelColor to clNone
     property LabelColor: TColor read GetLabelColor write SetLabelColor default clNone;
     property LabelFont: TFont read GetLabelFont write SetLabelFont;
+    property LabelAlignment: TAlignment read GetLabelAlignment write SetLabelAlignment default taLeftJustify;
+    property LabelLayout: TTextLayout read GetLabelLayout write SetLabelLayout default tlTop;
+    property LabelWordwrap: Boolean read GetLabelWordwrap write SetLabelWordwrap default false;
     property ShowHint: Boolean read FHint write SetShowHint default False;
-    property LabelAlignment: TAlignment read GetLabelAlignment write SetLabelAlignment;
     property Align;
     property Anchors;
     property AutoSize;
@@ -172,31 +189,37 @@ begin
   ControlStyle := ControlStyle + [csOpaque, csAcceptsControls];
   Self.Width := 285;
   Self.Height := 30;
+  FLabelLeft := 10;
+  FLabelTop := 8;
+  FLabelRight := 10;
+  FLabelBottom := 8;
   FGradient := TNoEventGradient.Create(Self);
   FGradient.Parent := Self;
   FLabel := TNoEventLabel.Create(Self);
-  FLabel.AutoSize := False;
+  FLabel.AutoSize := true;
+//  FLabel.AutoSize := False;  // wp
+  FLabel.Align := alClient;
   FLabel.Parent := Self;
-  FGradient.Left := 0;
-  FGradient.Top := 0;
+  //FGradient.Left := 0;
+  //FGradient.Top := 0;
   FGradient.StartColor := clBlack;
   FGradient.EndColor := clWhite;
   FGradient.Steps := 100;
-  LabelLeft := 10;
-  FLabel.Top := 8;
   LabelColor := clNone;
   FOldLabelFontChange := FLabel.Font.OnChange;
   FLabel.Font.OnChange := @DoLabelFontChange;
   FLabel.Font.Color := clWhite;
   FLabel.Caption := RsYourTextHereCaption;
+  FLabel.BorderSpacing.Left := FLabelLeft;;
+  FLabel.BorderSpacing.Top := FLabelTop;
   FHint := False;
 end;
 
 destructor TJvGradientHeaderPanel.Destroy;
 begin
-  FGradient.Free;
+  // FGradient.Free;
   //  FLabel.OnChange := FOldLabelFontChange;
-  FLabel.Free;
+  // FLabel.Free;
   inherited Destroy;
 end;
 
@@ -250,33 +273,46 @@ begin
   FGradient.Steps := Value;
 end;
 
-function TJvGradientHeaderPanel.GetLabelLeft: Integer;
-begin
-  Result := FLabelLeft;
-end;
-
 procedure TJvGradientHeaderPanel.SetLabelLeft(Value: Integer);
 begin
-  if FLabel.Left <> Value then
+  if FLabelLeft <> Value then
   begin
     if Value < 0 then
-      Value := 0;
-    FLabel.Left := Value;
-    FLabelLeft := Value;
-    AdjustLabelWidth;
+      FLabelLeft := 0
+    else
+      FLabelLeft := Value;
+    AdjustLabel;
   end;
 end;
 
-function TJvGradientHeaderPanel.GetLabelTop: Integer;
+procedure TJvGradientHeaderPanel.SetLabelRight(Value: Integer);
 begin
-  Result := FLabel.Top;
+  if FLabelRight <> Value then
+  begin
+    if Value < 0 then
+      FLabelRight := 0
+    else
+      FLabelRight := Value;
+    AdjustLabel;
+  end;
 end;
 
 procedure TJvGradientHeaderPanel.SetLabelTop(Value: Integer);
 begin
   if Value < 0 then
-    Value := 0;
-  FLabel.Top := Value;
+    FLabelTop := 0
+  else
+    FLabelTop := Value;
+  AdjustLabel;
+end;
+
+procedure TJvGradientHeaderPanel.SetLabelBottom(Value: Integer);
+begin
+  if Value < 0 then
+    FLabelBottom := 0
+  else
+    FLabelBottom := Value;
+  AdjustLabel;
 end;
 
 function TJvGradientHeaderPanel.GetLabelCursor: TCursor;
@@ -307,7 +343,7 @@ end;
 procedure TJvGradientHeaderPanel.SetLabelCaption(const Value: string);
 begin
   FLabel.Caption := Value;
-  AdjustLabelWidth;
+  AdjustLabel;
 end;
 
 function TJvGradientHeaderPanel.GetLabelColor: TColor;
@@ -336,7 +372,7 @@ end;
 procedure TJvGradientHeaderPanel.SetLabelFont(const Value: TFont);
 begin
   FLabel.Font := Value;
-  AdjustLabelWidth;
+  AdjustLabel;
 end;
 
 function TJvGradientHeaderPanel.GetGradientStyle: TJvGradientStyle;
@@ -357,38 +393,66 @@ end;
 procedure TJvGradientHeaderPanel.SetLabelAlignment(const Value: TAlignment);
 begin
   FLabel.Alignment := Value;
-  AdjustLabelWidth;
+  AdjustLabel;
+end;
+
+function TJvGradientHeaderPanel.GetLabelLayout: TTextLayout;
+begin
+  Result := FLabel.Layout;
+end;
+
+procedure TJvGradientHeaderPanel.SetLabelLayout(const Value: TTextLayout);
+begin
+  FLabel.Layout := Value;
+  AdjustLabel;
+end;
+
+function TJvGradientHeaderPanel.GetLabelWordWrap: Boolean;
+begin
+  Result := FLabel.WordWrap;
+end;
+
+procedure TJvGradientHeaderPanel.SetLabelWordwrap(const Value: Boolean);
+begin
+  FLabel.WordWrap := Value;
+  Invalidate;
 end;
 
 procedure TJvGradientHeaderPanel.WMSize(var Msg: TLMSize);
 begin
   inherited;
-  AdjustLabelWidth;
+//  AdjustLabel;
 end;
 
-
-procedure TJvGradientHeaderPanel.AdjustLabelWidth;
-var
-  W, L: Integer;
+procedure TJvGradientHeaderPanel.AdjustLabel;
 begin
-  L := FLabel.Left;
-  // make as large as we need:
-  FLabel.AutoSize := True;
-  FLabel.AutoSize := False;
-  FLabel.Left := L;
-  W := FGradient.Width - FLabelLeft - FLabelLeft;
-  // make bigger if there's room
-  if W > FLabel.Width then
+  FLabel.BorderSpacing.Left := FLabelLeft;
+  FLabel.BorderSpacing.Right := FLabelRight;
+  FLabel.BorderSpacing.Top := FLabelTop;
+  FLabel.BorderSpacing.Bottom := FLabelBottom;
+  if FLabel.Alignment = taCenter then
   begin
-    FLabel.Width := W;
-    FLabel.Left := FLabelLeft;
-  end
-  else
-  if W < FLabel.Width then // otherwise, just center
+    FLabel.BorderSpacing.Left := 0;
+    FLabel.BorderSpacing.Right := 0;
+  end;
+  if FLabel.Layout = tlCenter then
   begin
-    FLabel.Left := (Width - FLabel.Width) div 2;
-    //    if (FLabelLeft > FLabel.Left) and  then
-    //      FLabelLeft := FLabel.Left;
+    FLabel.BorderSpacing.Top := 0;
+    FLabel.BorderSpacing.Bottom := 0;
+  end;
+end;
+
+procedure TJvGradientHeaderPanel.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double
+  );
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FLabelLeft := round(FLabelLeft * AXProportion);
+    FLabelTop := round(FLabelTop * AYProportion);
+    FLabelRight := round(FLabelRight * AXProportion);
+    FLabelBottom := round(FLabelBottom * AYProportion);
   end;
 end;
 
@@ -396,7 +460,7 @@ procedure TJvGradientHeaderPanel.DoLabelFontChange(Sender: TObject);
 begin
   if Assigned(FOldLabelFontChange) then
     FOldLabelFontChange(Sender);
-  AdjustLabelWidth;
+  AdjustLabel;
 end;
 
 procedure TJvGradientHeaderPanel.MouseDown(Button: TMouseButton;
@@ -407,13 +471,14 @@ begin
     SetFocus;
 end;
 
-(*
+{
 function TJvGradientHeaderPanel.DoEraseBackground(Canvas: TCanvas; Param: LPARAM): Boolean;
 begin
   { Reduce flickering FGradient completely fills the TJvGradientHeaderPanel }
   Result := True;
 end;
-*)
+}
+
 
 //=== { TNoEventLabel } ======================================================
 
