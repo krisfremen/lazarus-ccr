@@ -176,6 +176,7 @@ begin
   AInspector.Align := alLeft;
 
   ITV := TJvImagesViewer.Create(Self);
+  ITV.AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
   ITV.Align := alClient;
   ITV.PopupMenu := PopupMenu1;
 //  ITV.Cursor := crHandPoint;
@@ -197,6 +198,7 @@ begin
     edFileMask.Text := ITV.Filemask;
 
   ITV2 := TJvImageListViewer.Create(Self);
+  ITV2.AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
   ITV2.Align := alClient;
   ITV2.Options.Width := ImageList1.Width * 2;
   ITV2.Options.Height := ImageList1.Height * 2;
@@ -216,6 +218,7 @@ begin
   ITV2.Options.ShowCaptions := True;
 
   ITV3 := TJvOwnerDrawViewer.Create(Self);
+  ITV3.AutoAdjustLayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
   ITV3.Options.Smooth := True; // Smooth looks OK here, because these items renders faster
   ITV3.Options.HotTrack := False;
   ITV3.Options.Width := 18;

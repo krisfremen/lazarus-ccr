@@ -72,17 +72,14 @@ type
     FHotFrameSize: Integer;
     FHotColor: TColor;
     FTransparent: Boolean;
-    function IsImagePaddingStored: Boolean;
     procedure SetImagePadding(const Value: Integer);
     procedure SetFrameColor(const Value: TColor);
     procedure SetHotColor(const Value: TColor);
     procedure SetHotFrameSize(const Value: Integer);
     procedure SetTransparent(const Value: Boolean);
   protected
-    {$IF LCL_FullVersion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
-    {$IFEND}
   public
     constructor Create(AOwner: TJvCustomItemViewer); override;
   published
@@ -96,7 +93,7 @@ type
     property HotColor: TColor read FHotColor write SetHotColor default clHighlight;
     property HotFrameSize: Integer read FHotFrameSize write SetHotFrameSize default 2;
     property HotTrack;
-    property ImagePadding: Integer read FImagePadding write SetImagePadding stored IsImagePaddingStored;
+    property ImagePadding: Integer read FImagePadding write SetImagePadding default DEFAULT_IMAGEVIEWEROPTIONS_IMAGEPADDING;
     property Layout;
     property LazyRead;
     property MultiSelect;
@@ -234,14 +231,13 @@ uses
 constructor TJvImageViewerOptions.Create(AOwner: TJvCustomItemViewer);
 begin
   inherited Create(AOwner);
-  FImagePadding := Owner.Scale96ToFont(DEFAULT_IMAGEVIEWEROPTIONS_IMAGEPADDING);
+  FImagePadding := DEFAULT_IMAGEVIEWEROPTIONS_IMAGEPADDING;
   FFrameColor := clGray;
   FHotColor := clHighlight;
   FHotFrameSize := 2;
   ShowCaptions := True;
 end;
 
-{$IF LCL_FullVersion >= 1080000}
 procedure TJvImageViewerOptions.DoAutoAdjustLayout(
   const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
@@ -249,15 +245,8 @@ begin
   inherited;
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    if IsImagePaddingStored then
-      FImagePadding := Round(FImagePadding * AXProportion);
+    FImagePadding := Round(FImagePadding * AXProportion);
   end;
-end;
-{$IFEND}
-
-function TJvImageViewerOptions.IsImagePaddingStored: Boolean;
-begin
-  Result := FImagePadding <> Owner.Scale96ToFont(DEFAULT_IMAGEVIEWEROPTIONS_IMAGEPADDING);
 end;
 
 procedure TJvImageViewerOptions.SetFrameColor(const Value: TColor);

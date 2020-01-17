@@ -10,7 +10,7 @@ uses
 {$R *.res}
 
 begin
-//  MemChk;
+  Application.Scaled := true;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;

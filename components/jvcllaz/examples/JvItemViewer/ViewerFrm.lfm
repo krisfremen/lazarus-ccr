@@ -17,8 +17,7 @@ object frmImageViewer: TfrmImageViewer
   OnMouseWheel = FormMouseWheel
   OnResize = FormResize
   OnShow = FormShow
-  LCLVersion = '1.9.0.0'
-  Scaled = False
+  LCLVersion = '2.1.0.0'
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23

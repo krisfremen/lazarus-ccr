@@ -29,6 +29,7 @@ interface
 {$MODE OBJFPC}{$H+}
 
 uses
+  LCLVersion,
   SysUtils, Classes, Controls, Graphics, StdCtrls, ComCtrls, ImgList,
   JvCustomItemViewer;
 
@@ -73,6 +74,11 @@ type
     procedure SetImages(const Value: TCustomImageList);
     function GetOptions: TJvImageListViewerOptions;
     procedure SetOptions(const Value: TJvImageListViewerOptions);
+  private
+    {$IF LCL_FullVersion >= 2000000}
+    FImagesWidth: Integer;
+    procedure SetImagesWidth(const Value: Integer);
+    {$IFEND}
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DoImageChange(Sender: TObject);
@@ -85,6 +91,9 @@ type
     destructor Destroy; override;
   published
     property Images: TCustomImageList read FImages write SetImages;
+    {$IF LCL_FUllVersion >= 2000000}
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth default 0;
+    {$IFEND}
     property Options: TJvImageListViewerOptions read GetOptions write SetOptions;
     property SelectedIndex;
     property Align;
@@ -238,6 +247,8 @@ var
   S: WideString;
   DrawStyle: TDrawingStyle;
   Flags: Cardinal;
+  imgWidth, imgHeight: Integer;
+  imgList: TCustomImageList;
 begin
   ACanvas.Brush.Color := Color;
   ACanvas.Font := Self.Font;
@@ -245,9 +256,17 @@ begin
   begin
     Flags := DT_END_ELLIPSIS or DT_EDITCONTROL;
     S := GetCaption(Index);
+    {$IF LCL_FullVersion >= 2000000}
+    imgList := Images.ResolutionForPPI[FImagesWidth, Font.PixelsPerInch, GetCanvasScaleFactor].Resolution.ImageList;
+    {$ELSE}
+    imgList := Images;
+    {$IFEND}
+    imgWidth := imgList.Width;
+    imgHeight := imgList.Height;
+
     // determine where to draw image
-    X := Max(AItemRect.Left, AItemRect.Left + (RectWidth(AItemRect) - Images.Width) div 2);
-    Y := AItemRect.Top + (RectHeight(AItemRect) - Images.Height) div 2;
+    X := Max(AItemRect.Left, AItemRect.Left + (RectWidth(AItemRect) - imgWidth) div 2);
+    Y := AItemRect.Top + (RectHeight(AItemRect) - imgHeight) div 2;
     if not Options.FillCaption then
       OffsetRect(TextRect,0,2);
     if cdsSelected in State then
@@ -281,7 +300,7 @@ begin
       DrawStyle := {DrawingStyles[}Options.DrawingStyle{]};
     //ImageList_Draw(Images.Handle, Index, ACanvas.Handle, X, Y,
     //  DrawStyle or DrawMask[Images.ImageType = itImage]);
-    Images.Draw(ACanvas, X, Y, Index, DrawStyle, itImage);
+    imgList.Draw(ACanvas, X, Y, Index, DrawStyle, itImage);
     if S <> '' then
     begin
       if cdsSelected in State then
@@ -344,6 +363,14 @@ begin
   end;
 end;
 
+{$IF LCL_FullVersion >= 2000000}
+procedure TJvImageListVIewer.SetImagesWidth(const Value: Integer);
+begin
+  if FImagesWidth = Value then exit;
+  FImagesWidth := Value;
+  Invalidate;
+end;
+{$IFEND}
 procedure TJvImageListViewer.SetOptions(const Value: TJvImageListViewerOptions);
 begin
   inherited Options := Value;

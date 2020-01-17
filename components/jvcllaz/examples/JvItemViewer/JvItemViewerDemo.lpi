@@ -13,6 +13,7 @@
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="JvItemViewerDemo"/>
+      <Scaled Value="True"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -25,7 +26,6 @@
     </PublishOptions>
     <RunParams>
       <FormatVersion Value="2"/>
-      <Modes Count="0"/>
     </RunParams>
     <RequiredPackages Count="4">
       <Item1>

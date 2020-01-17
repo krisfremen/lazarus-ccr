@@ -13,8 +13,7 @@ object frmMain: TfrmMain
   Font.Color = clWindowText
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
-  Scaled = False
+  LCLVersion = '2.1.0.0'
   object Splitter1: TSplitter
     Cursor = crSizeWE
     Left = 0
@@ -155,13 +154,13 @@ object frmMain: TfrmMain
     end
     object tabILViewer: TTabSheet
       Caption = 'TJvImageListViewer'
-      ClientHeight = 378
+      ClientHeight = 376
       ClientWidth = 698
       ImageIndex = 1
       object Label1: TLabel
         Left = 4
-        Height = 13
-        Top = 361
+        Height = 15
+        Top = 357
         Width = 690
         Align = alBottom
         BorderSpacing.Around = 4
