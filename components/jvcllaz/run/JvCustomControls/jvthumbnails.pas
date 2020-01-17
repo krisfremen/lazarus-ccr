@@ -56,7 +56,7 @@ uses
   {$IFDEF UNIX}
   baseunix,
   {$ENDIF}
-  LCLIntf, LCLType, LMessages, Types,
+  LCLIntf, LCLType, LCLVersion, LMessages, Types,
   Classes, Controls, ExtCtrls, SysUtils, Graphics, Forms,
   JvThumbImage, JvBaseThumbnail, Dialogs;
 
@@ -148,6 +148,17 @@ type
     procedure UpdateThumbWidth;
     procedure UpdateTitlePanelHeight;
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
+
+  { LCL Scaling }
+  protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+  public
+    procedure ScaleFontsPPI({$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+      const AProportion: Double); override;
+    {$IF LCL_FullVersion >= 2010000}
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
+    {$IFEND}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -744,6 +755,37 @@ begin
     FUpdated := True;
   end;
   inherited;
+end;
+
+
+{ LCL scaling routines }
+
+procedure TJvThumbnail.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FMargin := round(FMargin * AXProportion);
+    FHShadowOffset := round(FHShadowOffset * AXProportion);
+    FVShadowOffset := round(FVShadowOffset * AYProportion);
+  end;
+end;
+
+{$IF LCL_FullVersion >= 2010000}
+procedure TJvThumbnail.FixDesignFontsPPI(const ADesignTimePPI: Integer);
+begin
+  inherited;
+  DoFixDesignFontPPI(FTitleFont, ADesignTimePPI);
+end;
+{$IFEND}
+
+procedure TJvThumbnail.ScaleFontsPPI(
+  {$IF LCL_FullVersion >= 1080100}const AToPPI: Integer;{$IFEND}
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FTitleFont, AToPPI, AProportion);
 end;
 
 end.

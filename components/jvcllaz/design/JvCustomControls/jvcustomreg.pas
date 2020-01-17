@@ -57,6 +57,8 @@ begin
   RegisterComponentEditor(TJvCustomOutlookBar, TJvOutlookBarEditor);
 
   // Thumbnails
+  RegisterPropertyEditor(TypeInfo(String), TJvThumbView,
+    'Filter', TFileDlgFilterProperty);
   RegisterPropertyToSkip(TJvThumbnail, 'ClientWidth', 'Redundant', '');
   RegisterPropertyToSkip(TJvThumbnail, 'ClientHeight', 'Redundant', '');
 

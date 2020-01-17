@@ -154,8 +154,7 @@ type
 
   TJvBaseThumbnail = class(TPanel)  //JvExPanel)
   protected
-    { wp removed
-    function DoEraseBackground(Canvas: TCanvas; Param: LPARAM): Boolean; override; }
+    { function DoEraseBackground(Canvas: TCanvas; Param: LPARAM): Boolean; override; }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;

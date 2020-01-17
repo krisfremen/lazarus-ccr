@@ -82,7 +82,7 @@ type
     FThumbBevelOuter: TPanelBevel;
     FThumbBorderStyle: TBorderStyle;
     FThumbColor: TColor;
-    FThumbGap: Byte;
+    FThumbGap: Integer;
     FThumbList: TJvThumbList;
     FThumbSize: TPoint;
     FThumbTitleBevelInner: TPanelBevel;
@@ -130,7 +130,7 @@ type
     procedure SetThumbBevelOuter(const AValue: TPanelBevel);
     procedure SetThumbBorderStyle(const AValue: TBorderStyle);
     procedure SetThumbColor(const AValue: TColor);
-    procedure SetThumbGap(Sp: Byte);
+    procedure SetThumbGap(Sp: Integer);
     procedure SetThumbTitleColor(const AValue: TColor);
     procedure SetThumbTitleBevelInner(const AValue: TPanelBevel);
     procedure SetThumbTitleBevelOuter(const AValue: TPanelBevel);
@@ -142,6 +142,8 @@ type
 
   protected
     procedure CreateHandle; override;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     (*********** NOT CONVERTED **
     procedure GetDlgCode(var Code: TDlgCodes); override;
     *****)
@@ -182,8 +184,8 @@ type
     property Count: Word read GetCount default 0;
     property Directory: string read FDirectory write SetDirectory;
     property Filter: string read FFilter write FFilter;
-    property MaxHeight: Longint read GetMaxHeight write SetMaxHeight;
-    property MaxWidth: Longint read GetMaxWidth write SetMaxWidth;
+    property MaxHeight: Longint read GetMaxHeight write SetMaxHeight default 200;
+    property MaxWidth: Longint read GetMaxWidth write SetMaxWidth default 200;
     property MinMemory: Boolean read FMinMemory write FMinMemory default true;
     property ScrollMode: TScrollMode read FScrollMode write SetScrollMode default smHorizontal;
     property Selected: Longint read FSelected write SetSelected default -1;
@@ -200,7 +202,7 @@ type
       read FThumbBorderStyle write SetThumbBorderStyle default bsNone;
     property ThumbColor: TColor
       read FThumbColor write SetThumbColor default clDefault;
-    property ThumbGap: Byte
+    property ThumbGap: Integer
       read FThumbGap write SetThumbGap default 4;
     property ThumbTitleBevelInner: TPanelBevel
       read FThumbTitleBevelInner write SetThumbTitleBevelInner default bvNone;
@@ -308,6 +310,7 @@ var
   Thb: TJvThumbnail;
 begin
   Thb := TJvThumbnail.Create(Self);
+  Thb.AutoAdjustlayout(lapAutoAdjustForDPI, 96, Font.PixelsPerInch, 0, 0);
   if Assigned(FOnGetTitle) then
   begin
     ThumbnailTitle := ExtractFilename(AFile);
@@ -446,9 +449,6 @@ procedure TJvThumbView.CalculateMaxX;
 var
   A: Longint;
 begin
-  if not HandleAllocated then
-    exit;
-
   case FScrollMode of
     smVertical:
       A := (Width - 20) div (FThumbSize.X + FThumbGap);
@@ -456,8 +456,8 @@ begin
       A := (Height - 20) div (FThumbSize.Y + FThumbGap);
     smBoth:
       A := JkCeil(Sqrt(FThumbList.Count));
-  else
-    A := 1;
+    else
+      A := 1;
   end;
   if A < 1 then
     A := 1;
@@ -588,6 +588,19 @@ begin
     Refresh;
     Repaint;
   end
+end;
+
+procedure TJvThumbView.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FMaxSize.X := round(FMaxSize.X * AXProportion);
+    FMaxSize.Y := round(FMaxSize.Y * AYProportion);
+    FThumbGap := round(FThumbGap * AXProportion);
+  end;
 end;
 
 procedure TJvThumbView.DoInvalidImage(Sender: TObject; const FileName: string);
@@ -925,8 +938,11 @@ end;
 
 procedure TJvThumbView.Resize;
 begin
-  CalculateMaxX;
-  Reposition(0);
+  if HandleAllocated then
+  begin
+    CalculateMaxX;
+    Reposition(0);
+  end;
   inherited Resize;
 end;
 
@@ -1266,7 +1282,7 @@ begin
     FThumbList.Thumbnail[i].Color := FThumbColor;
 end;
 
-procedure TJvThumbView.SetThumbGap(Sp: Byte);
+procedure TJvThumbView.SetThumbGap(Sp: Integer);
 begin
   case FAlignView of
     vtNormal, vtCenter:
