@@ -104,8 +104,6 @@ unit JvHtControls;
 
 {$mode objfpc}{$H+}
 
-//{.$I jvcl.inc}
-
 interface
 
 uses
@@ -117,7 +115,7 @@ const
   DefaultSuperSubScriptRatio: Double = 0.67;
 
 type
-(*
+(*********** NOT PORTED ************
   TJvCustomListBoxDataConnector = class(TJvFieldDataConnector)
   private
     FListBox: TCustomListBox;
@@ -134,7 +132,7 @@ type
 
     procedure GotoCurrent;
   end;
-*)
+************************************)
 
   TJvHyperLinkClickEvent = procedure(Sender: TObject; LinkName: string) of object;
 
@@ -163,22 +161,21 @@ type
     procedure FontChanged(Sender: TObject); override;
     //procedure Loaded; override;
     procedure DrawItem(Index: Integer; Rect: TRect; State: TOwnerDrawState); override;
-  public
-    constructor Create(AOwner: TComponent); override;
-    //destructor Destroy; override;
-    procedure MeasureItem(Index: Integer; var AHeight: Integer); override;
-    property PlainItems[Index: Integer]: string read GetPlainItems;
-  protected
     //procedure CMChanged(var Message: TLMessage); message CM_CHANGED;
-    property HideSel: Boolean read FHideSel write SetHideSel;
+
+    property HideSel: Boolean read FHideSel write SetHideSel default false;
     property SuperSubScriptRatio: Double read FSuperSubScriptRatio write SetSuperSubScriptRation stored ISuperSuperSubScriptRatioStored;
 
     property ColorHighlight: TColor read FColorHighlight write FColorHighlight;
     property ColorHighlightText: TColor read FColorHighlightText write FColorHighlightText;
     property ColorDisabledText: TColor read FColorDisabledText write FColorDisabledText;
     property OnHyperLinkClick: TJvHyperLinkClickEvent read FOnHyperLinkClick write FOnHyperLinkClick;
-
     //property DataConnector: TJvCustomListBoxDataConnector read FDataConnector write SetDataConnector;
+  public
+    constructor Create(AOwner: TComponent); override;
+    //destructor Destroy; override;
+    procedure MeasureItem(Index: Integer; var AHeight: Integer); override;
+    property PlainItems[Index: Integer]: string read GetPlainItems;
   end;
 
   TJvHTListBox = class(TJvCustomHTListBox)
@@ -259,18 +256,15 @@ type
   protected
     procedure DrawItem(Index: Integer; Rect: TRect; State: TOwnerDrawState); override;
     procedure MeasureItem(Index: Integer; var TheHeight: Integer); override;
+    property HideSel: Boolean read FHideSel write SetHideSel default false;
+    //property DropWidth: Integer read FDropWidth write SetDropWidth;
+    property ColorHighlight: TColor read FColorHighlight write FColorHighlight default clHighlight;
+    property ColorHighlightText: TColor read FColorHighlightText write FColorHighlightText default clHighlightText;
+    property ColorDisabledText: TColor read FColorDisabledText write FColorDisabledText default clGrayText;
+    property SuperSubScriptRatio: Double read FSuperSubScriptRatio write SetSuperSubScriptRation stored ISuperSuperSubScriptRatioStored;
   public
     constructor Create(AOwner: TComponent); override;
     property PlainItems[Index: Integer]: string read GetPlainItems;
-    //procedure SetHeight(Value: Integer);
-    //function GetHeight: Integer;
-  protected
-    property HideSel: Boolean read FHideSel write SetHideSel;
-    //property DropWidth: Integer read FDropWidth write SetDropWidth;
-    property ColorHighlight: TColor read FColorHighlight write FColorHighlight;
-    property ColorHighlightText: TColor read FColorHighlightText write FColorHighlightText;
-    property ColorDisabledText: TColor read FColorDisabledText write FColorDisabledText;
-    property SuperSubScriptRatio: Double read FSuperSubScriptRatio write SetSuperSubScriptRation stored ISuperSuperSubScriptRatioStored;
   end;
 
   TJvHTComboBox = class(TJvCustomHTComboBox)
@@ -406,23 +400,32 @@ type
     property OnHyperLinkClick;
   end;
 
+{ example for Text parameter : 'Item 1 <b>bold</b> <i>italic ITALIC <br><FONT COLOR="clRed">red <FONT COLOR="clgreen">green <FONT COLOR="clblue">blue </i>' }
+
 procedure ItemHTDrawEx(Canvas: TCanvas; Rect: TRect;
   const State: LCLType.TOwnerDrawState; const Text: string; out Width: Integer;
   CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; out MouseOnLink: Boolean;
   var LinkName: string; SuperSubScriptRatio: Double; Scale: Integer = 100);
-  { example for Text parameter : 'Item 1 <b>bold</b> <i>italic ITALIC <br><FONT COLOR="clRed">red <FONT COLOR="clgreen">green <FONT COLOR="clblue">blue </i>' }
+
 procedure ItemHTDraw(Canvas: TCanvas; Rect: TRect; const State: TOwnerDrawState;
   const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100);
+
 procedure ItemHTDrawHL(Canvas: TCanvas; Rect: TRect; const State: TOwnerDrawState;
   const Text: string; MouseX, MouseY: Integer; SuperSubScriptRatio: Double;
   Scale: Integer = 100);
+
 function ItemHTPlain(const Text: string): string;
+
 function ItemHTExtent(Canvas: TCanvas; Rect: TRect; const State: TOwnerDrawState;
   const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): TSize;
+
 function ItemHTWidth(Canvas: TCanvas; Rect: TRect;
   const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
+
 function ItemHTHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
+
 function PrepareText(const A: string): string; deprecated;
+
 
 implementation
 
@@ -448,7 +451,7 @@ begin
   Result := HTMLPrepareText(A);
 end;
 
-// wp: Made Width and MouseOnLink out parameters (instead of var) to silence
+// Made Width and MouseOnLink out parameters (instead of var) to silence
 // the compiler
 procedure ItemHTDrawEx(Canvas: TCanvas; Rect: TRect;
   const State: LCLType.TOwnerDrawState; const Text: string; out Width: Integer;
@@ -458,7 +461,7 @@ begin
   HTMLDrawTextEx(Canvas, Rect, State, Text, Width, CalcType, MouseX, MouseY, MouseOnLink, LinkName, SuperSubScriptRatio, Scale);
 end;
 
-// wp: made this a procedure because the result in the original function was not
+// Made this a procedure because the result in the original function was not
 // set
 procedure ItemHTDraw(Canvas: TCanvas; Rect: TRect; const State: LCLType.TOwnerDrawState;
   const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100);
@@ -466,7 +469,7 @@ begin
   HTMLDrawText(Canvas, Rect, State, Text, SuperSubScriptRatio, Scale);
 end;
 
-// wp: made this a procedure because the result in the original function was not
+// Made this a procedure because the result in the original function was not
 // set
 procedure ItemHTDrawHL(Canvas: TCanvas; Rect: TRect; const State: LCLType.TOwnerDrawState;
   const Text: string; MouseX, MouseY: Integer; SuperSubScriptRatio: Double;
@@ -487,12 +490,14 @@ begin
 end;
 
 function ItemHTWidth(Canvas: TCanvas; Rect: TRect;
-  const State: LCLType.TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
+  const State: LCLType.TOwnerDrawState; const Text: string;
+  SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 begin
   Result := HTMLTextWidth(Canvas, Rect, State, Text, SuperSubScriptRatio, Scale);
 end;
 
-function ItemHTHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
+function ItemHTHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double;
+  Scale: Integer = 100): Integer;
 begin
   Result := HTMLTextHeight(Canvas, Text, SuperSubScriptRatio, Scale);
 end;
@@ -502,7 +507,10 @@ function IsHyperLinkPaint(Canvas: TCanvas; Rect: TRect; const State: LCLType.TOw
 var
   W: Integer;
 begin
-  ItemHTDrawEx(Canvas, Rect, State, Text, W, htmlShow, MouseX, MouseY, Result, HyperLink, DefaultSuperSubScriptRatio);
+  ItemHTDrawEx(
+    Canvas, Rect, State, Text, W, htmlShow, MouseX, MouseY,
+    Result, HyperLink, DefaultSuperSubScriptRatio
+  );
 end;
 
 function IsHyperLink(Canvas: TCanvas; Rect: TRect; const Text: string;
@@ -510,8 +518,12 @@ function IsHyperLink(Canvas: TCanvas; Rect: TRect; const Text: string;
 var
   W: Integer;
 begin
-  ItemHTDrawEx(Canvas, Rect, [], Text, W, htmlHyperLink, MouseX, MouseY, Result, HyperLink, DefaultSuperSubScriptRatio);
+  ItemHTDrawEx(
+    Canvas, Rect, [], Text, W, htmlHyperLink, MouseX, MouseY,
+    Result, HyperLink, DefaultSuperSubScriptRatio
+  );
 end;
+
 
 //=== { TJvCustomListBoxDataConnector } ======================================
 
@@ -747,6 +759,7 @@ begin
       ExecuteHyperlink(Self, FOnHyperLinkClick, LinkName);
   end;
 end;
+
 
 //=== { TJvCustomHTComboBox } ================================================
 
@@ -1055,15 +1068,3 @@ end;
 
 end.
 
-[Window Title]
-Ambiguous unit found
-
-[Content]
-The unit JvDBHTLabel exists twice in the unit path of the IDE:
-
-1. "D:\Prog_Lazarus\svn\lazarus-ccr\components\jvcllaz\lib\i386-win32\run\JvDB\JvDBHTLabel.ppu"
-2. "D:\Prog_Lazarus\svn\lazarus-ccr\components\jvcllaz\lib\i386-win32\design\JvDB\JvDBHTLabel.ppu"
-
-Hint: Check if two packages contain a unit with the same name.
-
-[Ignore] [Ignore all] [Abort]
