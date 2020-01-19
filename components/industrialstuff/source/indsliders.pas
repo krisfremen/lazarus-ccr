@@ -22,12 +22,6 @@ interface
 uses
   Classes, SysUtils, Graphics, Controls, Types;
 
-const
-  DEFAULT_SIZE = 28;
-  DEFAULT_TRACK_THICKNESS = 7;
-  DEFAULT_MULTISLIDER_WIDTH = 250;
-  DEFAULT_MULTISLIDER_HEIGHT = DEFAULT_SIZE * 5 div 4;
-
 Type
 
   { TMultiSlider }
@@ -43,6 +37,12 @@ Type
     Sender: TObject; AKind: TThumbKind; AValue: Integer) of object;
 
   TMultiSlider = class(TCustomControl)
+  private
+    const
+      DEFAULT_SIZE = 28;
+      DEFAULT_TRACK_THICKNESS = 7;
+      DEFAULT_MULTISLIDER_WIDTH = 250;
+      DEFAULT_MULTISLIDER_HEIGHT = DEFAULT_SIZE * 5 div 4;
   private
     FAutoRotate: Boolean;
     FTrackSize: TPoint;
@@ -191,8 +191,8 @@ begin
   FColorBelow := clInactiveCaption;
   FColorBetween := clActiveCaption;
   FColorThumb := clBtnFace;
-  FDefaultSize := Scale96ToFont(DEFAULT_SIZE);
-  FTrackThickness := Scale96ToFont(DEFAULT_TRACK_THICKNESS);
+  FDefaultSize := DEFAULT_SIZE;
+  FTrackThickness := DEFAULT_TRACK_THICKNESS;
   FTrackStart := FDefaultSize*9 div 16 + 2;
   SetVertical(false);
   FRangeMin := 0;
@@ -224,15 +224,14 @@ begin
   inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    DisableAutosizing;
-    try
-      if IsTrackThicknessStored then
-        if FVertical then
-          FTrackThickness := Round(FTrackThickness * AXProportion)
-        else
-          FTrackThickness := Round(FTrackThickness * AYProportion);
-    finally
-      EnableAutoSizing;
+    if FVertical then
+    begin
+      FTrackThickness := Round(FTrackThickness * AXProportion);
+      FDefaultSize := Round(FDefaultSize * AYProportion);
+    end else
+    begin
+      FTrackThickness := Round(FTrackThickness * AYProportion);
+      FDefaultSize := Round(FDefaultSize * AXProportion);
     end;
   end;
 end;
