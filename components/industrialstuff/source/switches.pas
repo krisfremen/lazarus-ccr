@@ -26,6 +26,9 @@ type
 
   TCustomOnOffSwitch = class(TCustomControl)
   private
+    const
+      DEFAULT_BUTTON_SIZE = 24;
+  private
     FBorderStyle: TSwitchBorderStyle;
     FButtonSize: Integer;
     FCaptions: array[0..1] of string;
@@ -46,7 +49,6 @@ type
     function GetCaptions(AIndex: Integer): String;
     function GetColors(AIndex: Integer): TColor;
     function GetOrientation: TSwitchOrientation;
-    function IsButtonSizeStored: Boolean;
     procedure SetBorderStyle(AValue: TSwitchBorderStyle); reintroduce;
     procedure SetButtonSize(AValue: Integer);
     procedure SetCaptions(AIndex: Integer; AValue: string);
@@ -79,7 +81,7 @@ type
     procedure Paint; override;
     property BorderColor: TColor index 2 read GetColors write SetColors default clGray;
     property BorderStyle: TSwitchBorderStyle read FBorderStyle write SetBorderStyle default bsThin;
-    property ButtonSize: Integer read FButtonSize write SetButtonSize stored IsButtonSizeStored;
+    property ButtonSize: Integer read FButtonSize write SetButtonSize default DEFAULT_BUTTON_SIZE;
     property CaptionOFF: String index 0 read GetCaptions write SetCaptions;
     property CaptionON: String index 1 read GetCaptions write SetCaptions;
     property Checked: Boolean read FChecked write SetChecked default false;
@@ -148,9 +150,6 @@ implementation
 uses
   LCLIntf, LCLType, Math;
 
-const
-  DEFAULT_BUTTON_SIZE = 24;
-
 function TintedColor(AColor: TColor; ADelta: Integer): TColor;
 var
   r, g, b: Byte;
@@ -180,7 +179,7 @@ begin
   TabStop := true;
   Color := clWindow;
   FBorderStyle := bsThin;
-  FButtonSize := Scale96ToFont(DEFAULT_BUTTON_SIZE);
+  FButtonSize := DEFAULT_BUTTON_SIZE;
   FColors[0] := clMaroon; // unchecked color
   FColors[1] := clGreen;  // checked color
   FColors[2] := clGray;   // Border color
@@ -268,11 +267,10 @@ begin
   begin
     DisableAutosizing;
     try
-      if IsButtonSizeStored then
-        case Orientation of
-          soHorizontal : FButtonSize := Round(FButtonSize * AXProportion);
-          soVertical   : FButtonSize := Round(FButtonSize * AYProportion);
-        end;
+      case Orientation of
+        soHorizontal : FButtonSize := Round(FButtonSize * AXProportion);
+        soVertical   : FButtonSize := Round(FButtonSize * AYProportion);
+      end;
     finally
       EnableAutoSizing;
     end;
@@ -403,11 +401,6 @@ end;
 function TCustomOnOffSwitch.GetOrientation: TSwitchOrientation;
 begin
   if Width > Height then Result := soHorizontal else Result := soVertical;
-end;
-
-function TCustomOnOffSwitch.IsButtonSizeStored: Boolean;
-begin
-  Result := FButtonSize <> Scale96ToFont(DEFAULT_BUTTON_SIZE);
 end;
 
 procedure TCustomOnOffSwitch.KeyDown(var Key: Word; Shift: TShiftState);
