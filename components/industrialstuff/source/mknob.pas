@@ -51,10 +51,6 @@ uses
   LclIntf, Types, SysUtils, Classes, Graphics, Math,
   Controls, Forms, Dialogs, ComCtrls;
 
-const
-  DEFAULT_KNOB_FACE_COLOR = clSilver;
-  DEFAULT_KNOB_MARK_SIZE = 6;
-
 type
   TKnobAngleRange = (
     arTop270, arTop180, arTop120, arTop90,
@@ -64,38 +60,51 @@ type
   );
   TKnobChangeEvent = procedure(Sender: TObject; AValue: Longint) of object;
   TKnobMarkStyle = (msLine, msCircle, msTriangle);
+  TKnobMarkSizeKind = (mskPercentage, mskPixels);
 
   TmKnob = class(TCustomControl)
   private
-    { Private declarations }
+    const
+      DEFAULT_KNOB_MARK_SIZE = 20;
+  private
     FMaxValue: Integer;
     FMinValue: Integer;
     FCurValue: Integer;
     FFaceColor: TColor;
     FTickColor: TColor;
+    FBorderColor: TColor;
     FAllowDrag: Boolean;
     FOnChange: TKnobChangeEvent;
     FFollowMouse: Boolean;
     FMarkSize: Integer;
+    FMarkSizeKind: TKnobMarkSizeKind;
     FMarkStyle: TKnobMarkStyle;
     FAngleRange: TKnobAngleRange;
     FRotationEffect: Boolean;
+    FShadow: Boolean;
+    FShadowColor: TColor;
     FTransparent: Boolean;
     function GetAngleOrigin: Double;
     function GetAngleRange: Double;
     procedure SetAllowDrag(AValue: Boolean);
     procedure SetAngleRange(AValue: TKnobAngleRange);
+    procedure SetBorderColor(AValue: TColor);
     procedure SetCurValue(AValue: Integer);
     procedure SetFaceColor(AColor: TColor);
     procedure SetMarkSize(AValue: Integer);
+    procedure SetMarkSizeKind(AValue: TKnobMarkSizeKind);
     procedure SetMarkStyle(AValue: TKnobMarkStyle);
     procedure SetMaxValue(AValue: Integer);
     procedure SetMinValue(AValue: Integer);
+    procedure SetShadow(AValue: Boolean);
+    procedure SetShadowColor(AValue: TColor);
     procedure SetTickColor(AValue: TColor);
     procedure SetTransparent(AValue: Boolean);
     procedure UpdatePosition(X, Y: Integer);
 
-  protected  { Protected declarations }
+  protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     class function GetControlClassDefaultSize: TSize; override;
     procedure KnobChange;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -104,35 +113,40 @@ type
     procedure Paint; override;
 
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
 
   published
-    { Published declarations }
     property Align;
     property AllowUserDrag: Boolean read FAllowDrag write SetAllowDrag default True;
     property AngleRange: TKnobAngleRange read FAngleRange write SetAngleRange default arTop270;
+    property BorderColor: TColor read FBorderColor write SetBorderColor default clBtnHighlight;
     property BorderSpacing;
     property Color;
-    property FaceColor: TColor read FFaceColor write SetFaceColor default DEFAULT_KNOB_FACE_COLOR;
+    property FaceColor: TColor read FFaceColor write SetFaceColor default clSilver;
     property TickColor: TColor read FTickColor write SetTickColor default clBlack;
     property Position: Integer read FCurValue write SetCurValue;
     property RotationEffect: Boolean read FRotationEffect write FRotationEffect default false;
     property Enabled;
     property MarkSize: Integer read FMarkSize write SetMarkSize default DEFAULT_KNOB_MARK_SIZE;
+    property MarkSizeKind: TKnobMarkSizeKind read FMarkSizeKind write SetMarkSizeKind default mskPercentage;
     property MarkStyle: TKnobMarkStyle read FMarkStyle write SetMarkStyle default msLine;
     property Max: Integer read FMaxValue write SetMaxValue default 100;
     property Min: Integer read FMinValue write SetMinvalue default 0;
     property OnChange: TKnobChangeEvent read FOnChange write FOnChange;
     property ParentColor;
     property ParentShowHint;
+    property Shadow: Boolean read FShadow write SetShadow default true;
+    property ShadowColor: TColor read FShadowColor write SetShadowColor default clBtnShadow;
     property ShowHint;
     property Transparent: Boolean read FTransparent write SetTransparent default true;
     property Visible;
   end;
 
+
 implementation
 
+{ Rotates point P around the Center by the angle given by its sin and cos.
+  The angle is relative to the upward y axis in clockwise direction. }
 function Rotate(P, Center: TPoint; SinAngle, CosAngle: Double): TPoint;
 begin
   P.X := P.X - Center.X;
@@ -141,7 +155,10 @@ begin
   Result.Y := round(sinAngle * P.X + cosAngle * P.Y) + Center.Y;
 end;
 
-constructor TmKnob.Create(AOwner : TComponent);
+
+{ TmKnob }
+
+constructor TmKnob.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   with GetControlClassDefaultSize do
@@ -154,11 +171,26 @@ begin
   FMarkStyle := msLine;
   FMarkSize := DEFAULT_KNOB_MARK_SIZE;
   FTickColor := clBlack;
-  FFaceColor := DEFAULT_KNOB_FACE_COLOR;
+  FFaceColor := clSilver;
+  FBorderColor := clBtnHighlight;
   FFollowMouse := false;
   FAllowDrag := true;
   FAngleRange := arTop270;
   FTransparent := true;
+  FShadow := true;
+  FShadowColor := clBtnShadow;
+end;
+
+procedure TmKnob.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    if FMarkSizeKind = mskPixels then
+      FMarkSize := Round(FMarkSize * AXProportion);
+  end;
 end;
 
 function TmKnob.GetAngleOrigin: Double;
@@ -223,102 +255,11 @@ begin
     UpdatePosition(X,Y)
 end;
 
-                        (*
 procedure TmKnob.Paint;
-var	R             : TRect;
-       	Bm            : TBitMap;
-        Co,Si,Angle   : Double;
-        X, Y,W, H     : Integer;
-        dx,dy,gx,gy   : Integer;
-        OuterPoint    : TPoint;
-begin
-	{ Initialize offscreen BitMap }
-   Bm := TBitMap.Create;
-   if ( csdesigning in componentstate) then
-      if Height < Width then
-         Height:=Width
-      else
-         Width:=Height;
-
-   Bm.Width := Width;
-   Bm.Height := Height;
-   Bm.Canvas.Brush.Color := clBTNFACE; //clWindow;
-   R.Left := 0;
-   R.Top := 0;
-   R.Right := Width ;//- 1;
-   R.Bottom := Height;// - 1;
-   W := R.Right - R.Left -4;
-   H := R.Bottom - R.Top -4;
-   { This weird thing make knob "shake", emulating a rotation effect.
-      Not so pretty, but I like it..............}
-   if fRotationEffect then
-      if (position mod 2) <> 0 then
-         inc(h);
-
-   Bm.Canvas.FillRect(R);
-
-   with Bm.Canvas do
-    begin
-
-    Brush.Color := FaceColor;
-    Pen.Width := 2;
-    Pen.Color := Cl3dlight;
-    ellipse(1, 1, W-1, H-1);
-    Pen.Color := Clbtnshadow;
-    ellipse(3, 3, W+2, H+2);
-
-    Pen.Color := Clbtnface;
-    Pen.Width := 1;
-    RoundRect(2,2,w,h,w,h);
-    Pen.Width := 3;
-    Pen.Color := TickColor;
-
-    if Position >= 0 then
-    begin
-      Brush.Color := FaceColor;
-      X := W div 2;
-      Y := H div 2;
-      dX := W div 6;
-      dY := H div 6;
-      gX := W div 32;
-      gY := H div 32;
-
-      Angle:=(Position - (Min + Max)/2 ) / (Max - Min) * 5 ;
-
-      Si:=Sin(Angle);
-      Co:=Cos(Angle);
-      OuterPoint.X:=Round(X + Si * (X-dx));
-      OuterPoint.Y:=Round(Y - Co * (Y-dy));
-      MoveTo(OuterPoint.X,OuterPoint.y);
-
-      case MarkStyle of
-        msLine   : LineTo(Round(X + Si * (X-gx)),Round(Y - Co * (Y-gy)));
-  { this implementation of circle style is very poor but for my needing is enough}
-        msCircle : begin
-                   Brush.Color := TickColor;
-                   RoundRect(OuterPoint.X-3, OuterPoint.Y-3,
-                             OuterPoint.X+3, OuterPoint.Y+3,
-                             OuterPoint.X+3, OuterPoint.Y+3);
-                   end;
-      end;
-    end;
-   end;
-
-   Canvas.CopyMode := cmSrcCopy;
-   Canvas.Draw(0, 0, Bm);
-   bm.Destroy;
-end;
-             *)
-
-procedure TmKnob.Paint;
-const
-  cPENWIDTH = 1;
-  cMARGIN = 4*cPENWIDTH;
 var
   R: TRect;
   bmp: TBitmap;
   Angle, sinAngle, cosAngle: Double;
-  //X, Y,
   W, H: Integer;
   i: Integer;
   P: array[0..3] of TPoint;
@@ -328,8 +269,8 @@ var
   ctr: TPoint;
   penwidth: Integer;
 begin
-  margin := Scale96ToFont(cMARGIN);
-  penwidth := Scale96ToFont(cPENWIDTH);
+  margin := 4;
+  penwidth := 1;
 
   { Initialize offscreen BitMap }
   bmp := TBitmap.Create;
@@ -373,22 +314,32 @@ begin
       Pen.Style := psSolid;
       R := Rect(ctr.X, ctr.Y, ctr.X, ctr.Y);
       InflateRect(R, radius - penwidth, radius - penwidth);
-      OffsetRect(R, -penwidth, -penwidth);
+      if FShadow then
+        OffsetRect(R, -penwidth, -penwidth);
       Ellipse(R);
 
-      Pen.Color := clBtnShadow;
-      OffsetRect(R, 3*penwidth, 3*penwidth);
-      Ellipse(R);
+      if FShadow then
+      begin
+        Pen.Color := FShadowColor;
+        OffsetRect(R, 3*penwidth, 3*penwidth);
+        Ellipse(R);
+      end;
 
-      Pen.Color := clBtnFace;
+      Pen.Color := FBorderColor;
       Pen.Width := 1;
-      OffsetRect(R, -2*penwidth, -2*penwidth);
+      if FShadow then
+        OffsetRect(R, -2*penwidth, -2*penwidth);
       Ellipse(R);
 
       if Position >= 0 then
       begin
-        markersize := radius * FMarkSize div 100;
-        if markersize < 5 then markersize := 5;
+        case FMarkSizeKind of
+          mskPercentage:
+            markersize := radius * FMarkSize div 100;
+          mskPixels:
+            markerSize := FMarkSize;
+        end;
+        if markersize < 2 then markersize := 2;
 
         Angle := (Position - (Min + Max)/2 ) / (Max - Min) * GetAngleRange + GetAngleOrigin;
         SinCos(Angle, sinAngle, cosAngle);
@@ -398,8 +349,8 @@ begin
             begin
               Pen.Width := 3;
               Pen.Color := TickColor;
-              P[0] := Point(ctr.X, markersize);
-              P[1] := Point(P[0].X, P[0].Y + markersize);
+              P[0] := Point(ctr.X, ctr.Y - radius + penwidth);
+              P[1] := Point(ctr.X, ctr.Y - radius + penwidth + markersize);
               for i:=0 to 1 do
                 P[i] := Rotate(P[i], ctr, sinAngle, cosAngle);
               MoveTo(P[0].X, P[0].Y);
@@ -409,7 +360,8 @@ begin
             begin
               Brush.Color := TickColor;
               Pen.Style := psClear;
-              P[0] := Rotate(Point(ctr.X, MARGIN + markersize + H div 32), ctr, sinAngle, cosAngle);
+              P[0] := Point(ctr.X, ctr.Y - radius + markersize + 2*penwidth);
+              P[0] := Rotate(P[0], ctr, sinAngle, cosAngle);
               R := Rect(P[0].X, P[0].Y, P[0].X, P[0].Y);
               InflateRect(R, markersize, markersize);
               Ellipse(R);
@@ -418,7 +370,8 @@ begin
             begin
               Brush.Color := TickColor;
               Pen.Style := psClear;
-              P[0] := Point(ctr.X, H div 32);
+//              P[0] := Point(ctr.X, H div 32);
+              P[0] := Point(ctr.X, ctr.Y - radius + 2*penwidth);
               P[1] := Point(P[0].X - markersize, P[0].Y + markersize*2);
               P[2] := Point(P[0].X + markersize, P[0].Y + markersize*2);
               P[3] := P[0];
@@ -451,6 +404,15 @@ begin
   if AValue <> FAngleRange then
   begin
     FAngleRange := AValue;
+    Invalidate;
+  end;
+end;
+
+procedure TmKnob.SetBorderColor(AValue: TColor);
+begin
+  if AValue <> FBorderColor then
+  begin
+    FBorderColor := AValue;
     Invalidate;
   end;
 end;
@@ -489,6 +451,15 @@ begin
   end;
 end;
 
+procedure TmKnob.SetMarkSizeKind(AValue: TKnobMarkSizeKind);
+begin
+  if AValue <> FMarkSizeKind then
+  begin
+    FMarkSizeKind := AValue;
+    Invalidate;
+  end;
+end;
+
 procedure TmKnob.SetMarkStyle(AValue: TKnobMarkStyle);
 begin
   if AValue <> FMarkStyle then
@@ -512,6 +483,24 @@ begin
   if AValue <> FMinValue then
   begin
     FMinValue := AValue;
+    Invalidate;
+  end;
+end;
+
+procedure TmKnob.SetShadow(AValue: Boolean);
+begin
+  if AValue <> FShadow then
+  begin
+    FShadow := AValue;
+    Invalidate;
+  end;
+end;
+
+procedure TmKnob.SetShadowColor(AValue: TColor);
+begin
+  if AValue <> FShadowColor then
+  begin
+    FShadowColor := AValue;
     Invalidate;
   end;
 end;
