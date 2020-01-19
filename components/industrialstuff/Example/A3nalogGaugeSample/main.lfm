@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 427
+  Left = 430
   Height = 483
-  Top = 104
+  Top = 138
   Width = 779
   Caption = 'AntiAliased Analog Gauge demo'
   ClientHeight = 483
@@ -11,7 +11,6 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   Position = poDefaultPosOnly
   LCLVersion = '2.1.0.0'
-  Scaled = False
   object Panel1: TPanel
     Left = 0
     Height = 216

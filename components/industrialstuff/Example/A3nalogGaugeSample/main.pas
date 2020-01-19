@@ -136,8 +136,7 @@ type
     procedure CaptionBoxClick(Sender: TObject);
     procedure CaptionEditChange(Sender: TObject);
     procedure CloseButtonClick(Sender: TObject);
-    procedure AboutLabelMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure AboutLabelMouseMove(Sender: TObject; Shift: TShiftState; X,Y: Integer);
     procedure AboutLabelClick(Sender: TObject);
   private
     AnalogGauge1: TA3nalogGauge;
@@ -195,7 +194,7 @@ begin
     Left := 490;
     Top := 16;
     Width := 278;
-    Height := 200; //245;
+    Height := 200;
     Anchors := [akRight, akTop, akBottom];
     Angle := 180;
     Caption := 'mV';
@@ -206,7 +205,7 @@ begin
   CenterRadEdit.Value := AnalogGauge1.CenterRadius;
   CircleRadEdit.Value := AnalogGauge1.CircleRadius;
   MarginEdit.Value := AnalogGauge1.Margin;
-  ScaleMaxEdit.Value := AnalogGauge1.Scale;
+  ScaleMaxEdit.Value := AnalogGauge1.ScaleMax;
   AngleEdit.Value := AnalogGauge1.Angle;
   MinimEdit.Value := AnalogGauge1.IndMinimum;
   MaximEdit.Value := AnalogGauge1.IndMaximum;
@@ -267,8 +266,8 @@ begin
     V := 0;
     FDelta := -FDelta
   end else
-  if V > AnalogGauge1.Scale then begin
-    V := AnalogGauge1.Scale;
+  if V > AnalogGauge1.ScaleMax then begin
+    V := AnalogGauge1.ScaleMax;
     FDelta := -FDelta
   end;
   AnalogGauge1.Position := V;
@@ -461,9 +460,9 @@ end;
 procedure TMainForm.ScaleMaxEditChange(Sender: TObject);
 begin
   if ScaleMaxEdit.Text <> '' then begin
-    AnalogGauge1.Scale := ScaleMaxEdit.Value;
-    AnalogGauge2.Scale := ScaleMaxEdit.Value;
-    AnalogGauge3.Scale := ScaleMaxEdit.Value;
+    AnalogGauge1.ScaleMax := ScaleMaxEdit.Value;
+    AnalogGauge2.ScaleMax := ScaleMaxEdit.Value;
+    AnalogGauge3.ScaleMax := ScaleMaxEdit.Value;
   end;
 end;
 

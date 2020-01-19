@@ -11,7 +11,7 @@ unit A3nalogGauge;
 interface
 
 uses
-  LCLIntf, LCLType, LCLProc, Types,
+  LCLIntf, LCLType, LCLProc, LCLVersion, Types,
   {$IFDEF TICKER} Windows,{$ENDIF}      // for QueryPerformanceCounter
   SysUtils, Classes, Graphics, Controls;
 
@@ -27,19 +27,20 @@ type
   );
   TFaceOptions = set of TFaceOption;
 
-const
-  DEFAULT_FACE_OPTIONS = [
-    foShowMainTicks, foShowSubTicks, foShowIndicatorMax,
-    foShowValues, foShowCenter, foShowFrame, foShow3D, foShowCaption
-  ];
-  DEFAULT_CENTER_RADIUS = 8;
-  DEFAULT_CIRCLE_RADIUS = 3;
-  DEFAULT_LENGTH_MAINTICKS = 15;
-  DEFAULT_LENGTH_SUBTICKS = 8;
-  DEFAULT_MARGIN = 10;
-
 type
   TA3nalogGauge = class(TCustomControl)
+  private
+    const
+      DEFAULT_FACE_OPTIONS = [
+        foShowMainTicks, foShowSubTicks, foShowIndicatorMax,
+        foShowValues, foShowCenter, foShowFrame, foShow3D, foShowCaption
+      ];
+      DEFAULT_CENTER_RADIUS = 8;
+      DEFAULT_CIRCLE_RADIUS = 3;
+      DEFAULT_LENGTH_MAINTICKS = 15;
+      DEFAULT_LENGTH_SUBTICKS = 8;
+      DEFAULT_MARGIN = 10;
+      DEFAULT_TEXT_DIST = 10;
   private
     // face elements colors
     FMinColor: TColor;
@@ -59,6 +60,7 @@ type
     FCircleRadius: Integer;
     FScaleAngle: Integer;
     FMargin: Integer;
+    FTextDist: Integer;
     FStyle: TStyle;
     FArrowWidth: Integer;
     FNumMainTicks: Integer;
@@ -91,11 +93,6 @@ type
     FOnFrames: TNotifyEvent;
    {$ENDIF}
     // set properties
-    function IsCenterRadiusStored: Boolean;
-    function IsCircleRadiusStored: Boolean;
-    function IsLengthMainTicksStored: Boolean;
-    function IsLengthSubTicksStored: Boolean;
-    function IsMarginStored: Boolean;
     procedure SetFrameColor(C: TColor);
     procedure SetMinColor(C: TColor);
     procedure SetMidColor(C: TColor);
@@ -121,6 +118,7 @@ type
     procedure SetPosition(V: Single);
     procedure SetScaleMaxValue(I: Integer);
     procedure SetScaleMinValue(I: Integer);
+    procedure SetTextDist(I: Integer);
     procedure SetMaximum(I: Integer);
     procedure SetMinimum(I: Integer);
     procedure SetCaption(const S: string);
@@ -130,25 +128,32 @@ type
 
   protected
     procedure CaptionFontChanged(Sender: TObject);
-    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
-      const AXProportion, AYProportion: Double); override;
     procedure DrawArrow(Bitmap: TBitmap; K: Integer);
     procedure DrawScale(Bitmap: TBitmap; K: Integer);
     procedure FastAntiAliasPicture;
+    procedure FontChanged(Sender: TObject); override;
+    class function GetControlClassDefaultSize: TSize; override;
     procedure Loaded; override;
     procedure RedrawArrow;
     procedure RedrawScale;
     procedure Paint; override;
     procedure Resize; override;
-    procedure FontChanged(Sender: TObject); override;
-    class function GetControlClassDefaultSize: TSize; override;
     //procedure CMFontChanged(var Msg: TMessage); message CM_FontChanged;
     //procedure WMEraseBkGnd(var Msg: TMessage); message WM_ERASEBKGND;
+
+  { LCL scaling }
+  protected
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+  public
+    {$IF LCL_FullVersion >= 2010000}
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
+    {$IFEND}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
 
   published
     property Angle: Integer
@@ -168,11 +173,11 @@ type
     property CenterColor: TColor
       read FCenterColor write SetCenterColor default clDkGray;
     property CenterRadius: Integer
-      read FCenterRadius write SetCenterRadius stored IsCenterRadiusStored;
+      read FCenterRadius write SetCenterRadius default DEFAULT_CENTER_RADIUS;
     property CircleColor: TColor
       read FCircleColor write SetCircleColor default clBlue;
     property CircleRadius: Integer
-      read FCircleRadius write SetCircleRadius stored IsCircleRadiusStored;
+      read FCircleRadius write SetCircleRadius default DEFAULT_CIRCLE_RADIUS;
     property FaceColor: TColor
       read FFaceColor write SetFaceColor default clBtnFace;
     property FaceOptions: TFaceOptions
@@ -184,11 +189,11 @@ type
     property IndMinimum: Integer
       read FMinimum write SetMinimum default 20;
     property LengthMainTicks: Integer
-      read FLengthMainTicks write SetLengthMainTicks stored IsLengthMainTicksStored;
+      read FLengthMainTicks write SetLengthMainTicks default DEFAULT_LENGTH_MAINTICKS;
     property LengthSubTicks: Integer
-      read FLengthSubTicks write SetLengthSubTicks stored IsLengthSubTicksStored;
+      read FLengthSubTicks write SetLengthSubTicks default DEFAULT_LENGTH_SUBTICKS;
     property Margin: Integer
-      read FMargin write SetMargin stored IsMarginStored;
+      read FMargin write SetMargin default DEFAULT_MARGIN;
     property MarginColor: TColor
       read FMarginColor write SetMarginColor default clSilver;
     property MaxColor: TColor
@@ -209,6 +214,8 @@ type
       read FScaleMinValue write SetScaleMinValue default 0;
     property Style: TStyle
       read FStyle write SetStyle default agsCenterStyle;
+    property TextDist: Integer
+      read FTextDist write SetTextDist default DEFAULT_TEXT_DIST;
     property TicksColor: TColor
       read FTicksColor write SetTicksColor default clBlack;
     property ValueColor: TColor
@@ -242,10 +249,14 @@ var
   w, h: Integer;
 begin
   inherited;
+
   FBackBitmap := TBitmap.Create;
   FFaceBitmap := TBitmap.Create;
   FAABitmap := nil;
+
   //*****************************defaults:****************************************
+  Constraints.MinWidth := 60;
+  Constraints.MinHeight := 50;
   with GetControlClassDefaultSize do begin
     SetInitialBounds(0, 0, CX, CY);
     w := CX;
@@ -273,18 +284,19 @@ begin
   FMaxColor := clRed;
   FArrowWidth := 1;
   FPosition := 0;
-  FMargin := Scale96ToFont(DEFAULT_MARGIN);
+  FMargin := DEFAULT_MARGIN;
   FStyle := agsCenterStyle;
   FScaleMaxValue := 100;
   FScaleMiNValue := 0;
   FMaximum := 80;
   FMinimum := 20;
   FScaleAngle := 120;
-  FCircleRadius := Scale96ToFont(DEFAULT_CIRCLE_RADIUS);
-  FCenterRadius := Scale96ToFont(DEFAULT_CENTER_RADIUS);
+  FCircleRadius := DEFAULT_CIRCLE_RADIUS;
+  FCenterRadius := DEFAULT_CENTER_RADIUS;
+  FTextDist := DEFAULT_TEXT_DIST;
   FNumMainTicks := 5;
-  FLengthMainTicks := Scale96ToFont(DEFAULT_LENGTH_MAINTICKS);
-  FLengthSubTicks := Scale96ToFont(DEFAULT_LENGTH_SUBTICKS);
+  FLengthMainTicks := DEFAULT_LENGTH_MAINTICKS;
+  FLengthSubTicks := DEFAULT_LENGTH_SUBTICKS;
   FCaption := '';
   FFaceOptions := DEFAULT_FACE_OPTIONS;
   FAntiAliased := aaNone;
@@ -327,21 +339,12 @@ begin
   inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    DisableAutosizing;
-    try
-      if IsCenterRadiusStored then
-        FCenterRadius := Round(FCenterRadius * AXProportion);
-      if IsCircleRadiusStored then
-        FCircleRadius := Round(FCircleRadius * AXProportion);
-      if IsLengthMainTicksStored then
-        FLengthMainTicks := Round(FLengthMainTicks * AXProportion);
-      if IsLengthSubTicksStored then
-        FLengthSubTicks := Round(FLengthSubTicks * AXProportion);
-      if IsMarginStored then
-        FMargin := Round(FMargin * AXProportion);
-    finally
-      EnableAutoSizing;
-    end;
+    FCenterRadius := Round(FCenterRadius * AXProportion);
+    FCircleRadius := Round(FCircleRadius * AXProportion);
+    FLengthMainTicks := Round(FLengthMainTicks * AXProportion);
+    FLengthSubTicks := Round(FLengthSubTicks * AXProportion);
+    FMargin := Round(FMargin * AXProportion);
+    FTextDist := Round(FTextDist * AXProportion);
   end;
 end;
 
@@ -356,7 +359,6 @@ var
   tm: TTextMetric;
   pt: TPoint;
   txt: String;
-  txtDist: Integer;
   apw: Integer;  // pen width of arc
   v: Double;
 begin
@@ -367,7 +369,6 @@ begin
   N := FNumMainTicks * 5;
   M := FMargin * K;
   R := FCircleRadius * K;
-  txtDist := Scale96ToFont(10);
 
   with Bitmap do begin
     Canvas.Brush.Color := FFaceColor;
@@ -459,7 +460,7 @@ begin
     end;
 
     { Draw min/mid/max indicator arcs }
-    apw := Scale96ToFont(4 * K);
+    apw := 4 * K; //Scale96ToFont(4 * K);
     if (foShowIndicatorMax in FFaceOptions) then begin
       SetPenStyles(Canvas.Pen, apw, FMaxColor);
       SinCos(DegToRad(A + FScaleAngle), sinA, cosA);
@@ -532,8 +533,8 @@ begin
         txt := FormatFloat('0', round(v));
         wTxt := Canvas.TextWidth(txt);
         Canvas.TextOut(
-          Round(C-(J-(FLengthMainTicks+txtDist)*K-I)*cosA) - wTxt div 2,
-          Round(Y-(J-(FLengthMainTicks+txtDist)*K)*sinA) - hTxt div 2,
+          Round(C-(J-(FLengthMainTicks+FTextDist)*K-I)*cosA) - wTxt div 2,
+          Round(Y-(J-(FLengthMainTicks+FTextDist)*K)*sinA) - hTxt div 2,
           txt
         );
       end;
@@ -808,31 +809,6 @@ begin
 end;
 }
 
-function TA3nalogGauge.IsCenterRadiusStored: Boolean;
-begin
-  Result := FCenterRadius <> Scale96ToFont(DEFAULT_CENTER_RADIUS);
-end;
-
-function TA3nalogGauge.IsCircleRadiusStored: Boolean;
-begin
-  Result := FCircleRadius <> Scale96ToFont(DEFAULT_CIRCLE_RADIUS);
-end;
-
-function TA3nalogGauge.IsLengthMainTicksStored: Boolean;
-begin
-  Result := FLengthMainTicks <> Scale96ToFont(DEFAULT_LENGTH_MAINTICKS);
-end;
-
-function TA3nalogGauge.IsLengthSubTicksStored: Boolean;
-begin
-  Result := FLengthSubTicks <> Scale96ToFont(DEFAULT_LENGTH_SUBTICKS);
-end;
-
-function TA3nalogGauge.IsMarginStored: Boolean;
-begin
-  Result := FMargin <> Scale96ToFont(DEFAULT_MARGIN);
-end;
-
 procedure TA3nalogGauge.Loaded;
 begin
   inherited;
@@ -866,10 +842,12 @@ procedure TA3nalogGauge.Resize;
 var
   K: Integer;
 begin
+(*
   if Width < 60 then
     Width := 60;
   if Height < 50 then
     Height := 50;
+  *)
 
   if FAntiAliased = aaNone then begin
     FBackBitmap.Width := Width;
@@ -888,6 +866,14 @@ begin
   FBitmapsValid := false;
   inherited;
 end;
+
+{$IF LCL_FullVersion >= 2010000}
+procedure TA3nalogGauge.FixDesignFontsPPI(const ADesignTimePPI: Integer);
+begin
+  inherited;
+  DoFixDesignFontPPI(FCaptionFont, ADesignTimePPI);
+end;
+{$IFEND}
 
 procedure TA3nalogGauge.ScaleFontsPPI(const AToPPI: Integer;
   const AProportion: Double);
@@ -1116,6 +1102,14 @@ begin
       exit;
     FScaleMinValue := I;
     if FPosition < FScaleMinValue then FPosition := FScaleMinValue;
+    RedrawScale;
+  end;
+end;
+
+procedure TA3nalogGauge.SetTextDist(I: Integer);
+begin
+  if I <> FTextDist then begin
+    FTextDist := I;
     RedrawScale;
   end;
 end;
