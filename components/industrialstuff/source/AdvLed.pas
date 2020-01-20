@@ -56,6 +56,8 @@ type
 
   protected
     FlipFLop : Boolean;
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
     procedure DoChange(AState: TLedState); dynamic;
     procedure Loaded; override;
   public
@@ -181,16 +183,17 @@ begin
   inherited;
   if FKind <> lkCustom then
     BitmapNeeded;
-  {
+end;
 
-   Try
-      If (csDesigning in ComponentState) Then Exit ;
-      // Load Bitmap if necessary
-     BitmapNeeded;
-   Finally
-      inherited Loaded;
-   End;
-   }
+procedure TAdvLed.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    BitmapNeeded;
+  end;
 end;
 
 // timer
@@ -231,14 +234,22 @@ const
   DisabledBitmaps: array[TLedKind] of string = ('LEDREDOFF', 'LEDGREENOFF',
     'LEDBLUEOFF', 'LEDYELLOWOFF', 'LEDPURPLEOFF', 'LEDBULBOFF' ,'');   }
   OnBitmaps: array[TLedKind] of string = ('RED', 'GREEN', 'YELLOW', 'BULBON', '');
-  OffBitmaps: array[TLedKind] of string = ('BLACK', 'BLACK', 'BLACK','BULBOFF', '');
-  DisabledBitmaps: array[TLedKind] of string = ('BLACK', 'BLACK', 'BLACK','BULBOFF' ,'');
+  OffBitmaps: array[TLedKind] of string = ('REDOFF', 'GREENOFF', 'YELLOWOFF','BULBOFF', '');
+  DisabledBitmaps: array[TLedKind] of string = ('BLACK', 'BLACK', 'BLACK','BULBDISABLED' ,'');
+var
+  resName: String;
 begin
   if LedKind <> lkCustom then
   begin
-    FGlyphs[lsOn].LoadFromResourceName(HInstance, OnBitmaps[LedKind]);
-    FGlyphs[lsOff].LoadFromResourceName(HInstance, OffBitmaps[LedKind]);
-    FGlyphs[lsDisabled].LoadFromResourceName(HInstance, DisabledBitmaps[LedKind]);
+    if Font.PixelsPerInch >=168 then
+      resName := '_200'
+    else if Font.PixelsPerInch >= 120 then
+      resName := '_150'
+    else
+      resName := '';
+    FGlyphs[lsOn].LoadFromResourceName(HInstance, OnBitmaps[LedKind] + resName);
+    FGlyphs[lsOff].LoadFromResourceName(HInstance, OffBitmaps[LedKind] + resName);
+    FGlyphs[lsDisabled].LoadFromResourceName(HInstance, DisabledBitmaps[LedKind] + resName);
   end;
 end;
 

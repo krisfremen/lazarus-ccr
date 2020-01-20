@@ -49,12 +49,14 @@ type
     FScaleFactor: Double;
     procedure SetBorderStyle(AValue: TLedNumberBorderStyle);
     procedure SetTransparent(AValue: boolean);
+    procedure SetZeroToO(AValue: Boolean);
   protected{private}
     FBgColor   : TColor;
     FOffColor  : TColor;
     FOnColor   : TColor;
     FColumns   : Integer;
     FRows      : Integer;
+    FZeroToO   : Boolean;
     FSize      : TSegmentSize;
     FSlantAngle: Integer;
     FSlanted   : Boolean;
@@ -69,6 +71,7 @@ type
     procedure PaintSegment(Segment: Integer; TheColor: TColor;
                            Points: array of TPoint; OffsetX, OffsetY: Integer);
     procedure ResizeControl(Row, Col, ASize: Integer);
+    procedure SetParent(NewParent: TWinControl); override;
     function  GetAbout: string;
     function  GetSlantAngle: Double;
     procedure SetAbout(const {%H-}Value: string);
@@ -79,7 +82,7 @@ type
     procedure SetOffColor(Value: TColor);
     procedure SetRows(Value: Integer);
     procedure SetColumns(Value: Integer);
-    procedure SetbgColor(Value: TColor);
+    procedure SetBGColor(Value: TColor);
     procedure SelectSegments(Segment: Word; Points: array of TPoint;
                              OffsetX, OffsetY: Integer);
   protected
@@ -96,6 +99,7 @@ type
     property SlantAngle: Integer read FSlantAngle write SetSlantAngle default 5;
     property Slanted: Boolean read FSlanted write SetSlanted default false;
     property Transparent: boolean read FTransparent write SetTransparent default false; {Draws segments with transparent background.BgColor is used as mask color.}
+    property ZeroToO: Boolean read FZeroToO write SetZeroToO default false;
   public
     constructor Create(AOwner:TComponent); override;
     destructor Destroy; override;
@@ -104,6 +108,7 @@ type
   TLEDNumber = class(TCustomLEDNumber)
   published
     property Version;
+    property BorderSpacing;
     property BorderStyle;
     property Caption;
     property Columns;
@@ -127,6 +132,7 @@ type
     property Slanted;
     property Transparent;
     property Visible;
+    property ZeroToO;
   end;
 
 
@@ -235,6 +241,10 @@ const
    44, 0, 45, 0, 0, 0, 0, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
    32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44);
 
+const
+  BASE_WIDTH = 17;
+  BASE_HEIGHT = 30;
+
 
 {===== TCustomLEDNumber ============================================}
 
@@ -249,14 +259,15 @@ begin
                    csSetCaption,
                    csClickEvents,
                    csDoubleClicks];
-  Width := 170;
-  Height := 30;
+  FRows := 1;
+  FColumns := 10;
+
+  Width := FColumns * BASE_WIDTH;
+  Height := FRows * BASE_HEIGHT;
   FOnColor := clLime;
   FOffColor := $000E3432;
   FBgColor := clBlack;
   FSize := 2;
-  FRows := 1;
-  FColumns := 10;
   FSlantAngle := 5;
   Caption := 'LED-LABEL';
   lbDrawBmp := TBitmap.Create;
@@ -292,6 +303,13 @@ begin
   Invalidate;
 end;
 
+procedure TCustomLEDNumber.SetZeroToO(AValue: Boolean);
+begin
+  if FZeroToO = AValue then Exit;
+  FZeroToO := AValue;
+  Invalidate;
+end;
+
 procedure TCustomLEDNumber.SetBorderStyle(AValue: TLedNumberBorderStyle);
 begin
   if FBorderStyle=AValue then Exit;
@@ -312,8 +330,6 @@ procedure TCustomLEDNumber.DoAutoAdjustLayout(
 begin
   inherited;
   FScalefactor := Font.PixelsPerInch / 96;
-  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
-    FScaleFactor *= Max(AXProportion, AYProportion)
 end;
 
 procedure TCustomLEDNumber.SlantPoint(var P: TPoint;
@@ -336,7 +352,7 @@ begin
   if FSlanted and (FSlantAngle <> 0) then
   begin
     tanAlpha := tan(GetSlantAngle);
-    baseY := round(FScaleFactor * 30 * (FSize - 1));
+    baseY := round(FScaleFactor * BASE_HEIGHT * (FSize - 1));
     for i := 0 to MAX_POINTS do
       SlantPoint(Points[i], baseY, tanAlpha);
   end;
@@ -346,9 +362,9 @@ end;
 function TCustomLEDNumber.NewOffset(xOry: char; OldOffset: Integer): Integer;
 begin
   if (xOry = 'x')then
-    Result := oldOffset + round(FScaleFactor * 17 * (FSize - 1))
+    Result := oldOffset + round(FScaleFactor * BASE_WIDTH * (FSize - 1))
   else
-    Result := oldOffset + round(FScaleFactor * 30 * (FSize - 1));
+    Result := oldOffset + round(FScaleFactor * BASE_HEIGHT * (FSize - 1));
 end;
 {=====}
 
@@ -415,8 +431,8 @@ var
 begin
   if (Segment and $FFFF) = $FFFF then begin
     MyColor := FOnColor;
-    PaintSegment(17, MyColor, Points, OffsetX, OffsetY);
-    PaintSegment(18, MyColor, Points, OffsetX, OffsetY);
+    PaintSegment(BASE_WIDTH, MyColor, Points, OffsetX, OffsetY);
+    PaintSegment(BASE_WIDTH+1, MyColor, Points, OffsetX, OffsetY);
   end
   else begin
     Bit := $8000;
@@ -451,7 +467,6 @@ begin
   Last := #0;
   OffsetX  := FSize;
   OffsetY  := 0;
-
   DisplayStr := Caption;
 
   if Length(DisplayStr) > 0 then
@@ -479,12 +494,13 @@ begin
             OffsetX := NewOffset('x', OffsetX);
           end
           else begin
-            OffsetX := OffsetX - round(FScaleFactor * 17 * (FSize - 1));
+            OffsetX := OffsetX - round(FScaleFactor * BASE_WIDTH * (FSize - 1));
             Tmp := (Characters[CharacterNDX[Ord(Next)]] or Characters[CharacterNDX[Ord(Last)]]);
             SelectSegments(Tmp, Points, OffsetX,  OffsetY);
             OffsetX := NewOffset('x', OffsetX);
           end
         else begin
+          if FZeroToO and (Next = '0') then Next := 'O';
           Tmp := Characters[CharacterNDX[Ord(Next)]];
           SelectSegments(Tmp, Points, OffsetX, OffsetY);
           OffsetX := NewOffset('x', OffsetX);
@@ -546,8 +562,8 @@ begin
   FRows := Row;
   FColumns := Col;
   FSize := ASize;
-  h := round(FScaleFactor * FRows * 30 * (FSize - 1));
-  w := round(FScaleFactor * (FColumns * 17 * (FSize - 1)));
+  h := round(FScaleFactor * FRows * BASE_HEIGHT * (FSize - 1));
+  w := round(FScaleFactor * (FColumns * BASE_WIDTH * (FSize - 1)));
   if FSlanted and (FSlantAngle <> 0) then
     inc(w, round(h * tan(GetSlantAngle)));
   SetBounds(Left, Top, w, h);
@@ -555,10 +571,10 @@ begin
 end;
 {=====}
 
-procedure TCustomLEDNumber.SetbgColor(Value: TColor);
+procedure TCustomLEDNumber.SetBGColor(Value: TColor);
 begin
-  if FBgColor <> Value then begin
-    FBgColor := Value;
+  if FBGColor <> Value then begin
+    FBGColor := Value;
     Invalidate;
   end;
 end;
@@ -580,7 +596,12 @@ begin
     Invalidate;
   end;
 end;
-{=====}
+
+procedure TCustomLEDNumber.SetParent(NewParent: TWinControl);
+begin
+  inherited;
+  Resizecontrol(FRows, FColumns, FSize);
+end;
 
 procedure TCustomLEDNumber.SetRows(Value : Integer);
 begin

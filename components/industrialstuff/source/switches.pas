@@ -265,14 +265,9 @@ begin
   inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
   if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
   begin
-    DisableAutosizing;
-    try
-      case Orientation of
-        soHorizontal : FButtonSize := Round(FButtonSize * AXProportion);
-        soVertical   : FButtonSize := Round(FButtonSize * AYProportion);
-      end;
-    finally
-      EnableAutoSizing;
+    case Orientation of
+      soHorizontal : FButtonSize := Round(FButtonSize * AXProportion);
+      soVertical   : FButtonSize := Round(FButtonSize * AYProportion);
     end;
   end;
 end;
