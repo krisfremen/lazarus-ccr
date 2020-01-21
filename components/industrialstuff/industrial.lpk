@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="industrial"/>
     <Type Value="RunAndDesignTime"/>
@@ -36,7 +36,7 @@
 - on/off switch
 - multislider"/>
     <License Value="MPL  + GPL + modified LGPL (see unit headers)."/>
-    <Version Minor="4"/>
+    <Version Minor="5"/>
     <Files Count="14">
       <Item1>
         <Filename Value="source\indled.pas"/>
