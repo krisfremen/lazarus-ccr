@@ -106,6 +106,7 @@ type
   published
     property Align;
     property Anchors;
+    property BorderSpacing;
     property Color;
     property Constraints;
     property Enabled;

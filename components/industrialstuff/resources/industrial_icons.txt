@@ -2,8 +2,14 @@ tadvled.png
 tadvled_150.png
 tadvled_200.png
 tanalogsensor.png
+tanalogsensor_150.png
+tanalogsensor_200.png
 tindgnoumeter.png
+tindgnoumeter_150.png
+tindgnoumeter_200.png
 tindled.png
+tindled_150.png
+tindled_200.png
 tlednumber.png
 tlednumber_150.png
 tlednumber_200.png
