@@ -64,14 +64,17 @@ type
     procedure CMTextChanged(var Message: TLMessage); message CM_TEXTCHANGED;
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
-    procedure SlantPoint(var P: TPoint; ABaseY: Integer; tanAlpha: Double);
     procedure Initialize(out Points: array of TPoint);
+    procedure Loaded; override;
     function  NewOffset(xOry: char; OldOffset: Integer): Integer;
-    procedure ProcessCaption(Points: array of TPoint);
+    procedure Paint; override;
     procedure PaintSegment(Segment: Integer; TheColor: TColor;
                            Points: array of TPoint; OffsetX, OffsetY: Integer);
-    procedure ResizeControl(Row, Col, ASize: Integer);
+    procedure ProcessCaption(Points: array of TPoint);
+    procedure ResizeControl(ARows, ACols, ASize: Integer);
     procedure SetParent(NewParent: TWinControl); override;
+    procedure SlantPoint(var P: TPoint; RowHeight: Integer; tanAlpha: Double);
+
     function  GetAbout: string;
     function  GetSlantAngle: Double;
     procedure SetAbout(const {%H-}Value: string);
@@ -86,7 +89,6 @@ type
     procedure SelectSegments(Segment: Word; Points: array of TPoint;
                              OffsetX, OffsetY: Integer);
   protected
-    procedure Paint; override;
     {properties}
     property Version: string  read GetAbout write SetAbout stored False;
     property BorderStyle: TLedNumberBorderStyle read FBorderStyle write SetBorderStyle default lnbNone; {Draws border around segments.}
@@ -96,10 +98,11 @@ type
     property OffColor: TColor read FOffColor write SetOffColor default $000E3432;
     property OnColor: TColor  read FOnColor write SetOnColor default clLime;
     property Size: TSegmentSize read FSize write SetSize default 2;
-    property SlantAngle: Integer read FSlantAngle write SetSlantAngle default 5;
+    property SlantAngle: Integer read FSlantAngle write SetSlantAngle default 8;
     property Slanted: Boolean read FSlanted write SetSlanted default false;
     property Transparent: boolean read FTransparent write SetTransparent default false; {Draws segments with transparent background.BgColor is used as mask color.}
     property ZeroToO: Boolean read FZeroToO write SetZeroToO default false;
+
   public
     constructor Create(AOwner:TComponent); override;
     destructor Destroy; override;
@@ -261,16 +264,15 @@ begin
                    csDoubleClicks];
   FRows := 1;
   FColumns := 10;
-
-  Width := FColumns * BASE_WIDTH;
-  Height := FRows * BASE_HEIGHT;
+  FSize := 2;
   FOnColor := clLime;
   FOffColor := $000E3432;
   FBgColor := clBlack;
-  FSize := 2;
-  FSlantAngle := 5;
+  FSlantAngle := 8;
   Caption := 'LED-LABEL';
   lbDrawBmp := TBitmap.Create;
+
+  ResizeControl(FRows, FColumns, FSize);
 end;
 {=====}
 
@@ -329,20 +331,15 @@ procedure TCustomLEDNumber.DoAutoAdjustLayout(
   const AXProportion, AYProportion: Double);
 begin
   inherited;
-  FScalefactor := Font.PixelsPerInch / 96;
-end;
-
-procedure TCustomLEDNumber.SlantPoint(var P: TPoint;
-  ABaseY: Integer; tanAlpha: Double);
-begin
-  P.X += round(tanAlpha * (ABaseY - P.Y));
+  FScaleFactor := Font.PixelsPerInch / 96;
+  ResizeControl(FRows, FColumns, FSize);
 end;
 
 procedure TCustomLEDNumber.Initialize(out Points: array of TPoint);
 var
   I: Integer;
   tanAlpha: Double;
-  baseY: Integer;
+  rowHeight: Integer;
 begin
   for I := 0 to MAX_POINTS do begin
     Points[i].X := round(FScaleFactor * (DigitPoints[i].X * (FSize - 1)));
@@ -351,13 +348,19 @@ begin
 
   if FSlanted and (FSlantAngle <> 0) then
   begin
+    rowHeight := round(FScaleFactor * BASE_HEIGHT * (FSize - 1));
     tanAlpha := tan(GetSlantAngle);
-    baseY := round(FScaleFactor * BASE_HEIGHT * (FSize - 1));
     for i := 0 to MAX_POINTS do
-      SlantPoint(Points[i], baseY, tanAlpha);
+      SlantPoint(Points[i], rowHeight, tanAlpha);
   end;
 end;
 {=====}
+
+procedure TCustomLEDNumber.Loaded;
+begin
+  inherited;
+  ResizeControl(FRows, FColumns, FSize);
+end;
 
 function TCustomLEDNumber.NewOffset(xOry: char; OldOffset: Integer): Integer;
 begin
@@ -451,7 +454,12 @@ begin
     end;
   end;
 end;
-{=====}
+
+procedure TCustomLEDNumber.SlantPoint(var P: TPoint;
+  RowHeight: Integer; tanAlpha: Double);
+begin
+  inc(P.X, round(tanAlpha * (RowHeight - P.Y)));
+end;
 
 procedure TCustomLEDNumber.ProcessCaption(Points: array of TPoint);
 var
@@ -555,12 +563,12 @@ begin
 end;
 {=====}
 
-procedure TCustomLEDNumber.ResizeControl(Row, Col, ASize: Integer);
+procedure TCustomLEDNumber.ResizeControl(ARows, ACols, ASize: Integer);
 var
   w, h: Integer;
 begin
-  FRows := Row;
-  FColumns := Col;
+  FRows := ARows;
+  FColumns := ACols;
   FSize := ASize;
   h := round(FScaleFactor * FRows * BASE_HEIGHT * (FSize - 1));
   w := round(FScaleFactor * (FColumns * BASE_WIDTH * (FSize - 1)));
