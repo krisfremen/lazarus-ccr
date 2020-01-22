@@ -375,9 +375,20 @@ procedure TCustomLEDNumber.Paint;
 var
   Points: array[0..MAX_POINTS] of TPoint;
   ARect: TRect;
+  AADraw: Boolean;  // anti-aliased drawing flag
+  savedScaleFactor: Double;
 begin
-  lbDrawBMP.Width := Width;
-  lbDrawBMP.Height := Height;
+  AADraw := (Font.PixelsPerInch <> 96) and (FSize = 2);
+  if AADraw then begin
+    savedScaleFactor := FScaleFactor;
+    FScaleFactor := 2*FScaleFactor;
+    lbDrawBMP.Width := 2*Width;
+    lbDrawBMP.Height := 2*Height;
+  end else
+  begin
+    lbDrawBMP.Width := Width;
+    lbDrawBMP.Height := Height;
+  end;
 
   Initialize(Points);
   lbDrawBMP.Canvas.Brush.Color := FBgColor;
@@ -385,7 +396,7 @@ begin
   ProcessCaption(Points);
 
   Canvas.CopyMode := cmSrcCopy;
-  if BorderStyle <> lnbNone then
+  if (BorderStyle <> lnbNone) then
   begin
     ARect := ClientRect;
     case BorderStyle of
@@ -402,6 +413,11 @@ begin
     inc(ARect.Right, 1);
     inc(ARect.Bottom, 1);
     Canvas.StretchDraw(ARect, lbDrawBMP);
+  end else
+  if AADraw then begin
+    ARect := ClientRect;
+    Canvas.StretchDraw(ARect, lbDrawBMP);
+    FScaleFactor := savedScaleFactor;
   end else
     Canvas.Draw(0, 0, lbDrawBMP);
 end;
