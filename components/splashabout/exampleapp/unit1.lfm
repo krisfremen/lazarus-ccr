@@ -1,0 +1,54 @@
+object Form1: TForm1
+  Left = 368
+  Height = 94
+  Top = 200
+  Width = 184
+  Caption = 'Form Caption'
+  ClientHeight = 94
+  ClientWidth = 184
+  OnCreate = FormCreate
+  Position = poDesktopCenter
+  LCLVersion = '1.2.0.2'
+  object BitBtn1: TBitBtn
+    Left = 16
+    Height = 30
+    Top = 8
+    Width = 75
+    Caption = 'About'
+    OnClick = BitBtn1Click
+    TabOrder = 0
+  end
+  object BitBtn2: TBitBtn
+    Left = 96
+    Height = 30
+    Top = 8
+    Width = 75
+    Caption = 'Splash'
+    OnClick = BitBtn2Click
+    TabOrder = 1
+  end
+  object BitBtn3: TBitBtn
+    Left = 56
+    Height = 30
+    Top = 48
+    Width = 75
+    DefaultCaption = True
+    Kind = bkClose
+    ModalResult = 11
+    TabOrder = 2
+  end
+  object SplashAbout1: TSplashAbout
+    OptionalIconFilePath = 'ski.ico'
+    BackGroundImageFilePath = 'splash.jpg'
+    MaskType = saRoundedRect
+    LicenseFile = saGPL
+    CreditText = 'programmed by Gordon'
+    SupportContact = 'minesadorada@charcodelvalle.com'
+    Author = 'Gordon Bamber'
+    UserTitle = 'SplashAbout Demo Application'
+    ShowDescription = False
+    Description = 'An example application to demonstrate the SplashAbout lazarus visual component.'
+    left = 30
+    top = 58
+  end
+end

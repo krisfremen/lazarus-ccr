@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="4">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="64"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="32" Y="27"/>
+        <UsageCount Value="64"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\usplashabout.pas"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="670"/>
+        <CursorPos Y="672"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\..\lcl\lresources.pp"/>
+        <UnitName Value="LResources"/>
+        <TopLine Value="5249"/>
+        <CursorPos Y="5268"/>
+        <UsageCount Value="7"/>
+      </Unit3>
+    </Units>
+    <JumpHistory Count="6" HistoryIndex="5">
+      <Position1>
+        <Filename Value="..\usplashabout.pas"/>
+        <Caret Line="141" Column="29" TopLine="115"/>
+      </Position1>
+      <Position2>
+        <Filename Value="..\usplashabout.pas"/>
+        <Caret Line="664" Column="64" TopLine="651"/>
+      </Position2>
+      <Position3>
+        <Filename Value="..\usplashabout.pas"/>
+        <Caret Line="186" Column="43" TopLine="172"/>
+      </Position3>
+      <Position4>
+        <Filename Value="..\usplashabout.pas"/>
+        <Caret Line="185" Column="42" TopLine="166"/>
+      </Position4>
+      <Position5>
+        <Filename Value="..\usplashabout.pas"/>
+        <Caret Line="191" TopLine="163"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\usplashabout.pas"/>
+        <Caret Line="660" Column="49" TopLine="643"/>
+      </Position6>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
