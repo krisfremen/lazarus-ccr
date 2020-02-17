@@ -44,7 +44,8 @@
 unit fpeIptcReadWrite;
 
 {$IFDEF FPC}
-  {$MODE objfpc}{$H+}
+  //{$MODE objfpc}{$H+}
+  {$MODE DELPHI}
 {$ENDIF}
 
 interface
@@ -86,7 +87,10 @@ type
 implementation
 
 uses
-  lConvEncoding, fpeStrConsts;
+  {$IFDEF FPC}
+  lConvEncoding,
+  {$ENDIF}
+  fpeStrConsts;
 
 type
   // http://search.cpan.org/dist/Image-MetaData-JPEG/lib/Image/MetaData/JPEG/Structures.pod#Structure_of_an_IPTC_data_block

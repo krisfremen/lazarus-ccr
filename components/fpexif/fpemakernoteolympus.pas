@@ -1,6 +1,9 @@
-unit fpeMakerNoteOlympus;
+﻿unit fpeMakerNoteOlympus;
 
-{$mode objfpc}{$H+}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  //{$mode objfpc}{$H+}
+{$ENDIF}
 
 interface
 
@@ -455,7 +458,7 @@ const
   SIGNATURE_V3I = 'OLYMPUS'#00'II'#03#00;
   SIGNATURE_V3M = 'OLYMPUS'#00'MM'#03#00;
 var
-  hdr: array of byte;
+  hdr: TBytes; //array of byte;
   p: Int64;
 begin
   p := AStream.Position;
@@ -560,10 +563,12 @@ var
   intVal: TExifIntegerArray;
   s: String;
   lkup: TStringArray;
-  val1: Integer = -1;
-  val2: Integer = -1;
+  val1: Integer;
+  val2: Integer;
 begin
   Result := '';
+  val1 := -1;
+  val2 := -1;
   if (toDecodeValue in FOptions) then begin
     intVal := GetAsIntegerArray;
     if Length(intVal) >= 3 then begin

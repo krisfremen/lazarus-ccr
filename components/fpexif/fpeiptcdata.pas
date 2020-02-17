@@ -1,7 +1,7 @@
 unit fpeIptcData;
 
 {$IFDEF FPC}
- {$MODE Delphi}
+  {$MODE Delphi}
 {$ENDIF}
 
 {$I fpexif.inc}

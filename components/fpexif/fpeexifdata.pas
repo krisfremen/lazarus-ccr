@@ -1,7 +1,8 @@
-unit fpeExifData;
+﻿unit fpeExifData;
 
 {$IFDEF FPC}
- {$mode objfpc}{$H+}
+  //{$mode objfpc}{$H+}
+  {$MODE DELPHI}
 {$ENDIF}
 
 {$I fpexif.inc}

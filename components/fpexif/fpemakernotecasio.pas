@@ -1,6 +1,9 @@
 unit fpeMakerNoteCasio;
 
-{$mode objfpc}{$H+}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  //{$mode objfpc}{$H+}
+{$ENDIF}
 
 interface
 

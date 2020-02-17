@@ -2,7 +2,10 @@
 
 unit fpeMakerNoteCanon;
 
-{$mode objfpc}{$H+}
+{$IFDEF FPC}
+//  {$mode objfpc}{$H+}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
 

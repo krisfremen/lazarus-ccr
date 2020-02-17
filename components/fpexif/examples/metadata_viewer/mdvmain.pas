@@ -59,6 +59,7 @@ type
     FImgInfo: TImgInfo;
     FImageLoaded: Boolean;
     FImageOrientation: TExifOrientation;
+    FFileName: String;
     procedure LoadFile(const AFileName: String);
     procedure LoadFromIni;
     procedure SaveToIni;
@@ -250,6 +251,7 @@ var
   crs: TCursor;
 begin
   FImageLoaded := false;
+  FFileName := AFileName;
   Image.Picture.Clear;
 
   TagListView.Items.BeginUpdate;
@@ -427,8 +429,8 @@ begin
     crs := Screen.Cursor;
     try
       Screen.Cursor := crHourglass;
-      Image.Picture.LoadFromFile(FImgInfo.FileName);
-      if FImgInfo.ExifData <> nil then
+      Image.Picture.LoadFromFile(FFileName);
+      if Assigned(FImgInfo) and Assigned(FImgInfo.ExifData) then
         RotateBitmap(Image.Picture.Bitmap, FImgInfo.ExifData.ImgOrientation);
       FImageLoaded := true;
     finally
@@ -561,7 +563,10 @@ begin
       'Date: %s', [
       FImgInfo.Filename, FImgInfo.FileSize div 1024, DateTimeToStr(FImgInfo.FileDate)])
   else
-    FilenameInfo.caption := '< no file >';
+  if FFileName <> '' then
+    FilenameInfo.Caption := Format('File: %s', [FFileName])
+  else
+    FilenameInfo.Caption := '< no file >';
 end;
 
 end.

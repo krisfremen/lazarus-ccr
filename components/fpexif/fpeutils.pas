@@ -1,7 +1,8 @@
-unit fpeUtils;
+﻿unit fpeUtils;
 
 {$IFDEF FPC}
- {$mode ObjFPC}{$H+}
+  {$mode ObjFPC}{$H+}
+  //{$MODE DELPHI}
 {$ENDIF}
 
 {$I fpExif.inc}
@@ -21,9 +22,9 @@ uses
 type
  {$IFDEF FPC}
 
-  {$IF FPC_FULLVERSION < 3000200}
+//  {$IF FPC_FULLVERSION < 30002}
   TStringArray = array of string;
-  {$ENDIF}
+//  {$ENDIF}
 
   TInt64List = specialize TFPGList<int64>;
  {$ELSE}

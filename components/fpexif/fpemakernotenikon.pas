@@ -1,6 +1,9 @@
 unit fpeMakerNoteNikon;
 
-{$mode objfpc}{$H+}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  //{$mode objfpc}{$H+}
+{$ENDIF}
 
 interface
 
@@ -336,7 +339,7 @@ end;
 
 procedure TNikonMakerNoteReader.GetTagDefs(AStream: TStream);
 var
-  b: array of byte;
+  b: TBytes; //array of byte;
   tmp, tmp2: String;
   p: Integer;
   streamPos: Int64;
@@ -393,7 +396,8 @@ begin
         FBigEndian := false
       else
         exit;
-      dw := AStream.ReadDWord;
+      dw := ReadDWord(AStream);
+//      dw := AStream.ReadDWord;
       if FBigEndian then dw := BEToN(dw) else dw := LEToN(dw);
       if dw = 8 then
         Result := true;

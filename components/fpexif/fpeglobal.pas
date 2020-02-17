@@ -1,7 +1,8 @@
 unit fpeGlobal;
 
 {$IFDEF FPC}
-  {$mode objfpc}{$H+}
+  //{$mode objfpc}{$H+}
+  {$MODE DELPHI}
 {$ENDIF}
 
 {$I fpExif.inc}

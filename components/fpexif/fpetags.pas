@@ -1104,7 +1104,7 @@ begin
         raise EFpExif.CreateFmt('Value %d out of range for tag "%s"', [AValue, FName]);
     ttSInt8:
       if not WithRangeCheck or ((AValue >= -128) and (AValue <= 127)) then
-        FRawData[AIndex] := {%H-}PByte(AValue)^
+        FRawData[AIndex] := PByte(@AValue)^
       else
         raise EFpExif.CreateFmt('Value %d out of range for tag "%s"', [AValue, FName]);
     ttSInt16:

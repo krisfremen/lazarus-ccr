@@ -1,6 +1,9 @@
 unit fpeMakerNoteSanyo;
 
-{$mode objfpc}{$H+}
+{$IFDEF FPC}
+  {$MODE DELPHI}
+  //{$mode objfpc}{$H+}
+{$ENDIF}
 
 interface
 
@@ -33,7 +36,7 @@ resourcestring
 // from dExif
 procedure BuildSanyoTagDefs(AList: TTagDefList);
 const
-  M = DWord(TAGPARENT_MAKERNOTE);
+  M = LongWord(TAGPARENT_MAKERNOTE);
 begin
   Assert(AList <> nil);
   with AList do begin
