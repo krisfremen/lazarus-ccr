@@ -383,30 +383,14 @@ const
   R = 5;
 var
   P: TPoint;
-  ext: TSize;
 begin
   // Screen coordinates of the GPS point
   P := TMapView(Sender).LonLatToScreen(APoint.RealPoint);
 
-  // Draw the GPS point with MapMarker bitmap
-  {
-  if CbShowPOIImage.Checked and not MapView.POIImage.Empty then begin
-    ADrawer.DrawBitmap(P.X - MapView.POIImage.Width div 2, P.Y - MapView.POIImage.Height, MapView.POIImage, true);
-  end else begin
-  }
-    // Draw the GPS point as a circle
-    ADrawer.BrushColor := clRed;
-    ADrawer.BrushStyle := bsSolid;
-    ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
-    P.Y := P.Y + R;
-  //end;
-    {
-  // Draw the caption of the GPS point
-  ext := ADrawer.TextExtent(APoint.Name);
-  ADrawer.BrushColor := clWhite;
-  ADrawer.BrushStyle := bsClear;
-  ADrawer.TextOut(P.X - ext.CX div 2, P.Y + 5, APoint.Name);
-  }
+  // Draw the GPS point as a circle
+  ADrawer.BrushColor := clRed;
+  ADrawer.BrushStyle := bsSolid;
+  ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
 end;
 
 procedure TMainForm.MapViewMouseLeave(Sender: TObject);
