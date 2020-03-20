@@ -5,7 +5,7 @@ unit mvDE_IntfGraphics;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Types, LazVersion,
+  Classes, SysUtils, Graphics, Types, LclVersion,
   FPImage, FPCanvas, IntfGraphics,
   mvDrawingEngine;
 
@@ -65,7 +65,14 @@ begin
   Result := (x >= min) and (x <= max);
 end;
 
-{$IF Laz_FullVersion < 1090000}
+
+{$IF Lcl_FullVersion < 1090000}
+
+function IfThen(ACondition: Boolean; a, b: Integer): Integer;
+begin
+  if ACondition then Result := a else Result := b;
+end;
+
 // Workaround for http://mantis.freepascal.org/view.php?id=27144
 procedure CopyPixels(ASource, ADest: TLazIntfImage;
   XDst: Integer = 0; YDst: Integer = 0;
@@ -117,8 +124,11 @@ begin
         ADest.Masked[x+XDst,y+YDst] := True;
     end;
 end;
+
 {$IFEND}
 
+
+{  TMvIntfGraphicsDrawingengine  }
 
 destructor TMvIntfGraphicsDrawingEngine.Destroy;
 begin
@@ -192,9 +202,9 @@ end;
 procedure TMvIntfGraphicsDrawingEngine.DrawLazIntfImage(X, Y: Integer;
   AImg: TLazIntfImage);
 begin
-  {$IF Laz_FullVersion < 1090000}
+  {$IF Lcl_FullVersion < 1090000}
   { Workaround for //http://mantis.freepascal.org/view.php?id=27144 }
-  CopyPixels(AImg, Buffer, X, Y);
+  CopyPixels(AImg, FBuffer, X, Y);
   {$ELSE}
   FBuffer.CopyPixels(AImg, X, Y);
   {$IFEND}
