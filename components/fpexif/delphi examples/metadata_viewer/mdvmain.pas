@@ -42,6 +42,7 @@ type
     ShellListView: TFileListbox;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
+    DriveComboBox1: TDriveComboBox;
     procedure BtnChangeDateClick(Sender: TObject);
     procedure CbShowTagIDsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -59,6 +60,7 @@ type
       Selected: Boolean);
     procedure ShellTreeViewChange(Sender: TObject);
     procedure ShellListViewChange(Sender: TObject);
+    procedure DriveComboBox1Change(Sender: TObject);
   private
     FFileName: String;
     FImgInfo: TImgInfo;
@@ -241,6 +243,11 @@ begin
   finally
     TagListView.Items.EndUpdate;
   end;
+end;
+
+procedure TMainForm.DriveComboBox1Change(Sender: TObject);
+begin
+  ShellTreeView.Drive := DriveComboBox1.Drive;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);

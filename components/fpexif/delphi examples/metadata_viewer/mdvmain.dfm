@@ -32,11 +32,12 @@ object MainForm: TMainForm
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 0
-      Top = 269
+      Top = 288
       Width = 274
       Height = 5
       Cursor = crVSplit
       Align = alTop
+      ExplicitTop = 269
     end
     object PreviewImage: TImage
       Left = 0
@@ -51,7 +52,7 @@ object MainForm: TMainForm
     end
     object ShellTreeView: TDirectoryOutline
       Left = 0
-      Top = 0
+      Top = 19
       Width = 274
       Height = 269
       Hint = 'Navigate to the folder with your images.'
@@ -88,19 +89,22 @@ object MainForm: TMainForm
         80008000800080008000}
       TabOrder = 0
       OnChange = ShellTreeViewChange
+      ExplicitTop = 0
       Data = {10}
     end
     object ShellListView: TFileListBox
       Left = 0
-      Top = 274
+      Top = 293
       Width = 274
-      Height = 260
+      Height = 241
       Hint = 'Select the image for which you want to see the metadata'
       Align = alClient
       Mask = '*.jpg;*.jpeg;*.jpe;*.tiff;*.tif'
       ShowGlyphs = True
       TabOrder = 2
       OnChange = ShellListViewChange
+      ExplicitTop = 274
+      ExplicitHeight = 260
     end
     object Panel4: TPanel
       Left = 0
@@ -120,6 +124,17 @@ object MainForm: TMainForm
         Color = clBtnFace
         ParentColor = False
       end
+    end
+    object DriveComboBox1: TDriveComboBox
+      Left = 0
+      Top = 0
+      Width = 274
+      Height = 19
+      Align = alTop
+      TabOrder = 3
+      OnChange = DriveComboBox1Change
+      ExplicitLeft = 3
+      ExplicitTop = -4
     end
   end
   object Panel2: TPanel
@@ -170,10 +185,6 @@ object MainForm: TMainForm
       OnChange = PageControl1Change
       object PgMetadata: TTabSheet
         Caption = 'Meta data'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object TagListView: TListView
           Left = 0
           Top = 0
@@ -215,7 +226,6 @@ object MainForm: TMainForm
           AutoSize = True
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitTop = 501
           object CbDecodeMakerNotes: TCheckBox
             Left = 0
             Top = 0
@@ -231,10 +241,6 @@ object MainForm: TMainForm
       end
       object PgImage: TTabSheet
         Caption = 'Image'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Image: TImage
           Left = 0
           Top = 0
