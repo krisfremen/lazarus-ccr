@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <Name Value="lazMapViewerPkg"/>
     <Type Value="RunAndDesignTime"/>
     <Author Value="Maciej Kaczkowski, ti_dic, Werner Pamler"/>
@@ -14,7 +14,7 @@
     <Description Value="Component for viewing maps (Google, OpenStreetMap, etc). 
 This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/ci/master/tree/mapviewer/) which itself is based on the MapViewer by Maciej Kaczkowski (https://github.com/maciejkaczkowski/mapviewer)."/>
     <License Value="GPL2 or later"/>
-    <Version Minor="1"/>
+    <Version Minor="2"/>
     <Files Count="18">
       <Item1>
         <Filename Value="source/mvcache.pas"/>
@@ -83,11 +83,11 @@ This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/c
       </Item16>
       <Item17>
         <Filename Value="source/mvde_intfgraphics.pas"/>
-        <UnitName Value="mvde_intfgraphics"/>
+        <UnitName Value="mvDE_IntfGraphics"/>
       </Item17>
       <Item18>
         <Filename Value="source/mvde_lcl.pas"/>
-        <UnitName Value="mvde_lcl"/>
+        <UnitName Value="mvDE_LCL"/>
       </Item18>
     </Files>
     <RequiredPkgs Count="1">

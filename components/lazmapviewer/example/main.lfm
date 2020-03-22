@@ -21,6 +21,7 @@ object MainForm: TMainForm
     CachePath = '../../../../example_cache/'
     DefaultTrackColor = clBlue
     DefaultTrackWidth = 3
+    DownloadEngine = MapView.BuiltInDLE
     DrawingEngine = MapView.BuiltInDE
     Font.Color = clBlack
     MapProvider = 'OpenStreetMap Mapnik'
@@ -37,9 +38,9 @@ object MainForm: TMainForm
     Height = 640
     Top = 0
     Width = 275
-    ActivePage = PgConfig
+    ActivePage = PgData
     Align = alRight
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     object PgData: TTabSheet
       Caption = 'Data'

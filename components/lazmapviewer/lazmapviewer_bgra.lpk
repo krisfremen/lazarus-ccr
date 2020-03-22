@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="lazmapviewer_bgra"/>
     <Type Value="RunAndDesignTime"/>
@@ -12,6 +12,8 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
+    <Description Value="Add-on to LazMapViewer: Contains the drawing engine based on the BGRABitmap library."/>
+    <Version Minor="2"/>
     <Files Count="1">
       <Item1>
         <Filename Value="source\addons\bgra_drawingengine\mvde_bgra.pas"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="lazMapViewer_Synapse"/>
     <Type Value="RunAndDesignTime"/>
@@ -15,7 +15,7 @@
     </CompilerOptions>
     <Description Value="Add-on to LazMapViewer: Contains the download engine based on the Synapse library."/>
     <License Value="GPL2 or later"/>
-    <Version Minor="1"/>
+    <Version Minor="2"/>
     <Files Count="1">
       <Item1>
         <Filename Value="source\addons\synapse_downloadengine\mvdlesynapse.pas"/>
