@@ -13,3 +13,6 @@ tmvdesynapse_200.png
 tmvrgbgraphicsdrawingengine.png
 tmvrgbgraphicsdrawingengine_150.png
 tmvrgbgraphicsdrawingengine_200.png
+tmvbgradrawingengine.png
+tmvbgradrawingengine_150.png
+tmvbgradrawingengine_200.png

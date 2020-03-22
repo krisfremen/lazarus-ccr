@@ -96,7 +96,7 @@ Type
       procedure ActivateEngine;
       procedure DblClick; override;
       procedure DoDrawTile(const TileId: TTileId; X,Y: integer; TileImg: TLazIntfImage);
-      procedure DoDrawTileInfo(const TileID: TTileID; X,Y: Integer);
+      procedure DoDrawTileInfo(const {%H-}TileID: TTileID; X,Y: Integer);
       function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
         MousePos: TPoint): Boolean; override;
       procedure DoOnResize; override;

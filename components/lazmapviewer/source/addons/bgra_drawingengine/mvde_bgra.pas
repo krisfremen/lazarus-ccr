@@ -116,8 +116,6 @@ procedure TMvBGRADrawingEngine.DrawLazIntfImage(X, Y: Integer;
 //http://mantis.freepascal.org/view.php?id=27144
 var
   temp: TBGRABitmap;
-  rawImg: TRawImage;
-  intfImg: TLazIntfImage;
 begin
   temp:=TBGRABitmap.Create(AImg);
   try
@@ -354,7 +352,7 @@ begin
       img := bmp.CreateIntfImage;
       try
         fc := TColorToFPColor(bmp.Canvas.Font.Color);
-        intens0 := (fc.Red + fc.Green + fc.Blue);
+        intens0 := Int64(fc.Red) + fc.Green + fc.Blue;
         for j := 0 to img.Height - 1 do
           for i := 0 to img.Width - 1 do begin
             c := bmp.Canvas.Pixels[i, j];
@@ -364,7 +362,7 @@ begin
             else if c = FFontColor then
               tc.Alpha := alphaOpaque
             else begin
-              intens := tc.Red + tc.Green + tc.Blue;
+              intens := Int64(tc.Red) + tc.Green + tc.Blue;
               if intens0 = 0 then
                 alpha := (3 * alphaopaque - intens) / (3 * alphaOpaque - intens0)
               else

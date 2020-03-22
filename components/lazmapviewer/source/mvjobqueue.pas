@@ -137,7 +137,7 @@ type
     FTask: integer;
   protected
     procedure DoCancel; override;
-    procedure pTaskStarted(aTask: integer); override;
+    procedure pTaskStarted({%H-}aTask: integer); override;
     procedure pTaskEnded(aTask: integer; aExcept: Exception); override;
     function pGetTask: integer; override;
   public

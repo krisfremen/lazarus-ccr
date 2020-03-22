@@ -14,23 +14,23 @@
     </CompilerOptions>
     <Description Value="Add-on to LazMapViewer: Contains the drawing engine based on the BGRABitmap library."/>
     <Version Minor="2"/>
-    <Files Count="1">
-      <Item1>
+    <Files>
+      <Item>
         <Filename Value="source\addons\bgra_drawingengine\mvde_bgra.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="mvDE_BGRA"/>
-      </Item1>
+      </Item>
     </Files>
-    <RequiredPkgs Count="3">
-      <Item1>
+    <RequiredPkgs>
+      <Item>
         <PackageName Value="BGRABitmapPack"/>
-      </Item1>
-      <Item2>
+      </Item>
+      <Item>
         <PackageName Value="lazMapViewerPkg"/>
-      </Item2>
-      <Item3>
+      </Item>
+      <Item>
         <PackageName Value="FCL"/>
-      </Item3>
+      </Item>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

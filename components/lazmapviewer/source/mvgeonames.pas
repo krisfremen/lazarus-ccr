@@ -156,7 +156,7 @@ end;
 
 procedure TMvGeoNames.FoundTextHandler(AText: String);
 var
-  code: Integer;
+  {%H-}code: Integer;
 begin
   if not FInDataRows or (AText = #10) then
     exit;
