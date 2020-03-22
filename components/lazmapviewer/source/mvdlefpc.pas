@@ -94,6 +94,7 @@ begin
     try
       http.Get(Url, AStream);
     except
+      // Eat the exception because we don't know on which server the map is found.
     end;
     AStream.Position := 0;
   finally

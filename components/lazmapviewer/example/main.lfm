@@ -21,7 +21,6 @@ object MainForm: TMainForm
     CachePath = '../../../../example_cache/'
     DefaultTrackColor = clBlue
     DefaultTrackWidth = 3
-    DownloadEngine = MapView.BuiltInDLE
     DrawingEngine = MapView.BuiltInDE
     Font.Color = clBlack
     MapProvider = 'OpenStreetMap Mapnik'
