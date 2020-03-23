@@ -504,7 +504,7 @@ var
   DelLst: TGPSObjList;
 begin
   DelLst := nil;
-  SetLength(NotFound, 0);
+  SetLength(NotFound{%H-}, 0);
   SetLength(Found, 0);
   Lock;
   try

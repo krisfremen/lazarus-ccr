@@ -13,7 +13,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Add-on to LazMapViewer: Contains the drawing engine based on the BGRABitmap library."/>
-    <Version Minor="2"/>
+    <Version Minor="2" Release="1"/>
     <Files>
       <Item>
         <Filename Value="source\addons\bgra_drawingengine\mvde_bgra.pas"/>

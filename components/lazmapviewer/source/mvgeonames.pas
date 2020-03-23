@@ -199,7 +199,7 @@ end;
 function TMVGeoNames.Search(ALocationName: String;
   ADownloadEngine: TMvCustomDownloadEngine): TRealPoint;
 var
-  s: string;
+  s: string = '';
 
   function gs(id: string; Start: integer): string;
   var

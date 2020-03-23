@@ -831,7 +831,7 @@ procedure TMapViewerEngine.Redraw(const aWin: TmapWindow);
 var
   TilesVis: TArea;
   x, y : Integer; //int64;
-  Tiles: TTileIdArray;
+  Tiles: TTileIdArray = nil;
   iTile: Integer;
 begin
   if not(Active) then
@@ -1238,7 +1238,7 @@ var
   mins, secs: Double;
   i, j, len: Integer;
   n: Integer;
-  s: String;
+  s: String = '';
   res: Integer;
   sgn: Double;
 begin
