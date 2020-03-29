@@ -118,6 +118,7 @@ uses
 
 type
   TAdobeImageResourceBlock = class
+  public
     Identifier: Word;
     Name: String;
     Data: TBytes;

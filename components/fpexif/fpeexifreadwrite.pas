@@ -126,6 +126,7 @@ const
 
 type
   TReaderItem = class
+  public
     ReaderClass: TMakerNoteReaderClass;
     Make: String;
     Model: String;
