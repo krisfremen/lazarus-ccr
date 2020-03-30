@@ -1,0 +1,6 @@
+label	Ibuprofen_low	Ibuprofen_Hi	Placebo	Aspirin
+None	0	1	0	1
+Poor	6	3	18	4
+Fair	10	5	10	11
+Good	17	25	37	25
+Very_Good	61	52	32	47

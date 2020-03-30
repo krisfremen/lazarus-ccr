@@ -1,0 +1,127 @@
+25
+3
+Time
+VARIABLE 1
+2
+I
+0
+99999
+L
+Censored
+VARIABLE 2
+1
+I
+0
+99999
+L
+Deaths
+VARIABLE 3
+1
+I
+0
+99999
+L
+Case 0
+Time
+Censored
+Deaths
+Case 1
+1
+1
+0
+Case 2
+5
+1
+0
+Case 3
+6
+0
+1
+Case 4
+6
+0
+1
+Case 5
+9
+1
+0
+Case 6
+10
+0
+1
+Case 7
+10
+0
+1
+Case 8
+10
+1
+0
+Case 9
+12
+0
+1
+Case 10
+12
+0
+1
+Case 11
+12
+0
+1
+Case 12
+12
+0
+1
+Case 13
+13
+1
+0
+Case 14
+13
+1
+0
+Case 15
+15
+1
+0
+Case 16
+16
+1
+0
+Case 17
+20
+1
+0
+Case 18
+24
+0
+1
+Case 19
+24
+1
+0
+Case 20
+27
+1
+0
+Case 21
+32
+0
+1
+Case 22
+34
+1
+0
+Case 23
+36
+1
+0
+Case 24
+36
+1
+0
+Case 25
+44
+1
+0

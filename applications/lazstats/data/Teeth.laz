@@ -1,0 +1,73 @@
+5
+5
+label
+VARIABLE 1
+8
+S
+0
+ 
+L
+Ibuprofen_low
+VARIABLE 2
+8
+I
+0
+ 
+L
+Ibuprofen_Hi
+VARIABLE 3
+8
+I
+0
+ 
+L
+Placebo
+VARIABLE 4
+8
+I
+0
+ 
+L
+Aspirin
+VARIABLE 5
+8
+I
+0
+ 
+L
+Case 0
+label
+Ibuprofen_low
+Ibuprofen_Hi
+Placebo
+Aspirin
+CASE 1
+None
+0
+1
+0
+1
+CASE 2
+Poor
+6
+3
+18
+4
+CASE 3
+Fair
+10
+5
+10
+11
+CASE 4
+Good
+17
+25
+37
+25
+CASE 5
+Excellent
+61
+52
+32
+47

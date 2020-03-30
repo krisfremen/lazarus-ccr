@@ -1,0 +1,211 @@
+16
+8
+VAR1 
+VARIABLE 1
+4
+F
+2
+99999
+L
+VAR2 
+VARIABLE 2
+4
+F
+2
+99999
+L
+VAR3 
+VARIABLE 3
+4
+F
+2
+99999
+L
+VAR4 
+VARIABLE 4
+4
+F
+2
+99999
+L
+VAR5 
+VARIABLE 5
+4
+F
+2
+99999
+L
+LastName 
+VARIABLE 6
+7
+S
+0
+99999
+L
+FirstName 
+VARIABLE 7
+3
+S
+0
+99999
+L
+IDNO 
+VARIABLE 8
+2
+I
+0
+99999
+L
+Case 0
+VAR1 
+VAR2 
+VAR3 
+VAR4 
+VAR5 
+LastName 
+FirstName 
+IDNO 
+CASE 1
+1.00
+1.00
+1.00
+1.00
+1.00
+Miller
+Bill
+1
+CASE 2
+1.00
+1.00
+1.00
+1.00
+0.00
+Benton
+Barb
+2
+CASE 3
+1.00
+1.00
+1.00
+0.00
+0.00
+Richards
+Tom
+3
+CASE 4
+1.00
+1.00
+0.00
+0.00
+0.00
+Thomas
+Keith
+4
+CASE 5
+1.00
+0.00
+0.00
+0.00
+0.00
+King
+Bob
+5
+CASE 6
+0.00
+0.00
+0.00
+0.00
+0.00
+Moreland
+Rob
+6
+CASE 7
+1.00
+0.00
+0.00
+0.00
+0.00
+Landis
+Sandy
+7
+CASE 8
+1.00
+1.00
+0.00
+0.00
+0.00
+Moore
+Vernil
+8
+CASE 9
+1.00
+1.00
+1.00
+0.00
+0.00
+Tyler
+Dick
+9
+CASE 10
+1.00
+1.00
+1.00
+1.00
+0.00
+Cook
+Harry
+10
+CASE 11
+1.00
+1.00
+1.00
+1.00
+1.00
+Rains
+Claude
+11
+CASE 12
+1.00
+0.00
+1.00
+0.00
+1.00
+Kent
+Clark
+12
+CASE 13
+0.00
+1.00
+1.00
+1.00
+0.00
+Clinton
+Bill
+13
+CASE 14
+1.00
+1.00
+1.00
+0.00
+1.00
+Bush
+George
+14
+CASE 15
+1.00
+1.00
+0.00
+1.00
+1.00
+Jefferson
+Tom
+15
+CASE 16
+1.00
+0.00
+0.00
+1.00
+0.00
+Lincoln
+Abe
+16

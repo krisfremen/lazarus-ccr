@@ -1,0 +1,73 @@
+5
+5
+Group
+VARIABLE 1
+11
+S
+0
+99999
+L
+None
+VARIABLE 2
+2
+I
+0
+99999
+L
+Light
+VARIABLE 3
+1
+I
+0
+99999
+L
+Medium
+VARIABLE 4
+1
+I
+0
+99999
+L
+Heavy
+VARIABLE 5
+1
+I
+0
+99999
+L
+Case 0
+Group
+None
+Light
+Medium
+Heavy
+Case 1
+Senior_Mgr.
+4
+2
+3
+2
+Case 2
+Junior_Mgr.
+4
+3
+7
+4
+Case 3
+Senior_Emp.
+25
+10
+12
+4
+Case 4
+Junior_Emp.
+18
+24
+33
+13
+Case 5
+Secretaries
+10
+6
+7
+2

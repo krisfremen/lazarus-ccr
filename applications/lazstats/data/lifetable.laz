@@ -1,0 +1,85 @@
+7
+5
+startobs
+VARIABLE 1
+1
+I
+0
+99999
+L
+endobs
+VARIABLE 2
+1
+I
+0
+99999
+L
+alive
+VARIABLE 3
+1
+I
+0
+99999
+L
+died
+VARIABLE 4
+1
+I
+0
+99999
+L
+censored
+VARIABLE 5
+1
+I
+0
+99999
+L
+Case 0
+startobs
+endobs
+alive
+died
+censored
+Case 1
+0
+1
+10
+1
+1
+Case 2
+1
+2
+8
+0
+0
+Case 3
+2
+3
+8
+2
+0
+Case 4
+3
+4
+6
+0
+1
+Case 5
+4
+5
+5
+1
+0
+Case 6
+5
+6
+4
+1
+1
+Case 7
+6
+7
+2
+1
+1

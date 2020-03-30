@@ -1,0 +1,223 @@
+49
+3
+Time
+VARIABLE 1
+2
+I
+0
+99999
+L
+Group
+VARIABLE 2
+1
+I
+0
+99999
+L
+Event_Censored
+VARIABLE 3
+1
+I
+0
+99999
+L
+Case 0
+Time
+Group
+Event_Censored
+Case 1
+1
+1
+2
+Case 2
+3
+2
+2
+Case 3
+5
+1
+2
+Case 4
+6
+1
+1
+Case 5
+6
+1
+1
+Case 6
+6
+2
+1
+Case 7
+6
+2
+1
+Case 8
+6
+2
+1
+Case 9
+6
+2
+1
+Case 10
+8
+2
+1
+Case 11
+8
+2
+1
+Case 12
+9
+1
+2
+Case 13
+10
+1
+1
+Case 14
+10
+1
+1
+Case 15
+10
+1
+2
+Case 16
+12
+1
+1
+Case 17
+12
+1
+1
+Case 18
+12
+1
+1
+Case 19
+12
+1
+1
+Case 20
+12
+2
+1
+Case 21
+12
+2
+1
+Case 22
+12
+1
+2
+Case 23
+12
+2
+2
+Case 24
+13
+1
+2
+Case 25
+15
+1
+2
+Case 26
+15
+2
+2
+Case 27
+16
+1
+2
+Case 28
+16
+2
+2
+Case 29
+18
+2
+2
+Case 30
+18
+2
+2
+Case 31
+20
+2
+1
+Case 32
+20
+1
+2
+Case 33
+22
+2
+2
+Case 34
+24
+1
+1
+Case 35
+24
+2
+1
+Case 36
+24
+1
+2
+Case 37
+27
+1
+2
+Case 38
+28
+2
+2
+Case 39
+28
+2
+2
+Case 40
+28
+2
+2
+Case 41
+30
+2
+1
+Case 42
+30
+2
+2
+Case 43
+32
+1
+1
+Case 44
+33
+2
+2
+Case 45
+34
+1
+2
+Case 46
+36
+1
+2
+Case 47
+36
+1
+2
+Case 48
+42
+2
+1
+Case 49
+44
+1
+2

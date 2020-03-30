@@ -1,0 +1,308 @@
+C:\Users\wgmiller\LazStats\LazStatsData\testitembank.BNK
+2
+2
+1
+2
+53
+7
+1
+1
+0
+Descriptive Statistics
+2
+1
+1
+Mean
+3
+1
+2
+Median
+4
+1
+3
+Mode
+5
+1
+4
+Variance
+6
+1
+5
+Standard Deviation
+7
+1
+6
+Skew
+8
+1
+7
+Kurtosis
+9
+1
+8
+Value Frequencies
+10
+1
+9
+Normality
+11
+2
+0
+One Sample Tests
+12
+2
+1
+One Sample Mean
+13
+2
+2
+One Sample Proportion
+14
+2
+3
+One Sample Correlation
+15
+2
+4
+One Sample Variance
+16
+3
+0
+Comparisons
+17
+3
+1
+t-tests
+18
+3
+2
+One-way ANOVA
+19
+3
+3
+Two-way ANOVA
+20
+3
+4
+Treatment by Subjects ANOVA
+21
+3
+5
+Repeated Measures ANOVA
+22
+3
+6
+ANOVA model
+23
+4
+0
+Correlation and Regression
+24
+4
+1
+Step Forward MR
+25
+4
+2
+Simultaneous MR
+26
+4
+3
+Cox Regression
+27
+4
+4
+Specified Entry MR
+28
+4
+5
+Raw and Standardized Coefficients
+29
+5
+0
+Multivariate Analyses
+30
+5
+1
+Discriminant Function
+31
+5
+2
+Factor Analysis
+32
+5
+3
+MANOVA
+33
+5
+4
+Log Linear Analysis
+34
+5
+5
+Heirarchical Grouping
+35
+6
+0
+Non-parametric Statistics
+36
+6
+1
+Kruskal-Wallis Analysis
+37
+6
+2
+Chi-squared analyses
+38
+6
+3
+Spearman rho
+39
+6
+4
+Mann-Whitney U Test
+40
+6
+5
+Fisher's Exact Test
+41
+6
+6
+Kendall's Coefficient of Concordance
+42
+6
+7
+Cochran Q Test
+43
+6
+8
+Sign Test
+44
+6
+9
+Friedman Two Way Anova
+45
+6
+10
+Runs Test
+46
+6
+11
+Kaplan-Meier Survival Test
+47
+6
+12
+Kolmogorov-Smirnov Test
+48
+7
+0
+Measurement
+49
+7
+1
+Reliability
+50
+7
+2
+Validity
+51
+7
+3
+Item Response Theory
+52
+7
+4
+Attitude Measurement
+53
+7
+5
+Composite Test Reliability
+1
+7
+2
+3
+Which of the following statements is false?
+Interval measured data can be correctly analyzed with parametric procedures.
+Ordinal measured data are analyzed using non-parametric procedures.
+Nominal measured data can be analyzed with parametric procedures.
+C
+none
+2
+1
+0
+5
+Type I error is
+Incorrect sampling.
+Incorrect research design.
+Inadequate measurement scale type.
+Probability of rejecting a true null hypothesis by random sampling variability.
+Probability of accepting a false null hypothesis by random sampling variability.
+D
+C:\Users\wgmiller\LazStats\HelpFiles\Type1&2Plot.jpg
+1
+1
+0
+In a highly skewed distribution, the best indicator of central tendency is the mean.
+F
+none
+2
+1
+1
+The sum of squared X values is the same as the square of the sum of X values.
+F
+none
+1
+1
+0
+5
+2
+Normal
+Poisson
+Binomial
+Beta
+Gamma
+Monte Carlo Distributions
+Theoretical distributions
+2
+none
+1
+1
+0
+Expand and simplify the expression sum of (X - Mean)^2
+sum X^2 + sum Mean^2 - 2 * sum (X * Mean)
+none
+2
+1
+1
+Describe kurtosis, mesokurtic, platykurtic
+Distribution shape, peaked, flat compared to normal
+none
+1
+7
+2
+MC
+2
+1
+0
+MC
+1
+1
+0
+TF
+2
+1
+1
+TF
+1
+1
+0
+Essay
+2
+1
+1
+Essay
+1
+1
+0
+Matching
+

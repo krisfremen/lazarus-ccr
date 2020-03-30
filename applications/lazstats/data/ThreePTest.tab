@@ -1,0 +1,17 @@
+VAR/CASE	VAR1	VAR2	VAR3	VAR4	VAR5	LastName	FirstName	IDNO	Theta
+CASE:1	1	1	1	1	1	Miller	Bill	1	0.00
+CASE:2	1	1	1	1	0	Benton	Barb	2	0.00
+CASE:3	1	1	1	0	0	Richards	Tom	3	0.00
+CASE:4	1	1	0	0	0	Thomas	Keith	4	0.00
+CASE:5	1	0	0	0	0	King	Bob	5	0.00
+CASE:6	0	0	0	0	0	Moreland	Rob	6	0.00
+CASE:7	1	0	0	0	0	Landis	Sandy	7	0.00
+CASE:8	1	1	0	0	0	Moore	Vernil	8	0.00
+CASE:9	1	1	1	0	0	Tyler	Dick	9	0.00
+CASE:10	1	1	1	1	0	Cook	Harry	10	0.00
+CASE:11	1	1	1	1	1	Rains	Claude	11	0.00
+CASE:12	1	0	1	0	1	Kent	Clark	12	0.00
+CASE:13	0	1	1	1	0	Clinton	Bill	13	0.00
+CASE:14	1	1	1	0	1	Bush	George	14	0.00
+CASE:15	1	1	0	1	1	Jefferson	Tom	15	0.00
+CASE:16	1	0	0	1	0	Lincoln	Abe	16	0.00
