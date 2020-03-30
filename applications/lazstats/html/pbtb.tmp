@@ -1,0 +1,231 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="Generator" content="Microsoft Word 97">
+<title>Table of Contents</title>
+<meta name="Template" content="C:\Program Files\Microsoft Office\Office\html.dot">
+<style> table, td, th { border-color: #cccccc; border-style: solid; } table { border-width: 0 0 1px 1px; border-spacing: 0px; border-collapse: collapse; } td { border-width: 1px; } th { border-width: 1px; } </style></head>
+<body text="#000000" link="#800080" vlink="#000080" alink="#008080">
+
+<h1>Table of Contents</h1>
+<p>A. Using LazStats</p><dir>
+<dir>
+
+<p><a href="Introduction.pdf">1. Basic Usage Information</a></p>
+<p><a href="FILES.pdf">2. Files</a></p>
+<p><a href="TOOLS.pdf">3. Tools</a></p>
+<p><a href="EDIT.pdf">4. Edit</a></p></dir>
+</dir>
+
+<p>B. Analyses</p><dir>
+<dir>
+
+<p><a href="DESC.pdf">1. Descriptive</a></p>
+<p><a href="ONESAMP.pdf">2. One Sample Tests</a></p>
+<p>3. Comparisons</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="PROPDIFF.pdf">Difference Between Proportions</a>
+<li><a href="CORRDIFF.pdf">Difference Between Correlations</a>
+<li><a href="MEANSDIFF.pdf">Difference Between Means</a>
+<li><a href="One23ANOVA.pdf">One, Two, or Three Way Analysis of Variance</a>
+<li><a href="WITHINANOVA.pdf">Within Subjects Analysis of Variance</a>
+<li><a href="AxSANOVA.pdf">A x S Analysis of Variance</a>
+<li><a href="AxBxSANOVA.pdf">A x B x S Analysis of Variance</a>
+<li><a href="ANCOVAMR.pdf">Analysis of Covariance by Multiple Regression</a>
+<li><a href="GLM.pdf">General Linear Model</a>
+<li><a href="Latin and Greco.pdf">Latin and Greco-Latin Squares</a>
+<li><a href="OneCellANOVA.pdf">Two or Three Way ANOVA 
+      with One Case Per Cell</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>4. Correlations</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="PMCorrelations.pdf">Product-Moment Correlations</a>
+<li><a href="PartialCorr.pdf">Partial and Semi-partial correlations</a>
+<li><a href="AutoCorrelation.pdf">Autocorrelation</a>
+<li><a href="CANCOR.pdf">Canonical Correlation</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>5. Multiple Regression</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="STEPFWDMR.pdf">Forward Stepwise</a>
+<li><a href="BACKMR.pdf">Backward Stepwise</a>
+<li><a href="SIMULTMR.pdf">Simultaneous</a>
+<li><a href="BLOCKMR.pdf">Block Entry</a>
+<li><a href="BESTMR.pdf">Best Combination</a>
+<li><a href="BinLogReg.pdf">Binary Logistic</a>
+<li><a href="COXREG.pdf">Cox Proportional Hazzards Survival Regression</a>
+<li><a href="LinearProgramming.pdf">Linear Programming</a>
+<li><a href="TWOSTAGELS.pdf">Two Stage Least Squares Regression</a>
+<li><a href="WLSREG.pdf">Weighted Least Squares Regression</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>6. Multivariate</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="DISCRIM.pdf">MANOVA/Discriminant Function Analysis</a>
+<li><a href="HIERCLUSTER.pdf">Hierarchical Analysis</a>
+<li><a href="PathAnalysis.pdf">Path Analysis</a>
+<li><a href="FactorAnalysis.pdf">Factor Analysis</a>
+<li><a href="CANCOR.pdf">Canonical Correlation</a>
+<li><a href="GLM.pdf">General Linear Model</a>
+<li><a href="AVGLINKCLUSTER.pdf">Average Link Clustering</a>
+<li><a href="KMeansClustering.pdf">K Means Clustering</a>
+<li><a href="SingleLinkClustering.pdf">Single Link Clustering</a>
+<li><a 
+      href="CorrespondenceAnalysis.pdf">Correspondence 
+Analysis</a>
+<li><a href="Median-polish.pdf">Median 
+    Polish</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>7. Cross-Classification</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="AXBLOGLIN.pdf">AxB Log Linear</a>
+<li><a href="ABCLOGLIN.pdf">AxBxC Log Linear</a>
+<li><a href="LogLinearScreen.pdf">Log Linear Screen</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>8. Measurement Programs</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="GenerateTestData.pdf"  >Generate Sample Test Data</a>
+<li><a href="ClassicalItemAnalysis.pdf">Classical Item Analysis</a>
+<li><a href="RaschAnalysis.pdf">Rasch Test Calibration</a>
+<li><a href="SuccessiveIntervalScaling.pdf">Successive Interval Scaling</a>
+<li><a href="GuttmanScalogramAnalysis.pdf">Guttman Scalogram Analysis</a>
+<li><a href="CompositeReliability.pdf">Weighted Composite Reliability</a>
+<li><a href="KR21.pdf">Kuder-Richardson #21 Reliability</a>
+<li><a href="SpearmanBrownProphecy.pdf">Spearman-Brown Prophecy Formula</a>
+<li><a href="ReliabilityForVarianceChange.pdf">Reliability Due to Test Variance Change</a>
+<li><a href="DifferentialItemFunctioning.pdf">Differential Item Functioning</a>
+<li><a href="PolytomousDIFAnalysis.pdf">Polytomous DIF Analysis</a>
+<li><a href="GRADEBOOK.pdf">Grade Book</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>9. Nonparametric</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="ChiSquare.pdf">Contingency Chi Square</a>
+<li><a href="SpearmanRankCorrelation.pdf">Spearman Rank Correlation</a>
+<li><a href="MannWhitUTest.pdf">Mann-Whitney U Test</a>
+<li><a href="FisherExactTest.pdf">Fisher’s Exact Test</a>
+<li><a href="CoefConcordance.pdf">Kendall’s Coefficient of Concordance</a>
+<li><a href="KWAnova.pdf">Kruskal-Wallis One-Way ANOVA</a>
+<li><a href="WilcoxonMatchedPairs.pdf">Matched Pairs Signed Ranks Test</a>
+<li><a href="CochranQTest.pdf">Cochran Q Test</a>
+<li><a href="SignTest.pdf">Sign Test</a>
+<li><a href="Friedman2WayANOVA.pdf">Friedman Two-Way ANOVA</a>
+<li><a href="BinomialProbability.pdf">Probability of a Binomial Event</a>
+<li><a href="KendallTau.pdf">Kendall’s Tau and Partial Tau</a>
+<li><a href="KaplanMeierSurvival.pdf">Kaplan-Meier Survival Analysis</a>
+<li><a href="RIDITAnalysis.pdf">RIDIT Analysis</a>
+<li><a href="KappaTest.pdf">Kappa and Weighted Kappa</a>
+<li><a href="LifeTable.pdf">LifeTable</a></li></ol>
+
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>10. Statistical Process Control</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="XBarChart.pdf">X Bar Chart</a>
+<li><a href="RangeChart.pdf">Range Chart</a>
+<li><a href="SControlChart.pdf">S Control Chart</a>
+<li><a href="CUSUMChart.pdf">CUMSUM Chart</a>
+<li><a href="DefectsCChart.pdf">Defect (nonconformity) c Chart</a>
+<li><a href="pChart.pdf">P Control Chart</a>
+<li><a href="DefectsPerUnitChart.pdf">Defects per unit u Chart</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>11. Financial</p></dir>
+</dir>
+
+<ol type="a">
+<ol type="a">
+<ol type="a">
+
+<li><a href="LoanAmortization.pdf">Loan Amortization Schedule</a>
+<li><a href="AcceleratedDepreciation.pdf">Sum of Years Digits Depreciation</a>
+<li><a href="StraightLineDepreciation.pdf">Straight Line Depreciation</a>
+<li><a href="DoubleDecliningBalance.pdf">Double Declining Value</a></li></ol>
+</ol>
+</ol>
+<dir>
+<dir>
+
+<p>12. <a href="MatManHelp.pdf">MatMan</a></p></dir>
+</dir>
+
+<p>C Simulation</p><dir>
+<dir>
+
+<p>1. <a href="GenCorrelation.pdf">Bivariate Scatterplot</a></p>
+<p>2. <a href="GenMultivar.pdf">Multivariate Distributions</a></p>
+<p>3. <a href="TypeIandTypeII Error.pdf">Type I and Type II Error Curves</a></p>
+<p>4. <a href="PowerCurves.pdf">Power Curves for a z Test</a></p>
+<p>5. <a href="CriticalValuesTheorDists.pdf">Distribution Plots and Critical Values</a></p>
+<p>6. <a href="GenerateSequentialValues.pdf">Generate Sequential Values</a></p>
+<p>7. <a href="GenTheorDists.pdf">Random Theoretical Values</a></p></dir>
+</dir>
+</body>
+</html>
