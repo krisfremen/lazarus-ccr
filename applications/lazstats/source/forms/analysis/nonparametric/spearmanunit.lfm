@@ -1,0 +1,246 @@
+object SpearmanFrm: TSpearmanFrm
+  Left = 531
+  Height = 317
+  Top = 246
+  Width = 347
+  AutoSize = True
+  Caption = 'Spearman Rank Correlation'
+  ClientHeight = 317
+  ClientWidth = 347
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Variables Available'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = XEdit
+    AnchorSideBottom.Control = XEdit
+    Left = 233
+    Height = 15
+    Top = 33
+    Width = 51
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 2
+    Caption = 'X Variable'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = YEdit
+    AnchorSideBottom.Control = YEdit
+    Left = 233
+    Height = 15
+    Top = 125
+    Width = 51
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 2
+    Caption = 'Y Variable'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = XIn
+    AnchorSideBottom.Control = Bevel1
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 243
+    Top = 25
+    Width = 181
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Constraints.MinHeight = 200
+    ItemHeight = 0
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object XIn: TBitBtn
+    AnchorSideLeft.Control = Bevel2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = VarList
+    Left = 197
+    Height = 28
+    Top = 25
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = XInClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object XOut: TBitBtn
+    AnchorSideLeft.Control = Bevel2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = XIn
+    AnchorSideTop.Side = asrBottom
+    Left = 197
+    Height = 28
+    Top = 57
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = XOutClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object YIn: TBitBtn
+    AnchorSideLeft.Control = Bevel2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = XOut
+    AnchorSideTop.Side = asrBottom
+    Left = 197
+    Height = 28
+    Top = 117
+    Width = 28
+    BorderSpacing.Top = 32
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = YInClick
+    Spacing = 0
+    TabOrder = 3
+  end
+  object YOut: TBitBtn
+    AnchorSideLeft.Control = Bevel2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = YIn
+    AnchorSideTop.Side = asrBottom
+    Left = 197
+    Height = 28
+    Top = 149
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = YOutClick
+    Spacing = 0
+    TabOrder = 4
+  end
+  object XEdit: TEdit
+    AnchorSideLeft.Control = XIn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = XOut
+    AnchorSideBottom.Side = asrBottom
+    Left = 233
+    Height = 23
+    Top = 50
+    Width = 106
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 5
+    Text = 'XEdit'
+  end
+  object YEdit: TEdit
+    AnchorSideLeft.Control = YOut
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = YOut
+    AnchorSideBottom.Side = asrBottom
+    Left = 233
+    Height = 23
+    Top = 142
+    Width = 106
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 6
+    Text = 'YEdit'
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 138
+    Height = 25
+    Top = 284
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 7
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 200
+    Height = 25
+    Top = 284
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 8
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 284
+    Height = 25
+    Top = 284
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 9
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ComputeBtn
+    Left = 0
+    Height = 8
+    Top = 268
+    Width = 347
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 150
+    Height = 11
+    Top = 3
+    Width = 47
+    Shape = bsSpacer
+  end
+end

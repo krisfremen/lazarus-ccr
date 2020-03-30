@@ -1,0 +1,165 @@
+object ConcordFrm: TConcordFrm
+  Left = 279
+  Height = 243
+  Top = 216
+  Width = 536
+  HelpContext = 1305
+  BorderStyle = bsDialog
+  Caption = 'Kendal''s Coefficient of Concordance'
+  ClientHeight = 243
+  ClientWidth = 536
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  HelpFile = 'OS2Help.hlp'
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    Left = 24
+    Height = 13
+    Top = 8
+    Width = 92
+    Caption = 'Available Variables:'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 200
+    Height = 13
+    Top = 8
+    Width = 91
+    Caption = 'Selected Variables:'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    Left = 8
+    Height = 201
+    Top = 24
+    Width = 129
+    ItemHeight = 0
+    MultiSelect = True
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    Left = 144
+    Height = 33
+    Top = 32
+    Width = 33
+    Glyph.Data = {
+      76010000424D7601000000000000760000002800000020000000100000000100
+      04000000000000010000120B0000120B00001000000000000000000000000000
+      800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+      FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+      3333333333333333333333333333333333333333333333333333333333333333
+      3333333333333333333333333333333333333333333FF3333333333333003333
+      3333333333773FF3333333333309003333333333337F773FF333333333099900
+      33333FFFFF7F33773FF30000000999990033777777733333773F099999999999
+      99007FFFFFFF33333F7700000009999900337777777F333F7733333333099900
+      33333333337F3F77333333333309003333333333337F77333333333333003333
+      3333333333773333333333333333333333333333333333333333333333333333
+      3333333333333333333333333333333333333333333333333333
+    }
+    NumGlyphs = 2
+    OnClick = InBtnClick
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    Left = 144
+    Height = 33
+    Top = 72
+    Width = 33
+    Glyph.Data = {
+      76010000424D7601000000000000760000002800000020000000100000000100
+      04000000000000010000120B0000120B00001000000000000000000000000000
+      800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+      FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+      3333333333333333333333333333333333333333333333333333333333333333
+      3333333333333FF3333333333333003333333333333F77F33333333333009033
+      333333333F7737F333333333009990333333333F773337FFFFFF330099999000
+      00003F773333377777770099999999999990773FF33333FFFFF7330099999000
+      000033773FF33777777733330099903333333333773FF7F33333333333009033
+      33333333337737F3333333333333003333333333333377333333333333333333
+      3333333333333333333333333333333333333333333333333333333333333333
+      3333333333333333333333333333333333333333333333333333
+    }
+    NumGlyphs = 2
+    OnClick = OutBtnClick
+    TabOrder = 2
+  end
+  object AllBtn: TBitBtn
+    Left = 144
+    Height = 33
+    Top = 136
+    Width = 33
+    Caption = 'ALL'
+    OnClick = AllBtnClick
+    TabOrder = 3
+  end
+  object ListBox1: TListBox
+    Left = 184
+    Height = 201
+    Top = 24
+    Width = 137
+    ItemHeight = 0
+    TabOrder = 4
+  end
+  object ResetBtn: TButton
+    Left = 336
+    Height = 25
+    Top = 179
+    Width = 65
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 5
+  end
+  object CancelBtn: TButton
+    Left = 456
+    Height = 25
+    Top = 179
+    Width = 65
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 6
+  end
+  object OKBtn: TButton
+    Left = 456
+    Height = 25
+    Top = 211
+    Width = 65
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = OKBtnClick
+    TabOrder = 7
+  end
+  object ComputeBtn: TButton
+    Left = 336
+    Height = 25
+    Top = 211
+    Width = 65
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 8
+  end
+  object Memo1: TMemo
+    Left = 336
+    Height = 169
+    Top = 0
+    Width = 185
+    Lines.Strings = (
+      'Directions:   A Judge''s ratings or '
+      'observations are recorded'
+      'as Variables (columns) 1 through k.  '
+      'Each line corresponds to a different '
+      'judge (person making the rating.)  '
+      'Select the variables from the left list '
+      'to analyze and click on the right '
+      'arrow.'
+      'Click on the left arrow to remove any '
+      'variables NOT to be analyzed.  Click '
+      'on the Compute button to obtain the'
+      'results. '
+    )
+    TabOrder = 9
+  end
+end

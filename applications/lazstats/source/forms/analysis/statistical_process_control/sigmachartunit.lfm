@@ -1,0 +1,194 @@
+object SigmaChartFrm: TSigmaChartFrm
+  Left = 533
+  Height = 298
+  Top = 243
+  Width = 397
+  AutoSize = True
+  Caption = 'Sigma Charting'
+  ClientHeight = 298
+  ClientWidth = 397
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Selection Variables'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = GroupEdit
+    AnchorSideTop.Control = Owner
+    Left = 234
+    Height = 15
+    Top = 8
+    Width = 77
+    BorderSpacing.Top = 8
+    Caption = 'Group Variable'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = MeasEdit
+    Left = 234
+    Height = 15
+    Top = 80
+    Width = 117
+    Caption = 'Measurement Variable'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupEdit
+    AnchorSideBottom.Control = Bevel2
+    Left = 8
+    Height = 226
+    Top = 23
+    Width = 218
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Constraints.MinHeight = 220
+    ItemHeight = 0
+    OnClick = VarListClick
+    TabOrder = 0
+  end
+  object GroupEdit: TEdit
+    AnchorSideLeft.Control = Bevel1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 234
+    Height = 23
+    Top = 25
+    Width = 155
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ReadOnly = True
+    TabOrder = 1
+    Text = 'GroupEdit'
+  end
+  object MeasEdit: TEdit
+    AnchorSideLeft.Control = Bevel1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 234
+    Height = 23
+    Top = 96
+    Width = 155
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 8
+    ReadOnly = True
+    TabOrder = 2
+    Text = 'MeasEdit'
+  end
+  object Panel1: TPanel
+    Left = 8
+    Height = 25
+    Top = 265
+    Width = 381
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 25
+    ClientWidth = 381
+    TabOrder = 3
+    object ResetBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ComputeBtn
+      Left = 180
+      Height = 25
+      Top = 0
+      Width = 54
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 1
+    end
+    object ComputeBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = CloseBtn
+      Left = 242
+      Height = 25
+      Top = 0
+      Width = 76
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 2
+    end
+    object HelpBtn: TButton
+      Tag = 141
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = ResetBtn
+      AnchorSideRight.Control = ResetBtn
+      Left = 121
+      Height = 25
+      Top = 0
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Help'
+      OnClick = HelpBtnClick
+      TabOrder = 0
+    end
+    object CloseBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 326
+      Height = 25
+      Top = 0
+      Width = 55
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      Caption = 'Close'
+      ModalResult = 11
+      TabOrder = 3
+    end
+  end
+  object Bevel2: TBevel
+    AnchorSideTop.Control = Panel1
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Panel1
+    Left = 0
+    Height = 8
+    Top = 249
+    Width = 397
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 162
+    Height = 16
+    Top = 0
+    Width = 72
+    Shape = bsSpacer
+  end
+end

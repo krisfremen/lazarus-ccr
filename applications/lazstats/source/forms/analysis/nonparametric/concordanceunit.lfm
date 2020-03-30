@@ -1,0 +1,205 @@
+object ConcordFrm: TConcordFrm
+  AnchorSideBottom.Side = asrBottom
+  Left = 535
+  Height = 310
+  Top = 327
+  Width = 397
+  Anchors = [akLeft]
+  AutoSize = True
+  Caption = 'Kendal''s Coefficient of Concordance'
+  ClientHeight = 310
+  ClientWidth = 397
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = VarList
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Top = 8
+    Caption = 'Avialable Variables'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = SelList
+    AnchorSideTop.Control = Owner
+    Left = 229
+    Height = 15
+    Top = 8
+    Width = 93
+    BorderSpacing.Top = 8
+    Caption = 'Selected Variables'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = AllBtn
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 236
+    Top = 25
+    Width = 159
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    Constraints.MinHeight = 200
+    ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 184
+    Height = 28
+    Top = 24
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = InBtnClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 184
+    Height = 28
+    Top = 56
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = OutBtnClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object AllBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 175
+    Height = 25
+    Top = 104
+    Width = 46
+    AutoSize = True
+    Caption = 'ALL'
+    OnClick = AllBtnClick
+    Spacing = 0
+    TabOrder = 3
+  end
+  object SelList: TListBox
+    AnchorSideLeft.Control = AllBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 229
+    Height = 236
+    Top = 25
+    Width = 160
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 4
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 188
+    Height = 25
+    Top = 277
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 6
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 250
+    Height = 25
+    Top = 277
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 7
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 334
+    Height = 25
+    Top = 277
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 8
+  end
+  object HelpBtn: TButton
+    Tag = 115
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 129
+    Height = 25
+    Top = 277
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 5
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 261
+    Width = 397
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

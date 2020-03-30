@@ -1,0 +1,88 @@
+object ScriptOptsFrm: TScriptOptsFrm
+  Left = 695
+  Height = 125
+  Top = 337
+  Width = 281
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Script Options'
+  ClientHeight = 125
+  ClientWidth = 281
+  OnActivate = FormActivate
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CheckGroup1: TCheckGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 72
+    Top = 8
+    Width = 265
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Options'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 52
+    ClientWidth = 261
+    Items.Strings = (
+      'Do NOT record file Open Operations'
+      'Do NOT record file Save Operations'
+    )
+    TabOrder = 0
+    Data = {
+      020000000202
+    }
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = CheckGroup1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 138
+    Height = 25
+    Top = 88
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Control = CheckGroup1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 212
+    Height = 25
+    Top = 88
+    Width = 61
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = ReturnBtnClick
+    TabOrder = 2
+  end
+end

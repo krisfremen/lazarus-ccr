@@ -1,0 +1,139 @@
+object AvgLinkFrm: TAvgLinkFrm
+  Left = 589
+  Height = 136
+  Top = 409
+  Width = 382
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Average Linkage Hierarchical Clustering'
+  ClientHeight = 136
+  ClientWidth = 382
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 131
+    Height = 72
+    Top = 8
+    Width = 120
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Matrix Type Is:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 52
+    ClientWidth = 116
+    Items.Strings = (
+      'Similarities'
+      'Dissimilarities'
+    )
+    TabOrder = 0
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 147
+    Height = 25
+    Top = 96
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object ComputeBtn: TButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 221
+    Height = 25
+    Top = 96
+    Width = 76
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 3
+  end
+  object ReturnBtn: TButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 309
+    Height = 25
+    Top = 96
+    Width = 61
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 4
+  end
+  object HelpBtn: TButton
+    Tag = 105
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 84
+    Height = 25
+    Top = 96
+    Width = 51
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 1
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = RadioGroup1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 80
+    Width = 382
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+end

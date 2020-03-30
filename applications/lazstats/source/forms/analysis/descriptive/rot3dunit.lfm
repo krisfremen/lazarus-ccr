@@ -1,0 +1,416 @@
+object Rot3DFrm: TRot3DFrm
+  Left = 358
+  Height = 527
+  Top = 153
+  Width = 710
+  Caption = 'Three Dimension Rotation'
+  ClientHeight = 527
+  ClientWidth = 710
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = VarList
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 561
+    Height = 15
+    Top = 8
+    Width = 102
+    BorderSpacing.Top = 8
+    Caption = 'Click the X, Y and Z'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = VarList
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    Left = 564
+    Height = 15
+    Top = 23
+    Width = 97
+    Caption = 'Variables to Rotate'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = XScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Label6
+    Left = 530
+    Height = 15
+    Top = 188
+    Width = 7
+    Anchors = [akLeft, akBottom]
+    Caption = 'X'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = YScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Label7
+    Left = 609
+    Height = 15
+    Top = 188
+    Width = 7
+    Anchors = [akLeft, akBottom]
+    Caption = 'Y'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    AnchorSideLeft.Control = ZScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Label8
+    Left = 689
+    Height = 15
+    Top = 188
+    Width = 7
+    Anchors = [akLeft, akBottom]
+    Caption = 'Z'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    AnchorSideLeft.Control = XScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = XScroll
+    Left = 525
+    Height = 15
+    Top = 203
+    Width = 17
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 4
+    Caption = '-90'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    AnchorSideLeft.Control = YScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = YScroll
+    Left = 604
+    Height = 15
+    Top = 203
+    Width = 17
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 4
+    Caption = '-90'
+    ParentColor = False
+  end
+  object Label8: TLabel
+    AnchorSideLeft.Control = ZScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = ZScroll
+    Left = 684
+    Height = 15
+    Top = 203
+    Width = 17
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 4
+    Caption = '-90'
+    ParentColor = False
+  end
+  object Label9: TLabel
+    AnchorSideLeft.Control = XScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Label10
+    Left = 527
+    Height = 15
+    Top = 417
+    Width = 12
+    Caption = '90'
+    ParentColor = False
+  end
+  object Label10: TLabel
+    AnchorSideLeft.Control = YScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = YScroll
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Label12
+    Left = 606
+    Height = 15
+    Top = 417
+    Width = 12
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 4
+    Caption = '90'
+    ParentColor = False
+  end
+  object Label11: TLabel
+    AnchorSideLeft.Control = ZScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Label10
+    Left = 686
+    Height = 15
+    Top = 417
+    Width = 12
+    Caption = '90'
+    ParentColor = False
+  end
+  object Label12: TLabel
+    AnchorSideLeft.Control = YScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Label10
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = YDegEdit
+    Left = 591
+    Height = 15
+    Top = 432
+    Width = 42
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 16
+    Caption = 'Degrees'
+    ParentColor = False
+  end
+  object Label13: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = XEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 499
+    Width = 7
+    BorderSpacing.Left = 8
+    Caption = 'X'
+    ParentColor = False
+  end
+  object Label14: TLabel
+    AnchorSideLeft.Control = XEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = YEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 104
+    Height = 15
+    Top = 499
+    Width = 7
+    BorderSpacing.Left = 24
+    Caption = 'Y'
+    ParentColor = False
+  end
+  object Label15: TLabel
+    AnchorSideLeft.Control = YEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ZEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 200
+    Height = 15
+    Top = 499
+    Width = 7
+    BorderSpacing.Left = 24
+    Caption = 'Z'
+    ParentColor = False
+  end
+  object Image1: TImage
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = VarList
+    AnchorSideBottom.Control = CloseBtn
+    Left = 8
+    Height = 478
+    Top = 8
+    Width = 506
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+  end
+  object VarList: TListBox
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Label4
+    Left = 522
+    Height = 140
+    Top = 40
+    Width = 180
+    Anchors = [akTop, akRight, akBottom]
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    ItemHeight = 0
+    OnClick = VarListClick
+    TabOrder = 0
+  end
+  object XScroll: TScrollBar
+    AnchorSideLeft.Control = VarList
+    AnchorSideBottom.Control = YScroll
+    AnchorSideBottom.Side = asrBottom
+    Left = 522
+    Height = 191
+    Top = 222
+    Width = 22
+    Anchors = [akLeft, akBottom]
+    Kind = sbVertical
+    PageSize = 0
+    TabOrder = 1
+    OnScroll = XScrollScroll
+  end
+  object YScroll: TScrollBar
+    AnchorSideLeft.Control = VarList
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Label10
+    Left = 601
+    Height = 191
+    Top = 222
+    Width = 22
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 4
+    Kind = sbVertical
+    PageSize = 0
+    TabOrder = 2
+    OnScroll = YScrollScroll
+  end
+  object ZScroll: TScrollBar
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = YScroll
+    AnchorSideBottom.Side = asrBottom
+    Left = 683
+    Height = 191
+    Top = 222
+    Width = 19
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Right = 8
+    Kind = sbVertical
+    PageSize = 0
+    TabOrder = 3
+    OnScroll = ZScrollScroll
+  end
+  object XDegEdit: TEdit
+    AnchorSideLeft.Control = XScroll
+    AnchorSideTop.Control = YDegEdit
+    AnchorSideBottom.Control = CloseBtn
+    Left = 522
+    Height = 23
+    Top = 463
+    Width = 35
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 8
+    TabOrder = 4
+    Text = 'XDegEdit'
+  end
+  object YDegEdit: TEdit
+    AnchorSideLeft.Control = YScroll
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = XDegEdit
+    Left = 595
+    Height = 23
+    Top = 463
+    Width = 35
+    TabOrder = 5
+    Text = 'XDegEdit'
+  end
+  object ZDegEdit: TEdit
+    AnchorSideTop.Control = XDegEdit
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 667
+    Height = 23
+    Top = 463
+    Width = 35
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    TabOrder = 6
+    Text = 'XDegEdit'
+  end
+  object XEdit: TEdit
+    AnchorSideLeft.Control = Label13
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CloseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 23
+    Height = 23
+    Top = 495
+    Width = 57
+    BorderSpacing.Left = 8
+    TabOrder = 7
+    Text = 'XEdit'
+  end
+  object YEdit: TEdit
+    AnchorSideLeft.Control = Label14
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CloseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 119
+    Height = 23
+    Top = 495
+    Width = 57
+    BorderSpacing.Left = 8
+    TabOrder = 8
+    Text = 'YEdit'
+  end
+  object ZEdit: TEdit
+    AnchorSideLeft.Control = Label15
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CloseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 215
+    Height = 23
+    Top = 495
+    Width = 56
+    BorderSpacing.Left = 8
+    TabOrder = 9
+    Text = 'ZEdit'
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = PrintBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 526
+    Height = 25
+    Top = 494
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 10
+  end
+  object PrintBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 588
+    Height = 25
+    Top = 494
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Print'
+    OnClick = PrintBtnClick
+    TabOrder = 11
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 647
+    Height = 25
+    Top = 494
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 12
+  end
+  object PrintDialog: TPrintDialog
+    left = 320
+    top = 304
+  end
+  object PrinterSetupDialog1: TPrinterSetupDialog
+    left = 184
+    top = 304
+  end
+end

@@ -1,0 +1,34 @@
+object LimitedForm: TLimitedForm
+  Left = 290
+  Height = 192
+  Top = 175
+  Width = 400
+  Caption = 'UNAVAILABLE IN THIS LIMITED VERSION'
+  ClientHeight = 192
+  ClientWidth = 400
+  LCLVersion = '2.1.0.0'
+  object Memo1: TMemo
+    Left = 6
+    Height = 120
+    Top = 8
+    Width = 384
+    Lines.Strings = (
+      'This procedure is not implimented in this limited'
+      'version.  The full version for Windows and Linux'
+      'systems can be purchased at:'
+      'http://www.statprograms4U.com'
+      'If you have any questions, send an email to me'
+      'at billmiller50322@gmail.com'
+    )
+    TabOrder = 0
+  end
+  object ReturnBtn: TButton
+    Left = 104
+    Height = 35
+    Top = 143
+    Width = 146
+    Caption = 'RETURN'
+    ModalResult = 1
+    TabOrder = 1
+  end
+end

@@ -1,0 +1,348 @@
+object GenKappaFrm: TGenKappaFrm
+  Left = 641
+  Height = 356
+  Top = 378
+  Width = 468
+  AutoSize = True
+  Caption = 'Generalized Kappa Coefficient'
+  ClientHeight = 356
+  ClientWidth = 468
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 167
+    Height = 25
+    Top = 323
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 2
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 233
+    Height = 25
+    Top = 323
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 307
+    Height = 25
+    Top = 323
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 4
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 395
+    Height = 25
+    Top = 323
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 5
+  end
+  object HelpBtn: TButton
+    Tag = 125
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 104
+    Height = 25
+    Top = 323
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 1
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ComputeBtn
+    Left = 0
+    Height = 8
+    Top = 307
+    Width = 468
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 299
+    Top = 8
+    Width = 452
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ClientHeight = 299
+    ClientWidth = 452
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = CatEdit
+      AnchorSideBottom.Control = CatEdit
+      Left = 248
+      Height = 15
+      Top = 25
+      Width = 117
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Category Code (1,2,...)'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = ObjectEdit
+      AnchorSideBottom.Control = ObjectEdit
+      Left = 248
+      Height = 15
+      Top = 117
+      Width = 144
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Object or Subject Classified'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = RaterEdit
+      AnchorSideBottom.Control = RaterEdit
+      Left = 248
+      Height = 15
+      Top = 209
+      Width = 101
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Rater Codes (1,2,...)'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 49
+      Caption = 'Variables:'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label4
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = CatIn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 282
+      Top = 17
+      Width = 204
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      TabOrder = 0
+    end
+    object CatIn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 212
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = CatInClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object CatOut: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = CatIn
+      AnchorSideTop.Side = asrBottom
+      Left = 212
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = CatOutClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object ObjIn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = CatOut
+      AnchorSideTop.Side = asrBottom
+      Left = 212
+      Height = 28
+      Top = 109
+      Width = 28
+      BorderSpacing.Top = 32
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = ObjInClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object ObjOut: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ObjIn
+      AnchorSideTop.Side = asrBottom
+      Left = 212
+      Height = 28
+      Top = 141
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = ObjOutClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object RaterIn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ObjOut
+      AnchorSideTop.Side = asrBottom
+      Left = 212
+      Height = 28
+      Top = 201
+      Width = 28
+      BorderSpacing.Top = 32
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = RaterInClick
+      Spacing = 0
+      TabOrder = 7
+    end
+    object RaterOut: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = RaterIn
+      AnchorSideTop.Side = asrBottom
+      Left = 212
+      Height = 28
+      Top = 233
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = RaterOutClick
+      Spacing = 0
+      TabOrder = 8
+    end
+    object CatEdit: TEdit
+      AnchorSideLeft.Control = CatIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = CatOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 248
+      Height = 23
+      Top = 42
+      Width = 204
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      TabOrder = 3
+      Text = 'CatEdit'
+    end
+    object ObjectEdit: TEdit
+      AnchorSideLeft.Control = ObjOut
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ObjOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 248
+      Height = 23
+      Top = 134
+      Width = 204
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      TabOrder = 6
+      Text = 'Edit1'
+    end
+    object RaterEdit: TEdit
+      AnchorSideLeft.Control = RaterOut
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = RaterIn
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = RaterOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 248
+      Height = 23
+      Top = 226
+      Width = 204
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      TabOrder = 9
+      Text = 'Edit1'
+    end
+  end
+end

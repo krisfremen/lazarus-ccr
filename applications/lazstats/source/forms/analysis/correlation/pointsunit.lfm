@@ -1,0 +1,81 @@
+object PointsFrm: TPointsFrm
+  Left = 506
+  Height = 470
+  Top = 217
+  Width = 736
+  Caption = 'Points Form'
+  ClientHeight = 470
+  ClientWidth = 736
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Image1: TImage
+    Left = 0
+    Height = 424
+    Top = 0
+    Width = 736
+    Align = alClient
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 46
+    Top = 424
+    Width = 736
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    BorderStyle = bsSingle
+    ClientHeight = 42
+    ClientWidth = 732
+    TabOrder = 0
+    object MsgEdit: TEdit
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 8
+      Height = 23
+      Top = 10
+      Width = 335
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 8
+      TabOrder = 0
+      Text = 'MsgEdit'
+    end
+    object PrintBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = ReturnBtn
+      Left = 600
+      Height = 25
+      Top = 9
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 12
+      Caption = 'Print'
+      OnClick = PrintBtnClick
+      TabOrder = 1
+    end
+    object ReturnBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 663
+      Height = 25
+      Top = 9
+      Width = 61
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Return'
+      ModalResult = 1
+      OnClick = ReturnBtnClick
+      TabOrder = 2
+    end
+  end
+end

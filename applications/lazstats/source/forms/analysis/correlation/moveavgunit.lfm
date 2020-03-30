@@ -1,0 +1,154 @@
+object MoveAvgFrm: TMoveAvgFrm
+  Left = 434
+  Height = 307
+  Top = 163
+  Width = 372
+  Caption = 'Moving Average Specification Form'
+  ClientHeight = 307
+  ClientWidth = 372
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideTop.Control = OrderEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = OrderEdit
+    Left = 38
+    Height = 15
+    Top = 17
+    Width = 36
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Order: '
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ThetaEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 52
+    Width = 66
+    BorderSpacing.Left = 8
+    Caption = 'Theta Value: '
+    ParentColor = False
+  end
+  object OrderEdit: TEdit
+    AnchorSideLeft.Control = ThetaEdit
+    AnchorSideRight.Control = ThetaList
+    AnchorSideRight.Side = asrBottom
+    Left = 82
+    Height = 23
+    Top = 13
+    Width = 118
+    Alignment = taRightJustify
+    OnKeyPress = OrderEditKeyPress
+    TabOrder = 0
+    Text = 'OrderEdit'
+  end
+  object ThetaEdit: TEdit
+    AnchorSideLeft.Control = Label2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = ThetaList
+    AnchorSideRight.Side = asrBottom
+    Left = 82
+    Height = 23
+    Top = 48
+    Width = 118
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    OnKeyPress = ThetaEditKeyPress
+    TabOrder = 1
+    Text = 'ThetaEdit'
+  end
+  object ThetaList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Panel1
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 219
+    Top = 80
+    Width = 286
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    ItemHeight = 0
+    OnClick = ThetaListClick
+    TabOrder = 2
+  end
+  object Panel1: TPanel
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 302
+    Height = 157
+    Top = 142
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ChildSizing.VerticalSpacing = 8
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ClientHeight = 157
+    ClientWidth = 62
+    TabOrder = 3
+    object HelpBtn: TButton
+      Tag = 132
+      Left = 0
+      Height = 25
+      Top = 0
+      Width = 62
+      AutoSize = True
+      Caption = 'Help'
+      OnClick = HelpBtnClick
+      TabOrder = 0
+    end
+    object ResetBtn: TButton
+      Left = 0
+      Height = 25
+      Top = 33
+      Width = 62
+      AutoSize = True
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 1
+    end
+    object CancelBtn: TButton
+      Left = 0
+      Height = 25
+      Top = 66
+      Width = 62
+      AutoSize = True
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 2
+    end
+    object ApplyBtn: TButton
+      Left = 0
+      Height = 25
+      Top = 99
+      Width = 62
+      AutoSize = True
+      Caption = 'Apply'
+      OnClick = ApplyBtnClick
+      TabOrder = 3
+    end
+    object OKBtn: TButton
+      Left = 0
+      Height = 25
+      Top = 132
+      Width = 62
+      AutoSize = True
+      Caption = 'OK'
+      ModalResult = 1
+      TabOrder = 4
+    end
+  end
+end

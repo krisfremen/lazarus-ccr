@@ -1,0 +1,419 @@
+object SelectFrm: TSelectFrm
+  Left = 541
+  Height = 382
+  Top = 241
+  Width = 830
+  Caption = 'Select Cases'
+  ClientHeight = 382
+  ClientWidth = 830
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 46
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Variables'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 306
+    Top = 25
+    Width = 160
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    ItemHeight = 0
+    TabOrder = 0
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = VarList
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = VarList
+    Left = 176
+    Height = 205
+    Top = 25
+    Width = 166
+    AutoSize = True
+    BorderSpacing.Left = 8
+    Caption = 'Select:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 8
+    ChildSizing.VerticalSpacing = 6
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ClientHeight = 185
+    ClientWidth = 162
+    TabOrder = 1
+    object AllCasesBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 8
+      Width = 138
+      Caption = 'All Cases'
+      OnClick = AllCasesBtnClick
+      TabOrder = 0
+    end
+    object IfCondBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 33
+      Width = 138
+      Caption = 'If condition is satisfied'
+      OnClick = IfCondBtnClick
+      TabOrder = 1
+    end
+    object RandomBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 58
+      Width = 138
+      Caption = 'A Random Sample'
+      OnClick = RandomBtnClick
+      TabOrder = 2
+    end
+    object RangeBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 83
+      Width = 138
+      Caption = 'A Range of Cases'
+      OnClick = RangeBtnClick
+      TabOrder = 3
+    end
+    object FilterBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 108
+      Width = 138
+      Caption = 'Use the Filter Variable'
+      OnClick = FilterBtnClick
+      TabOrder = 4
+    end
+    object Label2: TLabel
+      Left = 12
+      Height = 15
+      Top = 133
+      Width = 138
+      Caption = 'Click one from the list'
+      ParentColor = False
+    end
+    object FiltVarEdit: TEdit
+      Left = 12
+      Height = 23
+      Top = 154
+      Width = 138
+      TabOrder = 5
+      Text = 'FiltVarEdit'
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = VarList
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = GroupBox1
+    AnchorSideRight.Side = asrBottom
+    Left = 176
+    Height = 78
+    Top = 240
+    Width = 166
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    Caption = 'Unselected Cases Are:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 8
+    ChildSizing.VerticalSpacing = 4
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ClientHeight = 58
+    ClientWidth = 162
+    TabOrder = 2
+    object FilterOutBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 8
+      Width = 130
+      Caption = 'Filtered Out'
+      TabOrder = 0
+    end
+    object DeleteBtn: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 31
+      Width = 130
+      Caption = 'Deleted from the File'
+      TabOrder = 1
+    end
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 529
+    Height = 25
+    Top = 348
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 9
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 9
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 595
+    Height = 25
+    Top = 348
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 9
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 9
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 4
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 669
+    Height = 25
+    Top = 348
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 9
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 9
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 5
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 757
+    Height = 25
+    Top = 348
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 9
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 9
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 6
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 331
+    Width = 830
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 350
+    Height = 323
+    Top = 8
+    Width = 472
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ChildSizing.HorizontalSpacing = 12
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 4
+    ClientHeight = 323
+    ClientWidth = 472
+    TabOrder = 7
+    object Panel2: TPanel
+      Left = 0
+      Height = 323
+      Top = 0
+      Width = 109
+      BevelOuter = bvNone
+      ClientHeight = 323
+      ClientWidth = 109
+      TabOrder = 0
+      object Label3: TLabel
+        AnchorSideTop.Control = Panel2
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 51
+        Caption = 'Left Value'
+        Constraints.MaxHeight = 20
+        ParentColor = False
+      end
+      object ExpListBox: TListBox
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = Label3
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel2
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 306
+        Top = 17
+        Width = 109
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        ItemHeight = 0
+        TabOrder = 0
+      end
+    end
+    object Panel3: TPanel
+      Left = 121
+      Height = 323
+      Top = 0
+      Width = 109
+      BevelOuter = bvNone
+      ClientHeight = 323
+      ClientWidth = 109
+      TabOrder = 1
+      object Label4: TLabel
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Panel3
+        Left = 0
+        Height = 15
+        Top = 0
+        Width = 65
+        Caption = 'Comparison'
+        Constraints.MaxHeight = 20
+        ParentColor = False
+      end
+      object JoinList: TListBox
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Label4
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel3
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 306
+        Top = 17
+        Width = 109
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        ItemHeight = 0
+        TabOrder = 0
+      end
+    end
+    object Panel4: TPanel
+      Left = 242
+      Height = 323
+      Top = 0
+      Width = 109
+      BevelOuter = bvNone
+      ClientHeight = 323
+      ClientWidth = 109
+      TabOrder = 2
+      object Label5: TLabel
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Panel4
+        Left = 0
+        Height = 15
+        Top = 0
+        Width = 59
+        Caption = 'Right Value'
+        Constraints.MaxHeight = 20
+        ParentColor = False
+      end
+      object NotList: TListBox
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Label5
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel4
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel4
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 306
+        Top = 17
+        Width = 109
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        ItemHeight = 0
+        TabOrder = 0
+      end
+    end
+    object Panel5: TPanel
+      Left = 363
+      Height = 323
+      Top = 0
+      Width = 109
+      BevelOuter = bvNone
+      ClientHeight = 323
+      ClientWidth = 109
+      TabOrder = 3
+      object Label6: TLabel
+        AnchorSideLeft.Control = Panel5
+        AnchorSideTop.Control = Panel5
+        Left = 0
+        Height = 15
+        Top = 0
+        Width = 53
+        Caption = 'Join Logic'
+        Constraints.MaxHeight = 20
+        ParentColor = False
+      end
+      object OpsList: TListBox
+        AnchorSideLeft.Control = Panel5
+        AnchorSideTop.Control = Label6
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel5
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel5
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 306
+        Top = 17
+        Width = 109
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        ItemHeight = 0
+        TabOrder = 0
+      end
+    end
+  end
+end

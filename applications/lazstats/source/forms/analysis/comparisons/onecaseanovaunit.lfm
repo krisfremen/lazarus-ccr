@@ -1,0 +1,583 @@
+object OneCaseAnovaForm: TOneCaseAnovaForm
+  Left = 694
+  Height = 458
+  Top = 246
+  Width = 567
+  AutoSize = True
+  Caption = 'OneCaseAnovaForm'
+  ClientHeight = 458
+  ClientWidth = 567
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = PlotOptionsBox
+    AnchorSideTop.Control = PlotOptionsBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = PlotOptionsBox
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = OverAllAlpha
+    Left = 364
+    Height = 135
+    Top = 146
+    Width = 195
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 16
+    BorderSpacing.Bottom = 8
+    Caption = 'Post-Hoc Comparisons:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
+    ChildSizing.ShrinkVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 115
+    ClientWidth = 191
+    TabOrder = 2
+    object ScheffeChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 6
+      Width = 167
+      Caption = 'ScheffeChk'
+      TabOrder = 0
+    end
+    object TukeyHSDChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 27
+      Width = 167
+      Caption = 'Tukey HSD (= n''s)'
+      TabOrder = 1
+    end
+    object TukeyBChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 48
+      Width = 167
+      Caption = 'Tukey B (= n''s)'
+      TabOrder = 2
+    end
+    object TukeyKramerChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 69
+      Width = 167
+      Caption = 'Tukey-Kramer'
+      TabOrder = 3
+    end
+    object NewmanKeulsChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 90
+      Width = 167
+      Caption = 'Newman-Keuls (= n''s)'
+      TabOrder = 4
+    end
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = OverAllAlpha
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = OverAllAlpha
+    Left = 8
+    Height = 15
+    Top = 390
+    Width = 147
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'Alpha Level for Overall Tests'
+    ParentColor = False
+  end
+  object OverAllAlpha: TEdit
+    AnchorSideLeft.Control = Label3
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = PostAlpha
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 163
+    Height = 23
+    Top = 386
+    Width = 51
+    Alignment = taRightJustify
+    Anchors = [akLeft, akBottom]
+    TabOrder = 4
+    Text = 'OverAllAlpha'
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = OverAllAlpha
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = PostAlpha
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = PostAlpha
+    Left = 238
+    Height = 15
+    Top = 390
+    Width = 163
+    BorderSpacing.Left = 24
+    BorderSpacing.Right = 8
+    Caption = 'Alpha Level for Post-Hoc Tests:'
+    ParentColor = False
+  end
+  object PostAlpha: TEdit
+    AnchorSideLeft.Control = Label4
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Side = asrCenter
+    AnchorSideBottom.Control = Bevel1
+    Left = 409
+    Height = 23
+    Top = 386
+    Width = 51
+    Alignment = taRightJustify
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 8
+    TabOrder = 5
+    Text = 'PostAlpha'
+  end
+  object HelpBtn: TButton
+    Tag = 107
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 295
+    Height = 25
+    Top = 425
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 6
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 354
+    Height = 25
+    Top = 425
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 7
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 416
+    Height = 25
+    Top = 425
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 8
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 500
+    Height = 25
+    Top = 425
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 9
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 409
+    Width = 567
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object InteractBtn: TCheckBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Side = asrBottom
+    Left = 380
+    Height = 19
+    Top = 297
+    Width = 103
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 16
+    BorderSpacing.Bottom = 8
+    Caption = 'Get Interactions'
+    TabOrder = 3
+  end
+  object PlotOptionsBox: TRadioGroup
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 364
+    Height = 114
+    Top = 16
+    Width = 195
+    Anchors = [akTop, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    Caption = 'Plot Options'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 94
+    ClientWidth = 191
+    ItemIndex = 0
+    Items.Strings = (
+      'no plot'
+      'Plot with Vertical 3D Bars'
+      'Plot with Vertical 2D Bars'
+      'Plot with Horizontal 2D Bars'
+    )
+    TabOrder = 1
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = PlotOptionsBox
+    AnchorSideBottom.Control = OverAllAlpha
+    Left = 8
+    Height = 370
+    Top = 8
+    Width = 340
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 370
+    ClientWidth = 340
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 49
+      Caption = 'Variables:'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = DepIn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 353
+      Top = 17
+      Width = 187
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object DepIn: TBitBtn
+      AnchorSideLeft.Control = Bevel2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = VarList
+      Left = 195
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = DepInClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object StaticText1: TStaticText
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = DepVar
+      Left = 231
+      Height = 16
+      Top = 24
+      Width = 103
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Dependent Variable'
+      TabOrder = 3
+    end
+    object DepOut: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = DepIn
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = DepOutClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object Fact1In: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = DepOut
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 101
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = Fact1InClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object Fact1Out: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = Fact1In
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 133
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = Fact1OutClick
+      Spacing = 0
+      TabOrder = 6
+    end
+    object Fact2In: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = Fact1Out
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 185
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = Fact2InClick
+      Spacing = 0
+      TabOrder = 9
+    end
+    object Fact2Out: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = Fact2In
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 217
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = Fact2OutClick
+      Spacing = 0
+      TabOrder = 10
+    end
+    object StaticText2: TStaticText
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = Factor1
+      Left = 231
+      Height = 16
+      Top = 108
+      Width = 87
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Factor 1 Variable'
+      TabOrder = 7
+    end
+    object Factor1: TEdit
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Fact1Out
+      AnchorSideBottom.Side = asrBottom
+      Left = 231
+      Height = 23
+      Top = 126
+      Width = 109
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 8
+      Text = 'Edit1'
+    end
+    object StaticText3: TStaticText
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = Factor2
+      Left = 231
+      Height = 16
+      Top = 192
+      Width = 87
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Factor 2 Variable'
+      TabOrder = 11
+    end
+    object Factor2: TEdit
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Fact2Out
+      AnchorSideBottom.Side = asrBottom
+      Left = 231
+      Height = 23
+      Top = 210
+      Width = 109
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 12
+      Text = 'Edit1'
+    end
+    object Fact3In: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = Fact2Out
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 269
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = Fact3InClick
+      Spacing = 0
+      TabOrder = 13
+    end
+    object Fact3Out: TBitBtn
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = Fact3In
+      AnchorSideTop.Side = asrBottom
+      Left = 195
+      Height = 28
+      Top = 301
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = Fact3OutClick
+      Spacing = 0
+      TabOrder = 14
+    end
+    object StaticText4: TStaticText
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = Factor3
+      Left = 231
+      Height = 16
+      Top = 276
+      Width = 72
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Factor 3 Clark'
+      TabOrder = 15
+    end
+    object Factor3: TEdit
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Fact3Out
+      AnchorSideBottom.Side = asrBottom
+      Left = 231
+      Height = 23
+      Top = 294
+      Width = 109
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 16
+      Text = 'Edit1'
+    end
+    object DepVar: TEdit
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = DepOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 231
+      Height = 23
+      Top = 42
+      Width = 109
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 4
+      Text = 'DepVar'
+    end
+    object Bevel2: TBevel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel1
+      Left = 145
+      Height = 17
+      Top = 0
+      Width = 50
+      Shape = bsSpacer
+    end
+  end
+end

@@ -1,0 +1,1441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <PathDelim Value="\"/>
+    <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <Scaled Value="True"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <BuildModes Count="1">
+      <Item1 Name="default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+    </RunParams>
+    <RequiredPackages Count="4">
+      <Item1>
+        <PackageName Value="LazControls"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+        <MinVersion Major="1" Valid="True"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="Printer4Lazarus"/>
+        <MinVersion Minor="5" Valid="True"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="LCL"/>
+      </Item4>
+    </RequiredPackages>
+    <Units Count="170">
+      <Unit0>
+        <Filename Value="LazStats.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="forms\mainunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OS3MainFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MainUnit"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="units\globals.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Globals"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="forms\misc\dictionaryunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DictionaryFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DictionaryUnit"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="forms\options\optionsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OptionsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="OptionsUnit"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="forms\misc\outputunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OutputFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="OutputUnit"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="forms\misc\licenseunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LicenseFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LicenseUnit"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="units\dataprocs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DataProcs"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="forms\variables\transfrmunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TransFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TransfrmUnit"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="units\functionslib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FunctionsLib"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="forms\analysis\descriptive\descriptiveunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DescriptiveFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DescriptiveUnit"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="forms\misc\graphlib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GraphFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GraphLib"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="forms\analysis\descriptive\freqspecsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FreqSpecsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="FreqSpecsUnit"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="forms\analysis\descriptive\frequnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FreqFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="FreqUnit"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="forms\analysis\descriptive\crosstabunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CrossTabFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CrossTabUnit"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="units\matrixlib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MatrixLib"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="forms\analysis\descriptive\breakdownunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BreakDownFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BreakDownUnit"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="forms\analysis\descriptive\boxplotunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BoxPlotFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BoxPlotUnit"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="forms\misc\blankfrmunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BlankFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BlankFrmUnit"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="forms\analysis\descriptive\normalityunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="NormalityFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="NormalityUnit"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="forms\analysis\descriptive\rot3dunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Rot3DFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Rot3dUnit"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="forms\analysis\descriptive\plotxyunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PlotXYFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PlotXYUnit"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="forms\analysis\descriptive\bubbleplotunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BubbleForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BubblePlotUnit"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="forms\analysis\descriptive\stemleafunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="StemLeafFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="StemLeafUnit"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="forms\analysis\descriptive\multxvsyunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MultXvsYFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MultXvsYUnit"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="forms\analysis\one_sample_tests\onesampunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OneSampFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="OneSampUnit"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="forms\analysis\comparisons\twocorrsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TwoCorrsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TwoCorrsUnit"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="forms\analysis\comparisons\twopropunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TwoPropFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TwoPropUnit"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="forms\analysis\comparisons\ttestunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TtestFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TTestUnit"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="forms\analysis\comparisons\blkanovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BlksAnovaFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BlkANOVAUnit"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="units\anovatestsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ANOVATestsUnit"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="forms\analysis\comparisons\withinanovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="WithinANOVAFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="WithinANOVAUnit"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="forms\analysis\comparisons\axsanovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AxSAnovaFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AxSANOVAUnit"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="forms\analysis\comparisons\abranovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ABRAnovaFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ABRANOVAUnit"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="forms\analysis\comparisons\ancovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ANCOVAfrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ANCOVAUnit"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="forms\analysis\comparisons\latinspecsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LatinSpecsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LatinSpecsUnit"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="forms\analysis\comparisons\latinsqrsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LatinSqrsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LatinSqrsUnit"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="forms\analysis\correlation\rmatunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RMatFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RMatUnit"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="forms\analysis\correlation\partialsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PartialsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PartialsUnit"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="forms\analysis\correlation\pointsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PointsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PointsUnit"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="forms\analysis\correlation\differenceunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DifferenceFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DifferenceUnit"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="forms\analysis\correlation\expsmoothunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ExpSmoothFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ExpSmoothUnit"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="forms\analysis\correlation\fftunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FFTFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="FFTUnit"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="forms\analysis\correlation\polynomialunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PolynomialFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PolynomialUnit"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="forms\analysis\correlation\autocorunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AutoCorrFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AutoCorUnit"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="forms\analysis\correlation\moveavgunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MoveAvgFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MoveAvgUnit"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="forms\analysis\correlation\autoplotunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AutoPlotFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AutoPlotUnit"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="forms\analysis\correlation\canonunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CannonFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CanonUnit"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="forms\analysis\comparisons\glmunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GLMFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GLMUnit"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="forms\analysis\multiple_regression\stepfwdmrunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="StepFwdFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="StepFwdMRUnit"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="forms\analysis\multiple_regression\blkmregunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BlkMregFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BlkMRegUnit"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="forms\analysis\multiple_regression\backregunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BackRegFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BackRegUnit"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="forms\analysis\multiple_regression\bestregunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BestRegFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BestRegUnit"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="forms\analysis\multiple_regression\simultregunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SimultFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SimultRegUnit"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="forms\analysis\multiple_regression\coxregunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CoxRegFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CoxRegUnit"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="forms\analysis\multiple_regression\logregunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LogRegFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LogRegUnit"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="forms\analysis\multiple_regression\linprounit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LinProFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LinProUnit"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="forms\analysis\multivariate\discrimunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DiscrimFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DiscrimUnit"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="forms\analysis\multivariate\rotateunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RotateFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RotateUnit"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="forms\analysis\multivariate\factorunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FactorFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="FactorUnit"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="forms\analysis\multivariate\hierarchunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="HierarchFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="HierarchUnit"/>
+      </Unit60>
+      <Unit61>
+        <Filename Value="forms\analysis\multivariate\pathunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PathFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PathUnit"/>
+      </Unit61>
+      <Unit62>
+        <Filename Value="forms\analysis\cross-classification\loglinscreenunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LogLinScreenFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LogLinScreenUnit"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="forms\analysis\cross-classification\twowayloglinunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TwoWayLogLinFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TwoWayLogLinUnit"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="forms\analysis\cross-classification\abcloglinunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ABCLogLinearFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ABCLogLinUnit"/>
+      </Unit64>
+      <Unit65>
+        <Filename Value="forms\analysis\measurement_programs\testgenunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TestGenFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TestGenUnit"/>
+      </Unit65>
+      <Unit66>
+        <Filename Value="forms\analysis\measurement_programs\testscoreunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TestScoreFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TestScoreUnit"/>
+      </Unit66>
+      <Unit67>
+        <Filename Value="forms\analysis\measurement_programs\raschunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RaschFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RaschUnit"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="forms\analysis\measurement_programs\succintunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SuccIntFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SuccIntUnit"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="forms\analysis\measurement_programs\guttmanunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GuttmanFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GuttmanUnit"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="forms\analysis\measurement_programs\comprelunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CompRelFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CompRelUnit"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="forms\analysis\measurement_programs\kr21unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="KR21Frm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="KR21Unit"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="forms\analysis\measurement_programs\spbrunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SpBrFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SpBrUnit"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="forms\analysis\measurement_programs\relchangeunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RelChangeFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RelChangeUnit"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="forms\analysis\measurement_programs\difunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DIFFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DifUnit"/>
+      </Unit74>
+      <Unit75>
+        <Filename Value="forms\analysis\measurement_programs\polydifunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PolyDIFFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PolyDifUnit"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="forms\analysis\nonparametric\chisqrunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ChiSqrFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ChiSqrUnit"/>
+      </Unit76>
+      <Unit77>
+        <Filename Value="forms\analysis\nonparametric\spearmanunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SpearmanFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SpearmanUnit"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="forms\analysis\nonparametric\mannwhituunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MannWhitUFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MannWhitUUnit"/>
+      </Unit78>
+      <Unit79>
+        <Filename Value="forms\analysis\nonparametric\exactunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FisherFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ExactUnit"/>
+      </Unit79>
+      <Unit80>
+        <Filename Value="forms\analysis\nonparametric\concordanceunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ConcordFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ConcordanceUnit"/>
+      </Unit80>
+      <Unit81>
+        <Filename Value="forms\analysis\nonparametric\kwanovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="KWAnovaFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="KWANOVAUnit"/>
+      </Unit81>
+      <Unit82>
+        <Filename Value="forms\analysis\nonparametric\wilcoxonunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="WilcoxonFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="WilcoxonUnit"/>
+      </Unit82>
+      <Unit83>
+        <Filename Value="forms\analysis\nonparametric\cochranqunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CochranQFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CochranQUnit"/>
+      </Unit83>
+      <Unit84>
+        <Filename Value="forms\analysis\nonparametric\signtestunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SignTestFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SignTestUnit"/>
+      </Unit84>
+      <Unit85>
+        <Filename Value="forms\analysis\nonparametric\friedmanunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FriedmanFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="FriedmanUnit"/>
+      </Unit85>
+      <Unit86>
+        <Filename Value="forms\analysis\nonparametric\binomialunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BinomialFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BinomialUnit"/>
+      </Unit86>
+      <Unit87>
+        <Filename Value="forms\analysis\nonparametric\kendalltauunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="KendallTauFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="KendallTauUnit"/>
+      </Unit87>
+      <Unit88>
+        <Filename Value="forms\analysis\nonparametric\kaplanmeierunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="KaplanMeierFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="KaplanMeierUnit"/>
+      </Unit88>
+      <Unit89>
+        <Filename Value="forms\analysis\statistical_process_control\xbarunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="XBarFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="XBarUnit"/>
+      </Unit89>
+      <Unit90>
+        <Filename Value="forms\analysis\statistical_process_control\rchartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RChartFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RChartUnit"/>
+      </Unit90>
+      <Unit91>
+        <Filename Value="forms\analysis\statistical_process_control\sigmachartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SigmaChartFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SigmaChartUnit"/>
+      </Unit91>
+      <Unit92>
+        <Filename Value="forms\analysis\statistical_process_control\cumsumunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CUMSUMFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CUMSUMUnit"/>
+      </Unit92>
+      <Unit93>
+        <Filename Value="forms\analysis\statistical_process_control\cchartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="cChartFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CChartUnit"/>
+      </Unit93>
+      <Unit94>
+        <Filename Value="forms\analysis\statistical_process_control\pchartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="pChartFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PChartUnit"/>
+      </Unit94>
+      <Unit95>
+        <Filename Value="forms\analysis\statistical_process_control\uchartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="UChartFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="UChartUnit"/>
+      </Unit95>
+      <Unit96>
+        <Filename Value="forms\simulations\corsimunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CorSimFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CorSimUnit"/>
+      </Unit96>
+      <Unit97>
+        <Filename Value="forms\simulations\multgenunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MultGenFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MultGenUnit"/>
+      </Unit97>
+      <Unit98>
+        <Filename Value="forms\simulations\errorcurvesunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ErrorCurvesFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ErrorCurvesUnit"/>
+      </Unit98>
+      <Unit99>
+        <Filename Value="forms\simulations\pcurvesunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PCurvesFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PCurvesUnit"/>
+      </Unit99>
+      <Unit100>
+        <Filename Value="forms\simulations\distribunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DistribFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DistribUnit"/>
+      </Unit100>
+      <Unit101>
+        <Filename Value="forms\simulations\gensequnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GenSeqFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GenSeqUnit"/>
+      </Unit101>
+      <Unit102>
+        <Filename Value="forms\simulations\genrndvalsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GenRndValsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GenRndValsUnit"/>
+      </Unit102>
+      <Unit103>
+        <Filename Value="forms\analysis\financial\loanitunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LoanItFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LoanItUnit"/>
+      </Unit103>
+      <Unit104>
+        <Filename Value="forms\analysis\financial\sumyrsdepunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SumYrsDepFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SumYrsDepUnit"/>
+      </Unit104>
+      <Unit105>
+        <Filename Value="forms\analysis\financial\sldunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SLDepFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SLDUnit"/>
+      </Unit105>
+      <Unit106>
+        <Filename Value="forms\analysis\financial\dbldeclineunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DblDeclineFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DblDeclineUnit"/>
+      </Unit106>
+      <Unit107>
+        <Filename Value="forms\analysis\nonparametric\riditunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RIDITFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RIDITUnit"/>
+      </Unit107>
+      <Unit108>
+        <Filename Value="forms\analysis\multiple_regression\twoslsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TwoSLSFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TwoSLSUnit"/>
+      </Unit108>
+      <Unit109>
+        <Filename Value="forms\analysis\multiple_regression\wlsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="WLSFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="WLSUnit"/>
+      </Unit109>
+      <Unit110>
+        <Filename Value="forms\analysis\multivariate\avglinkunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AvgLinkFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AvgLinkUnit"/>
+      </Unit110>
+      <Unit111>
+        <Filename Value="forms\help\helpunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="HelpFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="HelpUnit"/>
+      </Unit111>
+      <Unit112>
+        <Filename Value="forms\tools\sortcasesunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SortCasesFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SortCasesUnit"/>
+      </Unit112>
+      <Unit113>
+        <Filename Value="forms\tools\selectcasesunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SelectFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SelectCasesUnit"/>
+      </Unit113>
+      <Unit114>
+        <Filename Value="forms\tools\selectifunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SelectIfFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SelectIfUnit"/>
+      </Unit114>
+      <Unit115>
+        <Filename Value="forms\tools\randomsampunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RandomSampFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RandomSampUnit"/>
+      </Unit115>
+      <Unit116>
+        <Filename Value="forms\tools\rangeselectunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RangeSelectFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RangeSelectUnit"/>
+      </Unit116>
+      <Unit117>
+        <Filename Value="forms\help\gridhelpunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GridHelpFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GridHelpUnit"/>
+      </Unit117>
+      <Unit118>
+        <Filename Value="forms\variables\recodeunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RecodeFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RecodeUnit"/>
+      </Unit118>
+      <Unit119>
+        <Filename Value="forms\analysis\nonparametric\kappaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="WeightedKappaFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="KappaUnit"/>
+      </Unit119>
+      <Unit120>
+        <Filename Value="forms\analysis\multivariate\kmeansunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="KMeansFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="KMeansUnit"/>
+      </Unit120>
+      <Unit121>
+        <Filename Value="forms\analysis\multivariate\singlelinkunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SingleLinkFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SingleLinkUnit"/>
+      </Unit121>
+      <Unit122>
+        <Filename Value="forms\analysis\nonparametric\genkappaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GenKappaFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GenKappaUnit"/>
+      </Unit122>
+      <Unit123>
+        <Filename Value="forms\analysis\matrix_manipulation\matmanunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MatManFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MatManUnit"/>
+      </Unit123>
+      <Unit124>
+        <Filename Value="forms\analysis\matrix_manipulation\scripteditorunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ScriptEditorFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ScriptEditorUnit"/>
+      </Unit124>
+      <Unit125>
+        <Filename Value="forms\analysis\matrix_manipulation\rootmethodunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RootMethodFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RootMethodUnit"/>
+      </Unit125>
+      <Unit126>
+        <Filename Value="forms\analysis\matrix_manipulation\scriptoptsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ScriptOptsFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ScriptOptsUnit"/>
+      </Unit126>
+      <Unit127>
+        <Filename Value="forms\analysis\matrix_manipulation\colinsertunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ColInsertFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ColInsertUnit"/>
+      </Unit127>
+      <Unit128>
+        <Filename Value="forms\analysis\matrix_manipulation\rowinsertunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="RowInsertFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RowInsertUnit"/>
+      </Unit128>
+      <Unit129>
+        <Filename Value="forms\analysis\measurement_programs\gradebookunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GradebookFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GradeBookUnit"/>
+      </Unit129>
+      <Unit130>
+        <Filename Value="forms\analysis\measurement_programs\gradingunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GradingFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GradingUnit"/>
+      </Unit130>
+      <Unit131>
+        <Filename Value="forms\simulations\probzunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProbzForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ProbZUnit"/>
+      </Unit131>
+      <Unit132>
+        <Filename Value="forms\simulations\probsmallerzunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProbSmallerzForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ProbSmallerZUnit"/>
+      </Unit132>
+      <Unit133>
+        <Filename Value="forms\simulations\twozprobunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TwozProbForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TwoZProbUnit"/>
+      </Unit133>
+      <Unit134>
+        <Filename Value="forms\simulations\inversezunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="InversezForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="InverseZUnit"/>
+      </Unit134>
+      <Unit135>
+        <Filename Value="forms\simulations\probchisqrunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ChiSqrProbForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ProbChiSqrUnit"/>
+      </Unit135>
+      <Unit136>
+        <Filename Value="forms\simulations\tprobunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TprobForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="tProbUnit"/>
+      </Unit136>
+      <Unit137>
+        <Filename Value="forms\simulations\fprobunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="FProbUnit"/>
+      </Unit137>
+      <Unit138>
+        <Filename Value="forms\simulations\hypergeounit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="HyperGeoForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="HyperGeoUnit"/>
+      </Unit138>
+      <Unit139>
+        <Filename Value="forms\analysis\comparisons\bnestaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BNestedAForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BNestAUnit"/>
+      </Unit139>
+      <Unit140>
+        <Filename Value="forms\analysis\comparisons\abcnestedunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ABCNestedForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ABCNestedUnit"/>
+      </Unit140>
+      <Unit141>
+        <Filename Value="forms\analysis\multivariate\bartletttestunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BartlettTestForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="BartlettTestUnit"/>
+      </Unit141>
+      <Unit142>
+        <Filename Value="forms\tools\datasmoothunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SmoothDataForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="DataSmoothUnit"/>
+      </Unit142>
+      <Unit143>
+        <Filename Value="forms\analysis\descriptive\groupfrequnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GroupFreqForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="GroupFreqUnit"/>
+      </Unit143>
+      <Unit144>
+        <Filename Value="forms\analysis\nonparametric\runstestunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="runstestform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RunsTestUnit"/>
+      </Unit144>
+      <Unit145>
+        <Filename Value="forms\analysis\descriptive\xvsmultyunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="XvsMultYForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="XvsMultYUnit"/>
+      </Unit145>
+      <Unit146>
+        <Filename Value="forms\analysis\nonparametric\sensunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SensForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SensUnit"/>
+      </Unit146>
+      <Unit147>
+        <Filename Value="forms\analysis\multivariate\correspondenceunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CorrespondenceForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CorrespondenceUnit"/>
+      </Unit147>
+      <Unit148>
+        <Filename Value="forms\analysis\descriptive\comparedistunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CompareDistFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CompareDistUnit"/>
+      </Unit148>
+      <Unit149>
+        <Filename Value="forms\variables\equationunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="EquationForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="EquationUnit"/>
+      </Unit149>
+      <Unit150>
+        <Filename Value="forms\misc\contexthelpunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ContextHelpForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ContextHelpUnit"/>
+      </Unit150>
+      <Unit151>
+        <Filename Value="forms\tools\calculatorunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CalculatorForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CalculatorUnit"/>
+      </Unit151>
+      <Unit152>
+        <Filename Value="forms\tools\jpegunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="JPEGform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="JpegUnit"/>
+      </Unit152>
+      <Unit153>
+        <Filename Value="forms\analysis\descriptive\resistancelineunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ResistanceLineForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ResistanceLineUnit"/>
+      </Unit153>
+      <Unit154>
+        <Filename Value="forms\analysis\multivariate\medianpolishunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MedianPolishForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MedianPolishUnit"/>
+      </Unit154>
+      <Unit155>
+        <Filename Value="forms\analysis\comparisons\onecaseanovaunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OneCaseAnovaForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="OneCaseANOVAUnit"/>
+      </Unit155>
+      <Unit156>
+        <Filename Value="forms\analysis\descriptive\smoothdataunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DataSmoothingForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SmoothDataUnit"/>
+      </Unit156>
+      <Unit157>
+        <Filename Value="forms\analysis\nonparametric\srhtestunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SRHTest"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SRHTestUnit"/>
+      </Unit157>
+      <Unit158>
+        <Filename Value="forms\help\aboutunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="AboutBox"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AboutUnit"/>
+      </Unit158>
+      <Unit159>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\itembankingunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ItemBankFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ItemBankingUnit"/>
+      </Unit159>
+      <Unit160>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\itemcodesunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CodesForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ItemCodesUnit"/>
+      </Unit160>
+      <Unit161>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\tfitemunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TFItemForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TFItemUnit"/>
+      </Unit161>
+      <Unit162>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\essayitemunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="EssayItemForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="EssayItemUnit"/>
+      </Unit162>
+      <Unit163>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\mcitemunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MCItemForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MCItemUnit"/>
+      </Unit163>
+      <Unit164>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\matchitemunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MatchItemForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MatchItemUnit"/>
+      </Unit164>
+      <Unit165>
+        <Filename Value="forms\analysis\measurement_programs\item_banking\testspecsunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="TestSpecsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="TestSpecsUnit"/>
+      </Unit165>
+      <Unit166>
+        <Filename Value="forms\analysis\nonparametric\simplechisqrunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SimpleChiSqrForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SimpleChiSqrUnit"/>
+      </Unit166>
+      <Unit167>
+        <Filename Value="forms\analysis\nonparametric\lifetableunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LifeTableForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LifeTableUnit"/>
+      </Unit167>
+      <Unit168>
+        <Filename Value="forms\analysis\multiple_regression\lsmrunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LSMregForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="LSMRUnit"/>
+      </Unit168>
+      <Unit169>
+        <Filename Value="forms\maindm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainDataModule"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+        <UnitName Value="MainDM"/>
+      </Unit169>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="..\LazStats"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="forms;forms\analysis;forms\analysis\cross-classification;forms\analysis\financial;forms\analysis\descriptive;forms\analysis\one_sample_tests;forms\analysis\comparisons;forms\analysis\correlation;forms\analysis\matrix_manipulation;forms\analysis\measurement_programs;forms\analysis\measurement_programs\item_banking;forms\analysis\multiple_regression;forms\analysis\multivariate;forms\analysis\nonparametric;forms\analysis\statistical_process_control;forms\help;forms\options;forms\misc;forms\simulations;forms\tools;forms\variables;units"/>
+      <UnitOutputDirectory Value="..\ppu\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <Checks>
+        <IOChecks Value="True"/>
+      </Checks>
+      <Optimizations>
+        <OptimizationLevel Value="2"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <LinkSmart Value="True"/>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="7">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+      <Item4>
+        <Name Value="EGridException"/>
+      </Item4>
+      <Item5>
+        <Name Value="EConvertError"/>
+      </Item5>
+      <Item6>
+        <Name Value="EPrinter"/>
+      </Item6>
+      <Item7>
+        <Name Value="Exception"/>
+      </Item7>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

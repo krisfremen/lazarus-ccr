@@ -1,0 +1,250 @@
+object PCurvesFrm: TPCurvesFrm
+  Left = 446
+  Height = 215
+  Top = 161
+  Width = 380
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Power Analysis for a z Test'
+  ClientHeight = 215
+  ClientWidth = 380
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = NullEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 12
+    Height = 15
+    Top = 12
+    Width = 151
+    BorderSpacing.Left = 12
+    Caption = 'Mean of the Null Hypothesis'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = SDEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 12
+    Height = 15
+    Top = 43
+    Width = 199
+    BorderSpacing.Left = 12
+    Caption = 'Standard Deviation of the Distribution'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = NEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 12
+    Height = 15
+    Top = 74
+    Width = 62
+    BorderSpacing.Left = 12
+    Caption = 'Sample Size'
+    ParentColor = False
+  end
+  object NullEdit: TEdit
+    AnchorSideLeft.Control = SDEdit
+    AnchorSideTop.Control = Owner
+    Left = 219
+    Height = 23
+    Top = 8
+    Width = 53
+    Alignment = taRightJustify
+    BorderSpacing.Top = 8
+    TabOrder = 0
+    Text = 'NullEdit'
+  end
+  object SDEdit: TEdit
+    AnchorSideLeft.Control = Label2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = NullEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 219
+    Height = 23
+    Top = 39
+    Width = 53
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    TabOrder = 1
+    Text = 'Edit1'
+  end
+  object NEdit: TEdit
+    AnchorSideLeft.Control = SDEdit
+    AnchorSideTop.Control = SDEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 219
+    Height = 23
+    Top = 70
+    Width = 53
+    Alignment = taRightJustify
+    BorderSpacing.Top = 8
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = NEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = NEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 12
+    Height = 82
+    Top = 109
+    Width = 260
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 16
+    BorderSpacing.Bottom = 12
+    Caption = 'Probability of a Type I Error:'
+    ChildSizing.TopBottomSpacing = 8
+    ChildSizing.VerticalSpacing = 8
+    ChildSizing.EnlargeHorizontal = crsHomogenousSpaceResize
+    ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+    ChildSizing.ShrinkVertical = crsHomogenousSpaceResize
+    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 62
+    ClientWidth = 256
+    TabOrder = 3
+    object Prob01: TCheckBox
+      Left = 31
+      Height = 19
+      Top = 8
+      Width = 47
+      Caption = '0.01'
+      TabOrder = 0
+    end
+    object Prob025: TCheckBox
+      Left = 31
+      Height = 19
+      Top = 35
+      Width = 47
+      Caption = '0.025'
+      TabOrder = 1
+    end
+    object Prob05: TCheckBox
+      Left = 109
+      Height = 19
+      Top = 8
+      Width = 47
+      Caption = '0.05'
+      TabOrder = 2
+    end
+    object Prob075: TCheckBox
+      Left = 109
+      Height = 19
+      Top = 35
+      Width = 47
+      Caption = '0.075'
+      TabOrder = 3
+    end
+    object Prob10: TCheckBox
+      Left = 187
+      Height = 19
+      Top = 8
+      Width = 41
+      Caption = '0.10'
+      TabOrder = 4
+    end
+    object Prob20: TCheckBox
+      Left = 187
+      Height = 19
+      Top = 35
+      Width = 41
+      Caption = '0.20'
+      TabOrder = 5
+    end
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = NullEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = GroupBox1
+    AnchorSideBottom.Side = asrBottom
+    Left = 288
+    Height = 191
+    Top = 0
+    Width = 76
+    Anchors = [akTop, akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 12
+    BevelOuter = bvNone
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 191
+    ClientWidth = 76
+    TabOrder = 4
+    object ResetBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = CancelBtn
+      Left = 0
+      Height = 25
+      Top = 55
+      Width = 76
+      Anchors = [akLeft, akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Bottom = 12
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 0
+    end
+    object CancelBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ComputeBtn
+      Left = 0
+      Height = 25
+      Top = 92
+      Width = 76
+      Anchors = [akLeft, akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Bottom = 12
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 1
+    end
+    object ComputeBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ReturnBtn
+      Left = 0
+      Height = 25
+      Top = 129
+      Width = 76
+      Anchors = [akLeft, akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Bottom = 12
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 2
+    end
+    object ReturnBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 25
+      Top = 166
+      Width = 76
+      Anchors = [akLeft, akRight, akBottom]
+      AutoSize = True
+      Caption = 'Return'
+      ModalResult = 1
+      TabOrder = 3
+    end
+  end
+end

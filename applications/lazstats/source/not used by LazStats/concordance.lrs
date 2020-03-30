@@ -1,0 +1,59 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TConcordFrm','FORMDATA',[
+  'TPF0'#11'TConcordFrm'#10'ConcordFrm'#4'Left'#3#23#1#6'Height'#3#243#0#3'Top'
+  +#3#216#0#5'Width'#3#24#2#11'HelpContext'#3#25#5#11'BorderStyle'#7#8'bsDialog'
+  +#7'Caption'#6'#Kendal''s Coefficient of Concordance'#12'ClientHeight'#3#243#0
+  +#11'ClientWidth'#3#24#2#5'Color'#7#9'clBtnFace'#10'Font.Color'#7#12'clWindow'
+  +'Text'#11'Font.Height'#2#245#9'Font.Name'#6#13'MS Sans Serif'#8'HelpFile'#6
+  +#11'OS2Help.hlp'#6'OnShow'#7#8'FormShow'#10'LCLVersion'#6#7'2.1.0.0'#0#6'TLa'
+  +'bel'#6'Label1'#4'Left'#2#24#6'Height'#2#13#3'Top'#2#8#5'Width'#2'\'#7'Capti'
+  +'on'#6#20'Available Variables:'#11'ParentColor'#8#0#0#6'TLabel'#6'Label2'#4
+  +'Left'#3#200#0#6'Height'#2#13#3'Top'#2#8#5'Width'#2'['#7'Caption'#6#19'Selec'
+  +'ted Variables:'#11'ParentColor'#8#0#0#8'TListBox'#7'VarList'#4'Left'#2#8#6
+  +'Height'#3#201#0#3'Top'#2#24#5'Width'#3#129#0#10'ItemHeight'#2#0#11'MultiSel'
+  +'ect'#9#8'TabOrder'#2#0#0#0#7'TBitBtn'#5'InBtn'#4'Left'#3#144#0#6'Height'#2
+  +'!'#3'Top'#2' '#5'Width'#2'!'#10'Glyph.Data'#10'z'#1#0#0'v'#1#0#0'BMv'#1#0#0
+  +#0#0#0#0'v'#0#0#0'('#0#0#0' '#0#0#0#16#0#0#0#1#0#4#0#0#0#0#0#0#1#0#0#18#11#0
+  +#0#18#11#0#0#16#0#0#0#0#0#0#0#0#0#0#0#0#0#128#0#0#128#0#0#0#128#128#0#128#0#0
+  +#0#128#0#128#0#128#128#0#0#127#127#127#0#191#191#191#0#0#0#255#0#0#255#0#0#0
+  +#255#255#0#255#0#0#0#255#0#255#0#255#255#0#0#255#255#255#0'33333333333333333'
+  +'333333333333333333333333333333333333333333?'#243'333333'#0'3333333w?'#243'3'
+  +'3333'#9#0'333333'#127'w?'#243'3333'#9#153#0'33?'#255#255#127'3w?'#243#0#0#0
+  +#9#153#153#0'3wwws33w?'#9#153#153#153#153#153#153#0#127#255#255#255'33?w'#0#0
+  +#0#9#153#153#0'3www'#127'3?w3333'#9#153#0'33333'#127'?w33333'#9#0'333333'#127
+  +'w333333'#0'3333333w3333333333333333333333333333333333333333333333333333'#9
+  +'NumGlyphs'#2#2#7'OnClick'#7#10'InBtnClick'#8'TabOrder'#2#1#0#0#7'TBitBtn'#6
+  +'OutBtn'#4'Left'#3#144#0#6'Height'#2'!'#3'Top'#2'H'#5'Width'#2'!'#10'Glyph.D'
+  +'ata'#10'z'#1#0#0'v'#1#0#0'BMv'#1#0#0#0#0#0#0'v'#0#0#0'('#0#0#0' '#0#0#0#16#0
+  +#0#0#1#0#4#0#0#0#0#0#0#1#0#0#18#11#0#0#18#11#0#0#16#0#0#0#0#0#0#0#0#0#0#0#0#0
+  +#128#0#0#128#0#0#0#128#128#0#128#0#0#0#128#0#128#0#128#128#0#0#127#127#127#0
+  +#191#191#191#0#0#0#255#0#0#255#0#0#0#255#255#0#255#0#0#0#255#0#255#0#255#255
+  +#0#0#255#255#255#0'33333333333333333333333333333333333333333333?'#243'333333'
+  +#0'333333?w'#243'33333'#0#144'33333?w7'#243'3333'#0#153#144'3333?w37'#255#255
+  +#255'3'#0#153#153#144#0#0#0'?w337www'#0#153#153#153#153#153#153#144'w?'#243
+  +'33'#255#255#247'3'#0#153#153#144#0#0#0'3w?'#243'7www33'#0#153#144'33333w?'
+  +#247#243'33333'#0#144'333333w7'#243'333333'#0'3333333w3333333333333333333333'
+  +'333333333333333333333333333333333333333333333'#9'NumGlyphs'#2#2#7'OnClick'#7
+  +#11'OutBtnClick'#8'TabOrder'#2#2#0#0#7'TBitBtn'#6'AllBtn'#4'Left'#3#144#0#6
+  +'Height'#2'!'#3'Top'#3#136#0#5'Width'#2'!'#7'Caption'#6#3'ALL'#7'OnClick'#7
+  +#11'AllBtnClick'#8'TabOrder'#2#3#0#0#8'TListBox'#8'ListBox1'#4'Left'#3#184#0
+  +#6'Height'#3#201#0#3'Top'#2#24#5'Width'#3#137#0#10'ItemHeight'#2#0#8'TabOrde'
+  +'r'#2#4#0#0#7'TButton'#8'ResetBtn'#4'Left'#3'P'#1#6'Height'#2#25#3'Top'#3#179
+  +#0#5'Width'#2'A'#7'Caption'#6#5'Reset'#7'OnClick'#7#13'ResetBtnClick'#8'TabO'
+  +'rder'#2#5#0#0#7'TButton'#9'CancelBtn'#4'Left'#3#200#1#6'Height'#2#25#3'Top'
+  +#3#179#0#5'Width'#2'A'#7'Caption'#6#6'Cancel'#11'ModalResult'#2#2#7'OnClick'
+  +#7#14'CancelBtnClick'#8'TabOrder'#2#6#0#0#7'TButton'#5'OKBtn'#4'Left'#3#200#1
+  +#6'Height'#2#25#3'Top'#3#211#0#5'Width'#2'A'#7'Caption'#6#6'Return'#11'Modal'
+  +'Result'#2#1#7'OnClick'#7#10'OKBtnClick'#8'TabOrder'#2#7#0#0#7'TButton'#10'C'
+  +'omputeBtn'#4'Left'#3'P'#1#6'Height'#2#25#3'Top'#3#211#0#5'Width'#2'A'#7'Cap'
+  +'tion'#6#7'Compute'#7'OnClick'#7#15'ComputeBtnClick'#8'TabOrder'#2#8#0#0#5'T'
+  +'Memo'#5'Memo1'#4'Left'#3'P'#1#6'Height'#3#169#0#3'Top'#2#0#5'Width'#3#185#0
+  +#13'Lines.Strings'#1#6'#Directions:   A Judge''s ratings or '#6#25'observati'
+  +'ons are recorded'#6'%as Variables (columns) 1 through k.  '#6'%Each line co'
+  +'rresponds to a different '#6'#judge (person making the rating.)  '#6'(Selec'
+  +'t the variables from the left list '#6'"to analyze and click on the right '
+  +#6#6'arrow.'#6'&Click on the left arrow to remove any '#6'%variables NOT to '
+  +'be analyzed.  Click '#6'#on the Compute button to obtain the'#6#9'results. '
+  +#0#8'TabOrder'#2#9#0#0#0
+]);

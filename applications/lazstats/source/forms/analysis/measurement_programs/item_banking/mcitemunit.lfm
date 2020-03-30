@@ -1,0 +1,515 @@
+object MCItemForm: TMCItemForm
+  Left = 638
+  Height = 663
+  Top = 205
+  Width = 585
+  Caption = 'Multiple Choice Item Create or Edit'
+  ClientHeight = 663
+  ClientWidth = 585
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object jpeglabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = jpegnameEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 471
+    Width = 224
+    BorderSpacing.Left = 8
+    Caption = 'jpeg photo to display prior to item (if any):'
+    ParentColor = False
+  end
+  object jpegnameEdit: TEdit
+    AnchorSideLeft.Control = jpeglabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = AnswerEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 240
+    Height = 23
+    Top = 467
+    Width = 337
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    TabOrder = 7
+    Text = 'jpegnameEdit'
+  end
+  object jpegBrowseBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Image1
+    Left = 8
+    Height = 25
+    Top = 506
+    Width = 131
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Browse jpeg Images'
+    OnClick = jpegBrowseBtnClick
+    TabOrder = 8
+  end
+  object SelectImageBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = jpegBrowseBtn
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = jpegBrowseBtn
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 25
+    Top = 555
+    Width = 131
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 24
+    Caption = 'Select Shown Image'
+    OnClick = SelectImageBtnClick
+    TabOrder = 11
+  end
+  object ItemSaveBtn: TButton
+    AnchorSideLeft.Control = ShowNextBtn
+    AnchorSideTop.Control = jpegBrowseBtn
+    AnchorSideRight.Control = PreviousBtn
+    Left = 329
+    Height = 25
+    Top = 506
+    Width = 110
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Save this item'
+    OnClick = ItemSaveBtnClick
+    TabOrder = 9
+  end
+  object PreviousBtn: TButton
+    AnchorSideTop.Control = ItemSaveBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 447
+    Height = 25
+    Top = 506
+    Width = 130
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Show Previous Item'
+    OnClick = PreviousBtnClick
+    TabOrder = 10
+  end
+  object ShowNextBtn: TButton
+    AnchorSideTop.Control = SelectImageBtn
+    AnchorSideRight.Control = PreviousBtn
+    Left = 329
+    Height = 25
+    Top = 555
+    Width = 110
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Show Next Item'
+    OnClick = ShowNextBtnClick
+    TabOrder = 12
+  end
+  object StartNewBtn: TButton
+    AnchorSideLeft.Control = PreviousBtn
+    AnchorSideTop.Control = ShowNextBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 447
+    Height = 25
+    Top = 555
+    Width = 130
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Start a new item'
+    OnClick = StartNewBtnClick
+    TabOrder = 13
+  end
+  object ReturnBtn: TButton
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Image1
+    AnchorSideBottom.Side = asrBottom
+    Left = 508
+    Height = 33
+    Top = 625
+    Width = 69
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Return'
+    OnClick = ReturnBtnClick
+    TabOrder = 14
+  end
+  object ItemStemLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ItemStemEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 182
+    Width = 57
+    BorderSpacing.Left = 8
+    Caption = 'Item Stem:'
+    ParentColor = False
+  end
+  object ItemStemEdit: TEdit
+    AnchorSideLeft.Control = ItemStemLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 73
+    Height = 23
+    Top = 178
+    Width = 504
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    TabOrder = 4
+    Text = 'ItemStemEdit'
+  end
+  object AnswerLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AnswerEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 440
+    Width = 116
+    BorderSpacing.Left = 8
+    Caption = 'Answer (A,B,C,D or F):'
+    ParentColor = False
+  end
+  object AnswerEdit: TEdit
+    AnchorSideLeft.Control = AnswerLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Side = asrBottom
+    Left = 132
+    Height = 23
+    Top = 436
+    Width = 29
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    TabOrder = 6
+  end
+  object Image1: TImage
+    AnchorSideLeft.Control = jpegBrowseBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = jpegnameEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ShowNextBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 147
+    Height = 160
+    Top = 498
+    Width = 174
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Constraints.MinHeight = 160
+  end
+  object TFItemNoLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = CodeBrowseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 151
+    Width = 74
+    BorderSpacing.Left = 8
+    Caption = 'Item Number:'
+    ParentColor = False
+  end
+  object ItemNoEdit: TEdit
+    AnchorSideLeft.Control = TFItemNoLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CodeBrowseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 90
+    Height = 23
+    Top = 147
+    Width = 44
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    TabOrder = 0
+    Text = '1'
+  end
+  object ItemCodeLabel: TLabel
+    AnchorSideLeft.Control = ItemNoEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CodeBrowseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 150
+    Height = 15
+    Top = 151
+    Width = 92
+    BorderSpacing.Left = 16
+    Caption = 'Item Major Code:'
+    ParentColor = False
+  end
+  object MajorCodeEdit: TEdit
+    AnchorSideLeft.Control = ItemCodeLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CodeBrowseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 250
+    Height = 23
+    Top = 147
+    Width = 41
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    TabOrder = 1
+    Text = '1'
+  end
+  object MinorCodeLabel: TLabel
+    AnchorSideLeft.Control = MajorCodeEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CodeBrowseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 307
+    Height = 15
+    Top = 151
+    Width = 93
+    BorderSpacing.Left = 16
+    Caption = 'Item Minor Code:'
+    ParentColor = False
+  end
+  object MinorCodeEdit: TEdit
+    AnchorSideLeft.Control = MinorCodeLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CodeBrowseBtn
+    AnchorSideTop.Side = asrCenter
+    Left = 408
+    Height = 23
+    Top = 147
+    Width = 45
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    TabOrder = 2
+    Text = '0'
+  end
+  object CodeBrowseBtn: TButton
+    AnchorSideLeft.Control = MinorCodeEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 469
+    Height = 28
+    Top = 144
+    Width = 106
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 16
+    Caption = 'Browse Items'
+    OnClick = CodeBrowseBtnClick
+    TabOrder = 3
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 120
+    Top = 8
+    Width = 569
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Directions:  To create a Multiple Choice item, you will need to enter the number of an item code which contains both a major code and a minor code.  It is suggested you print all item codes from the options menu on the main procedure page of the item banking program.  You can however, browse the MC items  from this form.'#13#10'After you have selected an item code number, enter the item stem in the space provided.  Your item can also include a jpeg picture prior to the presentation of the item on a test.  To find the image, click the jpeg browse button until you see the image you wish to include.  When that item is shown, click the Select button to save the name of the image file.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ItemStemEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 219
+    Top = 209
+    Width = 569
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Choices'
+    ClientHeight = 199
+    ClientWidth = 565
+    TabOrder = 5
+    object Label7: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = NoChoicesEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 15
+      Top = 6
+      Width = 223
+      BorderSpacing.Left = 12
+      Caption = 'Enter number of choices and press return: '
+      ParentColor = False
+    end
+    object NoChoicesEdit: TEdit
+      AnchorSideLeft.Control = Label7
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = GroupBox1
+      Left = 243
+      Height = 23
+      Top = 2
+      Width = 32
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      OnChange = NoChoicesEditChange
+      TabOrder = 0
+      Text = '0'
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = ChoiceAEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 15
+      Top = 44
+      Width = 14
+      BorderSpacing.Left = 12
+      Caption = 'A. '
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = ChoiceBEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 15
+      Top = 76
+      Width = 13
+      BorderSpacing.Left = 12
+      Caption = 'B. '
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = ChoiceCEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 15
+      Top = 108
+      Width = 14
+      BorderSpacing.Left = 12
+      Caption = 'C. '
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = ChoiceDEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 15
+      Top = 140
+      Width = 14
+      BorderSpacing.Left = 12
+      Caption = 'D. '
+      ParentColor = False
+    end
+    object Label6: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = ChoiceEEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 15
+      Top = 172
+      Width = 12
+      BorderSpacing.Left = 12
+      Caption = 'E. '
+      ParentColor = False
+    end
+    object ChoiceAEdit: TEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = GroupBox1
+      AnchorSideRight.Side = asrBottom
+      Left = 34
+      Height = 23
+      Top = 40
+      Width = 523
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      TabOrder = 1
+      Text = 'ChoiceAEdit'
+    end
+    object ChoiceDEdit: TEdit
+      AnchorSideLeft.Control = ChoiceAEdit
+      AnchorSideRight.Control = ChoiceAEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 34
+      Height = 23
+      Top = 136
+      Width = 523
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 4
+      Text = 'Edit1'
+    end
+    object ChoiceEEdit: TEdit
+      AnchorSideLeft.Control = ChoiceAEdit
+      AnchorSideRight.Control = ChoiceAEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 34
+      Height = 23
+      Top = 168
+      Width = 523
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Bottom = 8
+      TabOrder = 5
+      Text = 'Edit1'
+    end
+    object ChoiceCEdit: TEdit
+      AnchorSideLeft.Control = ChoiceAEdit
+      AnchorSideRight.Control = ChoiceAEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 34
+      Height = 23
+      Top = 104
+      Width = 523
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 3
+      Text = 'Edit1'
+    end
+    object ChoiceBEdit: TEdit
+      AnchorSideLeft.Control = ChoiceAEdit
+      AnchorSideRight.Control = ChoiceAEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 34
+      Height = 23
+      Top = 72
+      Width = 523
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 2
+      Text = 'Edit1'
+    end
+  end
+  object OpenPictureDialog1: TOpenPictureDialog
+    left = 224
+    top = 512
+  end
+end

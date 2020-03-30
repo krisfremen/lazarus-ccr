@@ -1,0 +1,341 @@
+object SingleLinkFrm: TSingleLinkFrm
+  Left = 579
+  Height = 284
+  Top = 362
+  Width = 409
+  AutoSize = True
+  Caption = 'Single Linkage Cluster Analysis'
+  ClientHeight = 284
+  ClientWidth = 409
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 108
+    Height = 25
+    Top = 251
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 1
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 174
+    Height = 25
+    Top = 251
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 248
+    Height = 25
+    Top = 251
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 3
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 336
+    Height = 25
+    Top = 251
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 4
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 235
+    Width = 409
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 219
+    Top = 8
+    Width = 393
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 219
+    ClientWidth = 393
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 97
+      Caption = 'Available Variables'
+      ParentColor = False
+    end
+    object ListBox1: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = VarInBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 202
+      Top = 17
+      Width = 174
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      TabOrder = 0
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = VarSelEdit
+      AnchorSideRight.Control = VarSelEdit
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = VarSelEdit
+      Left = 218
+      Height = 15
+      Top = 31
+      Width = 175
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Variable Selected for Analysis'
+      ParentColor = False
+      WordWrap = True
+    end
+    object VarInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ListBox1
+      Left = 182
+      Height = 28
+      Top = 17
+      Width = 28
+      Glyph.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00216324B81D5E2006FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF002A702F38256929F7216324D9FFFFFF00FFFFFF00FFFFFF00FFFFFF0061BE
+        6DFF5DB868FF58B162FF53A95CFF4DA156FF47994FFF419149FF3B8842FF3580
+        3BFF3F8845FF59A15EFF448B49FF216324CFFFFFFF00FFFFFF00FFFFFF0065C3
+        71FFA0D7A9FF9CD5A5FF98D3A1FF94D09DFF90CE98FF8BCB93FF87C98EFF82C6
+        89FF7EC384FF7AC180FF76BE7CFF458C4AFF216324C4FFFFFF00FFFFFF0068C7
+        74FFA5DAAEFFA2D8ABFF9ED6A7FF9AD4A3FF96D29FFF93CF9AFF8ECC95FF89CA
+        90FF85C78BFF81C587FF7DC282FF4A9150FF256929C9FFFFFF00FFFFFF0068C7
+        74FF68C774FF65C371FF61BE6DFF5DB868FF58B162FF53A95CFF4DA156FF4799
+        4FFF419149FF5AA362FF559D5CFF2F7835D1FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00419149F73B8842DBFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF0047994FBB41914906FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = VarInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object VarOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 182
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Glyph.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF004DA1560647994FB8FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF0053A95CD94DA156F747994F38FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF005DB868CF71BE7BFF7AC183FF5BAA64FF47994FFF419149FF3B8842FF3580
+        3BFF2F7835FF2A702FFF256929FF216324FF1D5E20FFFFFFFF00FFFFFF0065C3
+        71C47BC886FF9CD5A5FF98D3A1FF94D09DFF90CE98FF8BCB93FF87C98EFF82C6
+        89FF7EC384FF7AC180FF76BE7CFF72BD78FF216324FFFFFFFF00FFFFFF0068C7
+        74C97FCC8AFFA2D8ABFF9ED6A7FF9AD4A3FF96D29FFF93CF9AFF8ECC95FF89CA
+        90FF85C78BFF81C587FF7DC282FF78C07EFF256929FFFFFFFF00FFFFFF00FFFF
+        FF0068C774D180CD8BFF7CC987FF5DB868FF58B162FF53A95CFF4DA156FF4799
+        4FFF419149FF3B8842FF35803BFF2F7835FF2A702FFFFFFFFF00FFFFFF00FFFF
+        FF00FFFFFF0068C774DB65C371F7FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF0068C7740668C774BBFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+      }
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = VarOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object VarSelEdit: TEdit
+      AnchorSideLeft.Control = VarInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = VarOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 218
+      Height = 23
+      Top = 48
+      Width = 175
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      BorderSpacing.Bottom = 6
+      TabOrder = 3
+      Text = 'VarSelEdit'
+    end
+    object GroupBox1: TGroupBox
+      AnchorSideLeft.Control = VarInBtn
+      AnchorSideTop.Control = VarOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 182
+      Height = 135
+      Top = 93
+      Width = 178
+      AutoSize = True
+      BorderSpacing.Top = 16
+      Caption = 'Analysis Options:'
+      ChildSizing.LeftRightSpacing = 12
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.VerticalSpacing = 2
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 115
+      ClientWidth = 174
+      TabOrder = 4
+      object StdChkBox: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 6
+        Width = 150
+        Caption = 'Standardize Variable'
+        TabOrder = 0
+      end
+      object RepChkBox: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 27
+        Width = 150
+        Caption = 'Replace Grid Values'
+        TabOrder = 1
+      end
+      object DescChkBox: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 48
+        Width = 150
+        Caption = 'Show Each Combination'
+        TabOrder = 2
+      end
+      object PlotChkBox: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 69
+        Width = 150
+        Caption = 'Groups Vs Error Plot'
+        TabOrder = 3
+      end
+      object DendoChk: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 90
+        Width = 150
+        Caption = 'Dendogram Plot'
+        TabOrder = 4
+      end
+    end
+  end
+end

@@ -1,0 +1,195 @@
+object ChiSqrProbForm: TChiSqrProbForm
+  Left = 596
+  Height = 146
+  Top = 281
+  Width = 389
+  AutoSize = True
+  BorderStyle = bsSingle
+  Caption = 'Probability of a chisquared value'
+  ClientHeight = 146
+  ClientWidth = 389
+  OnActivate = FormActivate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CancelBtn: TButton
+    AnchorSideTop.Control = ReturnBtn
+    AnchorSideRight.Control = ResetBtn
+    Left = 96
+    Height = 25
+    Top = 109
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 8
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 0
+  end
+  object ResetBtn: TButton
+    AnchorSideTop.Control = ReturnBtn
+    AnchorSideRight.Control = ComputeBtn
+    Left = 166
+    Height = 25
+    Top = 109
+    Width = 54
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 1
+  end
+  object ComputeBtn: TButton
+    AnchorSideTop.Control = ReturnBtn
+    AnchorSideRight.Control = ReturnBtn
+    Left = 228
+    Height = 25
+    Top = 109
+    Width = 76
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 2
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 312
+    Height = 25
+    Top = 109
+    Width = 61
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 3
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 8
+    Top = 93
+    Width = 389
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 86
+    Height = 85
+    Top = 8
+    Width = 217
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ClientHeight = 85
+    ClientWidth = 217
+    TabOrder = 4
+    object Label1: TLabel
+      AnchorSideTop.Control = ChiSqrEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label3
+      AnchorSideRight.Side = asrBottom
+      Left = 30
+      Height = 15
+      Top = 4
+      Width = 105
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 8
+      Caption = 'Chisquared value = '
+      ParentColor = False
+    end
+    object ChiSqrEdit: TEdit
+      AnchorSideLeft.Control = ProbEdit
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ProbEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 143
+      Height = 23
+      Top = 0
+      Width = 74
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 0
+      Text = 'ChiSqrEdit'
+    end
+    object Label2: TLabel
+      AnchorSideTop.Control = DFEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label3
+      AnchorSideRight.Side = asrBottom
+      Left = 24
+      Height = 15
+      Top = 31
+      Width = 111
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 8
+      Caption = 'with deg. freedom = '
+      ParentColor = False
+    end
+    object DFEdit: TEdit
+      AnchorSideLeft.Control = ProbEdit
+      AnchorSideTop.Control = ChiSqrEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = ProbEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 143
+      Height = 23
+      Top = 27
+      Width = 74
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 1
+      Text = 'DFEdit'
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = ProbEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 66
+      Width = 135
+      Caption = 'Probability larger value = '
+      ParentColor = False
+    end
+    object ProbEdit: TEdit
+      AnchorSideLeft.Control = Label3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = DFEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 143
+      Height = 23
+      Top = 62
+      Width = 74
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 12
+      Font.Style = [fsBold]
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 2
+      Text = 'ProbEdit'
+    end
+  end
+end

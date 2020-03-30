@@ -1,0 +1,257 @@
+object CodesForm: TCodesForm
+  Left = 212
+  Height = 220
+  Top = 126
+  Width = 725
+  AutoSize = True
+  Caption = 'Code Creation Form'
+  ClientHeight = 220
+  ClientWidth = 725
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ItemNoLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 118
+    Width = 78
+    BorderSpacing.Left = 8
+    Caption = 'Code Number:'
+    ParentColor = False
+  end
+  object ItemNoEdit: TEdit
+    AnchorSideLeft.Control = ItemNoLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 94
+    Height = 23
+    Top = 114
+    Width = 37
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    TabOrder = 0
+    Text = '1'
+  end
+  object MajorLabel: TLabel
+    AnchorSideLeft.Control = ItemNoEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 147
+    Height = 15
+    Top = 118
+    Width = 65
+    BorderSpacing.Left = 16
+    Caption = 'Major Code:'
+    ParentColor = False
+  end
+  object MajorEdit: TEdit
+    AnchorSideLeft.Control = MajorLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 218
+    Height = 23
+    Top = 114
+    Width = 35
+    Alignment = taRightJustify
+    BorderSpacing.Left = 6
+    TabOrder = 1
+    Text = '1'
+  end
+  object MinorLabel: TLabel
+    AnchorSideLeft.Control = MajorEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 269
+    Height = 15
+    Top = 118
+    Width = 66
+    BorderSpacing.Left = 16
+    Caption = 'Minor Code:'
+    ParentColor = False
+  end
+  object MinorEdit: TEdit
+    AnchorSideLeft.Control = MinorLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 343
+    Height = 23
+    Top = 114
+    Width = 38
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    TabOrder = 2
+    Text = '0'
+  end
+  object DescLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DescriptionEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 149
+    Width = 111
+    BorderSpacing.Left = 8
+    Caption = 'Category Description'
+    ParentColor = False
+  end
+  object DescriptionEdit: TEdit
+    AnchorSideLeft.Control = DescLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 127
+    Height = 23
+    Top = 145
+    Width = 590
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    TabOrder = 3
+  end
+  object SaveCodeBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = StartNewBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 17
+    Height = 25
+    Top = 184
+    Width = 146
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Save Info. for this code'
+    OnClick = SaveCodeBtnClick
+    TabOrder = 4
+  end
+  object StartNewBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = EditOneBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 175
+    Height = 25
+    Top = 184
+    Width = 108
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Start New Code'
+    OnClick = StartNewBtnClick
+    TabOrder = 5
+  end
+  object DisplayBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 467
+    Height = 25
+    Top = 184
+    Width = 173
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Display All Saved Code Data'
+    OnClick = DisplayBtnClick
+    TabOrder = 7
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 652
+    Height = 25
+    Top = 184
+    Width = 61
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    OnClick = ReturnBtnClick
+    TabOrder = 8
+  end
+  object EditOneBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = DisplayBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 295
+    Height = 25
+    Top = 184
+    Width = 160
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Edit a Specific Code Entry'
+    OnClick = EditOneBtnClick
+    TabOrder = 6
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 90
+    Top = 8
+    Width = 709
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'One of the first steps in creating an item bank is to develop a coding scheme for each item in the item bank of items.  You can create up to 100 major and minor codes to describe each item in your bank.  Typically, the first item major code is 1 and the corresponding minor code is 0.  You will typically have multiple minor coded items under each major code.  For example, a major code 1 and minor code 0 might be a major section in a statistics book such as Descriptive Analyses.  Under the same major code you might have a minor code 1 to represent items such as the Mean or the Standard Deviation. On this form you will enter the  major and minor codes and a description for each one.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DescriptionEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 168
+    Width = 725
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+end

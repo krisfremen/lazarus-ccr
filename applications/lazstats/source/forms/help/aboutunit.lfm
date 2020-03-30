@@ -1,0 +1,105 @@
+object AboutBox: TAboutBox
+  Left = 202
+  Height = 170
+  Top = 145
+  Width = 295
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'About LazStats'
+  ClientHeight = 170
+  ClientWidth = 295
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object OKButton: TButton
+    AnchorSideLeft.Control = Panel1
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    Left = 111
+    Height = 25
+    Top = 134
+    Width = 75
+    BorderSpacing.Bottom = 8
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    Left = 8
+    Height = 118
+    Top = 8
+    Width = 280
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 118
+    ClientWidth = 280
+    Constraints.MinWidth = 280
+    TabOrder = 1
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel1
+      Left = 95
+      Height = 32
+      Top = 10
+      Width = 91
+      BorderSpacing.Top = 8
+      Caption = 'LazStats'
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -24
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      Left = 83
+      Height = 21
+      Top = 50
+      Width = 115
+      BorderSpacing.Top = 8
+      Caption = 'William G. Miller'
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      Left = 65
+      Height = 21
+      Top = 79
+      Width = 151
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 16
+      Caption = 'Copyright 2013-2020'
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+end

@@ -1,0 +1,274 @@
+object ScriptEditorFrm: TScriptEditorFrm
+  Left = 436
+  Height = 510
+  Top = 191
+  Width = 528
+  AutoSize = True
+  Caption = 'MatMan Script Editor'
+  ClientHeight = 510
+  ClientWidth = 528
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ScriptFileEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = ScriptFileEdit
+    Left = 8
+    Height = 15
+    Top = 69
+    Width = 135
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'Current Script File Name: '
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ScriptFileEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 96
+    Width = 73
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Current Script'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = RadioGroup1
+    AnchorSideTop.Control = LineEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 268
+    Height = 15
+    Top = 249
+    Width = 74
+    BorderSpacing.Top = 8
+    Caption = 'Directory Files'
+    ParentColor = False
+  end
+  object ScriptFileEdit: TEdit
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 154
+    Height = 23
+    Top = 65
+    Width = 366
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 8
+    TabOrder = 0
+    Text = 'ScriptFileEdit'
+  end
+  object ScriptList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = HorCenterBevel
+    AnchorSideBottom.Control = Bevel2
+    Left = 8
+    Height = 348
+    Top = 113
+    Width = 252
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    ItemHeight = 0
+    OnClick = ScriptListClick
+    TabOrder = 1
+  end
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = HorCenterBevel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label2
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 268
+    Height = 114
+    Top = 96
+    Width = 252
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Editing Options'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 94
+    ClientWidth = 248
+    Items.Strings = (
+      'Delete the line'
+      'Insert a new line prior to selected line'
+      'Modify the current line'
+      'Append another script'
+    )
+    OnClick = RadioGroup1Click
+    TabOrder = 2
+  end
+  object FileListBox1: TFileListBox
+    AnchorSideLeft.Control = RadioGroup1
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel2
+    Left = 268
+    Height = 195
+    Top = 266
+    Width = 252
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    Directory = 'C:\Windows\system32'
+    ItemHeight = 15
+    OnDblClick = FileListBox1DblClick
+    TabOrder = 3
+  end
+  object SaveBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 319
+    Height = 25
+    Top = 477
+    Width = 50
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 4
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 381
+    Height = 25
+    Top = 477
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 5
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 455
+    Height = 25
+    Top = 477
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 6
+  end
+  object DirChangeBtn: TButton
+    AnchorSideRight.Control = SaveBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 189
+    Height = 25
+    Top = 477
+    Width = 118
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Change Directory'
+    OnClick = DirChangeBtnClick
+    TabOrder = 7
+  end
+  object LineEdit: TEdit
+    AnchorSideLeft.Control = RadioGroup1
+    AnchorSideTop.Control = RadioGroup1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = RadioGroup1
+    AnchorSideRight.Side = asrBottom
+    Left = 268
+    Height = 23
+    Top = 218
+    Width = 252
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    OnKeyPress = LineEditKeyPress
+    TabOrder = 8
+    Text = 'LineEdit'
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 45
+    Top = 8
+    Width = 512
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Your script is shown in the list to  your left.  Select a line by clicking on a line in the script and then click on one of the edit option buttons.'#13#10'When finished editing, click on the Save button.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object HorCenterBevel: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 260
+    Height = 82
+    Top = 232
+    Width = 8
+    Shape = bsSpacer
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 461
+    Width = 528
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object SaveDialog1: TSaveDialog
+    left = 160
+    top = 168
+  end
+  object OpenDialog1: TOpenDialog
+    left = 160
+    top = 240
+  end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    left = 160
+    top = 312
+  end
+end

@@ -1,0 +1,639 @@
+object PolyDIFFrm: TPolyDIFFrm
+  Left = 548
+  Height = 413
+  Top = 305
+  Width = 631
+  AutoSize = True
+  Caption = 'Polytomous Item DIF'
+  ClientHeight = 413
+  ClientWidth = 631
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 334
+    Height = 25
+    Top = 380
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 400
+    Height = 25
+    Top = 380
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 4
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 474
+    Height = 25
+    Top = 380
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 5
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 562
+    Height = 25
+    Top = 380
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = ReturnBtnClick
+    TabOrder = 6
+  end
+  object HelpBtn: TButton
+    Tag = 138
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 271
+    Height = 25
+    Top = 380
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 2
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Panel3
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 356
+    Top = 8
+    Width = 411
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
+    BevelOuter = bvNone
+    ClientHeight = 356
+    ClientWidth = 411
+    Constraints.MinWidth = 400
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 97
+      Caption = 'Available Variables'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = ItemsList
+      AnchorSideTop.Control = Panel1
+      Left = 236
+      Height = 15
+      Top = 0
+      Width = 76
+      Caption = 'Items Selected'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = ItemsList
+      AnchorSideBottom.Control = GroupVarEdit
+      Left = 236
+      Height = 15
+      Top = 296
+      Width = 94
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Grouping Variable'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = AllBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 339
+      Top = 17
+      Width = 174
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      MultiSelect = True
+      TabOrder = 0
+    end
+    object ItemInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 191
+      Height = 28
+      Top = 25
+      Width = 28
+      BorderSpacing.Top = 8
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = ItemInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object ItemOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ItemInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 191
+      Height = 28
+      Top = 57
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = ItemOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object AllBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ItemOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 182
+      Height = 25
+      Top = 89
+      Width = 46
+      AutoSize = True
+      BorderSpacing.Top = 4
+      Caption = 'ALL'
+      OnClick = AllBtnClick
+      Spacing = 0
+      TabOrder = 3
+    end
+    object GrpInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideBottom.Control = GrpOutBtn
+      Left = 191
+      Height = 28
+      Top = 288
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = GrpInBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object GrpOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideBottom.Control = VarList
+      AnchorSideBottom.Side = asrBottom
+      Left = 191
+      Height = 28
+      Top = 320
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 8
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = GrpOutBtnClick
+      Spacing = 0
+      TabOrder = 6
+    end
+    object GroupVarEdit: TEdit
+      AnchorSideLeft.Control = ItemsList
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = GrpOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 236
+      Height = 23
+      Top = 313
+      Width = 175
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Bottom = 12
+      TabOrder = 7
+      Text = 'GroupVarEdit'
+    end
+    object ItemsList: TListBox
+      AnchorSideLeft.Control = AllBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = GrpInBtn
+      Left = 236
+      Height = 247
+      Top = 17
+      Width = 175
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      BorderSpacing.Bottom = 24
+      ItemHeight = 0
+      TabOrder = 4
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 364
+    Width = 631
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel3: TPanel
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 435
+    Height = 364
+    Top = 0
+    Width = 196
+    Anchors = [akTop, akRight, akBottom]
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 364
+    ClientWidth = 196
+    TabOrder = 1
+    object Label4: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = LevelsEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 12
+      Width = 124
+      Caption = 'No. of Grouping Levels:'
+      ParentColor = False
+    end
+    object Label11: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = LowScoreEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 191
+      Width = 99
+      Caption = 'Lowest Item Score:'
+      ParentColor = False
+    end
+    object Label12: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = HiScoreEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 218
+      Width = 103
+      Caption = 'Highest Item Score:'
+      ParentColor = False
+    end
+    object Label13: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = RefGrpEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 245
+      Width = 122
+      Caption = 'Reference Group Code:'
+      ParentColor = False
+    end
+    object Label14: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = TrgtGrpEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 272
+      Width = 98
+      Caption = 'Focal Group Code:'
+      ParentColor = False
+    end
+    object LevelsEdit: TEdit
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 140
+      Height = 23
+      Top = 8
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      OnExit = LevelsEditExit
+      TabOrder = 0
+    end
+    object GroupBox1: TGroupBox
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = TrgtGrpEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 51
+      Top = 303
+      Width = 188
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 12
+      Caption = 'Option:'
+      ChildSizing.LeftRightSpacing = 12
+      ChildSizing.TopBottomSpacing = 6
+      ClientHeight = 31
+      ClientWidth = 184
+      TabOrder = 6
+      object GraphChk: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 6
+        Width = 134
+        Caption = 'Graph of Level Means'
+        Checked = True
+        State = cbChecked
+        TabOrder = 0
+      end
+    end
+    object LowScoreEdit: TEdit
+      AnchorSideLeft.Control = LevelsEdit
+      AnchorSideTop.Control = GroupBox2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 140
+      Height = 23
+      Top = 187
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 12
+      BorderSpacing.Right = 8
+      TabOrder = 2
+    end
+    object HiScoreEdit: TEdit
+      AnchorSideLeft.Control = LowScoreEdit
+      AnchorSideTop.Control = LowScoreEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = LowScoreEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 140
+      Height = 23
+      Top = 214
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 3
+      Text = 'Edit1'
+    end
+    object RefGrpEdit: TEdit
+      AnchorSideLeft.Control = LowScoreEdit
+      AnchorSideTop.Control = HiScoreEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = LowScoreEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 140
+      Height = 23
+      Top = 241
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 4
+      Text = 'Edit1'
+    end
+    object TrgtGrpEdit: TEdit
+      AnchorSideLeft.Control = LowScoreEdit
+      AnchorSideTop.Control = RefGrpEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = LowScoreEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 140
+      Height = 23
+      Top = 268
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 5
+      Text = 'Edit1'
+    end
+    object GroupBox2: TGroupBox
+      AnchorSideLeft.Control = Panel3
+      AnchorSideTop.Control = LevelsEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel3
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 132
+      Top = 43
+      Width = 188
+      AutoSize = True
+      BorderSpacing.Top = 12
+      BorderSpacing.Right = 8
+      Caption = 'Enter Bounds for Levels'
+      ClientHeight = 112
+      ClientWidth = 184
+      TabOrder = 1
+      object Panel2: TPanel
+        Left = 8
+        Height = 104
+        Top = 0
+        Width = 168
+        AutoSize = True
+        BorderSpacing.Left = 8
+        BorderSpacing.Right = 8
+        BorderSpacing.Bottom = 8
+        BevelOuter = bvNone
+        ClientHeight = 104
+        ClientWidth = 168
+        TabOrder = 0
+        object Label6: TLabel
+          AnchorSideLeft.Control = LevelScroll
+          AnchorSideTop.Control = Panel2
+          Left = 0
+          Height = 15
+          Top = 0
+          Width = 31
+          Caption = 'Down'
+          ParentColor = False
+        end
+        object Label7: TLabel
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel2
+          AnchorSideRight.Control = LevelScroll
+          AnchorSideRight.Side = asrBottom
+          Left = 106
+          Height = 15
+          Top = 0
+          Width = 15
+          Anchors = [akTop, akRight]
+          Caption = 'Up'
+          ParentColor = False
+        end
+        object Label8: TLabel
+          AnchorSideLeft.Control = LevelNoEdit
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = Panel2
+          Left = 135
+          Height = 15
+          Top = 0
+          Width = 27
+          Caption = 'Level'
+          ParentColor = False
+        end
+        object Label9: TLabel
+          AnchorSideTop.Control = LowBoundEdit
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = LowBoundEdit
+          Left = 50
+          Height = 15
+          Top = 54
+          Width = 70
+          Anchors = [akTop, akRight]
+          BorderSpacing.Right = 8
+          Caption = 'Lower Bound'
+          ParentColor = False
+        end
+        object Label10: TLabel
+          AnchorSideTop.Control = UpBoundEdit
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = UpBoundEdit
+          Left = 50
+          Height = 15
+          Top = 85
+          Width = 70
+          Anchors = [akTop, akRight]
+          BorderSpacing.Right = 8
+          Caption = 'Upper Bound'
+          ParentColor = False
+        end
+        object LevelScroll: TScrollBar
+          AnchorSideLeft.Control = Panel2
+          AnchorSideTop.Control = LevelNoEdit
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = LevelNoEdit
+          Left = 0
+          Height = 18
+          Top = 21
+          Width = 121
+          Anchors = [akTop, akLeft, akRight]
+          BorderSpacing.Right = 8
+          Min = 1
+          PageSize = 0
+          Position = 1
+          TabOrder = 0
+          OnScroll = LevelScrollScroll
+        end
+        object LevelNoEdit: TEdit
+          AnchorSideTop.Control = Label8
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = Panel2
+          AnchorSideRight.Side = asrBottom
+          Left = 129
+          Height = 23
+          Top = 19
+          Width = 39
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          BorderSpacing.Top = 4
+          TabOrder = 1
+          Text = 'LevelNoEdit'
+        end
+        object LowBoundEdit: TEdit
+          AnchorSideTop.Control = LevelNoEdit
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = Panel2
+          AnchorSideRight.Side = asrBottom
+          Left = 128
+          Height = 23
+          Top = 50
+          Width = 40
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          BorderSpacing.Top = 8
+          OnExit = LowBoundEditExit
+          TabOrder = 2
+          Text = 'LowBoundEdit'
+        end
+        object UpBoundEdit: TEdit
+          AnchorSideTop.Control = LowBoundEdit
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = Panel2
+          AnchorSideRight.Side = asrBottom
+          Left = 128
+          Height = 23
+          Top = 81
+          Width = 40
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          BorderSpacing.Top = 8
+          OnExit = UpBoundEditExit
+          TabOrder = 3
+          Text = 'Edit1'
+        end
+      end
+    end
+  end
+end

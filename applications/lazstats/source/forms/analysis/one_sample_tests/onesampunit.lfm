@@ -1,0 +1,271 @@
+object OneSampFrm: TOneSampFrm
+  Left = 490
+  Height = 188
+  Top = 260
+  Width = 430
+  AutoSize = True
+  BorderStyle = bsSingle
+  Caption = 'One Sample Tests'
+  ClientHeight = 188
+  ClientWidth = 430
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = Panel1
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 131
+    Top = 8
+    Width = 149
+    Anchors = [akTop, akLeft, akBottom]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Statistic of Interest'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 111
+    ClientWidth = 145
+    ItemIndex = 0
+    Items.Strings = (
+      'Sample Mean'
+      'Sample Proportion'
+      'Sample Correlation'
+      'Sample Variance'
+    )
+    OnClick = RadioGroup1Click
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = RadioGroup1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 181
+    Height = 131
+    Top = 8
+    Width = 236
+    AutoSize = True
+    BorderSpacing.Left = 24
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ClientHeight = 131
+    ClientWidth = 236
+    TabOrder = 1
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Statistic
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 4
+      Width = 99
+      Caption = 'Sample Proportion'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Parameter
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 31
+      Width = 118
+      Caption = 'Population Parameter:'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Size
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 58
+      Width = 65
+      Caption = 'Sample Size:'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = CInterval
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 112
+      Width = 112
+      Caption = 'Confidence Level (%)'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = StdDev
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 85
+      Width = 145
+      Caption = 'Sample Standard Deviation:'
+      ParentColor = False
+    end
+    object Statistic: TEdit
+      AnchorSideLeft.Control = StdDev
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = StdDev
+      AnchorSideRight.Side = asrBottom
+      Left = 153
+      Height = 23
+      Top = 0
+      Width = 83
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 0
+      Text = 'Statistic'
+    end
+    object StdDev: TEdit
+      AnchorSideLeft.Control = Label5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Size
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 153
+      Height = 23
+      Top = 81
+      Width = 83
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      TabOrder = 3
+      Text = 'Edit1'
+    end
+    object Parameter: TEdit
+      AnchorSideLeft.Control = StdDev
+      AnchorSideTop.Control = Statistic
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = StdDev
+      AnchorSideRight.Side = asrBottom
+      Left = 153
+      Height = 23
+      Top = 27
+      Width = 83
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+    object Size: TEdit
+      AnchorSideLeft.Control = StdDev
+      AnchorSideTop.Control = Parameter
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = StdDev
+      AnchorSideRight.Side = asrBottom
+      Left = 153
+      Height = 23
+      Top = 54
+      Width = 83
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 2
+      Text = 'Edit1'
+    end
+    object CInterval: TEdit
+      AnchorSideLeft.Control = StdDev
+      AnchorSideTop.Control = StdDev
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = StdDev
+      AnchorSideRight.Side = asrBottom
+      Left = 153
+      Height = 23
+      Top = 108
+      Width = 83
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 4
+      Text = 'Edit1'
+    end
+  end
+  object ResetBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 221
+    Height = 25
+    Top = 155
+    Width = 54
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 2
+  end
+  object CloseBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 367
+    Height = 25
+    Top = 155
+    Width = 55
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 4
+  end
+  object ComputeBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 283
+    Height = 25
+    Top = 155
+    Width = 76
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 3
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 8
+    Top = 139
+    Width = 430
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+end

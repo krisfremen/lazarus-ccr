@@ -1,0 +1,316 @@
+object EquationForm: TEquationForm
+  Left = 377
+  Height = 364
+  Top = 142
+  Width = 592
+  AutoSize = True
+  BorderStyle = bsSingle
+  Caption = 'Equation Editor'
+  ClientHeight = 364
+  ClientWidth = 592
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Panel1: TPanel
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 36
+    Top = 320
+    Width = 576
+    Align = alBottom
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ChildSizing.EnlargeHorizontal = crsHomogenousSpaceResize
+    ChildSizing.ShrinkHorizontal = crsHomogenousSpaceResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ClientHeight = 36
+    ClientWidth = 576
+    TabOrder = 1
+    object ResetBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = CancelBtn
+      Left = 299
+      Height = 25
+      Top = 0
+      Width = 54
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 0
+    end
+    object CancelBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ComputeBtn
+      Left = 361
+      Height = 25
+      Top = 0
+      Width = 62
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Cancel'
+      ModalResult = 2
+      OnClick = CancelBtnClick
+      TabOrder = 1
+    end
+    object ComputeBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ReturnBnt
+      Left = 431
+      Height = 25
+      Top = 0
+      Width = 76
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 2
+    end
+    object ReturnBnt: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 515
+      Height = 25
+      Top = 0
+      Width = 61
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      Caption = 'Return'
+      ModalResult = 1
+      OnClick = ReturnBntClick
+      TabOrder = 3
+    end
+  end
+  object Panel2: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 45
+    Height = 112
+    Top = 189
+    Width = 503
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 112
+    ClientWidth = 503
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = OpsCombo
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 15
+      Top = 31
+      Width = 106
+      BorderSpacing.Top = 8
+      Caption = 'New Variable Name:'
+      ParentColor = False
+    end
+    object NewVarEdit: TEdit
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 23
+      Top = 48
+      Width = 127
+      BorderSpacing.Top = 2
+      TabOrder = 3
+      Text = 'NewVarEdit'
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = NewVarEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = NewVarEdit
+      AnchorSideTop.Side = asrCenter
+      Left = 137
+      Height = 15
+      Top = 52
+      Width = 8
+      BorderSpacing.Left = 10
+      Caption = '='
+      ParentColor = False
+    end
+    object OpEdit: TEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = NewVarEdit
+      Left = 155
+      Height = 23
+      Top = 48
+      Width = 96
+      BorderSpacing.Left = 10
+      TabOrder = 4
+      Text = 'OpEdit'
+    end
+    object FuncEdit: TEdit
+      AnchorSideLeft.Control = OpEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = NewVarEdit
+      Left = 259
+      Height = 23
+      Top = 48
+      Width = 136
+      BorderSpacing.Left = 8
+      TabOrder = 5
+      Text = 'FuncEdit'
+    end
+    object VarEdit: TEdit
+      AnchorSideLeft.Control = FuncEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = NewVarEdit
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      Left = 403
+      Height = 23
+      Top = 48
+      Width = 100
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      TabOrder = 6
+      Text = 'VarEdit'
+    end
+    object OpsCombo: TComboBox
+      AnchorSideLeft.Control = OpEdit
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = OpEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 155
+      Height = 23
+      Top = 0
+      Width = 96
+      Anchors = [akTop, akLeft, akRight]
+      AutoDropDown = True
+      ItemHeight = 15
+      Items.Strings = (
+        '+'
+        '-'
+        '*'
+        '/'
+        ''
+      )
+      OnClick = OpsComboClick
+      OnSelect = OpsComboSelect
+      TabOrder = 0
+    end
+    object FunctionCombo: TComboBox
+      AnchorSideLeft.Control = OpsCombo
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = FuncEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 259
+      Height = 23
+      Top = 0
+      Width = 136
+      Anchors = [akTop, akLeft, akRight]
+      AutoDropDown = True
+      BorderSpacing.Left = 8
+      ItemHeight = 15
+      Items.Strings = (
+        'sqr'
+        'sqrt'
+        'sin'
+        'cos'
+        'tan'
+        'asin'
+        'acos'
+        'atan'
+        'log10'
+        'ln'
+        'exp'
+        '1 / X'
+        ''
+      )
+      OnClick = FunctionComboClick
+      OnSelect = FunctionComboSelect
+      TabOrder = 1
+    end
+    object VarCombo: TComboBox
+      AnchorSideLeft.Control = FunctionCombo
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      Left = 403
+      Height = 23
+      Top = 0
+      Width = 100
+      Anchors = [akTop, akLeft, akRight]
+      AutoDropDown = True
+      BorderSpacing.Left = 8
+      ItemHeight = 15
+      OnClick = VarComboClick
+      OnSelect = VarComboSelect
+      TabOrder = 2
+      Text = 'VarCombo'
+    end
+    object NextBtn: TButton
+      AnchorSideTop.Control = NewVarEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = OpEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 102
+      Height = 25
+      Top = 87
+      Width = 149
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 16
+      Caption = 'Continue for next entry'
+      OnClick = NextBtnClick
+      TabOrder = 7
+    end
+    object FinishedBtn: TButton
+      AnchorSideLeft.Control = FuncEdit
+      AnchorSideTop.Control = NextBtn
+      Left = 259
+      Height = 25
+      Top = 87
+      Width = 70
+      AutoSize = True
+      Caption = 'Finished'
+      OnClick = FinishedBtnClick
+      TabOrder = 8
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideTop.Control = Panel2
+    AnchorSideTop.Side = asrBottom
+    Left = 0
+    Height = 3
+    Top = 309
+    Width = 592
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsTopLine
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 165
+    Top = 8
+    Width = 576
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'You can create a new variable as a combination of other existing variables with this procedure.'#13#10'First, enter the name of the new variable in the area labeled "New Variable".'#13#10'Next, enter up to three values for each entry in your equation by selecting an operation, function or variable from the "drop-down" boxes.   You can select:'#13#10'(a)   An operation code (+,-,* or /) except for the first one which should be a function or variable name.'#13#10'(b)   A function such as sin, cos, sqrt, etc. can be entered first followed by the variable to be acted upon.'#13#10'(c)   A variable name from the list of available variables in the drop-down list of variables.'#13#10'(d)   For each variable to be entered, click the "Next Entry" button.  Following the first entry, an '#13#10'        operation code must be the first entry.'#13#10'When done, click the "Finished" button followed by a click of the "Compute button".  An image of the completed function will be displayed before the new values are created.'
+    ParentColor = False
+    WordWrap = True
+  end
+end

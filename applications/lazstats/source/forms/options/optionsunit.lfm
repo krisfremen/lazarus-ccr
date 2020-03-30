@@ -1,0 +1,240 @@
+object OptionsFrm: TOptionsFrm
+  Left = 510
+  Height = 320
+  Top = 266
+  Width = 352
+  AutoSize = True
+  Caption = 'Options'
+  ClientHeight = 320
+  ClientWidth = 352
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = JustificationGrp
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 218
+    Width = 108
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 12
+    Caption = 'Default File Location'
+    ParentColor = False
+  end
+  object FractionTypeGrp: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 72
+    Top = 8
+    Width = 336
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Decimal Fraction Usage'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 52
+    ClientWidth = 332
+    ItemIndex = 0
+    Items.Strings = (
+      'English (default) period separator'
+      'European (comma) separator'
+    )
+    TabOrder = 0
+  end
+  object MissValsGrp: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = FractionTypeGrp
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 51
+    Top = 92
+    Width = 336
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 8
+    Caption = 'Default Missing Values'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 12
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 4
+    ClientHeight = 31
+    ClientWidth = 332
+    Columns = 4
+    ItemIndex = 3
+    Items.Strings = (
+      'Blank '
+      'Period '
+      'Zero (0) '
+      '99999'
+    )
+    TabOrder = 1
+  end
+  object JustificationGrp: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = MissValsGrp
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 51
+    Top = 155
+    Width = 336
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 8
+    Caption = 'Justification'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 12
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 31
+    ClientWidth = 332
+    Columns = 3
+    ItemIndex = 2
+    Items.Strings = (
+      'Left'
+      'Center'
+      'Right'
+    )
+    TabOrder = 2
+  end
+  object FilePathEdit: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 23
+    Top = 235
+    Width = 336
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    TabOrder = 3
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = HelpBtn
+    AnchorSideRight.Control = SaveBtn
+    Left = 169
+    Height = 25
+    Top = 281
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 4
+  end
+  object SaveBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = HelpBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 239
+    Height = 25
+    Top = 281
+    Width = 105
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Save and Close'
+    ModalResult = 1
+    OnClick = SaveBtnClick
+    TabOrder = 5
+  end
+  object BrowseBtn: TButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = HelpBtn
+    AnchorSideRight.Control = CancelBtn
+    Left = 88
+    Height = 25
+    Top = 281
+    Width = 73
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Browse...'
+    OnClick = BrowseBtnClick
+    TabOrder = 6
+  end
+  object HelpBtn: TButton
+    Tag = 135
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = BrowseBtn
+    Left = 29
+    Height = 25
+    Top = 281
+    Width = 51
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 7
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = FilePathEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 3
+    Top = 270
+    Width = 352
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 12
+    Shape = bsBottomLine
+  end
+  object SelDir: TSelectDirectoryDialog
+    left = 184
+    top = 184
+  end
+end

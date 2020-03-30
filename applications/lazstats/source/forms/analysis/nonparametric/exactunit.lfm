@@ -1,0 +1,483 @@
+object FisherFrm: TFisherFrm
+  Left = 535
+  Height = 472
+  Top = 234
+  Width = 672
+  Caption = 'Fisher''s Exact Test for a 2 by 2 Table'
+  ClientHeight = 472
+  ClientWidth = 672
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object InputGrp: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 114
+    Top = 8
+    Width = 425
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Input Options'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 94
+    ClientWidth = 421
+    Items.Strings = (
+      'Count cases classified by row and column vectors in the data grid.'
+      'Use frequencies recorded in the data grid for row and column variables.'
+      'Use proportions recorded in the data grid for row and column variables.'
+      'Enter frequencies on this form.'
+    )
+    OnClick = InputGrpClick
+    TabOrder = 0
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 455
+    Height = 25
+    Top = 439
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 521
+    Height = 25
+    Top = 439
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 4
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 605
+    Height = 25
+    Top = 439
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 423
+    Width = 672
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel2: TPanel
+    AnchorSideLeft.Control = InputGrp
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = InputGrp
+    Left = 449
+    Height = 77
+    Top = 32
+    Width = 206
+    Alignment = taRightJustify
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 24
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ChildSizing.HorizontalSpacing = 8
+    ChildSizing.VerticalSpacing = 8
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 77
+    ClientWidth = 206
+    TabOrder = 1
+    object Label5: TLabel
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 30
+      Caption = '  '
+      ParentColor = False
+    end
+    object Label6: TLabel
+      Left = 38
+      Height = 15
+      Top = 0
+      Width = 80
+      Alignment = taCenter
+      Caption = 'Row 1'
+      ParentColor = False
+    end
+    object Label7: TLabel
+      Left = 126
+      Height = 15
+      Top = 0
+      Width = 80
+      Alignment = taCenter
+      Caption = 'Row 2'
+      ParentColor = False
+    end
+    object Label8: TLabel
+      Left = 0
+      Height = 23
+      Top = 23
+      Width = 30
+      Caption = 'Col. 1'
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object RC11Edit: TEdit
+      Left = 38
+      Height = 23
+      Top = 23
+      Width = 80
+      Alignment = taRightJustify
+      OnKeyPress = RC11EditKeyPress
+      TabOrder = 0
+      Text = 'RC11Edit'
+    end
+    object RC12Edit: TEdit
+      Left = 126
+      Height = 23
+      Top = 23
+      Width = 80
+      Alignment = taRightJustify
+      OnKeyPress = RC12EditKeyPress
+      TabOrder = 1
+      Text = 'RC12Edit'
+    end
+    object Label9: TLabel
+      Left = 0
+      Height = 23
+      Top = 54
+      Width = 30
+      Caption = 'Col. 2'
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object RC21Edit: TEdit
+      Left = 38
+      Height = 23
+      Top = 54
+      Width = 80
+      Alignment = taRightJustify
+      OnKeyPress = RC21EditKeyPress
+      TabOrder = 2
+      Text = 'RC21Edit'
+    end
+    object RC22Edit: TEdit
+      Left = 126
+      Height = 23
+      Top = 54
+      Width = 80
+      Alignment = taRightJustify
+      OnKeyPress = RC22EditKeyPress
+      TabOrder = 3
+      Text = 'RC22Edit'
+    end
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = InputGrp
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 285
+    Top = 138
+    Width = 656
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ClientHeight = 285
+    ClientWidth = 656
+    TabOrder = 2
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 97
+      Caption = 'Variables Available'
+      ParentColor = False
+    end
+    object RowLabel: TLabel
+      AnchorSideLeft.Control = RowEdit
+      AnchorSideBottom.Control = RowEdit
+      Left = 350
+      Height = 15
+      Top = 25
+      Width = 67
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Row Variable'
+      ParentColor = False
+    end
+    object ColLabel: TLabel
+      AnchorSideLeft.Control = ColEdit
+      AnchorSideBottom.Control = ColEdit
+      Left = 350
+      Height = 15
+      Top = 109
+      Width = 87
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Column Variable'
+      ParentColor = False
+    end
+    object DepLabel: TLabel
+      AnchorSideLeft.Control = DepEdit
+      AnchorSideBottom.Control = DepEdit
+      Left = 350
+      Height = 15
+      Top = 193
+      Width = 99
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Variable to Analyze'
+      ParentColor = False
+    end
+    object NCasesLabel: TLabel
+      AnchorSideTop.Control = NCasesEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = NCasesEdit
+      Left = 494
+      Height = 15
+      Top = 257
+      Width = 97
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Total No. of Cases:'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = RowIn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 268
+      Top = 17
+      Width = 306
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      TabOrder = 0
+    end
+    object RowIn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 314
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = RowInClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object RowEdit: TEdit
+      AnchorSideLeft.Control = RowIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = RowOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 350
+      Height = 23
+      Top = 42
+      Width = 298
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 2
+      Text = 'RowEdit'
+    end
+    object ColEdit: TEdit
+      AnchorSideLeft.Control = ColIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ColOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 350
+      Height = 23
+      Top = 126
+      Width = 298
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 3
+      Text = 'ColEdit'
+    end
+    object DepEdit: TEdit
+      AnchorSideLeft.Control = DepIn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = DepOut
+      AnchorSideBottom.Side = asrBottom
+      Left = 350
+      Height = 23
+      Top = 210
+      Width = 298
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 4
+      Text = 'DepEdit'
+    end
+    object NCasesEdit: TEdit
+      AnchorSideTop.Control = DepOut
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 599
+      Height = 23
+      Top = 253
+      Width = 49
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      TabOrder = 5
+      Text = 'NCasesEdit'
+    end
+    object RowOut: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = RowIn
+      AnchorSideTop.Side = asrBottom
+      Left = 314
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = RowOutClick
+      Spacing = 0
+      TabOrder = 6
+    end
+    object ColIn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = RowOut
+      AnchorSideTop.Side = asrBottom
+      Left = 314
+      Height = 28
+      Top = 101
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = ColInClick
+      Spacing = 0
+      TabOrder = 7
+    end
+    object ColOut: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ColIn
+      AnchorSideTop.Side = asrBottom
+      Left = 314
+      Height = 28
+      Top = 133
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = ColOutClick
+      Spacing = 0
+      TabOrder = 8
+    end
+    object DepIn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ColOut
+      AnchorSideTop.Side = asrBottom
+      Left = 314
+      Height = 28
+      Top = 185
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = DepInClick
+      Spacing = 0
+      TabOrder = 9
+    end
+    object DepOut: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = DepIn
+      AnchorSideTop.Side = asrBottom
+      Left = 314
+      Height = 28
+      Top = 217
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = DepOutClick
+      Spacing = 0
+      TabOrder = 10
+    end
+  end
+end

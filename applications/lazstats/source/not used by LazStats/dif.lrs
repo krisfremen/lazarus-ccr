@@ -1,0 +1,127 @@
+LazarusResources.Add('TDIFfrm','FORMDATA',[
+  'TPF0'#7'TDIFfrm'#6'DIFfrm'#4'Left'#2'>'#3'Top'#2'd'#5'Width'#3#230#1#6'Heigh'
+  +'t'#3#210#1#11'HelpContext'#3#186#4#7'Caption'#6#18'DIF Specifications'#5'Co'
+  +'lor'#7#9'clBtnFace'#12'Font.Charset'#7#15'DEFAULT_CHARSET'#10'Font.Color'#7
+  +#12'clWindowText'#11'Font.Height'#2#245#9'Font.Name'#6#13'MS Sans Serif'#10
+  +'Font.Style'#11#0#8'HelpFile'#6#11'OS2Help.hlp'#6'OnShow'#7#8'FormShow'#13'P'
+  +'ixelsPerInch'#2'`'#10'TextHeight'#2#13#0#6'TLabel'#6'Label1'#4'Left'#2#8#3
+  +'Top'#2'p'#5'Width'#2'Y'#6'Height'#2#13#7'Caption'#6#19'Available Variables'
+  +#0#0#6'TLabel'#6'Label2'#4'Left'#3#200#0#3'Top'#2'p'#5'Width'#2'F'#6'Height'
+  +#2#13#7'Caption'#6#14'Items Selected'#0#0#6'TLabel'#6'Label3'#4'Left'#3#200#0
+  +#3'Top'#3#8#1#5'Width'#2'T'#6'Height'#2#13#7'Caption'#6#17'Grouping Variable'
+  +#0#0#6'TLabel'#6'Label4'#4'Left'#3#200#0#3'Top'#3'H'#1#5'Width'#2'n'#6'Heigh'
+  +'t'#2#13#7'Caption'#6#21'Reference group code:'#0#0#6'TLabel'#6'Label5'#4'Le'
+  +'ft'#3#200#0#3'Top'#3'`'#1#5'Width'#2'Y'#6'Height'#2#13#7'Caption'#6#17'Foca'
+  +'l Group Code:'#0#0#6'TLabel'#6'Label6'#4'Left'#3#200#0#3'Top'#3'x'#1#5'Widt'
+  +'h'#2'^'#6'Height'#2#13#7'Caption'#6#19'No. of Score Levels'#0#0#6'TLabel'#6
+  +'Label7'#4'Left'#3'`'#1#3'Top'#3' '#1#5'Width'#2'l'#6'Height'#2#13#7'Caption'
+  +#6#23'Enter bounds for levels'#0#0#6'TLabel'#6'Label8'#4'Left'#3'`'#1#3'Top'
+  +#3'`'#1#5'Width'#2'B'#6'Height'#2#13#7'Caption'#6#12'Lower Bound:'#0#0#6'TLa'
+  +'bel'#6'Label9'#4'Left'#3'`'#1#3'Top'#3'x'#1#5'Width'#2'B'#6'Height'#2#13#7
+  +'Caption'#6#12'Upper Bound:'#0#0#6'TLabel'#7'Label10'#4'Left'#3'`'#1#3'Top'#3
+  +'0'#1#5'Width'#2#28#6'Height'#2#13#7'Caption'#6#4'Down'#0#0#6'TLabel'#7'Labe'
+  +'l11'#4'Left'#3#160#1#3'Top'#3'0'#1#5'Width'#2#14#6'Height'#2#13#7'Caption'#6
+  +#2'Up'#0#0#6'TLabel'#7'Label12'#4'Left'#3#184#1#3'Top'#3'0'#1#5'Width'#2#26#6
+  +'Height'#2#13#7'Caption'#6#5'Level'#0#0#5'TMemo'#5'Memo1'#4'Left'#2#8#3'Top'
+  +#2#0#5'Width'#3#201#1#6'Height'#2'i'#13'Lines.Strings'#1#6'_This procedure i'
+  +'s an adaptation of the program written by Niels G. Waller, Dept. of Psychol'
+  +'ogy,'#6'hUniversity of California - Davis, Jan. 1998.  It''s purpose is to '
+  +'identify test items that differ in the '#6'^response pattern for two groups'
+  +': a reference group and a focal group.  The file of data to be '#6'Wanalyze'
+  +'d should consist of a variable containing a code designating the two groups'
+  +' and '#6'[variables containing subject''s item responses coded 0 for incorr'
+  +'ect and 1 for correct.  No '#6'bmissing data may be included.  The results '
+  +'provide the Mantel-Haenszel statistics for identifying '#6'3those items whi'
+  +'ch are different for the two groups.'#0#8'TabOrder'#2#0#0#0#8'TListBox'#7'V'
+  +'arList'#4'Left'#2#8#3'Top'#3#128#0#5'Width'#3#137#0#6'Height'#3#249#0#10'It'
+  +'emHeight'#2#13#11'MultiSelect'#9#8'TabOrder'#2#1#0#0#7'TBitBtn'#9'ItemInBtn'
+  +#4'Left'#3#160#0#3'Top'#3#152#0#5'Width'#2#25#6'Height'#2#25#8'TabOrder'#2#2
+  +#7'OnClick'#7#14'ItemInBtnClick'#10'Glyph.Data'#10'z'#1#0#0'v'#1#0#0'BMv'#1#0
+  +#0#0#0#0#0'v'#0#0#0'('#0#0#0' '#0#0#0#16#0#0#0#1#0#4#0#0#0#0#0#0#1#0#0#18#11
+  +#0#0#18#11#0#0#16#0#0#0#0#0#0#0#0#0#0#0#0#0#128#0#0#128#0#0#0#128#128#0#128#0
+  +#0#0#128#0#128#0#128#128#0#0''#0#191#191#191#0#0#0#255#0#0#255#0#0#0#255
+  +#255#0#255#0#0#0#255#0#255#0#255#255#0#0#255#255#255#0'333333333333333333333'
+  +'33333333333333333333333333333333333333?'#243'333333'#0'3333333w?'#243'33333'
+  +#9#0'333333w?'#243'3333'#9#153#0'33?'#255#255'3w?'#243#0#0#0#9#153#153#0'3'
+  +'wwws33w?'#9#153#153#153#153#153#153#0''#255#255#255'33?w'#0#0#0#9#153#153#0
+  +'3www3?w3333'#9#153#0'33333?w33333'#9#0'333333w333333'#0'3333333w33333333'
+  +'33333333333333333333333333333333333333333333'#9'NumGlyphs'#2#2#0#0#7'TBitBt'
+  +'n'#10'ItemOutBtn'#4'Left'#3#160#0#3'Top'#3#184#0#5'Width'#2#25#6'Height'#2
+  +#25#8'TabOrder'#2#3#7'OnClick'#7#15'ItemOutBtnClick'#10'Glyph.Data'#10'z'#1#0
+  +#0'v'#1#0#0'BMv'#1#0#0#0#0#0#0'v'#0#0#0'('#0#0#0' '#0#0#0#16#0#0#0#1#0#4#0#0
+  +#0#0#0#0#1#0#0#18#11#0#0#18#11#0#0#16#0#0#0#0#0#0#0#0#0#0#0#0#0#128#0#0#128#0
+  +#0#0#128#128#0#128#0#0#0#128#0#128#0#128#128#0#0''#0#191#191#191#0#0#0#255
+  +#0#0#255#0#0#0#255#255#0#255#0#0#0#255#0#255#0#255#255#0#0#255#255#255#0'333'
+  +'33333333333333333333333333333333333333333?'#243'333333'#0'333333?w'#243'333'
+  +'33'#0#144'33333?w7'#243'3333'#0#153#144'3333?w37'#255#255#255'3'#0#153#153
+  +#144#0#0#0'?w337www'#0#153#153#153#153#153#153#144'w?'#243'33'#255#255#247'3'
+  +#0#153#153#144#0#0#0'3w?'#243'7www33'#0#153#144'33333w?'#247#243'33333'#0#144
+  +'333333w7'#243'333333'#0'3333333w3333333333333333333333333333333333333333333'
+  +'333333333333333333333333'#9'NumGlyphs'#2#2#0#0#7'TBitBtn'#6'AllBtn'#4'Left'
+  +#3#160#0#3'Top'#3#216#0#5'Width'#2#25#6'Height'#2#25#7'Caption'#6#3'ALL'#8'T'
+  +'abOrder'#2#4#7'OnClick'#7#11'AllBtnClick'#0#0#7'TBitBtn'#8'GrpInBtn'#4'Left'
+  +#3#160#0#3'Top'#3#8#1#5'Width'#2#25#6'Height'#2#25#8'TabOrder'#2#5#7'OnClick'
+  +#7#13'GrpInBtnClick'#10'Glyph.Data'#10'z'#1#0#0'v'#1#0#0'BMv'#1#0#0#0#0#0#0
+  +'v'#0#0#0'('#0#0#0' '#0#0#0#16#0#0#0#1#0#4#0#0#0#0#0#0#1#0#0#18#11#0#0#18#11
+  ,#0#0#16#0#0#0#0#0#0#0#0#0#0#0#0#0#128#0#0#128#0#0#0#128#128#0#128#0#0#0#128#0
+  +#128#0#128#128#0#0''#0#191#191#191#0#0#0#255#0#0#255#0#0#0#255#255#0#255#0
+  +#0#0#255#0#255#0#255#255#0#0#255#255#255#0'333333333333333333333333333333333'
+  +'33333333333333333333333333?'#243'333333'#0'3333333w?'#243'33333'#9#0'333333'
+  +'w?'#243'3333'#9#153#0'33?'#255#255'3w?'#243#0#0#0#9#153#153#0'3wwws33w?'#9
+  +#153#153#153#153#153#153#0''#255#255#255'33?w'#0#0#0#9#153#153#0'3www3?w33'
+  +'33'#9#153#0'33333?w33333'#9#0'333333w333333'#0'3333333w333333333333333333'
+  +'3333333333333333333333333333333333'#9'NumGlyphs'#2#2#0#0#7'TBitBtn'#9'GrpOu'
+  +'tBtn'#4'Left'#3#160#0#3'Top'#3'('#1#5'Width'#2#25#6'Height'#2#25#8'TabOrder'
+  +#2#6#10'Glyph.Data'#10'z'#1#0#0'v'#1#0#0'BMv'#1#0#0#0#0#0#0'v'#0#0#0'('#0#0#0
+  +' '#0#0#0#16#0#0#0#1#0#4#0#0#0#0#0#0#1#0#0#18#11#0#0#18#11#0#0#16#0#0#0#0#0#0
+  +#0#0#0#0#0#0#0#128#0#0#128#0#0#0#128#128#0#128#0#0#0#128#0#128#0#128#128#0#0
+  +''#0#191#191#191#0#0#0#255#0#0#255#0#0#0#255#255#0#255#0#0#0#255#0#255#0
+  +#255#255#0#0#255#255#255#0'33333333333333333333333333333333333333333333?'#243
+  +'333333'#0'333333?w'#243'33333'#0#144'33333?w7'#243'3333'#0#153#144'3333?w37'
+  +#255#255#255'3'#0#153#153#144#0#0#0'?w337www'#0#153#153#153#153#153#153#144
+  +'w?'#243'33'#255#255#247'3'#0#153#153#144#0#0#0'3w?'#243'7www33'#0#153#144'3'
+  +'3333w?'#247#243'33333'#0#144'333333w7'#243'333333'#0'3333333w33333333333333'
+  +'33333333333333333333333333333333333333333333333333333'#9'NumGlyphs'#2#2#0#0
+  +#5'TEdit'#12'GroupVarEdit'#4'Left'#3#200#0#3'Top'#3#24#1#5'Width'#3#137#0#6
+  +'Height'#2#21#8'TabOrder'#2#7#4'Text'#6#12'GroupVarEdit'#0#0#8'TListBox'#9'I'
+  +'temsList'#4'Left'#3#200#0#3'Top'#3#128#0#5'Width'#3#137#0#6'Height'#2'y'#10
+  +'ItemHeight'#2#13#8'TabOrder'#2#8#0#0#5'TEdit'#10'RefGrpEdit'#4'Left'#3'8'#1
+  +#3'Top'#3'@'#1#5'Width'#2#25#6'Height'#2#21#8'TabOrder'#2#9#4'Text'#6#10'Ref'
+  +'GrpEdit'#0#0#5'TEdit'#11'TrgtGrpEdit'#4'Left'#3'8'#1#3'Top'#3'X'#1#5'Width'
+  +#2#25#6'Height'#2#21#8'TabOrder'#2#10#4'Text'#6#11'TrgtGrpEdit'#0#0#7'TButto'
+  +'n'#8'ResetBtn'#4'Left'#2#8#3'Top'#3#152#1#5'Width'#2'A'#6'Height'#2#25#7'Ca'
+  +'ption'#6#5'Reset'#8'TabOrder'#2#11#7'OnClick'#7#13'ResetBtnClick'#0#0#7'TBu'
+  +'tton'#10'ComputeBtn'#4'Left'#3#208#0#3'Top'#3#152#1#5'Width'#2'A'#6'Height'
+  +#2#25#7'Caption'#6#7'Compute'#8'TabOrder'#2#12#7'OnClick'#7#15'ComputeBtnCli'
+  +'ck'#0#0#7'TButton'#9'ReturnBtn'#4'Left'#3#144#1#3'Top'#3#152#1#5'Width'#2'A'
+  +#6'Height'#2#25#7'Caption'#6#6'Return'#11'ModalResult'#2#1#8'TabOrder'#2#13#7
+  +'OnClick'#7#14'ReturnBtnClick'#0#0#9'TGroupBox'#9'GroupBox1'#4'Left'#3'`'#1#3
+  +'Top'#2'p'#5'Width'#2'q'#6'Height'#3#169#0#7'Caption'#6#7'Options'#8'TabOrde'
+  +'r'#2#14#0#9'TCheckBox'#12'ItemStatsChk'#4'Left'#2#8#3'Top'#2#16#5'Width'#2
+  +'Y'#6'Height'#2#17#7'Caption'#6#15'Item Statistics'#7'Checked'#9#5'State'#7#9
+  +'cbChecked'#8'TabOrder'#2#0#0#0#9'TCheckBox'#12'TestStatsChk'#4'Left'#2#8#3
+  +'Top'#2' '#5'Width'#2'Y'#6'Height'#2#17#7'Caption'#6#15'Test Statistics'#8'T'
+  +'abOrder'#2#1#0#0#9'TCheckBox'#12'ItemCorrsChk'#4'Left'#2#8#3'Top'#2'0'#5'Wi'
+  +'dth'#2'a'#6'Height'#2#17#7'Caption'#6#16'Item Intercorr.s'#8'TabOrder'#2#2#0
+  +#0#9'TCheckBox'#11'ItemTestChk'#4'Left'#2#8#3'Top'#2'@'#5'Width'#2'Y'#6'Heig'
+  +'ht'#2#17#7'Caption'#6#15'Item-Test cor.s'#8'TabOrder'#2#3#0#0#9'TCheckBox'#8
+  +'AlphaChk'#4'Left'#2#8#3'Top'#2'P'#5'Width'#2'a'#6'Height'#2#17#7'Caption'#6
+  +#17'Alpha Reliability'#8'TabOrder'#2#4#0#0#9'TCheckBox'#11'LogisticChk'#4'Le'
+  +'ft'#2#8#3'Top'#2'p'#5'Width'#2'a'#6'Height'#2#17#7'Caption'#6#16'Logistic R'
+  +'egres.'#7'Enabled'#8#8'TabOrder'#2#5#0#0#9'TCheckBox'#5'MHChk'#4'Left'#2#8#3
+  +'Top'#2'`'#5'Width'#2'a'#6'Height'#2#17#7'Caption'#6#15'Mantel-Haenszel'#7'C'
+  +'hecked'#9#5'State'#7#9'cbChecked'#8'TabOrder'#2#6#0#0#9'TCheckBox'#9'Curves'
+  +'Chk'#4'Left'#2#8#3'Top'#3#128#0#5'Width'#2'a'#6'Height'#2#17#7'Caption'#6#16
+  +'Item Char. Crvs.'#8'TabOrder'#2#7#0#0#9'TCheckBox'#9'CountsChk'#4'Left'#2#8
+  +#3'Top'#3#144#0#5'Width'#2'a'#6'Height'#2#17#7'Caption'#6#12'Level Counts'#8
+  +'TabOrder'#2#8#0#0#0#5'TEdit'#10'LevelsEdit'#4'Left'#3'8'#1#3'Top'#3'p'#1#5
+  +'Width'#2#25#6'Height'#2#21#8'TabOrder'#2#15#6'OnExit'#7#14'LevelsEditExit'#0
+  +#0#5'TEdit'#11'LevelNoEdit'#4'Left'#3#184#1#3'Top'#3'@'#1#5'Width'#2#25#6'He'
+  +'ight'#2#21#8'TabOrder'#2#16#4'Text'#6#1'1'#0#0#5'TEdit'#12'LowBoundEdit'#4
+  +'Left'#3#184#1#3'Top'#3'X'#1#5'Width'#2#25#6'Height'#2#21#8'TabOrder'#2#17#6
+  +'OnExit'#7#16'LowBoundEditExit'#0#0#5'TEdit'#11'UpBoundEdit'#4'Left'#3#184#1
+  +#3'Top'#3'p'#1#5'Width'#2#25#6'Height'#2#21#8'TabOrder'#2#18#6'OnExit'#7#15
+  +'UpBoundEditExit'#0#0#10'TScrollBar'#11'LevelScroll'#4'Left'#3'`'#1#3'Top'#3
+  +'@'#1#5'Width'#2'Q'#6'Height'#2#19#3'Min'#2#1#8'PageSize'#2#0#8'Position'#2#1
+  +#8'TabOrder'#2#19#8'OnScroll'#7#17'LevelScrollScroll'#0#0#0
+]);

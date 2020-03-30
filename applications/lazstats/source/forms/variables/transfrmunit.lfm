@@ -1,0 +1,484 @@
+object TransFrm: TTransFrm
+  Left = 464
+  Height = 386
+  Top = 126
+  Width = 672
+  AutoSize = True
+  Caption = 'Transformations'
+  ClientHeight = 386
+  ClientWidth = 672
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 41
+    Top = 345
+    Width = 672
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 672
+    TabOrder = 1
+    object CancelBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ComputeBtn
+      Left = 449
+      Height = 25
+      Top = 8
+      Width = 62
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      Caption = 'Cancel'
+      ModalResult = 2
+      OnClick = CancelBtnClick
+      TabOrder = 2
+    end
+    object ComputeBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ReturnBtn
+      Left = 519
+      Height = 25
+      Top = 8
+      Width = 76
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 3
+    end
+    object ReturnBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 603
+      Height = 25
+      Top = 8
+      Width = 61
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      Caption = 'Return'
+      ModalResult = 1
+      TabOrder = 4
+    end
+    object HelpBtn: TButton
+      Tag = 150
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ResetBtn
+      Left = 328
+      Height = 25
+      Top = 8
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Help'
+      OnClick = HelpBtnClick
+      TabOrder = 0
+    end
+    object ResetBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = HelpBtn
+      AnchorSideRight.Control = CancelBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 387
+      Height = 25
+      Top = 8
+      Width = 54
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 1
+    end
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 8
+    Top = 337
+    Width = 672
+    Align = alBottom
+    Shape = bsBottomLine
+  end
+  object Panel2: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideBottom.Control = Bevel1
+    Left = 0
+    Height = 337
+    Top = 0
+    Width = 672
+    Align = alClient
+    BevelOuter = bvNone
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 337
+    ClientWidth = 672
+    Constraints.MinHeight = 300
+    TabOrder = 0
+    object Panel4: TPanel
+      Left = 8
+      Height = 329
+      Top = 8
+      Width = 445
+      Align = alClient
+      Anchors = [akTop, akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 4
+      BevelOuter = bvNone
+      ClientHeight = 329
+      ClientWidth = 445
+      TabOrder = 0
+      object Label2: TLabel
+        AnchorSideLeft.Control = V1InBtn
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = V1Edit
+        Left = 244
+        Height = 15
+        Top = 33
+        Width = 70
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Left = 8
+        BorderSpacing.Bottom = 2
+        Caption = 'Argument V1'
+        ParentColor = False
+      end
+      object Label3: TLabel
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = V1Edit
+        AnchorSideTop.Side = asrBottom
+        Left = 244
+        Height = 15
+        Top = 105
+        Width = 48
+        BorderSpacing.Top = 32
+        Caption = 'Constant'
+        ParentColor = False
+      end
+      object Label4: TLabel
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideBottom.Control = V2Edit
+        Left = 244
+        Height = 15
+        Top = 185
+        Width = 70
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Top = 32
+        BorderSpacing.Bottom = 2
+        Caption = 'Argument V2'
+        ParentColor = False
+      end
+      object V1InBtn: TBitBtn
+        AnchorSideLeft.Control = Panel4
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label8
+        AnchorSideTop.Side = asrBottom
+        Left = 208
+        Height = 28
+        Top = 25
+        Width = 28
+        BorderSpacing.Left = 8
+        Images = MainDataModule.ImageList
+        ImageIndex = 1
+        OnClick = V1InBtnClick
+        Spacing = 0
+        TabOrder = 1
+      end
+      object V1OutBtn: TBitBtn
+        AnchorSideLeft.Control = V1InBtn
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = V1InBtn
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = V1InBtn
+        AnchorSideRight.Side = asrBottom
+        Left = 208
+        Height = 28
+        Top = 57
+        Width = 28
+        BorderSpacing.Top = 4
+        Images = MainDataModule.ImageList
+        ImageIndex = 0
+        OnClick = V1OutBtnClick
+        Spacing = 0
+        TabOrder = 2
+      end
+      object V2InBtn: TBitBtn
+        AnchorSideLeft.Control = V1InBtn
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = ConstantEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = V1InBtn
+        AnchorSideRight.Side = asrBottom
+        Left = 208
+        Height = 28
+        Top = 177
+        Width = 28
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 32
+        Images = MainDataModule.ImageList
+        ImageIndex = 1
+        OnClick = V2InBtnClick
+        Spacing = 0
+        TabOrder = 5
+      end
+      object V2OutBtn: TBitBtn
+        AnchorSideLeft.Control = V1InBtn
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = V2InBtn
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = V1InBtn
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = V2Edit
+        AnchorSideBottom.Side = asrBottom
+        Left = 208
+        Height = 28
+        Top = 209
+        Width = 28
+        BorderSpacing.Top = 4
+        Images = MainDataModule.ImageList
+        ImageIndex = 0
+        OnClick = V2OutBtnClick
+        Spacing = 0
+        TabOrder = 6
+      end
+      object V1Edit: TEdit
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel4
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = V1OutBtn
+        AnchorSideBottom.Side = asrBottom
+        Left = 244
+        Height = 23
+        Top = 50
+        Width = 201
+        Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Bottom = 12
+        TabOrder = 3
+        Text = 'V1Edit'
+      end
+      object ConstantEdit: TEdit
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = Label3
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = V1Edit
+        AnchorSideRight.Side = asrBottom
+        Left = 244
+        Height = 23
+        Top = 122
+        Width = 201
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        TabOrder = 4
+        Text = 'ConstantEdit'
+      end
+      object V2Edit: TEdit
+        AnchorSideLeft.Control = Label2
+        AnchorSideTop.Control = Label4
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = V1Edit
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = V2OutBtn
+        AnchorSideBottom.Side = asrBottom
+        Left = 244
+        Height = 23
+        Top = 202
+        Width = 201
+        Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        BorderSpacing.Bottom = 12
+        TabOrder = 7
+        Text = 'V2Edit'
+      end
+      object Label5: TLabel
+        AnchorSideLeft.Control = Label2
+        AnchorSideBottom.Control = SaveEdit
+        Left = 244
+        Height = 15
+        Top = 289
+        Width = 114
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Save New Variable As:'
+        ParentColor = False
+      end
+      object SaveEdit: TEdit
+        AnchorSideLeft.Control = Label2
+        AnchorSideRight.Control = V1Edit
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel4
+        AnchorSideBottom.Side = asrBottom
+        Left = 244
+        Height = 23
+        Top = 306
+        Width = 201
+        Anchors = [akLeft, akRight, akBottom]
+        TabOrder = 8
+        Text = 'SaveEdit'
+      end
+      object Label8: TLabel
+        Left = 0
+        Height = 15
+        Top = 8
+        Width = 9
+        BorderSpacing.Top = 8
+        BorderSpacing.Bottom = 2
+        Caption = '   '
+        ParentColor = False
+      end
+      object VarList: TListBox
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Label1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = V1InBtn
+        AnchorSideBottom.Control = Panel4
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 312
+        Top = 17
+        Width = 200
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        ItemHeight = 0
+        TabOrder = 0
+      end
+      object Label1: TLabel
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Panel4
+        Left = 0
+        Height = 15
+        Top = 0
+        Width = 46
+        Caption = 'Variables'
+        ParentColor = False
+      end
+    end
+    object Panel5: TPanel
+      AnchorSideLeft.Control = Panel4
+      AnchorSideLeft.Side = asrBottom
+      Left = 466
+      Height = 337
+      Top = 0
+      Width = 206
+      Align = alRight
+      BorderSpacing.Left = 4
+      BevelOuter = bvNone
+      ClientHeight = 337
+      ClientWidth = 206
+      TabOrder = 1
+      object Label6: TLabel
+        AnchorSideLeft.Control = Panel5
+        AnchorSideBottom.Control = TransEdit
+        Left = 0
+        Height = 15
+        Top = 297
+        Width = 130
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Top = 12
+        BorderSpacing.Bottom = 2
+        Caption = 'Selected Transformation:'
+        ParentColor = False
+      end
+      object TransList: TListBox
+        AnchorSideLeft.Control = Panel5
+        AnchorSideTop.Control = Label7
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel5
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Label6
+        Left = 0
+        Height = 260
+        Top = 25
+        Width = 198
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        BorderSpacing.Right = 8
+        Items.Strings = (
+          'New = V1 + C'
+          'New = V1 - C'
+          'New = V1 * C'
+          'New = V1 / C'
+          'New = V1 ^ C'
+          'New = V1 + V2'
+          'New = V1 - V2'
+          'New = V1 * V2'
+          'New = V1 / V2'
+          'New = V1 ^ V2'
+          'New = ln(V1) {base e}'
+          'New = log(V1) {base 10}'
+          'New = exp(v1) {base e}'
+          'New = exp(V1) {base 10}'
+          'New = Sin(V1)'
+          'New = Cos(V1)'
+          'New = Tan(V1)'
+          'New = ArcSin(V1)'
+          'New = ArcCos(V1)'
+          'New = ArcTan(V1)'
+          'New = Z(V1)'
+          'New = Rank(V1)'
+          'New = ProbZ(V1)'
+          'New = NormDistZ(V1)'
+          'New = Abs(V1)'
+          'New = C'
+          'New = C - X'
+          'New = C / X'
+        )
+        ItemHeight = 15
+        OnClick = TransListClick
+        TabOrder = 0
+      end
+      object TransEdit: TEdit
+        AnchorSideLeft.Control = Panel5
+        AnchorSideRight.Control = Panel5
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel5
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 23
+        Top = 314
+        Width = 198
+        Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Right = 8
+        TabOrder = 1
+        Text = 'TransEdit'
+      end
+      object Label7: TLabel
+        AnchorSideTop.Control = Panel5
+        Left = 22
+        Height = 15
+        Top = 8
+        Width = 9
+        BorderSpacing.Top = 8
+        Caption = '   '
+        ParentColor = False
+      end
+    end
+    object Splitter1: TSplitter
+      Left = 457
+      Height = 337
+      Top = 0
+      Width = 5
+      Align = alRight
+      ResizeAnchor = akRight
+    end
+  end
+end

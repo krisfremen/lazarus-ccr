@@ -1,0 +1,265 @@
+object WilcoxonFrm: TWilcoxonFrm
+  Left = 498
+  Height = 352
+  Top = 336
+  Width = 436
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Wilcoxon Matched Pairs Signed Ranks Test'
+  ClientHeight = 352
+  ClientWidth = 436
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Variables Available'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Var1Edit
+    AnchorSideBottom.Control = Var1Edit
+    Left = 240
+    Height = 15
+    Top = 33
+    Width = 50
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 2
+    Caption = 'Variable 1'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = Var2Edit
+    AnchorSideBottom.Control = Var2Edit
+    Left = 240
+    Height = 15
+    Top = 125
+    Width = 50
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 2
+    Caption = 'Variable 2'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Var1In
+    AnchorSideBottom.Control = Bevel1
+    Left = 9
+    Height = 278
+    Top = 25
+    Width = 187
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 9
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    Constraints.MinHeight = 200
+    ItemHeight = 0
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object Var1In: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = VarList
+    Left = 204
+    Height = 28
+    Top = 25
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = Var1InClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object Var1Out: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Var1In
+    AnchorSideTop.Side = asrBottom
+    Left = 204
+    Height = 28
+    Top = 57
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = Var1OutClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object Var2In: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Var1Out
+    AnchorSideTop.Side = asrBottom
+    Left = 204
+    Height = 28
+    Top = 117
+    Width = 28
+    BorderSpacing.Top = 32
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = Var2InClick
+    Spacing = 0
+    TabOrder = 4
+  end
+  object Var2Out: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Var2In
+    AnchorSideTop.Side = asrBottom
+    Left = 204
+    Height = 28
+    Top = 149
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = Var2OutClick
+    Spacing = 0
+    TabOrder = 5
+  end
+  object Var1Edit: TEdit
+    AnchorSideLeft.Control = Var1In
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Var1Out
+    AnchorSideBottom.Side = asrBottom
+    Left = 240
+    Height = 23
+    Top = 50
+    Width = 188
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 3
+    Text = 'Var1Edit'
+  end
+  object Var2Edit: TEdit
+    AnchorSideLeft.Control = Var2In
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Var2Out
+    AnchorSideBottom.Side = asrBottom
+    Left = 240
+    Height = 23
+    Top = 142
+    Width = 188
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 6
+    Text = 'Var2Edit'
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 227
+    Height = 25
+    Top = 319
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 8
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 289
+    Height = 25
+    Top = 319
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 9
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 373
+    Height = 25
+    Top = 319
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 10
+  end
+  object HelpBtn: TButton
+    Tag = 156
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 168
+    Height = 25
+    Top = 319
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 7
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 303
+    Width = 436
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Bevel2: TBevel
+    Left = 3
+    Height = 20
+    Top = 336
+    Width = 16
+    Shape = bsSpacer
+  end
+end

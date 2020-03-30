@@ -1,0 +1,184 @@
+object GuttmanFrm: TGuttmanFrm
+  Left = 608
+  Height = 307
+  Top = 322
+  Width = 382
+  AutoSize = True
+  Caption = 'Guttman Sclaogram Analysis'
+  ClientHeight = 307
+  ClientWidth = 382
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Variables Available'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = ItemList
+    AnchorSideTop.Control = Owner
+    Left = 222
+    Height = 15
+    Top = 8
+    Width = 76
+    BorderSpacing.Top = 8
+    Caption = 'Selected Items'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = AllBtn
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 233
+    Top = 25
+    Width = 152
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    Constraints.MinHeight = 200
+    ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 177
+    Height = 28
+    Top = 25
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = InBtnClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 177
+    Height = 28
+    Top = 56
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = OutBtnClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object AllBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 168
+    Height = 25
+    Top = 104
+    Width = 46
+    AutoSize = True
+    Caption = 'ALL'
+    OnClick = AllBtnClick
+    Spacing = 0
+    TabOrder = 3
+  end
+  object ItemList: TListBox
+    AnchorSideLeft.Control = AllBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 222
+    Height = 233
+    Top = 25
+    Width = 152
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 4
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 163
+    Height = 25
+    Top = 274
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 5
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 225
+    Height = 25
+    Top = 274
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 6
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 309
+    Height = 25
+    Top = 274
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 7
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 258
+    Width = 382
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

@@ -1,0 +1,248 @@
+object FileExtractFrm: TFileExtractFrm
+  Left = 441
+  Height = 509
+  Top = 271
+  Width = 435
+  HelpContext = 406
+  HorzScrollBar.Page = 434
+  VertScrollBar.Page = 508
+  ActiveControl = NoFieldsEdit
+  Caption = 'File Extraction Procedure'
+  ClientHeight = 509
+  ClientWidth = 435
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  HelpFile = 'OS2Help.hlp'
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Label2: TLabel
+    Left = 8
+    Height = 13
+    Top = 152
+    Width = 127
+    Caption = 'Number of lines per record:'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 224
+    Height = 13
+    Top = 152
+    Width = 161
+    Caption = 'No. of fields (variables) per record:'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 8
+    Height = 13
+    Top = 176
+    Width = 189
+    Caption = 'Sequence number of key selection field:'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 8
+    Height = 13
+    Top = 200
+    Width = 196
+    Caption = 'Selection Value (Including Dec. Fraction):'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Label1: TLabel
+    Left = 272
+    Height = 13
+    Top = 424
+    Width = 92
+    Caption = 'Records Retrieved:'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 8
+    Height = 13
+    Top = 424
+    Width = 96
+    Caption = 'Records Processed:'
+    ParentColor = False
+  end
+  object Memo1: TMemo
+    Left = 24
+    Height = 113
+    Top = 0
+    Width = 377
+    Lines.Strings = (
+      'This procedure is used to extract records from files too large to read directly '
+      'into the data grid.  The data grid can hold about 100,000 records.  If your file'
+      'is larger but you will not be processing all records, you may extract sub-groups'
+      'of records using a "key" field, e.g. a group identification number.  The records'
+      'extracted will be placed into the data grid as if you had entered them via the'
+      'keyboard.  You may then save the sub-file, process it, etc. as any other file.  If'
+      'you have multiple groups to extract, repeat pressing the Extract button until all'
+      'sub-files you need are placed into the data grid.  Press return to continue.'
+    )
+    TabOrder = 4
+  end
+  object NoLinesEdit: TEdit
+    Left = 144
+    Height = 21
+    Top = 152
+    Width = 25
+    TabOrder = 5
+  end
+  object NoFieldsEdit: TEdit
+    Left = 392
+    Height = 21
+    Top = 152
+    Width = 25
+    TabOrder = 0
+  end
+  object FormatGrp: TRadioGroup
+    Left = 272
+    Height = 81
+    Top = 176
+    Width = 145
+    AutoFill = True
+    Caption = 'Record Format:'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 63
+    ClientWidth = 141
+    Items.Strings = (
+      'Tab seperated fields'
+      'comma seperated fields'
+      'space seperated fields'
+      'User specified format'
+    )
+    OnClick = FormatGrpClick
+    TabOrder = 3
+  end
+  object KeyVarNoEdit: TEdit
+    Left = 200
+    Height = 21
+    Top = 176
+    Width = 25
+    TabOrder = 1
+  end
+  object ValueEdit: TEdit
+    Left = 112
+    Height = 21
+    Top = 208
+    Width = 113
+    TabOrder = 2
+  end
+  object LabelsChk: TCheckBox
+    Left = 8
+    Height = 19
+    Top = 248
+    Width = 207
+    Caption = 'The first record contains variable labels.'
+    TabOrder = 6
+  end
+  object FmtGrid: TStringGrid
+    Left = 8
+    Height = 121
+    Top = 296
+    Width = 409
+    ColCount = 6
+    FixedCols = 0
+    FixedRows = 0
+    GridLineWidth = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColMoving, goEditing, goTabs]
+    TabOrder = 7
+  end
+  object CancelBtn: TButton
+    Left = 160
+    Height = 25
+    Top = 448
+    Width = 57
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 8
+  end
+  object OKBtn: TButton
+    Left = 360
+    Height = 25
+    Top = 448
+    Width = 57
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = OKBtnClick
+    TabOrder = 9
+  end
+  object ResetBtn: TButton
+    Left = 224
+    Height = 25
+    Top = 448
+    Width = 57
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 10
+  end
+  object ExtractBtn: TButton
+    Left = 288
+    Height = 25
+    Top = 448
+    Width = 65
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Extract'
+    OnClick = ExtractBtnClick
+    TabOrder = 11
+  end
+  object FileSelBtn: TButton
+    Left = 8
+    Height = 25
+    Top = 120
+    Width = 201
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Press to Select a Huge File for Extraction'
+    OnClick = FileSelBtnClick
+    TabOrder = 12
+  end
+  object NoGotEdit: TEdit
+    Left = 368
+    Height = 21
+    Top = 424
+    Width = 49
+    TabOrder = 13
+    Text = 'NoGotEdit'
+  end
+  object RecdReadEdit: TEdit
+    Left = 104
+    Height = 21
+    Top = 424
+    Width = 65
+    TabOrder = 14
+    Text = 'RecdReadEdit'
+  end
+  object TypeBox: TComboBox
+    Left = 208
+    Height = 21
+    Top = 272
+    Width = 57
+    ItemHeight = 13
+    Items.Strings = (
+      '(I)nteger'
+      '(F)loating point'
+      '(S)tring'
+      '(M)oney'
+      '(D)ate'
+    )
+    OnChange = TypeBoxChange
+    TabOrder = 15
+    Text = 'Type'
+  end
+  object OpenDialog1: TOpenDialog
+    FilterIndex = 0
+    left = 240
+    top = 192
+  end
+end

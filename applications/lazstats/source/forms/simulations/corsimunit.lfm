@@ -1,0 +1,223 @@
+object CorSimFrm: TCorSimFrm
+  Left = 542
+  Height = 447
+  Top = 126
+  Width = 857
+  Caption = 'Correlation Simulation'
+  ClientHeight = 447
+  ClientWidth = 857
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Image1: TImage
+    Left = 8
+    Height = 389
+    Top = 8
+    Width = 841
+    Align = alClient
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+  end
+  object Panel1: TPanel
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 26
+    Top = 413
+    Width = 841
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 26
+    ClientWidth = 841
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = MeanX
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 15
+      Top = 6
+      Width = 43
+      Caption = 'Mean X:'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = MeanX
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label1
+      Left = 108
+      Height = 15
+      Top = 6
+      Width = 43
+      BorderSpacing.Left = 16
+      Caption = 'Mean Y:'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = MeanY
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label2
+      Left = 221
+      Height = 15
+      Top = 6
+      Width = 50
+      BorderSpacing.Left = 16
+      Caption = 'Std.Dev.X'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = SDX
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label3
+      Left = 345
+      Height = 15
+      Top = 6
+      Width = 50
+      BorderSpacing.Left = 16
+      Caption = 'Std.Dev.Y'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = SDY
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label4
+      Left = 450
+      Height = 15
+      Top = 6
+      Width = 36
+      BorderSpacing.Left = 8
+      Caption = 'Cor.XY'
+      ParentColor = False
+    end
+    object Label6: TLabel
+      AnchorSideLeft.Control = Corr
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label5
+      AnchorSideTop.Side = asrCenter
+      Left = 554
+      Height = 15
+      Top = 6
+      Width = 35
+      BorderSpacing.Left = 16
+      Caption = 'N Size:'
+      ParentColor = False
+    end
+    object MeanX: TEdit
+      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 49
+      Height = 23
+      Top = 2
+      Width = 43
+      BorderSpacing.Left = 6
+      OnKeyPress = MeanXKeyPress
+      TabOrder = 0
+      Text = 'MeanX'
+    end
+    object MeanY: TEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = MeanX
+      Left = 159
+      Height = 23
+      Top = 2
+      Width = 46
+      BorderSpacing.Left = 8
+      OnKeyPress = MeanYKeyPress
+      TabOrder = 1
+      Text = 'MeanY'
+    end
+    object SDX: TEdit
+      AnchorSideLeft.Control = Label3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = MeanY
+      Left = 279
+      Height = 23
+      Top = 2
+      Width = 50
+      BorderSpacing.Left = 8
+      OnKeyPress = SDXKeyPress
+      TabOrder = 2
+      Text = 'SDX'
+    end
+    object SDY: TEdit
+      AnchorSideLeft.Control = Label4
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SDX
+      Left = 403
+      Height = 23
+      Top = 2
+      Width = 39
+      BorderSpacing.Left = 8
+      OnKeyPress = SDYKeyPress
+      TabOrder = 3
+      Text = 'SDY'
+    end
+    object Corr: TEdit
+      AnchorSideLeft.Control = Label5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SDY
+      Left = 494
+      Height = 23
+      Top = 2
+      Width = 44
+      BorderSpacing.Left = 8
+      OnKeyPress = CorrKeyPress
+      TabOrder = 4
+      Text = 'Corr'
+    end
+    object ComputeBtn: TButton
+      AnchorSideTop.Control = ReturnBtn
+      AnchorSideRight.Control = ReturnBtn
+      Left = 702
+      Height = 26
+      Top = 0
+      Width = 65
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 5
+    end
+    object ReturnBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 775
+      Height = 26
+      Top = 0
+      Width = 66
+      Anchors = [akTop, akRight]
+      Caption = 'Return'
+      ModalResult = 1
+      TabOrder = 6
+    end
+    object Nobs: TEdit
+      AnchorSideLeft.Control = Label6
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Corr
+      Left = 597
+      Height = 23
+      Top = 2
+      Width = 40
+      BorderSpacing.Left = 8
+      OnKeyPress = NobsKeyPress
+      TabOrder = 7
+      Text = 'Nobs'
+    end
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 8
+    Top = 397
+    Width = 857
+    Align = alBottom
+    Shape = bsBottomLine
+  end
+end

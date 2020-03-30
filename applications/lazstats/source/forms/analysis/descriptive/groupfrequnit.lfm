@@ -1,0 +1,219 @@
+object GroupFreqForm: TGroupFreqForm
+  Left = 513
+  Height = 341
+  Top = 233
+  Width = 444
+  AutoSize = True
+  Caption = 'Group Frequency Analysis'
+  ClientHeight = 341
+  ClientWidth = 444
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 84
+    Width = 100
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    Caption = 'Available Variables:'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = GrpInBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideBottom.Control = GrpVarEdit
+    Left = 237
+    Height = 15
+    Top = 109
+    Width = 77
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 12
+    BorderSpacing.Bottom = 2
+    Caption = 'Group Variable'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GrpInBtn
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 191
+    Top = 101
+    Width = 181
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object GrpInBtn: TBitBtn
+    AnchorSideLeft.Control = PlotOptionsBox
+    AnchorSideTop.Control = VarList
+    Left = 197
+    Height = 28
+    Top = 101
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = GrpInBtnClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object GrpOutBtn: TBitBtn
+    AnchorSideLeft.Control = GrpInBtn
+    AnchorSideTop.Control = GrpInBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 197
+    Height = 28
+    Top = 133
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = GrpOutBtnClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object GrpVarEdit: TEdit
+    AnchorSideLeft.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GrpOutBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 237
+    Height = 23
+    Top = 126
+    Width = 199
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 3
+    Text = 'GrpVarEdit'
+  end
+  object ResetBtn: TButton
+    AnchorSideTop.Control = CloseBtn
+    AnchorSideRight.Control = ComputeBtn
+    Left = 235
+    Height = 25
+    Top = 308
+    Width = 54
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 5
+  end
+  object ComputeBtn: TButton
+    AnchorSideTop.Control = CloseBtn
+    AnchorSideRight.Control = CloseBtn
+    Left = 297
+    Height = 25
+    Top = 308
+    Width = 76
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 6
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 381
+    Height = 25
+    Top = 308
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 7
+  end
+  object PlotOptionsBox: TRadioGroup
+    AnchorSideLeft.Control = GrpInBtn
+    AnchorSideTop.Control = GrpOutBtn
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 197
+    Height = 114
+    Top = 177
+    Width = 239
+    Anchors = [akTop, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    Caption = 'Plot Options:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 94
+    ClientWidth = 235
+    Items.Strings = (
+      'Plot means using 2D Horizontal Bars'
+      'Plot means using 3D Horizontal Bars'
+      'Plot means using 2D Vertical Bars'
+      'Plot means using 3D Vertical Bars'
+    )
+    TabOrder = 4
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 292
+    Width = 444
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 60
+    Top = 8
+    Width = 428
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'This procedure plots the frequency of cases in each of the groups in a group variable.  The group variable should be defined as an integer variable.'#13#10#13#10'Select the variable and type of plot and click the Compute button for the results.'
+    ParentColor = False
+    WordWrap = True
+  end
+end

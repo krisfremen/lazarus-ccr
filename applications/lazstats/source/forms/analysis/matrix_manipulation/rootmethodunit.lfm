@@ -1,0 +1,103 @@
+object RootMethodFrm: TRootMethodFrm
+  Left = 588
+  Height = 205
+  Top = 306
+  Width = 524
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Method to Obtain Roots'
+  ClientHeight = 205
+  ClientWidth = 524
+  OnActivate = FormActivate
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object MethodGroup: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 143
+    Top = 8
+    Width = 509
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'METHOD:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 4
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 123
+    ClientWidth = 505
+    ItemIndex = 0
+    Items.Strings = (
+      'Use Veldman''s SEVS routine - Symetric matrix, unnormalized vectors, positive roots'
+      'Use Veldman''s AEVS routine - Nonsymetric matrix, unnormalized vectors, positive roots'
+      'Use Cooley-Lohnes ITER routine - Symetric matrix, normalized vectors, positive roots'
+      'Use Numerical Recipes routine - Symetric matrix, normalized vectors, positive roots'
+      'Use IMSL routine - Symetric Matrix, normalized vectors'
+    )
+    TabOrder = 0
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Bevel2
+    Left = 192
+    Height = 25
+    Top = 171
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 12
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object ReturnBtn: TButton
+    AnchorSideLeft.Control = Bevel2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 270
+    Height = 25
+    Top = 171
+    Width = 61
+    AutoSize = True
+    BorderSpacing.Top = 12
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = ReturnBtnClick
+    TabOrder = 2
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = MethodGroup
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 8
+    Top = 151
+    Width = 524
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 254
+    Height = 27
+    Top = 159
+    Width = 16
+    Shape = bsSpacer
+  end
+end

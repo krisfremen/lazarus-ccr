@@ -1,0 +1,179 @@
+object OutputFrm: TOutputFrm
+  Left = 396
+  Height = 535
+  Top = 159
+  Width = 754
+  Caption = 'Output'
+  ClientHeight = 535
+  ClientWidth = 754
+  Font.CharSet = ANSI_CHARSET
+  Font.Color = clBlack
+  Font.Pitch = fpFixed
+  Font.Quality = fqDraft
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 41
+    Top = 0
+    Width = 754
+    Align = alTop
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 754
+    TabOrder = 0
+    object SaveFileBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 8
+      Height = 25
+      Top = 8
+      Width = 50
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Save'
+      OnClick = SaveFileBtnClick
+      TabOrder = 0
+    end
+    object OpenFileBtn: TButton
+      AnchorSideLeft.Control = SaveFileBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SaveFileBtn
+      Left = 74
+      Height = 25
+      Top = 8
+      Width = 76
+      AutoSize = True
+      BorderSpacing.Left = 16
+      Caption = 'Open File'
+      OnClick = OpenFileBtnClick
+      TabOrder = 1
+    end
+    object FontBtn: TButton
+      AnchorSideLeft.Control = OpenFileBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SaveFileBtn
+      Left = 174
+      Height = 25
+      Top = 8
+      Width = 50
+      AutoSize = True
+      BorderSpacing.Left = 24
+      Caption = 'Font'
+      OnClick = FontBtnClick
+      TabOrder = 2
+    end
+    object CutBtn: TButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SaveFileBtn
+      AnchorSideRight.Control = CopyBtn
+      Left = 297
+      Height = 25
+      Top = 8
+      Width = 45
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Cut'
+      OnClick = CutBtnClick
+      TabOrder = 3
+    end
+    object CopyBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = SaveFileBtn
+      Left = 350
+      Height = 25
+      Top = 8
+      Width = 54
+      AutoSize = True
+      Caption = 'Copy'
+      OnClick = CopyBtnClick
+      TabOrder = 4
+    end
+    object PasteBtn: TButton
+      AnchorSideLeft.Control = CopyBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SaveFileBtn
+      Left = 412
+      Height = 25
+      Top = 8
+      Width = 54
+      AutoSize = True
+      BorderSpacing.Left = 8
+      Caption = 'Paste'
+      OnClick = PasteBtnClick
+      TabOrder = 5
+    end
+    object PrintBtn: TButton
+      AnchorSideTop.Control = SaveFileBtn
+      AnchorSideRight.Control = ReturnBtn
+      Left = 626
+      Height = 25
+      Top = 8
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Print'
+      OnClick = PrintBtnClick
+      TabOrder = 6
+    end
+    object ReturnBtn: TButton
+      AnchorSideTop.Control = SaveFileBtn
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 685
+      Height = 25
+      Top = 8
+      Width = 61
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      Caption = 'Return'
+      ModalResult = 1
+      TabOrder = 7
+    end
+  end
+  object RichEdit: TMemo
+    Left = 8
+    Height = 486
+    Top = 41
+    Width = 738
+    Align = alClient
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    Font.Quality = fqDraft
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 1
+  end
+  object OpenDialog: TOpenDialog
+    left = 112
+    top = 72
+  end
+  object SaveDialog: TSaveDialog
+    left = 24
+    top = 72
+  end
+  object FontDialog: TFontDialog
+    MinFontSize = 0
+    MaxFontSize = 0
+    left = 192
+    top = 72
+  end
+  object PrintDialog: TPrintDialog
+    left = 640
+    top = 72
+  end
+end

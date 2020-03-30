@@ -1,0 +1,117 @@
+object LicenseFrm: TLicenseFrm
+  Left = 138
+  Height = 347
+  Top = 105
+  Width = 637
+  Caption = 'License For Use'
+  ClientHeight = 347
+  ClientWidth = 637
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Memo1: TMemo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 289
+    Top = 8
+    Width = 621
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    Lines.Strings = (
+      ' ***************************************************************************'
+      ' *                                                                         *'
+      ' *   This source is free software; you can redistribute it and/or modify   *'
+      ' *   it under the terms of the GNU General Public License as published by  *'
+      ' *   the Free Software Foundation; either version 2 of the License, or     *'
+      ' *   (at your option) any later version.                                   *'
+      ' *                                                                         *'
+      ' *   This code is distributed in the hope that it will be useful, but      *'
+      ' *   WITHOUT ANY WARRANTY; without even the implied warranty of            *'
+      ' *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *'
+      ' *   General Public License for more details.                              *'
+      ' *                                                                         *'
+      ' *   A copy of the GNU General Public License is available on the World    *'
+      ' *   Wide Web at <http://www.gnu.org/copyleft/gpl.html>. You can also      *'
+      ' *   obtain it by writing to the Free Software Foundation,                 *'
+      ' *   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.        *'
+      ' *                                                                         *'
+      ' ***************************************************************************'
+      ''
+      'Use at your own risk.  Compare results to other statistics programs'
+      'or text book examples for each procedure.'
+      'Click on Accept or Reject below.'
+    )
+    ParentFont = False
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    Left = 8
+    Height = 26
+    Top = 313
+    Width = 621
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 26
+    ClientWidth = 621
+    TabOrder = 1
+    object AcceptBtn: TButton
+      AnchorSideRight.Control = Bevel2
+      Left = 239
+      Height = 25
+      Top = 0
+      Width = 63
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      Caption = 'Accept'
+      ModalResult = 1
+      TabOrder = 0
+    end
+    object RejectBtn: TButton
+      AnchorSideLeft.Control = Bevel2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 318
+      Height = 25
+      Top = 1
+      Width = 58
+      AutoSize = True
+      Caption = 'Reject'
+      ModalResult = 2
+      TabOrder = 1
+    end
+    object Bevel2: TBevel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      Left = 302
+      Height = 19
+      Top = 4
+      Width = 16
+      Shape = bsSpacer
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Panel1
+    Left = 0
+    Height = 8
+    Top = 297
+    Width = 637
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

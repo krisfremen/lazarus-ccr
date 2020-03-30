@@ -1,0 +1,152 @@
+object ColInsertFrm: TColInsertFrm
+  Left = 710
+  Height = 149
+  Top = 385
+  Width = 291
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Column Insert'
+  ClientHeight = 149
+  ClientWidth = 291
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideTop.Control = GridNoEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = GridNoEdit
+    Left = 49
+    Height = 15
+    Top = 12
+    Width = 165
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 24
+    BorderSpacing.Right = 8
+    Caption = 'Insert a column in which grid ? '
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideTop.Control = BeforeColEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = BeforeColEdit
+    Left = 93
+    Height = 15
+    Top = 43
+    Width = 121
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Insert Before Column : '
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideTop.Control = AfterColEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = AfterColEdit
+    Left = 101
+    Height = 15
+    Top = 74
+    Width = 113
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Insert After Column : '
+    ParentColor = False
+  end
+  object GridNoEdit: TEdit
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 222
+    Height = 23
+    Top = 8
+    Width = 45
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 24
+    TabOrder = 0
+    Text = 'GridNoEdit'
+  end
+  object BeforeColEdit: TEdit
+    AnchorSideLeft.Control = GridNoEdit
+    AnchorSideTop.Control = GridNoEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GridNoEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 222
+    Height = 23
+    Top = 39
+    Width = 45
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    TabOrder = 1
+    Text = 'Edit1'
+  end
+  object AfterColEdit: TEdit
+    AnchorSideLeft.Control = GridNoEdit
+    AnchorSideTop.Control = BeforeColEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GridNoEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 222
+    Height = 23
+    Top = 70
+    Width = 45
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 144
+    Height = 25
+    Top = 113
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 218
+    Height = 25
+    Top = 113
+    Width = 61
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 4
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AfterColEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 8
+    Top = 97
+    Width = 291
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Shape = bsBottomLine
+  end
+end

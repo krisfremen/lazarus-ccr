@@ -1,0 +1,540 @@
+object LifeTableForm: TLifeTableForm
+  Left = 496
+  Height = 590
+  Top = 122
+  Width = 818
+  AutoSize = True
+  Caption = 'Life Table'
+  ClientHeight = 590
+  ClientWidth = 818
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Grid: TStringGrid
+    Left = 379
+    Height = 420
+    Top = 121
+    Width = 500
+    Align = alClient
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    ColCount = 13
+    Constraints.MinWidth = 500
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goThumbTracking, goSmoothScroll]
+    RowCount = 2
+    TabOrder = 2
+  end
+  object Panel1: TPanel
+    Left = 8
+    Height = 420
+    Top = 121
+    Width = 363
+    Align = alLeft
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 2
+    BevelOuter = bvNone
+    ClientHeight = 420
+    ClientWidth = 363
+    Constraints.MinWidth = 300
+    TabOrder = 1
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 49
+      Caption = 'Variables:'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = ObsStartInBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 403
+      Top = 17
+      Width = 159
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object ObsStartInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 167
+      Height = 28
+      Top = 19
+      Width = 28
+      BorderSpacing.Top = 2
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = ObsStartInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object ObsStartOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ObsStartInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 51
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = ObsStartOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = ObsStartInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = ObsStartEdit
+      Left = 203
+      Height = 15
+      Top = 27
+      Width = 91
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Observation Start'
+      ParentColor = False
+    end
+    object ObsStartEdit: TEdit
+      AnchorSideLeft.Control = ObsStartInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ObsStartOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 203
+      Height = 23
+      Top = 44
+      Width = 160
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      Constraints.MinWidth = 150
+      ReadOnly = True
+      TabOrder = 3
+      Text = 'ObsStartEdit'
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = ObsEndEdit
+      AnchorSideBottom.Control = ObsEndEdit
+      Left = 203
+      Height = 15
+      Top = 111
+      Width = 90
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Observation End:'
+      ParentColor = False
+    end
+    object ObsEndEdit: TEdit
+      AnchorSideLeft.Control = ObsEndInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ObsEndOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 203
+      Height = 23
+      Top = 128
+      Width = 160
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 6
+      Text = 'ObsEndEdit'
+    end
+    object ObsEndInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ObsStartOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 103
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = ObsEndInBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object ObsEndOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ObsEndInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 135
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = ObsEndOutBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = NoAliveEdit
+      AnchorSideBottom.Control = NoAliveEdit
+      Left = 203
+      Height = 15
+      Top = 195
+      Width = 76
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Number Alive:'
+      ParentColor = False
+    end
+    object NoAliveEdit: TEdit
+      AnchorSideLeft.Control = AliveInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = AliveOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 203
+      Height = 23
+      Top = 212
+      Width = 160
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 9
+      Text = 'NoAliveEdit'
+    end
+    object AliveInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ObsEndOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 187
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = AliveInBtnClick
+      Spacing = 0
+      TabOrder = 7
+    end
+    object AliveOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = AliveInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 219
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = AliveOutBtnClick
+      Spacing = 0
+      TabOrder = 8
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = NoDiedEdit
+      AnchorSideBottom.Control = NoDiedEdit
+      Left = 203
+      Height = 15
+      Top = 279
+      Width = 74
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Number Died:'
+      ParentColor = False
+    end
+    object NoDiedEdit: TEdit
+      AnchorSideLeft.Control = NoDiedOutBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = NoDiedOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 203
+      Height = 23
+      Top = 296
+      Width = 160
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 12
+      Text = 'NoDiedEdit'
+    end
+    object NoDiedInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = AliveOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 271
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = NoDiedInBtnClick
+      Spacing = 0
+      TabOrder = 10
+    end
+    object NoDiedOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = NoDiedInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 303
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = NoDiedOutBtnClick
+      Spacing = 0
+      TabOrder = 11
+    end
+    object Label6: TLabel
+      AnchorSideLeft.Control = NoCensoredEdit
+      AnchorSideBottom.Control = NoCensoredEdit
+      Left = 203
+      Height = 15
+      Top = 363
+      Width = 100
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Number Censored:'
+      ParentColor = False
+    end
+    object NoCensoredEdit: TEdit
+      AnchorSideLeft.Control = NoCensoredOutBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = NoCensoredOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 203
+      Height = 23
+      Top = 380
+      Width = 160
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 15
+      Text = 'NoCensoredEdit'
+    end
+    object NoCensoredInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = NoDiedOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Top = 355
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = NoCensoredInBtnClick
+      Spacing = 0
+      TabOrder = 13
+    end
+    object NoCensoredOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = NoCensoredInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 28
+      Hint = '0'
+      Top = 387
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = NoCensoredOutBtnClick
+      Spacing = 0
+      TabOrder = 14
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 41
+    Top = 549
+    Width = 818
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 818
+    TabOrder = 3
+    object ResetBtn: TButton
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = ComputeBtn
+      AnchorSideBottom.Side = asrCenter
+      Left = 609
+      Height = 25
+      Top = 8
+      Width = 54
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 1
+    end
+    object ComputeBtn: TButton
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = CloseBtn
+      AnchorSideBottom.Side = asrCenter
+      Left = 671
+      Height = 25
+      Top = 8
+      Width = 76
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 2
+    end
+    object CloseBtn: TButton
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Side = asrCenter
+      Left = 755
+      Height = 25
+      Top = 8
+      Width = 55
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Close'
+      ModalResult = 11
+      TabOrder = 3
+    end
+    object HelpBtn: TButton
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = ResetBtn
+      Left = 550
+      Height = 25
+      Top = 8
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Help'
+      OnClick = HelpBtnClick
+      TabOrder = 0
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Height = 113
+    Top = 0
+    Width = 818
+    Align = alTop
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 113
+    ClientWidth = 818
+    TabOrder = 0
+    object Memo1: TLabel
+      AnchorSideLeft.Control = Panel3
+      AnchorSideTop.Control = Panel3
+      AnchorSideRight.Side = asrBottom
+      Left = 8
+      Height = 105
+      Top = 8
+      Width = 427
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      Caption = 'Directions:  Your input grid data should consist of five integer column vaiables:'#13#10'1.   The beginning of each observation period (typically 0 for the first observation.'#13#10'2.   The ending of each observation period.'#13#10'3.   The number alive in the observation period.'#13#10'4.   The number that died during the observation period.'#13#10'5.   The number last seen alive during the period that are lost (censored)'#13#10'See the example file "lifetable.laz".'
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label7: TLabel
+      AnchorSideTop.Control = CIEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = CIEdit
+      Left = 576
+      Height = 15
+      Top = 94
+      Width = 188
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Confidence Level for Number Alive:'
+      ParentColor = False
+    end
+    object CIEdit: TEdit
+      AnchorSideRight.Control = Panel3
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Memo1
+      AnchorSideBottom.Side = asrBottom
+      Left = 772
+      Height = 23
+      Top = 90
+      Width = 38
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Right = 8
+      TabOrder = 0
+      Text = '0.95'
+    end
+  end
+  object Splitter1: TSplitter
+    Left = 373
+    Height = 428
+    Top = 113
+    Width = 4
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 8
+    Top = 541
+    Width = 818
+    Align = alBottom
+    Shape = bsBottomLine
+  end
+end

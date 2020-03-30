@@ -1,0 +1,357 @@
+object XvsMultYForm: TXvsMultYForm
+  Left = 288
+  Height = 467
+  Top = 117
+  Width = 452
+  Caption = 'X vs Multiple Y Plot'
+  ClientHeight = 467
+  ClientWidth = 452
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label4: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = PlotTitleEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 332
+    Width = 49
+    BorderSpacing.Left = 8
+    Caption = 'Plot Title:'
+    ParentColor = False
+  end
+  object PlotTitleEdit: TEdit
+    AnchorSideLeft.Control = Label4
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GroupBox1
+    Left = 65
+    Height = 23
+    Top = 328
+    Width = 379
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    TabOrder = 1
+    TextHint = 'Title above the chart'
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Bevel2
+    Left = 8
+    Height = 51
+    Top = 359
+    Width = 336
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Options'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 24
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 31
+    ClientWidth = 332
+    TabOrder = 2
+    object DescChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 6
+      Width = 127
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'Descriptive Statistics'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+    end
+    object LinesBox: TCheckBox
+      AnchorSideTop.Side = asrBottom
+      Left = 163
+      Height = 19
+      Top = 6
+      Width = 157
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      Caption = 'Connect Points with Lines'
+      TabOrder = 1
+    end
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = PlotTitleEdit
+    Left = 8
+    Height = 214
+    Top = 106
+    Width = 436
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 214
+    ClientWidth = 436
+    Constraints.MinHeight = 200
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 49
+      Caption = 'Variables:'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = XInBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 197
+      Top = 17
+      Width = 196
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object XInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 204
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = XInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object XOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = XInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 204
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = XOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object YInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideBottom.Control = Bevel1
+      Left = 204
+      Height = 28
+      Top = 133
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = YInBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object YOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Bevel1
+      AnchorSideTop.Side = asrBottom
+      Left = 204
+      Height = 28
+      Top = 165
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = YOutBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = XEdit
+      AnchorSideBottom.Control = XEdit
+      Left = 240
+      Height = 15
+      Top = 25
+      Width = 54
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'X Variable:'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = YBox
+      AnchorSideBottom.Control = YBox
+      Left = 240
+      Height = 15
+      Top = 95
+      Width = 64
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Y Variable(s)'
+      ParentColor = False
+    end
+    object XEdit: TEdit
+      AnchorSideLeft.Control = XInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = XOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 240
+      Height = 23
+      Top = 42
+      Width = 196
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 3
+      Text = 'XEdit'
+    end
+    object YBox: TListBox
+      AnchorSideLeft.Control = YInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 240
+      Height = 102
+      Top = 112
+      Width = 196
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 6
+    end
+    object Bevel1: TBevel
+      AnchorSideTop.Control = YBox
+      AnchorSideTop.Side = asrCenter
+      Left = 210
+      Height = 4
+      Top = 161
+      Width = 14
+      Shape = bsSpacer
+    end
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 90
+    Top = 8
+    Width = 436
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Directions:  '#13#10'1.   Select the X variable common to all of the Y variables to be selected.'#13#10'2.   Select the Y variables.'#13#10'3.   Enter a label for the plot.'#13#10'4.   Select the options desired.'#13#10'5.   Click the Compute button to obtain results.'
+    ParentColor = False
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 385
+    Height = 25
+    Top = 434
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 3
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 297
+    Height = 25
+    Top = 434
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 4
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 235
+    Height = 25
+    Top = 434
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 5
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 418
+    Width = 452
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

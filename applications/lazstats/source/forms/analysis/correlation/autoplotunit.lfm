@@ -1,0 +1,67 @@
+object AutoPlotFrm: TAutoPlotFrm
+  Left = 480
+  Height = 517
+  Top = 170
+  Width = 743
+  Caption = 'Autocorrelation and partial autocorrelation'
+  ClientHeight = 517
+  ClientWidth = 743
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Image1: TImage
+    Left = 0
+    Height = 476
+    Top = 0
+    Width = 743
+    Align = alClient
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 41
+    Top = 476
+    Width = 743
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 743
+    TabOrder = 0
+    object PrintBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = ReturnBtn
+      Left = 607
+      Height = 25
+      Top = 8
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 12
+      BorderSpacing.Bottom = 8
+      Caption = 'Print'
+      OnClick = PrintBtnClick
+      TabOrder = 0
+    end
+    object ReturnBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 670
+      Height = 25
+      Top = 8
+      Width = 61
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 12
+      BorderSpacing.Bottom = 8
+      Caption = 'Return'
+      ModalResult = 1
+      TabOrder = 1
+    end
+  end
+end

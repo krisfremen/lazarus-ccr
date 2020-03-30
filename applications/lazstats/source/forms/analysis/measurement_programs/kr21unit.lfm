@@ -1,0 +1,234 @@
+object KR21Frm: TKR21Frm
+  Left = 733
+  Height = 227
+  Top = 411
+  Width = 289
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Kuder-Richarson #21'
+  ClientHeight = 227
+  ClientWidth = 289
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CancelBtn
+    Left = 4
+    Height = 25
+    Top = 128
+    Width = 54
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 1
+  end
+  object CancelBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ComputeBtn
+    Left = 66
+    Height = 25
+    Top = 128
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object ComputeBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ReturnBtn
+    Left = 136
+    Height = 25
+    Top = 128
+    Width = 76
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 3
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 220
+    Height = 25
+    Top = 128
+    Width = 61
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 4
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 112
+    Width = 289
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 34
+    Height = 104
+    Top = 8
+    Width = 221
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ClientHeight = 104
+    ClientWidth = 221
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideTop.Control = NoItemsEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = NoItemsEdit
+      Left = 2
+      Height = 15
+      Top = 4
+      Width = 136
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Maximum Score Possible:'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideTop.Control = MeanEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = MeanEdit
+      Left = 15
+      Height = 15
+      Top = 31
+      Width = 123
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Mean of he Test Scores:'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideTop.Control = StdDevEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = StdDevEdit
+      Left = 15
+      Height = 15
+      Top = 58
+      Width = 123
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Std. Dev. of Test Scores:'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideTop.Control = RelEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = RelEdit
+      Left = 0
+      Height = 15
+      Top = 85
+      Width = 138
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'KR#21 Reliability Estimate:'
+      ParentColor = False
+    end
+    object NoItemsEdit: TEdit
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 146
+      Height = 23
+      Top = 0
+      Width = 75
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      TabOrder = 0
+      Text = 'NoItemsEdit'
+    end
+    object MeanEdit: TEdit
+      AnchorSideLeft.Control = NoItemsEdit
+      AnchorSideTop.Control = NoItemsEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 146
+      Height = 23
+      Top = 27
+      Width = 75
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+    object StdDevEdit: TEdit
+      AnchorSideLeft.Control = NoItemsEdit
+      AnchorSideTop.Control = MeanEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 146
+      Height = 23
+      Top = 54
+      Width = 75
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 2
+      Text = 'Edit1'
+    end
+    object RelEdit: TEdit
+      AnchorSideLeft.Control = NoItemsEdit
+      AnchorSideTop.Control = StdDevEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 146
+      Height = 23
+      Top = 81
+      Width = 75
+      Alignment = taRightJustify
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      Font.Style = [fsBold]
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 3
+    end
+  end
+end

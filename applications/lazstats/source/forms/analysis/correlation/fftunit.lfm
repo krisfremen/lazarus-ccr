@@ -1,0 +1,122 @@
+object FFTFrm: TFFTFrm
+  Left = 648
+  Height = 127
+  Top = 346
+  Width = 305
+  BorderStyle = bsDialog
+  Caption = 'Fourier Transform Form'
+  ClientHeight = 127
+  ClientWidth = 305
+  OnActivate = FormActivate
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CancelBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = OKBtn
+    Left = 177
+    Height = 25
+    Top = 93
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object OKBtn: TButton
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 251
+    Height = 25
+    Top = 93
+    Width = 42
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'OK'
+    ModalResult = 1
+    TabOrder = 2
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 30
+    Top = 8
+    Width = 289
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Enter the number of data points to include in the Fourier smoothing.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 66
+    Height = 23
+    Top = 50
+    Width = 172
+    AutoSize = True
+    BorderSpacing.Left = 64
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 64
+    BorderSpacing.Bottom = 4
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 172
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideTop.Control = NptsEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = NptsEdit
+      Left = 0
+      Height = 15
+      Top = 4
+      Width = 100
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Number of points: '
+      ParentColor = False
+    end
+    object NptsEdit: TEdit
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 108
+      Height = 23
+      Top = 0
+      Width = 64
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      TabOrder = 0
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 8
+    Top = 77
+    Width = 305
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+end

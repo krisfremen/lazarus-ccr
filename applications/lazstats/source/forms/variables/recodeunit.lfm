@@ -1,0 +1,382 @@
+object RecodeFrm: TRecodeFrm
+  Left = 690
+  Height = 315
+  Top = 317
+  Width = 459
+  AutoSize = True
+  BorderStyle = bsSingle
+  Caption = 'Variable Value Recoding'
+  ClientHeight = 315
+  ClientWidth = 459
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = varnameedit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 12
+    Width = 79
+    BorderSpacing.Left = 8
+    Caption = 'Variable Name:'
+    ParentColor = False
+  end
+  object varnameedit: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 95
+    Height = 23
+    Top = 8
+    Width = 119
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    TabOrder = 0
+    Text = 'varnameedit'
+  end
+  object TargetList: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = varnameedit
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 72
+    Top = 39
+    Width = 160
+    AutoFill = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Recode Into:'
+    ChildSizing.LeftRightSpacing = 16
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 52
+    ClientWidth = 156
+    Items.Strings = (
+      'The Same Column'
+      'A New Column'
+    )
+    TabOrder = 1
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = TargetList
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = TargetList
+    AnchorSideBottom.Control = TargetList
+    AnchorSideBottom.Side = asrBottom
+    Left = 184
+    Height = 72
+    Top = 39
+    Width = 165
+    Anchors = [akTop, akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    Caption = 'New Value:'
+    ClientHeight = 52
+    ClientWidth = 161
+    TabOrder = 2
+    object ValueBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = GroupBox1
+      Left = 16
+      Height = 19
+      Top = 6
+      Width = 49
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 6
+      Caption = 'Value'
+      TabOrder = 0
+    end
+    object BlankBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = NewValEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 19
+      Top = 27
+      Width = 100
+      BorderSpacing.Left = 16
+      Caption = 'Blank or empty'
+      TabOrder = 1
+    end
+    object NewValEdit: TEdit
+      AnchorSideLeft.Control = ValueBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = ValueBtn
+      AnchorSideTop.Side = asrCenter
+      Left = 73
+      Height = 23
+      Top = 4
+      Width = 80
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      TabOrder = 2
+      Text = 'NewValEdit'
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = TargetList
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBox1
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 180
+    Top = 119
+    Width = 341
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 12
+    Caption = 'Old Value:'
+    ClientHeight = 160
+    ClientWidth = 337
+    TabOrder = 3
+    object Label2: TLabel
+      AnchorSideLeft.Control = RangeFromEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = RangeBtn
+      AnchorSideTop.Side = asrCenter
+      Left = 172
+      Height = 15
+      Top = 54
+      Width = 46
+      BorderSpacing.Left = 6
+      Caption = 'through '
+      ParentColor = False
+    end
+    object OldValBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = GroupBox2
+      Left = 16
+      Height = 19
+      Top = 2
+      Width = 52
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 2
+      Caption = 'Value:'
+      TabOrder = 0
+    end
+    object OldBlnkBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = OldValBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 19
+      Top = 27
+      Width = 54
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 6
+      Caption = 'Blanks'
+      TabOrder = 1
+    end
+    object RangeBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = OldBlnkBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 19
+      Top = 52
+      Width = 88
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 6
+      Caption = 'Value Range:'
+      TabOrder = 2
+    end
+    object LowToBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = RangeBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 19
+      Top = 77
+      Width = 141
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 6
+      Caption = 'Lowest Value through :'
+      TabOrder = 3
+    end
+    object DownToBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = LowToBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 19
+      Top = 102
+      Width = 114
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 6
+      Caption = 'Highest Down To:'
+      TabOrder = 4
+    end
+    object AllButBtn: TRadioButton
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = DownToBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 19
+      Top = 127
+      Width = 112
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 6
+      Caption = 'All Values Except:'
+      TabOrder = 5
+    end
+    object OldValEdit: TEdit
+      AnchorSideTop.Control = OldValBtn
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 87
+      TabOrder = 6
+      Text = 'OldValEdit'
+    end
+    object RangeFromEdit: TEdit
+      AnchorSideLeft.Control = RangeBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = RangeBtn
+      AnchorSideTop.Side = asrCenter
+      Left = 108
+      Height = 23
+      Top = 50
+      Width = 58
+      BorderSpacing.Left = 4
+      TabOrder = 7
+      Text = 'RangeFromEdit'
+    end
+    object RangeToEdit: TEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = RangeBtn
+      AnchorSideTop.Side = asrCenter
+      Left = 224
+      Height = 23
+      Top = 50
+      Width = 65
+      BorderSpacing.Left = 6
+      BorderSpacing.Right = 12
+      TabOrder = 8
+      Text = 'RangeToEdit'
+    end
+    object LowToEdit: TEdit
+      AnchorSideLeft.Control = LowToBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = LowToBtn
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrBottom
+      Left = 161
+      Height = 23
+      Top = 75
+      Width = 69
+      BorderSpacing.Left = 4
+      TabOrder = 9
+      Text = 'LowToEdit'
+    end
+    object HiDownToEdit: TEdit
+      AnchorSideLeft.Control = LowToEdit
+      AnchorSideTop.Control = DownToBtn
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = LowToEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 161
+      Height = 23
+      Top = 100
+      Width = 69
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 10
+      Text = 'HiDownToEdit'
+    end
+    object AllButEdit: TEdit
+      AnchorSideLeft.Control = LowToEdit
+      AnchorSideTop.Control = AllButBtn
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = LowToEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 161
+      Height = 23
+      Top = 125
+      Width = 69
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Bottom = 12
+      TabOrder = 11
+      Text = 'AllButEdit'
+    end
+  end
+  object ResetBtn: TButton
+    AnchorSideLeft.Control = ReturnBtn
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CancelBtn
+    Left = 365
+    Height = 25
+    Top = 163
+    Width = 73
+    Anchors = [akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Bottom = 12
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 4
+  end
+  object CancelBtn: TButton
+    AnchorSideLeft.Control = ReturnBtn
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ApplyBtn
+    Left = 365
+    Height = 25
+    Top = 200
+    Width = 73
+    Anchors = [akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Bottom = 12
+    Caption = ' Cancel '
+    ModalResult = 2
+    TabOrder = 5
+  end
+  object ApplyBtn: TButton
+    AnchorSideLeft.Control = ReturnBtn
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 365
+    Height = 25
+    Top = 237
+    Width = 73
+    Anchors = [akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Bottom = 12
+    Caption = 'Apply'
+    OnClick = ApplyBtnClick
+    TabOrder = 6
+  end
+  object ReturnBtn: TButton
+    AnchorSideLeft.Control = GroupBox2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GroupBox2
+    AnchorSideBottom.Side = asrBottom
+    Left = 365
+    Height = 25
+    Top = 274
+    Width = 73
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 12
+    Caption = '  Return  '
+    ModalResult = 1
+    TabOrder = 7
+  end
+end

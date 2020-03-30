@@ -1,0 +1,285 @@
+object SimultFrm: TSimultFrm
+  Left = 872
+  Height = 447
+  Top = 291
+  Width = 437
+  AutoSize = True
+  Caption = 'Simultaneous Multiple Regression'
+  ClientHeight = 447
+  ClientWidth = 437
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Available Variables'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = ListBox1
+    AnchorSideTop.Control = Owner
+    Left = 249
+    Height = 15
+    Top = 8
+    Width = 127
+    BorderSpacing.Top = 8
+    Caption = 'Variables to be Analyzed'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = AllBtn
+    AnchorSideBottom.Control = GroupBox1
+    Left = 8
+    Height = 234
+    Top = 25
+    Width = 179
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Constraints.MinHeight = 220
+    ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 204
+    Height = 28
+    Top = 25
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = InBtnClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 204
+    Height = 28
+    Top = 65
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = OutBtnClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object AllBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 195
+    Height = 25
+    Top = 112
+    Width = 46
+    AutoSize = True
+    Caption = 'ALL'
+    OnClick = AllBtnClick
+    TabOrder = 3
+  end
+  object ListBox1: TListBox
+    AnchorSideLeft.Control = AllBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GroupBox1
+    Left = 249
+    Height = 235
+    Top = 24
+    Width = 180
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 4
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 123
+    Top = 267
+    Width = 417
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Options'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.HorizontalSpacing = 16
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 103
+    ClientWidth = 413
+    TabOrder = 5
+    object MatInChkBox: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 0
+      Width = 175
+      Caption = 'Get Data From a Matrix File'
+      TabOrder = 0
+    end
+    object MatSaveChkBox: TCheckBox
+      Left = 203
+      Height = 19
+      Top = 0
+      Width = 198
+      Caption = 'Save Correlation Matrix'
+      TabOrder = 1
+    end
+    object CPChkBox: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 21
+      Width = 175
+      Caption = 'Show Cross-Products Matrix'
+      TabOrder = 2
+    end
+    object CovChkBox: TCheckBox
+      Left = 203
+      Height = 19
+      Top = 21
+      Width = 198
+      Caption = 'Show Variance-Covariance Matrix'
+      TabOrder = 3
+    end
+    object CorrsChkBox: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 42
+      Width = 175
+      Caption = 'Show Intercorrelations Matrix'
+      TabOrder = 4
+    end
+    object MeansChkBox: TCheckBox
+      Left = 203
+      Height = 19
+      Top = 42
+      Width = 198
+      Caption = 'Show Means'
+      TabOrder = 5
+    end
+    object VarChkBox: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 63
+      Width = 175
+      Caption = 'Show Variances'
+      TabOrder = 6
+    end
+    object SDChkBox: TCheckBox
+      Left = 203
+      Height = 19
+      Top = 63
+      Width = 198
+      Caption = 'Show Standard Deviations'
+      TabOrder = 7
+    end
+    object InvMatChkBox: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 84
+      Width = 175
+      Caption = 'Show Inverse Matrix'
+      TabOrder = 8
+    end
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 228
+    Height = 25
+    Top = 414
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 6
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 290
+    Height = 25
+    Top = 414
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 7
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 374
+    Height = 25
+    Top = 414
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 8
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 398
+    Width = 437
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object OpenDialog1: TOpenDialog
+    left = 88
+    top = 96
+  end
+  object SaveDialog1: TSaveDialog
+    left = 88
+    top = 160
+  end
+end

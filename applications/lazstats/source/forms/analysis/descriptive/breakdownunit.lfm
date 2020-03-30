@@ -1,0 +1,305 @@
+object BreakDownFrm: TBreakDownFrm
+  Left = 400
+  Height = 367
+  Top = 248
+  Width = 428
+  AutoSize = True
+  Caption = 'Breakdown'
+  ClientHeight = 367
+  ClientWidth = 428
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CheckGroup1: TCheckGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 51
+    Top = 267
+    Width = 140
+    Anchors = [akLeft, akBottom]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Option'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 31
+    ClientWidth = 136
+    Items.Strings = (
+      'One Way ANOVA'
+    )
+    TabOrder = 1
+    Data = {
+      0100000002
+    }
+  end
+  object Panel2: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CheckGroup1
+    Left = 8
+    Height = 251
+    Top = 8
+    Width = 412
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 251
+    ClientWidth = 412
+    Constraints.MinHeight = 200
+    TabOrder = 0
+    object AvailLabel: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel2
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 97
+      Caption = 'Available Variables'
+      ParentColor = False
+    end
+    object AnalLabel: TLabel
+      AnchorSideLeft.Control = SelList
+      AnchorSideTop.Control = Panel2
+      Left = 228
+      Height = 15
+      Top = 0
+      Width = 104
+      Caption = 'Variables to Analyze'
+      ParentColor = False
+    end
+    object SelLabel: TLabel
+      AnchorSideLeft.Control = SelList
+      AnchorSideBottom.Control = DepVar
+      Left = 228
+      Height = 15
+      Top = 199
+      Width = 153
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Selected Continuous Variable'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = AvailLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = InBtn
+      AnchorSideBottom.Control = Panel2
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 234
+      Top = 17
+      Width = 184
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object SelList: TListBox
+      AnchorSideLeft.Control = InBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = AnalLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = SelVarInBtn
+      Left = 228
+      Height = 166
+      Top = 17
+      Width = 184
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      BorderSpacing.Bottom = 8
+      ItemHeight = 0
+      OnSelectionChange = SelListSelectionChange
+      TabOrder = 3
+    end
+    object DepVar: TEdit
+      AnchorSideLeft.Control = SelList
+      AnchorSideTop.Control = SelLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = SelList
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = SelVarOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 228
+      Height = 23
+      Top = 216
+      Width = 184
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 6
+      Text = 'DepVar'
+    end
+    object InBtn: TBitBtn
+      AnchorSideLeft.Control = Panel2
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 192
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = InBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object OutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel2
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = InBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 192
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = OutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object SelVarInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel2
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideBottom.Control = SelVarOutBtn
+      Left = 192
+      Height = 28
+      Top = 191
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = SelVarInBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object SelVarOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel2
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideBottom.Control = VarList
+      AnchorSideBottom.Side = asrBottom
+      Left = 192
+      Height = 28
+      Top = 223
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = SelVarOutBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 361
+    Height = 25
+    Top = 334
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 4
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 215
+    Height = 25
+    Top = 334
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object HelpBtn: TButton
+    Tag = 109
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 156
+    Height = 25
+    Top = 334
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 2
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 318
+    Width = 428
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 277
+    Height = 25
+    Top = 334
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 5
+  end
+end

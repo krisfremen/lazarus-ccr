@@ -1,0 +1,435 @@
+object TwoWayLogLinFrm: TTwoWayLogLinFrm
+  Left = 494
+  Height = 352
+  Top = 237
+  Width = 425
+  AutoSize = True
+  Caption = 'Log Linear Analysis of a 2x2 Table'
+  ClientHeight = 352
+  ClientWidth = 425
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object FileFromGrp: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 51
+    Top = 8
+    Width = 354
+    AutoFill = False
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Enter Data From:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 16
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 31
+    ClientWidth = 350
+    Columns = 2
+    Items.Strings = (
+      'File Data in the Main Grid'
+      'Data Entered on this Form'
+    )
+    OnClick = FileFromGrpClick
+    TabOrder = 0
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 216
+    Height = 25
+    Top = 319
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 278
+    Height = 25
+    Top = 319
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 4
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 362
+    Height = 25
+    Top = 319
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
+  end
+  object HelpBtn: TButton
+    Tag = 154
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 157
+    Height = 25
+    Top = 319
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 2
+  end
+  object Notebook1: TNotebook
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = FileFromGrp
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 236
+    Top = 67
+    Width = 409
+    PageIndex = 0
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    TabOrder = 1
+    object Page1: TPage
+      object Label1: TLabel
+        AnchorSideLeft.Control = RowVarEdit
+        AnchorSideBottom.Control = RowVarEdit
+        Left = 226
+        Height = 15
+        Top = 16
+        Width = 67
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Row Variable'
+        ParentColor = False
+      end
+      object Label2: TLabel
+        AnchorSideLeft.Control = ColVarEdit
+        AnchorSideBottom.Control = ColVarEdit
+        Left = 226
+        Height = 15
+        Top = 90
+        Width = 87
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Column Variable'
+        ParentColor = False
+      end
+      object Label3: TLabel
+        AnchorSideLeft.Control = FreqVarEdit
+        AnchorSideBottom.Control = FreqVarEdit
+        Left = 226
+        Height = 15
+        Top = 176
+        Width = 99
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Frequency Variable'
+        ParentColor = False
+      end
+      object VarList: TListBox
+        AnchorSideLeft.Control = Page1
+        AnchorSideTop.Control = Page1
+        AnchorSideRight.Control = RowInBtn
+        AnchorSideBottom.Control = Page1
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 236
+        Top = 0
+        Width = 182
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Right = 8
+        ItemHeight = 0
+        OnSelectionChange = VarListSelectionChange
+        TabOrder = 0
+      end
+      object RowInBtn: TBitBtn
+        AnchorSideLeft.Control = Page1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = VarList
+        Left = 190
+        Height = 28
+        Top = 8
+        Width = 28
+        BorderSpacing.Top = 8
+        Images = MainDataModule.ImageList
+        ImageIndex = 1
+        OnClick = RowInBtnClick
+        Spacing = 0
+        TabOrder = 1
+      end
+      object RowOutBtn: TBitBtn
+        AnchorSideLeft.Control = RowInBtn
+        AnchorSideTop.Control = RowInBtn
+        AnchorSideTop.Side = asrBottom
+        Left = 190
+        Height = 28
+        Top = 40
+        Width = 28
+        BorderSpacing.Top = 4
+        Enabled = False
+        Images = MainDataModule.ImageList
+        ImageIndex = 0
+        OnClick = RowOutBtnClick
+        Spacing = 0
+        TabOrder = 2
+      end
+      object ColInBtn: TBitBtn
+        AnchorSideLeft.Control = Page1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Label2
+        AnchorSideBottom.Control = ColVarEdit
+        AnchorSideBottom.Side = asrBottom
+        Left = 190
+        Height = 28
+        Top = 90
+        Width = 28
+        Images = MainDataModule.ImageList
+        ImageIndex = 1
+        OnClick = ColInBtnClick
+        Spacing = 0
+        TabOrder = 4
+      end
+      object ColOutBtn: TBitBtn
+        AnchorSideLeft.Control = ColInBtn
+        AnchorSideTop.Control = ColInBtn
+        AnchorSideTop.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 190
+        Height = 28
+        Top = 122
+        Width = 28
+        BorderSpacing.Top = 4
+        Enabled = False
+        Images = MainDataModule.ImageList
+        ImageIndex = 0
+        OnClick = ColOutBtnClick
+        Spacing = 0
+        TabOrder = 5
+      end
+      object FreqInBtn: TBitBtn
+        AnchorSideLeft.Control = Page1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideBottom.Control = FreqOutBtn
+        Left = 190
+        Height = 28
+        Top = 168
+        Width = 28
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 4
+        Images = MainDataModule.ImageList
+        ImageIndex = 1
+        OnClick = FreqInBtnClick
+        Spacing = 0
+        TabOrder = 7
+      end
+      object FreqOutBtn: TBitBtn
+        AnchorSideLeft.Control = FreqInBtn
+        AnchorSideBottom.Control = VarList
+        AnchorSideBottom.Side = asrBottom
+        Left = 190
+        Height = 28
+        Top = 200
+        Width = 28
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 8
+        Enabled = False
+        Images = MainDataModule.ImageList
+        ImageIndex = 0
+        OnClick = FreqOutBtnClick
+        Spacing = 0
+        TabOrder = 8
+      end
+      object RowVarEdit: TEdit
+        AnchorSideLeft.Control = RowInBtn
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideRight.Control = Page1
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = RowOutBtn
+        AnchorSideBottom.Side = asrBottom
+        Left = 226
+        Height = 23
+        Top = 33
+        Width = 183
+        Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Left = 8
+        BorderSpacing.Bottom = 12
+        ReadOnly = True
+        TabOrder = 3
+        Text = 'RowVarEdit'
+      end
+      object ColVarEdit: TEdit
+        AnchorSideLeft.Control = RowInBtn
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = VarList
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Page1
+        AnchorSideRight.Side = asrBottom
+        Left = 226
+        Height = 23
+        Top = 107
+        Width = 183
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        ReadOnly = True
+        TabOrder = 6
+        Text = 'ColVarEdit'
+      end
+      object FreqVarEdit: TEdit
+        AnchorSideLeft.Control = FreqInBtn
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideRight.Control = Page1
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = FreqOutBtn
+        AnchorSideBottom.Side = asrBottom
+        Left = 226
+        Height = 23
+        Top = 193
+        Width = 183
+        Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Left = 8
+        BorderSpacing.Bottom = 12
+        ReadOnly = True
+        TabOrder = 9
+        Text = 'FreqVarEdit'
+      end
+    end
+    object Page2: TPage
+      object NoRowsLabel: TLabel
+        AnchorSideLeft.Control = Page2
+        AnchorSideTop.Control = NoRowsEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 0
+        Height = 15
+        Top = 4
+        Width = 67
+        Caption = 'No. of Rows:'
+        ParentColor = False
+      end
+      object NoColsLabel: TLabel
+        AnchorSideLeft.Control = NoRowsEdit
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = NoColsEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 138
+        Height = 15
+        Top = 4
+        Width = 87
+        BorderSpacing.Left = 24
+        BorderSpacing.Right = 8
+        Caption = 'No. of Columns:'
+        ParentColor = False
+      end
+      object NoRowsEdit: TEdit
+        AnchorSideLeft.Control = NoRowsLabel
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Page2
+        Left = 75
+        Height = 23
+        Top = 0
+        Width = 39
+        Alignment = taRightJustify
+        BorderSpacing.Left = 8
+        OnKeyPress = NoRowsEditKeyPress
+        TabOrder = 0
+        Text = 'NoRowsEdit'
+      end
+      object NoColsEdit: TEdit
+        AnchorSideLeft.Control = NoColsLabel
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Page2
+        AnchorSideRight.Control = Page2
+        AnchorSideRight.Side = asrBottom
+        Left = 233
+        Height = 23
+        Top = 0
+        Width = 46
+        Alignment = taRightJustify
+        BorderSpacing.Left = 8
+        OnKeyPress = NoColsEditKeyPress
+        TabOrder = 1
+        Text = 'Edit1'
+      end
+      object Grid: TStringGrid
+        AnchorSideLeft.Control = Page2
+        AnchorSideTop.Control = NoRowsEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Page2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Page2
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 235
+        Top = 31
+        Width = 373
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 8
+        ColCount = 2
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll]
+        RowCount = 2
+        TabOrder = 2
+      end
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 303
+    Width = 425
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Bevel2: TBevel
+    Left = 3
+    Height = 14
+    Top = 336
+    Width = 18
+    Shape = bsSpacer
+  end
+end

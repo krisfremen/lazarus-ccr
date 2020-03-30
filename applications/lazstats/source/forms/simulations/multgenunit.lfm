@@ -1,0 +1,228 @@
+object MultGenFrm: TMultGenFrm
+  Left = 517
+  Height = 396
+  Top = 254
+  Width = 581
+  ActiveControl = NoVarsEdit
+  Caption = 'Multivariate Generator'
+  ClientHeight = 396
+  ClientWidth = 581
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object NoVarsEdit: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 126
+    Height = 23
+    Top = 8
+    Width = 45
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    OnExit = NoVarsEditExit
+    OnKeyPress = NoVarsEditKeyPress
+    TabOrder = 0
+    Text = 'NoVarsEdit'
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = NoVarsEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 12
+    Width = 110
+    BorderSpacing.Left = 8
+    Caption = 'Number of variables:'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideTop.Control = NoObsEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NoObsEdit
+    Left = 53
+    Height = 15
+    Top = 39
+    Width = 65
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Sample Size:'
+    ParentColor = False
+  end
+  object NoObsEdit: TEdit
+    AnchorSideLeft.Control = NoVarsEdit
+    AnchorSideTop.Control = NoVarsEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = NoVarsEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 126
+    Height = 23
+    Top = 35
+    Width = 45
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    OnExit = NoObsEditExit
+    OnKeyPress = NoObsEditKeyPress
+    TabOrder = 1
+    Text = 'NoObsEdit'
+  end
+  object ParmsChk: TCheckBox
+    AnchorSideLeft.Control = NoVarsEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = NoVarsEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 203
+    Height = 19
+    Top = 10
+    Width = 106
+    BorderSpacing.Left = 32
+    Caption = 'Print Parametes:'
+    TabOrder = 2
+  end
+  object SampleChk: TCheckBox
+    AnchorSideLeft.Control = ParmsChk
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ParmsChk
+    AnchorSideTop.Side = asrCenter
+    Left = 333
+    Height = 19
+    Top = 10
+    Width = 118
+    BorderSpacing.Left = 24
+    BorderSpacing.Right = 8
+    Caption = 'Print Sample Stats:'
+    TabOrder = 3
+  end
+  object PerturbChk: TCheckBox
+    AnchorSideLeft.Control = ParmsChk
+    AnchorSideTop.Control = NoObsEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 203
+    Height = 19
+    Top = 37
+    Width = 247
+    BorderSpacing.Right = 8
+    Caption = 'Select Distribution Perturbation Parameters'
+    TabOrder = 4
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 284
+    Height = 25
+    Top = 363
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 7
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 350
+    Height = 25
+    Top = 363
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 8
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 424
+    Height = 25
+    Top = 363
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 9
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 512
+    Height = 25
+    Top = 363
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = ReturnBtnClick
+    TabOrder = 10
+  end
+  object Grid: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = NoObsEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 281
+    Top = 66
+    Width = 565
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goTabs, goSmoothScroll]
+    TabOrder = 5
+    OnKeyPress = GridKeyPress
+    OnSetEditText = GridSetEditText
+  end
+  object HelpBtn: TButton
+    Tag = 133
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 221
+    Height = 25
+    Top = 363
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 6
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 347
+    Width = 581
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

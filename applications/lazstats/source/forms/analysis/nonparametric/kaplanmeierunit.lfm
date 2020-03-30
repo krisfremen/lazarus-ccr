@@ -1,0 +1,368 @@
+object KaplanMeierFrm: TKaplanMeierFrm
+  Left = 849
+  Height = 406
+  Top = 368
+  Width = 505
+  AutoSize = True
+  Caption = 'Kaplan-Meier Survival Analysis'
+  ClientHeight = 406
+  ClientWidth = 505
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 288
+    Height = 25
+    Top = 373
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 2
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 350
+    Height = 25
+    Top = 373
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 3
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 438
+    Height = 25
+    Top = 373
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 4
+  end
+  object HelpBtn: TButton
+    Tag = 127
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 229
+    Height = 25
+    Top = 373
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 1
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 357
+    Width = 505
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 349
+    Top = 8
+    Width = 489
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ClientHeight = 349
+    ClientWidth = 489
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 97
+      Caption = 'Available Variables'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = TimeEdit
+      AnchorSideBottom.Control = TimeEdit
+      Left = 266
+      Height = 15
+      Top = 25
+      Width = 70
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Time Variable'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = EventEdit
+      AnchorSideBottom.Control = EventEdit
+      Left = 266
+      Height = 30
+      Top = 108
+      Width = 140
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Event vs Censored Variable'#13#10'(Event = 1, Censored = 2)'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = GroupEdit
+      AnchorSideBottom.Control = GroupEdit
+      Left = 266
+      Height = 30
+      Top = 194
+      Width = 160
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Group Variable (if 2 groups)'#13#10'(Experimental = 1, Control =2)'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = TimeInBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 332
+      Top = 17
+      Width = 222
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object TimeInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 230
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = TimeInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object TimeOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = TimeInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 230
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = TimeOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object EventInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = TimeOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 230
+      Height = 28
+      Top = 105
+      Width = 28
+      BorderSpacing.Top = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = EventInBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object EventOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = EventInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 230
+      Height = 28
+      Top = 137
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = EventOutBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object GroupInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = EventOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 230
+      Height = 28
+      Top = 189
+      Width = 28
+      BorderSpacing.Top = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = GroupInBtnClick
+      Spacing = 0
+      TabOrder = 7
+    end
+    object GroupOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = GroupInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 230
+      Height = 28
+      Top = 221
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = GroupOutBtnClick
+      Spacing = 0
+      TabOrder = 8
+    end
+    object TimeEdit: TEdit
+      AnchorSideLeft.Control = TimeInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = TimeOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 266
+      Height = 23
+      Top = 42
+      Width = 223
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      TabOrder = 3
+      Text = 'TimeEdit'
+    end
+    object EventEdit: TEdit
+      AnchorSideLeft.Control = EventInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = EventOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 266
+      Height = 23
+      Top = 140
+      Width = 223
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      TabOrder = 6
+      Text = 'EventEdit'
+    end
+    object GroupEdit: TEdit
+      AnchorSideLeft.Control = GroupInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = GroupOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 266
+      Height = 23
+      Top = 226
+      Width = 223
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      TabOrder = 9
+      Text = 'GroupEdit'
+    end
+    object GroupBox1: TGroupBox
+      AnchorSideLeft.Control = GroupOutBtn
+      AnchorSideTop.Control = GroupOutBtn
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 230
+      Height = 72
+      Top = 273
+      Width = 213
+      AutoSize = True
+      BorderSpacing.Top = 24
+      Caption = 'Options:'
+      ChildSizing.LeftRightSpacing = 12
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.VerticalSpacing = 2
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 52
+      ClientWidth = 209
+      TabOrder = 10
+      object PlotChk: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 6
+        Width = 185
+        Caption = 'Graph Survival Probabilities (%)'
+        TabOrder = 0
+      end
+      object PrintChk: TCheckBox
+        Left = 12
+        Height = 19
+        Top = 27
+        Width = 185
+        AutoSize = False
+        Caption = 'Show Computation Results'
+        TabOrder = 1
+      end
+    end
+  end
+end

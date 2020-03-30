@@ -1,0 +1,153 @@
+object DifferenceFrm: TDifferenceFrm
+  Left = 611
+  Height = 115
+  Top = 292
+  Width = 318
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Differencing Specification'
+  ClientHeight = 115
+  ClientWidth = 318
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CancelBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 128
+    Height = 25
+    Top = 78
+    Width = 62
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object OKBtn: TButton
+    AnchorSideLeft.Control = CancelBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 202
+    Height = 25
+    Top = 78
+    Width = 42
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
+    BorderSpacing.Bottom = 8
+    Caption = 'OK'
+    ModalResult = 1
+    TabOrder = 3
+  end
+  object HelpBtn: TButton
+    Tag = 121
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CancelBtn
+    Left = 65
+    Height = 25
+    Top = 78
+    Width = 51
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 1
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 68
+    Height = 50
+    Top = 8
+    Width = 183
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BevelOuter = bvNone
+    ClientHeight = 50
+    ClientWidth = 183
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideTop.Control = LagEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = LagEdit
+      Left = 13
+      Height = 15
+      Top = 4
+      Width = 108
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Difference for lag of:'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideTop.Control = OrderEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = OrderEdit
+      Left = 0
+      Height = 15
+      Top = 31
+      Width = 121
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'No. of times to repeat: '
+      ParentColor = False
+    end
+    object LagEdit: TEdit
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 129
+      Height = 23
+      Top = 0
+      Width = 54
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      TabOrder = 0
+      Text = '1'
+    end
+    object OrderEdit: TEdit
+      AnchorSideTop.Control = LagEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 129
+      Height = 23
+      Top = 27
+      Width = 54
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 1
+      Text = '1'
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 8
+    Top = 62
+    Width = 318
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Shape = bsBottomLine
+  end
+end

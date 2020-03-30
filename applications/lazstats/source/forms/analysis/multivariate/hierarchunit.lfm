@@ -1,0 +1,312 @@
+object HierarchFrm: THierarchFrm
+  Left = 415
+  Height = 302
+  Top = 211
+  Width = 442
+  AutoSize = True
+  Caption = 'Hierarchical Cluster Analysis'
+  ClientHeight = 302
+  ClientWidth = 442
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Available Variables'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = PredList
+    AnchorSideTop.Control = Owner
+    Left = 228
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Top = 8
+    Caption = 'Predictor Variables'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = PredIn
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 228
+    Top = 25
+    Width = 176
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    MultiSelect = True
+    TabOrder = 0
+  end
+  object PredIn: TBitBtn
+    AnchorSideTop.Control = VarList
+    AnchorSideRight.Control = GroupBox1
+    Left = 192
+    Height = 28
+    Top = 25
+    Width = 28
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = PredInClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object PredOut: TBitBtn
+    AnchorSideLeft.Control = PredIn
+    AnchorSideTop.Control = PredIn
+    AnchorSideTop.Side = asrBottom
+    Left = 192
+    Height = 28
+    Top = 57
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = PredOutClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object PredList: TListBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GroupBox1
+    Left = 228
+    Height = 45
+    Top = 25
+    Width = 206
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    ItemHeight = 0
+    TabOrder = 3
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = PredIn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 228
+    Height = 175
+    Top = 78
+    Width = 206
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Options'
+    ClientHeight = 155
+    ClientWidth = 202
+    TabOrder = 4
+    object STDChk: TCheckBox
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = GroupBox1
+      Left = 12
+      Height = 19
+      Top = 2
+      Width = 131
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'Standardize Variables'
+      TabOrder = 0
+    end
+    object ReplaceChk: TCheckBox
+      AnchorSideLeft.Control = STDChk
+      AnchorSideTop.Control = STDChk
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 19
+      Top = 23
+      Width = 123
+      BorderSpacing.Top = 2
+      Caption = 'Replace Grid Values'
+      TabOrder = 1
+    end
+    object StatsChk: TCheckBox
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = ReplaceChk
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 19
+      Top = 44
+      Width = 127
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'Descriptive Statistics'
+      TabOrder = 2
+    end
+    object PlotChk: TCheckBox
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = StatsChk
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 19
+      Top = 65
+      Width = 151
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'No. Groups vs Errors Plot'
+      TabOrder = 3
+    end
+    object MaxGrpsChk: TCheckBox
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = PlotChk
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 19
+      Top = 86
+      Width = 141
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'Maximum No. Groups:'
+      TabOrder = 4
+    end
+    object MembersChk: TCheckBox
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = MaxGrpsChk
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 19
+      Top = 107
+      Width = 151
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'Print Group Membership'
+      TabOrder = 6
+    end
+    object VarChk: TCheckBox
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = MembersChk
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 19
+      Top = 128
+      Width = 162
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      BorderSpacing.Bottom = 8
+      Caption = 'Cluster Variables, not cases'
+      TabOrder = 7
+    end
+    object MaxGrps: TEdit
+      AnchorSideLeft.Control = MaxGrpsChk
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = MaxGrpsChk
+      AnchorSideTop.Side = asrCenter
+      Left = 157
+      Height = 23
+      Top = 84
+      Width = 37
+      Alignment = taRightJustify
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 8
+      TabOrder = 5
+      Text = 'MaxGrps'
+    end
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 141
+    Height = 25
+    Top = 269
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 5
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 207
+    Height = 25
+    Top = 269
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 6
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 281
+    Height = 25
+    Top = 269
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 7
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 369
+    Height = 25
+    Top = 269
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 8
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 253
+    Width = 442
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

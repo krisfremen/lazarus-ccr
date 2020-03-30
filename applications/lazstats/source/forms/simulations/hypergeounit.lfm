@@ -1,0 +1,355 @@
+object HyperGeoForm: THyperGeoForm
+  AnchorSideRight.Control = Label8
+  AnchorSideRight.Side = asrBottom
+  Left = 303
+  Height = 310
+  Top = 156
+  Width = 339
+  Anchors = [akTop]
+  AutoSize = True
+  BorderStyle = bsSingle
+  Caption = 'Hypergeometric Probabilities'
+  ClientHeight = 310
+  ClientWidth = 339
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideTop.Control = SampSizeEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 134
+    Height = 15
+    Top = 12
+    Width = 68
+    Anchors = [akTop, akRight]
+    Caption = 'Sample Size: '
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideTop.Control = SampObsEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 50
+    Height = 15
+    Top = 39
+    Width = 152
+    Anchors = [akTop, akRight]
+    Caption = 'Number observed in sample:'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideTop.Control = PopObsEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 118
+    Height = 15
+    Top = 93
+    Width = 84
+    Anchors = [akTop, akRight]
+    Caption = 'Population Size:'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideTop.Control = PopSizeEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 30
+    Height = 15
+    Top = 66
+    Width = 172
+    Anchors = [akTop, akRight]
+    Caption = 'Number observed in population:'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    AnchorSideTop.Control = ProbXEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 118
+    Height = 15
+    Top = 132
+    Width = 84
+    Anchors = [akTop, akRight]
+    Caption = 'Probability of X:'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    AnchorSideTop.Control = ProbGTEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 65
+    Height = 15
+    Top = 159
+    Width = 137
+    Anchors = [akTop, akRight]
+    Caption = 'Probability greater than X:'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    AnchorSideTop.Control = ProbLEEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 50
+    Height = 15
+    Top = 186
+    Width = 152
+    Anchors = [akTop, akRight]
+    Caption = 'Probability less or equal to X:'
+    ParentColor = False
+  end
+  object Label8: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ProbGEEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 32
+    Height = 15
+    Top = 213
+    Width = 170
+    BorderSpacing.Left = 32
+    Caption = 'Probability greater or equal to X:'
+    ParentColor = False
+  end
+  object Label9: TLabel
+    AnchorSideTop.Control = ProbLTEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Label8
+    AnchorSideRight.Side = asrBottom
+    Left = 83
+    Height = 15
+    Top = 240
+    Width = 119
+    Anchors = [akTop, akRight]
+    Caption = 'Probability less than X:'
+    ParentColor = False
+  end
+  object ResetBtn: TButton
+    AnchorSideTop.Control = ReturnBtn
+    AnchorSideRight.Control = ComputeBtn
+    Left = 65
+    Height = 25
+    Top = 276
+    Width = 54
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 0
+  end
+  object ComputeBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = ReturnBtn
+    Left = 131
+    Height = 25
+    Top = 276
+    Width = 76
+    AutoSize = True
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 1
+  end
+  object ReturnBtn: TButton
+    AnchorSideLeft.Control = ComputeBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 219
+    Height = 25
+    Top = 276
+    Width = 61
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 2
+  end
+  object SampSizeEdit: TEdit
+    AnchorSideLeft.Control = ProbGEEdit
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 8
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    TabOrder = 3
+    Text = 'SampSizeEdit'
+  end
+  object SampObsEdit: TEdit
+    AnchorSideLeft.Control = SampSizeEdit
+    AnchorSideTop.Control = SampSizeEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 35
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    TabOrder = 4
+    Text = 'Edit1'
+  end
+  object PopSizeEdit: TEdit
+    AnchorSideLeft.Control = SampSizeEdit
+    AnchorSideTop.Control = SampObsEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 62
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    TabOrder = 5
+    Text = 'Edit1'
+  end
+  object PopObsEdit: TEdit
+    AnchorSideLeft.Control = SampSizeEdit
+    AnchorSideTop.Control = PopSizeEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 89
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    TabOrder = 6
+    Text = 'Edit1'
+  end
+  object ProbXEdit: TEdit
+    AnchorSideLeft.Control = SampSizeEdit
+    AnchorSideTop.Control = PopObsEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbLEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 128
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 16
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 7
+    Text = 'Edit1'
+  end
+  object ProbGTEdit: TEdit
+    AnchorSideLeft.Control = SampSizeEdit
+    AnchorSideTop.Control = ProbXEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 155
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 8
+    Text = 'Edit1'
+  end
+  object ProbLEEdit: TEdit
+    AnchorSideLeft.Control = ProbGEEdit
+    AnchorSideTop.Control = ProbGTEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 182
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 9
+    Text = 'Edit1'
+  end
+  object ProbGEEdit: TEdit
+    AnchorSideLeft.Control = Label8
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ProbLEEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = SampSizeEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 209
+    Width = 82
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 32
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 10
+    Text = 'Edit1'
+  end
+  object ProbLTEdit: TEdit
+    AnchorSideLeft.Control = ProbGEEdit
+    AnchorSideTop.Control = ProbGEEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ProbGEEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 236
+    Width = 82
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Font.Style = [fsBold]
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 11
+    Text = 'Edit1'
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ProbLTEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 9
+    Top = 259
+    Width = 339
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsBottomLine
+  end
+end

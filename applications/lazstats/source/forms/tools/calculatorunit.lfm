@@ -1,0 +1,512 @@
+object CalculatorForm: TCalculatorForm
+  Left = 572
+  Height = 498
+  Top = 180
+  Width = 364
+  AutoSize = True
+  Caption = 'Calculator'
+  ClientHeight = 498
+  ClientWidth = 364
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = XEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 223
+    Top = 231
+    Width = 256
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    Caption = 'KeyPad'
+    ChildSizing.LeftRightSpacing = 8
+    ChildSizing.TopBottomSpacing = 8
+    ChildSizing.HorizontalSpacing = 8
+    ChildSizing.VerticalSpacing = 8
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
+    ChildSizing.ShrinkVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 4
+    ClientHeight = 203
+    ClientWidth = 252
+    TabOrder = 0
+    object sevenbtn: TButton
+      Left = 8
+      Height = 41
+      Top = 8
+      Width = 52
+      Caption = '7'
+      OnClick = sevenbtnClick
+      TabOrder = 0
+    end
+    object eightbtn: TButton
+      Left = 68
+      Height = 41
+      Top = 8
+      Width = 58
+      Caption = '8'
+      OnClick = eightbtnClick
+      TabOrder = 2
+    end
+    object ninebtn: TButton
+      Left = 134
+      Height = 41
+      Top = 8
+      Width = 52
+      Caption = ' 9 '
+      OnClick = ninebtnClick
+      TabOrder = 3
+    end
+    object dividebtn: TButton
+      Left = 194
+      Height = 41
+      Top = 8
+      Width = 50
+      Caption = ' / '
+      OnClick = dividebtnClick
+      TabOrder = 1
+    end
+    object fourbtn: TButton
+      Left = 8
+      Height = 41
+      Top = 57
+      Width = 52
+      Caption = '4'
+      OnClick = fourbtnClick
+      TabOrder = 4
+    end
+    object fivebtn: TButton
+      Left = 68
+      Height = 41
+      Top = 57
+      Width = 58
+      Caption = '5'
+      OnClick = fivebtnClick
+      TabOrder = 5
+    end
+    object sixbtn: TButton
+      Left = 134
+      Height = 41
+      Top = 57
+      Width = 52
+      Caption = '6'
+      OnClick = sixbtnClick
+      TabOrder = 6
+    end
+    object multbtn: TButton
+      Left = 194
+      Height = 41
+      Top = 57
+      Width = 50
+      Caption = '*'
+      OnClick = multbtnClick
+      TabOrder = 7
+    end
+    object onebtn: TButton
+      Left = 8
+      Height = 41
+      Top = 106
+      Width = 52
+      Caption = '1'
+      OnClick = onebtnClick
+      TabOrder = 8
+    end
+    object twobtn: TButton
+      Left = 68
+      Height = 41
+      Top = 106
+      Width = 58
+      Caption = '2'
+      OnClick = twobtnClick
+      TabOrder = 9
+    end
+    object threebtn: TButton
+      Left = 134
+      Height = 41
+      Top = 106
+      Width = 52
+      Caption = '3'
+      OnClick = threebtnClick
+      TabOrder = 10
+    end
+    object subtractbtn: TButton
+      Left = 194
+      Height = 41
+      Top = 106
+      Width = 50
+      Caption = '-'
+      OnClick = subtractbtnClick
+      TabOrder = 11
+    end
+    object ZeroBtn: TButton
+      Left = 8
+      Height = 40
+      Top = 155
+      Width = 52
+      Caption = ' 0 '
+      OnClick = ZeroBtnClick
+      TabOrder = 12
+    end
+    object ChangeSignBtn: TButton
+      Left = 68
+      Height = 40
+      Top = 155
+      Width = 58
+      Caption = '+/-'
+      OnClick = ChangeSignBtnClick
+      TabOrder = 13
+    end
+    object PeriodBtn: TButton
+      Left = 134
+      Height = 40
+      Top = 155
+      Width = 52
+      Caption = '.'
+      OnClick = PeriodBtnClick
+      TabOrder = 15
+    end
+    object Addbtn: TButton
+      Left = 194
+      Height = 40
+      Top = 155
+      Width = 50
+      Caption = '+'
+      OnClick = AddbtnClick
+      TabOrder = 14
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideBottom.Control = GroupBox1
+    AnchorSideBottom.Side = asrBottom
+    Left = 280
+    Height = 222
+    Top = 231
+    Width = 71
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 8
+    Caption = 'Memory'
+    ChildSizing.LeftRightSpacing = 8
+    ChildSizing.TopBottomSpacing = 8
+    ChildSizing.HorizontalSpacing = 8
+    ChildSizing.VerticalSpacing = 8
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
+    ChildSizing.ShrinkVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 202
+    ClientWidth = 67
+    TabOrder = 1
+    object MemInBtn: TButton
+      Left = 8
+      Height = 41
+      Top = 8
+      Width = 51
+      Caption = 'X->M'
+      OnClick = MemInBtnClick
+      TabOrder = 0
+    end
+    object MemOutBtn: TButton
+      Left = 8
+      Height = 41
+      Top = 57
+      Width = 51
+      Caption = 'M->X'
+      OnClick = MemOutBtnClick
+      TabOrder = 1
+    end
+    object MemPlusBtn: TButton
+      Left = 8
+      Height = 41
+      Top = 106
+      Width = 51
+      Caption = 'M+'
+      OnClick = MemPlusBtnClick
+      TabOrder = 2
+    end
+    object EqualBtn: TButton
+      Left = 8
+      Height = 39
+      Top = 155
+      Width = 51
+      Caption = '='
+      OnClick = EqualBtnClick
+      TabOrder = 3
+    end
+  end
+  object XEdit: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = GroupBox3
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 23
+    Top = 192
+    Width = 348
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 24
+    BorderSpacing.Right = 8
+    OnKeyPress = XEditKeyPress
+    TabOrder = 2
+    Text = 'XEdit'
+  end
+  object GroupBox3: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 160
+    Top = 8
+    Width = 348
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Functions'
+    ChildSizing.LeftRightSpacing = 4
+    ChildSizing.TopBottomSpacing = 4
+    ChildSizing.HorizontalSpacing = 4
+    ChildSizing.VerticalSpacing = 4
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 5
+    ClientHeight = 140
+    ClientWidth = 344
+    TabOrder = 3
+    object sinbtn: TButton
+      Left = 4
+      Height = 30
+      Top = 4
+      Width = 65
+      Caption = 'sin'
+      OnClick = sinbtnClick
+      TabOrder = 0
+    end
+    object cosbtn: TButton
+      Left = 73
+      Height = 30
+      Top = 4
+      Width = 60
+      Caption = 'cos'
+      OnClick = cosbtnClick
+      TabOrder = 1
+    end
+    object tanbtn: TButton
+      Left = 137
+      Height = 30
+      Top = 4
+      Width = 78
+      Caption = 'tan'
+      OnClick = tanbtnClick
+      TabOrder = 2
+    end
+    object Combobtn: TButton
+      Left = 219
+      Height = 30
+      Top = 4
+      Width = 55
+      Caption = 'nCr'
+      OnClick = CombobtnClick
+      TabOrder = 3
+    end
+    object ClearEntryBtn: TButton
+      Left = 278
+      Height = 30
+      Top = 4
+      Width = 62
+      Caption = 'CE'
+      OnClick = ClearEntryBtnClick
+      TabOrder = 4
+    end
+    object MeanBtn: TButton
+      Left = 4
+      Height = 30
+      Top = 38
+      Width = 65
+      Caption = 'Mean'
+      OnClick = MeanBtnClick
+      TabOrder = 5
+    end
+    object VarBtn: TButton
+      Left = 73
+      Height = 30
+      Top = 38
+      Width = 60
+      Caption = 'VAR.'
+      OnClick = VarBtnClick
+      TabOrder = 6
+    end
+    object StdDevBtn: TButton
+      Left = 137
+      Height = 30
+      Top = 38
+      Width = 78
+      Caption = 'Std.Dev.'
+      OnClick = StdDevBtnClick
+      TabOrder = 7
+    end
+    object natlogbtn: TButton
+      Left = 219
+      Height = 30
+      Top = 38
+      Width = 55
+      Caption = 'ln'
+      OnClick = natlogbtnClick
+      TabOrder = 8
+    end
+    object log10btn: TButton
+      Left = 278
+      Height = 30
+      Top = 38
+      Width = 62
+      Caption = 'log10'
+      OnClick = log10btnClick
+      TabOrder = 9
+    end
+    object sqrbtn: TButton
+      Left = 4
+      Height = 30
+      Top = 72
+      Width = 65
+      Caption = 'x^2'
+      OnClick = sqrbtnClick
+      TabOrder = 10
+    end
+    object sqrtbtn: TButton
+      Left = 73
+      Height = 30
+      Top = 72
+      Width = 60
+      Caption = 'sqrt'
+      OnClick = sqrtbtnClick
+      TabOrder = 11
+    end
+    object ytopowerxbtn: TButton
+      Left = 137
+      Height = 30
+      Top = 72
+      Width = 78
+      Caption = 'y^x'
+      OnClick = ytopowerxbtnClick
+      TabOrder = 12
+    end
+    object etoxbtn: TButton
+      Left = 219
+      Height = 30
+      Top = 72
+      Width = 55
+      Caption = 'e^x'
+      OnClick = etoxbtnClick
+      TabOrder = 13
+    end
+    object tentoxbtn: TButton
+      Left = 278
+      Height = 30
+      Top = 72
+      Width = 62
+      Caption = '10^x'
+      OnClick = tentoxbtnClick
+      TabOrder = 14
+    end
+    object expbtn: TButton
+      Left = 4
+      Height = 30
+      Top = 106
+      Width = 65
+      Caption = 'exp'
+      OnClick = expbtnClick
+      TabOrder = 15
+    end
+    object absbtn: TButton
+      Left = 73
+      Height = 30
+      Top = 106
+      Width = 60
+      Caption = 'abs'
+      OnClick = absbtnClick
+      TabOrder = 16
+    end
+    object PiBtn: TButton
+      Left = 137
+      Height = 30
+      Top = 106
+      Width = 78
+      Caption = 'Pi'
+      OnClick = PiBtnClick
+      TabOrder = 17
+    end
+    object nPrbtn: TButton
+      Left = 219
+      Height = 30
+      Top = 106
+      Width = 55
+      Caption = 'nPr'
+      OnClick = nPrbtnClick
+      TabOrder = 18
+    end
+    object nfactorialbtn: TButton
+      Left = 278
+      Height = 30
+      Top = 106
+      Width = 62
+      Caption = 'n!'
+      OnClick = nfactorialbtnClick
+      TabOrder = 19
+    end
+  end
+  object Label1: TLabel
+    AnchorSideTop.Control = NEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NEdit
+    Left = 54
+    Height = 15
+    Top = 467
+    Width = 154
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'No. in memory stack (M+) = '
+    ParentColor = False
+  end
+  object NEdit: TEdit
+    AnchorSideTop.Control = ReturnBtn
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = GroupBox1
+    AnchorSideRight.Side = asrBottom
+    Left = 216
+    Height = 23
+    Top = 463
+    Width = 48
+    Anchors = [akTop, akRight]
+    TabOrder = 4
+    Text = 'NEdit'
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Control = GroupBox2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBox2
+    AnchorSideRight.Side = asrBottom
+    Left = 282
+    Height = 26
+    Top = 461
+    Width = 69
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    OnClick = ReturnBtnClick
+    TabOrder = 5
+  end
+end

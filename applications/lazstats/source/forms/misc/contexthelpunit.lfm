@@ -1,0 +1,61 @@
+object ContextHelpForm: TContextHelpForm
+  Left = 240
+  Height = 404
+  Top = 134
+  Width = 578
+  Caption = 'Contextual Help'
+  ClientHeight = 404
+  ClientWidth = 578
+  Position = poScreenCenter
+  LCLVersion = '2.1.0.0'
+  object Panel1: TPanel
+    Left = 8
+    Height = 26
+    Top = 370
+    Width = 562
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 26
+    ClientWidth = 562
+    TabOrder = 0
+    object Button1: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 244
+      Height = 25
+      Top = 1
+      Width = 75
+      Caption = 'OK'
+      Constraints.MinWidth = 75
+      Default = True
+      ModalResult = 1
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+  end
+  object Memo1: TMemo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Panel1
+    Left = 8
+    Height = 354
+    Top = 8
+    Width = 562
+    Align = alClient
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Lines.Strings = (
+      'Memo1'
+    )
+    ScrollBars = ssVertical
+    TabOrder = 1
+  end
+end

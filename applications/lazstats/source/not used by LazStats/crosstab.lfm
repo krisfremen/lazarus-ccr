@@ -1,0 +1,145 @@
+object CrossTabFrm: TCrossTabFrm
+  Left = 320
+  Height = 214
+  Top = 689
+  Width = 521
+  HelpContext = 603
+  HorzScrollBar.Page = 520
+  VertScrollBar.Page = 213
+  ActiveControl = VarList
+  BorderStyle = bsDialog
+  Caption = 'Cross Tabulation Procedure'
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  HelpFile = 'OS2Help.hlp'
+  OnShow = FormShow
+  object Label1: TLabel
+    Left = 16
+    Height = 14
+    Top = 8
+    Width = 94
+    Caption = 'Available Variables:'
+    Color = clNone
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 184
+    Height = 14
+    Top = 8
+    Width = 102
+    Caption = 'Variables to Analyze:'
+    Color = clNone
+    ParentColor = False
+  end
+  object VarList: TListBox
+    Left = 8
+    Height = 177
+    Top = 24
+    Width = 129
+    ItemHeight = 13
+    MultiSelect = True
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    Left = 144
+    Height = 33
+    Top = 32
+    Width = 33
+    Glyph.Data = {
+      76010000424D7601000000000000760000002800000020000000100000000100
+      04000000000000010000120B0000120B00001000000000000000000000000000
+      800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+      FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+      3333333333333333333333333333333333333333333333333333333333333333
+      3333333333333333333333333333333333333333333FF3333333333333003333
+      3333333333773FF3333333333309003333333333337F773FF333333333099900
+      33333FFFFF7F33773FF30000000999990033777777733333773F099999999999
+      99007FFFFFFF33333F7700000009999900337777777F333F7733333333099900
+      33333333337F3F77333333333309003333333333337F77333333333333003333
+      3333333333773333333333333333333333333333333333333333333333333333
+      3333333333333333333333333333333333333333333333333333
+    }
+    NumGlyphs = 2
+    OnClick = InBtnClick
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    Left = 144
+    Height = 33
+    Top = 72
+    Width = 33
+    Enabled = False
+    Glyph.Data = {
+      76010000424D7601000000000000760000002800000020000000100000000100
+      04000000000000010000120B0000120B00001000000000000000000000000000
+      800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+      FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+      3333333333333333333333333333333333333333333333333333333333333333
+      3333333333333FF3333333333333003333333333333F77F33333333333009033
+      333333333F7737F333333333009990333333333F773337FFFFFF330099999000
+      00003F773333377777770099999999999990773FF33333FFFFF7330099999000
+      000033773FF33777777733330099903333333333773FF7F33333333333009033
+      33333333337737F3333333333333003333333333333377333333333333333333
+      3333333333333333333333333333333333333333333333333333333333333333
+      3333333333333333333333333333333333333333333333333333
+    }
+    NumGlyphs = 2
+    OnClick = OutBtnClick
+    TabOrder = 2
+  end
+  object ListBox1: TListBox
+    Left = 184
+    Height = 177
+    Top = 24
+    Width = 137
+    ItemHeight = 13
+    TabOrder = 3
+  end
+  object ResetBtn: TButton
+    Left = 448
+    Height = 25
+    Top = 104
+    Width = 65
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 4
+  end
+  object CancelBtn: TButton
+    Left = 448
+    Height = 25
+    Top = 144
+    Width = 65
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 5
+  end
+  object OKBtn: TButton
+    Left = 447
+    Height = 25
+    Top = 184
+    Width = 65
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    ModalResult = 1
+    OnClick = OKBtnClick
+    TabOrder = 6
+  end
+  object Memo1: TMemo
+    Left = 336
+    Height = 89
+    Top = 8
+    Width = 177
+    Lines.Strings = (
+      'Directions:  Select each categorical'
+      'variable from the variables available '
+      'in the leftmost box in the order that '
+      'you wish to have the breakdown'
+      'proceed.  Click the OK button to '
+      'start the analysis.'
+    )
+    TabOrder = 7
+  end
+end

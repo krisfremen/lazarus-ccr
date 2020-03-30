@@ -1,0 +1,793 @@
+object MatManFrm: TMatManFrm
+  Left = 347
+  Height = 575
+  Top = 176
+  Width = 943
+  Caption = 'Matrix Manipulation'
+  ClientHeight = 555
+  ClientWidth = 943
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Label2: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = GridNoEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 12
+    Width = 107
+    BorderSpacing.Left = 8
+    Caption = 'Current Active Grid: '
+    ParentColor = False
+  end
+  object GridNoEdit: TEdit
+    AnchorSideLeft.Control = Label2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 123
+    Height = 23
+    Top = 8
+    Width = 59
+    Alignment = taRightJustify
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    TabOrder = 0
+    Text = 'GridNoEdit'
+  end
+  object Op1Edit: TEdit
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 25
+    Height = 23
+    Top = 524
+    Width = 186
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    TabOrder = 1
+    Text = 'Op1Edit'
+  end
+  object Op2Edit: TEdit
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 224
+    Height = 23
+    Top = 524
+    Width = 186
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object Op3Edit: TEdit
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 424
+    Height = 23
+    Top = 524
+    Width = 186
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    TabOrder = 3
+    Text = 'Edit1'
+  end
+  object Op4Edit: TEdit
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 624
+    Height = 23
+    Top = 524
+    Width = 186
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    TabOrder = 4
+    Text = 'Edit1'
+  end
+  object Panel5: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = GridNoEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Splitter1
+    AnchorSideBottom.Control = Op1Edit
+    Left = 8
+    Height = 477
+    Top = 39
+    Width = 724
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BevelOuter = bvNone
+    ChildSizing.HorizontalSpacing = 12
+    ChildSizing.VerticalSpacing = 12
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
+    ChildSizing.ShrinkVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 477
+    ClientWidth = 724
+    TabOrder = 5
+    object Panel1: TPanel
+      Left = 0
+      Height = 233
+      Top = 0
+      Width = 356
+      BevelOuter = bvNone
+      ClientHeight = 233
+      ClientWidth = 356
+      TabOrder = 0
+      object Label3: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = MatOneEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 0
+        Height = 15
+        Top = 4
+        Width = 6
+        Caption = '1'
+        ParentColor = False
+      end
+      object MatOneEdit: TEdit
+        AnchorSideLeft.Control = Label3
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel1
+        AnchorSideRight.Control = Grid1
+        AnchorSideRight.Side = asrBottom
+        Left = 14
+        Height = 23
+        Top = 0
+        Width = 342
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        TabOrder = 0
+        Text = 'MatOneEdit'
+      end
+      object Grid1: TStringGrid
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = MatOneEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel1
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 206
+        Top = 27
+        Width = 356
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 4
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+        TabOrder = 1
+        OnClick = Grid1Click
+        OnKeyPress = Grid1KeyPress
+        OnMouseDown = Grid1MouseDown
+      end
+    end
+    object Panel2: TPanel
+      Left = 0
+      Height = 232
+      Top = 245
+      Width = 356
+      BevelOuter = bvNone
+      ClientHeight = 232
+      ClientWidth = 356
+      TabOrder = 1
+      object Label5: TLabel
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = MatTwoEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 0
+        Height = 15
+        Top = 4
+        Width = 6
+        Caption = '2'
+        ParentColor = False
+      end
+      object MatTwoEdit: TEdit
+        AnchorSideLeft.Control = Label5
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel2
+        AnchorSideRight.Control = Grid2
+        AnchorSideRight.Side = asrBottom
+        Left = 14
+        Height = 23
+        Top = 0
+        Width = 342
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        TabOrder = 0
+        Text = 'MatTwoEdit'
+      end
+      object Grid2: TStringGrid
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = MatTwoEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel2
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 205
+        Top = 27
+        Width = 356
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoEdit = False
+        BorderSpacing.Top = 4
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+        TabOrder = 1
+        OnClick = Grid2Click
+        OnKeyPress = Grid2KeyPress
+        OnMouseDown = Grid2MouseDown
+      end
+    end
+    object Panel3: TPanel
+      Left = 368
+      Height = 233
+      Top = 0
+      Width = 356
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 233
+      ClientWidth = 356
+      TabOrder = 2
+      object Label4: TLabel
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = MatThreeEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 0
+        Height = 15
+        Top = 4
+        Width = 6
+        Caption = '3'
+        ParentColor = False
+      end
+      object MatThreeEdit: TEdit
+        AnchorSideLeft.Control = Label4
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel3
+        AnchorSideRight.Control = Grid3
+        AnchorSideRight.Side = asrBottom
+        Left = 14
+        Height = 23
+        Top = 0
+        Width = 342
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        TabOrder = 0
+        Text = 'MatThreeEdit'
+      end
+      object Grid3: TStringGrid
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = MatThreeEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel3
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 206
+        Top = 27
+        Width = 356
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 4
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+        TabOrder = 1
+        OnClick = Grid3Click
+        OnKeyPress = Grid3KeyPress
+        OnMouseDown = Grid3MouseDown
+      end
+    end
+    object Panel4: TPanel
+      Left = 368
+      Height = 232
+      Top = 245
+      Width = 356
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 232
+      ClientWidth = 356
+      TabOrder = 3
+      object Label6: TLabel
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = MatFourEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 0
+        Height = 15
+        Top = 4
+        Width = 6
+        Caption = '4'
+        ParentColor = False
+      end
+      object MatFourEdit: TEdit
+        AnchorSideLeft.Control = Label6
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel4
+        AnchorSideRight.Control = Grid4
+        AnchorSideRight.Side = asrBottom
+        Left = 14
+        Height = 23
+        Top = 0
+        Width = 342
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        TabOrder = 0
+        Text = 'MatFourEdit'
+      end
+      object Grid4: TStringGrid
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = MatFourEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel4
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel4
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 205
+        Top = 27
+        Width = 356
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 4
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+        TabOrder = 1
+        OnClick = Grid4Click
+        OnKeyPress = Grid4KeyPress
+        OnMouseDown = Grid4MouseDown
+      end
+    end
+  end
+  object Panel6: TPanel
+    AnchorSideLeft.Control = Splitter1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GridNoEdit
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Panel5
+    AnchorSideBottom.Side = asrBottom
+    Left = 737
+    Height = 508
+    Top = 8
+    Width = 198
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 8
+    Caption = 'Panel6'
+    ClientHeight = 508
+    ClientWidth = 198
+    TabOrder = 6
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel6
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = ScalarsBox
+      AnchorSideTop.Side = asrBottom
+      Left = 81
+      Height = 15
+      Top = 133
+      Width = 37
+      BorderSpacing.Top = 16
+      Caption = 'SCRIPT'
+      ParentColor = False
+    end
+    object MatricesBox: TComboBox
+      AnchorSideLeft.Control = Panel6
+      AnchorSideTop.Control = Panel6
+      AnchorSideRight.Control = Panel6
+      AnchorSideRight.Side = asrBottom
+      Left = 1
+      Height = 23
+      Top = 1
+      Width = 196
+      Anchors = [akTop, akLeft, akRight]
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'MATRICES'
+      )
+      OnClick = MatricesBoxClick
+      TabOrder = 0
+      Text = 'MATRICES'
+    end
+    object ColVecsBox: TComboBox
+      AnchorSideLeft.Control = Panel6
+      AnchorSideTop.Control = MatricesBox
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel6
+      AnchorSideRight.Side = asrBottom
+      Left = 1
+      Height = 23
+      Top = 32
+      Width = 196
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'COLUMN VECTORS'
+      )
+      OnClick = ColVecsBoxClick
+      TabOrder = 1
+      Text = 'COLUMN VECTORS'
+    end
+    object RowVecsBox: TComboBox
+      AnchorSideLeft.Control = Panel6
+      AnchorSideTop.Control = ColVecsBox
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel6
+      AnchorSideRight.Side = asrBottom
+      Left = 1
+      Height = 23
+      Top = 63
+      Width = 196
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'ROW VECTORS'
+      )
+      OnClick = RowVecsBoxClick
+      TabOrder = 2
+      Text = 'ROW VECTORS'
+    end
+    object ScalarsBox: TComboBox
+      AnchorSideLeft.Control = Panel6
+      AnchorSideTop.Control = RowVecsBox
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel6
+      AnchorSideRight.Side = asrBottom
+      Left = 1
+      Height = 23
+      Top = 94
+      Width = 196
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'SCALARS'
+      )
+      OnClick = ScalarsBoxClick
+      TabOrder = 3
+      Text = 'SCALARS'
+    end
+    object ScriptList: TListBox
+      AnchorSideLeft.Control = Panel6
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel6
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel6
+      AnchorSideBottom.Side = asrBottom
+      Left = 1
+      Height = 358
+      Top = 149
+      Width = 196
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 1
+      ItemHeight = 0
+      OnClick = ScriptListClick
+      TabOrder = 4
+    end
+  end
+  object Splitter1: TSplitter
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = Panel5
+    AnchorSideBottom.Side = asrBottom
+    Left = 732
+    Height = 516
+    Top = 0
+    Width = 5
+    Align = alNone
+    Anchors = [akTop, akLeft, akBottom]
+  end
+  object MainMenu1: TMainMenu
+    left = 528
+    top = 168
+    object FilesMenu: TMenuItem
+      Caption = 'Files'
+      object keyBdmnu: TMenuItem
+        Caption = 'Keyboard Input'
+        object MatInmnu: TMenuItem
+          Caption = 'Matrix'
+          OnClick = MatInmnuClick
+        end
+        object VecInmnu: TMenuItem
+          Caption = 'Vector'
+          OnClick = VecInmnuClick
+        end
+        object ScalarInmnu: TMenuItem
+          Caption = 'Scalar'
+          OnClick = ScalarInmnuClick
+        end
+      end
+      object MainGridMnu: TMenuItem
+        Caption = 'Read Data from Main Form Grid'
+        OnClick = MainGridMnuClick
+      end
+      object MenuItem3: TMenuItem
+        Caption = '-'
+      end
+      object OpenFileMnu: TMenuItem
+        Caption = 'Open File'
+        OnClick = OpenFileMnuClick
+      end
+      object SaveFileMnu: TMenuItem
+        Caption = 'Save File'
+        OnClick = SaveFileMnuClick
+      end
+      object PrintFileMnu: TMenuItem
+        Caption = 'Print File'
+        OnClick = PrintFileMnuClick
+      end
+      object MenuItem1: TMenuItem
+        Caption = '-'
+      end
+      object ImportFileMnu: TMenuItem
+        Caption = 'Import a file'
+        object TabFileInmnu: TMenuItem
+          Caption = 'Tab File'
+        end
+        object SpaceFileInMnu: TMenuItem
+          Caption = 'Space File'
+        end
+        object CommaFileInMnu: TMenuItem
+          Caption = 'Comma File'
+        end
+      end
+      object ExportFileMnu: TMenuItem
+        Caption = 'Export a file'
+        object TabFileOutMnu: TMenuItem
+          Caption = 'Tab File'
+        end
+        object SpaceFileOutMnu: TMenuItem
+          Caption = 'Space File'
+        end
+        object CommaFileOutMnu: TMenuItem
+          Caption = 'Comma File'
+        end
+      end
+      object ScriptFileInMnu: TMenuItem
+        Caption = 'Open a Script File'
+        OnClick = ScriptFileInMnuClick
+      end
+      object ScriptSaveMnu: TMenuItem
+        Caption = 'Save a Script File'
+        OnClick = ScriptSaveMnuClick
+      end
+      object ResetMnu: TMenuItem
+        Caption = 'Reset All'
+        OnClick = ResetMnuClick
+      end
+      object MenuItem2: TMenuItem
+        Caption = '-'
+      end
+      object ExitMnu: TMenuItem
+        Caption = 'Exit'
+        OnClick = ExitMnuClick
+      end
+    end
+    object MatOpsMnu: TMenuItem
+      Caption = 'Matrix Operations'
+      object IdentMnu: TMenuItem
+        Caption = 'Create an Indentity Matrix'
+        OnClick = IdentMnuClick
+      end
+      object RowAugMnu: TMenuItem
+        Caption = 'Row Augment'
+        OnClick = RowAugMnuClick
+      end
+      object ColAugMnu: TMenuItem
+        Caption = 'Column Augment'
+        OnClick = ColAugMnuClick
+      end
+      object RowDelMnu: TMenuItem
+        Caption = 'Delete a Row'
+        OnClick = RowDelMnuClick
+      end
+      object RowInstMnu: TMenuItem
+        Caption = 'Insert a Row'
+        OnClick = RowInstMnuClick
+      end
+      object ColDelMnu: TMenuItem
+        Caption = 'Delete a Column'
+        OnClick = ColDelMnuClick
+      end
+      object ColInstMnu: TMenuItem
+        Caption = 'Insert a Column'
+        OnClick = ColInstMnuClick
+      end
+      object ExtractColVecMnu: TMenuItem
+        Caption = 'Extract a Column Vector'
+        OnClick = ExtractColVecMnuClick
+      end
+      object SVDInvMnu: TMenuItem
+        Caption = 'SVD Inverse'
+        OnClick = SVDInvMnuClick
+      end
+      object TriDiagMnu: TMenuItem
+        Caption = 'Tridiagonalize'
+        OnClick = TriDiagMnuClick
+      end
+      object ULDecompMnu: TMenuItem
+        Caption = 'Upper-lower Decomposition'
+        OnClick = ULDecompMnuClick
+      end
+      object Diagtovecmnu: TMenuItem
+        Caption = 'Diagonal to Vector'
+        OnClick = DiagtovecmnuClick
+      end
+      object Vec2DiagMnu: TMenuItem
+        Caption = 'Vector to Diagonal'
+        OnClick = Vec2DiagMnuClick
+      end
+      object DetermMnu: TMenuItem
+        Caption = 'Determinant'
+        OnClick = DetermMnuClick
+      end
+      object NormRowsMnu: TMenuItem
+        Caption = 'Normalize Rows'
+        OnClick = NormRowsMnuClick
+      end
+      object NormColsMnu: TMenuItem
+        Caption = 'Normalize Columns'
+        OnClick = NormColsMnuClick
+      end
+      object PreMultMnu: TMenuItem
+        Caption = 'Premultiply by'
+        object PrebyRowVmnu: TMenuItem
+          Caption = 'Row Vector'
+          OnClick = PrebyRowVmnuClick
+        end
+        object PreMatMnu: TMenuItem
+          Caption = 'Matrix'
+          OnClick = PreMatMnuClick
+        end
+        object PreScalarMnu: TMenuItem
+          Caption = 'Scalar'
+          OnClick = PreScalarMnuClick
+        end
+      end
+      object PostMultMnu: TMenuItem
+        Caption = 'Post Multiply by'
+        object PostColVMnu: TMenuItem
+          Caption = 'Column Vector'
+          OnClick = PostColVMnuClick
+        end
+        object PostMatMnu: TMenuItem
+          Caption = 'Matrix'
+          OnClick = PostMatMnuClick
+        end
+        object PostScalarMnu: TMenuItem
+          Caption = 'Scalar'
+        end
+      end
+      object EigenMnu: TMenuItem
+        Caption = 'Eigenvalues and Vectors'
+        OnClick = EigenMnuClick
+      end
+      object TransMnu: TMenuItem
+        Caption = 'Transpose'
+        OnClick = TransMnuClick
+      end
+      object TraceMnu: TMenuItem
+        Caption = 'Trace'
+        OnClick = TraceMnuClick
+      end
+      object MatSumMnu: TMenuItem
+        Caption = 'Matrix A + Matrix B'
+        OnClick = MatSumMnuClick
+      end
+      object MatSubMnu: TMenuItem
+        Caption = 'Matrix A - Matrix B'
+        OnClick = MatSubMnuClick
+      end
+      object MatPrintMnu: TMenuItem
+        Caption = 'Print'
+        OnClick = MatPrintMnuClick
+      end
+    end
+    object VecOpsMnu: TMenuItem
+      Caption = 'Vector Operations'
+      object VecTransMnu: TMenuItem
+        Caption = 'Transpose'
+        OnClick = VecTransMnuClick
+      end
+      object VecXscalarMnu: TMenuItem
+        Caption = 'Times a Scalar'
+        OnClick = VecXscalarMnuClick
+      end
+      object VecSqrtMnu: TMenuItem
+        Caption = 'Square Root of Elements'
+        OnClick = VecSqrtMnuClick
+      end
+      object VecRecipMnu: TMenuItem
+        Caption = 'Reciprocal of Elements'
+        OnClick = VecRecipMnuClick
+      end
+      object VecPrintMnu: TMenuItem
+        Caption = 'Print'
+        OnClick = VecPrintMnuClick
+      end
+      object RowxColVecMnu: TMenuItem
+        Caption = 'Row Vec. x Col. Vec.'
+        OnClick = RowxColVecMnuClick
+      end
+      object ColxRowVecMnu: TMenuItem
+        Caption = 'Col. Vec. x Row Vec.'
+        OnClick = ColxRowVecMnuClick
+      end
+    end
+    object ScalarOpsMnu: TMenuItem
+      Caption = 'Scalar Operations'
+      object ScalSqrtMnu: TMenuItem
+        Caption = 'Square Root'
+        OnClick = ScalSqrtMnuClick
+      end
+      object ScalRecipMnu: TMenuItem
+        Caption = 'Reciprocal'
+        OnClick = ScalRecipMnuClick
+      end
+      object ScalxScalMnu: TMenuItem
+        Caption = 'Scalar x Scalar'
+        OnClick = ScalxScalMnuClick
+      end
+      object PrintScalMnu: TMenuItem
+        Caption = 'Print'
+        OnClick = PrintScalMnuClick
+      end
+    end
+    object ScriptOptMnu: TMenuItem
+      Caption = 'Script Operations'
+      object ScriptPrintMnu: TMenuItem
+        Caption = 'Print'
+        OnClick = ScriptPrintMnuClick
+      end
+      object ScriptClearMnu: TMenuItem
+        Caption = 'Clear'
+        OnClick = ScriptClearMnuClick
+      end
+      object ScriptEditMnu: TMenuItem
+        Caption = 'Edit'
+        OnClick = ScriptEditMnuClick
+      end
+      object ScriptLoadMnu: TMenuItem
+        Caption = 'Load'
+        OnClick = ScriptLoadMnuClick
+      end
+      object ScrSavMnu: TMenuItem
+        Caption = 'Save'
+        OnClick = ScrSavMnuClick
+      end
+      object ScrExeMnu: TMenuItem
+        Caption = 'Execute'
+        OnClick = ScrExeMnuClick
+      end
+      object ScriptOpsMnu: TMenuItem
+        Caption = 'Options'
+        OnClick = ScriptOpsMnuClick
+      end
+    end
+    object HelpMnu: TMenuItem
+      Caption = 'Help'
+      object AboutMnu: TMenuItem
+        Caption = 'About'
+        OnClick = AboutMnuClick
+      end
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    left = 256
+    top = 240
+  end
+  object OpenDialog1: TOpenDialog
+    left = 256
+    top = 176
+  end
+end

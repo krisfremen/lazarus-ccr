@@ -1,0 +1,398 @@
+object CompareDistFrm: TCompareDistFrm
+  Left = 462
+  Height = 375
+  Top = 227
+  Width = 516
+  AutoSize = True
+  Caption = 'Compare Cumulative Distributions'
+  ClientHeight = 375
+  ClientWidth = 516
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CompareGroup: TRadioGroup
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 326
+    Height = 72
+    Top = 8
+    Width = 182
+    Anchors = [akTop, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Compare To:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 52
+    ClientWidth = 178
+    ItemIndex = 0
+    Items.Strings = (
+      'A Theoretical Distribution'
+      'Another Variable'
+    )
+    OnClick = CompareGroupClick
+    TabOrder = 2
+  end
+  object DistGroup: TRadioGroup
+    AnchorSideLeft.Control = CompareGroup
+    AnchorSideTop.Control = CompareGroup
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 326
+    Height = 135
+    Top = 96
+    Width = 182
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    Caption = 'Theoretical Distributions:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 115
+    ClientWidth = 178
+    Items.Strings = (
+      'Normal Distribution'
+      't-Distribution'
+      'Chi Square Distribution'
+      'F Distribution'
+      'Poisson Distribution'
+    )
+    OnClick = DistGroupClick
+    TabOrder = 3
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 299
+    Height = 25
+    Top = 342
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 5
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 365
+    Height = 25
+    Top = 342
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 6
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 453
+    Height = 25
+    Top = 342
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 7
+  end
+  object PlotTypeGrp: TGroupBox
+    AnchorSideLeft.Control = CompareGroup
+    AnchorSideTop.Control = DistGroup
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 326
+    Height = 74
+    Top = 247
+    Width = 182
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Plot Type:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 54
+    ClientWidth = 178
+    TabOrder = 4
+    object PointsChk: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 6
+      Width = 67
+      BorderSpacing.Left = 12
+      Caption = '3DPoints'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object LinesChk: TRadioButton
+      Left = 12
+      Height = 19
+      Top = 27
+      Width = 67
+      BorderSpacing.Left = 12
+      BorderSpacing.Bottom = 8
+      Caption = '3DLines'
+      TabOrder = 1
+    end
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 47
+    Top = 279
+    Width = 298
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    Caption = 'Option:'
+    ClientHeight = 27
+    ClientWidth = 294
+    TabOrder = 1
+    object BothChk: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 0
+      Width = 270
+      BorderSpacing.Left = 12
+      BorderSpacing.Right = 12
+      BorderSpacing.Bottom = 8
+      Caption = 'Plot both Frequency and cumulative Frequency'
+      TabOrder = 0
+    end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ResetBtn
+    Left = 0
+    Height = 8
+    Top = 326
+    Width = 516
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = CompareGroup
+    AnchorSideBottom.Control = GroupBox1
+    Left = 8
+    Height = 263
+    Top = 8
+    Width = 310
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 263
+    ClientWidth = 310
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 49
+      Caption = 'Variables:'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = VerticalCenterBevel
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 246
+      Top = 17
+      Width = 150
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object Var1InBtn: TBitBtn
+      AnchorSideLeft.Control = VerticalCenterBevel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = Var1OutBtn
+      Left = 160
+      Height = 28
+      Top = 53
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = Var1InBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object Var1OutBtn: TBitBtn
+      AnchorSideLeft.Control = Var1InBtn
+      AnchorSideBottom.Control = VerticalCenterBevel
+      Left = 160
+      Height = 28
+      Top = 85
+      Width = 28
+      Anchors = [akLeft, akBottom]
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = Var1OutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object Var2InBtn: TBitBtn
+      AnchorSideLeft.Control = VerticalCenterBevel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = VerticalCenterBevel
+      AnchorSideTop.Side = asrBottom
+      Left = 160
+      Height = 28
+      Top = 168
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = Var2InBtnClick
+      Spacing = 0
+      TabOrder = 3
+    end
+    object Var2OutBtn: TBitBtn
+      AnchorSideLeft.Control = Var2InBtn
+      AnchorSideTop.Control = Var2InBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 160
+      Height = 28
+      Top = 200
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = Var2OutBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = VarOneEdit
+      AnchorSideBottom.Control = VarOneEdit
+      Left = 196
+      Height = 15
+      Top = 61
+      Width = 66
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Variable One'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = VarTwoEdit
+      AnchorSideBottom.Control = VarTwoEdit
+      Left = 196
+      Height = 15
+      Top = 176
+      Width = 65
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Variable Two'
+      ParentColor = False
+    end
+    object VarOneEdit: TEdit
+      AnchorSideLeft.Control = Var1InBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Var1OutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 196
+      Height = 23
+      Top = 78
+      Width = 114
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 5
+      Text = 'VarOneEdit'
+    end
+    object VarTwoEdit: TEdit
+      AnchorSideLeft.Control = Var2InBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Var2OutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 196
+      Height = 23
+      Top = 193
+      Width = 114
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 6
+      Text = 'Edit1'
+    end
+    object VerticalCenterBevel: TBevel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      AnchorSideTop.Side = asrCenter
+      Left = 150
+      Height = 55
+      Top = 113
+      Width = 10
+      Shape = bsSpacer
+    end
+  end
+end

@@ -1,0 +1,357 @@
+object SimpleChiSqrForm: TSimpleChiSqrForm
+  Left = 827
+  Height = 436
+  Top = 221
+  Width = 408
+  Caption = 'Simple ChiSquare for Categories'
+  ClientHeight = 436
+  ClientWidth = 408
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnResize = FormResize
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideTop.Control = NcatsEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NcatsEdit
+    Left = 168
+    Height = 30
+    Top = 65
+    Width = 166
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'Enter the number of categories:'#13#10'Click the mouse after entering.'
+    ParentColor = False
+  end
+  object NcatsEdit: TEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 342
+    Height = 23
+    Top = 69
+    Width = 58
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 16
+    OnClick = NcatsEditExit
+    OnExit = NcatsEditExit
+    TabOrder = 0
+    Text = '1'
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 251
+    Height = 25
+    Top = 403
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 5
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 185
+    Height = 25
+    Top = 403
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 4
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 339
+    Height = 25
+    Top = 403
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 6
+  end
+  object Label5: TLabel
+    AnchorSideTop.Control = TotChiSqrEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = TotChiSqrEdit
+    Left = 152
+    Height = 15
+    Top = 341
+    Width = 96
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Total ChiSquare = '
+    ParentColor = False
+  end
+  object TotChiSqrEdit: TEdit
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ProbEdit
+    Left = 256
+    Height = 23
+    Top = 337
+    Width = 144
+    Alignment = taRightJustify
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Top = 12
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 2
+  end
+  object Label6: TLabel
+    AnchorSideTop.Control = ProbEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = ProbEdit
+    Left = 172
+    Height = 15
+    Top = 368
+    Width = 76
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Probability >='
+    ParentColor = False
+  end
+  object ProbEdit: TEdit
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 256
+    Height = 23
+    Top = 364
+    Width = 144
+    Alignment = taRightJustify
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Top = 3
+    ReadOnly = True
+    TabOrder = 3
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 387
+    Width = 408
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 45
+    Top = 8
+    Width = 392
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 8
+    Caption = 'This procedure lets you enter the number of observed values and the number of expected values for one or more categories.  Enter the values as indicated and when finished, press the compute button.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = NcatsEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = TotChiSqrEdit
+    Left = 8
+    Height = 217
+    Top = 108
+    Width = 392
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ChildSizing.HorizontalSpacing = 24
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 217
+    ClientWidth = 392
+    TabOrder = 1
+    object Panel2: TPanel
+      Left = 0
+      Height = 217
+      Top = 0
+      Width = 115
+      BevelOuter = bvNone
+      ClientHeight = 217
+      ClientWidth = 115
+      TabOrder = 0
+      object Label2: TLabel
+        AnchorSideLeft.Control = Panel2
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Panel2
+        Left = 18
+        Height = 15
+        Top = 0
+        Width = 79
+        BorderSpacing.Left = 8
+        Caption = 'Freq. Observed'
+        Constraints.MinHeight = 15
+        ParentColor = False
+      end
+      object ObservedGrid: TStringGrid
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel2
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 200
+        Top = 17
+        Width = 115
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoFillColumns = True
+        BorderSpacing.Top = 2
+        ColCount = 1
+        Constraints.MinHeight = 200
+        FixedCols = 0
+        MouseWheelOption = mwGrid
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goAlwaysShowEditor, goThumbTracking, goSmoothScroll]
+        RowCount = 2
+        TabOrder = 0
+        ColWidths = (
+          111
+        )
+      end
+    end
+    object Panel3: TPanel
+      Left = 139
+      Height = 217
+      Top = 0
+      Width = 115
+      BevelOuter = bvNone
+      ClientHeight = 217
+      ClientWidth = 115
+      TabOrder = 1
+      object Label3: TLabel
+        AnchorSideLeft.Control = Panel3
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Panel3
+        Left = 17
+        Height = 15
+        Top = 0
+        Width = 80
+        Caption = 'Freq. Expected:'
+        Constraints.MaxHeight = 15
+        ParentColor = False
+      end
+      object ExpectedGrid: TStringGrid
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Label3
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel3
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 200
+        Top = 17
+        Width = 115
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoFillColumns = True
+        BorderSpacing.Top = 2
+        ColCount = 1
+        FixedCols = 0
+        MouseWheelOption = mwGrid
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goAlwaysShowEditor, goThumbTracking, goSmoothScroll]
+        RowCount = 2
+        TabOrder = 0
+        ColWidths = (
+          111
+        )
+      end
+    end
+    object Panel4: TPanel
+      AnchorSideBottom.Side = asrBottom
+      Left = 278
+      Height = 217
+      Top = 0
+      Width = 114
+      BevelOuter = bvNone
+      ClientHeight = 217
+      ClientWidth = 114
+      TabOrder = 2
+      object Label4: TLabel
+        AnchorSideLeft.Control = Panel4
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Panel4
+        AnchorSideRight.Side = asrBottom
+        Left = 11
+        Height = 15
+        Top = 0
+        Width = 93
+        BorderSpacing.Right = 8
+        Caption = 'Computed Values'
+        ParentColor = False
+      end
+      object ChiSqrGrid: TStringGrid
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Label4
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel4
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel4
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 200
+        Top = 17
+        Width = 114
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoFillColumns = True
+        BorderSpacing.Top = 2
+        ColCount = 1
+        FixedCols = 0
+        MouseWheelOption = mwGrid
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goAlwaysShowEditor, goThumbTracking, goSmoothScroll]
+        RowCount = 2
+        TabOrder = 0
+        ColWidths = (
+          110
+        )
+      end
+    end
+  end
+end

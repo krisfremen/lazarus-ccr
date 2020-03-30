@@ -1,0 +1,247 @@
+object MannWhitUFrm: TMannWhitUFrm
+  Left = 540
+  Height = 321
+  Top = 256
+  Width = 373
+  AutoSize = True
+  Caption = 'Mann-Whitney U Test'
+  ClientHeight = 321
+  ClientWidth = 373
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Variables Available'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = GrpEdit
+    AnchorSideBottom.Control = GrpEdit
+    Left = 245
+    Height = 15
+    Top = 33
+    Width = 77
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 2
+    Caption = 'Group Variable'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = DepEdit
+    AnchorSideBottom.Control = DepEdit
+    Left = 245
+    Height = 15
+    Top = 125
+    Width = 102
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 2
+    Caption = 'Dependent Variable'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GrpIn
+    AnchorSideBottom.Control = Bevel2
+    Left = 8
+    Height = 247
+    Top = 25
+    Width = 193
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    Constraints.MinHeight = 200
+    ItemHeight = 0
+    OnSelectionChange = VarListSelectionChange
+    TabOrder = 0
+  end
+  object GrpIn: TBitBtn
+    AnchorSideLeft.Control = Bevel3
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = VarList
+    Left = 209
+    Height = 28
+    Top = 25
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = GrpInClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object GrpOut: TBitBtn
+    AnchorSideLeft.Control = Bevel3
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GrpIn
+    AnchorSideTop.Side = asrBottom
+    Left = 209
+    Height = 28
+    Top = 57
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = GrpOutClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object DepIn: TBitBtn
+    AnchorSideLeft.Control = Bevel3
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GrpOut
+    AnchorSideTop.Side = asrBottom
+    Left = 209
+    Height = 28
+    Top = 117
+    Width = 28
+    BorderSpacing.Top = 32
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = DepInClick
+    Spacing = 0
+    TabOrder = 3
+  end
+  object DepOut: TBitBtn
+    AnchorSideLeft.Control = Bevel3
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DepIn
+    AnchorSideTop.Side = asrBottom
+    Left = 209
+    Height = 28
+    Top = 149
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = DepOutClick
+    Spacing = 0
+    TabOrder = 4
+  end
+  object GrpEdit: TEdit
+    AnchorSideLeft.Control = GrpIn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GrpOut
+    AnchorSideBottom.Side = asrBottom
+    Left = 245
+    Height = 23
+    Top = 50
+    Width = 120
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 5
+    Text = 'GrpEdit'
+  end
+  object DepEdit: TEdit
+    AnchorSideLeft.Control = DepIn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = DepOut
+    AnchorSideBottom.Side = asrBottom
+    Left = 245
+    Height = 23
+    Top = 142
+    Width = 120
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    ReadOnly = True
+    TabOrder = 6
+    Text = 'Edit1'
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 164
+    Height = 25
+    Top = 288
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 7
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 226
+    Height = 25
+    Top = 288
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 8
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 310
+    Height = 25
+    Top = 288
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 9
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 272
+    Width = 373
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Bevel3: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 163
+    Height = 11
+    Top = 7
+    Width = 46
+    Shape = bsSpacer
+  end
+end

@@ -1,0 +1,56 @@
+object BlankFrm: TBlankFrm
+  Left = 37
+  Top = 21
+  BorderStyle = bsDialog
+  Caption = 'Test Item Administration'
+  ClientHeight = 514
+  ClientWidth = 623
+  Color = clBtnFace
+  Font.Charset = ANSI_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Times New Roman'
+  Font.Style = []
+  OnShow = FormShow
+  PixelsPerInch = 96
+  object Label1: TLabel
+    Left = 8
+    Top = 488
+    Width = 37
+    Height = 14
+    Caption = 'Answer:'
+  end
+  object Image1: TImage
+    Left = 0
+    Top = 0
+    Width = 623
+    Height = 449
+    Align = alTop
+  end
+  object ContinueBtn: TButton
+    Left = 544
+    Top = 480
+    Width = 73
+    Height = 25
+    Caption = 'Continue'
+    ModalResult = 1
+    TabOrder = 0
+    OnClick = ContinueBtnClick
+  end
+  object AnswerEdit: TEdit
+    Left = 48
+    Top = 480
+    Width = 33
+    Height = 22
+    TabOrder = 1
+  end
+  object AnswerMemo: TMemo
+    Left = 48
+    Top = 456
+    Width = 481
+    Height = 49
+    ScrollBars = ssVertical
+    TabOrder = 2
+    Visible = False
+  end
+end

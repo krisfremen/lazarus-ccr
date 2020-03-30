@@ -1,0 +1,486 @@
+object BubbleForm: TBubbleForm
+  Left = 473
+  Height = 454
+  Top = 253
+  Width = 500
+  AutoSize = True
+  Caption = 'Repeated Measures Bubble Plot'
+  ClientHeight = 454
+  ClientWidth = 500
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label6: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = TitleEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 316
+    Width = 55
+    BorderSpacing.Left = 8
+    Caption = 'Main Title:'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    AnchorSideTop.Control = XLabelEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = XLabelEdit
+    Left = 22
+    Height = 15
+    Top = 347
+    Width = 41
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'X Label:'
+    ParentColor = False
+  end
+  object Label8: TLabel
+    AnchorSideTop.Control = YLabelEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = YLabelEdit
+    Left = 293
+    Height = 15
+    Top = 347
+    Width = 41
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Y Label:'
+    ParentColor = False
+  end
+  object TitleEdit: TEdit
+    AnchorSideLeft.Control = Label6
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = XLabelEdit
+    Left = 71
+    Height = 23
+    Top = 312
+    Width = 421
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Bottom = 8
+    TabOrder = 1
+    TextHint = 'Title of the Diagram'
+  end
+  object XLabelEdit: TEdit
+    AnchorSideLeft.Control = TitleEdit
+    AnchorSideBottom.Control = TransformChk
+    Left = 71
+    Height = 23
+    Top = 343
+    Width = 150
+    Anchors = [akLeft, akBottom]
+    TabOrder = 2
+    TextHint = 'X Axis Title'
+  end
+  object YLabelEdit: TEdit
+    AnchorSideTop.Control = XLabelEdit
+    AnchorSideRight.Control = TitleEdit
+    AnchorSideRight.Side = asrBottom
+    Left = 342
+    Height = 23
+    Top = 343
+    Width = 150
+    Anchors = [akTop, akRight]
+    TabOrder = 3
+    TextHint = 'Y Axis Title'
+  end
+  object TransformChk: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 19
+    Top = 378
+    Width = 365
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Transform Data Grid for ANOVA (Treatments by Subjects ANOVA)'
+    TabOrder = 4
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = TitleEdit
+    Left = 8
+    Height = 296
+    Top = 8
+    Width = 484
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 296
+    ClientWidth = 484
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 49
+      Caption = 'Variables:'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = BubbleEdit
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = BubbleEdit
+      Left = 264
+      Height = 15
+      Top = 23
+      Width = 201
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Bubble Identification Number Variable'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = XEdit
+      AnchorSideBottom.Control = XEdit
+      Left = 264
+      Height = 15
+      Top = 97
+      Width = 82
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'X Value Variable'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = YEdit
+      AnchorSideBottom.Control = YEdit
+      Left = 264
+      Height = 15
+      Top = 171
+      Width = 82
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Y Value Variable'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = SizeEdit
+      AnchorSideBottom.Control = SizeEdit
+      Left = 264
+      Height = 15
+      Top = 245
+      Width = 104
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 2
+      Caption = 'Bubble Size Variable'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = IDInBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 279
+      Top = 17
+      Width = 220
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object IDInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 228
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = IDInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object IDOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = IDInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 47
+      Width = 28
+      BorderSpacing.Top = 2
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = IDOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object XInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = IDOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 91
+      Width = 28
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = XInBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object XOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = XInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 121
+      Width = 28
+      BorderSpacing.Top = 2
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = XOutBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object YInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = XOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 165
+      Width = 28
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = YInBtnClick
+      Spacing = 0
+      TabOrder = 7
+    end
+    object YOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = YInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 195
+      Width = 28
+      BorderSpacing.Top = 2
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = YOutBtnClick
+      Spacing = 0
+      TabOrder = 8
+    end
+    object SizeInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = YOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 239
+      Width = 28
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = SizeInBtnClick
+      Spacing = 0
+      TabOrder = 10
+    end
+    object SizeOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = SizeInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 228
+      Height = 28
+      Top = 269
+      Width = 28
+      BorderSpacing.Top = 2
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = SizeOutBtnClick
+      Spacing = 0
+      TabOrder = 11
+    end
+    object BubbleEdit: TEdit
+      AnchorSideLeft.Control = IDInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = IDOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 264
+      Height = 23
+      Top = 40
+      Width = 220
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 3
+      Text = 'BubbleEdit'
+    end
+    object XEdit: TEdit
+      AnchorSideLeft.Control = BubbleEdit
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = XOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 264
+      Height = 23
+      Top = 114
+      Width = 220
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 6
+      Text = 'XEdit'
+    end
+    object YEdit: TEdit
+      AnchorSideLeft.Control = BubbleEdit
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = YOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 264
+      Height = 23
+      Top = 188
+      Width = 220
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 9
+      Text = 'YEdit'
+    end
+    object SizeEdit: TEdit
+      AnchorSideLeft.Control = BubbleEdit
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = SizeOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 264
+      Height = 23
+      Top = 262
+      Width = 220
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 12
+      Text = 'SizeEdit'
+    end
+  end
+  object ReturnBtn: TButton
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 427
+    Height = 25
+    Top = 421
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 8
+  end
+  object ComputeBtn: TButton
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 343
+    Height = 25
+    Top = 421
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 7
+  end
+  object ResetBtn: TButton
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 281
+    Height = 25
+    Top = 421
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 6
+  end
+  object HelpBtn: TButton
+    Tag = 110
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 222
+    Height = 25
+    Top = 421
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 5
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 405
+    Width = 500
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+end

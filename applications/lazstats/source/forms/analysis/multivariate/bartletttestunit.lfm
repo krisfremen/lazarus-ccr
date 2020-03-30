@@ -1,0 +1,340 @@
+object BartlettTestForm: TBartlettTestForm
+  Left = 474
+  Height = 374
+  Top = 304
+  Width = 411
+  AutoSize = True
+  Caption = 'Bartlett Test of Sphericity'
+  ClientHeight = 374
+  ClientWidth = 411
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 106
+    Height = 25
+    Top = 341
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 172
+    Height = 25
+    Top = 341
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 4
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 246
+    Height = 25
+    Top = 341
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 5
+  end
+  object HelpBtn: TButton
+    Tag = 119
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 43
+    Height = 25
+    Top = 341
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 2
+  end
+  object Label5: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DFEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 65
+    Width = 88
+    BorderSpacing.Left = 8
+    Caption = 'Deg. Freedom = '
+    ParentColor = False
+  end
+  object DFEdit: TEdit
+    AnchorSideLeft.Control = Label5
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 104
+    Height = 23
+    Top = 61
+    Width = 40
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    TabOrder = 0
+    Text = 'DFEdit'
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 334
+    Height = 25
+    Top = 341
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 6
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 45
+    Top = 8
+    Width = 395
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'This is the Bartlett test of sphericity for  three or more variables.  Enter three or  more of the variables listed in the left  box and press the compute button to  obtain the results.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 325
+    Width = 411
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DFEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 0
+    Height = 241
+    Top = 84
+    Width = 411
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 241
+    ClientWidth = 411
+    Constraints.MinHeight = 240
+    TabOrder = 1
+    object Label2: TLabel
+      AnchorSideTop.Control = Panel1
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 46
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      Caption = 'Variables'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = AllBtn
+      AnchorSideBottom.Control = ChiSqrEdit
+      Left = 8
+      Height = 185
+      Top = 25
+      Width = 166
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      ItemHeight = 0
+      MultiSelect = True
+      TabOrder = 0
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = SelList
+      AnchorSideTop.Control = Label2
+      Left = 236
+      Height = 15
+      Top = 8
+      Width = 44
+      Caption = 'Selected'
+      ParentColor = False
+    end
+    object SelList: TListBox
+      AnchorSideLeft.Control = AllBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label3
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ProbEdit
+      Left = 236
+      Height = 185
+      Top = 25
+      Width = 167
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      ItemHeight = 0
+      TabOrder = 4
+    end
+    object InBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 191
+      Height = 26
+      Top = 25
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = InBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object OutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = InBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 191
+      Height = 26
+      Top = 55
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = OutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object AllBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = OutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 182
+      Height = 25
+      Top = 85
+      Width = 46
+      AutoSize = True
+      BorderSpacing.Top = 4
+      Caption = 'ALL'
+      OnClick = AllBtnClick
+      Spacing = 0
+      TabOrder = 3
+    end
+    object Label1: TLabel
+      AnchorSideTop.Control = ChiSqrEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = ChiSqrEdit
+      Left = 19
+      Height = 15
+      Top = 222
+      Width = 67
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      Caption = 'Chisquare = '
+      ParentColor = False
+    end
+    object ChiSqrEdit: TEdit
+      AnchorSideRight.Control = VarList
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 94
+      Height = 23
+      Top = 218
+      Width = 80
+      Alignment = taRightJustify
+      Anchors = [akRight, akBottom]
+      TabOrder = 5
+      Text = 'ChiSqrEdit'
+    end
+    object Label4: TLabel
+      AnchorSideTop.Control = ProbEdit
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = ProbEdit
+      Left = 252
+      Height = 15
+      Top = 222
+      Width = 71
+      Anchors = [akTop, akRight]
+      Caption = 'Probability = '
+      ParentColor = False
+    end
+    object ProbEdit: TEdit
+      AnchorSideRight.Control = SelList
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 323
+      Height = 23
+      Top = 218
+      Width = 80
+      Alignment = taRightJustify
+      Anchors = [akRight, akBottom]
+      TabOrder = 6
+      Text = 'ProbEdit'
+    end
+  end
+end

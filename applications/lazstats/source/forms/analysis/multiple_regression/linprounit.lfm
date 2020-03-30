@@ -1,0 +1,623 @@
+object LinProFrm: TLinProFrm
+  Left = 445
+  Height = 507
+  Top = 263
+  Width = 811
+  Caption = 'Linear Programming Using Min/Max Algorithm'
+  ClientHeight = 507
+  ClientWidth = 811
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = FileNameEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 12
+    Width = 21
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'File:'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = ObjectiveGrid
+    AnchorSideTop.Control = FileNameEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 167
+    Height = 15
+    Top = 39
+    Width = 50
+    BorderSpacing.Top = 8
+    Caption = 'Objective'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = Panel4
+    Left = 97
+    Height = 15
+    Top = 67
+    Width = 60
+    BorderSpacing.Right = 4
+    Caption = 'Constraints'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = NoVarsEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NoVarsEdit
+    Left = 654
+    Height = 15
+    Top = 12
+    Width = 68
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'No. Variables'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 10
+    Height = 1
+    Top = 91
+    Width = 1
+    ParentColor = False
+  end
+  object Label11: TLabel
+    AnchorSideLeft.Control = MinMaxGrp
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ResultsEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 208
+    Height = 15
+    Top = 435
+    Width = 83
+    BorderSpacing.Left = 16
+    Caption = 'General Results:'
+    ParentColor = False
+  end
+  object FileNameEdit: TEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Label4
+    Left = 37
+    Height = 23
+    Top = 8
+    Width = 601
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
+    TabOrder = 0
+    Text = 'FileNameEdit'
+  end
+  object ObjectiveGrid: TStringGrid
+    AnchorSideLeft.Control = Panel4
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 167
+    Height = 26
+    Top = 56
+    Width = 636
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 70
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ColCount = 1
+    RowCount = 1
+    TabOrder = 1
+  end
+  object NoVarsEdit: TEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 730
+    Height = 23
+    Top = 8
+    Width = 73
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    OnExit = NoVarsEditExit
+    OnKeyPress = NoVarsEditKeyPress
+    TabOrder = 2
+    Text = 'NoVarsEdit'
+  end
+  object ResultsEdit: TEdit
+    AnchorSideLeft.Control = Label11
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 299
+    Height = 23
+    Top = 431
+    Width = 504
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    TabOrder = 4
+    Text = 'ResultsEdit'
+  end
+  object LoadBtn: TButton
+    AnchorSideRight.Control = SaveBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 358
+    Height = 25
+    Top = 474
+    Width = 73
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Load File'
+    OnClick = LoadBtnClick
+    TabOrder = 5
+  end
+  object SaveBtn: TButton
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 443
+    Height = 25
+    Top = 474
+    Width = 71
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Save File'
+    OnClick = SaveBtnClick
+    TabOrder = 6
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 526
+    Height = 25
+    Top = 474
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 7
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 592
+    Height = 25
+    Top = 474
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = CancelBtnClick
+    TabOrder = 8
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ExitBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 666
+    Height = 25
+    Top = 474
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 9
+  end
+  object ExitBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 754
+    Height = 25
+    Top = 474
+    Width = 45
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Exit'
+    ModalResult = 1
+    OnClick = ExitBtnClick
+    TabOrder = 10
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ResetBtn
+    Left = 0
+    Height = 8
+    Top = 458
+    Width = 811
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel4: TPanel
+    AnchorSideLeft.Control = Panel5
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ObjectiveGrid
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ResultsEdit
+    Left = 97
+    Height = 333
+    Top = 82
+    Width = 706
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BevelOuter = bvNone
+    ChildSizing.VerticalSpacing = 4
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
+    ChildSizing.ShrinkVertical = crsHomogenousSpaceResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 333
+    ClientWidth = 706
+    TabOrder = 11
+    object Panel1: TPanel
+      Left = 0
+      Height = 109
+      Top = 0
+      Width = 706
+      BevelOuter = bvNone
+      ClientHeight = 109
+      ClientWidth = 706
+      TabOrder = 0
+      object MaxGrid: TStringGrid
+        AnchorSideLeft.Control = MaxConstraintsGrid
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel1
+        AnchorSideBottom.Side = asrBottom
+        Left = 70
+        Height = 101
+        Top = 8
+        Width = 636
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 4
+        ColCount = 1
+        RowCount = 1
+        TabOrder = 0
+      end
+      object MaxConstraintsGrid: TStringGrid
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = MaxGrid
+        AnchorSideBottom.Control = Panel1
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 101
+        Top = 8
+        Width = 66
+        Anchors = [akTop, akLeft, akBottom]
+        ColCount = 1
+        RowCount = 1
+        ScrollBars = ssNone
+        TabOrder = 1
+      end
+    end
+    object Panel2: TPanel
+      Left = 0
+      Height = 109
+      Top = 113
+      Width = 706
+      BevelOuter = bvNone
+      ClientHeight = 109
+      ClientWidth = 706
+      TabOrder = 1
+      object MinGrid: TStringGrid
+        AnchorSideLeft.Control = MinConstraintsGrid
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel2
+        AnchorSideRight.Control = Panel2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel2
+        AnchorSideBottom.Side = asrBottom
+        Left = 72
+        Height = 109
+        Top = 0
+        Width = 634
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 4
+        ColCount = 1
+        RowCount = 1
+        TabOrder = 0
+      end
+      object MinConstraintsGrid: TStringGrid
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = Panel2
+        AnchorSideBottom.Control = Panel2
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 109
+        Top = 0
+        Width = 68
+        Anchors = [akTop, akLeft, akBottom]
+        ColCount = 1
+        RowCount = 1
+        ScrollBars = ssNone
+        TabOrder = 1
+      end
+    end
+    object Panel3: TPanel
+      Left = 0
+      Height = 107
+      Top = 226
+      Width = 706
+      BevelOuter = bvNone
+      ClientHeight = 107
+      ClientWidth = 706
+      TabOrder = 2
+      object EqualGrid: TStringGrid
+        AnchorSideLeft.Control = EqualConstraintsGrid
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel3
+        AnchorSideRight.Control = Panel3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel3
+        AnchorSideBottom.Side = asrBottom
+        Left = 70
+        Height = 107
+        Top = 0
+        Width = 636
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 4
+        ColCount = 1
+        RowCount = 1
+        TabOrder = 0
+      end
+      object EqualConstraintsGrid: TStringGrid
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Panel3
+        AnchorSideRight.Control = Panel3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel3
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 107
+        Top = 0
+        Width = 66
+        Anchors = [akTop, akLeft, akBottom]
+        ColCount = 1
+        RowCount = 1
+        ScrollBars = ssNone
+        TabOrder = 1
+      end
+    end
+  end
+  object Panel5: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel4
+    AnchorSideBottom.Control = Panel4
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 333
+    Top = 82
+    Width = 81
+    Anchors = [akTop, akLeft, akBottom]
+    BorderSpacing.Left = 8
+    BevelOuter = bvNone
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 333
+    ClientWidth = 81
+    TabOrder = 12
+    object Panel6: TPanel
+      Left = 0
+      Height = 111
+      Top = 0
+      Width = 81
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 111
+      ClientWidth = 81
+      TabOrder = 0
+      object Label5: TLabel
+        AnchorSideLeft.Control = Panel6
+        AnchorSideTop.Control = Panel6
+        AnchorSideRight.Control = Panel6
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 30
+        Top = 0
+        Width = 81
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight]
+        Caption = 'No.Max. (<)'#13#10'constraints'
+        ParentColor = False
+      end
+      object NoMaxEdit: TEdit
+        AnchorSideLeft.Control = Panel6
+        AnchorSideTop.Control = Label5
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel6
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 23
+        Top = 32
+        Width = 81
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        OnExit = NoMaxEditExit
+        OnKeyPress = NoMaxEditKeyPress
+        TabOrder = 0
+        Text = 'NoMaxEdit'
+      end
+    end
+    object Panel7: TPanel
+      Left = 0
+      Height = 111
+      Top = 111
+      Width = 81
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 111
+      ClientWidth = 81
+      TabOrder = 1
+      object Label7: TLabel
+        AnchorSideLeft.Control = Panel7
+        AnchorSideTop.Control = Panel7
+        AnchorSideRight.Control = Panel7
+        AnchorSideRight.Side = asrBottom
+        Left = 8
+        Height = 30
+        Top = 0
+        Width = 73
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        Caption = 'No. Min. (>)'#13#10'constraints'
+        ParentColor = False
+      end
+      object NoMinEdit: TEdit
+        AnchorSideLeft.Control = Panel7
+        AnchorSideTop.Control = Label7
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel7
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 23
+        Top = 32
+        Width = 81
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        OnExit = NoMinEditExit
+        OnKeyPress = NoMinEditKeyPress
+        TabOrder = 0
+        Text = 'NoMinEdit'
+      end
+    end
+    object Panel8: TPanel
+      Left = 0
+      Height = 111
+      Top = 222
+      Width = 81
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 111
+      ClientWidth = 81
+      TabOrder = 2
+      object Label9: TLabel
+        AnchorSideLeft.Control = Panel8
+        AnchorSideTop.Control = Panel8
+        AnchorSideRight.Control = Panel8
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 30
+        Top = 0
+        Width = 81
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight]
+        Caption = 'No. Equal (=)'#13#10'constraints'
+        ParentColor = False
+      end
+      object NoEqualEdit: TEdit
+        AnchorSideLeft.Control = Panel8
+        AnchorSideTop.Control = Label9
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel8
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 23
+        Top = 32
+        Width = 81
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        OnExit = NoEqualEditExit
+        OnKeyPress = NoEqualEditKeyPress
+        TabOrder = 0
+        Text = 'NoEqualEdit'
+      end
+    end
+  end
+  object MinMaxGrp: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel4
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 49
+    Top = 415
+    Width = 184
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    Caption = 'Min/Max'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 5
+    ChildSizing.HorizontalSpacing = 16
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 29
+    ClientWidth = 180
+    Columns = 2
+    Items.Strings = (
+      'Maximize'
+      'Minimize'
+    )
+    TabOrder = 3
+  end
+  object OpenDialog1: TOpenDialog
+    left = 696
+    top = 136
+  end
+  object SaveDialog1: TSaveDialog
+    left = 600
+    top = 120
+  end
+end

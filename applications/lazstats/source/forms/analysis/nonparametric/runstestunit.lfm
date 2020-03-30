@@ -1,0 +1,451 @@
+object runstestform: Trunstestform
+  Left = 476
+  Height = 438
+  Top = 209
+  Width = 376
+  AutoSize = True
+  Caption = 'Test for Randomness'
+  ClientHeight = 438
+  ClientWidth = 376
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 15
+    Top = 54
+    Width = 100
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    Caption = 'Available Variables:'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = TestVarEdit
+    AnchorSideBottom.Control = TestVarEdit
+    Left = 210
+    Height = 15
+    Top = 79
+    Width = 108
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 2
+    Caption = 'Test Randomness of:'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = InBtn
+    AnchorSideBottom.Control = ProbEdit
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 287
+    Top = 71
+    Width = 158
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    MultiSelect = True
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = VarList
+    Left = 174
+    Height = 28
+    Top = 71
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = InBtnClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    AnchorSideLeft.Control = InBtn
+    AnchorSideTop.Control = InBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 174
+    Height = 28
+    Top = 103
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = OutBtnClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object TestVarEdit: TEdit
+    AnchorSideLeft.Control = InBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = OutBtn
+    AnchorSideBottom.Side = asrBottom
+    Left = 210
+    Height = 23
+    Top = 96
+    Width = 158
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 12
+    TabOrder = 3
+    Text = 'TestVarEdit'
+  end
+  object Label3: TLabel
+    AnchorSideTop.Control = MeanEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = MeanEdit
+    Left = 244
+    Height = 15
+    Top = 177
+    Width = 33
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Mean:'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = InBtn
+    AnchorSideTop.Control = StdDevEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = StdDevEdit
+    Left = 174
+    Height = 15
+    Top = 204
+    Width = 103
+    BorderSpacing.Right = 8
+    Caption = 'Standard Deviation:'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    AnchorSideTop.Control = NUpEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NUpEdit
+    Left = 185
+    Height = 15
+    Top = 231
+    Width = 92
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'N Values > Mean:'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    AnchorSideTop.Control = NDownEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NDownEdit
+    Left = 185
+    Height = 15
+    Top = 258
+    Width = 92
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'N Values < Mean:'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    AnchorSideTop.Control = NRunsEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = NRunsEdit
+    Left = 187
+    Height = 15
+    Top = 285
+    Width = 90
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Number of Runs:'
+    ParentColor = False
+  end
+  object Label8: TLabel
+    AnchorSideTop.Control = StatEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = StatEdit
+    Left = 210
+    Height = 15
+    Top = 312
+    Width = 67
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Test Statistic:'
+    ParentColor = False
+  end
+  object Label9: TLabel
+    AnchorSideTop.Control = ProbEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = ProbEdit
+    Left = 217
+    Height = 15
+    Top = 339
+    Width = 60
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Probability:'
+    ParentColor = False
+  end
+  object Label10: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ConclusionEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 15
+    Top = 370
+    Width = 63
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'Conclusion:'
+    ParentColor = False
+  end
+  object MeanEdit: TEdit
+    AnchorSideLeft.Control = StdDevEdit
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StdDevEdit
+    Left = 285
+    Height = 23
+    Top = 173
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 4
+    Text = 'MeanEdit'
+  end
+  object StdDevEdit: TEdit
+    AnchorSideLeft.Control = Label4
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = NUpEdit
+    Left = 285
+    Height = 23
+    Top = 200
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 5
+    Text = 'Edit1'
+  end
+  object NUpEdit: TEdit
+    AnchorSideLeft.Control = StdDevEdit
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = NDownEdit
+    Left = 285
+    Height = 23
+    Top = 227
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 6
+    Text = 'Edit1'
+  end
+  object NDownEdit: TEdit
+    AnchorSideLeft.Control = StdDevEdit
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = NRunsEdit
+    Left = 285
+    Height = 23
+    Top = 254
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 7
+    Text = 'Edit1'
+  end
+  object NRunsEdit: TEdit
+    AnchorSideLeft.Control = StdDevEdit
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StatEdit
+    Left = 285
+    Height = 23
+    Top = 281
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 8
+    Text = 'Edit1'
+  end
+  object StatEdit: TEdit
+    AnchorSideLeft.Control = StdDevEdit
+    AnchorSideRight.Control = StdDevEdit
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ProbEdit
+    Left = 285
+    Height = 23
+    Top = 308
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Bottom = 4
+    ReadOnly = True
+    TabOrder = 9
+    Text = 'Edit1'
+  end
+  object ProbEdit: TEdit
+    AnchorSideLeft.Control = StdDevEdit
+    AnchorSideRight.Control = StdDevEdit
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ConclusionEdit
+    Left = 285
+    Height = 23
+    Top = 335
+    Width = 83
+    Alignment = taRightJustify
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Bottom = 8
+    ReadOnly = True
+    TabOrder = 10
+    Text = 'Edit1'
+  end
+  object ConclusionEdit: TEdit
+    AnchorSideLeft.Control = Label10
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 79
+    Height = 23
+    Top = 366
+    Width = 289
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    ReadOnly = True
+    TabOrder = 11
+    Text = 'Edit1'
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 79
+    Height = 25
+    Top = 405
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 12
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 145
+    Height = 25
+    Top = 405
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 13
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 219
+    Height = 25
+    Top = 405
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 14
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 307
+    Height = 25
+    Top = 405
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 15
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 389
+    Width = 376
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Bevel2: TBevel
+    Left = 3
+    Height = 21
+    Top = 414
+    Width = 15
+    Shape = bsSpacer
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 30
+    Top = 8
+    Width = 360
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'This is a test for the randomness of a series of values in a variable.  Select the variable to analyze and click the Compute button.'
+    ParentColor = False
+    WordWrap = True
+  end
+end

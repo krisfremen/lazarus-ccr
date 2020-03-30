@@ -1,0 +1,439 @@
+object ABCNestedForm: TABCNestedForm
+  Left = 529
+  Height = 640
+  Top = 153
+  Width = 479
+  AutoSize = True
+  Caption = 'ABCNestedForm'
+  ClientHeight = 640
+  ClientWidth = 479
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = ResetBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 266
+    Height = 25
+    Top = 607
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 2
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 328
+    Height = 25
+    Top = 607
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 3
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 412
+    Height = 25
+    Top = 607
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 4
+  end
+  object OptionsBox: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 72
+    Top = 519
+    Width = 463
+    Anchors = [akLeft, akRight, akBottom]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'OptionsBox'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 16
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 52
+    ClientWidth = 459
+    Columns = 2
+    Items.Strings = (
+      'Plot means using 2D Horizontal Bars'
+      'Plot means using 3D Horizontal Bars'
+      'Plot means using 2D Vertical Bars'
+      'Plot means using 3D Vertical Bars'
+    )
+    TabOrder = 1
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 591
+    Width = 479
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Memo1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 180
+    Top = 8
+    Width = 463
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Directions:  This analysis assumes that levels of Factor B are Nested within levels of Factor A. It is assumed that all factors are fixed level factors.'#13#10#13#10'The variables for the group coding should be defined as integers.  The dependent variable should be defined as a floating point variable. The number of cases for each ABC group should be equal and the number of B treatments in in each A level should be equal.  The number of C treatment levels should be the same for each AB combination.'#13#10#13#10'Click the variable for each factor variable and the corresponding arrow to enter it in the edit box for that variable.  Select the type of plot desired for the means (if any.)  Click the Compute button to continue.'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Memo1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = OptionsBox
+    Left = 8
+    Height = 307
+    Top = 204
+    Width = 463
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 307
+    ClientWidth = 463
+    TabOrder = 0
+    object Label2: TLabel
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = FactorAEdit
+      Left = 253
+      Height = 15
+      Top = 25
+      Width = 88
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Factor A Variable'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = FactorBEdit
+      Left = 253
+      Height = 15
+      Top = 101
+      Width = 115
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Factor B (Nested in A)'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = DepEdit
+      Left = 253
+      Height = 15
+      Top = 253
+      Width = 102
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Dependent Variable'
+      ParentColor = False
+    end
+    object VarList: TListBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = AInBtn
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 290
+      Top = 17
+      Width = 209
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
+      TabOrder = 0
+    end
+    object AInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 217
+      Height = 28
+      Top = 17
+      Width = 28
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = AInBtnClick
+      Spacing = 0
+      TabOrder = 1
+    end
+    object AOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = AInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 49
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = AOutBtnClick
+      Spacing = 0
+      TabOrder = 2
+    end
+    object BInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = AOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 93
+      Width = 28
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = BInBtnClick
+      Spacing = 0
+      TabOrder = 4
+    end
+    object BOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = BInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 125
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = BOutBtnClick
+      Spacing = 0
+      TabOrder = 5
+    end
+    object DepInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = COutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 245
+      Width = 28
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = DepInBtnClick
+      Spacing = 0
+      TabOrder = 10
+    end
+    object DepOutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = DepInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 277
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = DepOutBtnClick
+      Spacing = 0
+      TabOrder = 11
+    end
+    object FactorAEdit: TEdit
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = AOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 253
+      Height = 23
+      Top = 42
+      Width = 210
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 3
+      Text = 'FactorAEdit'
+    end
+    object FactorBEdit: TEdit
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = BOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 253
+      Height = 23
+      Top = 118
+      Width = 210
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 6
+      Text = 'FactorBEdit'
+    end
+    object DepEdit: TEdit
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = DepOutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 253
+      Height = 23
+      Top = 270
+      Width = 210
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 12
+      Text = 'DepEdit'
+    end
+    object CInBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = BOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 169
+      Width = 28
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = CInBtnClick
+      Spacing = 0
+      TabOrder = 7
+    end
+    object COutBtn: TBitBtn
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = CInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 217
+      Height = 28
+      Top = 201
+      Width = 28
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = COutBtnClick
+      Spacing = 0
+      TabOrder = 8
+    end
+    object FactorCEdit: TEdit
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = COutBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 253
+      Height = 23
+      Top = 194
+      Width = 210
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 12
+      ReadOnly = True
+      TabOrder = 9
+      Text = 'FactorCEdit'
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = AInBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = FactorCEdit
+      Left = 253
+      Height = 15
+      Top = 177
+      Width = 88
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 2
+      Caption = 'Factor C Variable'
+      ParentColor = False
+    end
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 100
+      Caption = 'Available Variables:'
+      ParentColor = False
+    end
+  end
+end

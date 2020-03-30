@@ -1,0 +1,15 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TLimitedForm','FORMDATA',[
+  'TPF0'#12'TLimitedForm'#11'LimitedForm'#4'Left'#3'"'#1#6'Height'#3#192#0#3'To'
+  +'p'#3#175#0#5'Width'#3#144#1#7'Caption'#6'#UNAVAILABLE IN THIS LIMITED VERSI'
+  +'ON'#12'ClientHeight'#3#192#0#11'ClientWidth'#3#144#1#10'LCLVersion'#6#7'2.1'
+  +'.0.0'#0#5'TMemo'#5'Memo1'#4'Left'#2#6#6'Height'#2'x'#3'Top'#2#8#5'Width'#3
+  +#128#1#13'Lines.Strings'#1#6'1This procedure is not implimented in this limi'
+  +'ted'#6'0version.  The full version for Windows and Linux'#6#28'systems can '
+  +'be purchased at:'#6#29'http://www.statprograms4U.com'#6'.If you have any qu'
+  +'estions, send an email to me'#6#28'at billmiller50322@gmail.com'#0#8'TabOrd'
+  +'er'#2#0#0#0#7'TButton'#9'ReturnBtn'#4'Left'#2'h'#6'Height'#2'#'#3'Top'#3#143
+  +#0#5'Width'#3#146#0#7'Caption'#6#6'RETURN'#11'ModalResult'#2#1#8'TabOrder'#2
+  +#1#0#0#0
+]);

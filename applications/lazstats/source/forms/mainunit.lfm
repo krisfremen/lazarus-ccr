@@ -1,0 +1,1041 @@
+object OS3MainFrm: TOS3MainFrm
+  Left = 484
+  Height = 519
+  Top = 194
+  Width = 725
+  Caption = 'LazStats'
+  ClientHeight = 499
+  ClientWidth = 725
+  Font.CharSet = ANSI_CHARSET
+  Font.Color = clBlack
+  Font.Height = -11
+  Font.Name = 'Courier New'
+  Font.Pitch = fpFixed
+  Font.Quality = fqDraft
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 35
+    Top = 0
+    Width = 725
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 35
+    ClientWidth = 725
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 14
+      Top = 10
+      Width = 63
+      BorderSpacing.Left = 12
+      Caption = 'No. Cases'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = NoCasesEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 139
+      Height = 14
+      Top = 10
+      Width = 91
+      BorderSpacing.Left = 16
+      Caption = 'No. Variables'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = NoVarsEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 302
+      Height = 14
+      Top = 10
+      Width = 91
+      BorderSpacing.Left = 16
+      Caption = 'Current File:'
+      ParentColor = False
+    end
+    object NoCasesEdit: TEdit
+      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 83
+      Height = 22
+      Top = 6
+      Width = 40
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      TabStop = False
+      TabOrder = 0
+      Text = 'NoCasesEdit'
+    end
+    object NoVarsEdit: TEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 238
+      Height = 22
+      Top = 6
+      Width = 48
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      TabStop = False
+      TabOrder = 1
+      Text = 'NoVarsEdit'
+    end
+    object FileNameEdit: TEdit
+      AnchorSideLeft.Control = Label3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 401
+      Height = 22
+      Top = 6
+      Width = 316
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      TabStop = False
+      TabOrder = 2
+      Text = 'FileNameEdit'
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 41
+    Top = 458
+    Width = 725
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 725
+    TabOrder = 1
+    object Label4: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 12
+      Height = 14
+      Top = 13
+      Width = 28
+      BorderSpacing.Left = 12
+      Caption = 'Row:'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = RowEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 137
+      Height = 14
+      Top = 13
+      Width = 49
+      BorderSpacing.Left = 16
+      Caption = 'Column:'
+      ParentColor = False
+    end
+    object Label6: TLabel
+      AnchorSideLeft.Control = ColEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 275
+      Height = 14
+      Top = 13
+      Width = 91
+      BorderSpacing.Left = 16
+      Caption = 'Filter Status'
+      ParentColor = False
+    end
+    object RowEdit: TEdit
+      AnchorSideLeft.Control = Label4
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 48
+      Height = 22
+      Top = 9
+      Width = 73
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      TabStop = False
+      TabOrder = 0
+      Text = 'RowEdit'
+    end
+    object ColEdit: TEdit
+      AnchorSideLeft.Control = Label5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 194
+      Height = 22
+      Top = 9
+      Width = 65
+      Alignment = taRightJustify
+      BorderSpacing.Left = 8
+      TabStop = False
+      TabOrder = 1
+      Text = 'ColEdit'
+    end
+    object FilterEdit: TEdit
+      AnchorSideLeft.Control = Label6
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 374
+      Height = 22
+      Top = 9
+      Width = 231
+      BorderSpacing.Left = 8
+      TabStop = False
+      TabOrder = 2
+      Text = 'FilterEdit'
+    end
+  end
+  object DataGrid: TStringGrid
+    Left = 8
+    Height = 423
+    Top = 35
+    Width = 709
+    Align = alClient
+    AutoEdit = False
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    ColCount = 2
+    DefaultColWidth = 80
+    MouseWheelOption = mwGrid
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goDrawFocusSelected, goColSizing, goEditing, goTabs, goThumbTracking, goSmoothScroll]
+    RowCount = 2
+    TabOrder = 2
+    TabStop = False
+    TitleFont.CharSet = ANSI_CHARSET
+    TitleFont.Color = clBlack
+    TitleFont.Height = -11
+    TitleFont.Name = 'Courier New'
+    TitleFont.Pitch = fpFixed
+    TitleFont.Quality = fqDraft
+    OnClick = DataGridClick
+    OnKeyDown = DataGridKeyDown
+    OnKeyPress = DataGridKeyPress
+    OnPrepareCanvas = DataGridPrepareCanvas
+  end
+  object MainMenu1: TMainMenu
+    left = 192
+    top = 200
+    object MenuItem1: TMenuItem
+      Caption = 'File'
+      object NewFileBtn: TMenuItem
+        Caption = 'New File'
+        OnClick = NewFileBtnClick
+      end
+      object OpenFileBtn: TMenuItem
+        Caption = 'Open File (*.laz)'
+        OnClick = OpenFileBtnClick
+      end
+      object SaveFileBtn: TMenuItem
+        Caption = 'Save File (*.laz)'
+        OnClick = SaveFileBtnClick
+      end
+      object CloseFileBtn: TMenuItem
+        Caption = 'Close File'
+        OnClick = CloseFileBtnClick
+      end
+      object MenuItem42: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem13: TMenuItem
+        Caption = 'Import File of Type'
+        object TabFileInBtn: TMenuItem
+          Caption = 'TAB Separated'
+          OnClick = TabFileInBtnClick
+        end
+        object CSVFileIn: TMenuItem
+          Caption = 'Comma Separated'
+          OnClick = CSVFileInClick
+        end
+        object SSVFileIn: TMenuItem
+          Caption = 'Space Separated'
+          OnClick = SSVFileInClick
+        end
+      end
+      object TabFileOut: TMenuItem
+        Caption = 'Export File of Type'
+        object MenuItem20: TMenuItem
+          Caption = 'Tab Separated'
+          OnClick = MenuItem20Click
+        end
+        object CSVFileOut: TMenuItem
+          Caption = 'Comma Separated'
+          OnClick = CSVFileOutClick
+        end
+        object SSVFileOut: TMenuItem
+          Caption = 'Space Separated'
+          OnClick = SSVFileOutClick
+        end
+      end
+      object MenuItem12: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem16: TMenuItem
+        Caption = 'Exit'
+        OnClick = MenuItem16Click
+      end
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Variables'
+      object DefineVar: TMenuItem
+        Caption = 'Define'
+        OnClick = DefineVarClick
+      end
+      object PrintDefs: TMenuItem
+        Caption = 'Print Definitions'
+        OnClick = PrintDefsClick
+      end
+      object Transform: TMenuItem
+        Caption = 'Transform Variables'
+        OnClick = TransformClick
+      end
+      object Recode: TMenuItem
+        Caption = 'Recode Variables'
+        OnClick = RecodeClick
+      end
+      object Equation: TMenuItem
+        Caption = 'Equation Editor'
+        OnClick = EquationClick
+      end
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'Tools'
+      object FormatGrid: TMenuItem
+        Caption = 'Format Grid Cells'
+        OnClick = FormatGridClick
+      end
+      object SortCases: TMenuItem
+        Caption = 'Sort Cases'
+        OnClick = SortCasesClick
+      end
+      object PrintGrid: TMenuItem
+        Caption = 'Print Grid File'
+        OnClick = PrintGridClick
+      end
+      object MenuItem28: TMenuItem
+        Caption = 'Show Output Form'
+        OnClick = MenuItem28Click
+      end
+      object SelectCases: TMenuItem
+        Caption = 'Select Cases'
+        OnClick = SelectCasesClick
+      end
+      object LoadSubFile: TMenuItem
+        Caption = 'Load a Sub File'
+      end
+      object MenuItem30: TMenuItem
+        Caption = 'Swap Rows and Columns of Grid'
+        OnClick = MenuItem30Click
+      end
+      object SwapDecType: TMenuItem
+        Caption = 'Change English to European or Vice Versa'
+        OnClick = SwapDecTypeClick
+      end
+      object StrToIntegers: TMenuItem
+        Caption = 'Convert strings to integer codes'
+        OnClick = StrToIntegersClick
+      end
+      object smooth: TMenuItem
+        Caption = 'Smooth Data in a Variable'
+        OnClick = smoothClick
+      end
+      object MenuItem15: TMenuItem
+        Caption = '-'
+      end
+      object Calculater: TMenuItem
+        Caption = 'Calculator'
+        OnClick = CalculaterClick
+      end
+      object JPEGView: TMenuItem
+        Caption = 'JPEG Image Viewer'
+        OnClick = JPEGViewClick
+      end
+    end
+    object MenuItem4: TMenuItem
+      Caption = 'Edit'
+      object blockcopy: TMenuItem
+        Caption = 'Copy a Block of Cells'
+        OnClick = blockcopyClick
+      end
+      object BlockPaste: TMenuItem
+        Caption = 'Paste a Block of Cells'
+        OnClick = BlockPasteClick
+      end
+      object BlockCut: TMenuItem
+        Caption = 'Cut a Block of Cells'
+        Visible = False
+      end
+      object MenuItem49: TMenuItem
+        Caption = '-'
+      end
+      object InsNewCol: TMenuItem
+        Caption = 'Insert New Column Before  Current One'
+        OnClick = InsNewColClick
+      end
+      object CopyCol: TMenuItem
+        Caption = 'Copy Column'
+        OnClick = CopyColClick
+      end
+      object CutCol: TMenuItem
+        Caption = 'Cut Column'
+        OnClick = CutColClick
+      end
+      object PasteCol: TMenuItem
+        Caption = 'Paste Column'
+        OnClick = PasteColClick
+      end
+      object MenuItem48: TMenuItem
+        Caption = '-'
+      end
+      object NewRow: TMenuItem
+        Caption = 'Insert New  Row'
+        OnClick = NewRowClick
+      end
+      object CopyRow: TMenuItem
+        Caption = 'Copy Row'
+        OnClick = CopyRowClick
+      end
+      object CutRow: TMenuItem
+        Caption = 'Cut Row'
+        OnClick = CutRowClick
+      end
+      object PasteRow: TMenuItem
+        Caption = 'Paste Row'
+        OnClick = PasteRowClick
+      end
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'Analyses'
+      object MenuItem32: TMenuItem
+        Caption = 'Descriptive'
+        object Distributions: TMenuItem
+          Caption = 'Distribution Statistics'
+          OnClick = DistributionsClick
+        end
+        object FreqAnal: TMenuItem
+          Caption = 'Frequency Analysis'
+          OnClick = FreqAnalClick
+        end
+        object GrpFreq: TMenuItem
+          Caption = 'Plot Group Frequencies'
+          OnClick = GrpFreqClick
+        end
+        object CrossTabs: TMenuItem
+          Caption = 'Cross Tabulation'
+          OnClick = CrossTabsClick
+        end
+        object Breakdown: TMenuItem
+          Caption = 'Breakdown'
+          OnClick = BreakdownClick
+        end
+        object BoxPlot: TMenuItem
+          Caption = 'Box Plot'
+          OnClick = BoxPlotClick
+        end
+        object NormalityTests: TMenuItem
+          Caption = 'Normality Tests'
+          OnClick = NormalityTestsClick
+        end
+        object ThreeDRotate: TMenuItem
+          Caption = '3-D Variable Rotation'
+          OnClick = ThreeDRotateClick
+        end
+        object PlotXvsY: TMenuItem
+          Caption = 'Plot X vs Y'
+          OnClick = PlotXvsYClick
+        end
+        object BubblePlot: TMenuItem
+          Caption = 'Repeated Measures Bubble Plot'
+          OnClick = BubblePlotClick
+        end
+        object StemLeaf: TMenuItem
+          Caption = 'Stem and Leaf Plot'
+          OnClick = StemLeafClick
+        end
+        object MultXvsY: TMenuItem
+          Caption = 'Multiple Group X vs Y Plot'
+          OnClick = MultXvsYClick
+        end
+        object XvsMultY: TMenuItem
+          Caption = 'X versus Multiple Y Plot'
+          OnClick = XvsMultYClick
+        end
+        object CompareDists: TMenuItem
+          Caption = 'Compare Distributions'
+          OnClick = CompareDistsClick
+        end
+        object ResistanceLine: TMenuItem
+          Caption = 'Resistant Line for Bivariate Data'
+          OnClick = ResistanceLineClick
+        end
+        object DataSmooth: TMenuItem
+          Caption = 'Data Smoothing'
+          OnClick = DataSmoothClick
+        end
+        object homotest: TMenuItem
+          Caption = 'Brown-Forsythe Test for Homogeneity of Variance'
+          OnClick = homotestClick
+        end
+      end
+      object OneSampTests: TMenuItem
+        Caption = 'One Sample Tests'
+        OnClick = OneSampTestsClick
+      end
+      object MenuItem34: TMenuItem
+        Caption = 'Comparisons'
+        object PropDiff: TMenuItem
+          Caption = 'Difference beween Proportions'
+          OnClick = PropDiffClick
+        end
+        object CorrDiff: TMenuItem
+          Caption = 'Difference Between Correlations'
+          OnClick = CorrDiffClick
+        end
+        object ttests: TMenuItem
+          Caption = 't-tests'
+          OnClick = ttestsClick
+        end
+        object Anova: TMenuItem
+          Caption = '1,2 or 3 Way ANOVAs'
+          OnClick = AnovaClick
+        end
+        object WithinAnova: TMenuItem
+          Caption = 'Within Subjects ANOVA'
+          OnClick = WithinAnovaClick
+        end
+        object AxSAnova: TMenuItem
+          Caption = 'A x S ANOVA'
+          OnClick = AxSAnovaClick
+        end
+        object ABSAnova: TMenuItem
+          Caption = 'A x B x S ANOVA'
+          OnClick = ABSAnovaClick
+        end
+        object BinA: TMenuItem
+          Caption = 'B Nested in A ANOVA'
+          OnClick = BinAClick
+        end
+        object NestedABC: TMenuItem
+          Caption = 'ABC ANOVA with B Nested in A'
+          OnClick = NestedABCClick
+        end
+        object OneCaseAnova: TMenuItem
+          Caption = '2 or 3 Way ANOVA with One Case Per Cell'
+          OnClick = OneCaseAnovaClick
+        end
+        object Ancova: TMenuItem
+          Caption = 'ANCOVA by Regression'
+          OnClick = AncovaClick
+        end
+        object GLM: TMenuItem
+          Caption = 'General Linear Model'
+          OnClick = GLMClick
+        end
+        object LatinSquares: TMenuItem
+          Caption = 'Latin and Greco-Latin Squares'
+          OnClick = LatinSquaresClick
+        end
+      end
+      object MenuItem35: TMenuItem
+        Caption = 'Correlation'
+        object MenuItem71: TMenuItem
+          Caption = 'Product-Moment'
+          OnClick = MenuItem71Click
+        end
+        object MenuItem72: TMenuItem
+          Caption = 'Partial, Semipartial'
+          OnClick = MenuItem72Click
+        end
+        object MenuItem73: TMenuItem
+          Caption = 'Autocorrelation'
+          OnClick = MenuItem73Click
+        end
+        object MenuItem74: TMenuItem
+          Caption = 'Canonical'
+          OnClick = MenuItem74Click
+        end
+      end
+      object MenuItem36: TMenuItem
+        Caption = 'Multiple Regression'
+        object LSMRitem: TMenuItem
+          Caption = 'Least Squares Multiple Regression'
+          OnClick = LSMRitemClick
+        end
+        object MenuItem75: TMenuItem
+          Caption = 'Forward Stepwise'
+          OnClick = MenuItem75Click
+        end
+        object MenuItem76: TMenuItem
+          Caption = 'Backward Stepwise'
+          OnClick = MenuItem76Click
+        end
+        object MenuItem77: TMenuItem
+          Caption = 'Simultaneous'
+          OnClick = MenuItem77Click
+        end
+        object MenuItem78: TMenuItem
+          Caption = 'Block Entry'
+          OnClick = MenuItem78Click
+        end
+        object MenuItem79: TMenuItem
+          Caption = 'Best Combination'
+          OnClick = MenuItem79Click
+        end
+        object MenuItem80: TMenuItem
+          Caption = 'Binary Logistic'
+          OnClick = MenuItem80Click
+        end
+        object MenuItem81: TMenuItem
+          Caption = 'Cox Proportional Hazzards Survival Regression'
+          OnClick = MenuItem81Click
+        end
+        object MenuItem82: TMenuItem
+          Caption = 'Linear Programming'
+          OnClick = MenuItem82Click
+        end
+        object TwoSLSReg: TMenuItem
+          Caption = 'Two Stage Least Squares Regression'
+          OnClick = TwoSLSRegClick
+        end
+        object WLSReg: TMenuItem
+          Caption = 'Weighted Least Squares Regression'
+          OnClick = WLSRegClick
+        end
+      end
+      object MenuItem37: TMenuItem
+        Caption = 'Multivariate'
+        object MenuItem83: TMenuItem
+          Caption = 'MANOVA / Discriminant Function'
+          OnClick = MenuItem83Click
+        end
+        object MenuItem84: TMenuItem
+          Caption = 'Hierarchical Analysis'
+          OnClick = MenuItem84Click
+        end
+        object MenuItem29: TMenuItem
+          Caption = 'Average Link Clustering'
+          OnClick = MenuItem29Click
+        end
+        object MenuItem31: TMenuItem
+          Caption = 'K Means Clustering'
+          OnClick = MenuItem31Click
+        end
+        object MenuItem33: TMenuItem
+          Caption = 'Single Link Clustering'
+          OnClick = MenuItem33Click
+        end
+        object MenuItem85: TMenuItem
+          Caption = 'Path Analysis'
+          OnClick = MenuItem85Click
+        end
+        object MenuItem86: TMenuItem
+          Caption = 'Factor Analysis'
+          OnClick = MenuItem86Click
+        end
+        object MenuItem87: TMenuItem
+          Caption = 'Canonical Correlation'
+          OnClick = MenuItem87Click
+        end
+        object MenuItem88: TMenuItem
+          Caption = 'General Linear Model'
+          OnClick = MenuItem88Click
+        end
+        object BartlettTest: TMenuItem
+          Caption = 'Bartlett Test of Sphericity'
+          OnClick = BartlettTestClick
+        end
+        object Correspondence: TMenuItem
+          Caption = 'Correspondence Analysis'
+          OnClick = CorrespondenceClick
+        end
+        object MedianPolish: TMenuItem
+          Caption = 'Median Polishing for a 2x2 Table'
+          OnClick = MedianPolishClick
+        end
+      end
+      object MenuItem38: TMenuItem
+        Caption = 'Cross-Classification'
+        object MenuItem89: TMenuItem
+          Caption = 'AxB Log Linear'
+          OnClick = MenuItem89Click
+        end
+        object MenuItem90: TMenuItem
+          Caption = 'AxBxC Log Linear'
+          OnClick = MenuItem90Click
+        end
+        object MenuItem91: TMenuItem
+          Caption = 'Log Linear Screen'
+          OnClick = MenuItem91Click
+        end
+      end
+      object MenuItem39: TMenuItem
+        Caption = 'Measurement Programs'
+        object MenuItem92: TMenuItem
+          Caption = 'Generate Sample Test Data'
+          OnClick = MenuItem92Click
+        end
+        object MenuItem93: TMenuItem
+          Caption = 'Classical Test Analysis'
+          OnClick = MenuItem93Click
+        end
+        object MenuItem94: TMenuItem
+          Caption = 'Rasch Test Calibration'
+          OnClick = MenuItem94Click
+        end
+        object MenuItem95: TMenuItem
+          Caption = 'Successive Interval Scaling'
+          OnClick = MenuItem95Click
+        end
+        object MenuItem96: TMenuItem
+          Caption = 'Guttman Scalogram Analysis'
+          OnClick = MenuItem96Click
+        end
+        object MenuItem97: TMenuItem
+          Caption = 'Weighted Composite Reliability'
+          OnClick = MenuItem97Click
+        end
+        object MenuItem98: TMenuItem
+          Caption = 'Kuder-Richardson #21 Reliability'
+          OnClick = MenuItem98Click
+        end
+        object MenuItem99: TMenuItem
+          Caption = 'Spearman-Brown Prophecy Reliability'
+          OnClick = MenuItem99Click
+        end
+        object MenuItem100: TMenuItem
+          Caption = 'Reliability Due to Test Variance Change'
+          OnClick = MenuItem100Click
+        end
+        object MenuItem101: TMenuItem
+          Caption = 'Differential Item Functioning'
+          OnClick = MenuItem101Click
+        end
+        object MenuItem102: TMenuItem
+          Caption = 'Polytomous DIF Analysis'
+          OnClick = MenuItem102Click
+        end
+        object MenuItem43: TMenuItem
+          Caption = '-'
+        end
+        object GrdBkMnu: TMenuItem
+          Caption = 'Grade Book'
+          OnClick = GrdBkMnuClick
+        end
+        object ItemBankMenuItem: TMenuItem
+          Caption = 'Item Banking'
+          OnClick = ItemBankMenuItemClick
+        end
+      end
+      object MenuItem40: TMenuItem
+        Caption = 'Nonparametric'
+        object SimpChiSqr: TMenuItem
+          Caption = 'Simple ChiSquare for Categories'
+          OnClick = SimpChiSqrClick
+        end
+        object MenuItem103: TMenuItem
+          Caption = 'Contingency Chi Square'
+          OnClick = MenuItem103Click
+        end
+        object MenuItem104: TMenuItem
+          Caption = 'Spearman Rank Correlation'
+          OnClick = MenuItem104Click
+        end
+        object MenuItem105: TMenuItem
+          Caption = 'Mann-Whitney U Test'
+          OnClick = MenuItem105Click
+        end
+        object MenuItem106: TMenuItem
+          Caption = 'Fisher''s Exact Test'
+          OnClick = MenuItem106Click
+        end
+        object MenuItem107: TMenuItem
+          Caption = 'Kendall''s Coefficient of Concordance'
+          OnClick = MenuItem107Click
+        end
+        object MenuItem108: TMenuItem
+          Caption = 'Kruskal-Wallis One Way ANOVA'
+          OnClick = MenuItem108Click
+        end
+        object MenuItem109: TMenuItem
+          Caption = 'Wilcoxon Matched Pairs Signed Ranks Test'
+          OnClick = MenuItem109Click
+        end
+        object MenuItem110: TMenuItem
+          Caption = 'Cochran Q Test'
+          OnClick = MenuItem110Click
+        end
+        object MenuItem111: TMenuItem
+          Caption = 'Sign Test'
+          OnClick = MenuItem111Click
+        end
+        object MenuItem112: TMenuItem
+          Caption = 'Friedman Two Way ANOVA'
+          OnClick = MenuItem112Click
+        end
+        object MenuItem113: TMenuItem
+          Caption = 'Probability of a binomial event'
+          OnClick = MenuItem113Click
+        end
+        object MenuItem114: TMenuItem
+          Caption = 'Kendall''s Tau and Parrtial Tau'
+          OnClick = MenuItem114Click
+        end
+        object MenuItem115: TMenuItem
+          Caption = 'Kaplan-Meier Survival Analysis'
+          OnClick = MenuItem115Click
+        end
+        object RiditAnalysis: TMenuItem
+          Caption = 'RIDIT Analysis'
+          OnClick = RiditAnalysisClick
+        end
+        object WghtedKappa: TMenuItem
+          Caption = 'Kappa and Weighted Kappa'
+          OnClick = WghtedKappaClick
+        end
+        object GenKappa: TMenuItem
+          Caption = 'Generalized Kappa'
+          OnClick = GenKappaClick
+        end
+        object RunsTest: TMenuItem
+          Caption = 'Runs Test for Normality'
+          OnClick = RunsTestClick
+        end
+        object Sens: TMenuItem
+          Caption = 'Sen''s Slope Analysis'
+          OnClick = SensClick
+        end
+        object KSTest: TMenuItem
+          Caption = 'Kolmogorov-Smirnov Test'
+          OnClick = KSTestClick
+        end
+        object SRHItem: TMenuItem
+          Caption = 'Scheirer-Ray-Hart 2-way ANOVA'
+          OnClick = SRHItemClick
+        end
+        object lifetable: TMenuItem
+          Caption = 'Life Table'
+          OnClick = lifetableClick
+        end
+      end
+      object MenuItem41: TMenuItem
+        Caption = 'Statistical Process Control'
+        object MenuItem116: TMenuItem
+          Caption = 'XBAR Chart'
+          OnClick = MenuItem116Click
+        end
+        object MenuItem117: TMenuItem
+          Caption = 'Range Chart'
+          OnClick = MenuItem117Click
+        end
+        object MenuItem118: TMenuItem
+          Caption = 'S Control Chart'
+          OnClick = MenuItem118Click
+        end
+        object MenuItem6: TMenuItem
+          Caption = 'CUMSUM Chart'
+          OnClick = MenuItem6Click
+        end
+        object MenuItem119: TMenuItem
+          Caption = 'Defect (nonconformity) c Chart'
+          OnClick = MenuItem119Click
+        end
+        object pcontrochart: TMenuItem
+          Caption = 'p Control Chart'
+          OnClick = pcontrochartClick
+        end
+        object MenuItem120: TMenuItem
+          Caption = 'Defects per Unit u Chart'
+          OnClick = MenuItem120Click
+        end
+      end
+      object MenuItem9: TMenuItem
+        Caption = 'Financial'
+        object MenuItem10: TMenuItem
+          Caption = 'Loan Amortization Schedule'
+          OnClick = MenuItem10Click
+        end
+        object MenuItem11: TMenuItem
+          Caption = 'Sum of years digits depreciation'
+          OnClick = MenuItem11Click
+        end
+        object MenuItem14: TMenuItem
+          Caption = 'Straight line depreciation'
+          OnClick = MenuItem14Click
+        end
+        object MenuItem17: TMenuItem
+          Caption = 'Internal rate of return'
+          Visible = False
+        end
+        object MenuItem18: TMenuItem
+          Caption = 'Present Value'
+          Visible = False
+        end
+        object MenuItem19: TMenuItem
+          Caption = 'Period Payment'
+          Visible = False
+        end
+        object MenuItem21: TMenuItem
+          Caption = 'Payment'
+          Visible = False
+        end
+        object MenuItem22: TMenuItem
+          Caption = 'No. of Periods'
+          Visible = False
+        end
+        object MenuItem23: TMenuItem
+          Caption = 'Net Present Value'
+          Visible = False
+        end
+        object MenuItem24: TMenuItem
+          Caption = 'Interest Rate'
+          Visible = False
+        end
+        object MenuItem25: TMenuItem
+          Caption = 'Interest Payment'
+          Visible = False
+        end
+        object MenuItem26: TMenuItem
+          Caption = 'Future Value'
+          Visible = False
+        end
+        object MenuItem27: TMenuItem
+          Caption = 'Double Declining Value'
+          OnClick = MenuItem27Click
+        end
+      end
+      object MatManMnu: TMenuItem
+        Caption = 'Matrix Manipulation'
+        OnClick = MatManMnuClick
+      end
+    end
+    object Option: TMenuItem
+      Caption = 'Options'
+      object ShowOpts: TMenuItem
+        Caption = 'Show Options'
+        OnClick = OptionClick
+      end
+      object PicView: TMenuItem
+        Caption = 'View Pictures'
+        Visible = False
+      end
+    end
+    object MenuItem7: TMenuItem
+      Caption = 'Simulations'
+      object ScatPlot: TMenuItem
+        Caption = 'Bivariate Scatter Plot'
+        OnClick = ScatPlotClick
+      end
+      object MultDists: TMenuItem
+        Caption = 'Multivariate Distribution'
+        OnClick = MultDistsClick
+      end
+      object TypeErrors: TMenuItem
+        Caption = 'Type 1 and Type 2 Error Curves'
+        OnClick = TypeErrorsClick
+      end
+      object Power: TMenuItem
+        Caption = 'Power Curves for a z test'
+        OnClick = PowerClick
+      end
+      object DistPlots: TMenuItem
+        Caption = 'Distribution Plots and Critical Values'
+        OnClick = DistPlotsClick
+      end
+      object SeqValues: TMenuItem
+        Caption = 'Generate Sequential Values'
+        OnClick = SeqValuesClick
+      end
+      object RandomVals: TMenuItem
+        Caption = 'Random Theoretical Values'
+        OnClick = RandomValsClick
+      end
+      object Probabilities: TMenuItem
+        Caption = 'Probabilities'
+        object probgtz: TMenuItem
+          Caption = 'Probability > z'
+          OnClick = probgtzClick
+        end
+        object Probltz: TMenuItem
+          Caption = 'Probability < z'
+          OnClick = ProbltzClick
+        end
+        object probzbetween: TMenuItem
+          Caption = 'Prob between 2 z values'
+          OnClick = probzbetweenClick
+        end
+        object MenuItem45: TMenuItem
+          Caption = '-'
+        end
+        object inversez: TMenuItem
+          Caption = 'z for a given cum. Probability'
+          OnClick = inversezClick
+        end
+        object MenuItem44: TMenuItem
+          Caption = '-'
+        end
+        object Chiprob: TMenuItem
+          Caption = 'Chisquare Probability'
+          OnClick = ChiprobClick
+        end
+        object tprob: TMenuItem
+          Caption = 'Student t probability'
+          OnClick = tprobClick
+        end
+        object Fprob: TMenuItem
+          Caption = 'F probability'
+          OnClick = FprobClick
+        end
+        object HypergeoProb: TMenuItem
+          Caption = 'Hypergeometric probability'
+          OnClick = HypergeoProbClick
+        end
+      end
+    end
+    object MenuItem8: TMenuItem
+      Caption = 'Help'
+      object About: TMenuItem
+        Caption = 'About...'
+        OnClick = AboutClick
+      end
+      object MenuItem46: TMenuItem
+        Caption = '-'
+      end
+      object GridUse: TMenuItem
+        Caption = 'Using the Grid'
+        OnClick = GridUseClick
+      end
+      object HelpContents: TMenuItem
+        Caption = 'General Help'
+        OnClick = HelpContentsClick
+      end
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    left = 312
+    top = 200
+  end
+  object SaveDialog1: TSaveDialog
+    left = 432
+    top = 200
+  end
+end

@@ -1,0 +1,585 @@
+object TwoPropFrm: TTwoPropFrm
+  Left = 603
+  Height = 427
+  Top = 225
+  Width = 455
+  Caption = 'Test of Equality for two Proportions'
+  ClientHeight = 427
+  ClientWidth = 455
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object ConfLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = CInterval
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = CInterval
+    Left = 8
+    Height = 15
+    Top = 359
+    Width = 149
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'Percent Confidence Interval:'
+    ParentColor = False
+  end
+  object CInterval: TEdit
+    AnchorSideLeft.Control = ConfLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel4
+    Left = 165
+    Height = 23
+    Top = 355
+    Width = 41
+    Alignment = taRightJustify
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Right = 8
+    TabOrder = 1
+    Text = '95.0'
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 242
+    Height = 25
+    Top = 394
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 3
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 304
+    Height = 25
+    Top = 394
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 4
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 388
+    Height = 25
+    Top = 394
+    Width = 55
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
+  end
+  object HelpBtn: TButton
+    Tag = 152
+    AnchorSideRight.Control = ResetBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 183
+    Height = 25
+    Top = 394
+    Width = 51
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 2
+  end
+  object Notebook1: TNotebook
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CInterval
+    Left = 8
+    Height = 259
+    Top = 88
+    Width = 439
+    PageIndex = 1
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    TabOrder = 0
+    object Page1: TPage
+      AnchorSideTop.Side = asrBottom
+      object Label11: TLabel
+        AnchorSideLeft.Control = Page1
+        AnchorSideTop.Control = Page1
+        Left = 0
+        Height = 15
+        Top = 0
+        Width = 83
+        Caption = 'Select Variables:'
+        ParentColor = False
+      end
+      object FirstVarLabel: TLabel
+        AnchorSideLeft.Control = Bevel1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = VarList
+        Left = 223
+        Height = 15
+        Top = 17
+        Width = 66
+        Caption = 'First Variable'
+        ParentColor = False
+      end
+      object SecdVarLabel: TLabel
+        AnchorSideLeft.Control = Bevel1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideBottom.Control = Var2
+        Left = 223
+        Height = 15
+        Top = 110
+        Width = 83
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Second Variable'
+        ParentColor = False
+      end
+      object GrpLabel: TLabel
+        AnchorSideLeft.Control = Bevel1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideBottom.Control = Grp
+        Left = 223
+        Height = 15
+        Top = 219
+        Width = 64
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Group Code'
+        ParentColor = False
+      end
+      object VarList: TListBox
+        AnchorSideLeft.Control = Page1
+        AnchorSideTop.Control = Label11
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Bevel1
+        AnchorSideBottom.Control = Page1
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 242
+        Top = 17
+        Width = 215
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 2
+        Constraints.MinHeight = 220
+        ItemHeight = 0
+        OnClick = VarListClick
+        TabOrder = 0
+      end
+      object Var1: TEdit
+        AnchorSideLeft.Control = Bevel1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = FirstVarLabel
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Page1
+        AnchorSideRight.Side = asrBottom
+        Left = 223
+        Height = 23
+        Top = 34
+        Width = 216
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        ReadOnly = True
+        TabOrder = 1
+        Text = 'Var1'
+      end
+      object Var2: TEdit
+        AnchorSideLeft.Control = Bevel1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = VarList
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Page1
+        AnchorSideRight.Side = asrBottom
+        Left = 223
+        Height = 23
+        Top = 127
+        Width = 216
+        Anchors = [akTop, akLeft, akRight]
+        ReadOnly = True
+        TabOrder = 2
+        Text = 'Var2'
+      end
+      object Grp: TEdit
+        AnchorSideLeft.Control = Bevel1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideRight.Control = Page1
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = VarList
+        AnchorSideBottom.Side = asrBottom
+        Left = 223
+        Height = 23
+        Top = 236
+        Width = 216
+        Anchors = [akLeft, akRight, akBottom]
+        ReadOnly = True
+        TabOrder = 3
+        Text = 'Grp'
+      end
+      object Bevel1: TBevel
+        AnchorSideLeft.Control = Page1
+        AnchorSideLeft.Side = asrCenter
+        Left = 215
+        Height = 49
+        Top = 53
+        Width = 8
+        Shape = bsSpacer
+      end
+    end
+    object Page2: TPage
+      object Panel4: TPanel
+        AnchorSideTop.Control = Page2
+        Left = 24
+        Height = 62
+        Top = 16
+        Width = 344
+        AutoSize = True
+        BorderSpacing.Top = 16
+        BevelOuter = bvNone
+        ChildSizing.HorizontalSpacing = 8
+        ChildSizing.VerticalSpacing = 12
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 5
+        ClientHeight = 62
+        ClientWidth = 344
+        TabOrder = 0
+        object Samp1Label: TLabel
+          AnchorSideTop.Side = asrCenter
+          Left = 0
+          Height = 23
+          Top = 4
+          Width = 77
+          Caption = 'Sample 1 Freq.'
+          ParentColor = False
+        end
+        object IndFreq1: TEdit
+          Left = 85
+          Height = 23
+          Top = 4
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 0
+          Text = 'IndFreq1'
+        end
+        object Bevel2: TBevel
+          Left = 173
+          Height = 10
+          Top = 4
+          Width = 10
+          Constraints.MaxHeight = 10
+          Constraints.MaxWidth = 10
+          Shape = bsSpacer
+        end
+        object Samp1SizeLabel: TLabel
+          AnchorSideTop.Side = asrCenter
+          Left = 191
+          Height = 23
+          Top = 4
+          Width = 65
+          BorderSpacing.Top = 4
+          Caption = 'Sample Size:'
+          ParentColor = False
+        end
+        object IndSize1: TEdit
+          Left = 264
+          Height = 23
+          Top = 4
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 1
+          Text = 'IndSize1'
+        end
+        object Samp2Label: TLabel
+          Left = 0
+          Height = 23
+          Top = 39
+          Width = 77
+          Caption = 'Sample 2 Freq.'
+          ParentColor = False
+        end
+        object IndFreq2: TEdit
+          Left = 85
+          Height = 23
+          Top = 39
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 2
+          Text = 'IndFreq2'
+        end
+        object Bevel3: TBevel
+          Left = 173
+          Height = 10
+          Top = 39
+          Width = 10
+          Constraints.MaxHeight = 10
+          Constraints.MaxWidth = 10
+          Shape = bsSpacer
+        end
+        object Samp2SizeLabel: TLabel
+          Left = 191
+          Height = 23
+          Top = 39
+          Width = 65
+          Caption = 'Sample Size:'
+          ParentColor = False
+        end
+        object IndSize2: TEdit
+          Left = 264
+          Height = 23
+          Top = 39
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 3
+          Text = 'IndSize2'
+        end
+      end
+    end
+    object Page3: TPage
+      object DepSamp2Label: TLabel
+        AnchorSideLeft.Control = Page3
+        Left = 8
+        Height = 15
+        Top = 72
+        Width = 45
+        BorderSpacing.Left = 8
+        Caption = 'Sample2'
+        ParentColor = False
+      end
+      object DepSamp1Label: TLabel
+        AnchorSideTop.Control = Page3
+        Left = 168
+        Height = 15
+        Top = 0
+        Width = 45
+        Caption = 'Sample1'
+        ParentColor = False
+      end
+      object Panel3: TPanel
+        AnchorSideTop.Control = DepSamp1Label
+        AnchorSideTop.Side = asrBottom
+        Left = 72
+        Height = 85
+        Top = 23
+        Width = 201
+        BorderSpacing.Top = 8
+        BevelOuter = bvNone
+        ChildSizing.HorizontalSpacing = 16
+        ChildSizing.VerticalSpacing = 12
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 3
+        ClientHeight = 85
+        ClientWidth = 201
+        TabOrder = 0
+        object LabelCorner: TLabel
+          Left = 0
+          Height = 15
+          Top = 0
+          Width = 9
+          Caption = '   '
+          ParentColor = False
+        end
+        object Samp10Label: TLabel
+          Left = 25
+          Height = 15
+          Top = 0
+          Width = 80
+          Alignment = taCenter
+          Caption = '0'
+          ParentColor = False
+        end
+        object Samp11Label: TLabel
+          Left = 121
+          Height = 15
+          Top = 0
+          Width = 80
+          Alignment = taCenter
+          Caption = '1'
+          ParentColor = False
+        end
+        object Samp20Label: TLabel
+          Left = 0
+          Height = 23
+          Top = 27
+          Width = 9
+          Caption = '0'
+          Layout = tlCenter
+          ParentColor = False
+        end
+        object DepFreq00: TEdit
+          Left = 25
+          Height = 23
+          Top = 27
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 0
+          Text = 'DepFreq00'
+        end
+        object DepFreq10: TEdit
+          Left = 121
+          Height = 23
+          Top = 27
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 1
+          Text = 'DepFreq10'
+        end
+        object Samp21Label: TLabel
+          Left = 0
+          Height = 23
+          Top = 62
+          Width = 9
+          Caption = '1'
+          Layout = tlCenter
+          ParentColor = False
+        end
+        object DepFreq01: TEdit
+          Left = 25
+          Height = 23
+          Top = 62
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 2
+          Text = 'DepFreq01'
+        end
+        object DepFreq11: TEdit
+          Left = 121
+          Height = 23
+          Top = 62
+          Width = 80
+          Alignment = taRightJustify
+          TabOrder = 3
+          Text = 'DepFreq11'
+        end
+      end
+    end
+  end
+  object Bevel4: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CloseBtn
+    Left = 0
+    Height = 8
+    Top = 378
+    Width = 455
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 80
+    Top = 0
+    Width = 455
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 80
+    ClientWidth = 455
+    TabOrder = 6
+    object RadioGroup1: TRadioGroup
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Bevel5
+      Left = 16
+      Height = 72
+      Top = 8
+      Width = 203
+      Anchors = [akTop, akRight]
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Top = 8
+      Caption = 'Data Entry By:'
+      ChildSizing.LeftRightSpacing = 16
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.VerticalSpacing = 2
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 52
+      ClientWidth = 199
+      Items.Strings = (
+        'Values Entered on this Form'
+        'Values in the Data Grid'
+      )
+      OnClick = RadioGroup1Click
+      TabOrder = 0
+    end
+    object RadioGroup2: TRadioGroup
+      AnchorSideLeft.Control = Bevel5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 235
+      Height = 72
+      Top = 8
+      Width = 188
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Top = 8
+      Caption = 'Test Assumptions:'
+      ChildSizing.LeftRightSpacing = 16
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.VerticalSpacing = 2
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 52
+      ClientWidth = 184
+      Items.Strings = (
+        'Independent Proportions'
+        'Dependent Proportions'
+      )
+      OnClick = RadioGroup2Click
+      TabOrder = 1
+    end
+    object Bevel5: TBevel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel1
+      Left = 219
+      Height = 41
+      Top = 0
+      Width = 16
+      Shape = bsSpacer
+    end
+  end
+end

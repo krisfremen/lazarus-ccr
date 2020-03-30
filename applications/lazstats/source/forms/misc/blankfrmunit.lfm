@@ -1,0 +1,102 @@
+object BlankFrm: TBlankFrm
+  Left = 442
+  Height = 557
+  Top = 204
+  Width = 751
+  ActiveControl = CloseBtn
+  BorderStyle = bsSingle
+  Caption = 'BlankFrm'
+  ClientHeight = 557
+  ClientWidth = 751
+  OnActivate = FormActivate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object Image1: TImage
+    Left = 8
+    Height = 499
+    Top = 8
+    Width = 735
+    Align = alClient
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+  end
+  object Panel1: TPanel
+    Left = 8
+    Height = 26
+    Top = 523
+    Width = 735
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 8
+    BevelOuter = bvNone
+    ClientHeight = 26
+    ClientWidth = 735
+    TabOrder = 0
+    object PrintBtn: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 342
+      Height = 25
+      Top = 1
+      Width = 51
+      AutoSize = True
+      BorderSpacing.Left = 12
+      BorderSpacing.Right = 12
+      Caption = 'Print'
+      OnClick = PrintBtnClick
+      TabOrder = 1
+    end
+    object SaveBtn: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = PrintBtn
+      Left = 244
+      Height = 25
+      Top = 1
+      Width = 86
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      Caption = 'Save Image'
+      OnClick = SaveBtnClick
+      TabOrder = 0
+    end
+    object CloseBtn: TButton
+      AnchorSideLeft.Control = PrintBtn
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrBottom
+      Left = 405
+      Height = 25
+      Top = 1
+      Width = 55
+      AutoSize = True
+      Caption = 'Close'
+      OnClick = CloseBtnClick
+      TabOrder = 2
+    end
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 8
+    Top = 507
+    Width = 751
+    Align = alBottom
+    Shape = bsBottomLine
+  end
+  object SavePictureDialog1: TSavePictureDialog
+    left = 120
+    top = 392
+  end
+  object OpenPictureDialog1: TOpenPictureDialog
+    left = 248
+    top = 392
+  end
+  object PrintDialog1: TPrintDialog
+    left = 376
+    top = 392
+  end
+end

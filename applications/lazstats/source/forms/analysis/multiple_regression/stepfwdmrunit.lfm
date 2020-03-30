@@ -1,0 +1,446 @@
+object StepFwdFrm: TStepFwdFrm
+  Left = 677
+  Height = 461
+  Top = 239
+  Width = 469
+  AutoSize = True
+  Caption = 'Forward Stepwise Multiple Regression'
+  ClientHeight = 461
+  ClientWidth = 469
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 97
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Available Variables'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = ListBox1
+    AnchorSideTop.Control = Owner
+    Left = 189
+    Height = 15
+    Top = 8
+    Width = 127
+    BorderSpacing.Top = 8
+    Caption = 'Variables to be Analyzed'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = DepVar
+    AnchorSideTop.Control = Owner
+    Left = 346
+    Height = 15
+    Top = 8
+    Width = 102
+    BorderSpacing.Top = 8
+    Caption = 'Dependent Variable'
+    ParentColor = False
+  end
+  object VarList: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = AllBtn
+    AnchorSideBottom.Control = GroupBox1
+    Left = 8
+    Height = 244
+    Top = 25
+    Width = 119
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    ItemHeight = 0
+    MultiSelect = True
+    TabOrder = 0
+  end
+  object InBtn: TBitBtn
+    AnchorSideLeft.Control = AllBtn
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = VarList
+    Left = 144
+    Height = 28
+    Top = 25
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = InBtnClick
+    Spacing = 0
+    TabOrder = 1
+  end
+  object OutBtn: TBitBtn
+    AnchorSideLeft.Control = AllBtn
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = InBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 144
+    Height = 28
+    Top = 57
+    Width = 28
+    BorderSpacing.Top = 4
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = OutBtnClick
+    Spacing = 0
+    TabOrder = 2
+  end
+  object AllBtn: TBitBtn
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = OutBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 135
+    Height = 25
+    Top = 97
+    Width = 46
+    Anchors = [akTop]
+    AutoSize = True
+    BorderSpacing.Top = 12
+    Caption = 'ALL'
+    OnClick = AllBtnClick
+    Spacing = 0
+    TabOrder = 3
+  end
+  object ListBox1: TListBox
+    AnchorSideLeft.Control = AllBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = DepInBtn
+    AnchorSideBottom.Control = VarList
+    AnchorSideBottom.Side = asrBottom
+    Left = 189
+    Height = 244
+    Top = 25
+    Width = 113
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    TabOrder = 4
+  end
+  object DepInBtn: TBitBtn
+    Left = 310
+    Height = 28
+    Top = 24
+    Width = 28
+    Anchors = [akTop]
+    Images = MainDataModule.ImageList
+    ImageIndex = 1
+    OnClick = DepInBtnClick
+    Spacing = 0
+    TabOrder = 5
+  end
+  object DepOutBtn: TBitBtn
+    AnchorSideLeft.Control = DepInBtn
+    AnchorSideTop.Control = DepInBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 310
+    Height = 28
+    Top = 52
+    Width = 28
+    Images = MainDataModule.ImageList
+    ImageIndex = 0
+    OnClick = DepOutBtnClick
+    Spacing = 0
+    TabOrder = 6
+  end
+  object DepVar: TEdit
+    AnchorSideLeft.Control = DepInBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 346
+    Height = 23
+    Top = 25
+    Width = 115
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    TabOrder = 7
+    Text = 'DepVar'
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 135
+    Top = 277
+    Width = 451
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Caption = 'Options'
+    ChildSizing.LeftRightSpacing = 16
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 18
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ChildSizing.ControlsPerLine = 5
+    ClientHeight = 115
+    ClientWidth = 447
+    TabOrder = 9
+    object CPChkBox: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 6
+      Width = 196
+      Caption = 'Show Cross-Products Matrix'
+      TabOrder = 0
+    end
+    object CovChkBox: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 27
+      Width = 196
+      Caption = 'Show Variance-covariance Matrix'
+      TabOrder = 1
+    end
+    object CorrsChkBox: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 48
+      Width = 196
+      Caption = 'Show Intercorrelations Matrix'
+      TabOrder = 2
+    end
+    object MeansChkBox: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 69
+      Width = 196
+      Caption = 'Show Means'
+      TabOrder = 3
+    end
+    object VarChkBox: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 90
+      Width = 196
+      Caption = 'Show Variances'
+      TabOrder = 4
+    end
+    object SDChkBox: TCheckBox
+      Left = 230
+      Height = 19
+      Top = 6
+      Width = 201
+      Caption = 'Show Standard Deviations'
+      TabOrder = 5
+    end
+    object MatInChkBox: TCheckBox
+      Left = 230
+      Height = 19
+      Top = 27
+      Width = 201
+      Caption = 'Get Data from a Matrix File'
+      TabOrder = 6
+    end
+    object MatSaveChkBox: TCheckBox
+      Left = 230
+      Height = 19
+      Top = 48
+      Width = 201
+      Caption = 'Save the Correlation Matrix'
+      TabOrder = 7
+    end
+    object PredictChkBox: TCheckBox
+      Left = 230
+      Height = 19
+      Top = 69
+      Width = 201
+      Caption = 'Predictions, residuals, C.I.''s to Grid'
+      TabOrder = 8
+    end
+  end
+  object ResetBtn: TButton
+    AnchorSideRight.Control = CancelBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 168
+    Height = 25
+    Top = 428
+    Width = 54
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 10
+  end
+  object ComputeBtn: TButton
+    AnchorSideRight.Control = ReturnBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 308
+    Height = 25
+    Top = 428
+    Width = 76
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
+    TabOrder = 11
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = ComputeBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 234
+    Height = 25
+    Top = 428
+    Width = 62
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 12
+  end
+  object ReturnBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 396
+    Height = 25
+    Top = 428
+    Width = 61
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 13
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 0
+    Height = 8
+    Top = 412
+    Width = 469
+    Anchors = [akLeft, akRight, akBottom]
+    Shape = bsBottomLine
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = DepInBtn
+    AnchorSideTop.Control = DepOutBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 310
+    Height = 80
+    Top = 92
+    Width = 132
+    AutoSize = True
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 8
+    Caption = 'Minimum Probability'
+    ClientHeight = 60
+    ClientWidth = 128
+    TabOrder = 8
+    object Label4: TLabel
+      AnchorSideTop.Control = InProb
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = InProb
+      Left = 25
+      Height = 15
+      Top = 6
+      Width = 44
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 18
+      BorderSpacing.Right = 8
+      Caption = 'to Enter:'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      AnchorSideTop.Control = ProbOut
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = ProbOut
+      Left = 19
+      Height = 15
+      Top = 33
+      Width = 50
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 18
+      BorderSpacing.Right = 8
+      Caption = 'to Retain:'
+      ParentColor = False
+    end
+    object InProb: TEdit
+      AnchorSideTop.Control = GroupBox2
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 77
+      Height = 23
+      Top = 2
+      Width = 39
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 12
+      TabOrder = 0
+      Text = 'InProb'
+    end
+    object ProbOut: TEdit
+      AnchorSideLeft.Control = InProb
+      AnchorSideTop.Control = InProb
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 77
+      Height = 23
+      Top = 29
+      Width = 39
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 12
+      BorderSpacing.Bottom = 8
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+  end
+  object Bevel2: TBevel
+    Left = 5
+    Height = 15
+    Top = 352
+    Width = 13
+    Shape = bsSpacer
+  end
+  object OpenDialog1: TOpenDialog
+    left = 49
+    top = 48
+  end
+  object SaveDialog1: TSaveDialog
+    left = 48
+    top = 112
+  end
+end

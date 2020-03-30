@@ -1,0 +1,109 @@
+object LatinSqrsFrm: TLatinSqrsFrm
+  Left = 199
+  Height = 248
+  Top = 108
+  Width = 523
+  ActiveControl = Plan
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Latin and Greco-Latin Squares Analyses'
+  ClientHeight = 248
+  ClientWidth = 523
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object CancelBtn: TButton
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Plan
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = OKBtn
+    Left = 399
+    Height = 25
+    Top = 214
+    Width = 62
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 2
+  end
+  object OKBtn: TButton
+    AnchorSideTop.Control = Plan
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 473
+    Height = 25
+    Top = 214
+    Width = 42
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'OK'
+    ModalResult = 1
+    OnClick = OKBtnClick
+    TabOrder = 3
+  end
+  object Plan: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 198
+    Top = 8
+    Width = 515
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Winer''s Plans:'
+    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 2
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 178
+    ClientWidth = 511
+    Items.Strings = (
+      'Plan 1.   Three Factors (A,B,C) with no interactions.'
+      'Plan 2.   Four Factors (A,B,C,D) with partial interactions.'
+      'Plan 3.   Like Plan 2 but different assumptions (Partial confounding of interaction ABC.)'
+      'The Greco-Latin with no interactions assumed.'
+      'Plan 5.   Repeated measures Latin Square (random assignment of groups to rows.)'
+      'Plan 6.   Fractional replication of a three factor factorial experiment in incomplete blocks.'
+      'Plan 7.   Plan 5 with superimposing of an orthogonal Latin square.'
+      'Plan 9.   AxBxC (same square used for all levels of Factor C.)'
+    )
+    OnClick = PlanClick
+    TabOrder = 0
+  end
+  object HelpBtn: TButton
+    Tag = 130
+    AnchorSideTop.Control = Plan
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CancelBtn
+    Left = 340
+    Height = 25
+    Top = 214
+    Width = 51
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Help'
+    OnClick = HelpBtnClick
+    TabOrder = 1
+  end
+end

@@ -1,0 +1,52 @@
+object TypeFrm: TTypeFrm
+  Left = 126
+  Top = 120
+  HelpContext = 1830
+  BorderStyle = bsDialog
+  Caption = 'Item Type'
+  ClientHeight = 171
+  ClientWidth = 185
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  HelpFile = 'ITEMBANKHELP.HLP'
+  PixelsPerInch = 96
+  object TypeRG: TRadioGroup
+    Left = 8
+    Top = 8
+    Width = 169
+    Height = 113
+    Caption = 'Select the item type:'
+    ItemIndex = 0
+    Items.Strings = (
+      'Multiple Choice'
+      'True-False'
+      'Set of Matching Items'
+      'Essay'
+      'Fill in the Blank/Completion')
+    TabOrder = 0
+  end
+  object CancelBtn: TButton
+    Left = 8
+    Top = 136
+    Width = 73
+    Height = 25
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+    OnClick = CancelBtnClick
+  end
+  object OKBtn: TButton
+    Left = 104
+    Top = 136
+    Width = 73
+    Height = 25
+    Caption = 'OK'
+    ModalResult = 1
+    TabOrder = 2
+    OnClick = OKBtnClick
+  end
+end
