@@ -49,6 +49,7 @@
       <Unit2>
         <Filename Value="..\..\fpemakernotesanyo.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="fpeMakerNoteSanyo"/>
       </Unit2>
     </Units>
   </ProjectOptions>
@@ -62,6 +63,11 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <Checks>
+        <RangeChecks Value="True"/>
+      </Checks>
+    </CodeGeneration>
     <Linking>
       <Debugging>
         <UseExternalDbgSyms Value="True"/>

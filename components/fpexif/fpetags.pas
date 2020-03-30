@@ -491,7 +491,7 @@ begin
     AClass, AReadOnly);
 end;
 
-procedure TTagDefList.AddURationalTag( ATagID: TTagID; AName: String;
+procedure TTagDefList.AddURationalTag(ATagID: TTagID; AName: String;
   ACount: Word = 1; ADesc: String = '';
   ALkupTbl: String = ''; AFormatStr: String = ''; AClass: TTagClass = nil;
   AReadOnly: Boolean = false);
@@ -921,6 +921,7 @@ var
   s: String;
   fmtStr: TStringArray;
   lkup: TStringArray;
+  len: Integer;
 begin
   Result := '';
 
@@ -941,7 +942,9 @@ begin
     for i:=0 to FCount-1 do lkup[i] := '';
   end else begin
     lkup := Split(FLkUpTbl, '|');
-    for i:=Length(lkup) to FCount-1 do lkup[i] := '';
+    len := Length(lkup);
+    if len < FCount then SetLength(lkup, FCount);
+    for i:=len to FCount-1 do lkup[i] := '';
   end;
 
   for i:=0 to FCount-1 do begin

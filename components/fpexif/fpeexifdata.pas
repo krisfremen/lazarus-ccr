@@ -185,7 +185,7 @@ type
   private
     FIndex: Integer;
   public
-    constructor Create(ATagID, AIndex: Integer; AName: String; AData: TBytes;
+    constructor Create(ATagID: TTagID; AIndex: Integer; AName: String; AData: TBytes;
       ACount: Integer; ALkupTbl: String; AOptions: TTagOptions); reintroduce;
     property Index: Integer read FIndex;
   end;
@@ -194,7 +194,7 @@ type
   private
     FIndex: Integer;
   public
-    constructor Create(ATagID, AIndex: Integer; AName: String; AValue: Integer;
+    constructor Create(ATagID: TTagID; AIndex: Integer; AName: String; AValue: Integer;
       ALkupTbl, AFormatStr: String; ATagType: TTagType; AOptions: TTagOptions); reintroduce;
     property Index: Integer read FIndex;
   end;
@@ -203,7 +203,7 @@ type
   private
     FIndex: Integer;
   public
-    constructor Create(ATagID, AIndex: Integer; AName: String; AValue: Double;
+    constructor Create(ATagID: TTagID; AIndex: Integer; AName: String; AValue: Double;
       AFormatStr: String; ATagType: TTagType; AOptions: TTagOptions); reintroduce;
     property Index: Integer read FIndex;
   end;
@@ -1436,8 +1436,8 @@ end;
 //==============================================================================
 //                             TMakerNoteTag
 //==============================================================================
-constructor TMakerNoteIntegerTag.Create(ATagID, AIndex: Integer; AName: String;
-  AValue: Integer; ALkupTbl, AFormatStr: String; ATagType: TTagType;
+constructor TMakerNoteIntegerTag.Create(ATagID: TTagID; AIndex: Integer;
+  AName: String; AValue: Integer; ALkupTbl, AFormatStr: String; ATagType: TTagType;
   AOptions: TTagOptions);
 begin
   if not (ATagType in [ttUInt8, ttUInt16, ttUInt32, ttSInt8, ttSInt16, ttSInt32]) then
@@ -1457,8 +1457,8 @@ begin
   SetInteger(0, AValue, false);  // false: MakeNote tags are poorly defined -> don't crash
 end;
 
-constructor TMakerNoteFloatTag.Create(ATagID, AIndex: Integer; AName: String;
-  AValue: Double; AFormatStr: String; ATagType: TTagType;
+constructor TMakerNoteFloatTag.Create(ATagID: TTagID; AIndex: Integer;
+  AName: String; AValue: Double; AFormatStr: String; ATagType: TTagType;
   AOptions: TTagOptions);
 begin
   if not (ATagType in [ttURational, ttSRational]) then
@@ -1476,8 +1476,8 @@ begin
   AsFloat := AValue;
 end;
 
-constructor TMakerNoteStringTag.Create(ATagID, AIndex: Integer; AName: String;
-  AData: TBytes; ACount: Integer; ALkupTbl: String;
+constructor TMakerNoteStringTag.Create(ATagID: TTagID; AIndex: Integer;
+  AName: String; AData: TBytes; ACount: Integer; ALkupTbl: String;
   AOptions: TTagOptions);
 begin
   FIndex := AIndex;
