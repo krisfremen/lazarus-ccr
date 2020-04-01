@@ -96,6 +96,7 @@ type
     MenuItem44: TMenuItem;
     MenuItem45: TMenuItem;
     MenuItem46: TMenuItem;
+    LicenseMenu: TMenuItem;
     MenuItem48: TMenuItem;
     MenuItem49: TMenuItem;
     SimpChiSqr: TMenuItem;
@@ -300,6 +301,7 @@ type
     procedure JPEGViewClick(Sender: TObject);
     procedure KSTestClick(Sender: TObject);
     procedure LatinSquaresClick(Sender: TObject);
+    procedure LicenseMenuClick(Sender: TObject);
     procedure lifetableClick(Sender: TObject);
     procedure LSMRitemClick(Sender: TObject);
     procedure MatManMnuClick(Sender: TObject);
@@ -1710,6 +1712,11 @@ begin
   if LatinSqrsFrm = nil then
     Application.CreateForm(TLatinSqrsFrm, LatinSqrsFrm);
   LatinSqrsFrm.ShowModal;
+end;
+
+procedure TOS3MainFrm.LicenseMenuClick(Sender: TObject);
+begin
+  ShowLicense(false);
 end;
 
 // Menu "Analysis" > "Nonparametric" > "Life table"

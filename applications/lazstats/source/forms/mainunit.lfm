@@ -1017,6 +1017,10 @@ object OS3MainFrm: TOS3MainFrm
         Caption = 'About...'
         OnClick = AboutClick
       end
+      object LicenseMenu: TMenuItem
+        Caption = 'License...'
+        OnClick = LicenseMenuClick
+      end
       object MenuItem46: TMenuItem
         Caption = '-'
       end
