@@ -31,15 +31,9 @@ procedure OpenTabFile;
 procedure SaveTabFile;
 function ValidValue(row, col : integer) : boolean;
 function IsFiltered(GridRow : integer) : boolean;
-procedure MATREAD(VAR a : DblDyneMat;
-                  VAR norows : integer;
-                  VAR nocols : integer;
-                  VAR means : DblDyneVec;
-                  VAR stddevs : DblDyneVec;
-                  VAR NCases : integer;
-                  VAR RowLabels : StrDyneVec;
-                  VAR ColLabels : StrDyneVec;
-                  filename : string);
+procedure MatRead(var a: DblDyneMat; out NoRows, NoCols: integer;
+  var Means, StdDevs: DblDyneVec; out NCases: integer;
+  var RowLabels, ColLabels: StrDyneVec; const filename: string);
 procedure MATSAVE(VAR a : DblDyneMat;
                   norows : integer;
                   nocols : integer;
@@ -832,15 +826,12 @@ begin
 end;
 //-------------------------------------------------------------------
 
-procedure MATREAD(VAR a : DblDyneMat;
-                  VAR norows : integer;
-                  VAR nocols : integer;
-                  VAR means : DblDyneVec;
-                  VAR stddevs : DblDyneVec;
-                  VAR NCases : integer;
-                  VAR RowLabels : StrDyneVec;
-                  VAR ColLabels : StrDyneVec;
-                  filename : string);
+procedure MATREAD(var a: DblDyneMat;
+                  out NoRows, NoCols: integer;
+                  var means, stddevs: DblDyneVec;
+                  out NCases: integer;
+                  var RowLabels, ColLabels: StrDyneVec;
+                  const filename: string);
 var i, j : integer;
     mat_file : TextFile;
 begin
@@ -849,6 +840,11 @@ begin
      readln(mat_file,norows);
      readln(mat_file,nocols);
      readln(mat_file,NCases);
+
+     // wp: Setlength missing here --> very critical !!!!
+     // I understand that the calling routine pre-allocates these arrays
+     // But there should be a check whehter Norows, etc do not go beyond array size.
+
      for i := 1 to norows do readln(mat_file,RowLabels[i-1]);
      for i := 1 to nocols do readln(mat_file,ColLabels[i-1]);
      for i := 1 to nocols do readln(mat_file,means[i-1]);
@@ -897,7 +893,7 @@ begin
 
      if FileExists(filename) then
      begin
-          fileext := ExtractFileExt(filename);
+          fileext := Uppercase(ExtractFileExt(filename));
           OS3MainFrm.FileNameEdit.Text := filename;
           OS3MainFrm.OpenDialog1.FileName := filename;
           if fileext = '.CSV' then OpenCommaFile
@@ -906,7 +902,7 @@ begin
           else if fileext = '.SSV' then OpenSpaceFile;
      end
      else begin
-          ShowMessage('ERROR! ' + filename + ' not found');
+          MessageDlg(filename + ' not found.', mtError, [mbOK], 0);
           exit;
      end;
 end;

@@ -1397,14 +1397,14 @@
     </SearchPaths>
     <CodeGeneration>
       <SmartLinkUnit Value="True"/>
-      <Checks>
-        <IOChecks Value="True"/>
-      </Checks>
       <Optimizations>
         <OptimizationLevel Value="2"/>
       </Optimizations>
     </CodeGeneration>
     <Linking>
+      <Debugging>
+        <UseExternalDbgSyms Value="True"/>
+      </Debugging>
       <LinkSmart Value="True"/>
       <Options>
         <Win32>
