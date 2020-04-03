@@ -123,7 +123,6 @@ end;
 procedure TStepFwdFrm.FormCreate(Sender: TObject);
 begin
    Assert(OS3MainFrm <> nil);
-   if OutputFrm = nil then Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TStepFwdFrm.FormShow(Sender: TObject);

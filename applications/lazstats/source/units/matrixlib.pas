@@ -46,10 +46,10 @@ procedure nonsymroots(a : DblDyneMat; nv : integer;
                       var t : double;
                       var ev : double);
 
-PROCEDURE ludcmp(VAR a: DblDyneMat; n: integer; VAR indx: IntDyneVec; VAR d: double);
+procedure ludcmp(const a: DblDyneMat; n: integer; const indx: IntDyneVec; out d: double);
 
-procedure DETERM(VAR a : DblDyneMat; rows, cols : integer; VAR determ : double;
-                 VAR errorcode : boolean);
+procedure DETERM(const a: DblDyneMat; Rows, Cols: integer;
+  out determ: double; out errorcode: boolean);
 
 procedure EffectCode(GridCol, min, max : integer;
                     FactLetter : string;
@@ -522,86 +522,108 @@ begin
 end; { of procedure nonsymroots }
 //-------------------------------------------------------------------
 
-PROCEDURE ludcmp(VAR a: DblDyneMat; n: integer; VAR indx: IntDyneVec; VAR d: double);
-CONST   tiny=1.0e-20;
-VAR   k,j,imax,i: integer;
-      sum,dum,big: double;
-      vv: DblDyneVec;
+PROCEDURE ludcmp(const a: DblDyneMat; n: integer; const indx: IntDyneVec; out d: double);
+const
+  tiny = 1.0e-20;
+var
+  k,j,imax,i: integer;
+  sum,dum,big: double;
+  vv: DblDyneVec;
 BEGIN
    SetLength(vv,n);
-   d := 1.0; imax := 0;
-   FOR i := 1 to n DO BEGIN
+   d := 1.0;
+   imax := 0;
+   for i := 1 to n do begin
       big := 0.0;
-      FOR j := 1 to n DO IF (abs(a[i-1,j-1]) > big) THEN big := abs(a[i-1,j-1]);
-      IF (big = 0.0) THEN BEGIN
-         ShowMessage('Singular matrix in Lower-Upper Decomposition routine');
+      for j := 1 to n do
+        if (abs(a[i-1,j-1]) > big) then big := abs(a[i-1,j-1]);
+      if (big = 0.0) then
+      begin
+         MessageDlg('Singular matrix in Lower-Upper Decomposition routine', mtError, [mbOK], 0);
          exit;
-      END;
-      vv[i-1] := 1.0/big
-   END;
-   FOR j := 1 to n DO BEGIN
-      IF (j > 1) THEN BEGIN
-         FOR i := 1 to j-1 DO BEGIN
+      end;
+      vv[i-1] := 1.0/big;
+   end;
+
+   for j := 1 to n do
+   begin
+      if (j > 1) then
+      begin
+         for i := 1 to j-1 do
+         begin
             sum := a[i-1,j-1];
-            IF (i > 1) THEN BEGIN
-               FOR k := 1 to i-1 DO BEGIN
-                  sum := sum - a[i-1,k-1] * a[k-1,j-1]
-               END;
+            if (i > 1) then
+            begin
+               for k := 1 to i-1 do
+                  sum := sum - a[i-1,k-1] * a[k-1,j-1];
                a[i-1,j-1] := sum
-            END
-         END
-      END;
+            end;
+         end;
+      end;
+
       big := 0.0;
-      FOR i := j to n DO BEGIN
+      for i := j to n do
+      begin
          sum := a[i-1,j-1];
-         IF (j > 1) THEN BEGIN
-            FOR k := 1 to j-1 DO BEGIN
-               sum := sum - a[i-1,k-1] * a[k-1,j-1]
-            END;
+         if (j > 1) then
+         begin
+            for k := 1 to j-1 do
+               sum := sum - a[i-1,k-1] * a[k-1,j-1];
             a[i-1,j-1] := sum
          END;
          dum := vv[i-1] * abs(sum);
-         IF (dum > big) THEN BEGIN
+         if (dum > big) then
+         begin
             big := dum;
             imax := i
-         END
-      END;
-      IF (j <> imax) THEN BEGIN
-         FOR k := 1 to n DO BEGIN
+         end;
+      end;
+
+      if (j <> imax) then
+      begin
+         for k := 1 to n do
+         begin
             dum := a[imax-1,k-1];
             a[imax-1,k-1] := a[j-1,k-1];
-            a[j-1,k-1] := dum
-         END;
+            a[j-1,k-1] := dum;
+         end;
          d := -d;
          vv[imax-1] := vv[j-1]
-      END;
+      end;
       indx[j-1] := imax;
-      IF (j <> n) THEN BEGIN
-         IF (a[j-1,j-1] = 0.0) THEN a[j-1,j-1] := tiny;
+      if (j <> n) then
+      begin
+         if (a[j-1,j-1] = 0.0) then
+           a[j-1,j-1] := tiny;
          dum := 1.0/a[j-1,j-1];
-         FOR i := j+1 to n DO BEGIN
-            a[i-1,j-1] := a[i-1,j-1] * dum
-         END
-      END
-   END;
-   IF (a[n-1,n-1] = 0.0) THEN a[n-1,n-1] := tiny;
+         for i := j+1 to n do
+            a[i-1,j-1] := a[i-1,j-1] * dum;
+      end;
+   end;
+
+   if (a[n-1,n-1] = 0.0) then
+     a[n-1,n-1] := tiny;
+
    vv := nil;
-END;
+end;
 //-------------------------------------------------------------------
 
-procedure DETERM(VAR a : DblDyneMat; rows, cols : integer; VAR determ : double;
-                 VAR errorcode : boolean);
-var indx : IntDyneVec;
-    i : integer;
+procedure DETERM(const a: DblDyneMat; Rows, Cols: integer; out determ: double;
+  out errorcode: boolean);
+var
+  indx: IntDyneVec;
+  i: integer;
 begin
-     SetLength(indx,rows);
-     errorcode := FALSE;
-     if (rows <> cols) then errorcode := TRUE else
-     begin
-          LUDCMP(a, rows, indx, determ);
-          for i := 1 to rows do
-              determ := determ * a[i-1,i-1];
-     end;
+  SetLength(indx,rows);
+  errorcode := false;
+  if (rows <> cols) then
+    errorcode := true
+  else
+  begin
+    LUDCMP(a, rows, indx, determ);
+    for i := 1 to rows do
+      determ := determ * a[i-1,i-1];
+  end;
 end; { of determ }
 //-------------------------------------------------------------------
 
@@ -1329,7 +1351,7 @@ begin
     IndColLabels[i] := RowLabels[IndepIndex[i]-1];
     XYCorrs[i] := corrs[IndepIndex[i]-1,NoVars-1];
   end;
-  SVDinverse(IndepCorrs,NoIndepVars);
+  SVDinverse(IndepCorrs, NoIndepVars);
 
   if PrintInv then
   begin
@@ -1362,6 +1384,7 @@ begin
     MessageDlg('Error in computing variance estimate.', mtError, [mbOK], 0);
     StdErrEst := 0.0;
   end;
+
   if (R2 < 1.0) and (df2 > 0.0) and (df1 > 0.0) then
     F := (R2 / df1) / ((1.0-R2)/ df2)
   else

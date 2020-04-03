@@ -29,7 +29,7 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideTop.Control = InBtn
     Left = 269
     Height = 15
-    Top = 104
+    Top = 108
     Width = 127
     Caption = 'Variables to be Analyzed'
     ParentColor = False
@@ -39,7 +39,7 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideBottom.Control = DepVar
     Left = 269
     Height = 15
-    Top = 28
+    Top = 32
     Width = 102
     Anchors = [akLeft, akBottom]
     BorderSpacing.Bottom = 2
@@ -73,7 +73,7 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideTop.Side = asrBottom
     Left = 224
     Height = 28
-    Top = 104
+    Top = 108
     Width = 28
     BorderSpacing.Top = 24
     Images = MainDataModule.ImageList
@@ -89,7 +89,7 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideTop.Side = asrBottom
     Left = 224
     Height = 28
-    Top = 136
+    Top = 140
     Width = 28
     BorderSpacing.Top = 4
     Images = MainDataModule.ImageList
@@ -105,7 +105,7 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideTop.Side = asrBottom
     Left = 215
     Height = 25
-    Top = 188
+    Top = 192
     Width = 46
     AutoSize = True
     BorderSpacing.Top = 24
@@ -123,8 +123,8 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = GroupBox2
     Left = 269
-    Height = 92
-    Top = 121
+    Height = 88
+    Top = 125
     Width = 199
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
@@ -154,8 +154,9 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideTop.Side = asrBottom
     Left = 224
     Height = 28
-    Top = 52
+    Top = 56
     Width = 28
+    BorderSpacing.Top = 4
     Images = MainDataModule.ImageList
     ImageIndex = 0
     OnClick = DepOutBtnClick
@@ -173,7 +174,7 @@ object StepFwdFrm: TStepFwdFrm
     AnchorSideBottom.Side = asrBottom
     Left = 269
     Height = 23
-    Top = 45
+    Top = 49
     Width = 199
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8

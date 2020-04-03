@@ -17,9 +17,8 @@ type
     Bevel1: TBevel;
     OpenDialog1: TOpenDialog;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     InBtn: TBitBtn;
     OutBtn: TBitBtn;
     AllBtn: TBitBtn;
@@ -40,7 +39,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    ListBox1: TListBox;
+    SelList: TListBox;
     VarList: TListBox;
     procedure AllBtnClick(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
@@ -53,10 +52,12 @@ type
     procedure InBtnClick(Sender: TObject);
     procedure OutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure ReturnBtnClick(Sender: TObject);
+    procedure CloseBtnClick(Sender: TObject);
+    procedure VarListSelectionChange(Sender: TObject; User: boolean);
   private
     { private declarations }
     FAutoSized: Boolean;
+    procedure UpdateBtnStates;
   public
     { public declarations }
   end; 
@@ -69,31 +70,32 @@ implementation
 { TBackRegFrm }
 
 procedure TBackRegFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     VarList.Clear;
-     ListBox1.Clear;
-     for i := 1 to NoVariables do
-     begin
-          VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
-     end;
-     InBtn.Enabled := true;
-     OutBtn.Enabled := false;
-     CPChkBox.Checked := false;
-     CovChkBox.Checked := false;
-     CorrsChkBox.Checked := true;
-     MeansChkBox.Checked := true;
-     VarChkBox.Checked := false;
-     SDChkBox.Checked := true;
-     MatInChkBox.Checked := false;
-     MatSaveChkBox.Checked := false;
-     PartialsChkBox.Checked := false;
-     DepVar.Text := '';
-     DepInBtn.Enabled := true;
-     DepOutBtn.Enabled := false;
+  VarList.Clear;
+  SelList.Clear;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+
+  CPChkBox.Checked := false;
+  CovChkBox.Checked := false;
+  CorrsChkBox.Checked := true;
+  MeansChkBox.Checked := true;
+  VarChkBox.Checked := false;
+  SDChkBox.Checked := true;
+  MatInChkBox.Checked := false;
+  MatSaveChkBox.Checked := false;
+  PartialsChkBox.Checked := false;
+  DepVar.Text := '';
 end;
 
-procedure TBackRegFrm.ReturnBtnClick(Sender: TObject);
+procedure TBackRegFrm.VarListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
+end;
+
+procedure TBackRegFrm.CloseBtnClick(Sender: TObject);
 begin
   Close;
 end;
@@ -105,11 +107,10 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
@@ -120,7 +121,6 @@ end;
 procedure TBackRegFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TBackRegFrm.FormShow(Sender: TObject);
@@ -129,14 +129,13 @@ begin
 end;
 
 procedure TBackRegFrm.AllBtnClick(Sender: TObject);
-VAR count, index : integer;
+var
+  index: integer;
 begin
-     count := VarList.Items.Count;
-     for index := 0 to count-1 do
-     begin
-          ListBox1.Items.Add(VarList.Items.Strings[index]);
-     end;
-     VarList.Clear;
+  for index := 0 to VarList.Items.Count-1 do
+    SelList.Items.Add(VarList.Items.Strings[index]);
+  VarList.Clear;
+  UpdateBtnStates;
 end;
 
 procedure TBackRegFrm.CancelBtnClick(Sender: TObject);
@@ -145,8 +144,7 @@ begin
 end;
 
 procedure TBackRegFrm.ComputeBtnClick(Sender: TObject);
-Label CleanUp;
-VAR
+var
    NoVars, NoIndepVars, i, j, NCases, StepNo : integer;
    Index: integer;
    R2, determinant, stderrest, POut, LowestPartial : double;
@@ -168,6 +166,7 @@ VAR
    BetaWeights : DblDyneVec;
    IndepIndex : IntDyneVec;
    constant : double;
+   lReport: TStrings;
 begin
      if NoVariables = 0 then NoVariables := 200;
      SetLength(Corrs,NoVariables+1,NoVariables+1);
@@ -183,44 +182,46 @@ begin
      SetLength(IndepIndex,NoVariables);
      SetLength(ColNoSelected,NoVariables);
 
-     OutputFrm.RichEdit.Clear;
-//     OutputFrm.RichEdit.ParaGraph.Alignment := taLeftJustify;
-     OutputFrm.RichEdit.Lines.Add('Step Backward Multiple Regression by Bill Miller');
-     errcode := false;
-     errorcode := 0;
-     if MatInChkBox.Checked = true then
-     begin
-          OpenDialog1.Filter := 'FreeStat matrix files (*.MAT)|*.MAT|All files (*.*)|*.*';
+     lReport := TStringList.Create;
+     try
+       lReport.Add('STEP BACKWARD MULTIPLE REGRESSION by Bill Miller');
+       errcode := false;
+       errorcode := 0;
+
+       if MatInChkBox.Checked then
+       begin
+          OpenDialog1.Filter := 'LazStats matrix files (*.mat)|*.mat;*.MAT|All files (*.*)|*.*';
           OpenDialog1.FilterIndex := 1;
           if OpenDialog1.Execute then
           begin
                filename := OpenDialog1.FileName;
-               MATREAD(Corrs,NoVars,NoVars,Means,StdDevs,NCases,RowLabels,ColLabels,filename);
+               MatRead(Corrs, NoVars, NoVars, Means, StdDevs, NCases, RowLabels, ColLabels, filename);
                for i := 0 to NoVars-1 do
                begin
                     Variances[i] := sqr(StdDevs[i]);
                     ColNoSelected[i] := i+1;
                end;
                DepVar.Text := RowLabels[NoVars-1];
-               for i := 0 to NoVars-2 do ListBox1.Items.Add(RowLabels[i]);
+               for i := 0 to NoVars-2 do SelList.Items.Add(RowLabels[i]);
                CPChkBox.Checked := false;
                CovChkBox.Checked := false;
                MatSaveChkBox.Checked := false;
-               ShowMessage('NOTICE! Last variable in matrix is the dependent variable');
+               MessageDlg('Last variable in matrix is the dependent variable.', mtInformation, [mbOK], 0);
           end;
-     end;
-     if MatInChkBox.Checked = false then
-     begin
+       end;
+
+       if not MatInChkBox.Checked then
+       begin
           { get variable columns }
-          NoVars := ListBox1.Items.Count;
+          NoVars := SelList.Items.Count;
           if NoVars < 1 then
           begin
-               ShowMessage('ERROR! No variables selected.');
-               goto CleanUp;
+               MessageDlg('No variables selected.', mtError, [mbOK], 0);
+               exit;
           end;
           for i := 1 to NoVars do
           begin
-               cellstring := ListBox1.Items.Strings[i-1];
+               cellstring := SelList.Items[i-1];
                for j := 1 to NoVariables do
                begin
                     if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
@@ -234,8 +235,8 @@ begin
           { get dependendent variable column }
           if DepVar.Text = '' then
           begin
-               ShowMessage('ERROR! No Dependent variable selected.');
-               goto CleanUp;
+               MessageDlg('No Dependent variable selected.', mtError, [mbOK], 0);
+               exit;
           end;
           NoVars := NoVars + 1;
           for j := 1 to NoVariables do
@@ -247,59 +248,65 @@ begin
                     ColLabels[NoVars-1] := DepVar.Text;
                end;
           end;
-     end;
-     POut := 1.0;
-     StepNo := 1;
-     while NoVars > 1 do
-     begin
-          OutputFrm.RichEdit.Lines.Add('');
-          outline := format('----------------- STEP %3d ------------------',[StepNo]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-          if CPChkBox.Checked = true then
+       end;
+
+       POut := 1.0;
+       StepNo := 1;
+       while NoVars > 1 do
+       begin
+          if StepNo > 1 then
+            lReport.Add('');
+          lReport.Add('');
+          lReport.Add('----------------- STEP %3d ------------------', [StepNo]);
+          if CPChkBox.Checked then
           begin
                title := 'Cross-Products Matrix';
-               GridXProd(NoVars,ColNoSelected,Corrs,errcode,NCases);
-               MAT_PRINT(Corrs,NoVars,NoVars,title,RowLabels,ColLabels,NCases);
+               GridXProd(NoVars, ColNoSelected, Corrs, errcode, NCases);
+               MatPrint(Corrs, NoVars, NoVars, title, RowLabels, ColLabels, NCases, lReport);
           end;
-          if CovChkBox.Checked = true then
+          if CovChkBox.Checked then
           begin
                title := 'Variance-Covariance Matrix';
-               GridCovar(NoVars,ColNoSelected,Corrs,Means,Variances,
-                      StdDevs,errcode,NCases);
-               MAT_PRINT(Corrs,NoVars,NoVars,title,RowLabels,ColLabels,NCases);
+               GridCovar(NoVars, ColNoSelected, Corrs, Means, Variances, StdDevs, errcode, NCases);
+               MatPrint(Corrs, NoVars, NoVars, title, RowLabels, ColLabels, NCases, lReport);
           end;
-          if MatInChkBox.Checked = false then
-               Correlations(NoVars,ColNoSelected,Corrs,Means,Variances,
-                    StdDevs,errcode,NCases);
-          if CorrsChkBox.Checked = true then
+          if not MatInChkBox.Checked then
+               Correlations(NoVars, ColNoSelected, Corrs, Means, Variances, StdDevs, errcode, NCases);
+          if CorrsChkBox.Checked then
           begin
                title := 'Product-Moment Correlations Matrix';
-               MAT_PRINT(Corrs,NoVars,NoVars,title,RowLabels,ColLabels,NCases);
+               MatPrint(Corrs, NoVars, NoVars, title, RowLabels, ColLabels, NCases, lReport);
           end;
-          if MatSaveChkBox.Checked = true then
+          if MatSaveChkBox.Checked then
           begin
-               SaveDialog1.Filter := 'FreeStat matrix files (*.MAT)|*.MAT|All files (*.*)|*.*';
+               SaveDialog1.Filter := 'LazStats matrix files (*.mat)|*.mat;*.MAT|All files (*.*)|*.*';
                SaveDialog1.FilterIndex := 1;
                if SaveDialog1.Execute then
                begin
                     filename := SaveDialog1.FileName;
-                    MATSAVE(Corrs,NoVars,NoVars,Means,StdDevs,NCases,RowLabels,ColLabels,filename);
+                    MatSave(Corrs, NoVars, NoVars, Means, StdDevs, NCases, RowLabels, ColLabels, filename);
                end;
                MatSaveChkBox.Checked := false; // only save first one
           end;
-          title := 'Means';
-          if MeansChkBox.Checked = true then
-          DynVectorPrint(Means,NoVars,title,ColLabels,NCases);
-          title := 'Variances';
-          if VarChkBox.Checked = true then
-          DynVectorPrint(Variances,NoVars,title,ColLabels,NCases);
-          title := 'Standard Deviations';
-          if SDChkBox.Checked = true then
-             DynVectorPrint(StdDevs,NoVars,title,ColLabels,NCases);
+          if MeansChkBox.Checked then
+          begin
+            title := 'Means';
+            DynVectorPrint(Means, NoVars, title, ColLabels, NCases, lReport);
+          end;
+          if VarChkBox.Checked then
+          begin
+            title := 'Variances';
+            DynVectorPrint(Variances, NoVars, title, ColLabels, NCases, lReport);
+          end;
+          if SDChkBox.Checked then
+          begin
+            title := 'Standard Deviations';
+            DynVectorPrint(StdDevs, NoVars, title, ColLabels, NCases, lReport);
+          end;
           if errorcode > 0 then
           begin
-               ShowMessage('ERROR! A selected variable has no variability-run aborted.');
-               goto CleanUp;
+            MessageDlg('A selected variable has no variability-run aborted.', mtError, [mbOK], 0);
+            exit;
           end;
 
           { get determinant of the correlation matrix }
@@ -307,56 +314,55 @@ begin
           for i := 1 to NoVars do
               for j := 1 to NoVars do
                   CorrMat[i-1,j-1] := Corrs[i-1,j-1];
-          Determ(CorrMat,NoVars,NoVars,determinant,errcode);
+          Determ(CorrMat, NoVars, NoVars, determinant, errcode);
           if (determinant < 0.000001) then
           begin
-               ShowMessage('ERROR! Matrix is singular!');
+               MessageDlg('Matrix is singular!', mtError,[mbOK], 0);
 //               goto cleanup;
           end;
-          outline := format('Determinant of correlation matrix = %8.4f',[determinant]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-          OutputFrm.RichEdit.Lines.Add('');
-         NoIndepVars := NoVars-1;
+          lReport.Add('Determinant of correlation matrix = %8.4f', [determinant]);
+          lReport.Add('');
+
+          NoIndepVars := NoVars-1;
           for i := 1 to NoIndepVars do IndepIndex[i-1] := i;
           MReg2(NCases,NoVars,NoIndepVars,IndepIndex,corrs,InverseMat,
                RowLabels,R2,BetaWeights,
-               Means,Variances,errorcode,StdErrEst,constant,POut,true, false,false, OutputFrm.RichEdit.Lines);
-        // Get partial correlation matrix
-         for i := 1 to NoVars do
+               Means,Variances,errorcode,StdErrEst,constant,POut,true, false,false, lReport);
+
+          // Get partial correlation matrix
+          for i := 1 to NoVars do
               for j := 1 to NoVars do
                    InverseMat[i-1,j-1] := Corrs[i-1,j-1];
-         SVDinverse(InverseMat,NoVars);
-         for i := 1 to NoVars do
-         begin
+          SVDinverse(InverseMat, NoVars);
+          for i := 1 to NoVars do
+          begin
     	      for j := 1 to NoVars do
               begin
                    ProdMat[i-1,j-1] := -(1.0 / sqrt(InverseMat[i-1,i-1])) *
             	   InverseMat[i-1,j-1] * (1.0 / sqrt(InverseMat[j-1,j-1]));
               end;
-         end;
-         LowestPartial := 1.0;
-         Index := NoIndepVars;
-         for i := 1 to NoIndepVars do
-         begin
+          end;
+          LowestPartial := 1.0;
+          Index := NoIndepVars;
+          for i := 1 to NoIndepVars do
+          begin
               BetaWeights[i-1] := ProdMat[i-1,NoVars-1];
               if abs(BetaWeights[i-1]) < LowestPartial then
               begin
                    LowestPartial := abs(BetaWeights[i-1]);
                    Index := i;
               end;
-        end;
-         if PartialsChkBox.Checked = true then
-         begin
+          end;
+          if PartialsChkBox.Checked then
+          begin
               title := 'Partial Correlations';
-              DynVectorPrint(BetaWeights,NoIndepVars,title,ColLabels,NCases);
-         end;
-         OutputFrm.ShowModal;
+              DynVectorPrint(BetaWeights, NoIndepVars, title, ColLabels, NCases, lReport);
+          end;
 
-         { eliminate variable with lowest partial }
-         if NoVars > 2 then
-         begin
-              outline := format('Variable %d (%s) eliminated',[Index,ColLabels[Index-1]]);
-              OutputFrm.RichEdit.Lines.Add(outline);
+          { eliminate variable with lowest partial }
+          if NoVars > 2 then
+          begin
+              lReport.Add('Variable %d (%s) eliminated', [Index, ColLabels[Index-1]]);
               for i := Index to NoVars-1 do
               begin
                    ColNoSelected[i-1] := ColNoSelected[i];
@@ -366,70 +372,118 @@ begin
               NoVars := NoVars - 1;
               StepNo := StepNo + 1;
          end
-         else NoVars := 0;
-     end;
-     OutputFrm.ShowModal;
+         else
+              NoVars := 0;
+       end;
 
-CleanUp:
-     ColNoSelected := nil;
-     IndepIndex := nil;
-     BetaWeights := nil;
-     CorrMat := nil;
-     ProdMat := nil;
-     InverseMat := nil;
-     ColLabels := nil;
-     RowLabels := nil;
-     StdDevs := nil;
-     Variances := nil;
-     Means := nil;
-     Corrs := nil;
-     Close;
+       DisplayReport(lReport);
+
+     finally
+       lReport.Free;
+
+       ColNoSelected := nil;
+       IndepIndex := nil;
+       BetaWeights := nil;
+       CorrMat := nil;
+       ProdMat := nil;
+       InverseMat := nil;
+       ColLabels := nil;
+       RowLabels := nil;
+       StdDevs := nil;
+       Variances := nil;
+       Means := nil;
+       Corrs := nil;
+     end;
 end;
 
 procedure TBackRegFrm.DepInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := ListBox1.ItemIndex;
-     DepVar.Text := ListBox1.Items.Strings[index];
-     ListBox1.Items.Delete(index);
-     DepOutBtn.Enabled := true;
-     DepInBtn.Enabled := false;
+  index := varList.ItemIndex;
+  if (index > -1) and (DepVar.Text = '') then
+  begin
+    DepVar.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TBackRegFrm.DepOutBtnClick(Sender: TObject);
 begin
-     ListBox1.Items.Add(DepVar.Text);
-     DepVar.Text := '';
-     DepInBtn.Enabled := true;
+  if DepVar.Text <> '' then
+  begin
+    SelList.Items.Add(DepVar.Text);
+    DepVar.Text := '';
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TBackRegFrm.InBtnClick(Sender: TObject);
-VAR i, index : integer;
+var
+  i: integer;
 begin
-     index := VarList.Items.Count;
-     i := 0;
-     while i < index do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-            ListBox1.Items.Add(VarList.Items.Strings[i]);
-            VarList.Items.Delete(i);
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-     end;
-     OutBtn.Enabled := true;
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      SelList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TBackRegFrm.OutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  i: Integer;
 begin
-   index := ListBox1.ItemIndex;
-   VarList.Items.Add(ListBox1.Items.Strings[index]);
-   ListBox1.Items.Delete(index);
-   InBtn.Enabled := true;
+  i := 0;
+  while i < SelList.Items.Count do
+  begin
+    if SelList.Selected[i] then
+    begin
+      VarList.Items.Add(SelList.Items[i]);
+      SelList.Items.Delete(i);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
+
+procedure TBackRegFrm.UpdateBtnStates;
+var
+  i: Integer;
+  lSelected: Boolean;
+begin
+  lSelected := false;
+  for i := 0 to VarList.Items.Count-1 do
+    if VarList.Selected[i] then
+    begin
+      lSelected := true;
+      break;
+    end;
+  DepInBtn.Enabled := lSelected and (DepVar.Text = '');
+  InBtn.Enabled := lSelected;
+
+  DepOutBtn.Enabled := DepVar.Text <> '';
+
+  lSelected := false;
+  for i := 0 to SelList.Items.Count-1 do
+    if SelList.Selected[i] then
+    begin
+      lSelected := true;
+      break;
+    end;
+  OutBtn.Enabled := lSelected;
+end;
+
 
 initialization
   {$I backregunit.lrs}
