@@ -2,11 +2,11 @@ object CoxRegFrm: TCoxRegFrm
   Left = 457
   Height = 401
   Top = 291
-  Width = 432
+  Width = 424
   AutoSize = True
   Caption = 'Cox Proportional Hazards Survival Regression'
   ClientHeight = 401
-  ClientWidth = 432
+  ClientWidth = 424
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
@@ -27,7 +27,7 @@ object CoxRegFrm: TCoxRegFrm
   object Label2: TLabel
     AnchorSideLeft.Control = BlockList
     AnchorSideTop.Control = Owner
-    Left = 238
+    Left = 234
     Height = 15
     Top = 8
     Width = 116
@@ -38,7 +38,7 @@ object CoxRegFrm: TCoxRegFrm
   object Label3: TLabel
     AnchorSideLeft.Control = DepVar
     AnchorSideBottom.Control = DepVar
-    Left = 238
+    Left = 234
     Height = 15
     Top = 108
     Width = 114
@@ -50,7 +50,7 @@ object CoxRegFrm: TCoxRegFrm
   object Label4: TLabel
     AnchorSideLeft.Control = StatusEdit
     AnchorSideBottom.Control = StatusEdit
-    Left = 238
+    Left = 234
     Height = 15
     Top = 195
     Width = 120
@@ -64,11 +64,11 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = GroupBox1
     AnchorSideTop.Side = asrCenter
-    Left = 195
+    Left = 219
     Height = 15
     Top = 296
     Width = 117
-    BorderSpacing.Left = 16
+    BorderSpacing.Left = 40
     Caption = 'Maximum Interations:'
     ParentColor = False
   end
@@ -81,7 +81,7 @@ object CoxRegFrm: TCoxRegFrm
     Left = 8
     Height = 221
     Top = 26
-    Width = 186
+    Width = 182
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
@@ -90,13 +90,14 @@ object CoxRegFrm: TCoxRegFrm
     Constraints.MinHeight = 220
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 0
   end
   object InBtn: TBitBtn
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = VarList
-    Left = 202
+    Left = 198
     Height = 28
     Top = 26
     Width = 28
@@ -147,7 +148,7 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = InBtn
     AnchorSideTop.Side = asrBottom
-    Left = 202
+    Left = 198
     Height = 28
     Top = 58
     Width = 28
@@ -162,7 +163,7 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Label3
-    Left = 202
+    Left = 198
     Height = 28
     Top = 108
     Width = 28
@@ -177,7 +178,7 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = DepInBtn
     AnchorSideTop.Side = asrBottom
-    Left = 202
+    Left = 198
     Height = 28
     Top = 140
     Width = 28
@@ -192,7 +193,7 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideBottom.Control = StatusOutBtn
-    Left = 202
+    Left = 198
     Height = 28
     Top = 187
     Width = 28
@@ -210,7 +211,7 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = VarList
     AnchorSideBottom.Side = asrBottom
-    Left = 202
+    Left = 198
     Height = 28
     Top = 219
     Width = 28
@@ -229,16 +230,17 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Label3
-    Left = 238
+    Left = 234
     Height = 67
     Top = 25
-    Width = 186
+    Width = 182
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 16
     ItemHeight = 0
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 3
   end
   object DepVar: TEdit
@@ -248,13 +250,14 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideTop.Side = asrCenter
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 238
+    Left = 234
     Height = 23
     Top = 125
-    Width = 186
+    Width = 182
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
+    ReadOnly = True
     TabOrder = 6
     Text = 'DepVar'
   end
@@ -265,14 +268,15 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusOutBtn
     AnchorSideBottom.Side = asrBottom
-    Left = 238
+    Left = 234
     Height = 23
     Top = 212
-    Width = 186
+    Width = 182
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 12
+    ReadOnly = True
     TabOrder = 9
     Text = 'StatusEdit'
   end
@@ -323,97 +327,80 @@ object CoxRegFrm: TCoxRegFrm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Label5
     AnchorSideTop.Side = asrCenter
-    Left = 320
+    Left = 344
     Height = 23
     Top = 292
     Width = 42
     Alignment = taRightJustify
     BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     TabOrder = 11
     Text = 'MaxItsEdit'
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 111
+    Left = 215
     Height = 25
     Top = 368
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 32
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 12
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 177
-    Height = 25
-    Top = 368
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 13
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 251
+    Left = 277
     Height = 25
     Top = 368
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 14
+    TabOrder = 13
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 339
+    Left = 361
     Height = 25
     Top = 368
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 32
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 15
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 14
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 352
-    Width = 432
+    Width = 424
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
