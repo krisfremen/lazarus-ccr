@@ -1,3 +1,8 @@
+// File for testing: "cansas.laz"
+// - dependent variable: jumpgs
+// -  exolanatory variables: pulse, chins, situps
+// - instrumental variables: pulse, chins, situps, weight, waist
+
 unit TwoSLSUnit;
 
 {$mode objfpc}{$H+}
@@ -18,9 +23,8 @@ type
     Bevel2: TBevel;
     HelpBtn: TButton;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     ProxyRegShowChk: TCheckBox;
     SaveItChk: TCheckBox;
     DepIn: TBitBtn;
@@ -42,20 +46,23 @@ type
     procedure DepInClick(Sender: TObject);
     procedure DepOutClick(Sender: TObject);
     procedure ExpInClick(Sender: TObject);
+    procedure ExplanatorySelectionChange(Sender: TObject; User: boolean);
     procedure ExpOutClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure InstInClick(Sender: TObject);
+    procedure InstOutClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure PredictIt(ColNoSelected : IntDyneVec; NoVars : integer;
+    procedure PredictIt(const ColNoSelected: IntDyneVec; NoVars: integer;
               Means, StdDevs, BetaWeights : DblDyneVec;
               StdErrEst : double; NoIndepVars : integer);
 
   private
     { private declarations }
     FAutoSized: boolean;
+    procedure UpdateBtnStates;
 
   public
     { public declarations }
@@ -66,24 +73,23 @@ var
 
 implementation
 
+uses
+  StrUtils, Utils;
+
 { TTwoSLSFrm }
 
 procedure TTwoSLSFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     VarList.Clear;
-     Explanatory.Clear;
-     Instrumental.Clear;
-     DepVarEdit.Text := '';
-     ProxyRegShowChk.Checked := false;
-     DepIn.Enabled := true;
-     DepOut.Enabled := false;
-     ExpIn.Enabled := true;
-     ExpOut.Enabled := false;
-     InstIn.Enabled := true;
-     InstOut.Enabled := false;
-     for i := 1 to NoVariables do
-         VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  VarList.Clear;
+  Explanatory.Clear;
+  Instrumental.Clear;
+  DepVarEdit.Text := '';
+  ProxyRegShowChk.Checked := false;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  UpdateBtnStates;
 end;
 
 procedure TTwoSLSFrm.FormActivate(Sender: TObject);
@@ -93,12 +99,11 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
@@ -109,7 +114,6 @@ end;
 procedure TTwoSLSFrm.FormCreate(Sender: TObject);
 begin
    Assert(OS3MainFrm <> nil);
-   if OutputFrm = nil then Application.CreateForm(TOutputFrm, OutputFrm);
    if DictionaryFrm = nil then Application.CreateForm(TDictionaryFrm, DictionaryFrm);
 end;
 
@@ -126,64 +130,89 @@ begin
 end;
 
 procedure TTwoSLSFrm.InstInClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     if (VarList.Items.Count < 1) then exit;
-     i := 0;
-     while (i < VarList.Items.Count) do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-              Instrumental.Items.Add(VarList.Items.Strings[i]);
-         end;
-         i := i + 1;
-     end;
-     InstOut.Enabled := true;
-     if (VarList.Items.Count < 1) then InstIn.Enabled := false;
+  i := 0;
+  while (i < VarList.Items.Count) do
+  begin
+    if VarList.Selected[i] and (Instrumental.Items.IndexOf(VarList.Items[i]) = -1) then
+      Instrumental.Items.Add(VarList.Items[i])
+      // DO NOT DELETE Items HERE.
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
-procedure TTwoSLSFrm.DepInClick(Sender: TObject);
-VAR index : integer;
+procedure TTwoSLSFrm.InstOutClick(Sender: TObject);
+var
+  i: Integer;
 begin
-     if (VarList.Items.Count < 1) then exit;
-     index := VarList.ItemIndex;
-     DepVarEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     DepOut.Enabled := true;
-     DepIn.Enabled := false;
+  i := 0;
+  while (i < Instrumental.Items.Count) do
+  begin
+    if Instrumental.Selected[i] then
+    begin
+      if VarList.Items.IndexOf(Instrumental.Items[i]) = -1 then
+        VarList.Items.Add(Instrumental.Items[i]);
+      Instrumental.Items.Delete(i);
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TTwoSLSFrm.ComputeBtnClick(Sender: TObject);
-label cleanup;
-VAR
+var
      i, j, k, DepCol,  NoInst, NoExp, NoProx, Noindep : integer;
      IndepCols, ProxSrcCols, ExpCols, InstCols, ProxCols : IntDyneVec;
      DepProx,  NCases, col, counter : integer;
      ExpLabels, InstLabels, ProxLabels, RowLabels, ProxSrcLabels : StrDyneVec;
-     outstr : string;
-     R2, stderrest, X, Y : double;
+     X, Y : double;
      Means, Variances, StdDevs, BWeights : DblDyneVec;
      BetaWeights, BStdErrs, Bttests, tprobs : DblDyneVec;
-     ProxVals : DblDyneMat;
-     errorcode, PrintDesc, PrintCorrs, PrintInverse, PrintCoefs, SaveCorrs : boolean;
+//     ProxVals : DblDyneMat;
+     PrintDesc: Boolean;
+//     PrintCorrs, PrintInverse, PrintCoefs, SaveCorrs : boolean;
      found : boolean;
-
+     lReport: TStrings;
+     errorcode: Boolean = false;
+     R2: Double = 0.0;
+     stdErrEst: Double = 0.0;
 begin
+     if DepVarEdit.Text = '' then
+     begin
+       MessageDlg('Dependent variable not selected.', mtError, [mbOK], 0);
+       exit;
+     end;
+     if Explanatory.Items.Count = 0 then
+     begin
+       MessageDlg('No explanatory variables selected.', mtError, [mbOK], 0);
+       exit;
+     end;
+     if Instrumental.Items.Count = 0 then
+     begin
+       MessageDlg('No instrumental variables selected.', mtError, [mbOK], 0);
+       exit;
+     end;
+
      if (ProxyRegShowChk.Checked) then
      begin
         PrintDesc := true;
-        PrintCorrs := true;
-        PrintInverse := false;
-        PrintCoefs := true;
-        SaveCorrs := false;
+//        PrintCorrs := true;
+//        PrintInverse := false;
+//        PrintCoefs := true;
+//        SaveCorrs := false;
      end
      else
      begin
         PrintDesc := false;
-        PrintCorrs := false;
-        PrintInverse := false;
-        PrintCoefs := false;
-        SaveCorrs := false;
+//        PrintCorrs := false;
+//        PrintInverse := false;
+//        PrintCoefs := false;
+//        SaveCorrs := false;
      end;
      SetLength(Means,NoVariables+2);
      SetLength(Variances,NoVariables+2);
@@ -203,7 +232,7 @@ begin
      SetLength(RowLabels,NoVariables);
      SetLength(ProxSrcCols,NoVariables);
      SetLength(ProxSrcLabels,NoVariables);
-     SetLength(ProxVals,NoCases,NoVariables);
+//     SetLength(ProxVals,NoCases,NoVariables);
 
      // Get variables to analyze
      NCases := NoCases;
@@ -211,9 +240,10 @@ begin
      NoExp := Explanatory.Items.Count;
      if (NoInst < NoExp) then
      begin
-        ShowMessage('The no. of Instrumental must equal or exceed the Explanatory');
-        goto cleanup;
+        MessageDlg('The no. of Instrumental must equal or exceed the Explanatory', mtError, [mbOK], 0);
+        exit;
      end;
+
      for i := 0 to NoVariables - 1 do
      begin
          if (OS3MainFrm.DataGrid.Cells[i+1,0] = DepVarEdit.Text) then
@@ -260,22 +290,29 @@ begin
          end;
      end;
 
-     // Output Parameters of the Analysis
-     OutputFrm.RichEdit.Clear;
-     OutputFrm.RichEdit.Lines.Add('FILE: ' + OS3MainFrm.FileNameEdit.Text);
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.RichEdit.Lines.Add('Dependent := ' + DepVarEdit.Text);
-     OutputFrm.RichEdit.Lines.Add('Explanatory Variables:');
-     for i := 0 to NoExp - 1 do OutputFrm.RichEdit.Lines.Add(ExpLabels[i]);
-     OutputFrm.RichEdit.Lines.Add('Instrumental Variables:');
-     for i := 0 to NoInst - 1 do OutputFrm.RichEdit.Lines.Add(InstLabels[i]);
-     OutputFrm.RichEdit.Lines.Add('Proxy Variables:');
-     for i := 0 to NoProx - 1 do OutputFrm.RichEdit.Lines.Add(ProxLabels[i]);
-     OutputFrm.RichEdit.Lines.Add('');
+     lReport := TStringList.Create;
+     try
+       // Output Parameters of the Analysis
+       lReport.Add('FILE: ' + OS3MainFrm.FileNameEdit.Text);
+       lReport.Add('');
+       lReport.Add('Dependent: ' + DepVarEdit.Text);
+       lReport.Add('');
+       lReport.Add('Explanatory Variables:');
+       for i := 0 to NoExp - 1 do
+         lReport.Add('    ' + ExpLabels[i]);
+       lReport.Add('');
+       lReport.Add('Instrumental Variables:');
+       for i := 0 to NoInst - 1 do
+         lReport.Add('    ' + InstLabels[i]);
+       lReport.Add('');
+       lReport.Add('Proxy Variables:');
+       for i := 0 to NoProx - 1 do
+         lReport.Add('    ' + ProxLabels[i]);
+       lReport.Add('');
 
-     // Compute the prox regressions for the instrumental variables
-     for i := 0 to NoProx - 1 do
-     begin
+       // Compute the prox regressions for the instrumental variables
+       for i := 0 to NoProx - 1 do
+       begin
          DictionaryFrm.DictGrid.ColCount := 8;
          col := NoVariables + 1;
 //         NoVariables := col;
@@ -307,14 +344,23 @@ begin
              end;
          end;
          IndepCols[Noindep] := DepProx;
-         OutputFrm.RichEdit.Lines.Add('Analysis for ' + ProxLabels[i]);
-         OutputFrm.RichEdit.Lines.Add('Dependent: ' + ProxSrcLabels[i]);
-         OutputFrm.RichEdit.Lines.Add('Independent: ');
-         for j := 0 to Noindep - 1 do OutputFrm.RichEdit.Lines.Add(RowLabels[j]);
+         lReport.Add('');
+         lReport.Add('==================================================================');
+         lReport.Add('');
+         lReport.Add('Analysis for ' + ProxLabels[i]);
+         lReport.Add('-------------' + DupeString('-', Length(ProxLabels[i])));
+         lReport.Add('Dependent: ' + ProxSrcLabels[i]);
+         lReport.Add('');
+         lReport.Add('Independent: ');
+         for j := 0 to Noindep - 1 do
+           lReport.Add('    ' + RowLabels[j]);
+         lReport.Add('');
+
 //         OutputFrm.ShowModal();
-         mreg(Noindep, IndepCols, DepProx, RowLabels, Means, Variances, StdDevs,
+         MReg(Noindep, IndepCols, DepProx, RowLabels, Means, Variances, StdDevs,
              BWeights, BetaWeights, BStdErrs, Bttests, tprobs, R2, stderrest,
-             NCases, errorcode, PrintDesc);
+             NCases, errorcode, PrintDesc, lReport);
+
          // save predicted scores at column := NoVariables and in ProxVals array
          for j := 1 to NoCases do
          begin
@@ -327,17 +373,20 @@ begin
              end;
              Y := Y + BWeights[Noindep];  // intercept
              col := NoVariables;
-             outstr := format('%12.5f',[Y]);
-             OS3MainFrm.DataGrid.Cells[col,j] := outstr;
+             OS3MainFrm.DataGrid.Cells[col,j] := Format('%12.5f', [Y]);
          end; // next case
-     end; // next proxy
+       end; // next proxy
 //     OutputFrm.ShowModal();
 
-     // Compute the OLS using the Prox values and explanatory
-     Noindep := 0;
-     counter := 0;
-     for i := 0 to NoExp - 1 do
-     begin
+       lReport.Add('');
+       lReport.Add('==================================================================');
+       lReport.Add('');
+
+       // Compute the OLS using the Prox values and explanatory
+       Noindep := 0;
+       counter := 0;
+       for i := 0 to NoExp - 1 do
+       begin
          for j := 0 to NoInst - 1 do
          begin
              if (ExpLabels[i] = InstLabels[j]) then // use proxy
@@ -354,88 +403,115 @@ begin
              end;
          end;
          Noindep := Noindep + 1;
-     end;
-     PrintDesc := true;
-     PrintCorrs := true;
-     PrintInverse := false;
-     PrintCoefs := true;
-     SaveCorrs := false;
-     IndepCols[Noindep] := DepCol;
-     mreg(Noindep, IndepCols, DepCol, RowLabels, Means, Variances, StdDevs,
+       end;
+       PrintDesc := true;
+//       PrintCorrs := true;
+//       PrintInverse := false;
+//       PrintCoefs := true;
+//       SaveCorrs := false;
+       IndepCols[Noindep] := DepCol;
+       MReg(Noindep, IndepCols, DepCol, RowLabels, Means, Variances, StdDevs,
          BWeights, BetaWeights, BStdErrs, Bttests, tprobs, R2, stderrest,
-         NCases, errorcode, PrintDesc);
-     OutputFrm.ShowModal;
-     if (SaveItChk.Checked) then
-     begin
-        PredictIt(IndepCols, Noindep+1, Means, StdDevs, BetaWeights, stderrest, Noindep);
-     end;
+         NCases, errorcode, PrintDesc, lReport);
 
-     // cleanup
-cleanup:
-     ProxVals := nil;
-     ProxSrcLabels := nil;
-     ProxSrcCols := nil;
-     RowLabels := nil;
-     IndepCols := nil;
-     ProxLabels := nil;
-     ProxCols := nil;
-     InstCols := nil;
-     InstLabels := nil;
-     ExpCols := nil;
-     ExpLabels := nil;
-     tprobs := nil;
-     Bttests := nil;
-     BStdErrs := nil;
-     BetaWeights := nil;
-     BWeights := nil;
-     StdDevs := nil;
-     Variances := nil;
-     Means := nil;
+       DisplayReport(lReport);
+
+       if SaveItChk.Checked then
+         PredictIt(IndepCols, Noindep+1, Means, StdDevs, BetaWeights, stderrest, Noindep);
+
+     finally
+       lReport.Free;
+//       ProxVals := nil;
+       ProxSrcLabels := nil;
+       ProxSrcCols := nil;
+       RowLabels := nil;
+       IndepCols := nil;
+       ProxLabels := nil;
+       ProxCols := nil;
+       InstCols := nil;
+       InstLabels := nil;
+       ExpCols := nil;
+       ExpLabels := nil;
+       tprobs := nil;
+       Bttests := nil;
+       BStdErrs := nil;
+       BetaWeights := nil;
+       BWeights := nil;
+       StdDevs := nil;
+       Variances := nil;
+       Means := nil;
+     end;
+end;
+
+procedure TTwoSLSFrm.DepInClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (DepVarEdit.Text = '') then
+  begin
+    DepVarEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TTwoSLSFrm.DepOutClick(Sender: TObject);
 begin
-     if (DepVarEdit.Text = '') then exit;
-     VarList.Items.Add(DepVarEdit.Text);
-     DepVarEdit.Text := '';
-     DepIn.Enabled := true;
-     DepOut.Enabled := false;
+  if DepVarEdit.Text <> '' then
+  begin
+    VarList.Items.Add(DepVarEdit.Text);
+    DepVarEdit.Text := '';
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TTwoSLSFrm.ExpInClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     if (VarList.Items.Count < 1) then exit;
-     i := 0;
-     while (i < VarList.Items.Count) do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-              Explanatory.Items.Add(VarList.Items.Strings[i]);
-         end;
-         i := i + 1;
-     end;
-     ExpOut.Enabled := true;
-     if (VarList.Items.Count < 1) then ExpIn.Enabled := false;
+  i := 0;
+  while (i < VarList.Items.Count) do
+  begin
+    if VarList.Selected[i] and (Explanatory.Items.IndexOf(VarList.Items[i]) = -1) then
+      Explanatory.Items.Add(VarList.Items[i]);
+      // DO NOT DELETE Items HERE.
+    i := i + 1;
+  end;
+  UpdateBtnStates;
+end;
+
+procedure TTwoSLSFrm.ExplanatorySelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 procedure TTwoSLSFrm.ExpOutClick(Sender: TObject);
-VAR index : integer;
+var
+  i: Integer;
 begin
-     index := Explanatory.ItemIndex;
-     Explanatory.Items.Delete(index);
-     ExpIn.Enabled := true;
-     if (Explanatory.Items.Count < 1) then ExpOut.Enabled := false;
+  i := 0;
+  while (i < Explanatory.Items.Count) do
+  begin
+    if Explanatory.Selected[i] then
+    begin
+      if (VarList.Items.IndexOf(Explanatory.Items[i]) = -1) then
+        VarList.Items.Add(Explanatory.Items[i]);
+      Explanatory.Items.Delete(i);
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
-procedure TTwoSLSFrm.PredictIt(ColNoSelected : IntDyneVec; NoVars : integer;
-              Means, StdDevs, BetaWeights : DblDyneVec;
-              StdErrEst : double; NoIndepVars : integer);
-VAR
-   col, i, j, k, Index: integer;
-   predicted, zpredicted, z1, z2, resid, residsqr : double;
-   astring : string;
-
+procedure TTwoSLSFrm.PredictIt(const ColNoSelected: IntDyneVec; NoVars: integer;
+  Means, StdDevs, BetaWeights: DblDyneVec;
+  StdErrEst: double; NoIndepVars: integer);
+var
+  col, i, j, k, Index: integer;
+  predicted, zpredicted, z1, z2, resid, residsqr: double;
+  astring: string;
 begin
    // routine obtains predicted raw and standardized scores and their
    // residuals.  It is assumed that the dependent variable is last in the
@@ -518,6 +594,20 @@ begin
        astring := format('%8.3f',[residsqr]);
        OS3MainFrm.DataGrid.Cells[col,i] := astring;
    end;
+end;
+
+procedure TTwoSLSFrm.UpdateBtnStates;
+var
+  lSelected: Boolean;
+begin
+  lSelected := AnySelected(VarList);
+  DepIn.Enabled := lSelected and (DepVarEdit.Text = '');
+  ExpIn.Enabled := lSelected;
+  InstIn.Enabled := lSelected;
+
+  DepOut.Enabled := (DepVarEdit.Text <> '');
+  ExpOut.Enabled := AnySelected(Explanatory);
+  InstOut.Enabled := AnySelected(Instrumental);
 end;
 
 initialization

@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms,
-  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit;
+  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit, utils;
 
 {$R LazStats.res}
 

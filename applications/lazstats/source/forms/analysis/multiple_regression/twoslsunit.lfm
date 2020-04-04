@@ -74,6 +74,7 @@ object TwoSLSFrm: TTwoSLSFrm
     Constraints.MinHeight = 220
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = ExplanatorySelectionChange
     TabOrder = 0
   end
   object DepIn: TBitBtn
@@ -168,6 +169,7 @@ object TwoSLSFrm: TTwoSLSFrm
     BorderSpacing.Top = 4
     Images = MainDataModule.ImageList
     ImageIndex = 0
+    OnClick = InstOutClick
     Spacing = 0
     TabOrder = 8
   end
@@ -188,6 +190,7 @@ object TwoSLSFrm: TTwoSLSFrm
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
     BorderSpacing.Right = 8
+    ReadOnly = True
     TabOrder = 3
     Text = 'DepVarEdit'
   end
@@ -210,6 +213,7 @@ object TwoSLSFrm: TTwoSLSFrm
     BorderSpacing.Bottom = 24
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = ExplanatorySelectionChange
     TabOrder = 6
   end
   object Instrumental: TListBox
@@ -230,6 +234,8 @@ object TwoSLSFrm: TTwoSLSFrm
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = ExplanatorySelectionChange
     TabOrder = 9
   end
   object GroupBox1: TGroupBox
@@ -238,20 +244,20 @@ object TwoSLSFrm: TTwoSLSFrm
     Left = 8
     Height = 73
     Top = 286
-    Width = 308
+    Width = 316
     Anchors = [akLeft, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Bottom = 8
     Caption = 'Options'
-    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.LeftRightSpacing = 16
     ChildSizing.TopBottomSpacing = 6
     ChildSizing.VerticalSpacing = 2
     ClientHeight = 53
-    ClientWidth = 304
+    ClientWidth = 312
     TabOrder = 10
     object ProxyRegShowChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 6
       Width = 273
@@ -259,7 +265,7 @@ object TwoSLSFrm: TTwoSLSFrm
       TabOrder = 0
     end
     object SaveItChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 28
       Width = 280
@@ -268,84 +274,66 @@ object TwoSLSFrm: TTwoSLSFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 114
+    Left = 202
     Height = 25
     Top = 383
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 12
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 180
-    Height = 25
-    Top = 383
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 13
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 254
+    Left = 264
     Height = 25
     Top = 383
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 14
+    TabOrder = 13
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 342
+    Left = 348
     Height = 25
     Top = 383
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 15
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 14
   end
   object HelpBtn: TButton
     Tag = 153
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 51
+    Left = 143
     Height = 25
     Top = 383
     Width = 51
@@ -353,7 +341,7 @@ object TwoSLSFrm: TTwoSLSFrm
     AutoSize = True
     BorderSpacing.Left = 12
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -363,7 +351,7 @@ object TwoSLSFrm: TTwoSLSFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 367

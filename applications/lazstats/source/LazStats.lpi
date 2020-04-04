@@ -40,7 +40,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="170">
+    <Units Count="171">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -1382,6 +1382,11 @@
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="MainDM"/>
       </Unit169>
+      <Unit170>
+        <Filename Value="units\utils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Utils"/>
+      </Unit170>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
