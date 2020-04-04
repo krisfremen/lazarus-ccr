@@ -67,6 +67,9 @@ var
 
 implementation
 
+uses
+  Utils;
+
 { TBackRegFrm }
 
 procedure TBackRegFrm.ResetBtnClick(Sender: TObject);
@@ -459,29 +462,14 @@ end;
 
 procedure TBackRegFrm.UpdateBtnStates;
 var
-  i: Integer;
   lSelected: Boolean;
 begin
-  lSelected := false;
-  for i := 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
+  lSelected := AnySelected(VarList);
   DepInBtn.Enabled := lSelected and (DepVar.Text = '');
   InBtn.Enabled := lSelected;
 
   DepOutBtn.Enabled := DepVar.Text <> '';
-
-  lSelected := false;
-  for i := 0 to SelList.Items.Count-1 do
-    if SelList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
+  OutBtn.Enabled := AnySelected(SelList);
 end;
 
 

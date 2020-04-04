@@ -72,7 +72,8 @@ var
 implementation
 
 uses
-  Math;
+  Math,
+  Utils;
 
 { TStepFwdFrm }
 
@@ -578,30 +579,12 @@ begin
 end;
 
 procedure TStepFwdFrm.UpdateBtnStates;
-var
-  lSelected: Boolean;
-  i: Integer;
 begin
   DepInBtn.Enabled := (VarList.ItemIndex > -1) and (DepVar.Text = '');
   DepOutBtn.Enabled := (DepVar.Text <> '');
 
-  lSelected := false;
-  for i:=0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  InBtn.Enabled := lSelected;
-
-  lSelected := false;
-  for i := 0 to SelList.Items.Count-1 do
-    if SelList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
+  InBtn.Enabled := AnySelected(VarList);
+  OutBtn.Enabled := AnySelected(SelList);
 end;
 
 

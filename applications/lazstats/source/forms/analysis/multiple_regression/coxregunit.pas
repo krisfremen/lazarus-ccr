@@ -69,7 +69,8 @@ var
 implementation
 
 uses
-  Math;
+  Math,
+  Utils;
 
 { TCoxRegFrm }
 
@@ -625,28 +626,14 @@ end;
 
 procedure TCoxRegFrm.UpdateBtnStates;
 var
-  i: Integer;
   lSelected: Boolean;
 begin
-  lSelected := false;
-  for i := 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
+  lSelected := AnySelected(VarList);
   InBtn.Enabled := lSelected;
   DepInBtn.Enabled := lSelected and (DepVar.Text = '');
   StatusInBtn.Enabled := lSelected and (StatusEdit.Text = '');
 
-  lSelected := false;
-  for i := 0 to BlockList.Items.Count-1 do
-    if BlockList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
+  OutBtn.Enabled := AnySelected(BlockList);
   DepOutBtn.Enabled := DepVar.Text <> '';
   StatusOutBtn.Enabled := StatusEdit.Text <> '';
 end;
