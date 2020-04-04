@@ -112,7 +112,7 @@ var
    StdErr, df1, df2, x, determinant : double;
    errorcode : boolean = false;
    filename : string;
-   cellstring, outline, valstring : string;
+   cellstring, valstring : string;
    Corrs : DblDyneMat;
    Means : DblDyneVec;
    Variances : DblDyneVec;

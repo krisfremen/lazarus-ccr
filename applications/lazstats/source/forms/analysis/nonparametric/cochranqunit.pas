@@ -112,10 +112,10 @@ end;
 
 procedure TCochranQFrm.ComputeBtnClick(Sender: TObject);
 var
-   i, j, k, col : integer;
-   ColNoSelected : IntDyneVec;
-   R1, L1, L2, C1, g1, Q, g2, chiprob : double;
-   cellstring, outline : string;
+   i, j, k, col: integer;
+   ColNoSelected: IntDyneVec;
+   R1, L1, L2, C1, g1, Q, g2, chiprob: double;
+   cellstring: string;
    lReport: TStrings;
 begin
   if SelList.Items.Count = 0 then

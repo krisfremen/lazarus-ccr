@@ -141,13 +141,12 @@ begin
 end;
 
 procedure TLSMregForm.ComputeBtnClick(Sender: TObject);
-Label CleanUp;
 var
    i, j, NCases: integer;
    NoIndepVars, DepVarCol, NEntered: integer;
    R2, df1, df2: double;
    StdErrEst, F, FProbF, OldR2 : double;
-   pdf1, pdf2, probin, prout : double;
+   pdf1, probin, prout : double;
    errorcode : boolean;
    BetaWeights : DblDyneVec;
    BWeights : DblDyneVec;
@@ -215,7 +214,6 @@ begin
     R2 := 0.0;
     OldR2 := 0.0;
     pdf1 := 0.0;
-    pdf2 := 0.0;
     NEntered := 0;
 
     { get independendent variable column }

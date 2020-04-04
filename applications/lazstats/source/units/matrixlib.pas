@@ -811,7 +811,9 @@ begin
   VarY := VarY / (NCases - 1);
   SDY := sqrt(VarY);
 
-  AReport.Add('Variance Y = %10.3f SSY = %10.3f  SDY = %10.3f',[VarY,SSY,SDY]);
+  AReport.Add('Variance Y: %10.3f', [VarY]);
+  AReport.Add('SSY:        %10.3f', [SSY]);
+  AReport.Add('SDY:        %10.3f', [SDY]);
   // OutputFrm.ShowModal ;
 
   // augment the matrix
@@ -937,22 +939,24 @@ begin
   end;
 
   RowLabels[N-1] := 'Intercept';
-  AReport.Add('  Variable     Beta      B         Std.Err.  t         prob     VIF       TOL');
+  AReport.Add(' Variable     Beta        B       Std.Err.      t         prob       VIF      TOL');
+  AReport.Add('---------- ---------- ---------- ---------- ---------- ---------- --------- ----------');
   Correlations(NoIndep, IndepCols, XTX, Means, Variances, StdDevs, errcode, NCases);
   SVDinverse(XTX, NoIndep);
   for i := 0 to NoIndep do
   begin
     VIF := XTX[i,i];
     if VIF > 0.0 then TOL := 1.0 / VIF else TOL := 0.0;
-    AReport.Add('%10s%10.3f%10.3f%10.3f%10.3f%10.3f%10.3f%10.3f', [
+    AReport.Add('%10s %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f', [
       RowLabels[i], BetaWeights[i], BWeights[i], BStdErrs[i], Bttests[i], tprobs[i], VIF, TOL
     ]);
   end;
   AReport.Add('');
-  AReport.Add('SOURCE      DF         SS        MS        F      Prob.>F');
-  AReport.Add('Regression %3d  %9.3f %9.3f     %6.4f', [N-1, SSreg, SSreg/(N-1), F, Prob]);     // df1
-  AReport.Add('Residual   %3d  %9.3f %9.3f', [(NCases-N), SSres, SSres/(NCases-N)]);            // df2
-  AReport.Add('Total      %3d  %9.3f', [NCases-1, SSY]);
+  AReport.Add('SOURCE      DF       SS             MS             F        Prob. > F');
+  AReport.Add('---------- --- -------------- -------------- -------------- ----------');
+  AReport.Add('Regression %3d  %14.3f %14.3f %14.4f %10.4', [N-1, SSreg, SSreg/(N-1), F, Prob]);     // df1
+  AReport.Add('Residual   %3d  %14.3f %14.3f', [(NCases-N), SSres, SSres/(NCases-N)]);            // df2
+  AReport.Add('Total      %3d  %14.3f', [NCases-1, SSY]);
   AReport.Add('');
 
   AReport.Add('R2:                         %10.4f', [R2]);
@@ -1391,10 +1395,11 @@ begin
     F := 0.0;
   FProbF := probf(F,df1,df2);
 
-  AReport.Add('SOURCE    DF        SS      MS        F        Prob.>F');
-  AReport.Add('Regression %3.0f %9.3f %9.3f %9.3f %9.3f', [df1, SSreg, SSreg/df1, F, FprobF]);
-  AReport.Add('Residual   %3.0f %9.3f %9.3f', [df2, SSres, SSres/df2]);
-  AReport.Add('Total      %3.0f %9.3f', [df3, SSt]);
+  AReport.Add('SOURCE      DF        SS             MS             F        Prob. > F');
+  AReport.Add('---------- ---- -------------- -------------- -------------- ---------');
+  AReport.Add('Regression %4.0f %14.3f %14.3f %14.3f %9.3f', [df1, SSreg, SSreg/df1, F, FprobF]);
+  AReport.Add('Residual   %4.0f %14.3f %14.3f', [df2, SSres, SSres/df2]);
+  AReport.Add('Total      %4.0f %14.3f', [df3, SSt]);
   AReport.Add('');
 
   AdjR2 := 1.0 - (1.0 - R2) * (NCases - 1) / df2;
@@ -1402,13 +1407,15 @@ begin
   begin
     AReport.Add('Dependent Variable: ' + deplabel);
     AReport.Add('');
-    AReport.Add('%8s%10s%10s%12s%5s%5s', ['R', 'R2', 'F', 'Prob.>F', 'DF1', 'DF2']);
-    AReport.Add('%8.3f%10.3f%10.3f%10.3f%5.0f%5.0f',  [sqrt(R2), R2, F, FProbF, df1, df2]);
+    AReport.Add('%8s %10s %10s %10s %5s %5s', ['R', 'R2', 'F', 'Prob.>F', 'DF1', 'DF2']);
+    AReport.Add('-------- ---------- ---------- ---------- ----- -----');
+    AReport.Add('%8.3f %10.3f %10.3f %10.3f %5.0f %5.0f',  [sqrt(R2), R2, F, FProbF, df1, df2]);
     AReport.Add('Adjusted R Squared:     %10.3f', [AdjR2]);
     AReport.Add('');
     AReport.Add('Std. Error of Estimate: %10.3f', [StdErrEst]);
     AReport.Add('');
-    AReport.Add('Variable       Beta      B         Std.Error t         Prob.>t   VIF       TOL');
+    AReport.Add('Variable      Beta        B      Std.Error      t      Prob. > t     VIF        TOL');
+    Areport.Add('---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------');
   end;
 
   df1 := 1.0;
@@ -1439,7 +1446,7 @@ begin
     if PrintIt then
     begin
       valstring := Format('%10s', [IndRowLabels[i]]);
-      outline := Format('%10s%10.3f%10.3f%10.3f%10.3f%10.3f%10.3f%10.3f',
+      outline := Format('%10s %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f',
         [valstring, beta ,B, StdErrB, F, FProbF, VIF, TOL]);
       if FprobF > ProbOut then
         outline := outline + ' Exceeds limit - to be removed.';
@@ -1523,7 +1530,6 @@ var
   i, j, first, last, nflds: integer;
   done : boolean;
   outline: string;
-  valstring: string;
 begin
   AReport.Add('');
   AReport.Add(Title);

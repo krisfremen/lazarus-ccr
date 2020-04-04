@@ -144,7 +144,7 @@ begin
      SetLength(selected,noselected);
      SetLength(Values,NoCases,noselected+1);
      SetLength(Slopes,NoCases,NoCases);
-     SetLength(RankedQ,NoVars);
+     SetLength(RankedQ,NoVars);    // !!!!!!!!!!!!!!!!!!! NoVars is not initialized !!!!!!!!!!!!!!!!!!!!!!
      SetLength(Sorted,NoCases);
      SetLength(AvgSlopes,NoCases,NoCases);
 

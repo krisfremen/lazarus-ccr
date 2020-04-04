@@ -494,7 +494,6 @@ procedure TBNestedAForm.TwoWayPlot;
 VAR
   plottype, i: integer;
   maxmean: double;
-  title: string;
   XValue : DblDyneVec;
 begin
   case OptionsBox.ItemIndex of

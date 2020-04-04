@@ -154,7 +154,7 @@ var
    DifSigns : IntDyneVec;
    p, Q, Probability, z, NoDiff, CorrectedA, x1, x2 : double;
    SumProb : double;
-   cellstring, outline : string;
+   cellstring: string;
    lReport: TStrings;
 begin
      if Var1Edit.Text = '' then

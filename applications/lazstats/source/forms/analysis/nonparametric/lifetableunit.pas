@@ -198,7 +198,6 @@ var
   varcols : IntDyneVec;
   AtRisk, ProbDie, CumProbLive, StdErr, Up95, Low95 : double;
   N, P, Q, mu, CI, z : double;
-  outline : string;
 begin
   if ObsStartEdit.Text = '' then
   begin

@@ -509,7 +509,6 @@ end;
 procedure TBestRegFrm.Regress(AReport: TStrings);
 var
   i, j: integer;
-  outline: string;
 begin
   b_zero := 0.0 ;
   ss_reg := 0.0 ;

@@ -153,7 +153,7 @@ Var
    RowLabels, ColLabels : StrDyneVec;
    index : IntDyneVec;
    GrpNo : IntdyneMat;
-   cellstring, outline: string;
+   cellstring: string;
    title : string;
    ties : boolean;
    ColNoSelected : IntDyneVec;

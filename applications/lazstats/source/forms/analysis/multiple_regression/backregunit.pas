@@ -154,7 +154,7 @@ var
    errorcode : integer;
    errcode : boolean;
    filename : string;
-   cellstring, outline: string;
+   cellstring: string;
    Corrs : DblDyneMat;
    Means : DblDyneVec;
    Variances : DblDyneVec;

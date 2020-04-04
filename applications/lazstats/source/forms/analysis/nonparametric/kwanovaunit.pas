@@ -107,7 +107,6 @@ begin
 end;
 
 procedure TKWAnovaFrm.ComputeBtnClick(Sender: TObject);
-label cleanup, Check1, Check2;
 var
     i, j, k, m, ind_var, dep_var, min_grp, max_grp, group, total_n : integer;
     NoTies, NoTieGroups, nogroups, NoSelected, npairs, n1, n2 : integer;
@@ -118,7 +117,7 @@ var
     Correction, Temp, TieSum, alpha, U, U2, SD, z, prob : double;
     Ranks, X : DblDyneMat;
     RankSums : DblDyneVec;
-    cellstring, outline : string;
+    cellstring, outline: string;
     lReport: TStrings;
 begin
     // Check for data
@@ -460,7 +459,6 @@ begin
             lReport.Add('%3d  %10.3f %5d', [j, RankSums[group], group_count[1]]);
             lReport.Add('');
             lReport.Add(            'No. of tied rank groups:          %8d', [NoTieGroups]);
-            lReport.Add(outline);
             if (n1 > n2) then largestn := n1 else largestn := n2;
             if (largestn < 20) then
                 outline := Format(  'Statistic U:                      %8.4f',[U])

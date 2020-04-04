@@ -81,7 +81,6 @@ procedure TBinomialFrm.ComputeBtnClick(Sender: TObject);
 var
   p, Q, Probability, z, CorrectedA, SumProb : double;
   A, b, N, X, i: integer;
-  outline : string;
   lReport: TStrings;
   msg: String;
   C: TWinControl;
