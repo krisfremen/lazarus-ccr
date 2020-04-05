@@ -1,11 +1,11 @@
 object RIDITFrm: TRIDITFrm
-  Left = 520
-  Height = 369
-  Top = 238
+  Left = 1022
+  Height = 364
+  Top = 285
   Width = 665
   AutoSize = True
   Caption = 'Relative to an Identified Distribution Analysis'
-  ClientHeight = 369
+  ClientHeight = 364
   ClientWidth = 665
   OnActivate = FormActivate
   OnCreate = FormCreate
@@ -104,12 +104,12 @@ object RIDITFrm: TRIDITFrm
     AnchorSideRight.Side = asrBottom
     Left = 400
     Height = 72
-    Top = 180
+    Top = 176
     Width = 257
     Anchors = [akTop, akRight]
     AutoFill = True
     AutoSize = True
-    BorderSpacing.Top = 16
+    BorderSpacing.Top = 12
     BorderSpacing.Right = 8
     Caption = 'Reference Variable'
     ChildSizing.LeftRightSpacing = 12
@@ -141,7 +141,7 @@ object RIDITFrm: TRIDITFrm
     Top = 260
     Width = 167
     BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
+    BorderSpacing.Top = 12
     BorderSpacing.Right = 8
     Caption = 'Use Bonferroni for contrasts'
     TabOrder = 3
@@ -164,92 +164,74 @@ object RIDITFrm: TRIDITFrm
     Text = 'AlphaEdit'
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 364
+    Left = 452
     Height = 25
-    Top = 336
+    Top = 331
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 6
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 430
-    Height = 25
-    Top = 336
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 7
-  end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 592
+    Left = 598
     Height = 25
-    Top = 336
-    Width = 61
+    Top = 331
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 7
   end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 504
+    Left = 514
     Height = 25
-    Top = 336
+    Top = 331
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 9
+    TabOrder = 8
   end
   object HelpBtn: TButton
     Tag = 143
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 301
+    Left = 393
     Height = 25
-    Top = 336
+    Top = 331
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -259,10 +241,10 @@ object RIDITFrm: TRIDITFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
-    Height = 8
-    Top = 320
+    Height = 6
+    Top = 317
     Width = 665
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
@@ -273,13 +255,13 @@ object RIDITFrm: TRIDITFrm
     AnchorSideRight.Control = RefGrp
     AnchorSideBottom.Control = Bevel1
     Left = 0
-    Height = 312
+    Height = 309
     Top = 0
     Width = 400
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Bottom = 8
     BevelOuter = bvNone
-    ClientHeight = 312
+    ClientHeight = 309
     ClientWidth = 400
     TabOrder = 0
     object Label1: TLabel
@@ -321,7 +303,7 @@ object RIDITFrm: TRIDITFrm
       AnchorSideBottom.Control = RefEdit
       Left = 222
       Height = 15
-      Top = 272
+      Top = 269
       Width = 96
       Anchors = [akLeft, akBottom]
       BorderSpacing.Top = 8
@@ -337,7 +319,7 @@ object RIDITFrm: TRIDITFrm
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
       Left = 8
-      Height = 287
+      Height = 284
       Top = 25
       Width = 170
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -346,6 +328,7 @@ object RIDITFrm: TRIDITFrm
       BorderSpacing.Right = 8
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object RowIn: TBitBtn
@@ -424,6 +407,7 @@ object RIDITFrm: TRIDITFrm
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 3
       Text = 'RowEdit'
     end
@@ -436,7 +420,7 @@ object RIDITFrm: TRIDITFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Label4
       Left = 222
-      Height = 130
+      Height = 127
       Top = 134
       Width = 170
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -445,6 +429,7 @@ object RIDITFrm: TRIDITFrm
       BorderSpacing.Right = 8
       ItemHeight = 0
       OnClick = ColListClick
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 6
     end
     object RefEdit: TEdit
@@ -456,11 +441,12 @@ object RIDITFrm: TRIDITFrm
       AnchorSideBottom.Side = asrBottom
       Left = 222
       Height = 23
-      Top = 289
+      Top = 286
       Width = 170
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
+      ReadOnly = True
       TabOrder = 7
       Text = 'RefEdit'
     end

@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Globals, DictionaryUnit, OutputUnit, Dialogs,
   FunctionsLib, DataProcs, MainUnit;
 
-procedure GridDotProd(col1, col2: integer; var Product: double; var Ngood: integer);
+procedure GridDotProd(col1, col2: integer; out Product: double; var Ngood: integer);
 
 procedure GridXProd(NoSelected : integer;
                     {VAR} Selected : IntDyneVec;
@@ -199,9 +199,13 @@ procedure DynIntMatPrint(Mat: IntDyneMat; Rows, Cols: integer; YTitle: string;
 procedure SymMatRoots(A : DblDyneMat; M : integer; VAR E : DblDyneVec; VAR V : DblDyneMat);
 procedure matinv(a, vtimesw, v, w: DblDyneMat; n: integer);
 
+
 implementation
 
-procedure GridDotProd(col1, col2: integer; var Product: double; var Ngood: integer);
+uses
+  StrUtils;
+
+procedure GridDotProd(col1, col2: integer; out Product: double; var Ngood: integer);
 // Get the cross-product of two vectors
 // col1 and col2 are grid columns of the main form's DataGrid
 // Product is the vector product
@@ -1540,11 +1544,11 @@ begin
 
   while not done do
   begin
-    AReport.Add('');
+//    AReport.Add('');
     AReport.Add('                        ' + ytitle);;
     AReport.Add('Variables');
 
-    outline := '         ';
+    outline := DupeString(' ', 12+1);
     last := first + nflds;
     if last >= cols then
     begin
@@ -1552,21 +1556,21 @@ begin
       last := cols
     end;
     for i := first to last do
-      outline := outline + Format('%13s', [ColLabels[i-1]]);
+      outline := outline + Format('%12s ', [ColLabels[i-1]]);
     AReport.Add(outline);
 
     for i := 1 to rows do
     begin
-      outline := format('%10s', [RowLabels[i-1]]);
+      outline := Format('%12s ', [RowLabels[i-1]]);
       for j := first to last do
         outline := outline + Format('%12d ',[mat[i-1,j-1]]);
       AReport.Add(outline);
     end;
     AReport.Add('');
-    first := last + 1
+    first := last + 1;
   end;
   AReport.Add('');
-  AReport.Add('');
+//  AReport.Add('');
 end;
 //---------------------------------------------------------------------------
 
@@ -1860,7 +1864,7 @@ begin
   while not done do
   begin
     AReport.Add('Variables');
-    outline := '          ';
+    outline := DupeString(' ', 12+1); //'             ';
     last := first + nflds;
     if last >= cols then
     begin
@@ -1873,7 +1877,7 @@ begin
 
     for i := 1 to rows do
     begin
-      outline := format('%10s',[RowLabels[i-1]]);
+      outline := format('%12s ',[RowLabels[i-1]]);
       for j := first to last do
       begin
         valstring := format('%12.3f ',[xmat[i-1,j-1]]);
@@ -1921,18 +1925,19 @@ begin
   while not done do
   begin
     AReport.Add('');
-    outline := 'Variables';
     last := first + nflds;
     if last >= NoVars -1 then
     begin
       done := true;
       last := NoVars-1;
     end;
+
+    outline := 'Variables    ';     // 12+1 long
     for i := first to last do
-      outline := outline + Format('%13s', [Labels[i]]);
+      outline := outline + Format('%12s ', [Labels[i]]);
     AReport.Add(outline);
 
-    outline := '          ';
+    outline := DupeString(' ', 12+1); //'          ';
     for j := first to last do
     begin
       valstring := Format('%12.3f ', [AVector[j]]);
@@ -1955,10 +1960,11 @@ procedure scatplot(var x : DblDyneVec;
 
 var
    i, j, l, row, xslot : integer;
-   xdelta, maxy: double;
+   //xdelta: Double;
+   maxy: double;
    incrementx, incrementy, rangex, rangey, swap : double;
    plotstring  : array[0..51,0..61] of char;
-   ymed, xmed  : double;
+   //ymed, xmed  : double;
    height      : integer;
    overlap     : boolean;
    valuestring : string[2];
@@ -1973,11 +1979,11 @@ begin
   height := 40;
   rangex := x_max - x_min ;
   incrementx := rangex / 15.0;
-  xdelta := rangex / 60;
-  xmed := rangex / 2;
+//  xdelta := rangex / 60;
+//  xmed := rangex / 2;
   rangey := y_max - y_min;
   incrementy := rangey / height;
-  ymed := rangey / 2;
+//  ymed := rangey / 2;
 
   { sort in descending order }
   for i := 1 to (nocases - 1) do

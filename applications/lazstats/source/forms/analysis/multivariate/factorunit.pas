@@ -166,7 +166,7 @@ var
    MatInput : boolean;
    Title : string;
    filename : string;
-   Save_Cursor : TCursor;
+//   Save_Cursor : TCursor;
    errorcode : boolean = false;
 begin
      MaxRoot := 0.0;
@@ -525,7 +525,7 @@ again:
         FACTORS(Eigenvector, d2, ainverse, k, factorchoice);
         factREORDER(Eigenvector, ainverse, RowLabels, k);
     end;
-    Screen.Cursor := Save_Cursor;  // restore regular cursor
+//    Screen.Cursor := Save_Cursor;  // restore regular cursor
 
     for i := 1 to k do
         for j := 1 to k do
