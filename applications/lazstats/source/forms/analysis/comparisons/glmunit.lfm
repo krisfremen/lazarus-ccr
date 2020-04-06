@@ -11,92 +11,74 @@ object GLMFrm: TGLMFrm
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 561
+    Left = 653
     Height = 25
     Top = 533
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 3
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 627
-    Height = 25
-    Top = 533
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 4
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 701
+    Left = 715
     Height = 25
     Top = 533
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 4
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 789
+    Left = 799
     Height = 25
     Top = 533
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
   end
   object HelpBtn: TButton
     Tag = 126
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 498
+    Left = 594
     Height = 25
     Top = 533
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -106,7 +88,7 @@ object GLMFrm: TGLMFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 517
@@ -221,6 +203,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Top = 2
           BorderSpacing.Right = 8
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 1
         end
         object ContDepCode: TListBox
@@ -237,6 +220,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Left = 8
           BorderSpacing.Top = 2
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 0
         end
         object ContDepInBtn: TBitBtn
@@ -250,7 +234,7 @@ object GLMFrm: TGLMFrm
           Anchors = [akTop, akRight]
           BorderSpacing.Right = 8
           Images = MainDataModule.ImageList
-          ImageIndex = 1
+          ImageIndex = 0
           OnClick = ContDepInBtnClick
           Spacing = 0
           TabOrder = 2
@@ -268,7 +252,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Top = 4
           BorderSpacing.Right = 8
           Images = MainDataModule.ImageList
-          ImageIndex = 0
+          ImageIndex = 1
           OnClick = ContDepOutBtnClick
           Spacing = 0
           TabOrder = 3
@@ -345,6 +329,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Top = 2
           BorderSpacing.Right = 8
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 1
         end
         object CatDepCode: TListBox
@@ -359,6 +344,7 @@ object GLMFrm: TGLMFrm
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Left = 8
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 0
         end
       end
@@ -382,7 +368,7 @@ object GLMFrm: TGLMFrm
           Caption = 'Repeated Meas. Dep. Vars.'
           ParentColor = False
         end
-        object RepDepInBtn: TBitBtn
+        object ReptDepInBtn: TBitBtn
           AnchorSideTop.Control = RepeatList
           AnchorSideRight.Control = Panel8
           AnchorSideRight.Side = asrBottom
@@ -394,12 +380,12 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Right = 8
           Images = MainDataModule.ImageList
           ImageIndex = 1
-          OnClick = RepDepInBtnClick
+          OnClick = ReptDepInBtnClick
           Spacing = 0
           TabOrder = 2
         end
         object ReptDepOutBtn: TBitBtn
-          AnchorSideTop.Control = RepDepInBtn
+          AnchorSideTop.Control = ReptDepInBtn
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Panel8
           AnchorSideRight.Side = asrBottom
@@ -421,7 +407,7 @@ object GLMFrm: TGLMFrm
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Label7
           AnchorSideTop.Side = asrBottom
-          AnchorSideRight.Control = RepDepInBtn
+          AnchorSideRight.Control = ReptDepInBtn
           AnchorSideBottom.Control = Panel8
           AnchorSideBottom.Side = asrBottom
           Left = 60
@@ -433,6 +419,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Top = 2
           BorderSpacing.Right = 8
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 1
         end
         object ReptDepCode: TListBox
@@ -447,6 +434,7 @@ object GLMFrm: TGLMFrm
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Left = 8
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 0
         end
       end
@@ -495,6 +483,7 @@ object GLMFrm: TGLMFrm
         BorderSpacing.Top = 2
         ItemHeight = 0
         MultiSelect = True
+        OnSelectionChange = ContDepCodeSelectionChange
         TabOrder = 0
       end
     end
@@ -565,6 +554,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Right = 8
           ItemHeight = 0
           OnClick = FixedListClick
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 2
         end
         object FixedIndepCode: TListBox
@@ -579,6 +569,7 @@ object GLMFrm: TGLMFrm
           Width = 50
           Anchors = [akTop, akRight, akBottom]
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 3
         end
         object FixedIndepInBtn: TBitBtn
@@ -650,6 +641,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Right = 8
           ItemHeight = 0
           OnClick = RandomListClick
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 2
         end
         object RndIndepCode: TListBox
@@ -664,6 +656,7 @@ object GLMFrm: TGLMFrm
           Width = 50
           Anchors = [akTop, akRight, akBottom]
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 3
         end
         object RndIndepInBtn: TBitBtn
@@ -735,6 +728,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Right = 8
           ItemHeight = 0
           OnClick = CovariateListClick
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 2
         end
         object CovariateCode: TListBox
@@ -749,6 +743,7 @@ object GLMFrm: TGLMFrm
           Width = 50
           Anchors = [akTop, akRight, akBottom]
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 3
         end
         object CovInBtn: TBitBtn
@@ -820,6 +815,7 @@ object GLMFrm: TGLMFrm
           BorderSpacing.Right = 8
           ItemHeight = 0
           OnClick = RepTrtListClick
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 0
         end
         object RepTrtCode: TListBox
@@ -834,6 +830,7 @@ object GLMFrm: TGLMFrm
           Width = 50
           Anchors = [akTop, akRight, akBottom]
           ItemHeight = 0
+          OnSelectionChange = ContDepCodeSelectionChange
           TabOrder = 1
         end
         object Bevel2: TBevel
@@ -896,11 +893,11 @@ object GLMFrm: TGLMFrm
       end
       object Label11: TLabel
         AnchorSideLeft.Control = InterDefList
-        AnchorSideTop.Control = InterDefList
+        AnchorSideTop.Control = EndDefBtn
         AnchorSideTop.Side = asrBottom
         Left = 20
         Height = 15
-        Top = 138
+        Top = 165
         Width = 141
         BorderSpacing.Top = 8
         Caption = 'List of Defined Interactions'
@@ -908,14 +905,14 @@ object GLMFrm: TGLMFrm
       end
       object EndDefBtn: TButton
         AnchorSideLeft.Control = InterDefList
-        AnchorSideTop.Control = Label11
+        AnchorSideTop.Control = InterDefList
         AnchorSideTop.Side = asrBottom
         Left = 20
         Height = 25
-        Top = 161
+        Top = 132
         Width = 195
         AutoSize = True
-        BorderSpacing.Top = 8
+        BorderSpacing.Top = 2
         BorderSpacing.Right = 8
         Caption = 'End Definititon of an Interaction'
         OnClick = EndDefBtnClick
@@ -923,18 +920,18 @@ object GLMFrm: TGLMFrm
       end
       object InteractList: TListBox
         AnchorSideLeft.Control = InterDefList
-        AnchorSideTop.Control = EndDefBtn
+        AnchorSideTop.Control = Label11
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = Panel12
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Panel12
         AnchorSideBottom.Side = asrBottom
         Left = 20
-        Height = 135
-        Top = 194
+        Height = 147
+        Top = 182
         Width = 232
         Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Top = 8
+        BorderSpacing.Top = 2
         BorderSpacing.Right = 8
         ItemHeight = 0
         TabOrder = 3
@@ -1095,7 +1092,7 @@ object GLMFrm: TGLMFrm
     BevelOuter = bvNone
     ClientHeight = 25
     ClientWidth = 862
-    TabOrder = 7
+    TabOrder = 6
     object ShowModelBtn: TButton
       AnchorSideLeft.Control = Panel14
       AnchorSideTop.Control = Panel14

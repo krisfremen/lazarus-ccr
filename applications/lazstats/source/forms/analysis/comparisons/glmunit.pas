@@ -1,3 +1,9 @@
+// Data file for testing: anova2.laz
+// - Row, Col --> Fixed effect independent variables
+// - Cov1, Col2 --> Covariates (continuous)
+// - X --> Continuouse dependent variables
+// - Begin definition of an interaction, click Row, Col, end definition
+
 unit GLMUnit;
 
 {$mode objfpc}{$H+}
@@ -42,7 +48,7 @@ type
     ContDepOutBtn: TBitBtn;
     CatDepInBtn: TBitBtn;
     CatDepOutBtn: TBitBtn;
-    RepDepInBtn: TBitBtn;
+    ReptDepInBtn: TBitBtn;
     ReptDepOutBtn: TBitBtn;
     FixedIndepInBtn: TBitBtn;
     FixedIndepOutBtn: TBitBtn;
@@ -55,9 +61,8 @@ type
     CovariateCode: TListBox;
     RepTrtCode: TListBox;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     DescChk: TCheckBox;
     CorsChk: TCheckBox;
     Label12: TLabel;
@@ -93,6 +98,7 @@ type
     procedure CatDepInBtnClick(Sender: TObject);
     procedure CatDepOutBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
+    procedure ContDepCodeSelectionChange(Sender: TObject; User: boolean);
     procedure ContDepInBtnClick(Sender: TObject);
     procedure ContDepOutBtnClick(Sender: TObject);
     procedure CovariateListClick(Sender: TObject);
@@ -108,7 +114,7 @@ type
     procedure HelpBtnClick(Sender: TObject);
     procedure Panel9Resize(Sender: TObject);
     procedure RandomListClick(Sender: TObject);
-    procedure RepDepInBtnClick(Sender: TObject);
+    procedure ReptDepInBtnClick(Sender: TObject);
     procedure ReptDepOutBtnClick(Sender: TObject);
     procedure RepTrtListClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
@@ -185,18 +191,19 @@ type
     procedure AllocateGridMem;
     procedure DeallocateGridMem;
     procedure DeallocateIDMem;
-    procedure DummyCodes(min : integer; max : integer; VAR CodePattern : IntDyneMat);
-    procedure EffectCodes(min : integer; max : integer; VAR CodePattern : IntDyneMat);
-    procedure OrthogCodes(min : integer; max : integer; VAR CodePattern : IntDyneMat);
-    procedure RegAnal(Nentered : integer);
+    procedure DummyCodes(min, max: integer; const CodePattern: IntDyneMat);
+    procedure EffectCodes(min, max: integer; const CodePattern: IntDyneMat);
+    procedure OrthogCodes(min, max: integer; const CodePattern: IntDyneMat);
+    procedure RegAnal(Nentered: integer; AReport: TStrings);
     procedure PartIEntry;
     procedure PartIIEntry;
-    procedure ModelIAnalysis;
+    procedure ModelIAnalysis(AReport: TStrings);
     procedure ModelIIAnalysis;
-    procedure ModelIIIAnalysis;
+    procedure ModelIIIAnalysis(AReport: TStrings);
     function CntIntActVecs(linestr : string) : integer;
     procedure GenInterVecs(linestr : string);
     procedure CanCor(NLeft : integer; NRight : integer; GridPlace : IntDyneVec);
+    procedure UpdateBtnStates;
 
   public
     { public declarations }
@@ -208,7 +215,8 @@ var
 implementation
 
 uses
-  Math;
+  Math,
+  Utils;
 
 { TGLMFrm }
 
@@ -258,42 +266,63 @@ end;
 
 procedure TGLMFrm.RndIndepInBtnClick(Sender: TObject);
 var
-    index : integer;
-    codestr : string;
-
+  i: integer;
+  codestr: string;
 begin
-    index := VarList.ItemIndex;
-    if index >= 0 then
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
     begin
-        RandomList.Items.Add(VarList.Items.Strings[index]);
-        VarList.Items.Delete(index);
-        NRndIndep := NRndIndep + 1;
-        codestr := format('IR%d',[NRndIndep]);
-        RndIndepCode.Items.Add(codestr);
-        IndOrderBox.Items.Add(codestr);
-        RndIndepOutBtn.Enabled := true;
-    end;
+      RandomList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      NRndIndep := NRndIndep + 1;
+      codestr := Format('IR%d', [NRndIndep]);
+      RndIndepCode.Items.Add(codestr);
+      IndOrderBox.Items.Add(codestr);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
+  (*
+var
+  index: integer;
+  codestr: string;
+begin
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    RandomList.Items.Add(VarList.Items[index]);
+    VarList.Items.Delete(index);
+    NRndIndep := NRndIndep + 1;
+    codestr := format('IR%d',[NRndIndep]);
+    RndIndepCode.Items.Add(codestr);
+    IndOrderBox.Items.Add(codestr);
+  end;
+end;
+    *)
 procedure TGLMFrm.RndIndepOutBtnClick(Sender: TObject);
 var
-    i, index : integer;
-    cellstring : string;
-
+  i, index: integer;
+  cellstring: string;
 begin
-    index := RandomList.ItemIndex;
-    if index >= 0 then
-    begin
-        VarList.Items.Add(RandomList.Items.Strings[index]);
-        RandomList.Items.Delete(index);
-        cellstring := RndIndepCode.Items.Strings[index];
-        RndIndepCode.Items.Delete(index);
-        for i := 0 to IndOrderBox.Items.Count - 1 do
-            if cellstring = IndOrderBox.Items.Strings[i] then
-                IndOrderBox.Items.Delete(i);
-        NRndIndep := NRndIndep - 1;
-        if RandomList.ItemIndex < 0 then RndIndepOutBtn.Enabled := false;
-    end;
+  index := RandomList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(RandomList.Items[index]);
+    RandomList.Items.Delete(index);
+    cellstring := RndIndepCode.Items[index];
+    RndIndepCode.Items.Delete(index);
+    for i := IndOrderBox.Items.Count - 1 downto 0 do
+      if cellstring = IndOrderBox.Items.Strings[i] then
+        IndOrderBox.Items.Delete(i);
+    NRndIndep := NRndIndep - 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.ShowModelBtnClick(Sender: TObject);
@@ -406,19 +435,16 @@ procedure TGLMFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 procedure TGLMFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
   if DictionaryFrm = nil then
     Application.CreateForm(TDictionaryFrm, DictionaryFrm);
 end;
@@ -432,7 +458,7 @@ procedure TGLMFrm.HelpBtnClick(Sender: TObject);
 begin
   if ContextHelpForm = nil then
     Application.CreateForm(TContextHelpForm, ContextHelpForm);
-  ContextHelpForm.HelpMessage((Sender as TButton).tag);
+  ContextHelpForm.HelpMessage((Sender as TButton).Tag);
 end;
 
 procedure TGLMFrm.RandomListClick(Sender: TObject);
@@ -446,53 +472,52 @@ begin
     end;
 end;
 
-procedure TGLMFrm.RepDepInBtnClick(Sender: TObject);
+procedure TGLMFrm.ReptDepInBtnClick(Sender: TObject);
 var
-    index, i : integer;
-    codestr : string;
-
+  i: integer;
+  codestr: string;
 begin
-    index := VarList.Items.Count;
-    i := 0;
-    while i < index do
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
     begin
-         if (VarList.Selected[i]) then
-         begin
-            RepeatList.Items.Add(VarList.Items.Strings[i]);
-            VarList.Items.Delete(i);
-            NReptDep := NReptDep + 1;
-            codestr := format('DR%d',[NReptDep]);
-            if NReptDep = 1 then
-            begin
-                ReptDepCode.Items.Add(codestr);
-                codestr := format('IP%d',[NReptDep]);
-                IndOrderBox.Items.Add(codestr);
-                codestr := format('IR%d',[NReptDep]);
-                IndOrderBox.Items.Add(codestr);
-                RepTrtCode.Items.Add(codestr);
-                codestr := format('Rep.Trt.%d',[NReptDep]);
-                RepTrtList.Items.Add(codestr);
-            end;
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-    end;
-    ReptDepOutBtn.Enabled := true;
+      RepeatList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      NReptDep := NReptDep + 1;
+      codestr := Format('DR%d', [NReptDep]);
+      if NReptDep = 1 then
+      begin
+        ReptDepCode.Items.Add(codestr);
+        codestr := Format('IP%d', [NReptDep]);
+        IndOrderBox.Items.Add(codestr);
+        codestr := Format('IR%d', [NReptDep]);
+        IndOrderBox.Items.Add(codestr);
+        RepTrtCode.Items.Add(codestr);
+        codestr := Format('Rep.Trt.%d', [NReptDep]);
+        RepTrtList.Items.Add(codestr);
+      end;
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.ReptDepOutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-    index := RepeatList.ItemIndex;
-    if index >= 0 then
-    begin
-        VarList.Items.Add(RepeatList.Items.Strings[index]);
-        RepeatList.Items.Delete(index);
-        ReptDepCode.Items.Delete(index);
-        NReptDep := NReptDep - 1;
-        if RepeatList.ItemIndex < 0 then ReptDepOutBtn.Enabled := false;
-    end;
+  index := RepeatList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(RepeatList.Items[index]);
+    RepeatList.Items.Delete(index);
+    ReptDepCode.Items.Delete(index);
+    NReptDep := NReptDep - 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.RepTrtListClick(Sender: TObject);
@@ -508,590 +533,631 @@ end;
 
 procedure TGLMFrm.ContDepInBtnClick(Sender: TObject);
 var
-    index : integer;
-    codestr : string;
-
+  index: integer;
+  codestr: string;
 begin
-    index := VarList.ItemIndex;
-    if index >= 0 then
-    begin
-        DepContList.Items.Add(VarList.Items.Strings[index]);
-        VarList.Items.Delete(index);
-        ContDepOutBtn.Enabled := true;
-        NContDep := NContDep + 1;
-        codestr := format('DC%d',[NContDep]);
-        ContDepCode.Items.Add(codestr);
-    end;
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    DepContList.Items.Add(VarList.Items[index]);
+    VarList.Items.Delete(index);
+    NContDep := NContDep + 1;
+    codestr := Format('DC%d',[NContDep]);
+    ContDepCode.Items.Add(codestr);
+  end;
+  UpdateBtnStates;
+end;
+
+procedure TGLMFrm.ContDepOutBtnClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := DepContList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(DepContList.Items[index]);
+    DepContList.Items.Delete(index);
+    ContDepCode.Items.Delete(index);
+    NContDep := NContDep - 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.CatDepInBtnClick(Sender: TObject);
 var
-    index : integer;
-    codestr : string;
-
+  index: integer;
+  codestr: string;
 begin
-    index := VarList.ItemIndex;
-    if index >= 0 then
-    begin
-        DepCatList.Items.Add(VarList.Items.Strings[index]);
-        VarList.Items.Delete(index);
-        NCatDep := NCatDep + 1;
-        codestr := format('DF%d',[NCatDep]);
-        CatDepCode.Items.Add(codestr);
-        CatDepOutBtn.Enabled := true;
-    end;
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    DepCatList.Items.Add(VarList.Items[index]);
+    VarList.Items.Delete(index);
+    NCatDep := NCatDep + 1;
+    codestr := format('DF%d',[NCatDep]);
+    CatDepCode.Items.Add(codestr);
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.CatDepOutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-    index := DepCatList.ItemIndex;
-    if index >= 0 then
-    begin
-        VarList.Items.Add(DepCatList.Items.Strings[index]);
-        DepCatList.Items.Delete(index);
-        CatDepCode.Items.Delete(index);
-        NCatDep := NCatDep - 1;
-        if DepCatList.ItemIndex < 0 then CatDepOutBtn.Enabled := false;
-    end;
+  index := DepCatList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(DepCatList.Items[index]);
+    DepCatList.Items.Delete(index);
+    CatDepCode.Items.Delete(index);
+    NCatDep := NCatDep - 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.ComputeBtnClick(Sender: TObject);
 var
-    i, j : integer;  // no. of variables in the analysis
-    cellstring : string;
-
+  i, j: integer;  // no. of variables in the analysis
+  cellstring: string;
+  lReport: TStrings;
 begin
-    if (NContDep > 0) and (NReptDep > 0) then
-    begin
-        ShowMessage('ERROR! One cannot have both continuous and repeated dependent variables!');
-        exit;
-    end;
-    gencount := 0; // counter for generated variables
-    totalobs := 0; // initialize total no. of observations in data grid
-    AllocateIDMem; // get heap space for arrays
-    GetIDs; // get var. no.s of dependent and independent variables
-    novars := GetVarCount; // get total no. of variables to generate
-    AllocateGridMem; // create data array for values and codes
-    // Note, the Data Grid first subscript is row (subject) and second the var.
-    if (NCatDep > 0) or (NContDep > 1) then model := 2
-    else model := 1; // use mult.reg for model 1, canonical reg. for model 2
-    if NReptDep > 0 then model := 3;
+  if (NContDep = 0) and (NCatDep = 0) and (NReptDep = 0) then
+  begin
+    MessageDlg('No variables selected.', mtError, [mbOK], 0);
+    exit;
+  end;
 
-    // This procedure first creates the vectors of dependent variables then the
-    // vectors for independent variables.  A case no. is placed in the first
-    // column of a data grid followed by the dependent variables and then the
-    // independent variables.  If multiple dependent variables are created, the
-    // type of analysis is a canonical correlation analysis, otherwise a
-    // multiple regression analysis.  Analyses are performed to obtain both
-    // Type I SS's and Type II SS's (stepwise addition and unique contribution)
+  if (NContDep > 0) and (NReptDep > 0) then
+  begin
+    MessageDlg('One cannot have both continuous and repeated dependent variables!', mtError, [mbOK], 0);
+    exit;
+  end;
 
-    // PART I.  ENTRY OF DEPENDENT VARIABLES (AND OBSERVATION NO.)
-    // Place case labels in data grid and for repeated measures, spread out
-    // the repeated measures over NoCases * No. repeated measures
-    PartIEntry;
+  gencount := 0; // counter for generated variables
+  totalobs := 0; // initialize total no. of observations in data grid
+  AllocateIDMem; // get heap space for arrays
+  GetIDs; // get var. no.s of dependent and independent variables
+  novars := GetVarCount; // get total no. of variables to generate
+  AllocateGridMem; // create data array for values and codes
+  // Note, the Data Grid first subscript is row (subject) and second the var.
+  if (NCatDep > 0) or (NContDep > 1) then
+    model := 2
+  else
+    model := 1; // use mult.reg for model 1, canonical reg. for model 2
+  if NReptDep > 0 then
+    model := 3;
 
-    // PART II.  CREATION OF INDEPENDENT VARIABLE VECTORS
-    // First, if there are repeated measures, generate (n - 1) person vectors
-    PartIIEntry;
+  // This procedure first creates the vectors of dependent variables then the
+  // vectors for independent variables.  A case no. is placed in the first
+  // column of a data grid followed by the dependent variables and then the
+  // independent variables.  If multiple dependent variables are created, the
+  // type of analysis is a canonical correlation analysis, otherwise a
+  // multiple regression analysis.  Analyses are performed to obtain both
+  // Type I SS's and Type II SS's (stepwise addition and unique contribution)
 
+  // PART I.  ENTRY OF DEPENDENT VARIABLES (AND OBSERVATION NO.)
+  // Place case labels in data grid and for repeated measures, spread out
+  // the repeated measures over NoCases * No. repeated measures
+  PartIEntry;
+
+  // PART II.  CREATION OF INDEPENDENT VARIABLE VECTORS
+  // First, if there are repeated measures, generate (n - 1) person vectors
+  PartIIEntry;
+
+  lReport := TStringList.Create;
+  try
     // Now, do the analyses
-    if model = 1 then ModelIAnalysis; // models with 1 dependent variable
-    if model = 2 then ModelIIAnalysis; // models with 2 or more dependent var.s
-    if model = 3 then ModelIIIAnalysis; // Repeated measures designs
+    case model of
+      1: ModelIAnalysis(lReport);    // models with 1 dependent variable
+      2: ModelIIAnalysis;            // models with 2 or more dependent var.s
+      3: ModelIIIAnalysis(lReport);  // Repeated measures designs
+    end;
 
     // Place generated data into the main form's grid
     if ShowDesignChk.Checked then
     begin
-         if NoVariables < gencount then
-         begin
-              j := NoVariables;
-              for i := j+1 to gencount do
-              begin
-                   DictionaryFrm.NewVar(j);
-              end;
-         end;
-        OS3MainFrm.DataGrid.RowCount := totalobs+1;
-        for i := 1 to totalobs do
-            for j := 1 to gencount do
-                OS3MainFrm.DataGrid.Cells[j,i] := FloatToStr(DataGrid[i-1,j-1]);
-        for i := 1 to gencount do
-        begin
-             OS3MainFrm.DataGrid.Cells[i,0] := GenLabels[i-1];
-             DictionaryFrm.Defaults(Self,i);
-             DictionaryFrm.DictGrid.Cells[1,i] := GenLabels[i-1];
-        end;
-        for i := 1 to totalobs do
-        begin
-            cellstring := format('CASE%d',[i]);
-            OS3MainFrm.DataGrid.Cells[0,i] := cellstring;
-        end;
-        OS3MainFrm.NoCasesEdit.Text := IntToStr(totalobs);
-        OS3MainFrm.NoVarsEdit.Text := IntToStr(gencount);
-        NoVariables := gencount;
-        NoCases := totalobs;
-        OS3MainFrm.FileNameEdit.Text := '';
+      if NoVariables < gencount then
+      begin
+        j := NoVariables;
+        for i := j+1 to gencount do
+          DictionaryFrm.NewVar(j);
+      end;
+
+      OS3MainFrm.DataGrid.RowCount := totalobs+1;
+
+      for i := 1 to totalobs do
+        for j := 1 to gencount do
+          OS3MainFrm.DataGrid.Cells[j,i] := FloatToStr(DataGrid[i-1,j-1]);
+
+      for i := 1 to gencount do
+      begin
+        OS3MainFrm.DataGrid.Cells[i,0] := GenLabels[i-1];
+        DictionaryFrm.Defaults(Self,i);
+        DictionaryFrm.DictGrid.Cells[1,i] := GenLabels[i-1];
+      end;
+
+      for i := 1 to totalobs do
+      begin
+        cellstring := format('CASE%d',[i]);
+        OS3MainFrm.DataGrid.Cells[0,i] := cellstring;
+      end;
+
+      OS3MainFrm.NoCasesEdit.Text := IntToStr(totalobs);
+      OS3MainFrm.NoVarsEdit.Text := IntToStr(gencount);
+      NoVariables := gencount;
+      NoCases := totalobs;
+      OS3MainFrm.FileNameEdit.Text := '';
     end;
 
+    DisplayReport(lReport);
+
+  finally
+    lReport.Free;
     DeallocateGridMem; // free up heap allocated to data array
     DeallocateIDMem; // free up heap space
+  end;
 end;
 
-procedure TGLMFrm.ContDepOutBtnClick(Sender: TObject);
-VAR index : integer;
+procedure TGLMFrm.ContDepCodeSelectionChange(Sender: TObject; User: boolean);
 begin
-    index := DepContList.ItemIndex;
-    if index >= 0 then
-    begin
-        VarList.Items.Add(DepContList.Items.Strings[index]);
-        DepContList.Items.Delete(index);
-        ContDepCode.Items.Delete(index);
-        NContDep := NContDep - 1;
-        if DepContList.ItemIndex < 0 then ContDepOutBtn.Enabled := false;
-    end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.CovariateListClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-    if IntDef then
+  if IntDef then
+  begin
+    index := CovariateList.ItemIndex;
+    if index > -1 then
     begin
-        index := CovariateList.ItemIndex;
-        InterDefList.Items.Add(CovariateCode.Items.Strings[index]);
-        DefLine := DefLine + 1; // counter for number of terms - 1
+      InterDefList.Items.Add(CovariateCode.Items[index]);
+      DefLine := DefLine + 1; // counter for number of terms - 1
     end;
+  end;
 end;
 
 procedure TGLMFrm.CovInBtnClick(Sender: TObject);
 var
-    index : integer;
-    codestr : string;
-
+  i: integer;
+  codestr: string;
 begin
-    index := VarList.ItemIndex;
-    if index >= 0 then
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
     begin
-        CovariateList.Items.Add(VarList.Items.Strings[index]);
-        VarList.Items.Delete(index);
-        NCovIndep := NCovIndep + 1;
-        codestr := format('IC%d',[NCovIndep]);
-        CovariateCode.Items.Add(codestr);
-        IndOrderBox.Items.Add(codestr);
-        CovOutBtn.Enabled := true;
-    end;
+      CovariateList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      NCovIndep := NCovIndep + 1;
+      codestr := Format('IC%d', [NCovIndep]);
+      CovariateCode.Items.Add(codestr);
+      IndOrderBox.Items.Add(codestr);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
-
+{
+var
+  index: integer;
+  codestr: string;
+begin
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    CovariateList.Items.Add(VarList.Items[index]);
+    VarList.Items.Delete(index);
+    NCovIndep := NCovIndep + 1;
+    codestr := Format('IC%d', [NCovIndep]);
+    CovariateCode.Items.Add(codestr);
+    IndOrderBox.Items.Add(codestr);
+  end;
+  UpdateBtnStates;
+end;
+}
 procedure TGLMFrm.CovOutBtnClick(Sender: TObject);
 var
-    i, index : integer;
-    cellstring : string;
-
+  i, index: integer;
+  cellstring: string;
 begin
-    index := CovariateList.ItemIndex;
-    if index >= 0 then
-    begin
-        VarList.Items.Add(CovariateList.Items.Strings[index]);
-        CovariateList.Items.Delete(index);
-        cellstring := CovariateCode.Items.Strings[index];
-        CovariateCode.Items.Delete(index);
-        for i := 0 to IndOrderBox.Items.Count - 1 do
-            if cellstring = IndOrderBox.Items.Strings[i] then
-                IndOrderBox.Items.Delete(i);
-        NCovIndep := NCovIndep - 1;
-        if CovariateList.ItemIndex < 0 then CovOutBtn.Enabled := false;
-    end;
+  index := CovariateList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(CovariateList.Items[index]);
+    CovariateList.Items.Delete(index);
+    cellstring := CovariateCode.Items[index];
+    CovariateCode.Items.Delete(index);
+    for i := IndOrderBox.Items.Count - 1 downto 0 do
+      if cellstring = IndOrderBox.Items[i] then
+        IndOrderBox.Items.Delete(i);
+    NCovIndep := NCovIndep - 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.EndDefBtnClick(Sender: TObject);
 var
-    index : integer;
-    nolines : integer;
-    LineStr : string;
-
+  index: integer;
+  nolines: integer;
+  LineStr: string;
 begin
-    LineStr := '';
-    nolines := InterDefList.Items.Count;
-    if nolines > 0 then
+  LineStr := '';
+  nolines := InterDefList.Items.Count;
+  if nolines > 0 then
+  begin
+    for index := 0 to nolines - 1 do
     begin
-        for index := 0 to nolines - 1 do
-        begin
-            LineStr := LineStr + InterDefList.Items.Strings[index];
-            if index < nolines - 1 then LineStr := LineStr + ' * ';
-        end;
-        InteractList.Items.Add(LineStr);
-        IndOrderBox.Items.Add(LineStr);
-        NoInterDefs := NoInterDefs + 1;
+      LineStr := LineStr + InterDefList.Items.Strings[index];
+      if index < nolines - 1 then LineStr := LineStr + ' * ';
     end;
-    InterDefList.Clear;
+    InteractList.Items.Add(LineStr);
+    IndOrderBox.Items.Add(LineStr);
+    NoInterDefs := NoInterDefs + 1;
+  end;
+  InterDefList.Clear;
 end;
 
 procedure TGLMFrm.FixedIndepInBtnClick(Sender: TObject);
 var
-    index, i : integer;
-    codestr : string;
-
+  i: integer;
+  codestr: string;
 begin
-    index := VarList.Items.Count;
-    i := 0;
-    while i < index do
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
     begin
-         if (VarList.Selected[i]) then
-         begin
-            FixedList.Items.Add(VarList.Items.Strings[i]);
-            VarList.Items.Delete(i);
-            NFixedIndep := NFixedIndep + 1;
-            codestr := format('IF%d',[NFixedIndep]);
-            FixedIndepCode.Items.Add(codestr);
-            IndOrderBox.Items.Add(codestr);
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-    end;
-    FixedIndepOutBtn.Enabled := true;
+      FixedList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      NFixedIndep := NFixedIndep + 1;
+      codestr := Format('IF%d', [NFixedIndep]);
+      FixedIndepCode.Items.Add(codestr);
+      IndOrderBox.Items.Add(codestr);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.FixedIndepOutBtnClick(Sender: TObject);
 var
-    i, index : integer;
-    cellstring : string;
-
+  i, index: integer;
+  cellstring: string;
 begin
-    index := FixedList.ItemIndex;
-    if index >= 0 then
-    begin
-        VarList.Items.Add(FixedList.Items.Strings[index]);
-        FixedList.Items.Delete(index);
-        cellstring := FixedIndepCode.Items.Strings[index];
-        FixedIndepCode.Items.Delete(index);
-        NFixedIndep := NFixedIndep - 1;
-        for i := 0 to IndOrderBox.Items.Count - 1 do
-            if IndOrderBox.Items.Strings[i] = cellstring then
-                IndOrderBox.Items.Delete(i);
-        if FixedList.ItemIndex < 0 then FixedIndepOutBtn.Enabled := false;
-    end;
+  index := FixedList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(FixedList.Items[index]);
+    FixedList.Items.Delete(index);
+    cellstring := FixedIndepCode.Items[index];
+    FixedIndepCode.Items.Delete(index);
+    NFixedIndep := NFixedIndep - 1;
+    for i := IndOrderBox.Items.Count - 1 downto 0 do
+      if IndOrderBox.Items.Strings[i] = cellstring then
+        IndOrderBox.Items.Delete(i);
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TGLMFrm.FixedListClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-    if IntDef then
-    begin
-        index := FixedList.ItemIndex;
-        InterDefList.Items.Add(FixedIndepCode.Items.Strings[index]);
-        DefLine := DefLine + 1; // counter for number of terms
+  if IntDef then
+  begin
+    index := FixedList.ItemIndex;
+    if index > -1 then begin
+      InterDefList.Items.Add(FixedIndepCode.Items[index]);
+       DefLine := DefLine + 1; // counter for number of terms
     end;
+  end;
 end;
 
 procedure TGLMFrm.AllocateIDMem;
 begin
-    if NContDep > 0 then
-    begin
-        SetLength(ContDepID,NContDep);
-        SetLength(ContDepPos,NContDep);
-    end;
-    if NCatDep > 0 then
-    begin
-        SetLength(CatDepID,NCatDep);
-        SetLength(CatDepPos,NCatDep);
-        SetLength(NFixVecDep,NCatDep);
-    end;
-    if NReptDep > 0 then
-    begin
-        SetLength(ReptDepID,NReptDep);
-        SetLength(ReptDepPos,NReptDep);
-        SetLength(ReptIndepPos,NoCases);
-        SetLength(ReptTrtPos,NReptDep);
-    end;
-    if NFixedIndep > 0 then
-    begin
-        SetLength(FixedIndepID,NFixedIndep);
-        SetLength(FixedIndepPos,NFixedIndep);
-        SetLength(NFixVecIndep,NFixedIndep);
-    end;
-    if NRndIndep > 0 then
-    begin
-        SetLength(RndIndepID,NRndIndep);
-        SetLength(RndIndepPos,NRndIndep);
-        SetLength(NRndVecIndep,NRndIndep);
-    end;
-    if NCovIndep > 0 then
-    begin
-        SetLength(CovIndepID,NCovIndep);
-        SetLength(CovIndepPos,NCovIndep);
-    end;
-    if NoInterDefs > 0 then
-    begin
-        SetLength(NInteractVecs,NoInterDefs);
-        SetLength(InteractPos,NoInterDefs);
-    end;
+  if NContDep > 0 then
+  begin
+    SetLength(ContDepID, NContDep);
+    SetLength(ContDepPos, NContDep);
+  end;
+
+  if NCatDep > 0 then
+  begin
+    SetLength(CatDepID, NCatDep);
+    SetLength(CatDepPos, NCatDep);
+    SetLength(NFixVecDep, NCatDep);
+  end;
+
+  if NReptDep > 0 then
+  begin
+    SetLength(ReptDepID, NReptDep);
+    SetLength(ReptDepPos, NReptDep);
+    SetLength(ReptIndepPos, NoCases);
+    SetLength(ReptTrtPos, NReptDep);
+  end;
+
+  if NFixedIndep > 0 then
+  begin
+    SetLength(FixedIndepID, NFixedIndep);
+    SetLength(FixedIndepPos, NFixedIndep);
+    SetLength(NFixVecIndep, NFixedIndep);
+  end;
+
+  if NRndIndep > 0 then
+  begin
+    SetLength(RndIndepID, NRndIndep);
+    SetLength(RndIndepPos, NRndIndep);
+    SetLength(NRndVecIndep, NRndIndep);
+  end;
+
+  if NCovIndep > 0 then
+  begin
+    SetLength(CovIndepID, NCovIndep);
+    SetLength(CovIndepPos, NCovIndep);
+  end;
+
+  if NoInterDefs > 0 then
+  begin
+    SetLength(NInteractVecs, NoInterDefs);
+    SetLength(InteractPos, NoInterDefs);
+  end;
 end;
 
 procedure TGLMFrm.GetIDs;
 var
-    cellstring : string;
-    i, j : integer;
-
+  cellstring: string;
+  i, j: integer;
 begin
-    if NContDep > 0 then
+  if NContDep > 0 then
+  begin
+    for i := 0 to NContDep - 1 do
     begin
-        for i := 0 to NContDep - 1 do
-        begin
-            cellstring := DepContList.Items.Strings[i];
-            for j := 1 to NoVariables do
-            begin
-                if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
-                    ContDepID[i] := j;
-            end;
-        end;
+      cellstring := DepContList.Items[i];
+      for j := 1 to NoVariables do
+        if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
+          ContDepID[i] := j;
     end;
-    if NCatDep > 0 then
+  end;
+
+  if NCatDep > 0 then
+  begin
+    for i := 0 to NCatDep - 1 do
     begin
-        for i := 0 to NCatDep - 1 do
-        begin
-            cellstring := DepCatList.Items.Strings[i];
-            for j := 1 to NoVariables do
-            begin
-                if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
-                    CatDepID[i] := j;
-            end;
-        end;
+      cellstring := DepCatList.Items[i];
+      for j := 1 to NoVariables do
+        if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
+          CatDepID[i] := j;
     end;
-    if NReptDep > 0 then
+  end;
+
+  if NReptDep > 0 then
+  begin
+    for i := 0 to NReptDep - 1 do
     begin
-        for i := 0 to NReptDep - 1 do
-        begin
-            cellstring := RepeatList.Items.Strings[i];
-            for j := 1 to NoVariables do
-            begin
-                if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
-                    ReptDepID[i] := j;
-            end;
-        end;
+      cellstring := RepeatList.Items[i];
+      for j := 1 to NoVariables do
+        if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
+          ReptDepID[i] := j;
     end;
-    if NFixedIndep > 0 then
+  end;
+
+  if NFixedIndep > 0 then
+  begin
+    for i := 0 to NFixedIndep - 1 do
     begin
-        for i := 0 to NFixedIndep - 1 do
-        begin
-            cellstring := FixedList.Items.Strings[i];
-            for j := 1 to NoVariables do
-            begin
-                if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
-                    FixedIndepID[i] := j;
-            end;
-        end;
+      cellstring := FixedList.Items[i];
+      for j := 1 to NoVariables do
+        if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
+          FixedIndepID[i] := j;
     end;
-    if NRndIndep > 0 then
+  end;
+
+  if NRndIndep > 0 then
+  begin
+    for i := 0 to NRndIndep - 1 do
     begin
-        for i := 0 to NRndIndep - 1 do
-        begin
-            cellstring := RandomList.Items.Strings[i];
-            for j := 1 to NoVariables do
-            begin
-                if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
-                    RndIndepID[i] := j;
-            end;
-        end;
-    end;
-    if NCovIndep > 0 then
+      cellstring := RandomList.Items[i];
+      for j := 1 to NoVariables do
+        if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
+          RndIndepID[i] := j;
+      end;
+  end;
+
+  if NCovIndep > 0 then
+  begin
+    for i := 0 to NCovIndep - 1 do
     begin
-        for i := 0 to NCovIndep - 1 do
-        begin
-            cellstring := CovariateList.Items.Strings[i];
-            for j := 1 to NoVariables do
-            begin
-                if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
-                    CovIndepID[i] := j;
-            end;
-        end;
+      cellstring := CovariateList.Items[i];
+      for j := 1 to NoVariables do
+        if cellstring = OS3MainFrm.DataGrid.Cells[j,0] then
+          CovIndepID[i] := j;
     end;
+  end;
 end;
 
 function TGLMFrm.GetVarCount: integer;
 var
-    count, i, j, col, nvectors : integer;
-    min, max : integer; // use to get no. of coding vectors for categorical var.s
-    group : integer;
-    linestr : string;
-
+  count, i, j, col, nvectors: integer;
+  min, max: integer; // use to get no. of coding vectors for categorical var.s
+  group: integer;
+  linestr: string;
 begin
-    count := 1; // one column for case id's
-    count := count  + NContDep + NCovIndep; // sum of continuous variables
-    if NReptDep > 0 then count := count + 1; // one col. for repeated dep. measure
-    // plus person vectors for repeated measures (independent predictors)
-    if NReptDep > 0 then count := count + (NoCases - 1); // person vectors
-    if NReptDep > 0 then count := count + (NreptDep - 1); // repeated treatment vectors
-    if NCatDep > 0 then // calculate min and max for each var. to get no. of vectors
-    begin
-        for i := 0 to NCatDep - 1 do
-        begin
-            col := CatDepID[i];
-            min := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,1]));
-            max := min;
-            for j := 1 to NoCases do
-            begin
-                group := round(StrToFLoat(OS3MainFrm.DataGrid.Cells[col,j]));
-                if group < min then min := group;
-                if group > max then max := group;
-            end;
-            count := count + (max - min); // 1 less than the no. of groups
-            NFixVecDep[i] := count;
-        end;
-    end;
+  count := 1; // one column for case id's
+  count := count  + NContDep + NCovIndep; // sum of continuous variables
+  if NReptDep > 0 then count := count + 1; // one col. for repeated dep. measure
+  // plus person vectors for repeated measures (independent predictors)
+  if NReptDep > 0 then count := count + (NoCases - 1); // person vectors
+  if NReptDep > 0 then count := count + (NreptDep - 1); // repeated treatment vectors
 
-    if NFixedIndep > 0 then // add no. of vectors to count
+  // calculate min and max for each var. to get no. of vectors
+  if NCatDep > 0 then
+  begin
+    for i := 0 to NCatDep - 1 do
     begin
-        for i := 0 to NFixedIndep - 1 do
-        begin
-            col := FixedIndepID[i];
-            min := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,1]));
-            max := min;
-            for j := 1 to NoCases do
-            begin
-                group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,j]));
-                if group < min then min := group;
-                if group > max then max := group;
-            end;
-            count := count + (max - min); // 1 less than the no. of groups
-            NFixVecIndep[i] := max - min;
-        end;
+      col := CatDepID[i];
+      min := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,1]));
+      max := min;
+      for j := 1 to NoCases do
+      begin
+        group := round(StrToFLoat(OS3MainFrm.DataGrid.Cells[col,j]));
+        if group < min then min := group;
+        if group > max then max := group;
+      end;
+      count := count + (max - min); // 1 less than the no. of groups
+      NFixVecDep[i] := count;
     end;
+  end;
 
-    if NRndIndep > 0 then // add no. of vectors to count
+  // add no. of vectors to count
+  if NFixedIndep > 0 then
+  begin
+    for i := 0 to NFixedIndep - 1 do
     begin
-        for i := 0 to NRndIndep - 1 do
-        begin
-            col := RndIndepID[i];
-            min := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,1]));
-            max := min;
-            for j := 1 to NoCases do
-            begin
-                group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,j]));
-                if group < min then min := group;
-                if group > max then max := group;
-            end;
-            count := count + (max - min); // 1 less than the no. of groups
-            NRndVecIndep[i] := max - min;
-        end;
+      col := FixedIndepID[i];
+      min := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,1]));
+      max := min;
+      for j := 1 to NoCases do
+      begin
+        group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,j]));
+        if group < min then min := group;
+        if group > max then max := group;
+      end;
+      count := count + (max - min); // 1 less than the no. of groups
+      NFixVecIndep[i] := max - min;
     end;
+  end;
 
-    if NoInterDefs > 0 then // get no. of vectors for each interaction
+  // add no. of vectors to count
+  if NRndIndep > 0 then
+  begin
+    for i := 0 to NRndIndep - 1 do
     begin
-        for i := 0 to NoInterDefs - 1 do
-        begin
-            linestr := InterActList.Items.Strings[i];
-            // parse the line for variable definitions and get no. of columns
-            // and vectors for the products of these variables
-            nvectors := CntIntActVecs(linestr);
-            NInteractVecs[i] := nvectors;
-            count := count + nvectors;
-        end;
+      col := RndIndepID[i];
+      min := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,1]));
+      max := min;
+      for j := 1 to NoCases do
+      begin
+        group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[col,j]));
+        if group < min then min := group;
+        if group > max then max := group;
+      end;
+      count := count + (max - min); // 1 less than the no. of groups
+      NRndVecIndep[i] := max - min;
     end;
-    Result := count;
+  end;
+
+  // get no. of vectors for each interaction
+  if NoInterDefs > 0 then
+  begin
+    for i := 0 to NoInterDefs - 1 do
+    begin
+      linestr := InterActList.Items.Strings[i];
+      // parse the line for variable definitions and get no. of columns
+      // and vectors for the products of these variables
+      nvectors := CntIntActVecs(linestr);
+      NInteractVecs[i] := nvectors;
+      count := count + nvectors;
+    end;
+  end;
+
+  Result := count;
 end;
 
 procedure TGLMFrm.AllocateGridMem;
 var
-    norows : integer;
-
+  norows: integer;
 begin
-    if NReptDep > 0 then norows := NoCases * NReptDep
-    else norows := NoCases;
-    SetLength(DataGrid,norows+1,novars+4); // grid data for generated data
-    SetLength(GenLabels,novars+4);  // column labels of new data grid
-    SetLength(Labels,novars+4); // labels of variables entered into analysis
-    SetLength(ColSelected,novars+4); // datagrid columns selected for analysis
+  if NReptDep > 0 then
+    norows := NoCases * NReptDep
+  else
+    norows := NoCases;
+  SetLength(DataGrid, norows+1, novars+4); // grid data for generated data
+  SetLength(GenLabels, novars+4);          // column labels of new data grid
+  SetLength(Labels, novars+4);             // labels of variables entered into analysis
+  SetLength(ColSelected, novars+4);        // datagrid columns selected for analysis
 end;
 
 procedure TGLMFrm.DeallocateGridMem;
 begin
-    ColSelected := nil;
-    Labels := nil;
-    GenLabels := nil;
-    DataGrid := nil;
+  ColSelected := nil;
+  Labels := nil;
+  GenLabels := nil;
+  DataGrid := nil;
 end;
 
 procedure TGLMFrm.DeallocateIDMem;
 begin
-    InteractPos := nil;
-    NInteractVecs := nil;
-    CovIndepPos := nil;
-    CovIndepID := nil;
-    NRndVecIndep := nil;
-    RndIndepPos := nil;
-    RndIndepID := nil;
-    NFixVecIndep := nil;
-    FixedIndepPos := nil;
-    FixedIndepID := nil;
-    ReptTrtPos := nil;
-    ReptIndepPos := nil;
-    ReptDepPos := nil;
-    ReptDepID := nil;
-    NFixVecDep := nil;
-    CatDepPos := nil;
-    CatDepID := nil;
-    ContDepPos := nil;
-    ContDepID := nil;
+  InteractPos := nil;
+  NInteractVecs := nil;
+  CovIndepPos := nil;
+  CovIndepID := nil;
+  NRndVecIndep := nil;
+  RndIndepPos := nil;
+  RndIndepID := nil;
+  NFixVecIndep := nil;
+  FixedIndepPos := nil;
+  FixedIndepID := nil;
+  ReptTrtPos := nil;
+  ReptIndepPos := nil;
+  ReptDepPos := nil;
+  ReptDepID := nil;
+  NFixVecDep := nil;
+  CatDepPos := nil;
+  CatDepID := nil;
+  ContDepPos := nil;
+  ContDepID := nil;
 end;
 
-procedure TGLMFrm.DummyCodes(min: integer; max: integer;
-  var CodePattern: IntDyneMat);
+procedure TGLMFrm.DummyCodes(min, max: integer; const  CodePattern: IntDyneMat);
 var
-    ngrps : integer;
-    vects : integer;
-    i, j : integer;
-
+  ngrps: integer;
+  vects: integer;
+  i, j: integer;
 begin
-    ngrps := max - min + 1;
-    vects := ngrps - 1;
+  ngrps := max - min + 1;
+  vects := ngrps - 1;
+  for j := 1 to vects do
+    for i := 1 to ngrps do
+      if i = j then CodePattern[i,j] := 1 else CodePattern[i,j] := 0;
+end;
+
+procedure TGLMFrm.EffectCodes(min, max: integer; const CodePattern: IntDyneMat);
+var
+  ngrps: integer;
+  vects: integer;
+  i, j: integer;
+begin
+  ngrps := max - min + 1;
+  vects := ngrps - 1;
+  for i := 1 to ngrps do
     for j := 1 to vects do
     begin
-        for i := 1 to ngrps do
-        begin
-            if i = j then CodePattern[i,j] := 1 else CodePattern[i,j] := 0;
-        end;
+      if i = j then CodePattern[i,j] := 1;
+      if i = ngrps then CodePattern[i,j] := -1;
+      if (i <> j) and (i <> ngrps) then CodePattern[i,j] := 0;
     end;
 end;
 
-procedure TGLMFrm.EffectCodes(min: integer; max: integer;
-  var CodePattern: IntDyneMat);
+procedure TGLMFrm.OrthogCodes(min, max: integer; const CodePattern: IntDyneMat);
 var
-    ngrps : integer;
-    vects : integer;
-    i, j : integer;
-
+  ngrps: integer;
+  vects: integer;
+  i, j: integer;
 begin
-    ngrps := max - min + 1;
-    vects := ngrps - 1;
-    for i := 1 to ngrps do
+  ngrps := max - min + 1;
+  vects := ngrps - 1;
+  for i := 1 to ngrps do
+    for j := 1 to vects do
     begin
-        for j := 1 to vects do
-        begin
-            if i = j then CodePattern[i,j] := 1;
-            if i = ngrps then CodePattern[i,j] := -1;
-            if (i <> j) and (i <> ngrps) then CodePattern[i,j] := 0;
-        end;
-    end;
-end;
-
-procedure TGLMFrm.OrthogCodes(min: integer; max: integer;
-  var CodePattern: IntDyneMat);
-var
-    ngrps : integer;
-    vects : integer;
-    i, j : integer;
-
-begin
-    ngrps := max - min + 1;
-    vects := ngrps - 1;
-    for i := 1 to ngrps do
-    begin
-        for j := 1 to vects do
-        begin
-            if i <= j then CodePattern[i,j] := 1;
-            if i-1 = j then CodePattern[i,j] := -j;
-            if i > j+1 then CodePattern[i,j] := 0;
-        end;
+      if i <= j then CodePattern[i,j] := 1;
+      if i-1 = j then CodePattern[i,j] := -j;
+      if i > j+1 then CodePattern[i,j] := 0;
     end;
 end;
 
@@ -1100,68 +1166,87 @@ begin
   Bevel3.Constraints.MinHeight := Panel8.Height;
 end;
 
-procedure TGLMFrm.RegAnal(Nentered: integer);
+procedure TGLMFrm.RegAnal(Nentered: integer; AReport: TStrings);
 var
-    i, j, nvars, ncases : integer;
-    title : string;
-
+  i, j, nvars, ncases: integer;
+  title: string;
 begin
-    nvars := Nentered;
-    ncases := totalobs;
-    SetLength(rmatrix,nvars+1,nvars+1);
-    SetLength(indmatrix,nvars-1,nvars-1);
-    SetLength(rxy,nvars);
-    SetLength(invmatrix,nvars,nvars);
-    SetLength(B,nvars);
-    SetLength(Beta,nvars);
-    SetLength(means,nvars);
-    SetLength(Vars,nvars);
-    SetLength(StdDevs,nvars);
-    SetLength(workmat,nvars,nvars);
+  nvars := Nentered;
+  ncases := totalobs;
+  SetLength(rmatrix, nvars+1, nvars+1);
+  SetLength(indmatrix, nvars-1, nvars-1);
+  SetLength(rxy, nvars);
+  SetLength(invmatrix, nvars ,nvars);
+  SetLength(B, nvars);
+  SetLength(Beta, nvars);
+  SetLength(means, nvars);
+  SetLength(Vars, nvars);
+  SetLength(StdDevs, nvars);
+  SetLength(workmat, nvars, nvars);
 
-    DynCorrelations(nvars,ColSelected,DataGrid,rmatrix,means,vars,StdDevs,ncases,3);
-    OutputFrm.RichEdit.Clear;
+  DynCorrelations(nvars, ColSelected, DataGrid, rmatrix, means, vars, StdDevs, ncases, 3);
+
+  AReport.Add('');
+  AReport.Add('=======================================================================================');
+  AReport.Add('');
+
+  if DescChk.Checked then
+  begin
     title := 'Means';
-    if DescChk.Checked then DynVectorPrint(means,Nentered,title,Labels,ncases);
+    DynVectorPrint(means, Nentered, title, Labels, ncases, AReport);
+  end;
+
+  if CorsChk.Checked then
+  begin
     title := 'Correlations';
-    if CorsChk.Checked then
-        MAT_PRINT(rmatrix,Nentered,Nentered,title,Labels,Labels,ncases);
-    for i := 1 to nvars - 1 do
+    MatPrint(rmatrix, Nentered, Nentered, title, Labels, Labels, ncases, AReport);
+  end;
+
+  for i := 1 to nvars - 1 do
+  begin
+    rxy[i-1] := rmatrix[i,0]; // r's with dependent var
+    for j := 1 to nvars - 1 do
     begin
-        rxy[i-1] := rmatrix[i,0]; // r's with dependent var
-        for j := 1 to nvars - 1 do
-        begin
-            indmatrix[i-1,j-1] := rmatrix[i,j]; // intercorr.s of indep. var.s
-            workmat[i-1,j-1] := rmatrix[i,j]; // used to get inverse
-        end;
+      indmatrix[i-1,j-1] := rmatrix[i,j]; // intercorr.s of indep. var.s
+      workmat[i-1,j-1] := rmatrix[i,j]; // used to get inverse
     end;
-    SVDinverse(workmat,nvars-1);
-    // Copy inverse to zero indexed matrix
-    for i := 1 to nvars-1 do
-        for j := 1 to nvars-1 do invmatrix[i-1,j-1] := workmat[i-1,j-1];
-    title := 'inverse of indep. matrix';
-    // get betas and squared multiple correlation
-    R2 := 0.0;
-    for i := 1 to nvars-1 do
-    begin
-        Beta[i-1] := 0.0;
-        for j := 1 to nvars-1 do Beta[i-1] := Beta[i-1] + invmatrix[i-1,j-1] * rxy[j-1];
-        R2 := R2 + Beta[i-1] * rxy[i-1];
-    end;
-//    outline := format('Squared Multiple Correlation = %6.4f',[R2]);
-//    OutputFrm.RichEdit.Lines.Add(outline);
-//    title := 'Standardized regression coefficients';
-//    DynVectorPrint(Beta,Nentered-1,title,Labels,ncases);
-    // get raw coefficients
-    for i := 1 to nvars - 1 do
-    begin
-        if StdDevs[i] > 0.0 then
-            B[i-1] := Beta[i-1] * (StdDevs[0] / StdDevs[i])
-        else B[i-1] := 0.0;
-    end;
-//    title := 'Raw regression coefficients';
-//    DynVectorPrint(B,Nentered-1,title,Labels,ncases);
-//    OutputFrm.ShowModal;
+  end;
+  SVDinverse(workmat, nvars-1);
+
+  // Copy inverse to zero indexed matrix
+  for i := 1 to nvars-1 do
+      for j := 1 to nvars-1 do
+        invmatrix[i-1,j-1] := workmat[i-1,j-1];
+
+  title := 'inverse of indep. matrix';
+
+  // get betas and squared multiple correlation
+  R2 := 0.0;
+  for i := 1 to nvars-1 do
+  begin
+    Beta[i-1] := 0.0;
+    for j := 1 to nvars-1 do
+      Beta[i-1] := Beta[i-1] + invmatrix[i-1,j-1] * rxy[j-1];
+    R2 := R2 + Beta[i-1] * rxy[i-1];
+  end;
+
+  //    outline := format('Squared Multiple Correlation = %6.4f',[R2]);
+  //    OutputFrm.RichEdit.Lines.Add(outline);
+  //    title := 'Standardized regression coefficients';
+  //    DynVectorPrint(Beta,Nentered-1,title,Labels,ncases);
+
+  // get raw coefficients
+  for i := 1 to nvars - 1 do
+  begin
+    if StdDevs[i] > 0.0 then
+      B[i-1] := Beta[i-1] * (StdDevs[0] / StdDevs[i])
+    else
+      B[i-1] := 0.0;
+  end;
+
+  //    title := 'Raw regression coefficients';
+  //    DynVectorPrint(B,Nentered-1,title,Labels,ncases);
+  //    OutputFrm.ShowModal;
 end;
 
 procedure TGLMFrm.PartIEntry;
@@ -1451,574 +1536,563 @@ begin
     codepattern := nil;
 end;
 
-procedure TGLMFrm.ModelIAnalysis;
+procedure TGLMFrm.ModelIAnalysis(AReport: TStrings);
 var
-    block, i, j, k, NEntered, index, noblocks, priorentered : integer;
-    cellstring : string;
-    labelstr : string;
-    outline : string;
-    R, R2Increment, SSx, sum, constant, FullR2 : double;
-    df1, df2, F, FProbF, StdErrB,OldDF1, PredSS, PredMS : double;
-    SSt, VarEst, SSres, StdErrEst, AdjR2 : double;
-
+  block, i, j, k, NEntered, index, noblocks, priorentered : integer;
+  cellstring : string;
+  labelstr : string;
+  outline : string;
+  R, R2Increment, SSx, sum, constant, FullR2 : double;
+  df1, df2, F, FProbF, StdErrB,OldDF1, PredSS, PredMS : double;
+  SSt, VarEst, SSres, StdErrEst, AdjR2 : double;
 begin
+  NEntered := 0;
+  OldDF1 := 0.0;
+  priorentered := 0;
+  OldR2 := 0;
+
+  // enter the dependent variable first
+  if NContDep > 0 then
+  begin
+      ColSelected[0] := ContDepPos[0];
+      Labels[0] := GenLabels[1];
+  end
+  else begin
+      ColSelected[0] := ReptDepPos[0];
+      Labels[0] := GenLabels[1];
+  end;
+  NEntered := NEntered + 1;
+
+  // Enter independent variables as indicated in indorderbox then interactions
+  // until the total model is analyzed.  Then delete each term to get a
+  // restricted model and compare to the full model.
+  noblocks := IndOrderBox.Items.Count;
+  SetLength(TypeISS,noblocks);
+  SetLength(TypeIISS,noblocks);
+  SetLength(TypeIMS,noblocks);
+  SetLength(TypeIIMS,noblocks);
+  SetLength(TypeIDF1,noblocks);
+  SetLength(TypeIDF2,noblocks);
+  SetLength(TypeIIDF1,noblocks);
+  SetLength(TypeIIDF2,noblocks);
+  SetLength(TypeIF,noblocks);
+  SetLength(TypeIProb,noblocks);
+  SetLength(TypeIIF,noblocks);
+  SetLength(TypeIIProb,noblocks);
+
+  for block := 0 to noblocks - 1 do
+  begin
+    // get index of the abbreviation of term to enter and find corresponding
+
+      // vector(s) to place in the equation
+    cellstring := IndOrderBox.Items.Strings[block];
+    // check for covariates first
+    if NCovIndep > 0 then
+    begin
+      for i := 0 to NCovIndep-1 do
+      begin
+        if cellstring = CovariateCode.Items.Strings[i] then // matched!
+        begin
+          index := i; // index of covariate code
+          ColSelected[NEntered] := CovIndepPos[index];
+          labelstr := Format('%s', [CovariateCode.Items[index]]);
+          Labels[NEntered] := labelstr;
+          NEntered := NEntered + 1;
+          break;
+        end;
+      end;
+    end;
+
+    // check for fixed effect variables next
+    if NFixedIndep > 0 then
+    begin
+      for i := 0 to NFixedIndep-1 do
+      begin
+        if cellstring = FixedIndepCode.Items.Strings[i] then
+        begin
+          index := i;
+          for j := 0 to NFixVecIndep[index]-1 do
+          begin
+            ColSelected[NEntered] := FixedIndepPos[index] + j;
+            labelstr := Format('%s_%d',[FixedIndepCode.Items[index],j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
+        end;
+      end;
+    end;
+
+    // Check for random effects variables next
+    if NRndIndep > 0 then
+    begin
+      for i := 0 to NRndIndep-1 do
+      begin
+        if cellstring = RndIndepCode.Items.Strings[i] then
+        begin
+          index := i;
+          for j := 0 to NRndVecIndep[index]-1 do
+          begin
+            ColSelected[NEntered] := RndIndepPos[index] + j;
+            labelstr := Format('%s_%d',[RndIndepCode.Items[index],j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
+        end;
+      end;
+    end;
+
+    // check for interactions next
+    if NoInterDefs > 0 then
+    begin
+      for i := 0 to NoInterDefs-1 do
+      begin
+        if cellstring = InteractList.Items.Strings[i] then
+        begin
+          for j := 0 to NInteractVecs[i]-1 do
+          begin
+            ColSelected[NEntered] := InteractPos[i] + j;
+            labelstr := Format('%s%d_%d',['IA',i+1,j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
+        end;
+      end;
+    end; // check for interaction variables
+
+    // check for repeated measures variables (person codes)
+    if NReptDep > 0 then
+    begin  // look for 'IP' in cellstring
+      labelstr := copy(cellstring,0,2);
+      if labelstr = 'IP' then // person vectors were generated
+      begin
+        for i := 0 to NoCases - 2 do
+        begin
+          ColSelected[NEntered] := ReptIndepPos[i];
+          Labels[NEntered] := GenLabels[ReptIndepPos[i]];
+          NEntered := NEntered + 1;
+        end;
+      end;
+    end;
+
+    // check for repeated treatments
+    if NReptDep > 0 then
+    begin  // look for 'IR' in cellstring
+      labelstr := copy(cellstring,0,2);
+      if labelstr = 'IR' then // repeated treatment vectors were generated
+      begin
+        for i := 0 to NReptDep - 2 do
+        begin
+          ColSelected[NEntered] := ReptTrtPos[i];
+          Labels[NEntered] := GenLabels[ReptTrtPos[i]];
+          NEntered := NEntered + 1;
+        end;
+      end;
+    end;
+
+    RegAnal(NEntered, AReport);
+    R := sqrt(R2);
+    df1 := Nentered - 1; // no. of independent variables
+    df2 := totalobs - df1 - 1; // N - no. independent - 1
+    SSt := (totalobs-1) * Vars[0];
+    SSres := SSt * (1.0 - R2);
+    VarEst := SSres / df2;
+    if (VarEst > 0.0) then
+      StdErrEst := sqrt(VarEst)
+    else
+    begin
+      MessageDlg('Error in computing variance estimate.', mtError, [mbOK], 0);
+      StdErrEst := 0.0;
+    end;
+    if (R2 < 1.0) and (df2 > 0.0) then
+      F := (R2 / df1) / ((1.0-R2)/ df2)
+    else
+      F := 0.0;
+    FProbF := probf(F,df1,df2);
+    AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
+
+    AReport.Add('   R         R2         F      Prob. > F   DF1   DF2 ');
+    AReport.Add('-------- ---------- ---------- ---------- ----- -----');
+    AReport.Add('%8.3f %10.3f %10.3f %10.3f %5.0f %5.0f', [R, R2, F, FProbF, df1, df2]);
+    AReport.Add('');
+    AReport.Add('Adjusted R Squared:     %10.3f', [AdjR2]);
+    AReport.Add('Std. Error of Estimate: %10.3f', [StdErrEst]);
+    AReport.Add('');
+    AReport.Add('Variable      Beta        B      Std.Error      t      Prob. > t ');
+    AReport.Add('---------- ---------- ---------- ---------- ---------- ----------');
+    df1 := 1.0;
+    sum := 0.0;
+    for i := 0 to Nentered - 2 do
+    begin
+      SSx := (totalobs-1) * Vars[i+1];
+      sum  := sum + B[i] * means[i+1];
+      if invmatrix[i,i] > 1.0e-15 then
+      begin
+        StdErrB := VarEst / (SSx * (1.0 / invmatrix[i,i]));
+        StdErrB := sqrt(StdErrB);
+        if StdErrB > 0.0 then F := B[i] / StdErrB else F := 0.0;
+        FProbF := probf(F*F,df1,df2);
+      end else
+      begin
+        StdErrB := 0.0;
+        F := 0.0;
+        FProbF := 0.0;
+      end;
+      AReport.Add('%10s %10.3f %10.3f %10.3f %10.3f %10.3f', [Labels[i+1], Beta[i] ,B[i], StdErrB, F, FProbF]);
+    end;
+    AReport.Add('');
+    constant := means[0] - sum;
+    AReport.Add('Constant:               %10.3f', [constant]);
+
+    // test increment in R2 for this block
+    R2Increment := R2 - OldR2;
+    if priorentered > 0 then
+      df1 := (NEntered-1) - (priorentered-1)
+    else
+      df1 := NEntered - 1;
+    df2 := totalobs - NEntered;
+    TypeIDF1[block] := df1;
+    TypeIDF2[block] := df2;
+    TypeISS[block] := (R2 - OldR2) * SSt;
+    TypeIMS[block] := TypeISS[block] / df1;
+    F := ((R2 - OldR2)/ df1) / ((1.0 - R2) / df2);
+    TypeIF[block] := F;
+    FProbF := probf(F,df1,df2);
+    TypeIProb[block] := FProbF;
+    AReport.Add('Increment in Squared R: %10.3f', [R2Increment]);
+    AReport.Add('F:                      %10.3f', [F]);
+    AReport.Add('    with d.o.f.         %10.0f and %.0f',[df1, df2]);  // df is double! - why?
+    AReport.Add('    and Prob > F        %10.3f', [FProbF]);
+
+    AReport.Add('');
+    AReport.Add('=======================================================================================');
+    AReport.Add('');
+
+    OldR2 := R2;
+    priorentered := NEntered;
+    // setup for next block analysis
+    WorkMat := nil;
+    StdDevs := nil;
+    Vars := nil;
+    means := nil;
+    Beta := nil;
+    B := nil;
+    invmatrix := nil;
+    rxy := nil;
+    indmatrix := nil;
+    rmatrix := nil;
+  end; // next variable block
+
+  // Next, obtain the unique (Type II values) by elimination of each block
+  // from the full model and testing the decrement in R2
+  FullR2 := R2; // save previously obtained full model R2
+  for i := 0 to NoBlocks - 1 do
+  begin
     NEntered := 0;
-    OldDF1 := 0.0;
-    priorentered := 0;
-    OldR2 := 0;
     // enter the dependent variable first
     if NContDep > 0 then
     begin
-        ColSelected[0] := ContDepPos[0];
-        Labels[0] := GenLabels[1];
+      ColSelected[0] := ContDepPos[0];
+      Labels[0] := GenLabels[1];
     end
     else begin
-        ColSelected[0] := ReptDepPos[0];
-        Labels[0] := GenLabels[1];
+      ColSelected[0] := ReptDepPos[0];
+      Labels[0] := GenLabels[1];
     end;
     NEntered := NEntered + 1;
-
-    // Enter independent variables as indicated in indorderbox then interactions
-    // until the total model is analyzed.  Then delete each term to get a
-    // restricted model and compare to the full model.
-    noblocks := IndOrderBox.Items.Count;
-    SetLength(TypeISS,noblocks);
-    SetLength(TypeIISS,noblocks);
-    SetLength(TypeIMS,noblocks);
-    SetLength(TypeIIMS,noblocks);
-    SetLength(TypeIDF1,noblocks);
-    SetLength(TypeIDF2,noblocks);
-    SetLength(TypeIIDF1,noblocks);
-    SetLength(TypeIIDF2,noblocks);
-    SetLength(TypeIF,noblocks);
-    SetLength(TypeIProb,noblocks);
-    SetLength(TypeIIF,noblocks);
-    SetLength(TypeIIProb,noblocks);
-
-    for block := 0 to noblocks - 1 do
+    for block := 0 to NoBlocks - 1 do
     begin
-        // get index of the abbreviation of term to enter and find corresponding
-        // vector(s) to place in the equation
+      if i = block then
+        continue // delete this block
+      else
+      begin // enter the remaining blocks
         cellstring := IndOrderBox.Items.Strings[block];
-        // check for covariates first
+        // if a covariate, include it
         if NCovIndep > 0 then
         begin
-            for i := 0 to NCovIndep-1 do
+          for j := 0 to NCovIndep-1 do
+          begin
+            if cellstring = CovariateCode.Items.Strings[j] then // matched!
             begin
-                if cellstring = CovariateCode.Items.Strings[i] then // matched!
-                begin
-                    index := i; // index of covariate code
-                    ColSelected[NEntered] := CovIndepPos[index];
-                    labelstr := format('%s',[CovariateCode.Items.Strings[index]]);
-                    Labels[NEntered] := labelstr;
-                    NEntered := NEntered + 1;
-                    break;
-                end;
+              index := j; // index of covariate code
+              ColSelected[NEntered] := CovIndepPos[index];
+              Labels[NEntered] := Format('%s', [CovariateCode.Items[index]]);
+              NEntered := NEntered + 1;
+              break;
             end;
+          end;
         end;
         // check for fixed effect variables next
         if NFixedIndep > 0 then
         begin
-            for i := 0 to NFixedIndep-1 do
+          for j := 0 to NFixedIndep-1 do
+          begin
+            if cellstring = FixedIndepCode.Items.Strings[j] then
             begin
-                if cellstring = FixedIndepCode.Items.Strings[i] then
-                begin
-                    index := i;
-                    for j := 0 to NFixVecIndep[index]-1 do
-                    begin
-                        ColSelected[NEntered] := FixedIndepPos[index] + j;
-                        labelstr := format('%s_%d',[FixedIndepCode.Items.Strings[index],j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
+              index := j;
+              for k := 0 to NFixVecIndep[index]-1 do
+              begin
+                ColSelected[NEntered] := FixedIndepPos[index] + k;
+                Labels[NEntered] := Format('%s_%d', [FixedIndepCode.Items[index], k+1]);
+                NEntered := NEntered + 1;
+              end;
+              break;
             end;
+          end;
         end;
         // Check for random effects variables next
         if NRndIndep > 0 then
         begin
-            for i := 0 to NRndIndep-1 do
+          for j := 0 to NRndIndep-1 do
+          begin
+            if cellstring = RndIndepCode.Items.Strings[j] then
             begin
-                if cellstring = RndIndepCode.Items.Strings[i] then
-                begin
-                    index := i;
-                    for j := 0 to NRndVecIndep[index]-1 do
-                    begin
-                        ColSelected[NEntered] := RndIndepPos[index] + j;
-                        labelstr := format('%s_%d',[RndIndepCode.Items.Strings[index],j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
+              index := j;
+              for k := 0 to NRndVecIndep[index]-1 do
+              begin
+                ColSelected[NEntered] := RndIndepPos[index] + k;
+                Labels[NEntered] := Format('%s_%d',[RndIndepCode.Items[index], k+1]);
+                NEntered := NEntered + 1;
+              end;
             end;
+            break;
+          end;
         end;
         // check for interactions next
         if NoInterDefs > 0 then
         begin
-            for i := 0 to NoInterDefs-1 do
+          for j := 0 to NoInterDefs-1 do
+          begin
+            if cellstring = InteractList.Items.Strings[j] then
             begin
-                if cellstring = InteractList.Items.Strings[i] then
-                begin
-                    for j := 0 to NInteractVecs[i]-1 do
-                    begin
-                        ColSelected[NEntered] := InteractPos[i] + j;
-                        labelstr := format('%s%d_%d',['IA',i+1,j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
-            end;
-        end; // check for interaction variables
+              for k := 0 to NInteractVecs[j]-1 do
+              begin
+                ColSelected[NEntered] := InteractPos[j] + k;
+                Labels[NEntered] := Format('%s%d_%d', ['IA', j+1, k+1]);
+                NEntered := NEntered + 1;
+              end;
+              break;
+            end; // end if
+          end; // next j
+        end; // end if interdefs > 0
+      end; // entry of remaining blocks
+    end; // enter next block not equal to block i
 
-        // check for repeated measures variables (person codes)
-        if NReptDep > 0 then
-        begin  // look for 'IP' in cellstring
-             labelstr := copy(cellstring,0,2);
-             if labelstr = 'IP' then // person vectors were generated
-             begin
-                  for i := 0 to NoCases - 2 do
-                  begin
-                       ColSelected[NEntered] := ReptIndepPos[i];
-                       Labels[NEntered] := GenLabels[ReptIndepPos[i]];
-                       NEntered := NEntered + 1;
-                  end;
-             end;
-        end;
+    RegAnal(NEntered, AReport); // compute restricted model
 
-        // check for repeated treatments
-        if NReptDep > 0 then
-        begin  // look for 'IR' in cellstring
-             labelstr := copy(cellstring,0,2);
-             if labelstr = 'IR' then // repeated treatment vectors were generated
-             begin
-                  for i := 0 to NReptDep - 2 do
-                  begin
-                       ColSelected[NEntered] := ReptTrtPos[i];
-                       Labels[NEntered] := GenLabels[ReptTrtPos[i]];
-                       NEntered := NEntered + 1;
-                  end;
-             end;
-        end;
-
-        RegAnal(NEntered);
-        R := sqrt(R2);
-        df1 := Nentered - 1; // no. of independent variables
-        df2 := totalobs - df1 - 1; // N - no. independent - 1
-        SSt := (totalobs-1) * Vars[0];
-        SSres := SSt * (1.0 - R2);
-        VarEst := SSres / df2;
-        if (VarEst > 0.0) then StdErrEst := sqrt(VarEst)
-        else
-        begin
-             ShowMessage('ERROR! Error in computing variance estimate.');
-             StdErrEst := 0.0;
-        end;
-        if (R2 < 1.0) and (df2 > 0.0) then F := (R2 / df1) / ((1.0-R2)/ df2)
-        else F := 0.0;
-        FProbF := probf(F,df1,df2);
-        AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
-//        OutputFrm.RichEdit.ParaGraph.Alignment := taLeftJustify;
-        outline := format('%8s%10s%10s%12s%5s%5s',['R','R2','F','Prob.>F','DF1','DF2']);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('%8.3f%10.3f%10.3f%10.3f%5.0f%5.0f',
-                       		[R,R2,F,FProbF,df1,df2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('Adjusted R Squared = %5.3f',[AdjR2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        outline := format('Std. Error of Estimate = %10.3f',[StdErrEst]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        OutputFrm.RichEdit.Lines.Add('Variable       Beta      B         Std.Error t         Prob.>t');
-        df1 := 1.0;
-        sum := 0.0;
-        for i := 0 to Nentered - 2 do
-        begin
-            SSx := (totalobs-1) * Vars[i+1];
-            sum  := sum + B[i] * means[i+1];
-            if invmatrix[i,i] > 1.0e-15 then
-            begin
-                StdErrB := VarEst / (SSx * (1.0 / invmatrix[i,i]));
-                StdErrB := sqrt(StdErrB);
-                if StdErrB > 0.0 then F := B[i] / StdErrB else F := 0.0;
-                FProbF := probf(F*F,df1,df2);
-            end
-            else begin
-                StdErrB := 0.0;
-                F := 0.0;
-                FProbF := 0.0;
-            end;
-            cellstring := format('%10s',[Labels[i+1]]);
-            outline := format('%10s%10.3f%10.3f%10.3f%10.3f%10.3f',
-                    [cellstring, Beta[i] ,B[i], StdErrB, F, FProbF]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-        end;
-        constant := means[0] - sum;
-        outline := format('Constant = %10.3f',[constant]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-
-        // test increment in R2 for this block
-        R2Increment := R2 - OldR2;
-        if priorentered > 0 then
-            df1 := (NEntered-1) - (priorentered-1)
-        else df1 := NEntered - 1;
-        df2 := totalobs - NEntered;
-        TypeIDF1[block] := df1;
-        TypeIDF2[block] := df2;
-        TypeISS[block] := (R2 - OldR2) * SSt;
-        TypeIMS[block] := TypeISS[block] / df1;
-        F := ((R2 - OldR2)/ df1) / ((1.0 - R2) / df2);
-        TypeIF[block] := F;
-        FProbF := probf(F,df1,df2);
-        TypeIProb[block] := FProbF;
-        outline := format('Increment in Squared R = %10.3f',[R2Increment]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('F with degrees freedom %4.0f and %4.0f = %10.3f, Prob.>F = %10.3f',
-                    [df1,df2,F,FProbF]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.ShowModal;
-        OldR2 := R2;
-        priorentered := NEntered;
-        // setup for next block analysis
-        WorkMat := nil;
-        StdDevs := nil;
-        Vars := nil;
-        means := nil;
-        Beta := nil;
-        B := nil;
-        invmatrix := nil;
-        rxy := nil;
-        indmatrix := nil;
-        rmatrix := nil;
-    end; // next variable block
-
-    // Next, obtain the unique (Type II values) by elimination of each block
-    // from the full model and testing the decrement in R2
-    FullR2 := R2; // save previously obtained full model R2
-    for i := 0 to NoBlocks - 1 do
+    if R2 > 0.0 then R := sqrt(R2) else R := 0.0;
+    df1 := Nentered; // no. of independent variables
+    df2 := totalobs - df1 - 1; // N - no. independent - 1
+    SSt := (totalobs-1) * Vars[0];
+    SSres := SSt * (1.0 - R2);
+    VarEst := SSres / df2;
+    if (VarEst > 0.0) then
+      StdErrEst := sqrt(VarEst)
+    else
     begin
-        NEntered := 0;
-        // enter the dependent variable first
-        if NContDep > 0 then
-        begin
-            ColSelected[0] := ContDepPos[0];
-            Labels[0] := GenLabels[1];
-        end
-        else begin
-            ColSelected[0] := ReptDepPos[0];
-            Labels[0] := GenLabels[1];
-        end;
-        NEntered := NEntered + 1;
-        for block := 0 to NoBlocks - 1 do
-        begin
-            if i = block then continue // delete this block
-            else
-            begin // enter the remaining blocks
-                cellstring := IndOrderBox.Items.Strings[block];
-                // if a covariate, include it
-                if NCovIndep > 0 then
-                begin
-                    for j := 0 to NCovIndep-1 do
-                    begin
-                        if cellstring = CovariateCode.Items.Strings[j] then // matched!
-                        begin
-                            index := j; // index of covariate code
-                            ColSelected[NEntered] := CovIndepPos[index];
-                            labelstr := format('%s',[CovariateCode.Items.Strings[index]]);
-                            Labels[NEntered] := labelstr;
-                            NEntered := NEntered + 1;
-                            break;
-                        end;
-                    end;
-                end;
-                // check for fixed effect variables next
-                if NFixedIndep > 0 then
-                begin
-                    for j := 0 to NFixedIndep-1 do
-                    begin
-                        if cellstring = FixedIndepCode.Items.Strings[j] then
-                        begin
-                            index := j;
-                            for k := 0 to NFixVecIndep[index]-1 do
-                            begin
-                                ColSelected[NEntered] := FixedIndepPos[index] + k;
-                                labelstr := format('%s_%d',[FixedIndepCode.Items.Strings[index],k+1]);
-                                Labels[NEntered] := labelstr;
-                                NEntered := NEntered + 1;
-                            end;
-                            break;
-                        end;
-                    end;
-                end;
-                // Check for random effects variables next
-                if NRndIndep > 0 then
-                begin
-                    for j := 0 to NRndIndep-1 do
-                    begin
-                        if cellstring = RndIndepCode.Items.Strings[j] then
-                        begin
-                            index := j;
-                            for k := 0 to NRndVecIndep[index]-1 do
-                            begin
-                                ColSelected[NEntered] := RndIndepPos[index] + k;
-                                labelstr := format('%s_%d',[RndIndepCode.Items.Strings[index],k+1]);
-                                Labels[NEntered] := labelstr;
-                                NEntered := NEntered + 1;
-                            end;
-                        end;
-                        break;
-                    end;
-                end;
-                // check for interactions next
-                if NoInterDefs > 0 then
-                begin
-                    for j := 0 to NoInterDefs-1 do
-                    begin
-                        if cellstring = InteractList.Items.Strings[j] then
-                        begin
-                            for k := 0 to NInteractVecs[j]-1 do
-                            begin
-                                ColSelected[NEntered] := InteractPos[j] + k;
-                                labelstr := format('%s%d_%d',['IA',j+1,k+1]);
-                                Labels[NEntered] := labelstr;
-                                NEntered := NEntered + 1;
-                            end;
-                            break;
-                        end; // end if
-                    end; // next j
-                end; // end if interdefs > 0
-            end; // entry of remaining blocks
-        end; // enter next block not equal to block i
+      MessageDlg('Error in computing variance estimate.', mtError, [mbOk], 0);
+      StdErrEst := 0.0;
+    end;
+    if (R2 < 1.0) and (df2 > 0.0) then F := (R2 / df1) / ((1.0-R2)/ df2)
+    else F := 0.0;
+    FProbF := probf(F,df1,df2);
+    AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
 
-        RegAnal(NEntered); // compute restricted model
-        if R2 > 0.0 then R := sqrt(R2) else R := 0.0;
-        df1 := Nentered; // no. of independent variables
-        df2 := totalobs - df1 - 1; // N - no. independent - 1
-        SSt := (totalobs-1) * Vars[0];
-        SSres := SSt * (1.0 - R2);
-        VarEst := SSres / df2;
-        if (VarEst > 0.0) then StdErrEst := sqrt(VarEst)
-        else
-        begin
-             ShowMessage('ERROR! Error in computing variance estimate.');
-             StdErrEst := 0.0;
-        end;
-        if (R2 < 1.0) and (df2 > 0.0) then F := (R2 / df1) / ((1.0-R2)/ df2)
-        else F := 0.0;
-        FProbF := probf(F,df1,df2);
-        AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
-//        OutputFrm.RichEdit.ParaGraph.Alignment := taLeftJustify;
-        outline := format('%8s%10s%10s%12s%5s%5s',['R','R2','F','Prob.>F','DF1','DF2']);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('%8.3f%10.3f%10.3f%10.3f%5.0f%5.0f',
-                       		[R,R2,F,FProbF,df1,df2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('Adjusted R Squared = %5.3f',[AdjR2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        outline := format('Std. Error of Estimate = %10.3f',[StdErrEst]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        OutputFrm.RichEdit.Lines.Add('Variable       Beta      B         Std.Error t         Prob.>t');
-        df1 := 1.0;
-        sum := 0.0;
-        for j := 0 to Nentered - 2 do
-        begin
-            SSx := (totalobs-1) * Vars[j+1];
-            sum  := sum + B[j] * means[j+1];
-            if invmatrix[j,j] > 1.0e-18 then
-                StdErrB := VarEst / (SSx * (1.0 / invmatrix[j,j]))
-            else StdErrB := 0.0;
-            if StdErrB > 0.0 then StdErrB := sqrt(StdErrB);
-            if StdErrB > 0.0 then F := B[j] / StdErrB else F := 0.0;
-            FProbF := probf(F*F,df1,df2);
-            cellstring := format('%10s',[Labels[j+1]]);
-            outline := format('%10s%10.3f%10.3f%10.3f%10.3f%10.3f',
-                [cellstring, Beta[j] ,B[j], StdErrB, F, FProbF]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-        end;
-        constant := means[0] - sum;
-        outline := format('Constant = %10.3f',[constant]);
-        OutputFrm.RichEdit.Lines.Add(outline);
+    AReport.Add('   R         R2         F      Prob. > F   DF1   DF2 ');
+    AReport.Add('-------- ---------- ---------- ---------- ----- -----');
+    AReport.Add('%8.3f %10.3f %10.3f %10.3f %5.0f %5.0f', [R, R2, F, FProbF, df1, df2]);
+    AReport.Add('');
+    AReport.Add('Adjusted R Squared:     %10.3f', [AdjR2]);
+    AReport.Add('Std. Error of Estimate: %10.3f', [StdErrEst]);
+    AReport.Add('');
+    AReport.Add('Variable      Beta        B      Std.Error      t      Prob. > t ');
+    AReport.Add('---------- ---------- ---------- ---------- ---------- ----------');
 
-        // Now compute unique contribution of block left out (Type II)
-        R2Increment := FullR2 - R2;
-        df1 := (novars - 2) - (NEntered - 1); // k1 - k2
-        df2 := totalobs - (novars - 2) - 1;
-        TypeIIDF1[i] := df1;
-        TypeIIDF2[i] := df2;
-        TypeIISS[i] := (FullR2 - R2) * SSt;
-        TypeIIMS[i] := TypeIISS[i] / df1;
-        F := ((FullR2 - R2)/ df1) / ((1.0 - FullR2) / df2);
-        TypeIIF[i] := F;
-        FProbF := probf(F,df1,df2);
-        TypeIIProb[i] := FProbF;
-        outline := format('Decrement in Squared R = %10.3f',[R2Increment]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('F with degrees freedom %4.0f and %4.0f = %10.3f, Prob.>F = %10.3f',
-                    [df1,df2,F,FProbF]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.ShowModal;
-        // setup for next block analysis
-        WorkMat := nil;
-        StdDevs := nil;
-        Vars := nil;
-        means := nil;
-        Beta := nil;
-        B := nil;
-        invmatrix := nil;
-        rxy := nil;
-        indmatrix := nil;
-        rmatrix := nil;
-    end; // next i block selected for elimination
-
-    // Show summary table of Type I and Type II tests
-    OutputFrm.RichEdit.Clear;
-    OutputFrm.RichEdit.Lines.Add('Summary Table for GLM Effects');
-    OutputFrm.RichEdit.Lines.Add('');
-    OutputFrm.RichEdit.Lines.Add('Incremental Effects.');
-    OutputFrm.RichEdit.Lines.Add('SOURCE     DF1  DF2          SS         MS        F    PROB>F');
-    for i := 0 to NoBlocks - 1 do
+    df1 := 1.0;
+    sum := 0.0;
+    for j := 0 to Nentered - 2 do
     begin
+        SSx := (totalobs-1) * Vars[j+1];
+        sum  := sum + B[j] * means[j+1];
+        if invmatrix[j,j] > 1.0e-18 then
+            StdErrB := VarEst / (SSx * (1.0 / invmatrix[j,j]))
+        else StdErrB := 0.0;
+        if StdErrB > 0.0 then StdErrB := sqrt(StdErrB);
+        if StdErrB > 0.0 then F := B[j] / StdErrB else F := 0.0;
+        FProbF := probf(F*F,df1,df2);
+        AReport.Add('%10s %10.3f %10.3f %10.3f %10.3f %10.3f', [Labels[j+1], Beta[j] ,B[j], StdErrB, F, FProbF]);
+    end;
+    AReport.Add('');
+    constant := means[0] - sum;
+    AReport.Add('Constant:               %10.3f', [constant]);
+
+    // Now compute unique contribution of block left out (Type II)
+    R2Increment := FullR2 - R2;
+    df1 := (novars - 2) - (NEntered - 1); // k1 - k2
+    df2 := totalobs - (novars - 2) - 1;
+    TypeIIDF1[i] := df1;
+    TypeIIDF2[i] := df2;
+    TypeIISS[i] := (FullR2 - R2) * SSt;
+    TypeIIMS[i] := TypeIISS[i] / df1;
+    F := ((FullR2 - R2)/ df1) / ((1.0 - FullR2) / df2);
+    TypeIIF[i] := F;
+    FProbF := probf(F,df1,df2);
+    TypeIIProb[i] := FProbF;
+
+    AReport.Add('Decrement in Squared R: %10.3f', [R2Increment]);
+    AReport.Add('F:                      %10.3f', [F]);
+    AReport.Add('    with d.o.f.         %10.0f and %.0f',[df1, df2]);
+    AReport.Add('    and Prob > F        %10.3f', [FProbF]);
+
+    AReport.Add('');
+    AReport.Add('=======================================================================================');
+    AReport.Add('');
+
+    // setup for next block analysis
+    WorkMat := nil;
+    StdDevs := nil;
+    Vars := nil;
+    means := nil;
+    Beta := nil;
+    B := nil;
+    invmatrix := nil;
+    rxy := nil;
+    indmatrix := nil;
+    rmatrix := nil;
+  end; // next i block selected for elimination
+
+  // Show summary table of Type I and Type II tests
+  AReport.Add('SUMMARY TABLE FOR GLM EFFECTS');
+  AReport.Add('');
+  AReport.Add('Incremental Effects:');
+  AReport.Add('SOURCE     DF1  DF2      SS         MS         F      Prob > F');
+  AReport.Add('---------- ---- ---- ---------- ---------- ---------- --------');
+  for i := 0 to NoBlocks - 1 do
+  begin
+    cellstring := IndOrderBox.Items.Strings[i];
+    AReport.Add('%10s %4.0f %4.0f %10.3f %10.3f %10.3f %8.3f',
+      [cellstring,TypeIDF1[i],TypeIDF2[i],TypeISS[i],TypeIMS[i],TypeIF[i],TypeIProb[i]]
+    );
+  end;
+  AReport.Add('');
+  AReport.Add('Unique Effects:');
+  AReport.Add('SOURCE     DF1  DF2      SS         MS         F      Prob > F');
+  AReport.Add('---------- ---- ---- ---------- ---------- ---------- --------');
+  for i := 0 to NoBlocks - 1 do
+  begin
+    cellstring := IndOrderBox.Items.Strings[i];
+    AReport.Add('%10s %4.0f %4.0f %10.3f %10.3f %10.3f %8.3f',
+      [cellstring,TypeIIDF1[i],TypeIIDF2[i],TypeIISS[i],TypeIIMS[i],TypeIIF[i],TypeIIProb[i]]
+    );
+  end;
+
+  AReport.Add('');
+  AReport.Add('=======================================================================================');
+  AReport.Add('');
+
+  // Show Anova Results for fixed and/or covariates
+  if (NRndIndep = 0) and (NReptDep = 0) then // must be fixed and/or covariate only design
+  begin
+    if (NFixedIndep > 0) or (NCovIndep > 0) then // fixed effects
+    begin
+      df1 := novars - 2; // k1 (note: novars contains ID variable, dep, independents)
+      PredSS := SSt * FullR2;
+      PredMS := PredSS / df1;
+      df2 := totalobs - df1 - 1; // residual df
+      SSres := SSt * (1.0 - FullR2);
+      VarEst := SSres / df2; // ms residual
+      F := PredMS / VarEst;
+      FProbF := probf(F,df1,df2);
+      AReport.Add('SOURCE                DF      SS         MS         F      Prob > F');
+      AReport.Add('-------------------- ---- ---------- ---------- ---------- --------');
+      AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %8.3f', ['Full Model', df1, PredSS, PredMS, F, FProbF]);
+      for i := 0 to NoBlocks - 1 do
+      begin
+        F := TypeIMS[i] / VarEst;
+        FProbF := probf(F,TypeIDF1[i],df2);
         cellstring := IndOrderBox.Items.Strings[i];
-        outline := format('%10s %3.0f  %3.0f  %10.3f %10.3f %10.3f %6.3f',
-            [cellstring,TypeIDF1[i],TypeIDF2[i],TypeISS[i],TypeIMS[i],TypeIF[i],TypeIProb[i]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
+        AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %8.3f', [cellstring, TypeIDF1[i], TypeISS[i], TypeIMS[i], F, FProbF]);
+      end;
+      AReport.Add('%20s %4.0f %10.3f %10.3f', ['Residual', df2, SSres, VarEst]);
+      AReport.Add('%20s %4d %10.3f', ['Total', totalobs-1, SSt]);
+      AReport.Add('');
+      AReport.Add('=======================================================================================');
+      AReport.Add('');
     end;
-    OutputFrm.RichEdit.Lines.Add('');
-    OutputFrm.RichEdit.Lines.Add('Unique Effects.');
-    OutputFrm.RichEdit.Lines.Add('SOURCE     DF1  DF2          SS         MS        F    PROB>F');
+  end;
+
+  // Show Anova Results for random effects and/or covariates
+  if (NFixedIndep = 0) and (NReptDep = 0) then // must be random only or covariate only design
+  begin
+    if (NRndIndep > 0) or (NCovIndep > 0) then // random and/or covariate effects
+    begin
+      df1 := novars - 2; // k1 (note: novars contains ID variable, dep, independents)
+      PredSS := SSt * FullR2;
+      PredMS := PredSS / df1;
+      df2 := totalobs - df1 - 1; // residual df
+      SSres := SSt * (1.0 - FullR2);
+      VarEst := SSres / df2; // ms residual
+      F := PredMS / VarEst;
+      FProbF := probf(F,df1,df2);
+      AReport.Add('SOURCE                DF      SS         MS         F      Prob > F');
+      AReport.Add('-------------------- ---- ---------- ---------- ---------- --------');
+      AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %8.3f', ['Full Model', df1, PredSS, PredMS, F, FProbF]);
+      for i := 0 to NoBlocks - 1 do
+      begin
+        F := TypeIMS[i] / VarEst;
+        FProbF := probf(F,TypeIDF1[i],df2);
+        AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %8.3f', [Labels[i+1], TypeIDF1[i], TypeISS[i], TypeIMS[i], F, FProbF]);
+      end;
+      AReport.Add('%20s %4.0f %10.3f %10.3f', ['Residual', df2, SSres, VarEst]);
+      AReport.Add('%20s %4d %10.3f', ['Total', totalobs-1, SSt]);
+      AReport.Add('');
+      AReport.Add('=======================================================================================');
+      AReport.Add('');
+    end;
+  end;
+
+  // show effects for repeated measures ANOVA (and covariates)
+  if NReptDep > 0 then
+  begin
+    df1 := novars - 2; // k1 (note: novars contains ID variable, dep, independents)
+    PredSS := SSt * FullR2;
+    PredMS := PredSS / df1;
+    df2 := totalobs - df1 - 1; // residual df
+    SSres := SSt * (1.0 - FullR2);
+    VarEst := SSres / df2; // ms residual
+    F := PredMS / VarEst;
+    FProbF := probf(F,df1,df2);
+    AReport.Add('SOURCE                DF      SS         MS         F      Prob > F');
+    AReport.Add('-------------------- ---- ---------- ---------- ---------- --------');
+    AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %8.3f', ['Full Model', df1, PredSS, PredMS, F, FProbF]);
     for i := 0 to NoBlocks - 1 do
     begin
-        cellstring := IndOrderBox.Items.Strings[i];
-        outline := format('%10s %3.0f  %3.0f  %10.3f %10.3f %10.3f %6.3f',
-            [cellstring,TypeIIDF1[i],TypeIIDF2[i],TypeIISS[i],TypeIIMS[i],TypeIIF[i],TypeIIProb[i]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
+      F := TypeIMS[i] / VarEst;
+      FProbF := probf(F,TypeIDF1[i],df2);
+      AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %8.3f', [Labels[i+1], TypeIDF1[i], TypeISS[i], TypeIMS[i], F, FProbF]);
     end;
-    OutputFrm.ShowModal;
+    AReport.Add('%20s %4.0f %10.3f %10.3f', ['Residual', df2, SSres, VarEst]);
+    AReport.Add('%20s %4d %10.3f', ['Total', totalobs-1, SSt]);
+    AReport.Add('');
+    AReport.Add('=======================================================================================');
+    AReport.Add('');
+  end;
 
-    // Show Anova Results for fixed and/or covariates
-    OutputFrm.RichEdit.Clear;
-    if (NRndIndep = 0) and (NReptDep = 0) then // must be fixed and/or covariate only design
-    begin
-        if (NFixedIndep > 0) or (NCovIndep > 0) then // fixed effects
-        begin
-            df1 := novars - 2; // k1 (note: novars contains ID variable, dep, independents)
-            PredSS := SSt * FullR2;
-            PredMS := PredSS / df1;
-            df2 := totalobs - df1 - 1; // residual df
-            SSres := SSt * (1.0 - FullR2);
-            VarEst := SSres / df2; // ms residual
-            F := PredMS / VarEst;
-            FProbF := probf(F,df1,df2);
-            OutputFrm.RichEdit.Lines.Add('SOURCE               DF          SS         MS        F    PROB>F');
-            outline := format('%20s %3.0f  %10.3f %10.3f %10.3f %6.3f',
-                ['Full Model',df1,PredSS,PredMS,F,FProbF]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            for i := 0 to NoBlocks - 1 do
-            begin
-                F := TypeIMS[i] / VarEst;
-                FProbF := probf(F,TypeIDF1[i],df2);
-                cellstring := IndOrderBox.Items.Strings[i];
-                outline := format('%20s %3.0f  %10.3f %10.3f %10.3f %6.3f',
-                    [cellstring,TypeIDF1[i],TypeISS[i],TypeIMS[i],F,FProbF]);
-                OutputFrm.RichEdit.Lines.Add(outline);
-            end;
-            outline := format('%20s %3.0f  %10.3f %10.3f',
-                ['Residual',df2,SSres,VarEst]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            outline := format('%20s %3d  %10.3f',
-                ['Total',totalobs-1,SSt]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            OutputFrm.ShowModal;
-        end;
-    end;
-
-    // Show Anova Results for random effects and/or covariates
-    OutputFrm.RichEdit.Clear;
-    if (NFixedIndep = 0) and (NReptDep = 0) then // must be random only or covariate only design
-    begin
-        if (NRndIndep > 0) or (NCovIndep > 0) then // random and/or covariate effects
-        begin
-            df1 := novars - 2; // k1 (note: novars contains ID variable, dep, independents)
-            PredSS := SSt * FullR2;
-            PredMS := PredSS / df1;
-            df2 := totalobs - df1 - 1; // residual df
-            SSres := SSt * (1.0 - FullR2);
-            VarEst := SSres / df2; // ms residual
-            F := PredMS / VarEst;
-            FProbF := probf(F,df1,df2);
-            OutputFrm.RichEdit.Lines.Add('SOURCE               DF          SS         MS        F    PROB>F');
-            outline := format('%20s %3.0f  %10.3f %10.3f %10.3f %6.3f',
-                ['Full Model',df1,PredSS,PredMS,F,FProbF]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            for i := 0 to NoBlocks - 1 do
-            begin
-                F := TypeIMS[i] / VarEst;
-                FProbF := probf(F,TypeIDF1[i],df2);
-                outline := format('%20s %3.0f  %10.3f %10.3f %10.3f %6.3f',
-                    [Labels[i+1],TypeIDF1[i],TypeISS[i],TypeIMS[i],F,FProbF]);
-                OutputFrm.RichEdit.Lines.Add(outline);
-            end;
-            outline := format('%20s %3.0f  %10.3f %10.3f',
-                ['Residual',df2,SSres,VarEst]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            outline := format('%20s %3d  %10.3f',
-                ['Total',totalobs-1,SSt]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            OutputFrm.ShowModal;
-        end;
-    end;
-
-    // show effects for repeated measures ANOVA (and covariates)
-    OutputFrm.RichEdit.Clear;
-    if NReptDep > 0 then
-    begin
-         df1 := novars - 2; // k1 (note: novars contains ID variable, dep, independents)
-         PredSS := SSt * FullR2;
-         PredMS := PredSS / df1;
-         df2 := totalobs - df1 - 1; // residual df
-         SSres := SSt * (1.0 - FullR2);
-         VarEst := SSres / df2; // ms residual
-         F := PredMS / VarEst;
-         FProbF := probf(F,df1,df2);
-         OutputFrm.RichEdit.Lines.Add('SOURCE               DF          SS         MS        F    PROB>F');
-         outline := format('%20s %3.0f  %10.3f %10.3f %10.3f %6.3f',
-                ['Full Model',df1,PredSS,PredMS,F,FProbF]);
-         OutputFrm.RichEdit.Lines.Add(outline);
-         for i := 0 to NoBlocks - 1 do
-         begin
-                F := TypeIMS[i] / VarEst;
-                FProbF := probf(F,TypeIDF1[i],df2);
-                outline := format('%20s %3.0f  %10.3f %10.3f %10.3f %6.3f',
-                    [Labels[i+1],TypeIDF1[i],TypeISS[i],TypeIMS[i],F,FProbF]);
-                OutputFrm.RichEdit.Lines.Add(outline);
-         end;
-         outline := format('%20s %3.0f  %10.3f %10.3f',
-                ['Residual',df2,SSres,VarEst]);
-         OutputFrm.RichEdit.Lines.Add(outline);
-         outline := format('%20s %3d  %10.3f',
-                ['Total',totalobs-1,SSt]);
-         OutputFrm.RichEdit.Lines.Add(outline);
-         OutputFrm.ShowModal;
-    end;
-
-    // clean up the heap
-    TypeIIProb := nil;
-    TypeIIF := nil;
-    TypeIProb := nil;
-    TypeIF := nil;
-    TypeIIDF2 := nil;
-    TypeIIDF1 := nil;
-    TypeIDF2 := nil;
-    TypeIDF1 := nil;
-    TypeIIMS := nil;
-    TypeIMS := nil;
-    TypeIISS := nil;
-    TypeISS := nil;
+  // clean up the heap
+  TypeIIProb := nil;
+  TypeIIF := nil;
+  TypeIProb := nil;
+  TypeIF := nil;
+  TypeIIDF2 := nil;
+  TypeIIDF1 := nil;
+  TypeIDF2 := nil;
+  TypeIDF1 := nil;
+  TypeIIMS := nil;
+  TypeIMS := nil;
+  TypeIISS := nil;
+  TypeISS := nil;
 end;
 
 procedure TGLMFrm.ModelIIAnalysis;
@@ -2196,428 +2270,426 @@ begin
     TypeISS := nil;
 end;
 
-procedure TGLMFrm.ModelIIIAnalysis;
+procedure TGLMFrm.ModelIIIAnalysis(AReport: TStrings);
 var
-    block, i, j, NEntered, index, noblocks, priorentered : integer;
-    cellstring : string;
-    labelstr : string;
-    outline, effstr : string;
-    R, SSx, sum, constant: double;
-    df1, df2, F, FProbF, StdErrB, OldDF1: double;
-    SSt, VarEst, SSres, StdErrEst, AdjR2 : double;
-    dfbetween, dferrbetween, dfwithin, dferrwithin : double;
-    ssbetween, sserrbetween, mserrbetween, sswithin, sserrwithin,  mserrwithin : double;
-    betweenblock : integer;
-    totalss, totaldf : double;
-
+  block, i, j, NEntered, index, noblocks, priorentered : integer;
+  cellstring : string;
+  labelstr : string;
+  outline, effstr : string;
+  R, SSx, sum, constant: double;
+  df1, df2, F, FProbF, StdErrB, OldDF1: double;
+  SSt, VarEst, SSres, StdErrEst, AdjR2 : double;
+  dfbetween, dferrbetween, dfwithin, dferrwithin : double;
+  ssbetween, sserrbetween, mserrbetween, sswithin, sserrwithin,  mserrwithin : double;
+  betweenblock : integer;
+  totalss, totaldf : double;
 begin
-    OldDF1 := 0.0;
-    priorentered := 0;
-    OldR2 := 0;
+  OldDF1 := 0.0;
+  priorentered := 0;
+  OldR2 := 0;
+  ColSelected[0] := ReptDepPos[0];
+  Labels[0] := GenLabels[1];
+  // Complete an individual regression analysis for each between subjects var.
+  // Enter each block containing between subjects variance including:
+  // (1)  covariates
+  // (2)  person vectors
+  // (3)  fixed or random factors
+  // (4)  the interactions among only fixed or random effects
+  noblocks := IndOrderBox.Items.Count;
+  SetLength(TypeISS,noblocks); // use for between subject effects
+  SetLength(TypeIISS,noblocks);// use for within subject effects
+  SetLength(TypeIMS,noblocks);
+  SetLength(TypeIIMS,noblocks);
+  SetLength(TypeIDF1,noblocks);
+  SetLength(TypeIDF2,noblocks);
+  SetLength(TypeIIDF1,noblocks);
+  SetLength(TypeIIDF2,noblocks);
+  SetLength(TypeIF,noblocks);
+  SetLength(TypeIProb,noblocks);
+  SetLength(TypeIIF,noblocks);
+  SetLength(TypeIIProb,noblocks);
+
+  for i := 0 to noblocks - 1 do
+  begin
+    TypeISS[i] := -1.0; // store indicator for block (-1 indicates no use)
+    TypeIISS[i] := -1.0;
+  end;
+
+  for block := 0 to noblocks - 1 do
+  begin
     ColSelected[0] := ReptDepPos[0];
     Labels[0] := GenLabels[1];
-    // Complete an individual regression analysis for each between subjects var.
-    // Enter each block containing between subjects variance including:
-    // (1)  covariates
-    // (2)  person vectors
-    // (3)  fixed or random factors
-    // (4)  the interactions among only fixed or random effects
-    noblocks := IndOrderBox.Items.Count;
-    SetLength(TypeISS,noblocks); // use for between subject effects
-    SetLength(TypeIISS,noblocks);// use for within subject effects
-    SetLength(TypeIMS,noblocks);
-    SetLength(TypeIIMS,noblocks);
-    SetLength(TypeIDF1,noblocks);
-    SetLength(TypeIDF2,noblocks);
-    SetLength(TypeIIDF1,noblocks);
-    SetLength(TypeIIDF2,noblocks);
-    SetLength(TypeIF,noblocks);
-    SetLength(TypeIProb,noblocks);
-    SetLength(TypeIIF,noblocks);
-    SetLength(TypeIIProb,noblocks);
+    NEntered := 1;
+    cellstring := IndOrderBox.Items.Strings[block];
+    effstr := cellstring;
+    j := Pos('IR',cellstring);
+    if j <> 0 then continue;
 
-    for i := 0 to noblocks - 1 do
-    begin
-        TypeISS[i] := -1.0; // store indicator for block (-1 indicates no use)
-        TypeIISS[i] := -1.0;
+    // check for repeated measures variables (person codes)
+    if NReptDep > 0 then
+    begin  // look for 'IP' in cellstring
+      labelstr := copy(cellstring,0,2);
+      if labelstr = 'IP' then // person vectors were generated
+      begin
+        betweenblock := block; // save block no. of between subject vectors
+        for i := 0 to NoCases - 2 do
+        begin
+          ColSelected[NEntered] := ReptIndepPos[i];
+          Labels[NEntered] := GenLabels[ReptIndepPos[i]];
+          NEntered := NEntered + 1;
+        end;
+      end;
     end;
 
-    for block := 0 to noblocks - 1 do
+    // check for fixed effect variables next
+    if NFixedIndep > 0 then
     begin
-        ColSelected[0] := ReptDepPos[0];
-        Labels[0] := GenLabels[1];
-        NEntered := 1;
-        cellstring := IndOrderBox.Items.Strings[block];
-        effstr := cellstring;
-        j := Pos('IR',cellstring);
-        if j <> 0 then continue;
-        // check for repeated measures variables (person codes)
-        if NReptDep > 0 then
-        begin  // look for 'IP' in cellstring
-             labelstr := copy(cellstring,0,2);
-             if labelstr = 'IP' then // person vectors were generated
-             begin
-                  betweenblock := block; // save block no. of between subject vectors
-                  for i := 0 to NoCases - 2 do
-                  begin
-                       ColSelected[NEntered] := ReptIndepPos[i];
-                       Labels[NEntered] := GenLabels[ReptIndepPos[i]];
-                       NEntered := NEntered + 1;
-                  end;
-             end;
-        end;
-        // check for fixed effect variables next
-        if NFixedIndep > 0 then
+      for i := 0 to NFixedIndep-1 do
+      begin
+        if cellstring = FixedIndepCode.Items.Strings[i] then
         begin
-            for i := 0 to NFixedIndep-1 do
-            begin
-                if cellstring = FixedIndepCode.Items.Strings[i] then
-                begin
-                    index := i;
-                    for j := 0 to NFixVecIndep[index]-1 do
-                    begin
-                        ColSelected[NEntered] := FixedIndepPos[index] + j;
-                        labelstr := format('%s_%d',[FixedIndepCode.Items.Strings[index],j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
-            end;
+          index := i;
+          for j := 0 to NFixVecIndep[index]-1 do
+          begin
+            ColSelected[NEntered] := FixedIndepPos[index] + j;
+            labelstr := format('%s_%d',[FixedIndepCode.Items.Strings[index],j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
         end;
-        // Check for random effects variables next
-        if NRndIndep > 0 then
-        begin
-            for i := 0 to NRndIndep-1 do
-            begin
-                if cellstring = RndIndepCode.Items.Strings[i] then
-                begin
-                    index := i;
-                    for j := 0 to NRndVecIndep[index]-1 do
-                    begin
-                        ColSelected[NEntered] := RndIndepPos[index] + j;
-                        labelstr := format('%s_%d',[RndIndepCode.Items.Strings[index],j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
-            end;
-        end;
-        // check for interactions next
-        if NoInterDefs > 0 then
-        begin
-            for i := 0 to NoInterDefs-1 do
-            begin
-                if cellstring = InteractList.Items.Strings[i] then
-                begin
-                    // eliminate any interactions containing 'IR'
-                    j := Pos('IR',cellstring);
-                    if j <> 0 then continue;
-                    for j := 0 to NInteractVecs[i]-1 do
-                    begin
-                        ColSelected[NEntered] := InteractPos[i] + j;
-                        labelstr := format('%s%d_%d',['IA',i+1,j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
-            end;
-        end; // check for interaction variables
-        // check for covariates
-        if NCovIndep > 0 then
-        begin
-            for i := 0 to NCovIndep-1 do
-            begin
-                if cellstring = CovariateCode.Items.Strings[i] then // matched!
-                begin
-                    index := i; // index of covariate code
-                    ColSelected[NEntered] := CovIndepPos[index];
-                    labelstr := format('%s',[CovariateCode.Items.Strings[index]]);
-                    Labels[NEntered] := labelstr;
-                    NEntered := NEntered + 1;
-                    break;
-                end;
-            end;
-        end;
-
-        // do reg analysis and save sum of squares
-        RegAnal(NEntered);
-        R := sqrt(R2);
-        df1 := Nentered - 1; // no. of independent variables
-        TypeIDF1[block] := df1;
-        df2 := totalobs - df1 - 1; // N - no. independent - 1
-        SSt := (totalobs-1) * Vars[0];
-        SSres := SSt * (1.0 - R2);
-        VarEst := SSres / df2;
-        if (VarEst > 0.0) then StdErrEst := sqrt(VarEst)
-        else
-        begin
-            ShowMessage('ERROR! Error in computing variance estimate.');
-            StdErrEst := 0.0;
-        end;
-        if (R2 < 1.0) and (df2 > 0.0) then F := (R2 / df1) / ((1.0-R2)/ df2)
-        else F := 0.0;
-        FProbF := probf(F,df1,df2);
-        AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
-//        OutputFrm.RichEdit.ParaGraph.Alignment := taLeftJustify;
-        outline := format('%8s%10s%10s%12s%5s%5s',['R','R2','F','Prob.>F','DF1','DF2']);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('%8.3f%10.3f%10.3f%10.3f%5.0f%5.0f',
-                       		[R,R2,F,FProbF,df1,df2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('Adjusted R Squared = %5.3f',[AdjR2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        outline := format('Std. Error of Estimate = %10.3f',[StdErrEst]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        OutputFrm.RichEdit.Lines.Add('Variable       Beta      B         Std.Error t         Prob.>t');
-        df1 := 1.0;
-        sum := 0.0;
-        for i := 0 to Nentered - 2 do
-        begin
-            SSx := (totalobs-1) * Vars[i+1];
-            sum  := sum + B[i] * means[i+1];
-            if invmatrix[i,i] > 1.0e-15 then
-            begin
-                StdErrB := VarEst / (SSx * (1.0 / invmatrix[i,i]));
-                StdErrB := sqrt(StdErrB);
-                if StdErrB > 0.0 then F := B[i] / StdErrB else F := 0.0;
-                FProbF := probf(F*F,df1,df2);
-            end
-            else begin
-                StdErrB := 0.0;
-                F := 0.0;
-                FProbF := 0.0;
-            end;
-            cellstring := format('%10s',[Labels[i+1]]);
-            outline := format('%10s%10.3f%10.3f%10.3f%10.3f%10.3f',
-                    [cellstring, Beta[i] ,B[i], StdErrB, F, FProbF]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-        end;
-        constant := means[0] - sum;
-        outline := format('Constant = %10.3f',[constant]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        TypeISS[block] := R2 * SST;
-        OutputFrm.RichEdit.Lines.Add('BETWEEN SUBJECT EFFECT:');
-        outline := format('SS for %-10s = %10.3f',[effstr,TypeISS[block]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('SS TOTAL     = %10.3f',[SST]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.ShowModal;
+      end;
     end;
 
-    // Summarize between subject effects
-    totalss := 0.0;
-    totaldf := 0.0;
-    for i := 0 to noblocks - 1 do
+    // Check for random effects variables next
+    if NRndIndep > 0 then
     begin
-        if TypeISS[i] < 0.0 then continue;
-        if betweenblock = i then
+      for i := 0 to NRndIndep-1 do
+      begin
+        if cellstring = RndIndepCode.Items.Strings[i] then
         begin
-            ssbetween := TypeISS[i];
-            dfbetween := TypeIDF1[i];
-        end
-        else
-        begin
-            totalss := totalss + TypeISS[i];
-            totaldf := totaldf + TypeIDF1[i];
+          index := i;
+          for j := 0 to NRndVecIndep[index]-1 do
+          begin
+            ColSelected[NEntered] := RndIndepPos[index] + j;
+            labelstr := format('%s_%d',[RndIndepCode.Items.Strings[index],j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
         end;
+      end;
     end;
-    sserrbetween := ssbetween - totalss;
-    dferrbetween := dfbetween - totaldf;
-    mserrbetween := sserrbetween / dferrbetween;
 
-    OutputFrm.RichEdit.Lines.Clear;
-    OutputFrm.RichEdit.Lines.Add('           SUMMARY OF BETWEEN SUBJECT EFFECTS');
-    outline := 'SOURCE              DF       SS        MS        F         PROB.>F';
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := format('%-19s %3.0f  %9.3f',['Between Subjects',dfbetween, ssbetween]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    for i := 0 to noblocks - 1 do
+    // check for interactions next
+    if NoInterDefs > 0 then
     begin
-        if TypeISS[i] < 0.0 then continue;
-        if betweenblock = i then continue; // already done above
-        TypeIMS[i] := TypeISS[i] / TypeIDF1[i];
-        TypeIF[i] := TypeIMS[i] / mserrbetween;
-        TypeIDF2[i] := dferrbetween;
-        TypeIProb[i] := probf(TypeIF[i],TypeIDF1[i],TypeIDF2[i]);
-        outline := format('%19s %3.0f  %9.3f %9.3f %9.3f %9.3f',
-          [IndOrderBox.Items.Strings[i],TypeIDF1[i],TypeISS[i],TypeIMS[i],
-          TypeIF[i],TypeIProb[i]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
-    outline := format('%19s %3.0f  %9.3f %9.3f',['Error Between', dferrbetween,
-       sserrbetween, mserrbetween]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.ShowModal;
-
-    // Now, get within subject effects
-    sswithin := SST - SSbetween;
-    dfwithin := totalobs - dfbetween - 1;
-    for block := 0 to noblocks - 1 do
-    begin
-        ColSelected[0] := ReptDepPos[0];
-        Labels[0] := GenLabels[1];
-        NEntered := 1;
-        cellstring := IndOrderBox.Items.Strings[block];
-        effstr := cellstring;
-        j := Pos('IR',cellstring);
-        if j = 0 then continue; // only select those for rep. treatments or interactions
-
-        // check for treatments
-        if NReptDep > 0 then
-        begin  // look for 'IR' in cellstring
-             labelstr := copy(cellstring,0,2);
-             if labelstr = 'IR' then // repeated treatment vectors were generated
-             begin
-                  for i := 0 to NReptDep - 2 do
-                  begin
-                       ColSelected[NEntered] := ReptTrtPos[i];
-                       Labels[NEntered] := GenLabels[ReptTrtPos[i]];
-                       NEntered := NEntered + 1;
-                  end;
-             end;
-        end;
-        // check for interactions next
-        if NoInterDefs > 0 then
+      for i := 0 to NoInterDefs-1 do
+      begin
+        if cellstring = InteractList.Items.Strings[i] then
         begin
-            for i := 0 to NoInterDefs-1 do
-            begin
-                if cellstring = InteractList.Items.Strings[i] then
-                begin
-                    for j := 0 to NInteractVecs[i]-1 do
-                    begin
-                        ColSelected[NEntered] := InteractPos[i] + j;
-                        labelstr := format('%s%d_%d',['IA',i+1,j+1]);
-                        Labels[NEntered] := labelstr;
-                        NEntered := NEntered + 1;
-                    end;
-                    break;
-                end;
-            end;
-        end; // check for interaction variables
-        // do reg analysis and save sum of squares
-        if NEntered < 2 then continue;
-        RegAnal(NEntered);
-        R := sqrt(R2);
-        df1 := Nentered - 1; // no. of independent variables
-        TypeIIDF1[block] := df1;
-        df2 := totalobs - df1 - 1; // N - no. independent - 1
-        SSt := (totalobs-1) * Vars[0];
-        SSres := SSt * (1.0 - R2);
-        VarEst := SSres / df2;
-        if (VarEst > 0.0) then StdErrEst := sqrt(VarEst)
-        else
-        begin
-            ShowMessage('ERROR! Error in computing variance estimate.');
-            StdErrEst := 0.0;
+          // eliminate any interactions containing 'IR'
+          j := Pos('IR',cellstring);
+          if j <> 0 then continue;
+          for j := 0 to NInteractVecs[i]-1 do
+          begin
+            ColSelected[NEntered] := InteractPos[i] + j;
+            labelstr := format('%s%d_%d',['IA',i+1,j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
         end;
-        if (R2 < 1.0) and (df2 > 0.0) then F := (R2 / df1) / ((1.0-R2)/ df2)
-        else F := 0.0;
-        FProbF := probf(F,df1,df2);
-        AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
-//        OutputFrm.RichEdit.ParaGraph.Alignment := taLeftJustify;
-        outline := format('%8s%10s%10s%12s%5s%5s',['R','R2','F','Prob.>F','DF1','DF2']);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('%8.3f%10.3f%10.3f%10.3f%5.0f%5.0f',
-                       		[R,R2,F,FProbF,df1,df2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('Adjusted R Squared = %5.3f',[AdjR2]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        outline := format('Std. Error of Estimate = %10.3f',[StdErrEst]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
-        OutputFrm.RichEdit.Lines.Add('Variable       Beta      B         Std.Error t         Prob.>t');
-        df1 := 1.0;
-        sum := 0.0;
-        for i := 0 to Nentered - 2 do
+      end;
+    end; // check for interaction variables
+
+    // check for covariates
+    if NCovIndep > 0 then
+    begin
+      for i := 0 to NCovIndep-1 do
+      begin
+        if cellstring = CovariateCode.Items.Strings[i] then // matched!
         begin
-            SSx := (totalobs-1) * Vars[i+1];
-            sum  := sum + B[i] * means[i+1];
-            if invmatrix[i,i] > 1.0e-15 then
-            begin
-                StdErrB := VarEst / (SSx * (1.0 / invmatrix[i,i]));
-                StdErrB := sqrt(StdErrB);
-                if StdErrB > 0.0 then F := B[i] / StdErrB else F := 0.0;
-                FProbF := probf(F*F,df1,df2);
-            end
-            else begin
-                StdErrB := 0.0;
-                F := 0.0;
-                FProbF := 0.0;
-            end;
-            cellstring := format('%10s',[Labels[i+1]]);
-            outline := format('%10s%10.3f%10.3f%10.3f%10.3f%10.3f',
-                    [cellstring, Beta[i] ,B[i], StdErrB, F, FProbF]);
-            OutputFrm.RichEdit.Lines.Add(outline);
+          index := i; // index of covariate code
+          ColSelected[NEntered] := CovIndepPos[index];
+          labelstr := format('%s',[CovariateCode.Items.Strings[index]]);
+          Labels[NEntered] := labelstr;
+          NEntered := NEntered + 1;
+          break;
         end;
-        constant := means[0] - sum;
-        outline := format('Constant = %10.3f',[constant]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        TypeIISS[block] := R2 * SST;
-        OutputFrm.RichEdit.Lines.Add('WITHIN SUBJECT EFFECT:');
-        outline := format('SS for %-10s = %10.3f',[effstr,TypeIISS[block]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        outline := format('SS TOTAL     = %10.3f',[SST]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.ShowModal;
+      end;
     end;
-    totalss := 0.0;
-    totaldf := 0.0;
-    for i := 0 to noblocks - 1 do // add sums of squares for within effects
-    begin
-        if TypeIISS[i] < 0.0 then continue;
-        totalss := totalss + TypeIISS[i];
-        totaldf := totaldf + TypeIIDF1[i];
-    end;
-    sserrwithin := sswithin - totalss;
-    dferrwithin := dfwithin - totaldf;
-    mserrwithin := sserrwithin / dferrwithin;
 
-    OutputFrm.RichEdit.Lines.Clear;
-    OutputFrm.RichEdit.Lines.Add('           SUMMARY OF WITHIN SUBJECT EFFECTS');
-    outline := 'SOURCE              DF       SS        MS        F         PROB.>F';
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := format('%-19s %3.0f  %9.3f',['Within Subjects',dfwithin, sswithin]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    for i := 0 to noblocks - 1 do
-    begin
-        if TypeIISS[i] < 0.0 then continue;
-        TypeIIMS[i] := TypeIISS[i] / TypeIIDF1[i];
-        TypeIIF[i] := TypeIIMS[i] / mserrwithin;
-        TypeIIDF2[i] := dferrwithin;
-        TypeIIProb[i] := probf(TypeIIF[i],TypeIIDF1[i],TypeIIDF2[i]);
-        outline := format('%19s %3.0f  %9.3f %9.3f %9.3f %9.3f',
-          [IndOrderBox.Items.Strings[i],TypeIIDF1[i],TypeIISS[i],TypeIIMS[i],
-          TypeIIF[i],TypeIIProb[i]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
-    outline := format('%19s %3.0f  %9.3f %9.3f',['Error Within', dferrwithin,
-       sserrwithin, mserrwithin]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := format('%19s %3d  %9.3f',['TOTAL',totalobs-1,SST]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.ShowModal;
+    // do reg analysis and save sum of squares
+    RegAnal(NEntered, AReport);
+    R := sqrt(R2);
+    df1 := Nentered - 1; // no. of independent variables
+    TypeIDF1[block] := df1;
+    df2 := totalobs - df1 - 1; // N - no. independent - 1
+    SSt := (totalobs-1) * Vars[0];
+    SSres := SSt * (1.0 - R2);
+    VarEst := SSres / df2;
 
-    // clean up the heap
-    TypeIIProb := nil;
-    TypeIIF := nil;
-    TypeIProb := nil;
-    TypeIF := nil;
-    TypeIIDF2 := nil;
-    TypeIIDF1 := nil;
-    TypeIDF2 := nil;
-    TypeIDF1 := nil;
-    TypeIIMS := nil;
-    TypeIMS := nil;
-    TypeIISS := nil;
-    TypeISS := nil;
+    if (VarEst > 0.0) then
+      StdErrEst := sqrt(VarEst)
+    else
+    begin
+      ShowMessage('ERROR! Error in computing variance estimate.');
+      StdErrEst := 0.0;
+    end;
+
+    if (R2 < 1.0) and (df2 > 0.0) then
+      F := (R2 / df1) / ((1.0-R2)/ df2)
+    else
+      F := 0.0;
+    FProbF := probf(F,df1,df2);
+    AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
+
+    AReport.Add('   R         R2         F      Prob. > F   DF1   DF2 ');
+    AReport.Add('-------- ---------- ---------- ---------- ----- -----');
+    AReport.Add('%8.3f %10.3f %10.3f %10.3f %5.0f %5.0f', [R, R2, F, FProbF, df1, df2]);
+    AReport.Add('Adjusted R Squared:     %10.3f', [AdjR2]);
+    AReport.Add('');
+    AReport.Add('Std. Error of Estimate: %10.3f', [StdErrEst]);
+    AReport.Add('');
+    AReport.Add('Variable      Beta        B      Std.Error      t      Prob. > t ');
+    AReport.Add('---------- ---------- ---------- ---------- ---------- ----------');
+
+    df1 := 1.0;
+    sum := 0.0;
+    for i := 0 to Nentered - 2 do
+    begin
+      SSx := (totalobs-1) * Vars[i+1];
+      sum  := sum + B[i] * means[i+1];
+      if invmatrix[i,i] > 1.0e-15 then
+      begin
+        StdErrB := VarEst / (SSx * (1.0 / invmatrix[i,i]));
+        StdErrB := sqrt(StdErrB);
+        if StdErrB > 0.0 then F := B[i] / StdErrB else F := 0.0;
+        FProbF := probf(F*F,df1,df2);
+      end
+      else begin
+        StdErrB := 0.0;
+        F := 0.0;
+        FProbF := 0.0;
+      end;
+      cellstring := Format('%10s', [Labels[i+1]]);
+      AReport.Add('%10s %10.3f %10.3f %10.3f %10.3f %10.3f', [cellstring, Beta[i] ,B[i], StdErrB, F, FProbF]);
+    end;
+    constant := means[0] - sum;
+    AReport.Add('Constant:          %10.3f', [constant]);
+    TypeISS[block] := R2 * SST;
+    AReport.Add('BETWEEN SUBJECT EFFECT:');
+    AReport.Add('SS for %-10s: %10.3f',[effstr,TypeISS[block]]);
+    AReport.Add('SS TOTAL:          %10.3f',[SST]);
+    AReport.Add('');
+    AReport.Add('=======================================================================================');
+    AReport.Add('');
+  end;
+
+  // Summarize between subject effects
+  totalss := 0.0;
+  totaldf := 0.0;
+  for i := 0 to noblocks - 1 do
+  begin
+    if TypeISS[i] < 0.0 then continue;
+    if betweenblock = i then
+    begin
+      ssbetween := TypeISS[i];
+      dfbetween := TypeIDF1[i];
+    end
+    else
+    begin
+      totalss := totalss + TypeISS[i];
+      totaldf := totaldf + TypeIDF1[i];
+    end;
+  end;
+  sserrbetween := ssbetween - totalss;
+  dferrbetween := dfbetween - totaldf;
+  mserrbetween := sserrbetween / dferrbetween;
+
+  AReport.Add('SUMMARY OF BETWEEN SUBJECT EFFECTS');
+  AReport.Add('SOURCE                DF       SS        MS        F       Prob > F');
+  AReport.Add('-------------------- ---- ---------- ---------- ---------- --------');
+  AReport.Add('%-20s %4.0f %10.3f', ['Between Subjects', dfbetween, ssbetween]);
+  for i := 0 to noblocks - 1 do
+  begin
+    if TypeISS[i] < 0.0 then continue;
+    if betweenblock = i then continue; // already done above
+    TypeIMS[i] := TypeISS[i] / TypeIDF1[i];
+    TypeIF[i] := TypeIMS[i] / mserrbetween;
+    TypeIDF2[i] := dferrbetween;
+    TypeIProb[i] := probf(TypeIF[i],TypeIDF1[i],TypeIDF2[i]);
+    AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %10.3f',
+      [IndOrderBox.Items[i], TypeIDF1[i], TypeISS[i], TypeIMS[i], TypeIF[i], TypeIProb[i]]
+    );
+  end;
+  AReport.Add('%20s %4.0f %10.3f %10.3f', ['Error Between', dferrbetween, sserrbetween, mserrbetween]);
+  AReport.Add('');
+  AReport.Add('=======================================================================================');
+  AReport.Add('');
+
+  // Now, get within subject effects
+  sswithin := SST - SSbetween;
+  dfwithin := totalobs - dfbetween - 1;
+  for block := 0 to noblocks - 1 do
+  begin
+    ColSelected[0] := ReptDepPos[0];
+    Labels[0] := GenLabels[1];
+    NEntered := 1;
+    cellstring := IndOrderBox.Items.Strings[block];
+    effstr := cellstring;
+    j := Pos('IR',cellstring);
+    if j = 0 then continue; // only select those for rep. treatments or interactions
+
+    // check for treatments
+    if NReptDep > 0 then
+    begin  // look for 'IR' in cellstring
+      labelstr := copy(cellstring,0,2);
+      if labelstr = 'IR' then // repeated treatment vectors were generated
+      begin
+        for i := 0 to NReptDep - 2 do
+        begin
+          ColSelected[NEntered] := ReptTrtPos[i];
+          Labels[NEntered] := GenLabels[ReptTrtPos[i]];
+          NEntered := NEntered + 1;
+        end;
+      end;
+    end;
+
+    // check for interactions next
+    if NoInterDefs > 0 then
+    begin
+      for i := 0 to NoInterDefs-1 do
+      begin
+        if cellstring = InteractList.Items.Strings[i] then
+        begin
+          for j := 0 to NInteractVecs[i]-1 do
+          begin
+            ColSelected[NEntered] := InteractPos[i] + j;
+            labelstr := format('%s%d_%d',['IA',i+1,j+1]);
+            Labels[NEntered] := labelstr;
+            NEntered := NEntered + 1;
+          end;
+          break;
+        end;
+      end;
+    end; // check for interaction variables
+
+    // do reg analysis and save sum of squares
+    if NEntered < 2 then continue;
+    RegAnal(NEntered, AReport);
+    R := sqrt(R2);
+    df1 := Nentered - 1; // no. of independent variables
+    TypeIIDF1[block] := df1;
+    df2 := totalobs - df1 - 1; // N - no. independent - 1
+    SSt := (totalobs-1) * Vars[0];
+    SSres := SSt * (1.0 - R2);
+    VarEst := SSres / df2;
+    if (VarEst > 0.0) then
+      StdErrEst := sqrt(VarEst)
+    else
+    begin
+      MessageDlg('Error in computing variance estimate.', mtError,[mbOK], 0);
+      StdErrEst := 0.0;
+    end;
+    if (R2 < 1.0) and (df2 > 0.0) then
+      F := (R2 / df1) / ((1.0-R2)/ df2)
+    else
+      F := 0.0;
+    FProbF := probf(F,df1,df2);
+    AdjR2 := 1.0 - (1.0 - R2) * (totalobs - 1) / df2;
+
+    AReport.Add('   R         R2         F      Prob. > F   DF1   DF2 ');
+    AReport.Add('-------- ---------- ---------- ---------- ----- -----');
+    AReport.Add('%8.3f %10.3f %10.3f %10.3f %5.0f %5.0f', [R, R2, F, FProbF, df1, df2]);
+    AReport.Add('');
+    AReport.Add('Adjusted R Squared:     %10.3f', [AdjR2]);
+    AReport.Add('Std. Error of Estimate: %10.3f', [StdErrEst]);
+    AReport.Add('');
+    AReport.Add('Variable      Beta        B      Std.Error      t      Prob. > t ');
+    AReport.Add('---------- ---------- ---------- ---------- ---------- ----------');
+
+    df1 := 1.0;
+    sum := 0.0;
+    for i := 0 to Nentered - 2 do
+    begin
+      SSx := (totalobs-1) * Vars[i+1];
+      sum  := sum + B[i] * means[i+1];
+      if invmatrix[i,i] > 1.0e-15 then
+      begin
+        StdErrB := VarEst / (SSx * (1.0 / invmatrix[i,i]));
+        StdErrB := sqrt(StdErrB);
+        if StdErrB > 0.0 then F := B[i] / StdErrB else F := 0.0;
+        FProbF := probf(F*F,df1,df2);
+      end
+      else begin
+        StdErrB := 0.0;
+        F := 0.0;
+        FProbF := 0.0;
+      end;
+      cellstring := Format('%10s', [Labels[i+1]]);
+      AReport.Add('%10s %10.3f %10.3f %10.3f %10.3f %10.3f', [cellstring, Beta[i] ,B[i], StdErrB, F, FProbF]);
+    end;
+    constant := means[0] - sum;
+    AReport.Add('Constant:               %10.3f', [constant]);
+
+    TypeIISS[block] := R2 * SST;
+    AReport.Add('BETWEEN SUBJECT EFFECT:');
+    AReport.Add('SS for %-10s: %10.3f',[effstr, TypeIISS[block]]);
+    AReport.Add('SS TOTAL:          %10.3f',[SST]);
+    AReport.Add('');
+    AReport.Add('=======================================================================================');
+    AReport.Add('');
+  end;
+
+  totalss := 0.0;
+  totaldf := 0.0;
+  for i := 0 to noblocks - 1 do // add sums of squares for within effects
+  begin
+    if TypeIISS[i] < 0.0 then continue;
+    totalss := totalss + TypeIISS[i];
+    totaldf := totaldf + TypeIIDF1[i];
+  end;
+  sserrwithin := sswithin - totalss;
+  dferrwithin := dfwithin - totaldf;
+  mserrwithin := sserrwithin / dferrwithin;
+
+  AReport.Add('           SUMMARY OF WITHIN SUBJECT EFFECTS');
+  AReport.Add('SOURCE                DF      SS         MS         F      Prob > F');
+  AReport.Add('-------------------- ---- ---------- ---------- ---------- --------');
+  AReport.Add('%-20s %4.0f %10.3f', ['Within Subjects', dfwithin, sswithin]);
+  for i := 0 to noblocks - 1 do
+  begin
+    if TypeIISS[i] < 0.0 then continue;
+    TypeIIMS[i] := TypeIISS[i] / TypeIIDF1[i];
+    TypeIIF[i] := TypeIIMS[i] / mserrwithin;
+    TypeIIDF2[i] := dferrwithin;
+    TypeIIProb[i] := probf(TypeIIF[i],TypeIIDF1[i],TypeIIDF2[i]);
+    AReport.Add('%20s %4.0f %10.3f %10.3f %10.3f %10.3f',
+      [IndOrderBox.Items.Strings[i],TypeIIDF1[i],TypeIISS[i],TypeIIMS[i],TypeIIF[i],TypeIIProb[i]]
+    );
+  end;
+  AReport.Add('%20s %4.0f %10.3f %10.3f', ['Error Within', dferrwithin, sserrwithin, mserrwithin]);
+  AReport.Add('%20s %4d %10.3f', ['TOTAL', totalobs-1, SST]);
+
+  AReport.Add('');
+  AReport.Add('=======================================================================================');
+  AReport.Add('');
+
+  // clean up the heap
+  TypeIIProb := nil;
+  TypeIIF := nil;
+  TypeIProb := nil;
+  TypeIF := nil;
+  TypeIIDF2 := nil;
+  TypeIIDF1 := nil;
+  TypeIDF2 := nil;
+  TypeIDF1 := nil;
+  TypeIIMS := nil;
+  TypeIMS := nil;
+  TypeIISS := nil;
+  TypeISS := nil;
 end;
 
 function TGLMFrm.CntIntActVecs(linestr: string): integer;
@@ -3335,6 +3407,27 @@ cleanup:
     rab := nil;
     rbb := nil;
     raa := nil;
+end;
+
+procedure TGLMFrm.UpdateBtnStates;
+begin
+  ContDepInBtn.Enabled := VarList.ItemIndex > -1;
+  ContDepOutBtn.Enabled := DepContList.ItemIndex > -1;
+
+  CatDepInBtn.Enabled := VarList.ItemIndex > -1;
+  CatDepOutBtn.Enabled := DepCatList.ItemIndex > -1;
+
+  ReptDepInBtn.Enabled := AnySelected(VarList);
+  ReptDepOutBtn.Enabled := RepeatList.ItemIndex > -1;
+
+  FixedIndepInBtn.Enabled := AnySelected(VarList);
+  FixedIndepOutBtn.Enabled := FixedList.ItemIndex > -1;
+
+  RndIndepInBtn.Enabled := VarList.ItemIndex > -1;
+  RndIndepOutBtn.Enabled := RandomList.ItemIndex > -1;
+
+  CovInBtn.Enabled := VarList.ItemIndex > -1;
+  CovOutBtn.Enabled := CovariateList.ItemIndex > -1;
 end;
 
 initialization
