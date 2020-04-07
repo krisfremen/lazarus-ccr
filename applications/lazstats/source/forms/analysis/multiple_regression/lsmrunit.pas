@@ -69,7 +69,8 @@ var
 implementation
 
 uses
-  Math;
+  Math,
+  Utils;
 
 procedure TLSMregForm.ResetBtnClick(Sender: TObject);
 var
@@ -413,27 +414,13 @@ end;
 
 procedure TLSMregForm.UpdateBtnStates;
 var
-  i: Integer;
   lSelected: Boolean;
 begin
-  lSelected := false;
-  for i := 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
+  lSelected := AnySelected(VarList);
   DepInBtn.Enabled := lSelected;
   InBtn.Enabled := lSelected;
 
-  lSelected := false;
-  for i := 0 to IndepVars.Items.Count-1 do
-    if IndepVars.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
+  OutBtn.Enabled := AnySelected(IndepVars);
   DepOutBtn.Enabled := DepVar.Text <> '';
   AllBtn.Enabled := VarList.Items.Count > 0;
 end;

@@ -61,7 +61,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TSimultFrm }
 
@@ -427,28 +427,9 @@ begin
 end;
 
 procedure TSimultFrm.UpdateBtnStates;
-var
-  i: Integer;
-  lSelected: Boolean;
 begin
-  lSelected := false;
-  for i := 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  InBtn.Enabled := lSelected;
-
-  lSelected := false;
-  for i := 0 to ListBox1.Items.Count-1 do
-    if ListBox1.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
-
+  InBtn.Enabled := AnySelected(VarList);
+  OutBtn.Enabled := AnySelected(ListBox1);
   AllBtn.Enabled := VarList.Items.Count > 0;
 end;
 

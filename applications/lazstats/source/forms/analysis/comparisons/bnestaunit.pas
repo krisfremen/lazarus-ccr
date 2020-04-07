@@ -78,7 +78,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TBNestedAForm }
 
@@ -574,17 +574,9 @@ end;
 
 procedure TBNestedAForm.UpdateBtnStates;
 var
-  i: Integer;
   lSelected: Boolean;
 begin
-  lSelected := false;
-  for i := 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-
+  lSelected := AnySelected(VarList);
   AInBtn.Enabled := lSelected and (ACodes.Text = '');
   BInBtn.Enabled := lSelected and (BCodes.Text = '');
   DepInBtn.Enabled := lSelected and (DepEdit.Text = '');

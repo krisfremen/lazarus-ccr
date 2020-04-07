@@ -50,7 +50,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TCochranQFrm }
 
@@ -233,28 +233,9 @@ begin
 end;
 
 procedure TCochranQFrm.UpdateBtnStates;
-var
-  i: Integer;
-  lSelected: Boolean;
 begin
-  lSelected := false;
-  for i:=0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  InBtn.Enabled := lSelected;
-
-  lSelected := false;
-  for i:=0 to SelList.Items.Count-1 do
-    if SelList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
-
+  InBtn.Enabled := AnySelected(VarList);
+  OutBtn.Enabled := AnySelected(SelList);
   AllBtn.Enabled := VarList.Items.Count > 0;
 end;
 

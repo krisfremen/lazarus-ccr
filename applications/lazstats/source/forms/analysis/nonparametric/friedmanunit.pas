@@ -56,7 +56,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TFriedmanFrm }
 
@@ -401,29 +401,13 @@ end;
 
 procedure TFriedmanFrm.UpdateBtnStates;
 var
-  i: Integer;
   lSelected: Boolean;
 begin
-  lSelected := false;
-  for i:= 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
+  lSelected := AnySelected(VarList);
   GrpIn.Enabled := lSelected and (GrpVar.Text = '');
   TrtIn.Enabled := lSelected;
-
   GrpOut.Enabled := GrpVar.Text <> '';
-
-  lSelected := false;
-  for i := 0 to TreatVars.Items.Count-1 do
-    if TreatVars.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  TrtOut.Enabled := lSelected;
+  TrtOut.Enabled := AnySelected(TreatVars)
 end;
 
 
