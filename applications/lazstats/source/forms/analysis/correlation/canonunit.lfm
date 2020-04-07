@@ -66,84 +66,66 @@ object CannonFrm: TCannonFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 104
+    Left = 192
     Height = 25
     Top = 346
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 3
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 170
-    Height = 25
-    Top = 346
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 4
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 244
+    Left = 254
     Height = 25
     Top = 346
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 4
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 332
+    Left = 338
     Height = 25
     Top = 346
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
   end
   object HelpBtn: TButton
     Tag = 111
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 41
+    Left = 133
     Height = 25
     Top = 346
     Width = 51
@@ -151,7 +133,7 @@ object CannonFrm: TCannonFrm
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -161,7 +143,7 @@ object CannonFrm: TCannonFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 330
@@ -235,6 +217,7 @@ object CannonFrm: TCannonFrm
       Constraints.MinHeight = 220
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object LeftIn: TBitBtn
@@ -461,6 +444,8 @@ object CannonFrm: TCannonFrm
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 16
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 3
     end
     object RightList: TListBox
@@ -478,6 +463,8 @@ object CannonFrm: TCannonFrm
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Top = 2
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 6
     end
   end
