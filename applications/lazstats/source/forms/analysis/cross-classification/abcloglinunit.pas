@@ -1,3 +1,5 @@
+// Sample file for testing: ABCLogLinData.laz
+
 unit ABCLogLinUnit;
 
 {$mode objfpc}{$H+}
@@ -542,13 +544,10 @@ begin
     Title := 'Sub-matrix BC';
     PrintMatrix(BC,Ncols,Nslices,Title, lReport);
 
-    DisplayReport(lReport);
-    lReport.Clear;
-
-
     for Model := 1 to 9 do
-      ModelEffect(Nrows,Ncols,Nslices,Data,RowMarg,ColMarg,
-                  SliceMarg,AB,AC,BC,Total,Model, lReport);
+      ModelEffect(Nrows, Ncols, Nslices, Data, RowMarg, ColMarg, SliceMarg, AB, AC, BC, Total, Model, lReport);
+
+    DisplayReport(lReport);
 
   finally
     lReport.Free;

@@ -2,11 +2,11 @@ object ABCLogLinearFrm: TABCLogLinearFrm
   Left = 596
   Height = 432
   Top = 216
-  Width = 371
+  Width = 395
   AutoSize = True
   Caption = 'Log Linear Analysis for AxBxC Classification Table'
   ClientHeight = 432
-  ClientWidth = 371
+  ClientWidth = 395
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
@@ -16,7 +16,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 162
+    Left = 186
     Height = 25
     Top = 399
     Width = 54
@@ -34,7 +34,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 224
+    Left = 248
     Height = 25
     Top = 399
     Width = 76
@@ -53,7 +53,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 308
+    Left = 332
     Height = 25
     Top = 399
     Width = 55
@@ -72,7 +72,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 103
+    Left = 127
     Height = 25
     Top = 399
     Width = 51
@@ -96,7 +96,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     Left = 8
     Height = 316
     Top = 67
-    Width = 355
+    Width = 379
     PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
@@ -107,7 +107,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
       object Label3: TLabel
         AnchorSideLeft.Control = RowVarEdit
         AnchorSideBottom.Control = RowVarEdit
-        Left = 199
+        Left = 211
         Height = 15
         Top = 8
         Width = 67
@@ -119,7 +119,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
       object Label4: TLabel
         AnchorSideLeft.Control = ColVarEdit
         AnchorSideBottom.Control = ColVarEdit
-        Left = 199
+        Left = 211
         Height = 15
         Top = 84
         Width = 87
@@ -131,7 +131,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
       object Label5: TLabel
         AnchorSideLeft.Control = SliceVarEdit
         AnchorSideBottom.Control = SliceVarEdit
-        Left = 199
+        Left = 211
         Height = 15
         Top = 160
         Width = 68
@@ -143,7 +143,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
       object Label6: TLabel
         AnchorSideLeft.Control = FreqVarEdit
         AnchorSideBottom.Control = FreqVarEdit
-        Left = 199
+        Left = 211
         Height = 15
         Top = 236
         Width = 99
@@ -161,7 +161,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         Left = 0
         Height = 316
         Top = 0
-        Width = 155
+        Width = 167
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Right = 8
         ItemHeight = 0
@@ -172,7 +172,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Control = Page1
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = VarList
-        Left = 163
+        Left = 175
         Height = 28
         Top = 0
         Width = 28
@@ -187,7 +187,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = RowInBtn
         AnchorSideTop.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 32
         Width = 28
@@ -204,7 +204,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = RowOutBtn
         AnchorSideTop.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 76
         Width = 28
@@ -220,7 +220,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = ColInBtn
         AnchorSideTop.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 108
         Width = 28
@@ -237,7 +237,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = ColOutBtn
         AnchorSideTop.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 152
         Width = 28
@@ -253,7 +253,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = SliceBtnIn
         AnchorSideTop.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 184
         Width = 28
@@ -270,7 +270,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = SliceBtnOut
         AnchorSideTop.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 228
         Width = 28
@@ -287,7 +287,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideTop.Control = FreqInBtn
         AnchorSideTop.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
-        Left = 163
+        Left = 175
         Height = 28
         Top = 260
         Width = 28
@@ -306,10 +306,10 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = RowOutBtn
         AnchorSideBottom.Side = asrBottom
-        Left = 199
+        Left = 211
         Height = 23
         Top = 25
-        Width = 156
+        Width = 168
         Anchors = [akLeft, akRight, akBottom]
         BorderSpacing.Left = 8
         BorderSpacing.Bottom = 12
@@ -324,10 +324,10 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = ColOutBtn
         AnchorSideBottom.Side = asrBottom
-        Left = 199
+        Left = 211
         Height = 23
         Top = 101
-        Width = 156
+        Width = 168
         Anchors = [akLeft, akRight, akBottom]
         BorderSpacing.Left = 8
         BorderSpacing.Bottom = 12
@@ -342,10 +342,10 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = SliceBtnOut
         AnchorSideBottom.Side = asrBottom
-        Left = 199
+        Left = 211
         Height = 23
         Top = 177
-        Width = 156
+        Width = 168
         Anchors = [akLeft, akRight, akBottom]
         BorderSpacing.Left = 8
         BorderSpacing.Bottom = 12
@@ -360,10 +360,10 @@ object ABCLogLinearFrm: TABCLogLinearFrm
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = FreqOutBtn
         AnchorSideBottom.Side = asrBottom
-        Left = 199
+        Left = 211
         Height = 23
         Top = 253
-        Width = 156
+        Width = 168
         Anchors = [akLeft, akRight, akBottom]
         BorderSpacing.Left = 8
         BorderSpacing.Bottom = 12
@@ -479,7 +479,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     Left = 8
     Height = 51
     Top = 8
-    Width = 354
+    Width = 362
     AutoFill = True
     AutoSize = True
     BorderSpacing.Left = 8
@@ -488,7 +488,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     Caption = 'Enter Data From:'
     ChildSizing.LeftRightSpacing = 12
     ChildSizing.TopBottomSpacing = 6
-    ChildSizing.HorizontalSpacing = 16
+    ChildSizing.HorizontalSpacing = 24
     ChildSizing.VerticalSpacing = 2
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsHomogenousChildResize
@@ -497,7 +497,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 2
     ClientHeight = 31
-    ClientWidth = 350
+    ClientWidth = 358
     Columns = 2
     Items.Strings = (
       'File Data in the Main Grid'
@@ -514,7 +514,7 @@ object ABCLogLinearFrm: TABCLogLinearFrm
     Left = 0
     Height = 8
     Top = 383
-    Width = 371
+    Width = 395
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
