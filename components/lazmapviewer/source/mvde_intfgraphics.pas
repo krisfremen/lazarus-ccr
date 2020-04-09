@@ -1,3 +1,14 @@
+{ Drawing engine based on Lazarus IntfGraphics routines
+  (C) 2014 Werner Pamler (user wp at Lazarus forum https://forum.lazarus.freepascal.org)
+
+  License: modified LGPL with linking exception (like RTL, FCL and LCL)
+
+  See the file COPYING.modifiedLGPL.txt, included in the Lazarus distribution,
+  for details about the license.
+
+  See also: https://wiki.lazarus.freepascal.org/FPC_modified_LGPL
+}
+
 unit mvDE_IntfGraphics;
 
 {$mode objfpc}{$H+}

@@ -1,3 +1,15 @@
+{
+  Drawing Engine for BGRABitmap library
+  Copyright (C) 2019 user jc99 at Lazarus forum https://forum.lazarus.freepascal.org
+
+  License: modified LGPL with linking exception (like RTL, FCL and LCL)
+
+  See the file COPYING.modifiedLGPL.txt, included in the Lazarus distribution,
+  for details about the license.
+
+  See also: https://wiki.lazarus.freepascal.org/FPC_modified_LGPL
+}
+
 unit mvDE_BGRA;
 
 {$mode objfpc}{$H+}

@@ -14,8 +14,8 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Add-on to LazMapViewer: Contains the download engine based on the Synapse library."/>
-    <License Value="LGPL 2 or later"/>
-    <Version Minor="2" Release="1"/>
+    <License Value="modified LGPL with linking exception, like FreePascal RTL/FCL and Lazarus LCL"/>
+    <Version Minor="2" Release="2"/>
     <Files>
       <Item>
         <Filename Value="source\addons\synapse_downloadengine\mvdlesynapse.pas"/>

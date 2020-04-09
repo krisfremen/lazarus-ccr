@@ -4,6 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="lazmapviewer_bgra"/>
     <Type Value="RunAndDesignTime"/>
+    <Author Value="jc99"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -13,7 +14,8 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Add-on to LazMapViewer: Contains the drawing engine based on the BGRABitmap library."/>
-    <Version Minor="2" Release="1"/>
+    <License Value="modified LGPL with linking exception, like FreePascal RTL/FCL and Lazarus LCL"/>
+    <Version Minor="2" Release="2"/>
     <Files>
       <Item>
         <Filename Value="source\addons\bgra_drawingengine\mvde_bgra.pas"/>

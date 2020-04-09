@@ -13,8 +13,8 @@
     </CompilerOptions>
     <Description Value="Component for viewing maps (Google, OpenStreetMap, etc). 
 This is a fork of MapViewer by ti_dic (https://sourceforge.net/p/roadbook/code/ci/master/tree/mapviewer/) which itself is based on the MapViewer by Maciej Kaczkowski (https://github.com/maciejkaczkowski/mapviewer)."/>
-    <License Value="LGPL 2 or later"/>
-    <Version Minor="2" Release="1"/>
+    <License Value="modified LGPL with linking exception, like FreePascal RTL/FCL and Lazarus LCL"/>
+    <Version Minor="2" Release="2"/>
     <Files>
       <Item>
         <Filename Value="source/mvcache.pas"/>

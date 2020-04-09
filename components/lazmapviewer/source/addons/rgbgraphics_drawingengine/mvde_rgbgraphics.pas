@@ -1,3 +1,15 @@
+{
+  Drawing engine for RGBGraphics library
+    (C) 2014 ti_dic@hotmail.com
+
+  License: modified LGPL with linking exception (like RTL, FCL and LCL)
+
+  See the file COPYING.modifiedLGPL.txt, included in the Lazarus distribution,
+  for details about the license.
+
+  See also: https://wiki.lazarus.freepascal.org/FPC_modified_LGPL
+}
+
 unit mvDE_RGBGraphics;
 
 {$mode objfpc}{$H+}
