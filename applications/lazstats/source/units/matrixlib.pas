@@ -34,8 +34,8 @@ procedure Correlations(NoSelected : integer;
                        VAR errorcode : boolean;
                        VAR Ngood : integer);
 
-procedure MatAxB(var A, B, C: DblDyneMat; BRows, BCols, CRows, CCols: Integer;
-  var ErrorCode: boolean);
+procedure MatAxB(const A, B, C: DblDyneMat; BRows, BCols, CRows, CCols: Integer;
+  out ErrorCode: boolean);
 
 procedure MatTrn(var A, B: DblDyneMat; BRows, BCols: Integer);
 
@@ -175,21 +175,17 @@ function SCPF(VAR x,y : DblDyneMat; kx,ky,n,nd : integer) : double;
 
 procedure Mat_Print(var xmat: DblDyneMat; Rows,Cols: Integer; var Title: String;
   var RowLabels, ColLabels: StrDyneVec; NCases: Integer);
-procedure MatPrint(var xmat: DblDyneMat; Rows,Cols: Integer; var Title: String;
-  var RowLabels, ColLabels: StrDyneVec; NCases: Integer; AReport: TStrings);
+procedure MatPrint(const xmat: DblDyneMat; Rows,Cols: Integer; const Title: String;
+  const RowLabels, ColLabels: StrDyneVec; NCases: Integer; AReport: TStrings);
 
 procedure DynVectorPrint(var AVector: DblDyneVec; NoVars: integer;
   Title: string; var Labels: StrDyneVec; NCases: integer); overload;
 procedure DynVectorPrint(var AVector: DblDyneVec; NoVars: integer;
   Title: string; var Labels: StrDyneVec; NCases: integer; AReport: TStrings); overload;
 
-procedure scatplot(var x : DblDyneVec;
-                   var y : DblDyneVec;
-                   nocases : integer;
-                   titlestr : string;
-                   x_axis, y_axis : string;
-                   x_min, x_max, y_min, y_max : double;
-                   VAR VarLabels : StrDyneVec);
+procedure scatplot(const x, y: DblDyneVec; NoCases: integer;
+  const TitleStr, x_axis, y_axis: string; x_min, x_max, y_min, y_max: double;
+  const VarLabels: StrDyneVec; AReport: TStrings);
 
 procedure DynIntMatPrint(Mat: IntDyneMat; Rows, Cols: integer; YTitle: string;
   RowLabels, ColLabels: StrDyneVec; Title: string); overload;
@@ -203,7 +199,7 @@ procedure matinv(a, vtimesw, v, w: DblDyneMat; n: integer);
 implementation
 
 uses
-  StrUtils;
+  StrUtils, Utils;
 
 procedure GridDotProd(col1, col2: integer; out Product: double; var Ngood: integer);
 // Get the cross-product of two vectors
@@ -416,8 +412,8 @@ end;
 //-------------------------------------------------------------------
 
 // Product of matrix b times c with results returned in a
-procedure MatAxB(var A, B, C: DblDyneMat; BRows, BCols, CRows, CCols: Integer;
-  var ErrorCode: boolean);
+procedure MatAxB(const A, B, C: DblDyneMat; BRows, BCols, CRows, CCols: Integer;
+  out ErrorCode: boolean);
 var
   i, j, k: integer;
 begin
@@ -1846,8 +1842,8 @@ begin
   MatPrint(xmat, Rows, Cols, Title, RowLabels, ColLabels, NCases, OutputFrm.RichEdit.Lines);
 end;
 
-procedure MatPrint(var xmat: DblDyneMat; Rows, Cols: integer; var Title: string;
-  var RowLabels, ColLabels: StrDyneVec; NCases: integer; AReport: TStrings);
+procedure MatPrint(const xmat: DblDyneMat; Rows, Cols: integer; const Title: string;
+  const RowLabels, ColLabels: StrDyneVec; NCases: integer; AReport: TStrings);
 var
   i, j, first, last, nflds: integer;
   done: boolean;
@@ -1950,27 +1946,20 @@ begin
 end;
 //--------------------------------------------------------------------------
 
-procedure scatplot(var x : DblDyneVec;
-                   var y : DblDyneVec;
-                   nocases : integer;
-                   titlestr : string;
-                   x_axis, y_axis : string;
-                   x_min, x_max, y_min, y_max : double;
-                   VAR VarLabels : StrDyneVec);
-
+procedure scatplot(const x, y: DblDyneVec; NoCases: integer;
+  const TitleStr, x_axis, y_axis: string; x_min, x_max, y_min, y_max: double;
+  const VarLabels: StrDyneVec; AReport: TStrings);
 var
-   i, j, l, row, xslot : integer;
-   //xdelta: Double;
-   maxy: double;
-   incrementx, incrementy, rangex, rangey, swap : double;
-   plotstring  : array[0..51,0..61] of char;
-   //ymed, xmed  : double;
-   height      : integer;
-   overlap     : boolean;
-   valuestring : string[2];
-   howlong     : integer;
-   outline     : string;
-   Labels      : StrDyneVec;
+  i, j, l, row, xslot : integer;
+  maxy: double;
+  incrementx, incrementy, rangex, rangey, swap : double;
+  plotstring  : array[0..51,0..61] of char;
+  height      : integer;
+  overlap     : boolean;
+  valuestring : string[2];
+  howlong     : integer;
+  outline     : string;
+  Labels      : StrDyneVec;
 begin
   Assert(OutputFrm <> nil);
 
@@ -1986,28 +1975,37 @@ begin
 //  ymed := rangey / 2;
 
   { sort in descending order }
-  for i := 1 to (nocases - 1) do
+  for i := 1 to (NoCases - 1) do
   begin
-      for j := (i + 1) to nocases do
+      for j := (i + 1) to NoCases do
       begin
            if y[i-1] < y[j-1] then
            begin
+             Exchange(y[i-1], y[j-1]);
+             {
                 swap := y[i-1];
                 y[i-1] := y[j-1];
                 y[j-1] := swap;
+             }
+             Exchange(x[i-1], x[j-1]);
+             {
                 swap := x[i-1];
                 x[i-1] := x[j-1];
                 x[j-1] := swap;
+             }
+             Exchange(Labels[i-1], Labels[j-1]);
+             {
                 outline := Labels[i-1];
                 Labels[i-1] := Labels[j-1];
                 Labels[j-1] := outline;
+             }
            end;
       end;
   end;
-  outline :=  '             SCATTERPLOT - ' + titlestr;
-  OutputFrm.RichEdit.Lines.Add(outline);
-  OutputFrm.RichEdit.Lines.Add('');
-  OutputFrm.RichEdit.Lines.Add(y_axis);
+
+  AReport.Add('             SCATTERPLOT - ' + TitleStr);
+  AReport.Add('');
+  AReport.Add(y_axis);
   maxy := y_max;
   for i := 1 to 60 do
       for j := 1 to height+1 do plotstring[j,i] := ' ';
@@ -2019,9 +2017,7 @@ begin
       row := row + 1;
       plotstring[row,30] := '|';
       if (row = (height / 2)) then
-      begin
            for i := 1 to 60 do plotstring[row,i] := '-';
-      end;
       for i := 1 to nocases do
       begin
            if ((maxy >= y[i-1]) and (y[i-1] > (maxy - incrementy))) then
@@ -2041,40 +2037,40 @@ begin
                   if (howlong < 2) then
                     plotstring[row,xslot] := valuestring[2]
                   else for l := 1 to 2 do
-                     plotstring[row,xslot + l - 1] := valuestring[l];
+                    plotstring[row,xslot + l - 1] := valuestring[l];
                 end;
            end;
       end;
       maxy := maxy - incrementy;
   end;
+
   { print the plot }
   for i := 1 to row do
   begin
       outline := ' |';
-      for j := 1 to 60 do outline := outline + format('%1s',[plotstring[i,j]]);
-      outline := outline + format('|-%6.2f-%6.2f',
+      for j := 1 to 60 do outline := outline + Format('%1s', [plotstring[i,j]]);
+      outline := outline + Format('|-%6.2f-%6.2f',
           [(y_max - i * incrementy),(y_max - i * incrementy + incrementy)]);
-      OutputFrm.RichEdit.Lines.Add(outline);
+      AReport.Add(outline);
   end;
+
   outline := '';
   for i := 1 to 63 do outline := outline + '-';
-  OutputFrm.RichEdit.Lines.Add(outline);
+  AReport.Add(outline);
+
   outline := '';
   for i := 1 to 16 do outline := outline + '  | ';
   outline := outline + x_axis;
-  OutputFrm.RichEdit.Lines.Add(outline);
+  AReport.Add(outline);
+
   outline := '';
-  for i := 1 to 16 do outline := outline + format('%4.1f',[(x_min + i * incrementx - incrementx)]);
-  OutputFrm.RichEdit.Lines.Add(outline);
-  OutputFrm.RichEdit.Lines.Add('');
-  OutputFrm.RichEdit.Lines.Add('Labels:');
+  for i := 1 to 16 do outline := outline + Format('%4.1f', [(x_min + i * incrementx - incrementx)]);
+  AReport.Add(outline);
+  AReport.Add('');
+  AReport.Add('Labels:');
   for i := 1 to nocases do
-  begin
-      outline := format('%2d = %s',[i,Labels[i-1]]);
-      OutputFrm.RichEdit.Lines.Add(outline);
-  end;
-  OutputFrm.ShowModal;
-  OutputFrm.RichEdit.Clear;
+    AReport.Add('%2d = %s', [i, Labels[i-1]]);
+
   Labels := nil;
 end; { of scatplot procedure }
 //-------------------------------------------------------------------

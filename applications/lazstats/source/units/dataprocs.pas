@@ -9,7 +9,7 @@ uses
   StdCtrls, ExtCtrls, Clipbrd,
   Globals, OptionsUnit, DictionaryUnit, OutputUnit;
 
-Function GoodRecord(Row, NoVars : integer; VAR GridPos : IntDyneVec): boolean;
+Function GoodRecord(Row, NoVars: integer; const GridPos: IntDyneVec): boolean;
 procedure FormatCell(Col, Row : integer);
 procedure FormatGrid;
 function IsNumeric(s : string) : boolean;
@@ -31,9 +31,9 @@ procedure OpenTabFile;
 procedure SaveTabFile;
 function ValidValue(row, col : integer) : boolean;
 function IsFiltered(GridRow : integer) : boolean;
-procedure MatRead(var a: DblDyneMat; out NoRows, NoCols: integer;
-  var Means, StdDevs: DblDyneVec; out NCases: integer;
-  var RowLabels, ColLabels: StrDyneVec; const filename: string);
+procedure MatRead(const a: DblDyneMat; out NoRows, NoCols: integer;
+  const Means, StdDevs: DblDyneVec; out NCases: integer;
+  const RowLabels, ColLabels: StrDyneVec; const filename: string);
 procedure MATSAVE(VAR a : DblDyneMat;
                   norows : integer;
                   nocols : integer;
@@ -62,19 +62,18 @@ implementation
 
 uses MainUnit;
 
-Function GoodRecord(Row, NoVars : integer; VAR GridPos : IntDyneVec): boolean;
+Function GoodRecord(Row, NoVars: integer; const GridPos: IntDyneVec): boolean;
 var
-   i, j : integer;
-   isgood : boolean;
-
+  i, j: integer;
+  isgood: boolean;
 begin
-     isgood := true;
-     for i := 1 to NoVars do
-     begin
-          j := GridPos[i-1];
-          if NOT ValidValue(Row,j) then isgood := false;
-     end;
-     Result := isgood;
+  Result := true;
+  for i := 1 to NoVars do
+  begin
+    j := GridPos[i-1];
+    if not ValidValue(Row,j) then
+      Result := false;
+  end;
 end;
 //-------------------------------------------------------------------
 
@@ -826,11 +825,11 @@ begin
 end;
 //-------------------------------------------------------------------
 
-procedure MATREAD(var a: DblDyneMat;
+procedure MATREAD(const a: DblDyneMat;
                   out NoRows, NoCols: integer;
-                  var means, stddevs: DblDyneVec;
+                  const means, stddevs: DblDyneVec;
                   out NCases: integer;
-                  var RowLabels, ColLabels: StrDyneVec;
+                  const RowLabels, ColLabels: StrDyneVec;
                   const filename: string);
 var i, j : integer;
     mat_file : TextFile;

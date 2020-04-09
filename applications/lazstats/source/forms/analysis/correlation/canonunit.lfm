@@ -1,7 +1,7 @@
 object CannonFrm: TCannonFrm
-  Left = 261
+  Left = 350
   Height = 379
-  Top = 157
+  Top = 137
   Width = 401
   AutoSize = True
   Caption = 'Canonical Correlation Analysis'
