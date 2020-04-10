@@ -66,85 +66,65 @@ object PathFrm: TPathFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 290
+    Left = 382
     Height = 25
     Top = 354
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 3
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 356
-    Height = 25
-    Top = 354
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    OnClick = CancelBtnClick
-    TabOrder = 4
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 430
+    Left = 444
     Height = 25
     Top = 354
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 4
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 518
+    Left = 528
     Height = 25
     Top = 354
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    OnClick = ReturnBtnClick
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 338
@@ -223,6 +203,7 @@ object PathFrm: TPathFrm
         BorderSpacing.Right = 8
         ItemHeight = 0
         MultiSelect = True
+        OnSelectionChange = ListBox1SelectionChange
         TabOrder = 0
       end
       object InBtn: TBitBtn
@@ -273,15 +254,17 @@ object PathFrm: TPathFrm
         BorderSpacing.Top = 2
         ItemHeight = 0
         MultiSelect = True
+        OnSelectionChange = ListBox1SelectionChange
         TabOrder = 3
       end
     end
     object Label3: TLabel
-      AnchorSideTop.Control = Owner
+      AnchorSideTop.Control = ModelNo
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = ModelNo
       Left = 446
       Height = 15
-      Top = 8
+      Top = 12
       Width = 84
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 10
@@ -296,7 +279,7 @@ object PathFrm: TPathFrm
       AnchorSideBottom.Control = CausedEdit
       Left = 457
       Height = 15
-      Top = 69
+      Top = 73
       Width = 93
       BorderSpacing.Top = 16
       BorderSpacing.Bottom = 2
@@ -309,24 +292,25 @@ object PathFrm: TPathFrm
       AnchorSideTop.Side = asrBottom
       Left = 457
       Height = 15
-      Top = 149
+      Top = 153
       Width = 102
       BorderSpacing.Top = 40
       Caption = '"Causing" Variables'
       ParentColor = False
     end
     object ModelNo: TEdit
-      AnchorSideTop.Control = Label3
-      AnchorSideTop.Side = asrCenter
+      AnchorSideTop.Control = Panel2
       AnchorSideRight.Control = Panel2
       AnchorSideRight.Side = asrBottom
       Left = 538
       Height = 23
-      Top = 4
+      Top = 8
       Width = 45
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
       BorderSpacing.Right = 8
+      ReadOnly = True
       TabOrder = 1
       Text = 'ModelNo'
     end
@@ -338,12 +322,14 @@ object PathFrm: TPathFrm
       AnchorSideRight.Side = asrBottom
       Left = 457
       Height = 22
-      Top = 31
+      Top = 35
       Width = 126
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       BorderSpacing.Right = 8
+      Min = 1
       PageSize = 0
+      Position = 1
       TabOrder = 2
       OnChange = ScrollBarChange
     end
@@ -357,13 +343,14 @@ object PathFrm: TPathFrm
       AnchorSideBottom.Side = asrBottom
       Left = 457
       Height = 23
-      Top = 86
+      Top = 90
       Width = 126
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 5
       Text = 'CausedEdit'
     end
@@ -377,8 +364,8 @@ object PathFrm: TPathFrm
       AnchorSideBottom.Control = Panel2
       AnchorSideBottom.Side = asrBottom
       Left = 457
-      Height = 92
-      Top = 166
+      Height = 88
+      Top = 170
       Width = 126
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
@@ -386,6 +373,8 @@ object PathFrm: TPathFrm
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 8
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = ListBox1SelectionChange
       TabOrder = 8
     end
     object CausedInBtn: TBitBtn
@@ -395,7 +384,7 @@ object PathFrm: TPathFrm
       AnchorSideBottom.Control = CausedOutBtn
       Left = 421
       Height = 28
-      Top = 58
+      Top = 62
       Width = 28
       Anchors = [akBottom]
       BorderSpacing.Left = 8
@@ -413,7 +402,7 @@ object PathFrm: TPathFrm
       AnchorSideBottom.Side = asrBottom
       Left = 421
       Height = 28
-      Top = 88
+      Top = 92
       Width = 28
       BorderSpacing.Top = 2
       BorderSpacing.Bottom = 3
@@ -429,7 +418,7 @@ object PathFrm: TPathFrm
       AnchorSideTop.Control = CausingList
       Left = 421
       Height = 28
-      Top = 166
+      Top = 170
       Width = 28
       BorderSpacing.Left = 8
       Images = MainDataModule.ImageList
@@ -444,7 +433,7 @@ object PathFrm: TPathFrm
       AnchorSideTop.Side = asrBottom
       Left = 421
       Height = 28
-      Top = 198
+      Top = 202
       Width = 28
       BorderSpacing.Top = 4
       Images = MainDataModule.ImageList

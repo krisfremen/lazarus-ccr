@@ -88,6 +88,8 @@ const
     clAqua, clLime, clFuchsia, clGray, clSilver, clOlive
   );
 
+  DIVIDER = '===========================================================================';
+
 
 implementation
 

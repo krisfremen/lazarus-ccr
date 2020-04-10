@@ -105,9 +105,6 @@ implementation
 uses
   Math, Utils, RotateUnit;
 
-const
-  DIVIDER = '========================================================================';
-
 { TFactorFrm }
 
 procedure TFactorFrm.ResetBtnClick(Sender: TObject);
