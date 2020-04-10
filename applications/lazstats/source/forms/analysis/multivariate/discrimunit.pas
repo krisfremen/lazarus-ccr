@@ -1,3 +1,5 @@
+// Sample file for testing: manodiscrim.laz
+
 unit DiscrimUnit;
 
 {$mode objfpc}{$H+}
@@ -19,9 +21,8 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     DescChk: TCheckBox;
     PCovChk: TCheckBox;
     CentroidsChk: TCheckBox;
@@ -53,6 +54,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PredInClick(Sender: TObject);
+    procedure PredListSelectionChange(Sender: TObject; User: boolean);
     procedure PredOutClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
   private
@@ -78,7 +80,8 @@ type
                                GrpVar : integer;
                                NoGrps : integer;
                                NoInGrp : IntDyneVec;
-                               VarLabels : StrDyneVec);
+                               VarLabels : StrDyneVec;
+                               AReport: TStrings);
 
     procedure ClassIt(Sender: TObject; PooledW : DblDyneMat;
                               ColNoSelected : IntDyneVec;
@@ -91,7 +94,9 @@ type
                               NoSelected : integer;
                               NoCases : integer;
                               RawCmat : DblDyneMat;
-                              Constants : DblDyneVec);
+                              Constants : DblDyneVec;
+                              AReport: TStrings);
+    procedure UpdateBtnStates;
   public
     { public declarations }
   end; 
@@ -102,28 +107,26 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TDiscrimFrm }
 
 procedure TDiscrimFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     VarList.Clear;
-     PredList.Clear;
-     PredOut.Enabled := false;
-     PredIn.Enabled := true;
-     DepOut.Enabled := false;
-     DepIn.Enabled := true;
-     GroupVar.Text := '';
-     DescChk.Checked := false;
-     CorrsChk.Checked := false;
-     InvChk.Checked := false;
-     PlotChk.Checked := false;
-     ClassChk.Checked := false;
-     AnovaChk.Checked := false;
-     for i := 1 to NoVariables do
-         VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  VarList.Clear;
+  PredList.Clear;
+  GroupVar.Text := '';
+  DescChk.Checked := false;
+  CorrsChk.Checked := false;
+  InvChk.Checked := false;
+  PlotChk.Checked := false;
+  ClassChk.Checked := false;
+  AnovaChk.Checked := false;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  UpdateBtnStates;
 end;
 
 procedure TDiscrimFrm.FormActivate(Sender: TObject);
@@ -133,11 +136,10 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
   Panel1.Constraints.MinWidth := OptionsGroup.Width * 2 + DepIn.Width;
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
@@ -148,8 +150,6 @@ end;
 procedure TDiscrimFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
   if GraphFrm = nil then
     Application.CreateForm(TGraphFrm, GraphFrm);
   if DictionaryFrm = nil then
@@ -161,43 +161,49 @@ begin
   ResetBtnClick(self);
 end;
 
-procedure TDiscrimFrm.DepInClick(Sender: TObject);
-VAR index : integer;
-begin
-     index := VarList.ItemIndex;
-     GroupVar.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     DepOut.Enabled := true;
-     DepIn.Enabled := false;
-end;
-
 procedure TDiscrimFrm.ComputeBtnClick(Sender: TObject);
 var
-    i, j, k, grp, grpvalue, matrow, matcol, noroots, dfchi, n2, k2 : integer;
-    NoSelected : integer;
-    outline, GroupLabel, ColHead : string;
-    Title : string;
-    GrpVar, NoGrps, nowithin, TotalCases, value, grpno : integer;
-    ColNoSelected : IntDyneVec;
-    CaseNo, NoInGrp : IntDyneVec;
-    VarLabels, ColLabels, GrpNos : StrDyneVec;
-    X, Y, GroupSS, ErrorSS, GroupMS, ErrorMS, TotalSS, num, s, v2, den : double;
-    Lambda, ChiSquare, Pillia, TotChi, p, Rc, chi, chiprob, m, L2, F, Fprob : double;
-    DFGroup, DFError, DFTotal, Fratio, prob, minroot, trace, pcnttrace : double;
-    probchi : double;
-    WithinMat, WithinInv, WinvB, v, PooledW, TotalMat, BetweenMat : DblDyneMat;
-    EigenVectors, EigenTrans, TempMat, Theta, DiagMat, CoefMat : DblDyneMat;
-    RawCMat, GrpMeans, GrpSDevs, Centroids, Structure : DblDyneMat;
-    Constants, ScoreVar, Roots, Pcnts, TotalMeans, TotalVariances : DblDyneVec;
-    TotalStdDevs, WithinMeans, WithinVariances, WithinStdDevs, w : DblDyneVec;
-    errorcode : boolean = false;
+  i, j, k, grp, grpvalue, matrow, matcol, noroots, dfchi, n2, k2 : integer;
+  NoSelected : integer;
+  outline, GroupLabel, ColHead : string;
+  Title : string;
+  GrpVar, NoGrps, nowithin, TotalCases, value, grpno : integer;
+  ColNoSelected : IntDyneVec;
+  CaseNo, NoInGrp : IntDyneVec;
+  VarLabels, ColLabels, GrpNos : StrDyneVec;
+  X, Y, GroupSS, ErrorSS, GroupMS, ErrorMS, TotalSS, num, s, v2, den : double;
+  Lambda, ChiSquare, Pillia, TotChi, p, Rc, chi, chiprob, m, L2, F, Fprob : double;
+  DFGroup, DFError, DFTotal, Fratio, prob, minroot, trace, pcnttrace : double;
+  probchi : double;
+  WithinMat, WithinInv, WinvB, v, PooledW, TotalMat, BetweenMat : DblDyneMat;
+  EigenVectors, EigenTrans, TempMat, Theta, DiagMat, CoefMat : DblDyneMat;
+  RawCMat, GrpMeans, GrpSDevs, Centroids, Structure : DblDyneMat;
+  Constants, ScoreVar, Roots, Pcnts, TotalMeans, TotalVariances : DblDyneVec;
+  TotalStdDevs, WithinMeans, WithinVariances, WithinStdDevs, w : DblDyneVec;
+  errorcode : boolean = false;
+  lReport: TStrings;
 begin
-    TotalCases := 0;
-    OutputFrm.RichEdit.Clear();
-    OutputFrm.RichEdit.Lines.Add('MULTIVARIATE ANOVA / DISCRIMINANT FUNCTION');
-    OutputFrm.RichEdit.Lines.Add('Reference: Multiple Regression in Behavioral Research');
-    OutputFrm.RichEdit.Lines.Add('Elazar J. Pedhazur, 1997, Chapters 20-21');
-    OutputFrm.RichEdit.Lines.Add('Harcourt Brace College Publishers');
+  if GroupVar.Text = '' then
+  begin
+    MessageDlg('Group variable not selected.', mtError, [mbOK], 0);
+    exit;
+  end;
+  if PredList.Items.Count = 0 then
+  begin
+    MessageDlg('No Predictor variable(s) selected.', mtError, [mbOK], 0);
+    exit;
+  end;
+
+  TotalCases := 0;
+
+  lReport := TStringList.Create;
+  try
+    lReport.Add('MULTIVARIATE ANOVA / DISCRIMINANT FUNCTION');
+    lReport.Add('Reference: Multiple Regression in Behavioral Research');
+    lReport.Add('Elazar J. Pedhazur, 1997, Chapters 20-21');
+    lReport.Add('Harcourt Brace College Publishers');
+    lReport.Add('');
+
     NoSelected := PredList.Items.Count + 1;
     SetLength(ColNoSelected,NoVariables);
     SetLength(VarLabels,NoVariables);
@@ -298,11 +304,8 @@ begin
         end;
     end;
 
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := format('Total Cases := %d, Number of Groups := %d',
-            [NoCases, NoGrps]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
+    lReport.Add('Total Cases: %d, Number of Groups: %d', [NoCases, NoGrps]);
+    lReport.Add('');
 
     //Read the data for each group, accumulating cross-products and sums
     for grp := 1 to NoGrps do
@@ -341,12 +344,12 @@ begin
         end; // next case
 
         // Does user want cross-products matrices ?
-        if (CrossChk.Checked = true) then
+        if CrossChk.Checked then
         begin
             // print within matrix
-            ColHead := format('Group %d, N = %d',[grp,nowithin]);
+            ColHead := Format('Group %d, N = %d', [grp, nowithin]);
             Title := 'SUM OF CROSS-PRODUCTS for ' + ColHead;
-            MAT_PRINT(WithinMat,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,nowithin);
+            MatPrint(WithinMat, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, nowithin, lReport);
         end;
 
         // Convert to deviation cross-products and pool
@@ -354,20 +357,19 @@ begin
         begin
             for k := 1 to NoSelected - 1 do
             begin
-                WithinMat[j-1,k-1] := WithinMat[j-1,k-1] -
-                    (WithinMeans[j-1] * WithinMeans[k-1] / nowithin);
+                WithinMat[j-1,k-1] := WithinMat[j-1,k-1] - (WithinMeans[j-1] * WithinMeans[k-1] / nowithin);
                 PooledW[j-1,k-1] := PooledW[j-1,k-1] + WithinMat[j-1,k-1];
             end;
         end;
 
         // Does user want deviation cross-products?
-        if (DevCPChk.Checked = true) then
+        if DevCPChk.Checked then
         begin
             // print within matrix
-            ColHead := format('Group %d, N := %d',[grpvalue,nowithin]);
+            ColHead := Format('Group %d, N = %d', [grpvalue, nowithin]);
             Title := 'WITHIN GROUP SUM OF DEVIATION CROSS-PRODUCTS ' + ColHead;
-            MAT_PRINT(WithinMat,NoSelected-1,NoSelected-1,Title,VarLabels,
-                      VarLabels,nowithin);
+            MatPrint(WithinMat, NoSelected-1, NoSelected-1, Title, VarLabels,
+                     VarLabels, nowithin, lReport);
         end;
 
         // Compute descriptives from sums and sums of squares
@@ -384,17 +386,20 @@ begin
         if DescChk.Checked then
         begin
             // print mean, variance and std. dev.s for variables
-            outline := format('MEANS FOR GROUP %d, N := %d',[grp,nowithin]);
-            DynVectorPrint(WithinMeans,NoSelected-1,outline,VarLabels,nowithin);
-            outline := format('VARIANCES FOR GROUP %d',[grp]);
-            DynVectorPrint(WithinVariances,NoSelected-1,outline,VarLabels,nowithin);
+            outline := Format('MEANS FOR GROUP %d, N: %d', [grp, nowithin]);
+            DynVectorPrint(WithinMeans, NoSelected-1, outline, VarLabels, nowithin, lReport);
+
+            outline := format('VARIANCES FOR GROUP %d', [grp]);
+            DynVectorPrint(WithinVariances, NoSelected-1, outline, VarLabels, nowithin, lReport);
+
             outline := format('STANDARD DEVIATIONS FOR GROUP %d',[grp]);
-            DynVectorPrint(WithinStdDevs,NoSelected-1,outline,VarLabels,nowithin);
+            DynVectorPrint(WithinStdDevs, NoSelected-1, outline, VarLabels, nowithin, lReport);
         end;
-        if (DescChk.Checked) or (DevCPChk.Checked) or (CrossChk.Checked) then
+
+        if DescChk.Checked or DevCPChk.Checked or CrossChk.Checked then
         begin
-             OutputFrm.ShowModal;
-             OutputFrm.RichEdit.Clear();
+            lReport.Add(DIVIDER);
+            lReport.Add('');
         end;
 
         // Now initialize for the next group and save descriptives
@@ -414,9 +419,9 @@ begin
     begin
         // print Total cross-products matrix
         Title := 'TOTAL SUM OF CROSS-PRODUCTS';
-        MAT_PRINT(TotalMat,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(TotalMat, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     //Obtain Total deviation cross-products
@@ -430,10 +435,11 @@ begin
     begin
         // print total deviation cross-products matrix
         Title := 'TOTAL SUM OF DEVIATION CROSS-PRODUCTS';
-        MAT_PRINT(TotalMat,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(TotalMat, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
+
     for j := 1 to NoSelected - 1 do
     begin
         TotalVariances[j-1] := TotalVariances[j-1] -
@@ -448,28 +454,29 @@ begin
     begin
         // print mean, variance and std. dev.s for variables
         Title := 'MEANS';
-        DynVectorPrint(TotalMeans,NoSelected-1,Title,VarLabels,TotalCases);
+        DynVectorPrint(TotalMeans, NoSelected-1, Title, VarLabels, TotalCases, lReport);
+
         Title := 'VARIANCES';
-        DynVectorPrint(TotalVariances,NoSelected-1,Title,VarLabels,TotalCases);
+        DynVectorPrint(TotalVariances, NoSelected-1, Title, VarLabels, TotalCases, lReport);
+
         Title := 'STANDARD DEVIATIONS';
-        DynVectorPrint(TotalStdDevs,NoSelected-1,Title,VarLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        DynVectorPrint(TotalStdDevs, NoSelected-1, Title, VarLabels, TotalCases, lReport);
+
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // Obtain between groups deviation cross-products matrix
-    MATSUB(BetweenMat,TotalMat,PooledW,NoSelected-1,NoSelected-1,
-           NoSelected-1,NoSelected-1,errorcode);
+    MatSub(BetweenMat, TotalMat, PooledW, NoSelected-1, NoSelected-1, NoSelected-1, NoSelected-1, errorcode);
 
     // Does user want deviation cross-products?
     if DevCPChk.Checked then
     begin
         // print between groups deviation cross-products matrix
         Title := 'BETWEEN GROUPS SUM OF DEV. CPs';
-        MAT_PRINT(BetweenMat,NoSelected-1,NoSelected-1,Title,VarLabels,
-                  VarLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(BetweenMat, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // Do univariate ANOVA's for each variable
@@ -477,10 +484,10 @@ begin
     begin
         for j := 1 to NoSelected - 1 do
         begin
-            outline := format('UNIVARIATE ANOVA FOR VARIABLE %s',
-                              [VarLabels[j-1]]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            OutputFrm.RichEdit.Lines.Add('SOURCE    DF       SS        MS        F         PROB > F');
+            lReport.Add('UNIVARIATE ANOVA FOR VARIABLE %s', [VarLabels[j-1]]);
+            lReport.Add('');
+            lReport.Add('SOURCE      DF      SS         MS         F      PROB > F');
+            lReport.Add('---------- ---- ---------- ---------- ---------- ----------');
             GroupSS := BetweenMat[j-1,j-1];
             ErrorSS := PooledW[j-1,j-1];
             TotalSS := TotalMat[j-1,j-1];
@@ -491,18 +498,13 @@ begin
             ErrorMS := ErrorSS / DFError;
             Fratio  := GroupMS / ErrorMS;
             prob := probf(Fratio,DFGroup,DFError);
-            outline := format('BETWEEN   %3.0f%10.3f%10.3f%10.3f%10.3f',
-                [DFGroup,GroupSS,GroupMS,Fratio,prob]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            outline := format('ERROR     %3.0f%10.3f%10.3f',
-                [DFError,ErrorSS,ErrorMS]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            outline := format('TOTAL     %3.0f%10.3f',[DFTotal,TotalSS]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-            OutputFrm.RichEdit.Lines.Add('');
+            lReport.Add('BETWEEN    %4.0f %10.3f %10.3f %10.3f %10.3f', [DFGroup,GroupSS,GroupMS,Fratio,prob]);
+            lReport.Add('ERROR      %4.0f %10.3f %10.3f', [DFError,ErrorSS,ErrorMS]);
+            lReport.Add('TOTAL      %4.0f %10.3f',[DFTotal,TotalSS]);
+            lReport.Add('');
         end;
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // Get roots of the product of the within group inverse times between
@@ -516,9 +518,9 @@ begin
     if InvChk.Checked then
     begin
         Title := 'Inv. of Pooled Within Dev. CPs Matrix';
-        MAT_PRINT(WithinInv,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(WithinInv, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // Get roots of the W inverse times Betweeen matrices
@@ -529,15 +531,12 @@ begin
     trace := 0.0;
     pcnttrace := 0.0;
     nonsymroots(WinvB,NoSelected-1,noroots,minroot,EigenVectors,Roots,Pcnts,trace,pcnttrace);
-    outline := format('Number of roots extracted := %d',[noroots]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := format('Percent of trace extracted := %10.4f',[pcnttrace]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := 'Roots of the W inverse time B Matrix';
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := 'No.       Root   Proportion   Canonical R    Chi-Squared  D.F.    Prob.';
-    OutputFrm.RichEdit.Lines.Add(outline);
+    lReport.Add('Number of roots extracted: %d', [noroots]);
+    lReport.Add('Percent of trace extracted: %10.4f',[pcnttrace]);
+    lReport.Add('Roots of the W inverse time B Matrix');
+    lReport.Add('');
+    lReport.Add('No.    Root      Proportion  Canonical R   Chi-Squared  D.F.   Prob.');
+    lReport.Add('---  ----------  ----------  ------------  ------------ ----  -------');
     Lambda := 1.0;
     ChiSquare := 0.0;
     Pillia := 0.0;
@@ -555,22 +554,21 @@ begin
         dfchi := (NoSelected - i) * (NoGrps - i );
         chi := TotChi * (TotalCases - 1.0 - 0.5 * (NoSelected + NoGrps));
         chiprob := 1.0 - chisquaredprob(chi,dfchi);
-        outline := format('%2d  %10.4f   %6.4f        %6.4f        %10.4f   %3d    %6.3f',
-                [i,Roots[i-1],p,Rc,chi,dfchi,chiprob]);
-        OutputFrm.RichEdit.Lines.Add(outline);
+        lReport.Add('%3d  %10.4f  %10.4f  %12.4f %12.4f  %4d  %6.3f', [i, Roots[i-1], p, Rc, chi, dfchi, chiprob]);
         TotChi := TotChi - ln(1.0 + Roots[i-1]);
     end;
     ChiSquare := ChiSquare * ((TotalCases - 1) - (0.5 * (NoSelected - 1 + NoGrps)));
-    OutputFrm.ShowModal;
-    OutputFrm.RichEdit.Clear();
+    lReport.Add('');
+    lReport.Add(DIVIDER);
+    lReport.Add('');
 
     for i := 1 to noroots do ColLabels[i-1] := IntToStr(i);
     if EigensChk.Checked then
     begin
         Title := 'Eigenvectors of the W inverse x B Matrix';
-        MAT_PRINT(EigenVectors,NoSelected-1,noroots,Title,VarLabels,ColLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(EigenVectors, NoSelected-1, noroots, Title, VarLabels, ColLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // Now get covariance matrices for the total and within
@@ -586,27 +584,27 @@ begin
     if PCovChk.Checked then
     begin
         Title := 'Pooled Within-Groups Covariance Matrix';
-        MAT_PRINT(PooledW,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,TotalCases);
+        MatPrint(PooledW, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
         Title := 'Total Covariance Matrix';
-        MAT_PRINT(TotalMat,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(TotalMat, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     //Get the pooled within groups variance-covariance of disc. scores matrix v'C v
-    MATTRN(EigenTrans,EigenVectors, NoSelected-1,noroots); // v'
-    MATAxB(TempMat,EigenTrans,PooledW,noroots,NoSelected-1,NoSelected-1,
-           NoSelected-1,errorcode);//v'C
-    MATAxB(Theta,TempMat,EigenVectors,noroots,NoSelected-1,NoSelected-1,
-           noroots, errorcode); //v'C v
+    MatTrn(EigenTrans, EigenVectors, NoSelected-1, noroots); // v'
+    MatAxB(TempMat, EigenTrans, PooledW, noroots, NoSelected-1, NoSelected-1, NoSelected-1,errorcode);//v'C
+    MatAxB(Theta, TempMat, EigenVectors, noroots, NoSelected-1, NoSelected-1, noroots, errorcode); //v'C v
 
     //Create a diagonal matrix with square roots of the diagonal of the Within
     for i := 1 to NoSelected - 1 do
     begin
         for j := 1 to NoSelected - 1 do
         begin
-            if (i <> j) then DiagMat[i-1,j-1] := 0.0
-            else DiagMat[i-1,j-1] := sqrt(PooledW[i-1,j-1]);
+            if (i <> j) then
+              DiagMat[i-1,j-1] := 0.0
+            else
+              DiagMat[i-1,j-1] := sqrt(PooledW[i-1,j-1]);
         end;
     end;
 
@@ -636,37 +634,35 @@ begin
 
     // Plot discriminant scores?
     if PlotChk.Checked then
-    begin
-        PlotPts(self,RawCMat,Constants,ColNoSelected,NoSelected,
-            noroots,NoCases,GrpVar,NoGrps,NoInGrp);
-    end;
+        PlotPts(self,RawCMat,Constants,ColNoSelected,NoSelected, noroots,NoCases,GrpVar,NoGrps,NoInGrp);
 
     // print discrim functions
-        Title := 'Raw Function Coeff.s from Pooled Cov.';
-        MAT_PRINT(RawCMat,NoSelected-1,noroots,Title,VarLabels,ColLabels,TotalCases);
-        Title := 'Raw Discriminant Function Constants';
-        DynVectorPrint(Constants,noroots,Title,ColLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+    Title := 'Raw Function Coeff.s from Pooled Cov.';
+    MatPrint(RawCMat, NoSelected-1, noroots, Title, VarLabels, ColLabels, TotalCases, lReport);
+    Title := 'Raw Discriminant Function Constants';
+    DynVectorPrint(Constants, noroots, Title, ColLabels, TotalCases, lReport);
+    lReport.Add(DIVIDER);
+    lReport.Add('');
 
     //Does user want to classify cases using canonical functions?
     if ClassChk.Checked then
     begin
         Classify(self,PooledW, GrpMeans, ColNoSelected, NoSelected-1, NoCases,
-                 GrpVar, NoGrps, NoInGrp, VarLabels);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear;
+                 GrpVar, NoGrps, NoInGrp, VarLabels, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
+
         ClassIt(self,PooledW,ColNoSelected,GrpMeans,Roots,noroots, GrpVar,
-                NoGrps,NoInGrp,NoSelected-1,NoCases,RawCMat,Constants);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear;
+                NoGrps,NoInGrp,NoSelected-1,NoCases,RawCMat,Constants, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // print standardized discrim function coefficients
     Title := 'Standardized Coeff. from Pooled Cov.';
-    MAT_PRINT(CoefMat,NoSelected-1,noroots,Title,VarLabels,ColLabels,TotalCases);
-    OutputFrm.ShowModal;
-    OutputFrm.RichEdit.Clear();
+    MatPrint(CoefMat, NoSelected-1, noroots, Title, VarLabels, ColLabels, TotalCases, lReport);
+    lReport.Add(DIVIDER);
+    lReport.Add('');
 
     // Calculate centroids
     for k := 1 to NoGrps do
@@ -674,9 +670,7 @@ begin
         for i := 1 to noroots do
         begin
             for j := 1 to NoSelected - 1 do
-            begin
                 Centroids[k-1,i-1] := Centroids[k-1,i-1] + (RawCMat[j-1,i-1] * GrpMeans[k-1,j-1]);
-            end;
             Centroids[k-1,i-1] := Centroids[k-1,i-1] + Constants[i-1];
         end;
     end;
@@ -684,54 +678,51 @@ begin
     if CentroidsChk.Checked then
     begin
         Title := 'Centroids';
-        MAT_PRINT(Centroids,NoGrps,noroots,Title,GrpNos,ColLabels,TotalCases);
-        OutputFrm.ShowModal;
-        OutputFrm.RichEdit.Clear();
+        MatPrint(Centroids, NoGrps, noroots, Title, GrpNos, ColLabels, TotalCases, lReport);
+        lReport.Add(DIVIDER);
+        lReport.Add('');
     end;
 
     // Get variance-covariance matrix of functions (theta)
-    MATTRN(EigenTrans,EigenVectors,NoSelected-1,noroots);
-    MATAxB(TempMat,EigenTrans,TotalMat,noroots,NoSelected-1,NoSelected-1,
-           NoSelected-1,errorcode);
-    MATAxB(Theta,TempMat,EigenVectors,noroots,NoSelected-1,NoSelected-1,
-           noroots,errorcode);
+    MatTrn(EigenTrans, EigenVectors, NoSelected-1, noroots);
+    MatAxB(TempMat, EigenTrans, TotalMat, noroots, NoSelected-1, NoSelected-1,
+           NoSelected-1, errorcode);
+    MatAxB(Theta, TempMat, EigenVectors, noroots, NoSelected-1, NoSelected-1,
+           noroots, errorcode);
 
     // Create a diagonal matrix with square roots of the Total covariance diagonal
     for i := 1 to NoSelected - 1 do
-    begin
         for j := 1 to NoSelected - 1 do
-        begin
-            if (i <> j) then DiagMat[i-1,j-1] := 0.0
-            else DiagMat[i-1,j-1] := sqrt(TotalMat[i-1,j-1]);
-        end;
-    end;
+            if (i <> j) then
+              DiagMat[i-1,j-1] := 0.0
+            else
+              DiagMat[i-1,j-1] := sqrt(TotalMat[i-1,j-1]);
 
     // Get recipricol of standard deviations of each function
-    for i := 1 to noroots do ScoreVar[i-1] := 1.0 / sqrt(Theta[i-1,i-1]);
+    for i := 1 to noroots do
+      ScoreVar[i-1] := 1.0 / sqrt(Theta[i-1,i-1]);
 
     // Divide coefficients by score standard deviations
     for i := 1 to NoSelected - 1 do
-    begin
         for j := 1 to noroots do
         begin
             RawCMat[i-1,j-1] := EigenVectors[i-1,j-1] * ScoreVar[j-1];
             CoefMat[i-1,j-1] := RawCMat[i-1,j-1] * sqrt(TotalMat[i-1,i-1]);
         end;
-    end;
 
     // print functions obtained from total matrix
     Title := 'Raw Coefficients from Total Cov.';
-    MAT_PRINT(RawCMat,NoSelected-1,noroots,Title,VarLabels,ColLabels,TotalCases);
+    MatPrint(RawCMat, NoSelected-1, noroots, Title, VarLabels, ColLabels, TotalCases, lReport);
     Title := 'Raw Discriminant Function Constants';
-    DynVectorPrint(Constants,noroots,Title,ColLabels,TotalCases);
-//    OutputFrm.ShowModal;
-//    OutputFrm.RichEdit.Clear();
+    DynVectorPrint(Constants, noroots, Title, ColLabels, TotalCases, lReport);
+    lReport.Add(DIVIDER);
+    lReport.Add('');
 
     // print std. disc coefficients from total matrix
     Title := 'Standardized Coeff.s from Total Cov.';
-    MAT_PRINT(CoefMat,NoSelected-1,noroots,Title,VarLabels,ColLabels,TotalCases);
-    OutputFrm.ShowModal;
-    OutputFrm.RichEdit.Clear();
+    MatPrint(CoefMat, NoSelected-1, noroots, Title, VarLabels, ColLabels, TotalCases, lReport);
+    lReport.Add(DIVIDER);
+    lReport.Add('');
 
     // Get correlations from Total covariance matrix
     for i := 1 to NoSelected - 1 do
@@ -742,15 +733,15 @@ begin
     if CorrsChk.Checked then
     begin
        Title := 'Total Correlation Matrix';
-       MAT_PRINT(TempMat,NoSelected-1,NoSelected-1,Title,VarLabels,VarLabels,TotalCases);
-//       OutputFrm.ShowModal;
-//       OutputFrm.RichEdit.Clear();
+       MatPrint(TempMat, NoSelected-1, NoSelected-1, Title, VarLabels, VarLabels, TotalCases, lReport);
+       lReport.Add(DIVIDER);
+       lReport.Add('');
     end;
 
     // Obtain structure coefficients
-    MATAxB(Structure,TempMat,CoefMat,NoSelected-1,NoSelected-1,NoSelected-1,noroots,errorcode);
+    MatAxB(Structure, TempMat, CoefMat, NoSelected-1, NoSelected-1, NoSelected-1, noroots, errorcode);
     Title := 'Corr.s Between Variables and Functions';
-    MAT_PRINT(Structure,NoSelected-1,noroots,Title,VarLabels,ColLabels,TotalCases);
+    MatPrint(Structure, NoSelected-1, noroots, Title, VarLabels, ColLabels, TotalCases, lReport);
 
     //Compute and print overall statistics for equal group centroids
     n2 := (NoSelected-1) * (NoSelected-1);
@@ -763,22 +754,28 @@ begin
     L2 := Power(Lambda,1.0 / s);
     F := ((1.0 - L2)/ L2) * (den / num);
     Fprob := probf(F,num,den);
-    outline := format('Wilk''s Lambda = %10.4f.',[Lambda]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := format('F = %10.4f with D.F. %5.0f and %5.0f .  Prob > F = %6.4f',
-            [F,num,den,Fprob]);
-    OutputFrm.RichEdit.Lines.Add(outline);
+    lReport.Add('Wilk''s Lambda:       %10.4f', [Lambda]);
+    lReport.Add('F:                    %10.4f', [F]);
+    lReport.Add('   with D.F.          %10.0f and %.0f', [num, den]);
+    lReport.Add('   prob > F:          %10.4f', [Fprob]);
+    lReport.Add('');
+
     dfchi := (NoSelected - 1) * noroots;
     probchi := 1.0 - chisquaredprob(ChiSquare,dfchi);
-    outline := format('Bartlett Chi-Squared = %10.4f with %d D.F. and prob. = %6.4f',
-                     [ChiSquare,dfchi,probchi]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := format('Pillai Trace = %10.4f',[Pillia]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.ShowModal;
-    OutputFrm.RichEdit.Clear();
+    lReport.Add('Bartlett Chi-Squared: %10.4f', [ChiSquare]);
+    lReport.Add('   with D.F.          %10d', [dfchi]);
+    lReport.Add('   and prob.          %10.4f', [probchi]);
+    lReport.Add('');
 
-    // Clean up heap
+    lReport.Add('Pillai Trace          %10.4f', [Pillia]);
+    lReport.Add('');
+
+    lReport.Add(DIVIDER);
+    lReport.Add('');
+
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
     ColNoSelected := nil;
     NoInGrp := nil;
     GrpNos := nil;
@@ -814,46 +811,74 @@ begin
     CaseNo := nil;
     ColLabels := nil;
     VarLabels := nil;
+  end;
 end;
+
+procedure TDiscrimFrm.DepInClick(Sender: TObject);
+var
+  index: Integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (GroupVar.Text = '') then
+  begin
+    GroupVar.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+  end;
+  UpdateBtnStates;
+end;
+
 
 procedure TDiscrimFrm.DepOutClick(Sender: TObject);
 begin
-     VarList.Items.Add(GroupVar.Text);
-     GroupVar.Text := '';
-     DepOut.Enabled := false;
-     DepIn.Enabled := true;
+  if GroupVar.Text <> '' then
+  begin
+    VarList.Items.Add(GroupVar.Text);
+    GroupVar.Text := '';
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TDiscrimFrm.PredInClick(Sender: TObject);
-VAR i, index : integer;
+var
+  i: integer;
 begin
-     index := VarList.Items.Count;
-     i := 0;
-     while i < index do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-            PredList.Items.Add(VarList.Items.Strings[i]);
-            VarList.Items.Delete(i);
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-     end;
-     PredOut.Enabled := true;
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      PredList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
+end;
+
+procedure TDiscrimFrm.PredListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 procedure TDiscrimFrm.PredOutClick(Sender: TObject);
-VAR index : integer;
+var
+  i: integer;
 begin
-     index := PredList.ItemIndex;
-     if index < 0 then
-     begin
-          PredOut.Enabled := false;
-          exit;
-     end;
-     VarList.Items.Add(PredList.Items.Strings[index]);
-     PredList.Items.Delete(index);
+  i := 0;
+  while i < PredList.Items.Count do
+  begin
+    if PredList.Selected[i] then
+    begin
+      VarList.Items.Add(PredList.Items[i]);
+      PredList.Items.Delete(i);
+      i := 0;
+    end
+    else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TDiscrimFrm.PlotPts(Sender: TObject; RawCMat: DblDyneMat;
@@ -941,7 +966,7 @@ begin
                  GraphFrm.AutoScaled := true;
                  GraphFrm.PtLabels := true;
                  GraphFrm.GraphType := 7; // 2d points
-                 GraphFrm.BackColor := clYellow;
+                 GraphFrm.BackColor := clCream;
                  GraphFrm.ShowBackWall := true;
                  GraphFrm.ShowModal;
             end; // next i
@@ -956,16 +981,14 @@ end;
 procedure TDiscrimFrm.Classify(Sender: TObject; PooledW: DblDyneMat;
   GrpMeans: DblDyneMat; ColNoSelected: IntDyneVec; NoSelected: integer;
   NoCases: integer; GrpVar: integer; NoGrps: integer; NoInGrp: IntDyneVec;
-  VarLabels: StrDyneVec);
+  VarLabels: StrDyneVec; AReport: TStrings);
 var
    i, j, k, grp : integer;
    outline : string;
    Constant, T : DblDyneVec;
    S : double;
    Coeff, WithinInv : DblDyneMat;
-
 begin
-//     SetLength(NoInGrp,NoGrps);
      SetLength(T,NoSelected);
      SetLength(Coeff,NoGrps,NoSelected);
      SetLength(WithinInv,NoSelected,NoSelected);
@@ -978,7 +1001,7 @@ begin
     SVDinverse(WithinInv,NoSelected);
 
     // Get Fisher Discrim Functions and probabilities
-    OutputFrm.RichEdit.Lines.Add('Fisher Discriminant Functions');
+    AReport.Add('FISHER DISCRIMINANT FUNCTIONS');
     for grp := 0 to NoGrps-1 do
     begin
         Constant[grp] := 0.0;
@@ -994,15 +1017,12 @@ begin
                 T[j] := T[j] + WithinInv[j,k] * GrpMeans[grp,k];
         end;
         for j := 0 to NoSelected-1 do Coeff[grp,j] := T[j];
-        outline := format('Group %3d Constant := %6.3f',[grp+1,Constant[grp]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('Variable  Coefficient');
+        AReport.Add('Group %d Constant: %6.3f', [grp+1, Constant[grp]]);
+        AReport.Add('Variable  Coefficient');
+        AReport.Add('--------  -----------');
         for i := 0 to NoSelected-1 do
-        begin
-            outline := format('   %3d    %6.3f',[i+1,T[i]]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-        end;
-        OutputFrm.RichEdit.Lines.Add('');
+            AReport.Add('%8d  %11.3f', [i+1, T[i]]);
+        AReport.Add('');
     end; // next group
 
     // clean up the heap
@@ -1010,14 +1030,13 @@ begin
     WithinInv := nil;
     Coeff := nil;
     T := nil;
-//    NoInGrp := nil;
 end;
 
 procedure TDiscrimFrm.ClassIt(Sender: TObject; PooledW: DblDyneMat;
   ColNoSelected: IntDyneVec; GrpMeans: DblDyneMat; Roots: DblDyneVec;
   noroots: integer; GrpVar : integer; NoGrps: integer; NoInGrp: IntDyneVec;
   NoSelected: integer; NoCases: integer; RawCmat: DblDyneMat;
-  Constants: DblDyneVec);
+  Constants: DblDyneVec; AReport: TStrings);
 var
    i, j, k, grp, j1, InGrp, Largest, SecdLarge, oldcolcnt, linecount : integer;
    numberstr, prompt, outline, cellname : string;
@@ -1077,20 +1096,19 @@ begin
     for i := 1 to noroots do Determinant := Determinant * Roots[i-1];
 
     linecount := 0;
+
     // Print Heading
-    OutputFrm.RichEdit.Clear;
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := 'CLASSIFICATION OF CASES';
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := 'SUBJECT ACTUAL HIGH  PROBABILITY   SEC.D HIGH   DISCRIM';
-    OutputFrm.RichEdit.Lines.Add(outline);
-    outline := 'ID NO.  GROUP  IN    GROUP P(G/D)  GROUP P(G/D) SCORE';
-    OutputFrm.RichEdit.Lines.Add(outline);
+    AReport.Add('CLASSIFICATION OF CASES');
+    AReport.Add('');
+    AReport.Add('SUBJECT  ACTUAL  HIGH  PROBABILITY   SEC.D  HIGH    DISCRIM');
+    AReport.Add('ID NO.   GROUP   IN    GROUP P(G/D)  GROUP  P(G/D)  SCORE');
+    AReport.Add('-------  ------  ----  ------------  -----  ------  -------');
     linecount := linecount + 4;
 
     //Get selected priors
     // Default priors are equal proportions
-    for j := 1 to NoGrps do Apriori[j-1] := 1.0 / NoGrps;
+    for j := 1 to NoGrps do
+      Apriori[j-1] := 1.0 / NoGrps;
     if ClassSizeGroup.ItemIndex = 1 then
     begin
         // Get apriori probabilities
@@ -1111,12 +1129,14 @@ begin
     // Calculate group probabilities for each case
     for i := 1 to NoCases do
     begin
+        {
         if (linecount >= 59) then
         begin
            OutputFrm.ShowModal;
            OutputFrm.RichEdit.Clear;
            linecount := 0;
         end;
+        }
         if (not GoodRecord(i,NoSelected,ColNoSelected))then  continue;
         InGrp := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[GrpVar,i])));
         InGrp := NoGrps - (MaxGrp - InGrp);
@@ -1156,7 +1176,7 @@ begin
         begin
             for j := 1 to noroots do
             begin
-                 numberstr := format('%8.3f',[Discrim[j-1]]);
+                 numberstr := Format('%8.3f', [Discrim[j-1]]);
                  OS3MainFrm.DataGrid.Cells[oldcolcnt+j,i] := numberstr;
             end;
         end;
@@ -1186,16 +1206,13 @@ begin
         end;
 
         // Print results for this case i
-        outline := format('%3d    %3d    %3d      %6.4f      %3d   %6.4f %7.4f',
-                [i,InGrp,Largest,LargestProb,SecdLarge,SecdProb,
-                Discrim[0]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
+        AReport.Add('%7d  %6d  %4d  %12.4f  %5d  %6.4f  %7.4f', [
+          i,InGrp,Largest,LargestProb,SecdLarge,SecdProb, Discrim[0]
+        ]);
         linecount := linecount + 1;
         for j := 2 to noroots do
         begin
-            outline := format('                                                %7.4f',
-                    [Discrim[j-1]]);
-            OutputFrm.RichEdit.Lines.Add(outline);
+            AReport.Add('                                                    %7.4f', [Discrim[j-1]]);
             linecount := linecount + 1;
         end;
         Table[InGrp-1,Largest-1] := Table[InGrp-1,Largest-1] + 1;
@@ -1212,9 +1229,11 @@ begin
 
     if (linecount > 0) then
     begin
-         OutputFrm.ShowModal();
-         OutputFrm.RichEdit.Clear;
+         AReport.Add('');
+         AReport.Add(DIVIDER);
+         AReport.Add('');
     end;
+
     // Print table of classifications
     for i := 1 to NoGrps + 1 do
     begin
@@ -1224,7 +1243,8 @@ begin
     RowLabels[NoGrps] := 'TOTAL';
     ColLabels[NoGrps] := 'TOTAL';
     IntArrayPrint(Table, NoGrps+1,NoGrps+1, 'PREDICTED GROUP',
-                  RowLabels, ColLabels, 'CLASSIFICATION TABLE');
+                  RowLabels, ColLabels, 'CLASSIFICATION TABLE',
+                  AReport);
 
     // Clean up the heap
     WithinInv := nil;
@@ -1238,6 +1258,17 @@ begin
     Dev := nil;
     ProdVec := nil;
     Table := nil;
+end;
+
+procedure TDiscrimFrm.UpdateBtnStates;
+var
+  varSelected: Boolean;
+begin
+  varSelected := AnySelected(VarList);
+  DepIn.Enabled := varSelected and (GroupVar.Text = '');
+  PredIn.Enabled := varSelected;
+  Depout.Enabled := (GroupVar.Text <> '');
+  PredOut.Enabled := AnySelected(PredList);
 end;
 
 initialization

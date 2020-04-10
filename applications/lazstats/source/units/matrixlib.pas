@@ -141,8 +141,8 @@ procedure MReg2(NCases : integer;
                PrintInv : boolean;
                AReport: TStrings);
 
-procedure MATSUB(VAR a, b, c : DblDyneMat;
-                 brows, bcols, crows, ccols : integer; VAR errorcode : boolean);
+procedure MatSub(const a, b, c: DblDyneMat;
+  brows, bcols, crows, ccols: integer; out errorcode: boolean);
 
 procedure IntArrayPrint(mat : IntDyneMat;
                         rows, cols : integer;
@@ -1494,19 +1494,21 @@ begin
 end;
 //---------------------------------------------------------------------------
 
-procedure MATSUB(VAR a, b, c : DblDyneMat;
-                 brows, bcols, crows, ccols : integer; VAR errorcode : boolean);
+procedure MatSub(const a, b, c: DblDyneMat;
+  brows, bcols, crows, ccols: integer; out errorcode: boolean);
 // Subtracts matrix c from b and returns the results in matrix a
-var i, j : integer;
+var
+  i, j: integer;
 begin
-     errorcode := FALSE;
-     if ((brows <> crows) or (bcols <> ccols)) then errorcode := TRUE
-     else
-     begin
-     for i := 0 to brows-1 do
-         for j := 0 to bcols-1 do
-             a[i,j] := b[i,j] - c[i,j];
-     end;
+  errorcode := false;
+  if (brows <> crows) or (bcols <> ccols) then
+    errorcode := true
+  else
+  begin
+    for i := 0 to brows-1 do
+      for j := 0 to bcols-1 do
+        a[i,j] := b[i,j] - c[i,j];
+  end;
 end;  { of matsub }
 //---------------------------------------------------------------------------
 

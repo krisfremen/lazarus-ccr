@@ -13,77 +13,59 @@ object DiscrimFrm: TDiscrimFrm
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 304
+    Left = 396
     Height = 25
     Top = 424
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 2
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 370
-    Height = 25
-    Top = 424
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 3
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 444
+    Left = 458
     Height = 25
     Top = 424
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 4
+    TabOrder = 3
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 532
+    Left = 542
     Height = 25
     Top = 424
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 5
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 4
   end
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
@@ -152,6 +134,7 @@ object DiscrimFrm: TDiscrimFrm
       BorderSpacing.Right = 8
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = PredListSelectionChange
       TabOrder = 0
     end
     object DepIn: TBitBtn
@@ -362,6 +345,7 @@ object DiscrimFrm: TDiscrimFrm
       Top = 17
       Width = 176
       Anchors = [akTop, akLeft, akRight]
+      ReadOnly = True
       TabOrder = 3
       Text = 'GroupVar'
     end
@@ -380,6 +364,8 @@ object DiscrimFrm: TDiscrimFrm
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = PredListSelectionChange
       TabOrder = 6
     end
   end
@@ -387,7 +373,7 @@ object DiscrimFrm: TDiscrimFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 408
