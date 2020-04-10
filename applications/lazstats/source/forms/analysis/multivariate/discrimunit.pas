@@ -169,17 +169,17 @@ var
   Title : string;
   GrpVar, NoGrps, nowithin, TotalCases, value, grpno : integer;
   ColNoSelected : IntDyneVec;
-  CaseNo, NoInGrp : IntDyneVec;
+  NoInGrp : IntDyneVec;
   VarLabels, ColLabels, GrpNos : StrDyneVec;
   X, Y, GroupSS, ErrorSS, GroupMS, ErrorMS, TotalSS, num, s, v2, den : double;
   Lambda, ChiSquare, Pillia, TotChi, p, Rc, chi, chiprob, m, L2, F, Fprob : double;
   DFGroup, DFError, DFTotal, Fratio, prob, minroot, trace, pcnttrace : double;
   probchi : double;
-  WithinMat, WithinInv, WinvB, v, PooledW, TotalMat, BetweenMat : DblDyneMat;
+  WithinMat, WithinInv, WinvB, PooledW, TotalMat, BetweenMat : DblDyneMat;
   EigenVectors, EigenTrans, TempMat, Theta, DiagMat, CoefMat : DblDyneMat;
   RawCMat, GrpMeans, GrpSDevs, Centroids, Structure : DblDyneMat;
   Constants, ScoreVar, Roots, Pcnts, TotalMeans, TotalVariances : DblDyneVec;
-  TotalStdDevs, WithinMeans, WithinVariances, WithinStdDevs, w : DblDyneVec;
+  TotalStdDevs, WithinMeans, WithinVariances, WithinStdDevs: DblDyneVec;
   errorcode : boolean = false;
   lReport: TStrings;
 begin
@@ -191,6 +191,13 @@ begin
   if PredList.Items.Count = 0 then
   begin
     MessageDlg('No Predictor variable(s) selected.', mtError, [mbOK], 0);
+    exit;
+  end;
+
+  if ClassSizeGroup.ItemIndex = -1 then
+  begin
+    ClassSizeGroup.SetFocus;
+    MessageDlg('"Classify Using" is not specified.', mtError, [mbOk], 0);
     exit;
   end;
 
@@ -208,7 +215,6 @@ begin
     SetLength(ColNoSelected,NoVariables);
     SetLength(VarLabels,NoVariables);
     SetLength(ColLabels,NoVariables);
-    SetLength(CaseNo,NoVariables);
 
     // Get items selected
     for i := 1 to NoSelected - 1 do
@@ -233,7 +239,6 @@ begin
     SetLength(WithinMat,NoVariables,NoVariables);
     SetLength(WithinInv,NoVariables,NoVariables);
     SetLength(WinvB,NoVariables,NoVariables);
-    SetLength(v,NoVariables,NoVariables);
     SetLength(PooledW,NoVariables,NoVariables);
     SetLength(TotalMat,NoVariables,NoVariables);
     SetLength(BetweenMat,NoVariables,NoVariables);
@@ -255,7 +260,6 @@ begin
     SetLength(WithinMeans,NoVariables);
     SetLength(WithinVariances,NoVariables);
     SetLength(WithinStdDevs,NoVariables);
-    SetLength(w,NoVariables);
 
     // Initialize arrays
     for i := 0 to NoSelected-1 do
@@ -782,7 +786,6 @@ begin
     Centroids := nil;
     GrpSDevs := nil;
     GrpMeans := nil;
-    w := nil;
     WithinStdDevs := nil;
     WithinVariances := nil;
     WithinMeans := nil;
@@ -804,11 +807,9 @@ begin
     BetweenMat := nil;
     TotalMat := nil;
     PooledW := nil;
-    v := nil;
     WinvB := nil;
     WithinInv := nil;
     WithinMat := nil;
-    CaseNo := nil;
     ColLabels := nil;
     VarLabels := nil;
   end;
@@ -984,7 +985,6 @@ procedure TDiscrimFrm.Classify(Sender: TObject; PooledW: DblDyneMat;
   VarLabels: StrDyneVec; AReport: TStrings);
 var
    i, j, k, grp : integer;
-   outline : string;
    Constant, T : DblDyneVec;
    S : double;
    Coeff, WithinInv : DblDyneMat;
@@ -1041,7 +1041,7 @@ var
    i, j, k, grp, j1, InGrp, Largest, SecdLarge, oldcolcnt, linecount : integer;
    numberstr, prompt, outline, cellname : string;
    Table : IntDyneMat;
-   ProdVec, Dev, D2, Density, ProbGrp, Apriori, Discrim : DblDyneVec;
+   ProdVec, Dev, D2, ProbGrp, Apriori, Discrim : DblDyneVec;
    SumD2, Determinant, LargestProb, SecdProb, X : double;
    RowLabels, ColLabels : StrDyneVec;
    WithinInv : DblDyneMat;
@@ -1054,7 +1054,6 @@ begin
     SetLength(ProdVec,NoSelected);
     SetLength(Dev,NoSelected);
     SetLength(D2,NoGrps);
-    SetLength(Density,NoGrps);
     SetLength(ProbGrp,NoGrps);
     SetLength(Apriori,NoGrps);
     SetLength(Discrim,noroots);
@@ -1253,7 +1252,6 @@ begin
     Discrim := nil;
     Apriori := nil;
     ProbGrp := nil;
-    Density := nil;
     D2 := nil;
     Dev := nil;
     ProdVec := nil;

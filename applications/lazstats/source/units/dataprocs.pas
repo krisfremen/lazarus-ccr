@@ -65,7 +65,6 @@ uses MainUnit;
 Function GoodRecord(Row, NoVars: integer; const GridPos: IntDyneVec): boolean;
 var
   i, j: integer;
-  isgood: boolean;
 begin
   Result := true;
   for i := 1 to NoVars do

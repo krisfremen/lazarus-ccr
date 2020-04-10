@@ -138,11 +138,11 @@ procedure TFactorFrm.ComputeBtnClick(Sender: TObject);
 label again;
 var
    i, j, k, L, Nroots, noiterations, NoSelected, factorchoice : integer;
-   maxiters, prtopts, maxnoroots, count : integer;
-   TempMat, V, corrmat, ainverse, Loadings : DblDyneMat;
-   Eigenvector, pcnttrace, b, communality, xvector, yvector, d2 : DblDyneVec;
-   means, variances, stddevs, W : DblDyneVec;
-   MaxRoot,  criterion, Difference, minroot, maxk, trace : double;
+   maxiters, maxnoroots, count : integer;
+   TempMat, corrmat, ainverse, Loadings : DblDyneMat;
+   Eigenvector, b, communality, xvector, yvector, d2 : DblDyneVec;
+   means, variances, stddevs: DblDyneVec;
+   criterion, Difference, minroot, trace : double;
    cellstring, outline, xtitle, ytitle : string;
    ColNoSelected : IntDyneVec;
    RowLabels, ColLabels : StrDyneVec;
@@ -161,25 +161,12 @@ begin
     exit;
   end;
 
-  MaxRoot := 0.0;
   NoIterations := 0;
   MaxNoRoots := 0;
-  PrtOpts := 0;
 
   criterion := 0.0001; //Convergence of communality estimates
-  //factorchoice := 1;  // assume principal component
   factorChoice := TypeGroup.ItemIndex + 1;
-    {
-    if (TypeGroup.ItemIndex = 1) then factorchoice := 2;
-    if (TypeGroup.ItemIndex = 2) then factorchoice := 3;
-    if (TypeGroup.ItemIndex = 3) then factorchoice := 4;
-    if (TypeGroup.ItemIndex = 4) then factorchoice := 5;
-    if (TypeGroup.ItemIndex = 5) then factorchoice := 6;
-    if (TypeGroup.ItemIndex = 6) then factorchoice := 7;
-    }
-  if RMatBtn.Checked then prtopts := 3;                    // wp: why changed in next line?
-  if RMatBtn.Checked then prtopts := 2;
-  if RMatBtn.Checked and DescBtn.Checked then prtopts := 1;
+
   maxiters := StrToInt(MaxItersEdit.Text);
   if (MaxFactorsEdit.Text <> '') then
     MaxNoRoots := StrToInt(MaxFactorsEdit.Text);
@@ -203,12 +190,9 @@ begin
     SetLength(corrmat, NoVariables + 1, NoVariables + 1);
     SetLength(TempMat, NoVariables, NoVariables);
     SetLength(ainverse, NoVariables, NoVariables);
-    SetLength(V, NoVariables, NoVariables);
-    SetLength(W, NoVariables);
     SetLength(Loadings, NoVariables, NoVariables);
     SetLength(Eigenvector, NoVariables);
     SetLength(communality, NoVariables);
-    SetLength(pcnttrace, NoVariables);
     SetLength(b, NoVariables);
     SetLength(d2, NoVariables);
     SetLength(xvector, NoVariables);
@@ -290,7 +274,6 @@ begin
         MatSave(corrmat, NoSelected, NoSelected, means, stddevs, count, RowLabels, ColLabels, filename);
       end;
     end;
-    maxk := k;
     Nroots := k;
 
     //not a principal component analysis
@@ -688,12 +671,9 @@ again:
     xvector := nil;
     d2 := nil;
     b := nil;
-    pcnttrace := nil;
     communality := nil;
     Eigenvector := nil;
     Loadings := nil;
-    W := nil;
-    V := nil;
     ainverse := nil;
     TempMat := nil;
     corrmat := nil;
@@ -1130,7 +1110,6 @@ var
    ee, p, sum : double;
    A, C, d, v, trans : DblDyneMat;
    e, f, g, means, stddevs : DblDyneVec;
-   outline : string;
    Title : string;
    ColALabels : StrDyneVec ;
    filename : string;
@@ -1382,7 +1361,7 @@ procedure TFactorFrm.QuartiMax(const v: DblDyneMat; n1, n2: integer;
   AReport: TStrings);
 var
   i, j, M, N, minuscount, NoIters : integer;
-  A, b, C : DblDyneVec;
+  A, b: DblDyneVec;
   High_Factor : IntDyneVec;
   c4, s1, Q, NewQ, TotalPercent, t : double;
   theta, tan4theta, ssqrp, ssqrj, prodjp, numerator, denominator : double;
@@ -1391,7 +1370,6 @@ var
 begin
   SetLength(A,NoVariables);
   SetLength(b,NoVariables);
-  SetLength(C,NoVariables);
   SetLength(High_Factor,NoVariables);
   NoIters := 0;
 
@@ -1554,7 +1532,6 @@ begin
   AReport.Add('');
 
   High_Factor := nil;
-  C := nil;
   b := nil;
   A := nil;
 end;

@@ -1541,13 +1541,11 @@ var
   block, i, j, k, NEntered, index, noblocks, priorentered : integer;
   cellstring : string;
   labelstr : string;
-  outline : string;
   R, R2Increment, SSx, sum, constant, FullR2 : double;
-  df1, df2, F, FProbF, StdErrB,OldDF1, PredSS, PredMS : double;
+  df1, df2, F, FProbF, StdErrB, PredSS, PredMS : double;
   SSt, VarEst, SSres, StdErrEst, AdjR2 : double;
 begin
   NEntered := 0;
-  OldDF1 := 0.0;
   priorentered := 0;
   OldR2 := 0;
 
@@ -2272,20 +2270,18 @@ end;
 
 procedure TGLMFrm.ModelIIIAnalysis(AReport: TStrings);
 var
-  block, i, j, NEntered, index, noblocks, priorentered : integer;
+  block, i, j, NEntered, index, noblocks: integer;
   cellstring : string;
   labelstr : string;
-  outline, effstr : string;
+  effstr : string;
   R, SSx, sum, constant: double;
-  df1, df2, F, FProbF, StdErrB, OldDF1: double;
+  df1, df2, F, FProbF, StdErrB: double;
   SSt, VarEst, SSres, StdErrEst, AdjR2 : double;
   dfbetween, dferrbetween, dfwithin, dferrwithin : double;
   ssbetween, sserrbetween, mserrbetween, sswithin, sserrwithin,  mserrwithin : double;
   betweenblock : integer;
   totalss, totaldf : double;
 begin
-  OldDF1 := 0.0;
-  priorentered := 0;
   OldR2 := 0;
   ColSelected[0] := ReptDepPos[0];
   Labels[0] := GenLabels[1];
@@ -2979,7 +2975,7 @@ var
    s, m, n, df1, df2, q, w, pcnt_extracted, trace : double;
    minroot, critical_prob, Lambda, Pillia : double;
    chisqr, HLTrace, chiprob, ftestprob, Roys, f, Hroot : double;
-   raa, rbb, rab, rba, bigmat, prod, first_prod, second_prod : DblDyneMat;
+   raa, rbb, rab, rba, bigmat, first_prod, second_prod : DblDyneMat;
    char_equation, raainv, rbbinv, eigenvectors, norm_a, norm_b : DblDyneMat;
    raw_a, raw_b, a_cors, b_cors, eigentrans, theta, tempmat : DblDyneMat;
    mean, variance, stddev, roots, root_chi, chi_prob, pv_a, pv_b : DblDyneVec;
@@ -3016,7 +3012,6 @@ begin
     SetLength(rab,NLeft+1,NRight+1);
     SetLength(rba,NRight+1,NLeft+1);
     SetLength(bigmat,novars+1,novars+1);
-    SetLength(prod,novars+1,novars+1);
     SetLength(first_prod,novars+1,novars+1);
     SetLength(second_prod,novars+1,novars+1);
     SetLength(char_equation,novars+1,novars+1);
@@ -3401,7 +3396,6 @@ cleanup:
     char_equation := nil;
     second_prod := nil;
     first_prod := nil;
-    prod := nil;
     bigmat := nil;
     rba := nil;
     rab := nil;

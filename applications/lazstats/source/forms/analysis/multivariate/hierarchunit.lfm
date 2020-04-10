@@ -1,11 +1,11 @@
 object HierarchFrm: THierarchFrm
   Left = 415
-  Height = 302
+  Height = 319
   Top = 211
   Width = 442
   AutoSize = True
   Caption = 'Hierarchical Cluster Analysis'
-  ClientHeight = 302
+  ClientHeight = 319
   ClientWidth = 442
   OnActivate = FormActivate
   OnCreate = FormCreate
@@ -42,7 +42,7 @@ object HierarchFrm: THierarchFrm
     AnchorSideRight.Control = PredIn
     AnchorSideBottom.Control = Bevel1
     Left = 8
-    Height = 228
+    Height = 245
     Top = 25
     Width = 176
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -51,6 +51,7 @@ object HierarchFrm: THierarchFrm
     BorderSpacing.Right = 8
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 0
   end
   object PredIn: TBitBtn
@@ -91,7 +92,7 @@ object HierarchFrm: THierarchFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = GroupBox1
     Left = 228
-    Height = 45
+    Height = 62
     Top = 25
     Width = 206
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -99,6 +100,8 @@ object HierarchFrm: THierarchFrm
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 3
   end
   object GroupBox1: TGroupBox
@@ -109,7 +112,7 @@ object HierarchFrm: THierarchFrm
     AnchorSideBottom.Control = Bevel1
     Left = 228
     Height = 175
-    Top = 78
+    Top = 95
     Width = 206
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -225,86 +228,68 @@ object HierarchFrm: THierarchFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 141
+    Left = 233
     Height = 25
-    Top = 269
+    Top = 286
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 5
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 207
-    Height = 25
-    Top = 269
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 6
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 281
+    Left = 295
     Height = 25
-    Top = 269
+    Top = 286
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 7
+    TabOrder = 6
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 369
+    Left = 379
     Height = 25
-    Top = 269
-    Width = 61
+    Top = 286
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 7
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 253
+    Top = 270
     Width = 442
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine

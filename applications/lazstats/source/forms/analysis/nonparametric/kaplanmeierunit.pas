@@ -208,7 +208,7 @@ var
      Size1, Size2, TotalSize, NoDeaths, ThisTime: integer;
      mintime, maxtime, tempint, nopoints, tempvalue : integer;
      NoCensored, nocats, i, j, k, icase, oldtime, pos, first, last : integer;
-     noinexp, noincntrl, count, TimeCol, DeathsCol, CensoredCol : integer;
+     noinexp, noincntrl, count, TimeCol, DeathsCol: integer;
      GroupCol : integer;
      cumprop, proportion, term1, term2, term3 : double;
      E1, E2, O1, O2, Chisquare, ProbChi, Risk, LogRisk, SELogRisk : double;
@@ -227,7 +227,6 @@ begin
   DeathsLabel := EventEdit.Text;
   TimeCol := 0;
   DeathsCol := 0;
-  CensoredCol := 0;
   GroupCol := 0;
   for i := 1 to NoVariables do
   begin

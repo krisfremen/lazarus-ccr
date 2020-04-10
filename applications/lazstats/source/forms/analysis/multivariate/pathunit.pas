@@ -325,12 +325,12 @@ end;
 procedure TPathFrm.ComputeBtnClick(Sender: TObject);
 var
    i, j, k, col, row, NoVars, nocaused, NoSelected, NoIndepVars : integer;
-   count, IER, noexogenous, t, L: integer;
-   constant, StdErrEst, ProbOut, R2, Temp, d2, sum, absdiff : double;
+   count, IER, noexogenous, L: integer;
+   constant, StdErrEst, ProbOut, R2, d2, sum, absdiff : double;
    cellstring: string;
    ColNoSelected, selected : IntDyneVec;
    IndepIndex : IntDyneVec;
-   rmat, WorkMat, PathCoef, IndMatrix, InvMatrix, e, W : DblDyneMat;
+   rmat, WorkMat, PathCoef, IndMatrix, e, W : DblDyneMat;
    means, variances, stddevs, beta, p : DblDyneVec;
    zvals : DblDyneMat; // z scores for path model
    genedz : IntDyneVec; // list of z's created for path models
@@ -386,7 +386,6 @@ begin
    SetLength(WorkMat,NoVariables+1,NoVariables+1);
    SetLength(PathCoef,NoVariables,NoVariables);
    SetLength(IndMatrix,NoVariables,NoVariables);
-   SetLength(InvMatrix,NoVariables,NoVariables);
    SetLength(e,NoVariables,NoVariables);
    SetLength(W,NoVariables,NoVariables);
    SetLength(means,NoVariables);
@@ -830,7 +829,6 @@ begin
      means := nil;
      W := nil;
      e := nil;
-     InvMatrix := nil;
      IndMatrix := nil;
      PathCoef := nil;
      WorkMat := nil;
