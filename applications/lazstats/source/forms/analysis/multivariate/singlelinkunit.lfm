@@ -13,83 +13,65 @@ object SingleLinkFrm: TSingleLinkFrm
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 108
+    Left = 200
     Height = 25
     Top = 251
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 1
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 174
-    Height = 25
-    Top = 251
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 2
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 248
+    Left = 262
     Height = 25
     Top = 251
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 3
+    TabOrder = 2
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 336
+    Left = 346
     Height = 25
     Top = 251
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 4
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 3
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 235
@@ -124,7 +106,7 @@ object SingleLinkFrm: TSingleLinkFrm
       Caption = 'Available Variables'
       ParentColor = False
     end
-    object ListBox1: TListBox
+    object VarList: TListBox
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
@@ -139,6 +121,7 @@ object SingleLinkFrm: TSingleLinkFrm
       BorderSpacing.Top = 2
       BorderSpacing.Right = 8
       ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object Label2: TLabel
@@ -159,7 +142,7 @@ object SingleLinkFrm: TSingleLinkFrm
     object VarInBtn: TBitBtn
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = ListBox1
+      AnchorSideTop.Control = VarList
       Left = 182
       Height = 28
       Top = 17
@@ -274,10 +257,11 @@ object SingleLinkFrm: TSingleLinkFrm
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       BorderSpacing.Bottom = 6
+      ReadOnly = True
       TabOrder = 3
       Text = 'VarSelEdit'
     end
-    object GroupBox1: TGroupBox
+    object OptionsGroup: TGroupBox
       AnchorSideLeft.Control = VarInBtn
       AnchorSideTop.Control = VarOutBtn
       AnchorSideTop.Side = asrBottom
