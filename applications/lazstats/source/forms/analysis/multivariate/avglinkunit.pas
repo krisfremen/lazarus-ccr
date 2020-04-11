@@ -1,3 +1,9 @@
+// File for testing: cansas_rotated.laz
+
+// NOTE: Run Correlation > Product-Moment with option Save Matrix to Grid
+//       before executing the Average Link Clustering command in order to
+//       have a symmetrical matrix.
+
 unit AvgLinkUnit;
 
 {$mode objfpc}{$H+}
@@ -15,21 +21,19 @@ type
 
   TAvgLinkFrm = class(TForm)
     Bevel1: TBevel;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
     HelpBtn: TButton;
-    ReturnBtn: TButton;
-    RadioGroup1: TRadioGroup;
+    CloseBtn: TButton;
+    MatrixTypeGroup: TRadioGroup;
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
-    procedure TreePlot(Clusters : IntDyneMat; Lst : IntDyneVec; NoPoints : integer);
-    procedure PreTree(NN, CRIT : integer; LST : IntDyneVec; KLUS : IntDyneMat);
-
   private
     { private declarations }
+    procedure PreTree(NN, CRIT: integer; LST: IntDyneVec; KLUS: IntDyneMat; AReport: TStrings);
+    procedure TreePlot(Clusters: IntDyneMat; Lst: IntDyneVec; NoPoints: integer; AReport: TStrings);
   public
     { public declarations }
   end; 
@@ -48,23 +52,20 @@ procedure TAvgLinkFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([HelpBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 procedure TAvgLinkFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TAvgLinkFrm.FormShow(Sender: TObject);
 begin
-  RadioGroup1.ItemIndex := 0;
+  MatrixTypeGroup.ItemIndex := 0;
 end;
 
 procedure TAvgLinkFrm.HelpBtnClick(Sender: TObject);
@@ -75,73 +76,76 @@ begin
 end;
 
 procedure TAvgLinkFrm.ComputeBtnClick(Sender: TObject);
+const
+  SIM_DIS: array[0..1] of String = ('Similarity', 'Dissimilarity');
 VAR
-    X : DblDyneMat; // similarity or dissimilarity matrix
-    KLUS : IntDyneMat;
-    LST : IntDyneVec;
-    RX, SAV, SAV2, RRRMIN : double;
-    NIN, NVAR : IntDyneVec;
-    I, J, K, L, M, MN, N, CRIT, ITR, LIMIT : integer;
-//    ROWS : StrDyneVec;
-    DIS, Title : string;
-    outline : string;
-    nvalues : integer;
-label label300, label60, label70;
+  X : DblDyneMat; // similarity or dissimilarity matrix
+  KLUS : IntDyneMat;
+  LST : IntDyneVec;
+  RX, SAV, SAV2, RRRMIN : double;
+  NIN, NVAR : IntDyneVec;
+  I, J, K, L, M, MN, N, CRIT, ITR, LIMIT : integer;
+  //    ROWS : StrDyneVec;
+  nvalues : integer;
+  lReport: TStrings;
+
+label
+  label300, label60, label70;
 
 begin
-     //  Reference:  Anderberg, M. R. (1973).  Cluster analysis for
-     //              applications.  New York:  Academic press.
-     //
-     //  Almost any text on cluster analysis should have a good
-     //  description of the average-linkage hierarchical clustering
-     //  algorithm.   The algorithm begins with an initial similarity
-     //  or dissimilarity matrix between pairs of objects.  The
-     //  algorithm proceeds in an iterative way.  At each iteration
-     //  the two most similar (we assume similarities for explanation)
-     //  objects are combined into one group.  At each successive
-     //  iteration, the two most similar objects or groups of objects are
-     //  merged.  Similarity between groups is defined as the average
-     //  similarity between objects in one group with objects in the other.
-     //
-     //     INPUT:   A correlation matrix (or some other similarity or
-     //              dissimilarity matrix) in a file named MATRIX.DAT
-     //              This must contain all the elements of a full
-     //              (n x n), symmetrical matrix.  Any format is
-     //              allowable, as long as numbers are separated by
-     //              blanks.
-     //
-     //     OUTPUT:  Output consists of a cluster history and a tree
-     //              diagram (dendogram).  The cluster history
-     //              indicates, for each iteration, the objects
-     //              or clusters merged, and the average pairwise
-     //              similarity or dissimilarity in the resulting
-     //              cluster.
-     //
-     //  Author:    John Uebersax
+   //  Reference:  Anderberg, M. R. (1973).  Cluster analysis for
+   //              applications.  New York:  Academic press.
+   //
+   //  Almost any text on cluster analysis should have a good
+   //  description of the average-linkage hierarchical clustering
+   //  algorithm.   The algorithm begins with an initial similarity
+   //  or dissimilarity matrix between pairs of objects.  The
+   //  algorithm proceeds in an iterative way.  At each iteration
+   //  the two most similar (we assume similarities for explanation)
+   //  objects are combined into one group.  At each successive
+   //  iteration, the two most similar objects or groups of objects are
+   //  merged.  Similarity between groups is defined as the average
+   //  similarity between objects in one group with objects in the other.
+   //
+   //     INPUT:   A correlation matrix (or some other similarity or
+   //              dissimilarity matrix) in a file named MATRIX.DAT
+   //              This must contain all the elements of a full
+   //              (n x n), symmetrical matrix.  Any format is
+   //              allowable, as long as numbers are separated by
+   //              blanks.
+   //
+   //     OUTPUT:  Output consists of a cluster history and a tree
+   //              diagram (dendogram).  The cluster history
+   //              indicates, for each iteration, the objects
+   //              or clusters merged, and the average pairwise
+   //              similarity or dissimilarity in the resulting
+   //              cluster.
+   //
+   //  Author:    John Uebersax
 
-     nvalues := NoVariables;
-     if (NoVariables <= 0) then
-     begin
-        ShowMessage('ERROR! You must first load a matrix into the grid.');
-        exit;
-     end;
+  if (NoVariables <= 0) then
+  begin
+    MessageDlg('You must first load a matrix into the grid.', mtError, [mbOK], 0);
+    exit;
+  end;
 
-    SetLength(X,nvalues+1,nvalues+1);
-    SetLength(KLUS,nvalues+1,3);
-    SetLength(LST,nvalues+1);
-    SetLength(NIN,nvalues+1);
-    SetLength(NVAR,nvalues+1);
+  nvalues := NoVariables;
+  SetLength(X,nvalues+1,nvalues+1);
+  SetLength(KLUS,nvalues+1,3);
+  SetLength(LST,nvalues+1);
+  SetLength(NIN,nvalues+1);
+  SetLength(NVAR,nvalues+1);
 
-    Title := 'Average Linkage Cluster Analysis.  Adopted from ClusBas by John S. Uebersax';
+  lReport := TStringList.Create;
+  try
+    lReport.Add('AVERAGE LINK CLUSTER ANALYSIS');
+    lReport.Add('Adopted from ClusBas by John S. Uebersax');
+    lReport.Add('');
 
     // This section does the cluster analysis, taking data from the Main Form.
     // Parameters controlling the analysis are obtained from the dialog form.
-    DIS := 'DIS';
-    OutputFrm.RichEdit.Clear;
-    OutputFrm.RichEdit.Lines.Add(Title);
-    OutputFrm.RichEdit.Lines.Add('');
     M := nvalues;
-    CRIT := RadioGroup1.ItemIndex; // 0 := Similarity, 1 := dissimilarity
+    CRIT := MatrixTypeGroup.ItemIndex; // 0 := Similarity, 1 := dissimilarity
 
     // get matrix of data from OS3MainFrm
     for i := 1 to NoVariables do
@@ -255,17 +259,14 @@ label70: // end of ARRANGE procedure
 
     // continuation of CLUSV1 procedure
     // OUTPUT
+    lReport.Add('Group %3d is joined by group %3d. N is %3d ITER: %3d %s: %10.3f', [NVAR[K], NVAR[L], NIN[K], ITR, SIM_DIS[CRIT], RX]);
+    {
     if (CRIT = 0) then
-    begin
-        outline := format('Group %3d is joined by group %3d. N is %3d ITER := %3d SIM := %10.3f',
-            [NVAR[K], NVAR[L],NIN[K],ITR,RX]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end else
-    begin
-        outline := format('Group %3d is joined by group %3d. N is %3d ITER := %3d DIS := %10.3f',
-            [NVAR[K], NVAR[L],NIN[K],ITR,RX]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
+        lReport.Add('Group %3d is joined by group %3d. N is %3d ITER: %3d SIM: %10.3f', [NVAR[K], NVAR[L], NIN[K], ITR, RX])
+    else
+        lReport.Add('Group %3d is joined by group %3d. N is %3d ITER: %3d DIS: %10.3f', [NVAR[K], NVAR[L], NIN[K], ITR, RX]);
+    }
+
     KLUS[ITR,1] := NVAR[K]; // save in KLUS rather than write out to file as in
     KLUS[ITR,2] := NVAR[L]; // original program
     if not(L = M) then
@@ -275,26 +276,32 @@ label70: // end of ARRANGE procedure
     end;
     M := M - 1;
     if (ITR < LIMIT) then goto label300;
-    OutputFrm.RichEdit.Lines.Add('');
-//    OutputFrm.ShowModal;
+    lReport.Add('');
     // End of CLUSV1 procedure
 
     // do pre-tree processing
-    PreTree(nvalues, CRIT, LST, KLUS);
-    OutputFrm.ShowModal;
-    // do TREE procedure
-    TreePlot(KLUS,LST,nvalues);
-    OutputFrm.ShowModal;
+    PreTree(nvalues, CRIT, LST, KLUS, lReport);
+    lReport.Add('');
+    lReport.Add(DIVIDER);
+    lReport.Add('');
 
-    // cleanup
+    // do TREE procedure
+    TreePlot(KLUS, LST, nvalues, lReport);
+
+    DisplayReport(lReport);
+
+  finally
+    lReport.Free;
     NVAR := nil;
     NIN := nil;
     LST := nil;
     KLUS := nil;
     X := nil;
+  end;
 end;
 
-procedure TAvgLinkFrm.TreePlot(Clusters : IntDyneMat; Lst : IntDyneVec; NoPoints : integer);
+procedure TAvgLinkFrm.TreePlot(Clusters: IntDyneMat; Lst: IntDyneVec;
+  NoPoints: integer; AReport: TStrings);
 VAR
      outline : array[0..501] of char;
      aline : array[0..82] of char;
@@ -308,15 +315,14 @@ VAR
      Results : StrDyneVec;
      ColPos : IntDyneVec;
      i, j, k, L, linecount, newcol, howlong, count: integer;
-     done : boolean;
 begin
      linecount := 1;
      star := '*';
      blank := ' ';
      SetLength(ColPos,NoPoints+2);
      SetLength(Results,NoPoints*2+3);
-     OutputFrm.RichEdit.Lines.Add('');
-     done := false;
+     //AReport.Add('');
+
      // store initial column positions of vertical linkages
      for i := 1 to NoPoints do ColPos[Lst[i]] := 4 + (i * 5);
 
@@ -340,7 +346,7 @@ begin
      for i := 1 to NoPoints - 1 do
      begin
          outline := '';
-         valstr := format('%5d',[i]); // put step no. first
+         valstr := Format('%5d',[i]); // put step no. first
          outline := valstr;
          // clear remainder of outline
          for j := 5 to (5 + NoPoints * 5) do outline[j] := ' ';
@@ -384,21 +390,17 @@ begin
      if (noparts <= 0) then noparts := 1;
 
      if (noparts = 1) then // simply print the list
-     begin
          for i := 0 to linecount - 1 do
-         begin
-             OutputFrm.RichEdit.Lines.Add(Results[i]);
-         end;
-     end
+             AReport.Add(Results[i])
      else // break lines into strings of 15 units
      begin
          startcol := 0;
          endcol := 80;
          for i := 1 to noparts do
          begin
-             outline := format('PART %d OUTPUT',[i]);
-             OutputFrm.RichEdit.Lines.Add(outline);
-             for j := 0 to 80 do aline[j] := blank;
+             AReport.Add('PART %d OUTPUT', [i]);
+             for j := 0 to 80 do
+               aline[j] := blank;
 
              for j := 0 to linecount - 1 do
              begin
@@ -410,9 +412,9 @@ begin
                      count := count + 1;
                  end;
                  aline[count+1] := #0;
-                 OutputFrm.RichEdit.Lines.Add(aline);
+                 AReport.Add(aline);
              end;
-             OutputFrm.RichEdit.Lines.Add('');
+             AReport.Add('');
              startcol := endcol + 1;
              endcol := endcol + 80;
              if (endcol > howlong) then endcol := howlong;
@@ -422,25 +424,26 @@ begin
      ColPos := nil;
 end;
 
-procedure TAvgLinkFrm.PreTree(NN, CRIT : integer; LST : IntDyneVec; KLUS : IntDyneMat);
+procedure TAvgLinkFrm.PreTree(NN, CRIT: integer; LST: IntDyneVec;
+  KLUS: IntDyneMat; AReport: TStrings);
 VAR
-    I, II, J, NI, NJ, L, M, N, Ina, INEND, NHOLD, NLINES, INDX, ICOL, JCOL : integer;
-    KSH, JEND, MSH : integer;
-    JHOLD, NIN1 : IntDyneVec;
-    outline, outvalue : string;
-label label2015, label2020, label2030, label2040, label2055, label2060;
-
+    I, II, J, NI, NJ, L, M, N, Ina, INEND, NHOLD, NLINES, INDX, ICOL, JCOL: integer;
+    KSH, JEND, MSH: integer;
+    JHOLD, NIN1: IntDyneVec;
+    outline: string;
+label
+  label2015, label2020, label2030, label2040, label2055, label2060;
 begin
     // PRETRE procedure
     SetLength(JHOLD,NN+1);
     SetLength(NIN1,NN+1);
 //    int NN := nvalues;
     N := NN - 1;
-    outline := format('No. of objects := %3d',[NN]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    if (CRIT = 0) then outline := 'Matrix defined similarities among objects.'
-    else outline := 'Matrix defined dissimilarities among objects.';
-    OutputFrm.RichEdit.Lines.Add(outline);
+    AReport.Add('No. of objects: %3d', [NN]);
+    if (CRIT = 0) then
+      AReport.Add('Matrix defined similarities among objects.')
+    else
+      AReport.Add('Matrix defined dissimilarities among objects.');
 
     for I := 1 to NN do
     begin
@@ -509,13 +512,12 @@ label2060:
         for J := 1 to 20 do
         begin
             INDX := INDX + 1;
-            if (INDX <= NN) then
-            begin
-                 outvalue := format(' %3d',[LST[INDX]]);
-                 outline := outline + outvalue;
-            end;
+            if (INDX <= NN) then                  // wp: This outline is not printed anywhere !!!
+                 outline := outline + Format(' %3d', [LST[INDX]]);
         end;
     end;
+    AReport.Add(outline);  // wp: added, without it outline would not be used anywhere
+
     NIN1 := nil;
     JHOLD := nil;
     // End of PRETRE procedure

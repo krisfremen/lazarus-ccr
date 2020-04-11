@@ -1,19 +1,19 @@
 object AvgLinkFrm: TAvgLinkFrm
   Left = 589
-  Height = 136
+  Height = 132
   Top = 409
-  Width = 382
+  Width = 383
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Average Linkage Hierarchical Clustering'
-  ClientHeight = 136
-  ClientWidth = 382
+  ClientHeight = 132
+  ClientWidth = 383
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
-  object RadioGroup1: TRadioGroup
+  object MatrixTypeGroup: TRadioGroup
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Owner
@@ -43,31 +43,13 @@ object AvgLinkFrm: TAvgLinkFrm
     )
     TabOrder = 0
   end
-  object CancelBtn: TButton
-    AnchorSideTop.Control = Bevel1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Side = asrBottom
-    Left = 147
-    Height = 25
-    Top = 96
-    Width = 62
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 2
-  end
   object ComputeBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Side = asrBottom
-    Left = 221
+    Left = 236
     Height = 25
     Top = 96
     Width = 76
@@ -75,48 +57,48 @@ object AvgLinkFrm: TAvgLinkFrm
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 3
+    TabOrder = 2
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 309
+    Left = 320
     Height = 25
     Top = 96
-    Width = 61
+    Width = 55
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 4
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 3
   end
   object HelpBtn: TButton
     Tag = 105
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Side = asrBottom
-    Left = 84
+    Left = 177
     Height = 25
     Top = 96
     Width = 51
     Anchors = [akTop, akRight]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -124,15 +106,15 @@ object AvgLinkFrm: TAvgLinkFrm
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = RadioGroup1
+    AnchorSideTop.Control = MatrixTypeGroup
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 80
-    Width = 382
+    Width = 383
     Anchors = [akTop, akLeft, akRight]
     Shape = bsBottomLine
   end
