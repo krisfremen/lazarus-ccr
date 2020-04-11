@@ -2,21 +2,21 @@ object KMeansFrm: TKMeansFrm
   Left = 664
   Height = 349
   Top = 318
-  Width = 407
+  Width = 422
   AutoSize = True
   Caption = 'k Means Clustering '
   ClientHeight = 349
-  ClientWidth = 407
+  ClientWidth = 422
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 106
+    Left = 201
     Height = 25
     Top = 316
     Width = 54
@@ -30,29 +30,11 @@ object KMeansFrm: TKMeansFrm
     OnClick = ResetBtnClick
     TabOrder = 3
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 172
-    Height = 25
-    Top = 316
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 4
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 246
+    Left = 267
     Height = 25
     Top = 316
     Width = 76
@@ -64,33 +46,33 @@ object KMeansFrm: TKMeansFrm
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 4
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 334
+    Left = 355
     Height = 25
     Top = 316
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 12
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
   end
   object HelpBtn: TButton
     Tag = 129
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 43
+    Left = 138
     Height = 25
     Top = 316
     Width = 51
@@ -108,11 +90,11 @@ object KMeansFrm: TKMeansFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 300
-    Width = 407
+    Width = 422
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
@@ -121,16 +103,17 @@ object KMeansFrm: TKMeansFrm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
     Left = 0
     Height = 101
-    Top = 0
-    Width = 407
-    Anchors = [akTop, akLeft, akRight]
+    Top = 199
+    Width = 422
+    Anchors = [akLeft, akRight, akBottom]
     AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 101
-    ClientWidth = 407
-    TabOrder = 0
+    ClientWidth = 422
+    TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = NoClustersEdit
@@ -235,22 +218,21 @@ object KMeansFrm: TKMeansFrm
   end
   object Panel2: TPanel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Panel1
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Bevel1
+    AnchorSideBottom.Control = Panel1
     Left = 0
     Height = 191
-    Top = 109
-    Width = 407
+    Top = 8
+    Width = 422
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoSize = True
     BorderSpacing.Top = 8
     BevelOuter = bvNone
     ClientHeight = 191
-    ClientWidth = 407
-    TabOrder = 1
+    ClientWidth = 422
+    TabOrder = 0
     object Label3: TLabel
       AnchorSideLeft.Control = Panel2
       AnchorSideTop.Control = Panel2
@@ -272,20 +254,21 @@ object KMeansFrm: TKMeansFrm
       Left = 8
       Height = 173
       Top = 18
-      Width = 164
+      Width = 172
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 3
       BorderSpacing.Right = 8
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object VarInBtn: TBitBtn
       AnchorSideLeft.Control = Panel2
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = VarList
-      Left = 189
+      Left = 197
       Height = 28
       Top = 18
       Width = 28
@@ -334,7 +317,7 @@ object KMeansFrm: TKMeansFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = VarInBtn
       AnchorSideTop.Side = asrBottom
-      Left = 189
+      Left = 197
       Height = 28
       Top = 50
       Width = 28
@@ -384,7 +367,7 @@ object KMeansFrm: TKMeansFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = VarOutBtn
       AnchorSideTop.Side = asrBottom
-      Left = 180
+      Left = 188
       Height = 25
       Top = 102
       Width = 46
@@ -395,7 +378,7 @@ object KMeansFrm: TKMeansFrm
       Spacing = 0
       TabOrder = 3
     end
-    object ListBox1: TListBox
+    object SelList: TListBox
       AnchorSideLeft.Control = AllBtn
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label4
@@ -404,21 +387,23 @@ object KMeansFrm: TKMeansFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Panel2
       AnchorSideBottom.Side = asrBottom
-      Left = 234
+      Left = 242
       Height = 173
       Top = 18
-      Width = 165
+      Width = 172
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 3
       BorderSpacing.Right = 8
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 4
     end
     object Label4: TLabel
-      AnchorSideLeft.Control = ListBox1
+      AnchorSideLeft.Control = SelList
       AnchorSideTop.Control = Panel2
-      Left = 234
+      Left = 242
       Height = 15
       Top = 0
       Width = 93
