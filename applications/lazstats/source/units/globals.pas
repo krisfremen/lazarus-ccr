@@ -90,6 +90,9 @@ const
 
   DIVIDER = '===========================================================================';
 
+  GRAPH_BACK_COLOR = clCream;
+  GRAPH_WALL_COLOR = clGray;
+  GRAPH_FLOOR_COLOR = clLtGray;
 
 implementation
 

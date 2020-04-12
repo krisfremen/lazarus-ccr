@@ -1,100 +1,81 @@
 object MedianPolishForm: TMedianPolishForm
   Left = 638
-  Height = 408
+  Height = 410
   Top = 340
-  Width = 462
+  Width = 472
   AutoSize = True
   Caption = 'Median Polishing for a Two-Way Table'
-  ClientHeight = 408
-  ClientWidth = 462
+  ClientHeight = 410
+  ClientWidth = 472
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = ResetBtnClick
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 161
-    Height = 25
-    Top = 375
-    Width = 54
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 100
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Reset'
-    OnClick = ResetBtnClick
-    TabOrder = 3
-  end
-  object CancelBtn: TButton
     AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 227
+    Left = 263
     Height = 25
-    Top = 375
-    Width = 62
+    Top = 377
+    Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Cancel = True
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 4
+    Caption = 'Reset'
+    OnClick = ResetBtnClick
+    TabOrder = 1
   end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 301
+    Left = 325
     Height = 25
-    Top = 375
+    Top = 377
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 2
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 389
+    Left = 409
     Height = 25
-    Top = 375
-    Width = 61
+    Top = 377
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 3
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 359
-    Width = 462
+    Top = 361
+    Width = 472
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
@@ -103,15 +84,16 @@ object MedianPolishForm: TMedianPolishForm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = NormChk
+    AnchorSideBottom.Control = Bevel1
     Left = 0
-    Height = 340
+    Height = 361
     Top = 0
-    Width = 462
+    Width = 472
     Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 340
-    ClientWidth = 462
+    ClientHeight = 361
+    ClientWidth = 472
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
@@ -129,58 +111,59 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = DepIn1
+      AnchorSideRight.Control = DepIn
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
       Left = 8
-      Height = 309
+      Height = 338
       Top = 23
-      Width = 201
+      Width = 206
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
       ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object DepVar: TEdit
-      AnchorSideLeft.Control = DepIn1
+      AnchorSideLeft.Control = DepIn
       AnchorSideLeft.Side = asrBottom
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = DepOut
       AnchorSideBottom.Side = asrBottom
-      Left = 253
+      Left = 258
       Height = 23
       Top = 48
-      Width = 201
+      Width = 206
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 4
       Text = 'DepVar'
     end
-    object DepIn1: TBitBtn
+    object DepIn: TBitBtn
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = VarList
-      Left = 217
+      Left = 222
       Height = 28
       Top = 23
       Width = 28
       Images = MainDataModule.ImageList
       ImageIndex = 1
-      OnClick = DepIn1Click
+      OnClick = DepInClick
       Spacing = 0
       TabOrder = 1
     end
     object DepOut: TBitBtn
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = DepIn1
+      AnchorSideTop.Control = DepIn
       AnchorSideTop.Side = asrBottom
-      Left = 217
+      Left = 222
       Height = 28
       Top = 55
       Width = 28
@@ -196,7 +179,7 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = DepOut
       AnchorSideTop.Side = asrBottom
-      Left = 217
+      Left = 222
       Height = 28
       Top = 107
       Width = 28
@@ -212,7 +195,7 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Fact1In
       AnchorSideTop.Side = asrBottom
-      Left = 217
+      Left = 222
       Height = 28
       Top = 139
       Width = 28
@@ -228,7 +211,7 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Fact1Out
       AnchorSideTop.Side = asrBottom
-      Left = 217
+      Left = 222
       Height = 28
       Top = 191
       Width = 28
@@ -244,7 +227,7 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Fact2In
       AnchorSideTop.Side = asrBottom
-      Left = 217
+      Left = 222
       Height = 28
       Top = 222
       Width = 28
@@ -262,16 +245,17 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Fact1Out
       AnchorSideBottom.Side = asrBottom
-      Left = 253
+      Left = 258
       Height = 23
       Top = 132
-      Width = 201
+      Width = 206
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 7
-      Text = 'Edit1'
+      Text = 'Factor1'
     end
     object Factor2: TEdit
       AnchorSideLeft.Control = Fact2In
@@ -280,22 +264,23 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Fact2Out
       AnchorSideBottom.Side = asrBottom
-      Left = 253
+      Left = 258
       Height = 23
       Top = 215
-      Width = 201
+      Width = 206
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 10
-      Text = 'Edit1'
+      Text = 'Factor2'
     end
     object Label4: TLabel
       AnchorSideLeft.Control = Fact2Out
       AnchorSideTop.Control = Fact2Out
       AnchorSideTop.Side = asrBottom
-      Left = 217
+      Left = 222
       Height = 15
       Top = 274
       Width = 81
@@ -308,10 +293,11 @@ object MedianPolishForm: TMedianPolishForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label4
       AnchorSideTop.Side = asrCenter
-      Left = 306
+      Left = 311
       Height = 23
       Top = 270
       Width = 35
+      Alignment = taRightJustify
       BorderSpacing.Left = 8
       TabOrder = 11
       Text = '5'
@@ -319,7 +305,7 @@ object MedianPolishForm: TMedianPolishForm
     object StaticText1: TStaticText
       AnchorSideLeft.Control = DepVar
       AnchorSideBottom.Control = DepVar
-      Left = 253
+      Left = 258
       Height = 15
       Top = 31
       Width = 73
@@ -331,7 +317,7 @@ object MedianPolishForm: TMedianPolishForm
     object Label2: TLabel
       AnchorSideLeft.Control = Factor1
       AnchorSideBottom.Control = Factor1
-      Left = 253
+      Left = 258
       Height = 15
       Top = 115
       Width = 42
@@ -343,7 +329,7 @@ object MedianPolishForm: TMedianPolishForm
     object Label3: TLabel
       AnchorSideLeft.Control = Factor2
       AnchorSideBottom.Control = Factor2
-      Left = 253
+      Left = 258
       Height = 15
       Top = 198
       Width = 42
@@ -352,32 +338,31 @@ object MedianPolishForm: TMedianPolishForm
       Caption = 'Factor 2'
       ParentColor = False
     end
-  end
-  object ItersBtn: TRadioButton
-    AnchorSideLeft.Control = NormChk
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = NormChk
-    AnchorSideTop.Side = asrCenter
-    Left = 258
-    Height = 19
-    Top = 340
-    Width = 182
-    BorderSpacing.Left = 16
-    BorderSpacing.Right = 8
-    Caption = 'Show Results for Each Iteration'
-    TabOrder = 2
-    Visible = False
-  end
-  object NormChk: TCheckBox
-    AnchorSideLeft.Control = Owner
-    AnchorSideBottom.Control = Bevel1
-    Left = 8
-    Height = 19
-    Top = 340
-    Width = 234
-    Anchors = [akLeft, akBottom]
-    BorderSpacing.Left = 8
-    Caption = 'Show Bill Miller''s Normalizing Procedure'
-    TabOrder = 1
+    object NormChk: TCheckBox
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = MaxEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 222
+      Height = 19
+      Top = 305
+      Width = 234
+      BorderSpacing.Top = 12
+      Caption = 'Show Bill Miller''s Normalizing Procedure'
+      TabOrder = 12
+    end
+    object ItersBtn: TRadioButton
+      AnchorSideLeft.Control = DepIn
+      AnchorSideTop.Control = NormChk
+      AnchorSideTop.Side = asrBottom
+      Left = 222
+      Height = 19
+      Top = 328
+      Width = 182
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 8
+      Caption = 'Show Results for Each Iteration'
+      TabOrder = 13
+      Visible = False
+    end
   end
 end
