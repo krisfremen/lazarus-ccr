@@ -154,93 +154,74 @@ object CorrespondenceForm: TCorrespondenceForm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 261
+    Left = 353
     Height = 25
     Top = 503
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 3
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 327
-    Height = 25
-    Top = 503
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Cancel = True
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 4
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 401
+    Left = 415
     Height = 25
     Top = 503
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 4
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 489
+    Left = 499
     Height = 25
     Top = 503
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
   end
   object HelpBtn: TButton
     Tag = 160
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 198
+    Left = 294
     Height = 25
     Top = 503
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -267,7 +248,7 @@ object CorrespondenceForm: TCorrespondenceForm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 487
@@ -319,6 +300,7 @@ object CorrespondenceForm: TCorrespondenceForm
       BorderSpacing.Right = 8
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = ColListSelectionChange
       TabOrder = 0
     end
     object RowIn: TBitBtn
@@ -423,6 +405,7 @@ object CorrespondenceForm: TCorrespondenceForm
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 3
       Text = 'RowEdit'
     end
@@ -442,6 +425,8 @@ object CorrespondenceForm: TCorrespondenceForm
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = ColListSelectionChange
       TabOrder = 6
     end
   end
