@@ -1252,6 +1252,9 @@ end;          }
 
 procedure TOS3MainFrm.FormCreate(Sender: TObject);
 begin
+  // Reduce ultra-wide width of Inputbox windows
+  cInputQueryEditSizePercents := 0;
+
   if DictionaryFrm = nil then
     Application.CreateForm(TDictionaryFrm, DictionaryFrm);
 
@@ -1651,15 +1654,31 @@ end;
 // Menu "Analyses" > "Brown-Forsythe test for homogeneity of variance"
 procedure TOS3MainFrm.homotestClick(Sender: TObject);
 Var
-  response : string;
-  GroupCol, VarColumn,NoCases : integer;
+  response: string;
+  GroupCol, VarCol, NoCases: integer;
 begin
-  response := InputBox('Column no. of group codes:','Column?','1');
-  GroupCol := StrToInt(response);
-  response := InputBox('Column no. of dependent variable:','Column','2');
-  VarColumn := StrToInt(response);
+  response := '1';
+  repeat
+    if not InputQuery('Column of group codes', 'Column index', response) then
+      exit;
+    if TryStrToInt(response, GroupCol) and (GroupCol > 0) then
+      break
+    else
+      MessageDlg('Illegal value entered for index of group column.', mtError, [mbOk], 0);
+  until false;
+
+  response := '2';
+  repeat
+    if not InputQuery('Column of dependent variable', 'Column index', response) then
+      exit;
+    if TryStrToInt(response, VarCol) then
+      break
+    else
+      MessageDlg('Illegal value entered for index of variable column.', mtError, [mbOK], 0);
+  until false;
+
   NoCases := StrToInt(NoCasesEdit.text);
-  HomogeneityTest(GroupCol, VarColumn, NoCases);
+  HomogeneityTest(GroupCol, VarCol, NoCases);
 end;
 
 // Menu "Simulations" > "Hypergeometric probability"
