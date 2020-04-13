@@ -2,6 +2,9 @@
 //     Tried to reproduce https://www.youtube.com/watch?v=RtC9ZMOYgk8
 //     --> does not work...
 
+// wp: a file with reasonable output is LesMaySmoothin.laz with x -> dep,
+//     row --> Factor 1, col --> Factor2.
+
 unit MedianPolishUnit;
 
 {$mode objfpc}{$H+}
@@ -732,8 +735,8 @@ end;
 procedure TMedianPolishForm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
+  if GraphFrm = nil then
+    Application.CreateForm(TGraphFrm, GraphFrm);
 end;
 
 function TMedianPolishForm.Median(const X: DblDyneVec; ASize: integer): double;
