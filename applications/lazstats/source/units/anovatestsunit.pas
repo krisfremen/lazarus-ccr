@@ -590,8 +590,18 @@ Var
    cellvars : DblDyneVec;
    cellsums : DblDyneVec;
    X, X2, temp : double;
-   outline : string;
 begin
+     if GroupCol >= OS3MainFrm.DataGrid.ColCount then
+     begin
+       MessageDlg('Invalid index of group column', mtError, [mbOK], 0);
+       exit;
+     end;
+     if VarColumn >= OS3MainFrm.DataGrid.ColCount then
+     begin
+       Messagedlg('Invalid index of variable column', mtError, [mbOK], 0);
+       exit;
+     end;
+
      // complete a one-way anova on z scores obtained as the absolute difference
      // between between the observed score and the median of a group.
 
@@ -681,8 +691,8 @@ begin
                OS3MainFrm.DataGrid.Cells[VarColumn,k] := FloatToStr(abs(zscores[i,j]));
           end;
      end;
-     outline := 'Data have been placed in the grid.  Do a one-way ANOVA';
-     ShowMessage(outline);
+
+     MessageDlg('Data have been placed in the grid.  Do a one-way ANOVA', mtInformation, [mbOK], 0);
 end;
 
 end.
