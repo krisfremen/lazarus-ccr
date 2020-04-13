@@ -160,12 +160,12 @@ object DataSmoothingForm: TDataSmoothingForm
     Left = 8
     Height = 19
     Top = 316
-    Width = 188
+    Width = 122
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Bottom = 4
-    Caption = 'Repeat Smoothing No. Times = '
+    Caption = 'Execute smoothing'
     TabOrder = 7
   end
   object RepeatEdit: TEdit
@@ -173,7 +173,7 @@ object DataSmoothingForm: TDataSmoothingForm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = RepeatChk
     AnchorSideTop.Side = asrCenter
-    Left = 204
+    Left = 138
     Height = 23
     Top = 314
     Width = 32
@@ -211,5 +211,18 @@ object DataSmoothingForm: TDataSmoothingForm
     Caption = 'This procedure smooths data by averaging every three data points starting with the first three to the last three.  The data smoothing can be repeated multiple times. The first and last data points are unchanged.'
     ParentColor = False
     WordWrap = True
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = RepeatEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = RepeatEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 178
+    Height = 15
+    Top = 318
+    Width = 29
+    BorderSpacing.Left = 8
+    Caption = 'times'
+    ParentColor = False
   end
 end

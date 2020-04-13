@@ -15,6 +15,7 @@ type
 
   TDataSmoothingForm = class(TForm)
     Bevel1: TBevel;
+    Label3: TLabel;
     Memo1: TLabel;
     RepeatEdit: TEdit;
     RepeatChk: TCheckBox;
@@ -66,51 +67,66 @@ end;
 
 procedure TDataSmoothingForm.ComputeBtnClick(Sender: TObject);
 var
-   DataPts, OutPts : DblDyneVec;
-   avalue, avg : double;
-   N, Reps, i, j, VarCol : integer;
-   VarLabel, strvalue : string;
+  DataPts, OutPts: DblDyneVec;
+  N, Reps, i, j, VarCol: integer;
+  VarLabel, strValue: string;
 begin
-     N := NoCases;
-     SetLength(DataPts,N);
-     SetLength(OutPts,N);
-     Reps := StrToInt(RepeatEdit.Text);
-     Varlabel := SelectedEdit.Text;
-     for i := 1 to NoVariables do
-       if VarLabel = OS3MainFrm.DataGrid.Cells[i,0] then VarCol := i;
-     for i := 0 to N - 1 do
-     begin
-       avalue := StrToFloat(OS3MainFrm.DataGrid.Cells[VarCol,i+1]);
-       DataPts[i] := avalue;
-     end;
+  if SelectedEdit.Text = '' then
+  begin
+    MessageDlg('No variable selected.', mtError, [mbOk], 0);
+    exit;
+  end;
 
-     // repeat smoothing for number of times elected
-     OutPts[0] := DataPts[0];
-     OutPts[N-1] := DataPts[N-1];
-     for j := 1 to Reps do
-     begin
-       for i := 1 to N - 2 do
-       begin
-         avg := (DataPts[i-1] + DataPts[i] + DataPts[i+1]) / 3.0;
-         OutPts[i] := avg;
-       end;
-       if j < reps then
-          for i := 0 to N - 1 do DataPts[i] := OutPts[i];
-     end;
-     // create a new variable and copy smoothed data into it
-     strvalue := 'Smoothed' + VarLabel;
-     DictionaryFrm.NewVar(NoVariables+1);
-     DictionaryFrm.DictGrid.Cells[1,NoVariables] := strvalue;
-     OS3MainFrm.DataGrid.Cells[NoVariables,0] := strvalue;
-     for i := 0 to N - 1 do
-     begin
-         strvalue := format('%9.3f',[OutPts[i]]);
-         OS3MainFrm.DataGrid.Cells[NoVariables,i+1] := strvalue;
-     end;
+  if RepeatChk.Checked then
+  begin
+    if RepeatEdit.Text = '' then
+    begin
+      MessageDlg('Repeat count not specified.', mtError, [mbOK], 0);
+      exit;
+    end;
+    if not TryStrToInt(RepeatEdit.Text, Reps) and (Reps < 1) then
+    begin
+      MessageDlg('Repeat count must be >= 1.', mtError, [mbOK], 0);
+      exit;
+    end;
+  end else
+    Reps := 1;
 
-     // clean up
-     OutPts := nil;
-     DataPts := nil;
+  N := NoCases;
+  SetLength(DataPts,N);
+  SetLength(OutPts,N);
+
+  Varlabel := SelectedEdit.Text;
+  for i := 1 to NoVariables do
+    if VarLabel = OS3MainFrm.DataGrid.Cells[i,0] then VarCol := i;
+  for i := 0 to N - 1 do
+    DataPts[i] := StrToFloat(OS3MainFrm.DataGrid.Cells[VarCol,i+1]);
+
+  // repeat smoothing for number of times elected
+  OutPts[0] := DataPts[0];
+  OutPts[N-1] := DataPts[N-1];
+  for j := 1 to Reps do
+  begin
+    for i := 1 to N - 2 do
+      OutPts[i] := (DataPts[i-1] + DataPts[i] + DataPts[i+1]) / 3.0;
+    if j < reps then
+      for i := 0 to N - 1 do DataPts[i] := OutPts[i];
+  end;
+
+  // create a new variable and copy smoothed data into it
+  if Reps = 1 then
+    strvalue := Format('%s_Smoothed', [VarLabel])
+  else
+    strvalue := Format('%s_Smoothed_%dx', [VarLabel, Reps]);
+  DictionaryFrm.NewVar(NoVariables+1);
+  DictionaryFrm.DictGrid.Cells[1,NoVariables] := strvalue;
+  OS3MainFrm.DataGrid.Cells[NoVariables,0] := strvalue;
+  for i := 0 to N - 1 do
+    OS3MainFrm.DataGrid.Cells[NoVariables,i+1] := Format('%0.3f', [OutPts[i]]);
+
+  // clean up
+  OutPts := nil;
+  DataPts := nil;
 end;
 
 procedure TDataSmoothingForm.FormActivate(Sender: TObject);

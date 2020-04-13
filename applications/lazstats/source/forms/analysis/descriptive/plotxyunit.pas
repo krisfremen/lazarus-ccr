@@ -50,7 +50,7 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
-    procedure plotxy(VAR Xpoints : DblDyneVec;
+    procedure PlotXY(VAR Xpoints : DblDyneVec;
                      VAR Ypoints : DblDyneVec;
                      VAR UpConf : DblDyneVec;
                      VAR LowConf : DblDyneVec;
@@ -112,19 +112,22 @@ var
   index: integer;
 begin
   index := VarList.ItemIndex;
-  if index > -1 then
+  if (index > -1) and (XEdit.Text = '') then
   begin
     XEdit.Text := VarList.Items[index];
     VarList.Items.Delete(index);
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TPlotXYFrm.XOutBtnClick(Sender: TObject);
 begin
-  VarList.Items.Add(XEdit.Text);
-  XEdit.Text := '';
-  UpdateBtnStates;
+  if XEdit.Text <> '' then
+  begin
+    VarList.Items.Add(XEdit.Text);
+    XEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TPlotXYFrm.YInBtnClick(Sender: TObject);
@@ -132,19 +135,22 @@ var
   index: integer;
 begin
   index := VarList.ItemIndex;
-  if index > -1 then
+  if (index > -1) and (YEdit.Text = '') then
   begin
     YEdit.Text := VarList.Items[index];
     VarList.Items.Delete(index);
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TPlotXYFrm.YOutBtnClick(Sender: TObject);
 begin
-  VarList.Items.Add(YEdit.Text);
-  YEdit.Text := '';
-  UpdateBtnStates;
+  if YEdit.Text <> '' then
+  begin
+    VarList.Items.Add(YEdit.Text);
+    YEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TPlotXYFrm.FormShow(Sender: TObject);
@@ -454,7 +460,7 @@ begin
           BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
           ypos := ypos + 10;
           BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          Title := format('%6.2f',[Xvalue]);
+          Title := format('%.2f',[Xvalue]);
           offset := BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
           xpos := xpos - offset;
           BlankFrm.Image1.Canvas.Pen.Color := clBlack;

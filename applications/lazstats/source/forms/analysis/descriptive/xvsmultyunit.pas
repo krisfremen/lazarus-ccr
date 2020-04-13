@@ -64,7 +64,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TXvsMultYForm }
 
@@ -439,7 +439,14 @@ begin
 end;
 
 procedure TXvsMultYForm.UpdateBtnStates;
+var
+  lSelected: Boolean;
 begin
+  lSelected := AnySelected(VarList);
+  XInBtn.Enabled := lSelected and (XEdit.Text = '');
+  YInBtn.Enabled := lSelected;
+  xOutBtn.Enabled := (XEdit.Text <> '');
+  YOutBtn.Enabled := AnySelected(YBox);
 end;
 
 initialization
