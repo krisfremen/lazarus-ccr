@@ -17,9 +17,8 @@ type
     Bevel1: TBevel;
     Panel1: TPanel;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     NoItemsEdit: TEdit;
     NoCasesEdit: TEdit;
     MeanEdit: TEdit;
@@ -43,6 +42,7 @@ type
     procedure SDEditKeyPress(Sender: TObject; var Key: char);
   private
     { private declarations }
+    function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
   public
     { public declarations }
   end; 
@@ -76,19 +76,32 @@ begin
 end;
 
 procedure TTestGenFrm.ComputeBtnClick(Sender: TObject);
-Var
+var
     test_var, true_var, total_item_var, true_item_var : double;
     error_item_var, true_score, reliability, tempmean : double;
     test_stddev, test_mean, X, error_score : double;
     random_mean : DblDyneVec;
     i, k, no_cases, no_items, itemtype, col : integer;
     outline : string;
+    msg: String;
+    C: TWinControl;
+    res: Integer;
 
 begin
-    if ((NoCases > 0) or (NoVariables > 0)) then
+    if (NoCases > 0) or (NoVariables > 0) then
     begin
-        ShowMessage('You must first close the current file.');
-        exit;
+        res := MessageDlg('You must first close the current file. Close it now?', mtConfirmation, [mbYes, mbNo], 0);
+        case res of
+          mrYes: OS3MainFrm.CloseFileBtnClick(nil);
+          mrNo:  exit;
+        end;
+    end;
+
+    if not Validate(msg, C) then
+    begin
+      C.SetFocus;
+      MessageDlg(msg, mtError, [mbOk], 0);
+      exit;
     end;
 
     itemtype := Options.ItemIndex; // 0 = T-F, 1 = continuous
@@ -99,8 +112,7 @@ begin
     no_items := StrToInt(NoItemsEdit.Text);
     no_cases := StrToInt(NoCasesEdit.Text);
     test_mean := StrToFloat(MeanEdit.Text);
-    total_item_var := (test_var / no_items) * (1.0 -
-        ((no_items - 1) / no_items) * reliability);
+    total_item_var := (test_var / no_items) * (1.0 - ((no_items - 1) / no_items) * reliability);
     true_item_var := total_item_var * reliability;
     error_item_var := total_item_var - true_item_var;
     tempmean := test_mean / no_items;
@@ -119,7 +131,17 @@ begin
         outline := format('Item%d',[i]);
         DictionaryFrm.DictGrid.RowCount := i;
         DictionaryFrm.NewVar(col);
-        DictionaryFrm.DictGrid.Cells[1,col] := outline;
+        DictionaryFrm.DictGrid.Cells[1, i] := outline;
+        if itemtype = 0 then
+        begin
+          DictionaryFrm.DictGrid.Cells[4, i] := 'I';
+          DictionaryFrm.DictGrid.Cells[5, i] := '0';
+        end else
+        begin
+          DictionaryFrm.DictGrid.Cells[4, i] := 'F';
+          DictionaryFrm.DictGrid.Cells[5, i] := '4';
+        end;
+        Dictionaryfrm.DictGrid.Cells[7, i] := 'R';
         OS3MainFrm.DataGrid.Cells[col,0] := outline;
     end;
     for i := 1 to no_cases do
@@ -133,7 +155,7 @@ begin
     end;
     for k := 1 to no_cases do
     begin
-        true_score := RandG(0.0,sqrt(true_var));
+        true_score := RandG(0.0, sqrt(true_var));
         true_score := true_score / no_items;
         for i := 1 to no_items do
         begin
@@ -144,8 +166,10 @@ begin
                 if (X >= random_mean[i-1]) then  X := 1.0
                 else X := 0.0;
             end;
-            if (itemtype = 0) then outline := format('%2.0f',[X])
-            else outline := format('%6.4f',[X]);
+            if (itemtype = 0) then
+              outline := format('%.0f',[X])
+            else
+              outline := format('%.4f',[X]);
             OS3MainFrm.DataGrid.Cells[i,k] := outline;
         end; // end item loop
     end; // end case loop
@@ -158,7 +182,8 @@ begin
     OS3MainFrm.DataGrid.Col := 1;
     OS3MainFrm.RowEdit.Text := IntToStr(no_cases);
     OS3MainFrm.ColEdit.Text := IntToStr(no_items);
-    OS3MainFrm.FileNameEdit.Text := 'GenTest.LAZ';
+    OS3MainFrm.FileNameEdit.Text := 'GenTest.laz';
+
     // clean up the heap
     random_mean := nil;
 end;
@@ -167,11 +192,10 @@ procedure TTestGenFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MaxHeight := Height;
   Constraints.MinHeight := Height;
@@ -202,6 +226,81 @@ end;
 procedure TTestGenFrm.RelEditKeyPress(Sender: TObject; var Key: char);
 begin
      if Ord(Key) = 13 then ComputeBtn.SetFocus;
+end;
+
+function TTestGenFrm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;
+var
+  n: Integer;
+  x: Double;
+begin
+  Result := false;
+
+  if NoItemsEdit.Text = '' then
+  begin
+    AControl := NoItemsEdit;
+    AMsg := 'Number of items not specified.';
+    exit;
+  end;
+  if not (TryStrToInt(NoItemsEdit.Text, n) and (n > 0)) then
+  begin
+    AControl := NoItemsEdit;
+    AMsg := 'Illegal value given for Number of items.';
+    exit;
+  end;
+
+  if NoCasesEdit.Text = '' then
+  begin
+    AControl := NoCasesEdit;
+    AMsg := 'Number of subjects not specified.';
+    exit;
+  end;
+  if not (TryStrToInt(NoCasesEdit.Text, n) and (n > 0)) then
+  begin
+    AControl := NoCasesEdit;
+    AMsg := 'Illegal value given for Number of subjects.';
+    exit;
+  end;
+
+  if MeanEdit.Text = '' then
+  begin
+    AControl := MeanEdit;
+    AMsg := 'Mean not specified.';
+    exit;
+  end;
+  if not TryStrToFloat(MeanEdit.Text, x) then
+  begin
+    AControl := MeanEdit;
+    AMsg := 'Numeric input expected for mean.';
+    exit;
+  end;
+
+  if SDEdit.Text = '' then
+  begin
+    AControl := SDEdit;
+    AMsg := 'Standard deviation not specified.';
+    exit;
+  end;
+  if not (TryStrToFloat(SDEdit.Text, x) and (x > 0)) then
+  begin
+    AControl := SDEdit;
+    AMsg := 'Numeric input expected for standrad deviation.';
+    exit;
+  end;
+
+  if RelEdit.Text = '' then
+  begin
+    AControl := RelEdit;
+    AMsg := 'Test reliability not specified.';
+    exit;
+  end;
+  if not TryStrToFloat(RelEdit.Text, x) then
+  begin
+    AControl := RelEdit;
+    AMsg := 'Numeric input expected for test reliability.';
+    exit;
+  end;
+
+  Result := true;
 end;
 
 initialization
