@@ -1,11 +1,11 @@
 object SuccIntFrm: TSuccIntFrm
   Left = 864
-  Height = 326
+  Height = 282
   Top = 391
   Width = 335
   AutoSize = True
   Caption = 'Successive Interval Scaling'
-  ClientHeight = 326
+  ClientHeight = 282
   ClientWidth = 335
   OnActivate = FormActivate
   OnCreate = FormCreate
@@ -41,7 +41,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideRight.Control = AllBtn
     AnchorSideBottom.Control = Bevel1
     Left = 8
-    Height = 252
+    Height = 208
     Top = 25
     Width = 128
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -91,7 +91,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideTop.Side = asrCenter
     Left = 144
     Height = 25
-    Top = 139
+    Top = 117
     Width = 46
     AutoSize = True
     Caption = 'ALL'
@@ -108,7 +108,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 198
-    Height = 252
+    Height = 208
     Top = 25
     Width = 129
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -126,7 +126,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideBottom.Side = asrBottom
     Left = 126
     Height = 25
-    Top = 293
+    Top = 249
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -144,7 +144,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideBottom.Side = asrBottom
     Left = 188
     Height = 25
-    Top = 293
+    Top = 249
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -163,7 +163,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideBottom.Side = asrBottom
     Left = 272
     Height = 25
-    Top = 293
+    Top = 249
     Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -182,7 +182,7 @@ object SuccIntFrm: TSuccIntFrm
     AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 277
+    Top = 233
     Width = 335
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
