@@ -14,11 +14,11 @@ type
 
   TKR21Frm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     Panel1: TPanel;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     NoItemsEdit: TEdit;
     MeanEdit: TEdit;
     StdDevEdit: TEdit;
@@ -49,21 +49,20 @@ uses
 
 procedure TKR21Frm.ResetBtnClick(Sender: TObject);
 begin
-     NoItemsEdit.Text := '';
-     MeanEdit.Text := '';
-     StdDevEdit.Text := '';
-     RelEdit.Text := '';
+  NoItemsEdit.Text := '';
+  MeanEdit.Text := '';
+  StdDevEdit.Text := '';
+  RelEdit.Text := '';
 end;
 
 procedure TKR21Frm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 procedure TKR21Frm.FormShow(Sender: TObject);
@@ -73,14 +72,13 @@ end;
 
 procedure TKR21Frm.ComputeBtnClick(Sender: TObject);
 var
-   items, mean, stddev, rel : double;
+  items, mean, stddev, rel: double;
 begin
-     items := StrToFloat(NoItemsEdit.Text);
-     mean := StrToFloat(MeanEdit.Text);
-     stddev := StrToFloat(StdDevEdit.Text);
-     rel := (items / (items - 1.0)) * (1.0 - (mean * (items - mean))/
-          (items * sqr(stddev)));
-     RelEdit.Text := FormatFloat('0.00000', rel);  //FloatToStr(rel);
+  items := StrToFloat(NoItemsEdit.Text);
+  mean := StrToFloat(MeanEdit.Text);
+  stddev := StrToFloat(StdDevEdit.Text);
+  rel := (items / (items - 1.0)) * (1.0 - (mean * (items - mean))/(items * sqr(stddev)));
+  RelEdit.Text := FormatFloat('0.00000', rel);
 end;
 
 initialization
