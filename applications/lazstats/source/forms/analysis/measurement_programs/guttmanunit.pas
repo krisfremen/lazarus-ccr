@@ -20,7 +20,7 @@ type
     AllBtn: TBitBtn;
     ResetBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     Label1: TLabel;
     Label2: TLabel;
     ItemList: TListBox;
@@ -48,7 +48,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TGuttmanFrm }
 
@@ -75,10 +75,10 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MinWidth := Width + w;  // make form a bit wider...
   Constraints.MinHeight := Height;
@@ -484,9 +484,11 @@ begin
     end;
 
     lReport.Add('');
-    lReport.Add('No. of Cases := %3d.  No. of items := %3d',[NoCases,NoSelected]);
+    lReport.Add('No. of Cases: %3d', [NoCases]);
+    lReport.Add('No. of items: %3d', [NoSelected]);
     lReport.Add('');
     lReport.Add('RESPONSE MATRIX');
+    lReport.Add('');
     first := 1;
     last := first + 5; // column (item) index
     if (last > NoSelected) then last := NoSelected;
@@ -547,7 +549,7 @@ begin
     end;
     lReport.Add('');
     CoefRepro := 1.0 - (totalerrors / (NoCases * NoSelected));
-    lReport.Add('Coefficient of Reproducibility := %6.3f', [CoefRepro]);
+    lReport.Add('Coefficient of Reproducibility:   %6.3f', [CoefRepro]);
 
     for j := 1 to NoSelected do
       if (ColProps[j-1] > (1.0 - ColProps[j-1])) then
@@ -556,7 +558,7 @@ begin
         Min_Coeff := Min_Coeff + (1.0 - ColProps[j-1]);
     Min_Coeff := Min_coeff / NoSelected;
 
-    lReport.Add('Minimal Marginal Reproducibility := %6.3f', [Min_Coeff]);
+    lReport.Add('Minimal Marginal Reproducibility: %6.3f', [Min_Coeff]);
 
     DisplayReport(lReport);
   finally
@@ -618,28 +620,9 @@ begin
 end;
 
 procedure TGuttmanFrm.UpdateBtnStates;
-var
-  i: Integer;
-  lSelected: Boolean;
 begin
-  lSelected := false;
-  for i := 0 to VarList.Items.Count-1 do
-    if VarList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  InBtn.Enabled := lSelected;
-
-  lSelected := false;
-  for i := 0 to ItemList.Items.Count-1 do
-    if ItemList.Selected[i] then
-    begin
-      lSelected := true;
-      break;
-    end;
-  OutBtn.Enabled := lSelected;
-
+  InBtn.Enabled := AnySelected(Varlist);
+  OutBtn.Enabled := AnySelected(Itemlist);
   AllBtn.Enabled := VarList.Items.Count > 0;
 end;
 

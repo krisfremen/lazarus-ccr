@@ -118,7 +118,7 @@ object GuttmanFrm: TGuttmanFrm
     AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 163
+    Left = 169
     Height = 25
     Top = 274
     Width = 54
@@ -133,10 +133,10 @@ object GuttmanFrm: TGuttmanFrm
     TabOrder = 5
   end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 225
+    Left = 231
     Height = 25
     Top = 274
     Width = 76
@@ -150,30 +150,30 @@ object GuttmanFrm: TGuttmanFrm
     OnClick = ComputeBtnClick
     TabOrder = 6
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 309
+    Left = 315
     Height = 25
     Top = 274
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
+    Caption = 'Close'
+    ModalResult = 11
     TabOrder = 7
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 258
