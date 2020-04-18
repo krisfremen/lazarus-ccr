@@ -195,15 +195,15 @@ begin
 
   // get variable col. no.s selected
   NoVars := ItemList.Items.Count;
-  for i := 1 to NoVars do
+  for i := 0 to NoVars-1 do
   begin
-    cellstring := ItemList.Items.Strings[i-1];
+    cellstring := ItemList.Items.Strings[i];
     for j := 1 to NoVariables do
     begin
       if (cellstring = OS3MainFrm.DataGrid.Cells[j,0]) then
       begin
-        colnoselected[i-1] := j;
-        RowLabels[i-1] := cellstring;
+        colnoselected[i] := j;
+        RowLabels[i] := cellstring;
       end;
     end;
   end;
@@ -234,34 +234,35 @@ begin
       DynVectorPrint(stddevs, NoVars, title, RowLabels, count, lReport);
     end;
 
-    for i := 1 to NoVars do
-      for j := 1 to NoVars do
-        RelMat[i-1,j-1] := Rmat[i-1,j-1];
+    for i := 0 to NoVars do
+      for j := 0 to NoVars do
+        RelMat[i, j] := Rmat[i, j];
 
-    for i := 1 to NoVars do
+    for i := 0 to NoVars-1 do
     begin
-      Reliabilities[i-1] := StrToFloat(RelList.Items.Strings[i-1]);
-      RelMat[i-1,i-1] := Reliabilities[i-1];
-      Weights[i-1] := StrToFloat(WeightList.Items.Strings[i-1]);
+      Reliabilities[i] := StrToFloat(RelList.Items.Strings[i]);
+      RelMat[i, i] := Reliabilities[i];
+      Weights[i] := StrToFloat(WeightList.Items.Strings[i]);
     end;
 
     // get numerator and denominator of composite reliability
-    for i := 1 to NoVars do VectProd[i-1] := 0.0;
+    for i := 0 to NoVars-1 do
+      VectProd[i] := 0.0;
     numerator := 0.0;
     denominator := 0.0;
-    for i := 1 to NoVars do
-      for j := 1 to NoVars do
-        VectProd[i-1] := VectProd[i-1] + (Weights[i-1] * RelMat[j-1,i-1]);
-    for i := 1 to NoVars do
-      numerator := numerator + (VectProd[i-1] * Weights[i-1]);
+    for i := 0 to NoVars-1 do
+      for j := 0 to NoVars-1 do
+        VectProd[i] := VectProd[i] + (Weights[i] * RelMat[j, i]);
+    for i := 0 to NoVars-1 do
+      numerator := numerator + (VectProd[i] * Weights[i]);
 
-    for i := 1 to NoVars do
-      VectProd[i-1] := 0.0;
-    for i := 1 to NoVars do
-      for j := 1 to NoVars do
-        VectProd[i-1] := VectProd[i-1] + (Weights[i-1] * Rmat[j-1,i-1]);
-    for i := 1 to NoVars do
-      denominator := denominator + VectProd[i-1] * Weights[i-1];
+    for i := 0 to NoVars-1 do
+      VectProd[i] := 0.0;
+    for i := 0 to NoVars-1 do
+      for j := 0 to NoVars-1 do
+        VectProd[i] := VectProd[i] + (Weights[i] * Rmat[j, i]);
+    for i := 0 to NoVars-1 do
+      denominator := denominator + VectProd[i] * Weights[i];
     CompRel := numerator / denominator;
 
     title := 'Test Weights';
@@ -283,10 +284,11 @@ begin
       col := NoVariables;
       for i := 1 to NoCases do
       begin
+        if not GoodRecord(i, NoVars, ColNoSelected) then
+          continue;
         compscore := 0.0;
-        if not GoodRecord(i, NoVars, ColNoSelected) then continue;
-        for j := 1 to NoVars do
-          compscore := compscore + (Weights[j-1] * StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[colnoselected[j-1],i])));
+        for j := 0 to NoVars-1 do
+          compscore := compscore + (Weights[j] * StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[colnoselected[j],i])));
         OS3MainFrm.DataGrid.Cells[col,i] := FloatToStr(compscore);
       end;
     end;
