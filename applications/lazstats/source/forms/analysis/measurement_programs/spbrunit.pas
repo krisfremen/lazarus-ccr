@@ -15,12 +15,12 @@ type
 
   TSpBrFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     HelpBtn: TButton;
     Panel1: TPanel;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     OldRelEdit: TEdit;
     MultKEdit: TEdit;
     NewRelEdit: TEdit;
@@ -59,11 +59,11 @@ procedure TSpBrFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width, HelpBtn.Width]);
+  HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MaxHeight := Height;
   Constraints.MinHeight := Height;
@@ -78,12 +78,12 @@ procedure TSpBrFrm.HelpBtnClick(Sender: TObject);
 begin
   if ContextHelpForm = nil then
     Application.CreateForm(TContextHelpForm, ContextHelpForm);
-  ContextHelpForm.HelpMessage((Sender as TButton).tag);
+  ContextHelpForm.HelpMessage((Sender as TButton).Tag);
 end;
 
 procedure TSpBrFrm.ComputeBtnClick(Sender: TObject);
 var
-  oldrel, newrel, Factor : double;
+  oldrel, newrel, Factor: double;
 begin
   oldrel := StrToFloat(OldRelEdit.Text);
   Factor := StrToFloat(MultKEdit.Text);
