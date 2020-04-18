@@ -1,3 +1,5 @@
+// File for testing: CompRelData.laz, use all variables
+
 unit CompRelUnit;
 
 {$mode objfpc}{$H+}
@@ -22,9 +24,8 @@ type
     OutBtn: TBitBtn;
     AllBtn: TBitBtn;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     RMatChk: TCheckBox;
     GridScrChk: TCheckBox;
     GroupBox1: TGroupBox;
@@ -44,6 +45,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure InBtnClick(Sender: TObject);
+    procedure ItemListSelectionChange(Sender: TObject; User: boolean);
     procedure OutBtnClick(Sender: TObject);
     procedure RelListClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
@@ -51,6 +53,7 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
+    procedure UpdateBtnStates;
   public
     { public declarations }
   end; 
@@ -61,30 +64,31 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
+
 { TCompRelFrm }
 
 procedure TCompRelFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     VarList.Clear;
-     ItemList.Clear;
-     RelList.Clear;
-     WeightList.Clear;
-     OutBtn.Enabled := false;
-     InBtn.Enabled := true;
-     for i := 1 to NoVariables do
-         VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  VarList.Clear;
+  ItemList.Clear;
+  RelList.Clear;
+  WeightList.Clear;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  UpdateBtnStates;
 end;
 
 procedure TCompRelFrm.WeightListClick(Sender: TObject);
 var
-   response : string;
-   index : integer;
+  response: string;
+  index: integer;
 begin
-     response := InputBox('Test Weight','Test weight = ','1.0');
-     index := WeightList.ItemIndex;
-     WeightList.Items.Strings[index] := response;
+  response := InputBox('Test Weight', 'Test weight:', '1.0');
+  index := WeightList.ItemIndex;
+  WeightList.Items.Strings[index] := response;
 end;
 
 procedure TCompRelFrm.FormActivate(Sender: TObject);
@@ -94,12 +98,11 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   w := Max(Label1.Width, Label3.Width);
   VarList.Constraints.MinWidth := w;
@@ -145,36 +148,39 @@ end;
 
 procedure TCompRelFrm.AllBtnClick(Sender: TObject);
 var
-   i, count : integer;
-   cellstring : string;
+  i, count : integer;
+  cellstring : string;
 begin
-     count := VarList.Items.Count;
-     for i := 1 to count do
-     begin
-         ItemList.Items.Add(VarList.Items.Strings[i-1]);
-         cellstring := '1.0';
-         RelList.Items.Add(cellstring);
-         WeightList.Items.Add(cellstring);
-     end;
-     VarList.Clear;
-     InBtn.Enabled := false;
-     OutBtn.Enabled := true;
+  cellstring := '1.0';
+  for i := 1 to VarList.Items.Count do
+  begin
+    ItemList.Items.Add(VarList.Items[i-1]);
+    RelList.Items.Add(cellstring);
+    WeightList.Items.Add(cellstring);
+  end;
+  VarList.Clear;
+  InBtn.Enabled := false;
+  OutBtn.Enabled := true;
 end;
 
 procedure TCompRelFrm.ComputeBtnClick(Sender: TObject);
 var
-   i, j, NoVars, count, col : integer;
-   Rmat, RelMat : DblDyneMat;
-   Weights, Reliabilities, VectProd, means, variances, stddevs : DblDyneVec;
-   CompRel, numerator, denominator, compscore : double;
-   colnoselected : IntDyneVec;
-   outline, cellstring : string;
-   title : string;
-   RowLabels : StrDyneVec;
-   errorcode : boolean = false;
+  errorcode: boolean = false;
+  i, j, NoVars, count, col: integer;
+  Rmat, RelMat: DblDyneMat;
+  Weights, Reliabilities, VectProd, means, variances, stddevs: DblDyneVec;
+  CompRel, numerator, denominator, compscore: double;
+  colnoselected: IntDyneVec;
+  outline, cellstring: string;
+  title: string;
+  RowLabels: StrDyneVec;
+  lReport: TStrings;
 begin
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
+  if ItemList.Count = 0 then
+  begin
+    MessageDlg('No items selected.', mtError, [mbOK], 0);
+    exit;
+  end;
 
   SetLength(colnoselected,NoVariables);
   SetLength(Rmat,NoVariables+1,NoVariables+1);
@@ -187,7 +193,6 @@ begin
   SetLength(stddevs,NoVariables);
   SetLength(RowLabels,NoVariables);
 
-  OutputFrm.RichEdit.Clear;
   // get variable col. no.s selected
   NoVars := ItemList.Items.Count;
   for i := 1 to NoVars do
@@ -195,149 +200,173 @@ begin
     cellstring := ItemList.Items.Strings[i-1];
     for j := 1 to NoVariables do
     begin
-        if (cellstring = OS3MainFrm.DataGrid.Cells[j,0]) then
-        begin
-             colnoselected[i-1] := j;
-             RowLabels[i-1] := cellstring;
-        end;
+      if (cellstring = OS3MainFrm.DataGrid.Cells[j,0]) then
+      begin
+        colnoselected[i-1] := j;
+        RowLabels[i-1] := cellstring;
+      end;
     end;
   end;
   count := NoCases;
 
-  OutputFrm.RichEdit.Lines.Add('Composite Test Reliability');
-  OutputFrm.RichEdit.Lines.Add('');
-  outline := 'File Analyzed: ' + OS3MainFrm.FileNameEdit.Text;
-  OutputFrm.RichEdit.Lines.Add(outline);
-  OutputFrm.RichEdit.Lines.Add('');
-  // get correlation matrix
-  Correlations(NoVars,colnoselected,Rmat,means,variances,stddevs,errorcode,count);
-  if (errorcode) then
-    ShowMessage('ERROR! Zero variance found for a variable.');
-  if RmatChk.Checked then
-  begin
-     title := 'Correlations Among Tests';
-     MAT_PRINT(Rmat,NoVars,NoVars,title,RowLabels,RowLabels,count);
-     title := 'Means';
-     DynVectorPrint(means,NoVars,title,RowLabels,count);
-     title := 'Variances';
-     DynVectorPrint(variances,NoVars,title,RowLabels,count);
-     title := 'Standard Deviations';
-     DynVectorPrint(stddevs,NoVars,title,RowLabels,count);
-  end;
-  for i := 1 to NoVars do
-    for j := 1 to NoVars do
+  lReport := TStringList.Create;
+  try
+    lReport.Add('COMPOSITE TEST RELIABILITY');
+    lReport.Add('');
+    lReport.Add('File Analyzed: ' + OS3MainFrm.FileNameEdit.Text);
+    lReport.Add('');
+
+    // get correlation matrix
+    Correlations(NoVars, colnoselected, Rmat, means, variances, stddevs, errorcode, count);
+
+    if errorcode then
+      MessageDlg('Zero variance found for a variable.', mtError, [mbOK], 0);
+
+    if RmatChk.Checked then
+    begin
+      title := 'Correlations Among Tests';
+      MatPrint(Rmat, NoVars, NoVars, title, RowLabels, RowLabels, count, lReport);
+      title := 'Means';
+      DynVectorPrint(means, NoVars, title, RowLabels, count, lReport);
+      title := 'Variances';
+      DynVectorPrint(variances, NoVars, title, RowLabels, count, lReport);
+      title := 'Standard Deviations';
+      DynVectorPrint(stddevs, NoVars, title, RowLabels, count, lReport);
+    end;
+
+    for i := 1 to NoVars do
+      for j := 1 to NoVars do
         RelMat[i-1,j-1] := Rmat[i-1,j-1];
-  for i := 1 to NoVars do
-  begin
-    Reliabilities[i-1] := StrToFloat(RelList.Items.Strings[i-1]);
-    RelMat[i-1,i-1] := Reliabilities[i-1];
-    Weights[i-1] := StrToFloat(WeightList.Items.Strings[i-1]);
-  end;
-  // get numerator and denominator of composite reliability
-  for i := 1 to NoVars do VectProd[i-1] := 0.0;
-  numerator := 0.0;
-  denominator := 0.0;
-  for i := 1 to NoVars do
-    for j := 1 to NoVars do
+
+    for i := 1 to NoVars do
+    begin
+      Reliabilities[i-1] := StrToFloat(RelList.Items.Strings[i-1]);
+      RelMat[i-1,i-1] := Reliabilities[i-1];
+      Weights[i-1] := StrToFloat(WeightList.Items.Strings[i-1]);
+    end;
+
+    // get numerator and denominator of composite reliability
+    for i := 1 to NoVars do VectProd[i-1] := 0.0;
+    numerator := 0.0;
+    denominator := 0.0;
+    for i := 1 to NoVars do
+      for j := 1 to NoVars do
         VectProd[i-1] := VectProd[i-1] + (Weights[i-1] * RelMat[j-1,i-1]);
-  for i := 1 to NoVars do numerator := numerator + (VectProd[i-1] * Weights[i-1]);
+    for i := 1 to NoVars do
+      numerator := numerator + (VectProd[i-1] * Weights[i-1]);
 
-  for i := 1 to NoVars do VectProd[i-1] := 0.0;
-  for i := 1 to NoVars do
-    for j := 1 to NoVars do
+    for i := 1 to NoVars do
+      VectProd[i-1] := 0.0;
+    for i := 1 to NoVars do
+      for j := 1 to NoVars do
         VectProd[i-1] := VectProd[i-1] + (Weights[i-1] * Rmat[j-1,i-1]);
-  for i := 1 to NoVars do denominator := denominator +
-    (VectProd[i-1] * Weights[i-1]);
-  CompRel := numerator / denominator;
-  OutputFrm.RichEdit.Lines.Add('');
-  title := 'Test Weights';
-  DynVectorPrint(Weights,NoVars,title,RowLabels,count);
-  title := 'Test Reliabilities';
-  DynVectorPrint(Reliabilities,NoVars,title,RowLabels,count);
-  outline := format('Composite reliability = %6.3f',[CompRel]);
-  OutputFrm.RichEdit.Lines.Add(outline);
-  OutputFrm.ShowModal;
-  if GridScrChk.Checked then
-  begin
-     cellstring := 'Composite';
-     col := NoVariables + 1;
-     DictionaryFrm.NewVar(col);
-     DictionaryFrm.DictGrid.Cells[1,col] := cellstring;
-     col := NoVariables;
-     OS3MainFrm.DataGrid.Cells[col,0] := cellstring;
-     col := NoVariables;
-     for i := 1 to NoCases do
-     begin
-           compscore := 0.0;
-           if not GoodRecord(i,NoVars,ColNoSelected) then continue;
-           for j := 1 to NoVars do
-           begin
-                compscore := compscore + (Weights[j-1] *
-                   StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[colnoselected[j-1],i])));
-           end;
-           OS3MainFrm.DataGrid.Cells[col,i] := FloatToStr(compscore);
-     end;
-  end;
+    for i := 1 to NoVars do
+      denominator := denominator + VectProd[i-1] * Weights[i-1];
+    CompRel := numerator / denominator;
 
-  RowLabels := nil;
-  stddevs := nil;
-  variances := nil;
-  means := nil;
-  VectProd := nil;
-  Reliabilities := nil;
-  Weights := nil;
-  RelMat := nil;
-  Rmat := nil;
-  colnoselected := nil;
+    title := 'Test Weights';
+    DynVectorPrint(Weights, NoVars, title, RowLabels, count, lReport);
+    title := 'Test Reliabilities';
+    DynVectorPrint(Reliabilities, NoVars, title, RowLabels, count, lReport);
+    lReport.Add('Composite reliability: %6.3f', [CompRel]);
+
+    DisplayReport(lReport);
+
+    if GridScrChk.Checked then
+    begin
+      cellstring := 'Composite';
+      col := NoVariables + 1;
+      DictionaryFrm.NewVar(col);
+      DictionaryFrm.DictGrid.Cells[1,col] := cellstring;
+      col := NoVariables;
+      OS3MainFrm.DataGrid.Cells[col,0] := cellstring;
+      col := NoVariables;
+      for i := 1 to NoCases do
+      begin
+        compscore := 0.0;
+        if not GoodRecord(i, NoVars, ColNoSelected) then continue;
+        for j := 1 to NoVars do
+          compscore := compscore + (Weights[j-1] * StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[colnoselected[j-1],i])));
+        OS3MainFrm.DataGrid.Cells[col,i] := FloatToStr(compscore);
+      end;
+    end;
+
+  finally
+    lReport.Free;
+    RowLabels := nil;
+    stddevs := nil;
+    variances := nil;
+    means := nil;
+    VectProd := nil;
+    Reliabilities := nil;
+    Weights := nil;
+    RelMat := nil;
+    Rmat := nil;
+    colnoselected := nil;
+  end;
 end;
 
 procedure TCompRelFrm.InBtnClick(Sender: TObject);
 var
-   index, i : integer;
-   cellstring : string;
+  i: integer;
+  cellstring: string;
 begin
-     index := VarList.Items.Count;
-     i := 0;
-     while i < index do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-            ItemList.Items.Add(VarList.Items.Strings[i]);
-            cellstring := '1.0';
-            RelList.Items.Add(cellstring);
-            WeightList.Items.Add(cellstring);
-            VarList.Items.Delete(i);
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-     end;
-     OutBtn.Enabled := true;
+  cellstring := '1.0';
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      ItemList.Items.Add(VarList.Items[i]);
+      RelList.Items.Add(cellstring);
+      WeightList.Items.Add(cellstring);
+      VarList.Items.Delete(i);
+      i := 0;
+    end
+    else
+      inc(i);
+  end;
+  UpdateBtnStates;
+end;
+
+procedure TCompRelFrm.ItemListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 procedure TCompRelFrm.OutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  i: Integer;
 begin
-     index := ItemList.ItemIndex;
-     if index < 0 then
-     begin
-          OutBtn.Enabled := false;
-          exit;
-     end;
-     VarList.Items.Add(ItemList.Items.Strings[index]);
-     ItemList.Items.Delete(index);
-     RelList.Items.Delete(index);
-     WeightList.Items.Delete(index);
+  while i < ItemList.Items.Count do
+  begin
+    if ItemList.Selected[i] then
+    begin
+      VarList.Items.Add(ItemList.Items[i]);
+      ItemList.Items.Delete(i);
+      RelList.Items.Delete(i);
+      WeightList.Items.Delete(i);
+      i := 0;
+    end else
+      inc(i);
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TCompRelFrm.RelListClick(Sender: TObject);
 var
-   response : string;
-   index : integer;
+  response: string;
+  index: integer;
 begin
-     response := InputBox('Reliability','Reliability estimate = ','1.0');
-     index := RelList.ItemIndex;
-     RelList.Items.Strings[index] := response;
+  response := InputBox('Reliability', 'Reliability estimate: ', '1.0');
+  index := RelList.ItemIndex;
+  RelList.Items[index] := response;
+end;
+
+procedure TCompRelFrm.UpdateBtnStates;
+begin
+  InBtn.Enabled := AnySelected(VarList);
+  OutBtn.Enabled := AnySelected(ItemList);
+  AllBtn.Enabled := VarList.Items.Count > 0;
 end;
 
 initialization
