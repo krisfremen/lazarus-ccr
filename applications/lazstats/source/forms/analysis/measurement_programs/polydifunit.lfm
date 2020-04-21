@@ -1,106 +1,86 @@
 object PolyDIFFrm: TPolyDIFFrm
-  Left = 548
+  Left = 984
   Height = 413
-  Top = 305
-  Width = 631
+  Top = 356
+  Width = 657
   AutoSize = True
   Caption = 'Polytomous Item DIF'
   ClientHeight = 413
-  ClientWidth = 631
+  ClientWidth = 657
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 334
+    Left = 448
     Height = 25
     Top = 380
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 3
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 400
-    Height = 25
-    Top = 380
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    OnClick = CancelBtnClick
-    TabOrder = 4
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 474
+    Left = 510
     Height = 25
     Top = 380
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 5
+    TabOrder = 4
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 562
+    Left = 594
     Height = 25
     Top = 380
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    OnClick = ReturnBtnClick
-    TabOrder = 6
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 5
   end
   object HelpBtn: TButton
     Tag = 138
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 271
+    Left = 389
     Height = 25
     Top = 380
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -114,14 +94,14 @@ object PolyDIFFrm: TPolyDIFFrm
     Left = 8
     Height = 356
     Top = 8
-    Width = 411
+    Width = 437
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 16
     BevelOuter = bvNone
     ClientHeight = 356
-    ClientWidth = 411
+    ClientWidth = 437
     Constraints.MinWidth = 400
     TabOrder = 0
     object Label1: TLabel
@@ -137,7 +117,7 @@ object PolyDIFFrm: TPolyDIFFrm
     object Label2: TLabel
       AnchorSideLeft.Control = ItemsList
       AnchorSideTop.Control = Panel1
-      Left = 236
+      Left = 249
       Height = 15
       Top = 0
       Width = 76
@@ -147,7 +127,7 @@ object PolyDIFFrm: TPolyDIFFrm
     object Label3: TLabel
       AnchorSideLeft.Control = ItemsList
       AnchorSideBottom.Control = GroupVarEdit
-      Left = 236
+      Left = 249
       Height = 15
       Top = 296
       Width = 94
@@ -166,19 +146,20 @@ object PolyDIFFrm: TPolyDIFFrm
       Left = 0
       Height = 339
       Top = 17
-      Width = 174
+      Width = 187
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Top = 2
       BorderSpacing.Right = 8
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object ItemInBtn: TBitBtn
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = VarList
-      Left = 191
+      Left = 204
       Height = 28
       Top = 25
       Width = 28
@@ -194,7 +175,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = ItemInBtn
       AnchorSideTop.Side = asrBottom
-      Left = 191
+      Left = 204
       Height = 28
       Top = 57
       Width = 28
@@ -210,7 +191,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = ItemOutBtn
       AnchorSideTop.Side = asrBottom
-      Left = 182
+      Left = 195
       Height = 25
       Top = 89
       Width = 46
@@ -225,7 +206,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = GrpOutBtn
-      Left = 191
+      Left = 204
       Height = 28
       Top = 288
       Width = 28
@@ -242,7 +223,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = VarList
       AnchorSideBottom.Side = asrBottom
-      Left = 191
+      Left = 204
       Height = 28
       Top = 320
       Width = 28
@@ -260,12 +241,13 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = GrpOutBtn
       AnchorSideBottom.Side = asrBottom
-      Left = 236
+      Left = 249
       Height = 23
       Top = 313
-      Width = 175
+      Width = 188
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 7
       Text = 'GroupVarEdit'
     end
@@ -277,15 +259,17 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = GrpInBtn
-      Left = 236
+      Left = 249
       Height = 247
       Top = 17
-      Width = 175
+      Width = 188
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       BorderSpacing.Bottom = 24
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 4
     end
   end
@@ -293,11 +277,11 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 364
-    Width = 631
+    Width = 657
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
@@ -306,12 +290,11 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
-    Left = 435
+    Left = 461
     Height = 364
     Top = 0
     Width = 196
     Anchors = [akTop, akRight, akBottom]
-    AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 364
     ClientWidth = 196
@@ -322,7 +305,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideTop.Side = asrCenter
       Left = 0
       Height = 15
-      Top = 12
+      Top = 132
       Width = 124
       Caption = 'No. of Grouping Levels:'
       ParentColor = False
@@ -333,7 +316,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideTop.Side = asrCenter
       Left = 0
       Height = 15
-      Top = 191
+      Top = 16
       Width = 99
       Caption = 'Lowest Item Score:'
       ParentColor = False
@@ -344,7 +327,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideTop.Side = asrCenter
       Left = 0
       Height = 15
-      Top = 218
+      Top = 43
       Width = 103
       Caption = 'Highest Item Score:'
       ParentColor = False
@@ -355,7 +338,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideTop.Side = asrCenter
       Left = 0
       Height = 15
-      Top = 245
+      Top = 70
       Width = 122
       Caption = 'Reference Group Code:'
       ParentColor = False
@@ -366,34 +349,36 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideTop.Side = asrCenter
       Left = 0
       Height = 15
-      Top = 272
+      Top = 97
       Width = 98
       Caption = 'Focal Group Code:'
       ParentColor = False
     end
     object LevelsEdit: TEdit
+      AnchorSideTop.Control = TrgtGrpEdit
+      AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = GroupBox2
       AnchorSideRight.Side = asrBottom
       Left = 140
       Height = 23
-      Top = 8
+      Top = 128
       Width = 40
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
-      BorderSpacing.Top = 8
+      BorderSpacing.Top = 12
       BorderSpacing.Right = 8
-      OnExit = LevelsEditExit
-      TabOrder = 0
+      OnEditingDone = LevelsEditEditingDone
+      TabOrder = 4
     end
     object GroupBox1: TGroupBox
       AnchorSideLeft.Control = GroupBox2
-      AnchorSideTop.Control = TrgtGrpEdit
+      AnchorSideTop.Control = GroupBox2
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = GroupBox2
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 51
-      Top = 303
+      Top = 307
       Width = 188
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
@@ -417,19 +402,19 @@ object PolyDIFFrm: TPolyDIFFrm
     end
     object LowScoreEdit: TEdit
       AnchorSideLeft.Control = LevelsEdit
-      AnchorSideTop.Control = GroupBox2
-      AnchorSideTop.Side = asrBottom
+      AnchorSideTop.Control = Panel3
       AnchorSideRight.Control = GroupBox2
       AnchorSideRight.Side = asrBottom
       Left = 140
       Height = 23
-      Top = 187
+      Top = 12
       Width = 40
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 12
       BorderSpacing.Right = 8
-      TabOrder = 2
+      TabOrder = 0
+      Text = 'LowScoreEdit'
     end
     object HiScoreEdit: TEdit
       AnchorSideLeft.Control = LowScoreEdit
@@ -439,13 +424,13 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Side = asrBottom
       Left = 140
       Height = 23
-      Top = 214
+      Top = 39
       Width = 40
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
-      TabOrder = 3
-      Text = 'Edit1'
+      TabOrder = 1
+      Text = 'HiScoreEdit'
     end
     object RefGrpEdit: TEdit
       AnchorSideLeft.Control = LowScoreEdit
@@ -455,13 +440,13 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Side = asrBottom
       Left = 140
       Height = 23
-      Top = 241
+      Top = 66
       Width = 40
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
-      TabOrder = 4
-      Text = 'Edit1'
+      TabOrder = 2
+      Text = 'RefGrpEdit'
     end
     object TrgtGrpEdit: TEdit
       AnchorSideLeft.Control = LowScoreEdit
@@ -471,13 +456,13 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Side = asrBottom
       Left = 140
       Height = 23
-      Top = 268
+      Top = 93
       Width = 40
       Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
-      TabOrder = 5
-      Text = 'Edit1'
+      TabOrder = 3
+      Text = 'TrgtGrpEdit'
     end
     object GroupBox2: TGroupBox
       AnchorSideLeft.Control = Panel3
@@ -487,7 +472,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 132
-      Top = 43
+      Top = 163
       Width = 188
       AutoSize = True
       BorderSpacing.Top = 12
@@ -495,7 +480,7 @@ object PolyDIFFrm: TPolyDIFFrm
       Caption = 'Enter Bounds for Levels'
       ClientHeight = 112
       ClientWidth = 184
-      TabOrder = 1
+      TabOrder = 5
       object Panel2: TPanel
         Left = 8
         Height = 104
@@ -584,25 +569,9 @@ object PolyDIFFrm: TPolyDIFFrm
           PageSize = 0
           Position = 1
           TabOrder = 0
-          OnScroll = LevelScrollScroll
-        end
-        object LevelNoEdit: TEdit
-          AnchorSideTop.Control = Label8
-          AnchorSideTop.Side = asrBottom
-          AnchorSideRight.Control = Panel2
-          AnchorSideRight.Side = asrBottom
-          Left = 129
-          Height = 23
-          Top = 19
-          Width = 39
-          Alignment = taRightJustify
-          Anchors = [akTop, akRight]
-          BorderSpacing.Top = 4
-          TabOrder = 1
-          Text = 'LevelNoEdit'
+          OnChange = LevelScrollChange
         end
         object LowBoundEdit: TEdit
-          AnchorSideTop.Control = LevelNoEdit
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = Panel2
           AnchorSideRight.Side = asrBottom
@@ -613,7 +582,7 @@ object PolyDIFFrm: TPolyDIFFrm
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
-          OnExit = LowBoundEditExit
+          OnEditingDone = LowBoundEditEditingDone
           TabOrder = 2
           Text = 'LowBoundEdit'
         end
@@ -629,9 +598,24 @@ object PolyDIFFrm: TPolyDIFFrm
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 8
-          OnExit = UpBoundEditExit
+          OnEditingDone = UpBoundEditEditingDone
           TabOrder = 3
           Text = 'Edit1'
+        end
+        object LevelNoEdit: TStaticText
+          AnchorSideTop.Control = Label8
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = Panel2
+          AnchorSideRight.Side = asrBottom
+          Left = 129
+          Height = 23
+          Top = 19
+          Width = 39
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          BorderSpacing.Top = 4
+          BorderStyle = sbsSingle
+          TabOrder = 1
         end
       end
     end
