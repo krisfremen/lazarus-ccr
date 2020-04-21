@@ -130,18 +130,16 @@ begin
   HiScoreEdit.Text := '';
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
-  LevelScroll.Min := 0; //1;
-  LevelScroll.Max := 0; //LevelScroll.Min;
-  LevelScroll.Position := 0; //1;
-  {
-  if NoVariables > 0 then
-    LevelScroll.Max := NoVariables;
-    }
-  LevelsEdit.Text := ''; //IntToStr(NoVariables);
-  LevelNoEdit.Caption := ''; //'1';
-  LowBoundEdit.Text := ''; //'0';
-  UpBoundEdit.Text := ''; //'2';
-  ComputeBtn.Enabled := false;
+  LevelScroll.Min := 0;
+  LevelScroll.Max := 0;
+  LevelScroll.Position := 0;
+
+  LevelsEdit.Text := '';
+  LevelNoEdit.Caption := '';
+  LowBoundEdit.Text := '';
+  UpBoundEdit.Text := '';
+
+  //ComputeBtn.Enabled := false;
 
   UpdateBtnStates;
 end;
@@ -157,7 +155,7 @@ begin
     ComputeBtn.Enabled := true;
     exit;
   end;
-  LowBoundEdit.Text := IntToStr(UBounds[level]); //IntToStr(Ubounds[level] + 1);
+//  LowBoundEdit.Text := IntToStr(UBounds[level]); //IntToStr(Ubounds[level] + 1);
 //  LowBoundEdit.SetFocus;
 end;
 
@@ -282,31 +280,6 @@ begin
     UpBoundEdit.Text := IntToStr(UBounds[level]);
 end;
 
-  // wp: Setting focus to other controls makes the form very difficult to use.
-
-{
-  level := StrToInt(LevelNoEdit.Text);
-  scrlpos := LevelScroll.Position;
-  if ((scrlpos > level) and (level <= StrToInt(LevelsEdit.Text))) then
-  begin
-       LevelNoEdit.Text := IntToStr(scrlpos);
-       LowBoundEdit.SetFocus;
-       exit;
-  end;
-  if scrlpos < level then
-  begin
-       level := scrlpos;
-       if level > 0 then
-       begin
-            LevelNoEdit.Text := IntToStr(level);
-            LowBoundEdit.Text := IntToStr(Lbounds[level-1]);
-            UpBoundEdit.Text := IntToStr(Ubounds[level-1]);
-       end;
-       LowBoundEdit.SetFocus;
-  end;
-end;
-}
-
 procedure TPolyDIFFrm.LevelsEditEditingDone(Sender: TObject);
 var
   L: Integer;
@@ -326,9 +299,7 @@ var
   level: integer;
 begin
   level := LevelScroll.Position;
-//  level := StrToInt(LevelNoEdit.Caption) - 1;
   Lbounds[level] := StrToInt(LowBoundEdit.Text);
-  //UpBoundEdit.Set
 end;
 
 procedure TPolyDIFFrm.AllBtnClick(Sender: TObject);
@@ -372,6 +343,12 @@ begin
     exit;
   end;
 
+  if GroupVarEdit.Text = '' then
+  begin
+    MessageDlg('No Grouping Variable selected.', mtError, [mbOK], 0);
+    exit;
+  end;
+
   if not ValidNumEdit(LevelsEdit, 'Number of Grouping Levels', noLevels) then
     exit;
   if not ValidNumEdit(LowScoreEdit, 'Lowest Item Score', loscore) then
@@ -382,6 +359,23 @@ begin
     exit;
   if not ValidNumEdit(TrgtGrpEdit, 'Focus Group Code', i) then
     exit;
+
+  for i:=0 to StrToInt(LevelsEdit.Caption) - 1 do
+  begin
+    if LBounds[i] = -1 then begin
+      MessageDlg(Format('Lower bound not specified for level #%d.', [i+1]), mtError, [mbOK], 0);
+      exit;
+    end;
+    if UBounds[i] = -1 then begin
+      MessageDlg(Format('Upper bound not specified for level #%d.', [i+1]), mtError, [mbOk], 0);
+      exit;
+    end;
+    if LBounds[i] > UBounds[i] then begin
+      MessageDlg(Format('Upper bound must be larger than the lower bound (level #%d).', [i+1]), mtError, [mbOK], 0);
+      exit;
+    end;
+  end;
+
 
   lReport := TStringList.Create;
   try

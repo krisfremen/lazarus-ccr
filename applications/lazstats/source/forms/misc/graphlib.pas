@@ -24,7 +24,6 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PrintBtnClick(Sender: TObject);
-    procedure ReturnBtnClick(Sender: TObject);
     procedure SaveBtnClick(Sender: TObject);
   private
     { private declarations }
@@ -228,11 +227,6 @@ begin
     10: HBar3D(self);
     else exit;
   end;
-end;
-
-procedure TGraphFrm.ReturnBtnClick(Sender: TObject);
-begin
-  Close;
 end;
 
 procedure TGraphFrm.SaveBtnClick(Sender: TObject);

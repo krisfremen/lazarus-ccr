@@ -694,6 +694,9 @@ object OS3MainFrm: TOS3MainFrm
           Caption = 'Generate Sample Test Data'
           OnClick = MenuItem92Click
         end
+        object MenuItem50: TMenuItem
+          Caption = '-'
+        end
         object MenuItem93: TMenuItem
           Caption = 'Classical Test Analysis'
           OnClick = MenuItem93Click
@@ -725,6 +728,9 @@ object OS3MainFrm: TOS3MainFrm
         object MenuItem100: TMenuItem
           Caption = 'Reliability Due to Test Variance Change'
           OnClick = MenuItem100Click
+        end
+        object MenuItem47: TMenuItem
+          Caption = '-'
         end
         object MenuItem101: TMenuItem
           Caption = 'Differential Item Functioning'

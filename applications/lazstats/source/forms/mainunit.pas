@@ -97,8 +97,10 @@ type
     MenuItem45: TMenuItem;
     MenuItem46: TMenuItem;
     LicenseMenu: TMenuItem;
+    MenuItem47: TMenuItem;
     MenuItem48: TMenuItem;
     MenuItem49: TMenuItem;
+    MenuItem50: TMenuItem;
     SimpChiSqr: TMenuItem;
     SRHItem: TMenuItem;
     OneCaseAnova: TMenuItem;

@@ -60,7 +60,6 @@ object GraphFrm: TGraphFrm
       BorderSpacing.Left = 12
       Caption = 'Return'
       ModalResult = 1
-      OnClick = ReturnBtnClick
       TabOrder = 2
     end
     object SaveBtn: TButton
