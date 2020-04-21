@@ -148,7 +148,7 @@ end;
 
 procedure TCompRelFrm.AllBtnClick(Sender: TObject);
 var
-  i, count : integer;
+  i: integer;
   cellstring : string;
 begin
   cellstring := '1.0';
@@ -171,7 +171,7 @@ var
   Weights, Reliabilities, VectProd, means, variances, stddevs: DblDyneVec;
   CompRel, numerator, denominator, compscore: double;
   colnoselected: IntDyneVec;
-  outline, cellstring: string;
+  cellstring: string;
   title: string;
   RowLabels: StrDyneVec;
   lReport: TStrings;
@@ -314,6 +314,7 @@ var
   cellstring: string;
 begin
   cellstring := '1.0';
+  i := 0;
   while i < VarList.Items.Count do
   begin
     if VarList.Selected[i] then
@@ -339,6 +340,7 @@ procedure TCompRelFrm.OutBtnClick(Sender: TObject);
 var
   i: Integer;
 begin
+  i := 0;
   while i < ItemList.Items.Count do
   begin
     if ItemList.Selected[i] then

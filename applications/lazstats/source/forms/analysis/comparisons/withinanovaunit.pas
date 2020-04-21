@@ -116,7 +116,7 @@ var
   SSrows, SScols, SSwrows, SSerr, SStot: double;
   MSrows, MScols, MSwrows, MSerr, MStot: double;
   dfrows, dfcols, dfwrows, dferr, dftot: double;
-  f1, f2, probf1, GrandMean, Term1, Term2, Term3, Term4: double;
+  f1, probf1, GrandMean, Term1, Term2, Term3, Term4: double;
   r1, r2, r3, r4, X, avgvar, avgcov: double;
   determ1, determ2, M2, C2, chi2, prob: double;
   errorfound: boolean;
@@ -351,7 +351,6 @@ begin
       M2 := 0.0;
       C2 := 0.0;
       chi2 := 0.0;
-      f2 := 0;
       prob := 0.0;
       Determ(vcmat,NoSelected,NoSelected,determ1,errorfound);
       if determ1 < 0.0 then determ1 := 0.0;

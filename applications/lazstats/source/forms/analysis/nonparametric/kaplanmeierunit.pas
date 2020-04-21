@@ -419,12 +419,14 @@ begin
     FrmOutPut.ShowModal();
 }
     // get no. of categories
+    nocats := 0;
     for i := 0 to NoCases do
-              if ((Deaths[i] > 0) or (Censored[i] > 0)) then nocats := nocats + 1;
-    SetLength(Time,nocats+2);
-    SetLength(AtRisk,nocats+2);
-    SetLength(Dead,nocats+2);
-    SetLength(CondProb,nocats+2);
+      if (Deaths[i] > 0) or (Censored[i] > 0) then
+        nocats := nocats + 1;
+    SetLength(Time, nocats + 2);
+    SetLength(AtRisk, nocats + 2);
+    SetLength(Dead, nocats + 2);
+    SetLength(CondProb, nocats + 2);
     for i := 0 to nocats do
     begin
       Time[i] := 0;

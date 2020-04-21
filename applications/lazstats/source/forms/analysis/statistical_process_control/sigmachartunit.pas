@@ -134,7 +134,7 @@ const
 var
    i, j, GrpVar, MeasVar, mingrp, maxgrp, G, range, grpsize : integer;
    oldgrpsize : integer;
-   X, UCL, LCL, Sigma, UpperSpec, LowerSpec, TargetSpec : double;
+   X, UCL, LCL, UpperSpec, LowerSpec, TargetSpec : double;
    xmin, xmax, GrandMean, GrandSD, semean, D3Value, D4Value : double;
    GrandSigma, C4, gamma, B : double;
    means, stddev: DblDyneVec;
@@ -165,7 +165,6 @@ begin
 
   GrpVar := 1;
   MeasVar := 2;
-  Sigma := 3.0;
   UpperSpec := 0.0;
   LowerSpec := 0.0;
   TargetSpec := 0.0;

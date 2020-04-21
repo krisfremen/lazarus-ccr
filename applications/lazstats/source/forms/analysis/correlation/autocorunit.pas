@@ -669,8 +669,10 @@ begin
     for i := 1 to NoPts do
     begin
         X := pts[i-1];
-        if (MeanChk.Checked = true) then covzero := covzero + (X * X)
-        else covzero := covzero + ((X - mean) * (X - mean));
+        if (MeanChk.Checked = true) then
+          covzero := covzero + sqr(X)
+        else
+          covzero := covzero + sqr(X - mean);
     end;
     covzero := covzero / count;
 

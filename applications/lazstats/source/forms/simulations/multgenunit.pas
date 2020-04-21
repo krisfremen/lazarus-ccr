@@ -95,7 +95,6 @@ var
     determ, n3, r1, s8, s9, d2, x, y, mean : double;
     linestring : string;
     cellstring : string;
-    singular : boolean;
     title : string;
     RowLabels: StrDyneVec;
     ColLabels: StrDyneVec;
@@ -127,7 +126,6 @@ begin
     end;
 
     // get determinant of Rho matrix, i.e. check for singularity
-     singular := FALSE;
      for i := 0 to NoVars-1 do
      begin
          for j := 0 to NoVars - 1 do

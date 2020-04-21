@@ -249,7 +249,7 @@ end;
 procedure TTwoWayLogLinFrm.ComputeBtnClick(Sender: TObject);
 var
    Data : DblDyneMat;
-   NewData : DblDyneMat;
+   NewData : DblDyneMat = nil;
    Prop : DblDyneMat;
    LogData : DblDyneMat;
    Expected : DblDyneMat;
@@ -262,7 +262,7 @@ var
    ColLogs : DblDyneVec;
    CellLambdas : DblDyneCube;
    Total : double;
-   NewTotal : double;
+   NewTotal: double = 0.0;
    TotalLogs : double;
    mu : double;
    row, col : integer;
@@ -304,18 +304,18 @@ begin
       end;
 
       // Get data
-      SetLength(Data,Nrows+1,Ncols+1);
-      SetLength(CellLambdas,Nrows+1,Ncols+1,4);
-      SetLength(RowMarg,Nrows+1);
-      SetLength(RowLogs,Nrows+1);
-      SetLength(ColMarg,Ncols+1);
-      SetLength(ColLogs,Ncols+1);
-      SetLength(Prop,Nrows+1,Ncols+1);
-      SetLength(LogData,Nrows+1,Ncols+1);
-      SetLength(Expected,Nrows+1,Ncols+1);
-      SetLength(NewData,Nrows+1,Ncols+1);
-      SetLength(NewRowMarg,Nrows+1);
-      SetLength(NewColMarg,Ncols+1);
+      SetLength(Data, Nrows + 1, Ncols + 1);
+      SetLength(CellLambdas, Nrows + 1,Ncols + 1, 4);
+      SetLength(RowMarg, Nrows + 1);
+      SetLength(RowLogs, Nrows + 1);
+      SetLength(ColMarg, Ncols + 1);
+      SetLength(ColLogs, Ncols + 1);
+      SetLength(Prop, Nrows + 1, Ncols + 1);
+      SetLength(LogData, Nrows + 1, Ncols + 1);
+      SetLength(Expected, Nrows + 1, Ncols + 1);
+      SetLength(NewData, Nrows + 1, Ncols + 1);
+      SetLength(NewRowMarg, Nrows + 1);
+      SetLength(NewColMarg, Ncols + 1);
 
       for i := 1 to Nrows do
           for j := 1 to Ncols do

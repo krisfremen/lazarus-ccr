@@ -576,7 +576,7 @@ var
    Title, astr : string;
    NewRowMarg,NewColMarg,NewSliceMarg : DblDyneVec;
    LogRowMarg, LogColMarg, LogSliceMarg : DblDyneVec;
-   NewTotal : double;
+   NewTotal: double = 0.0;
    ABLogs, ACLogs, BCLogs : DblDyneMat;
    LogTotal, mu, Ysqr : double;
    DF : integer;

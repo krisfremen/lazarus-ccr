@@ -7,6 +7,7 @@
 //  - Level 1: lower bound 0, upper bound 1
 //  - Level 2: lower bound 2, upper bound 3
 //  - Level 3: lower bound 4, upper bound 5
+//  - Lower/upper bounds: 0-1, 2-3, 4-5
 // The results obtained this way match the pdf file.
 
 unit PolyDifUnit;
@@ -26,6 +27,7 @@ type
 
   TPolyDIFFrm = class(TForm)
     Bevel1: TBevel;
+    NextBtn: TButton;
     GroupBox2: TGroupBox;
     HelpBtn: TButton;
     LevelNoEdit: TStaticText;
@@ -79,6 +81,7 @@ type
     procedure LevelScrollChange(Sender: TObject);
     procedure LevelsEditEditingDone(Sender: TObject);
     procedure LowBoundEditEditingDone(Sender: TObject);
+    procedure NextBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure UpBoundEditEditingDone(Sender: TObject);
     procedure VarListSelectionChange(Sender: TObject; User: boolean);
@@ -147,16 +150,18 @@ end;
 procedure TPolyDIFFrm.UpBoundEditEditingDone(Sender: TObject);
 var
   level: Integer;
+  n: Integer;
 begin
   level := StrToInt(LevelNoEdit.Caption) - 1;
-  Ubounds[level] := StrToInt(UpBoundEdit.Text);
-  if level + 1 = StrToInt(LevelsEdit.Text) then
+  if TryStrToInt(UpBoundEdit.Text, n) then
   begin
-    ComputeBtn.Enabled := true;
-    exit;
-  end;
-//  LowBoundEdit.Text := IntToStr(UBounds[level]); //IntToStr(Ubounds[level] + 1);
-//  LowBoundEdit.SetFocus;
+    Ubounds[level] := n;
+    if level + 1 = StrToInt(LevelsEdit.Text) then
+      exit;
+    if LBounds[level + 1] = -1 then
+      lBounds[level + 1] := UBounds[level] + 1;
+  end else
+    MessageDlg(Format('No valid number in upper bound at level #%d.', [level+1]), mtError, [mbOk], 0);
 end;
 
 procedure TPolyDIFFrm.FormActivate(Sender: TObject);
@@ -272,7 +277,7 @@ begin
   if LBounds[level] = -1 then
     LowBoundEdit.Text := ''
   else
-    LowBoundEdit.Text :=IntToStr(LBounds[level]);
+    LowBoundEdit.Text := IntToStr(LBounds[level]);
 
   if UBounds[level] = -1 then
     UpBoundEdit.Text := ''
@@ -289,17 +294,24 @@ begin
     LevelScroll.Max := Max(L - 1, 0);
     LevelScroll.Min := 0;
     LevelNoEdit.Caption := IntToStr(LevelScroll.Position + 1);
-    //LevelScroll.Enabled := true;
-    //LowBoundEdit.SetFocus;
   end;
 end;
 
 procedure TPolyDIFFrm.LowBoundEditEditingDone(Sender: TObject);
 var
   level: integer;
+  n: Integer;
 begin
   level := LevelScroll.Position;
-  Lbounds[level] := StrToInt(LowBoundEdit.Text);
+  if TryStrToInt(LowBoundEdit.Text, n) then
+    Lbounds[level] := n
+  else
+    Messagedlg(Format('No valid number in lower bound at level #%d.', [level+1]), mtError, [mbOK], 0);
+end;
+
+procedure TPolyDIFFrm.NextBtnClick(Sender: TObject);
+begin
+  LevelScroll.Position := LevelScroll.Position + 1;
 end;
 
 procedure TPolyDIFFrm.AllBtnClick(Sender: TObject);
@@ -318,22 +330,23 @@ end;
 
 procedure TPolyDIFFrm.ComputeBtnClick(Sender: TObject);
 var
-  i, j, k : integer;
-  itm, nolevels, level : integer;
-  grpvar : integer;
-  subjgrp : integer;
-  subjtot : integer;
-  value : integer;
-  cellstring : string;
-  title : string;
-  nsize : array [1..2] of integer;
-  FData : IntDyneCube; //no. of category values within item for focal group
-  RData : IntDyneCube; //no. of category values within item for reference group
-  TotData : IntDyneCube; // sum of the above two
-  t, Mf, Mb, Sf, Sb, Nb, Nf, df, d, Sd : DblDyneVec;
-  Zc, Vart, BigJ, SumE, SumV, Term1, MY, prob : double;
-  X, BigDnum, BigDden, BigD, BigDS, Zd, M2, E, VarE, Ti, dftot : double;
-  loscore, hiscore : integer;
+  i, j, k: integer;
+  itm, nolevels, level: integer;
+  grpvar: integer;
+  subjgrp: integer;
+  subjtot: integer;
+  value: integer;
+  cellstring: string;
+  title: string;
+  nsize: array [1..2] of integer;
+  FData: IntDyneCube; //no. of category values within item for focal group
+  RData: IntDyneCube; //no. of category values within item for reference group
+  TotData: IntDyneCube; // sum of the above two
+  t, Mf, Mb, Sf, Sb, Nb, Nf, df, d, Sd: DblDyneVec;
+  Zc, Vart, BigJ, SumE, SumV, Term1, MY, prob: double;
+  X, BigDnum, BigDden, BigD, BigDS, Zd, M2, E, VarE, Ti, dftot: double;
+  loscore, hiscore: integer;
+  morePlots: Boolean;
   lReport: TStrings;
 begin
   NoItems := ItemsList.Items.Count;
@@ -375,7 +388,6 @@ begin
       exit;
     end;
   end;
-
 
   lReport := TStringList.Create;
   try
@@ -491,6 +503,7 @@ begin
     lReport.Add('');
 
     // obtain statistics and print frequency in categories for each item
+    morePlots := true;
     for i := 1 to NoItems do
     begin
       lReport.Add('ITEM ' + IntToStr(i));
@@ -631,11 +644,11 @@ begin
       lReport.Add(DIVIDER);
       lReport.Add('');
 
-      if GraphChk.Checked then
+      if GraphChk.Checked and morePlots then
       begin
         GraphFrm.nosets := 2;
         GraphFrm.nbars := nolevels;
-        GraphFrm.Heading := 'Level Means';
+        GraphFrm.Heading := 'Level Means, Item ' + IntToStr(i);
         GraphFrm.XTitle := 'Level';
         GraphFrm.YTitle := 'Mean';
         SetLength(GraphFrm.Ypoints, 2, nolevels+1);
@@ -656,7 +669,7 @@ begin
         GraphFrm.BackColor := GRAPH_BACK_COLOR;
         GraphFrm.WallColor := GRAPH_WALL_COLOR;
         GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
-        GraphFrm.ShowModal;
+        morePlots := (GraphFrm.ShowModal = mrOK);
       end;
     end; // next item
 

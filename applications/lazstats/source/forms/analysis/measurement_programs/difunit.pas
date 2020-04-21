@@ -1,8 +1,9 @@
-// Test file: DIFData.laz
+// Data file not 100% clear, bus seems to be: DIFData.laz
 // - Reference Group Code: 1
 // - Focal Group Code: 2
 // - No. of Score Levels: 11
 // - Lower/Upper Bounds: 0-3, 4-7, 8-11, 12-15, 16-19, 20-23, 24-27, 28-31, 32-35, 36-39, 40-43
+// The result obtained this way match the pdf file.
 
 unit DifUnit;
 

@@ -1954,7 +1954,7 @@ procedure scatplot(const x, y: DblDyneVec; NoCases: integer;
 var
   i, j, l, row, xslot : integer;
   maxy: double;
-  incrementx, incrementy, rangex, rangey, swap : double;
+  incrementx, incrementy, rangex, rangey: double;
   plotstring  : array[0..51,0..61] of char;
   height      : integer;
   overlap     : boolean;

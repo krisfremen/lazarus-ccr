@@ -94,7 +94,7 @@ object DIFFrm: TDIFFrm
       Height = 19
       Top = 167
       Width = 137
-      Caption = 'Item Char. Curves'
+      Caption = 'Plot Item Curves'
       TabOrder = 7
     end
     object CountsChk: TCheckBox

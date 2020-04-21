@@ -110,7 +110,7 @@ VAR
   means, variances, stddevs: DblDyneVec;
   determinant, chisquare, probability: double;
   i, j, df, p, ncases, colno: integer;
-  aline, strvalue, title, probvalue, chivalue: string;
+  title: string;
   ColNoSelected: IntDyneVec;
   dblvalue: double;
   DataGrid: DblDyneMat;

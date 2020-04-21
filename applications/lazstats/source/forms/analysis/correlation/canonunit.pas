@@ -157,7 +157,7 @@ const
   SEPARATOR = '===========================================================================';
 var
   i, j, k, count, a_size, b_size, no_factors, novars, IER: integer;
-  outline, cellstring, gridstring: string;
+  cellstring, gridstring: string;
   s, m, n, df1, df2, q, w, pcnt_extracted, trace : double;
   minroot, critical_prob, Lambda, Pillia : double;
   chisqr, HLTrace, chiprob, ftestprob, Roys, f, Hroot : double;

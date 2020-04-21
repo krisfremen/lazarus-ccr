@@ -188,16 +188,16 @@ end;
 
 procedure TPartialsFrm.ComputeBtnClick(Sender: TObject);
 var
-   rmatrix, workmat : DblDyneMat;
-   Means, Variances, StdDevs, W, Betas : DblDyneVec;
-   R2Full, R2Cntrl, SemiPart, Partial, df1, df2, F, Prob : double;
-   NoPredVars, NoCntrlVars, DepVarNo, TotNoVars, pcnt, ccnt, count : integer;
-   PredVars, CntrlVars : IntDyneVec;
-   MatVars : IntDyneVec;
-   outline, varstring : string;
-   i, j, K, L, NCases : integer;
-   errorcode : boolean;
-   vtimesw, W1, v : DblDyneMat;
+   rmatrix, workmat: DblDyneMat;
+   Means, Variances, StdDevs, W, Betas: DblDyneVec;
+   R2Full, R2Cntrl, SemiPart, Partial, df1, df2, F, Prob: double;
+   NoPredVars, NoCntrlVars, DepVarNo, TotNoVars, pcnt, ccnt, count: integer;
+   PredVars, CntrlVars: IntDyneVec;
+   MatVars: IntDyneVec;
+   outline, varstring: string;
+   i, j, K, L: integer;
+   errorcode: boolean;
+   vtimesw, W1, v: DblDyneMat;
 
 begin
      DepVarNo := 1;
@@ -213,7 +213,6 @@ begin
     end;
     TotNoVars := NoPredVars + NoCntrlVars + 1;
     count := NoCases;
-    NCases := NoCases;
 
     // Allocate space required
     SetLength(vtimesw,NoVariables,NoVariables);
