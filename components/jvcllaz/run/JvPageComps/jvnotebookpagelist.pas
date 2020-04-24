@@ -21,7 +21,7 @@ unit JvNotebookPageList;
 interface
 
 uses
-  Classes, SysUtils, ExtCtrls, LCLVersion,
+  Classes, SysUtils, ExtCtrls,
   JvPageList;
 
 type
@@ -100,13 +100,11 @@ end;
 
 procedure TJvNotebookPageList.MovePage(CurIndex, NewIndex: Integer);
 begin
-{$IF LCL_FullVersion >= 2010000}
-  Pages.Move(CurIndex, NewIndex);  // Fix for issue #36956
-{$ELSE}
-  Pages.Exchange(CurIndex, NewIndex);
-  // Note: This code is not working (issue #36956), it exchanges the captions,
-  // not the pages. Required changes in TNotebook are available only in Laz 2.1+
-{$IFEND}
+  Pages.Move(CurIndex, NewIndex);
+  // Note: This code is not working for Laz < 2.1 (issue #36956),
+  // it exchanges the captions only (not the pages) when PageListTabLink is false
+  // or crashes when PageListTabLink is true.
+  // Required changes in TNotebook are available only in Laz 2.1+
 end;
 
 procedure TJvNotebookPagelist.PageCaptionChanged(AIndex: Integer;

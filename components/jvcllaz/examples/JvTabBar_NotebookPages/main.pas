@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
-  ActnList, StdActns, Menus, SynEdit, SynHighlighterPas, SynHighlighterXML,
+  ActnList, Menus, LCLVersion,
+  SynEdit, SynHighlighterPas, SynHighlighterXML,
   JvTabBar, JvNotebookPageList, JvTabBarXPPainter;
 
 type
@@ -50,6 +51,9 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   dir: String;
 begin
+  {$IF LCL_FullVersion >= 2010000}
+  JvTabBar1.PageListTabLink := true;
+  {$IFEND}
   dir := ExpandFileName(Application.Location + '../../examples/JvTabBar_NotebookPages/');
   PasSynEdit.Lines.LoadfromFile(dir + 'main.pas');
   XMLSynEdit.Lines.LoadFromFile(dir + 'JvTabBarDemo_NotebookPages.lpi');

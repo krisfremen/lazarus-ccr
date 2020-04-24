@@ -1064,7 +1064,6 @@ object Form1: TForm1
     DirectiveAttri.Style = [fsBold]
     CompilerMode = pcmDelphi
     NestedComments = False
-    TypeHelpers = True
     left = 157
     top = 111
   end
