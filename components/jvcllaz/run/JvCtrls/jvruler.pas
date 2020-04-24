@@ -30,7 +30,7 @@ unit JvRuler;
 
 interface
 
-uses                                  lazlogger,
+uses
   LCLIntf, LCLType, LCLVersion, Types,
   Classes, SysUtils, Graphics, Controls,
   JvComponent;
