@@ -21,7 +21,7 @@ unit JvNotebookPageList;
 interface
 
 uses
-  Classes, SysUtils, ExtCtrls,
+  Classes, SysUtils, ExtCtrls, LCLVersion,
   JvPageList;
 
 type
@@ -72,13 +72,8 @@ end;
 -------------------------------------------------------------------------------}
 
 procedure TJvNotebookPageList.AddPage(const ACaption: String);
-var
-  idx: Integer;
-  lPage: TPage;
 begin
-  idx := Pages.Add(ACaption);
-  lPage := Page[idx];
-  lPage.Name := GetUniqueName(Self, 'TPage');
+  Pages.Add(ACaption);
 end;
 
 function TJvNotebookPageList.CanChange(AIndex: Integer): Boolean;
@@ -95,7 +90,7 @@ end;
 
 function TJvNotebookPageList.GetPageCaption(AIndex: Integer): string;
 begin
-  Result := Pages[AIndex];
+  Result := Page[AIndex].Caption;
 end;
 
 function TJvNotebookPageList.GetPageCount: Integer;
@@ -105,13 +100,19 @@ end;
 
 procedure TJvNotebookPageList.MovePage(CurIndex, NewIndex: Integer);
 begin
+{$IF LCL_FullVersion >= 2010000}
+  Pages.Move(CurIndex, NewIndex);  // Fix for issue #36956
+{$ELSE}
   Pages.Exchange(CurIndex, NewIndex);
+  // Note: This code is not working (issue #36956), it exchanges the captions,
+  // not the pages. Required changes in TNotebook are available only in Laz 2.1+
+{$IFEND}
 end;
 
 procedure TJvNotebookPagelist.PageCaptionChanged(AIndex: Integer;
   const NewCaption: string);
 begin
-  Pages[AIndex] := NewCaption;
+  Page[AIndex].Caption := NewCaption;
 end;
 
 procedure TJvNotebookPageList.SetActivePageIndex(AIndex: Integer);
