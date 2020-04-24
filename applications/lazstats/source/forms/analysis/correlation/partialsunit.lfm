@@ -1,12 +1,12 @@
 object PartialsFrm: TPartialsFrm
-  Left = 637
-  Height = 460
-  Top = 307
-  Width = 412
+  Left = 593
+  Height = 398
+  Top = 175
+  Width = 361
   AutoSize = True
   Caption = 'Partial Correlation'
-  ClientHeight = 460
-  ClientWidth = 412
+  ClientHeight = 398
+  ClientWidth = 361
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
@@ -28,7 +28,7 @@ object PartialsFrm: TPartialsFrm
     AnchorSideLeft.Control = DepVar
     AnchorSideTop.Control = DepInBtn
     AnchorSideBottom.Control = DepVar
-    Left = 228
+    Left = 202
     Height = 15
     Top = 25
     Width = 152
@@ -37,10 +37,13 @@ object PartialsFrm: TPartialsFrm
   end
   object Label3: TLabel
     AnchorSideLeft.Control = PredList
-    Left = 229
+    AnchorSideTop.Control = DepOutBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 203
     Height = 15
-    Top = 120
+    Top = 93
     Width = 144
+    BorderSpacing.Top = 8
     Caption = 'Selected Predictor Variables'
     ParentColor = False
   end
@@ -48,11 +51,13 @@ object PartialsFrm: TPartialsFrm
     AnchorSideLeft.Control = PartList
     AnchorSideTop.Control = PartInBtn
     AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = PartList
     Left = 8
     Height = 15
-    Top = 289
+    Top = 239
     Width = 121
     BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 2
     Caption = 'Variables Partialed Out:'
     ParentColor = False
   end
@@ -61,25 +66,25 @@ object PartialsFrm: TPartialsFrm
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = DepInBtn
+    AnchorSideBottom.Control = Bevel3
     Left = 8
-    Height = 220
+    Height = 170
     Top = 25
-    Width = 176
-    Anchors = [akTop, akLeft, akRight]
+    Width = 150
+    Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
     BorderSpacing.Right = 8
-    Constraints.MinHeight = 220
-    Constraints.MinWidth = 175
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 0
   end
   object DepInBtn: TBitBtn
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = VarList
-    Left = 192
+    Left = 166
     Height = 28
     Top = 25
     Width = 28
@@ -130,7 +135,7 @@ object PartialsFrm: TPartialsFrm
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = DepInBtn
     AnchorSideTop.Side = asrBottom
-    Left = 192
+    Left = 166
     Height = 28
     Top = 57
     Width = 28
@@ -180,13 +185,14 @@ object PartialsFrm: TPartialsFrm
   object PredInBtn: TBitBtn
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
-    AnchorSideBottom.Control = PredOutBtn
-    Left = 192
+    AnchorSideTop.Control = DepOutBtn
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Bevel4
+    Left = 166
     Height = 28
-    Top = 185
+    Top = 122
     Width = 28
     Anchors = [akLeft, akBottom]
-    BorderSpacing.Bottom = 4
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -232,13 +238,13 @@ object PartialsFrm: TPartialsFrm
   object PredOutBtn: TBitBtn
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
-    AnchorSideBottom.Control = VarList
+    AnchorSideTop.Control = Bevel4
+    AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 192
+    Left = 166
     Height = 28
-    Top = 217
+    Top = 154
     Width = 28
-    Anchors = [akLeft, akBottom]
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -285,9 +291,10 @@ object PartialsFrm: TPartialsFrm
     AnchorSideTop.Control = VarList
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Bevel1
-    Left = 64
+    AnchorSideBottom.Control = Label4
+    Left = 51
     Height = 28
-    Top = 253
+    Top = 203
     Width = 28
     Anchors = [akTop, akRight]
     BorderSpacing.Top = 8
@@ -336,13 +343,11 @@ object PartialsFrm: TPartialsFrm
   object PartOutBtn: TBitBtn
     AnchorSideLeft.Control = Bevel1
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = VarList
-    AnchorSideTop.Side = asrBottom
-    Left = 100
+    AnchorSideTop.Control = PartInBtn
+    Left = 87
     Height = 28
-    Top = 253
+    Top = 203
     Width = 28
-    BorderSpacing.Top = 8
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -394,33 +399,37 @@ object PartialsFrm: TPartialsFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = DepOutBtn
     AnchorSideBottom.Side = asrBottom
-    Left = 228
+    Left = 202
     Height = 23
     Top = 42
-    Width = 176
+    Width = 151
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
     BorderSpacing.Right = 8
+    ReadOnly = True
     TabOrder = 3
     Text = 'DepVar'
   end
   object PredList: TListBox
     AnchorSideLeft.Control = PredInBtn
     AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = PredOutBtn
-    AnchorSideBottom.Side = asrBottom
-    Left = 229
-    Height = 109
-    Top = 136
-    Width = 175
+    AnchorSideBottom.Control = Bevel3
+    Left = 203
+    Height = 85
+    Top = 110
+    Width = 150
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 9
+    BorderSpacing.Top = 2
     BorderSpacing.Right = 8
-    Constraints.MinWidth = 175
     ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 6
   end
   object PartList: TListBox
@@ -431,103 +440,86 @@ object PartialsFrm: TPartialsFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel2
     Left = 8
-    Height = 105
-    Top = 306
-    Width = 176
+    Height = 93
+    Top = 256
+    Width = 150
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
-    Constraints.MinHeight = 100
     ItemHeight = 0
+    MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 9
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 111
+    Left = 152
     Height = 25
-    Top = 427
+    Top = 365
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 11
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 177
-    Height = 25
-    Top = 427
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 12
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 251
+    Left = 214
     Height = 25
-    Top = 427
+    Top = 365
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 13
+    TabOrder = 12
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 339
+    Left = 298
     Height = 25
-    Top = 427
-    Width = 61
+    Top = 365
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 14
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 13
   end
   object HelpBtn: TButton
     Tag = 136
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 48
+    Left = 93
     Height = 25
-    Top = 427
+    Top = 365
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -538,9 +530,9 @@ object PartialsFrm: TPartialsFrm
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = VarList
     AnchorSideTop.Side = asrBottom
-    Left = 92
+    Left = 79
     Height = 28
-    Top = 245
+    Top = 195
     Width = 8
     Shape = bsSpacer
   end
@@ -548,12 +540,32 @@ object PartialsFrm: TPartialsFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 411
-    Width = 412
+    Top = 349
+    Width = 361
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
+  end
+  object Bevel3: TBevel
+    AnchorSideTop.Control = Owner
+    AnchorSideTop.Side = asrCenter
+    Left = 8
+    Height = 8
+    Top = 195
+    Width = 40
+    Shape = bsSpacer
+  end
+  object Bevel4: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = PredList
+    AnchorSideTop.Side = asrCenter
+    Left = 160
+    Height = 4
+    Top = 150
+    Width = 40
+    Shape = bsSpacer
   end
 end

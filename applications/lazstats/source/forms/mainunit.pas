@@ -534,6 +534,7 @@ begin
   RMatFrm.ShowModal;
 end;
 
+// Menu "Correlation" > "Partial, Semipartial"
 procedure TOS3MainFrm.MenuItem72Click(Sender: TObject);
 begin
   if PartialsFrm = nil then

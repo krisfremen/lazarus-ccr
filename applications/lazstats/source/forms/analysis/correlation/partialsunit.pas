@@ -1,3 +1,8 @@
+// File for testing: cansas.laz
+// - Selected dependent variable --> jumps
+// - Seleckted predictor variables --> weight
+// - variables partialed out --> waist, pulse
+
 unit PartialsUnit;
 
 {$mode objfpc}{$H+}
@@ -16,6 +21,8 @@ type
   TPartialsFrm = class(TForm)
     Bevel1: TBevel;
     Bevel2: TBevel;
+    Bevel3: TBevel;
+    Bevel4: TBevel;
     DepInBtn: TBitBtn;
     DepOutBtn: TBitBtn;
     HelpBtn: TButton;
@@ -24,9 +31,8 @@ type
     PartInBtn: TBitBtn;
     PartOutBtn: TBitBtn;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     DepVar: TEdit;
     Label1: TLabel;
     Label2: TLabel;
@@ -47,9 +53,11 @@ type
     procedure PredInBtnClick(Sender: TObject);
     procedure PredOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure VarListSelectionChange(Sender: TObject; User: boolean);
   private
     { private declarations }
     FAutoSized: Boolean;
+    procedure UpdateBtnStates;
   public
     { public declarations }
   end; 
@@ -60,25 +68,21 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TPartialsFrm }
 
 procedure TPartialsFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     DepVar.Text := '';
-     VarList.Clear;
-     PartList.Clear;
-     PredList.Clear;
-     DepInBtn.Enabled := true;
-     DepOutBtn.Enabled := false;
-     PredInBtn.Enabled := true;
-     PredOutBtn.Enabled := false;
-     PartInBtn.Enabled := true;
-     PartOutBtn.Enabled := false;
-     for i := 1 to OS3MainFrm.DataGrid.ColCount - 1 do
-         VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  DepVar.Text := '';
+  VarList.Clear;
+  PartList.Clear;
+  PredList.Clear;
+  for i := 1 to OS3MainFrm.DataGrid.ColCount - 1 do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  UpdateBtnStates;
 end;
 
 procedure TPartialsFrm.FormActivate(Sender: TObject);
@@ -88,14 +92,14 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
-  Constraints.MinWidth := Width;
+  w := 2 * Max(Label2.Width, Label3.Width) + DepInBtn.Width + 4 * VarList.BorderSpacing.Left;
+  Constraints.MinWidth := w; //Max(Width, w);
   Constraints.MinHeight := Height;
 
   FAutoSized := true;
@@ -104,7 +108,6 @@ end;
 procedure TPartialsFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TPartialsFrm.FormShow(Sender: TObject);
@@ -120,178 +123,205 @@ begin
 end;
 
 procedure TPartialsFrm.PartInBtnClick(Sender: TObject);
-VAR i, index : integer;
+var
+  i: integer;
 begin
-     index := VarList.Items.Count;
-     i := 0;
-     while i < index do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-            PartList.Items.Add(VarList.Items.Strings[i]);
-            VarList.Items.Delete(i);
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-     end;
-     PartOutBtn.Enabled := true;
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      PartList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TPartialsFrm.PartOutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  i: integer;
 begin
-   index := PartList.ItemIndex;
-   VarList.Items.Add(PartList.Items.Strings[index]);
-   PartList.Items.Delete(index);
-   if PartList.Items.Count = 0 then PartOutBtn.Enabled := false;
+  i := 0;
+  while i < PartList.Items.Count do
+  begin
+    if PartList.Selected[i] then
+    begin
+      VarList.Items.Add(PartList.Items[i]);
+      PartList.Items.Delete(i);
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TPartialsFrm.PredInBtnClick(Sender: TObject);
-VAR i, index : integer;
+var
+  i: integer;
 begin
-     index := VarList.Items.Count;
-     i := 0;
-     while i < index do
-     begin
-         if (VarList.Selected[i]) then
-         begin
-            PredList.Items.Add(VarList.Items.Strings[i]);
-            VarList.Items.Delete(i);
-            index := index - 1;
-            i := 0;
-         end
-         else i := i + 1;
-     end;
-     PredOutBtn.Enabled := true;
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      PredList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TPartialsFrm.PredOutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  i: integer;
 begin
-   index := PredList.ItemIndex;
-   VarList.Items.Add(PredList.Items.Strings[index]);
-   PredList.Items.Delete(index);
-   if PredList.Items.Count = 0 then PredOutBtn.Enabled := false;
+  i := 0;
+  while i < PredList.Items.Count do
+  begin
+    if PredList.Selected[i] then
+    begin
+      VarList.Items.Add(PredList.Items[i]);
+      PredList.Items.Delete(i);
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  UpdateBtnStates;
 end;
 
 procedure TPartialsFrm.DepInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := VarList.ItemIndex;
-     if index < 0 then exit;
-     DepVar.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     DepOutBtn.Enabled := true;
-     DepInBtn.Enabled := false;
+  index := VarList.ItemIndex;
+  if (index > -1) and (DepVar.Text = '') then
+  begin
+    DepVar.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+procedure TPartialsFrm.DepOutBtnClick(Sender: TObject);
+begin
+  if DepVar.Text <> '' then
+  begin
+    VarList.Items.Add(DepVar.Text);
+    DepVar.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TPartialsFrm.ComputeBtnClick(Sender: TObject);
 var
-   rmatrix, workmat: DblDyneMat;
-   Means, Variances, StdDevs, W, Betas: DblDyneVec;
-   R2Full, R2Cntrl, SemiPart, Partial, df1, df2, F, Prob: double;
-   NoPredVars, NoCntrlVars, DepVarNo, TotNoVars, pcnt, ccnt, count: integer;
-   PredVars, CntrlVars: IntDyneVec;
-   MatVars: IntDyneVec;
-   outline, varstring: string;
-   i, j, K, L: integer;
-   errorcode: boolean;
-   vtimesw, W1, v: DblDyneMat;
+  rmatrix, workmat: DblDyneMat;
+  Means, Variances, StdDevs, W, Betas: DblDyneVec;
+  R2Full, R2Cntrl, SemiPart, Partial, df1, df2, F, Prob: double;
+  NoPredVars, NoCntrlVars, DepVarNo, TotNoVars, pcnt, ccnt, count: integer;
+  PredVars, CntrlVars: IntDyneVec;
+  MatVars: IntDyneVec;
+  outline, varstring: string;
+  i, j, K, L: integer;
+  errorcode: boolean;
+  vtimesw, W1, v: DblDyneMat;
+  lReport: TStrings;
 
 begin
-     DepVarNo := 1;
-     errorcode := false;
+  DepVarNo := 1;
+  errorcode := false;
 
-    // Get no. of predictor and control variables
-    NoPredVars := PredList.Items.Count;
-    NoCntrlVars := PartList.Items.Count;
-    if (NoPredVars = 0) or (NoCntrlVars = 0) then
-    begin
-        ShowMessage('You must select at least one predictor and one control variable!');
-        exit;
-    end;
-    TotNoVars := NoPredVars + NoCntrlVars + 1;
-    count := NoCases;
+  if DepVar.Text = '' then
+  begin
+    MessageDlg('No dependent variable selected.', mtError, [mbOK], 0);
+    exit;
+  end;
 
-    // Allocate space required
-    SetLength(vtimesw,NoVariables,NoVariables);
-    SetLength(v,NoVariables,NoVariables);
-    SetLength(W1,NoVariables,NoVariables);
-    SetLength(rmatrix,NoVariables+1,NoVariables+1); // augmented
-    SetLength(workmat,NoVariables+1,NoVariables+1); // augmented
-    SetLength(PredVars,NoVariables);
-    SetLength(CntrlVars,NoVariables);
-    SetLength(Means,NoVariables);
-    SetLength(Variances,NoVariables);
-    SetLength(StdDevs,NoVariables);
-    SetLength(W,NoVariables);
-    SetLength(Betas,NoVariables);
-    SetLength(MatVars,NoVariables);
+  // Get no. of predictor and control variables
+  NoPredVars := PredList.Items.Count;
+  NoCntrlVars := PartList.Items.Count;
+  if (NoPredVars = 0) or (NoCntrlVars = 0) then
+  begin
+    MessageDlg('You must select at least one predictor and one control variable.', mtError, [mbOK], 0);
+    exit;
+  end;
+  TotNoVars := NoPredVars + NoCntrlVars + 1;
+  count := NoCases;
 
-    OutputFrm.RichEdit.Clear;
-    OutputFrm.RichEdit.Lines.Add('Partial and Semi-Partial Correlation Analysis');
-    OutputFrm.RichEdit.Lines.Add('');
+  // Allocate space required
+  SetLength(vtimesw,NoVariables,NoVariables);
+  SetLength(v,NoVariables,NoVariables);
+  SetLength(W1,NoVariables,NoVariables);
+  SetLength(rmatrix,NoVariables+1,NoVariables+1); // augmented
+  SetLength(workmat,NoVariables+1,NoVariables+1); // augmented
+  SetLength(PredVars,NoVariables);
+  SetLength(CntrlVars,NoVariables);
+  SetLength(Means,NoVariables);
+  SetLength(Variances,NoVariables);
+  SetLength(StdDevs,NoVariables);
+  SetLength(W,NoVariables);
+  SetLength(Betas,NoVariables);
+  SetLength(MatVars,NoVariables);
+
+  lReport := TStringList.Create;
+  try
+    lReport.Add('PARTIAL AND SEMI-PARTIAL CORRELATION ANALYSIS');
+    lReport.Add('');
 
     // Get column numbers of dependent, predictor and control variables
     pcnt := 1;
     for i := 0 to NoPredVars - 1 do
     begin
-        varstring := PredList.Items.Strings[i];
-        for j := 1 to NoVariables do
+      varstring := PredList.Items.Strings[i];
+      for j := 1 to NoVariables do
+      begin
+        if varstring = OS3MainFrm.DataGrid.Cells[j,0] then
         begin
-            if varstring = OS3MainFrm.DataGrid.Cells[j,0] then
-            begin
-                PredVars[pcnt-1] := j;
-                pcnt := pcnt + 1;
-            end;
+          PredVars[pcnt-1] := j;
+          pcnt := pcnt + 1;
         end;
+      end;
     end;
     ccnt := 1;
     for i := 0 to NoCntrlVars - 1 do
     begin
-        varstring := PartList.Items.Strings[i];
-        for j := 1 to NoVariables do
+      varstring := PartList.Items.Strings[i];
+      for j := 1 to NoVariables do
+      begin
+        if varstring = OS3MainFrm.DataGrid.Cells[j,0] then
         begin
-            if varstring = OS3MainFrm.DataGrid.Cells[j,0] then
-            begin
-                CntrlVars[ccnt-1] := j;
-                ccnt := ccnt + 1;
-            end;
-        end;
+          CntrlVars[ccnt-1] := j;
+          ccnt := ccnt + 1;
+          end;
+      end;
     end;
     varstring := DepVar.Text;
     for i := 1 to NoVariables do
-        if varstring = OS3MainFrm.DataGrid.Cells[i,0] then DepVarNo := i;
+      if varstring = OS3MainFrm.DataGrid.Cells[i,0] then DepVarNo := i;
 
-    outline := format('Dependent variable = %s',[OS3MainFrm.DataGrid.Cells[DepVarNo,0]]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    OutputFrm.RichEdit.Lines.Add('Predictor Variables:');
+    lReport.Add('Dependent variable: %s', [OS3MainFrm.DataGrid.Cells[DepVarNo, 0]]);
+    lReport.Add('');
+    lReport.Add('Predictor Variables:');
     for i := 1 to NoPredVars do
-    begin
-        outline := format('Variable %d = %s',[i+1,OS3MainFrm.DataGrid.Cells[PredVars[i-1],0]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
-    OutputFrm.RichEdit.Lines.Add('');
-    OutputFrm.RichEdit.Lines.Add('Control Variables:');
+      lReport.Add('  Variable %d: %s', [i+1, OS3MainFrm.DataGrid.Cells[PredVars[i-1], 0]]);
+    lReport.Add('');
+    lReport.Add('Control Variables:');
     for i := 1 to NoCntrlVars do
-    begin
-        outline := format('Variable %d = %s',[i+1,OS3MainFrm.DataGrid.Cells[CntrlVars[i-1],0]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
-    OutputFrm.RichEdit.Lines.Add('');
+      lReport.Add('  Variable %d: %s', [i+1, OS3MainFrm.DataGrid.Cells[CntrlVars[i-1], 0]]);
+    lReport.Add('');
     if NoPredVars > 1 then
     begin
-        outline := format('Higher order partialling at level = %d',[NoPredVars]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
+      lReport.Add('Higher order partialling at level: %d', [NoPredVars]);
+      lReport.Add('');
     end;
     if NoCntrlVars > 1 then
     begin
-        outline := format('Multiple partialling with %d variables.',[NoCntrlVars]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-        OutputFrm.RichEdit.Lines.Add('');
+      lReport.Add('Multiple partialling with %d variables.', [NoCntrlVars]);
+      lReport.Add('');
     end;
 
     // Now, build the correlation matrix
@@ -303,61 +333,54 @@ begin
     // Now do Multiple regression models required
     // Full model first
     for i := 2 to TotNoVars do
-        for j := 2 to TotNoVars do
-            workmat[i-2,j-2] := rmatrix[i-1,j-1];
+      for j := 2 to TotNoVars do
+        workmat[i-2,j-2] := rmatrix[i-1,j-1];
 
-    matinv(workmat, vtimesw, v, W1, TotNoVars-1);
+    MatInv(workmat, vtimesw, v, W1, TotNoVars-1);
     R2Full := 0.0;
     for i := 1 to TotNoVars-1 do // rows
     begin
-        W[i-1] := 0.0;
-        for j := 1 to TotNoVars - 1 do W[i-1] := W[i-1] + (workmat[i-1,j-1] * rmatrix[0,j]);
-        R2Full := R2Full + W[i-1] * rmatrix[0,i];
+      W[i-1] := 0.0;
+      for j := 1 to TotNoVars - 1 do
+        W[i-1] := W[i-1] + (workmat[i-1,j-1] * rmatrix[0,j]);
+      R2Full := R2Full + W[i-1] * rmatrix[0,i];
     end;
-    outline := format('Squared Multiple Correlation with all variables = %6.3f',[R2Full]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    OutputFrm.RichEdit.Lines.Add('Standardized Regression Coefficients:');
+    lReport.Add('Squared Multiple Correlation with all variables:     %6.3f', [R2Full]);
+    lReport.Add('');
+    lReport.Add('Standardized Regression Coefficients:');
     for i := 1 to TotNoVars - 1 do
-    begin
-        outline := format('%10s = %6.3f',[OS3MainFrm.DataGrid.Cells[MatVars[i],0],W[i-1]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
-    OutputFrm.RichEdit.Lines.Add('');
+      lReport.Add('%15s:  %6.3f', [OS3MainFrm.DataGrid.Cells[MatVars[i],0], W[i-1]]);
+    lReport.Add('');
 
     // Now do model for Partial and Semi-partial
     for i := 1 to NoCntrlVars do
     begin
-        K := i + 1 + NoPredVars;
-        for j := 1 to NoCntrlVars do
-        begin
-            L := j + 1 + NoPredVars;
-            workmat[i-1,j-1] := rmatrix[K-1,L-1];
-        end;
+      K := i + 1 + NoPredVars;
+      for j := 1 to NoCntrlVars do
+      begin
+        L := j + 1 + NoPredVars;
+        workmat[i-1,j-1] := rmatrix[K-1,L-1];
+      end;
     end;
-    matinv(workmat, vtimesw, v, W1, NoCntrlVars);
+    MatInv(workmat, vtimesw, v, W1, NoCntrlVars);
     R2Cntrl := 0.0;
     for i := 1 to NoCntrlVars do
     begin
-        L := i + 1 + NoPredVars;
-        W[i-1] := 0.0;
-        for j := 1 to NoCntrlVars do
-        begin
-                K := j + 1 + NoPredVars;
-                W[i-1] := W[i-1] + (workmat[i-1,j-1] * rmatrix[0,K-1]);
-        end;
-        R2Cntrl := R2Cntrl + W[i-1] * rmatrix[0,L-1];
+      L := i + 1 + NoPredVars;
+      W[i-1] := 0.0;
+      for j := 1 to NoCntrlVars do
+      begin
+        K := j + 1 + NoPredVars;
+        W[i-1] := W[i-1] + (workmat[i-1,j-1] * rmatrix[0,K-1]);
+      end;
+      R2Cntrl := R2Cntrl + W[i-1] * rmatrix[0,L-1];
     end;
-    outline := format('Squared Multiple Correlation with control variables = %6.3f',[R2Cntrl]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    OutputFrm.RichEdit.Lines.Add('Standardized Regression Coefficients:');
+    lReport.Add('Squared Multiple Correlation with control variables: %6.3f', [R2Cntrl]);
+    lReport.Add('');
+    lReport.Add('Standardized Regression Coefficients:');
     for i := 1 to NoCntrlVars do
-    begin
-        outline := format('%10s = %6.3f',[OS3MainFrm.DataGrid.Cells[MatVars[i+NoPredVars],0],W[i-1]]);
-        OutputFrm.RichEdit.Lines.Add(outline);
-    end;
-    OutputFrm.RichEdit.Lines.Add('');
+      lReport.Add('%15s:  %6.3f', [OS3MainFrm.DataGrid.Cells[MatVars[i+NoPredVars],0], W[i-1]]);
+    lReport.Add('');
 
     SemiPart := R2Full - R2Cntrl;
     Partial := SemiPart / (1.0 - R2Cntrl);
@@ -367,18 +390,20 @@ begin
     Prob := probf(F,df1,df2);
 
     // Report results
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := format('Partial Correlation = %6.3f',[sqrt(Partial)]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := format('Semi-Partial Correlation = %6.3f',[sqrt(SemiPart)]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.RichEdit.Lines.Add('');
-    outline := format('F = %8.3f with probability = %6.4f, D.F.1 = %3.0f and D.F.2 = %3.0f',[F,Prob,df1,df2]);
-    OutputFrm.RichEdit.Lines.Add(outline);
-    OutputFrm.ShowModal;
+    lReport.Add('');
+    lReport.Add('Partial Correlation:      %8.3f', [sqrt(Partial)]);
+    lReport.Add('');
+    lReport.Add('Semi-Partial Correlation: %8.3f', [sqrt(SemiPart)]);
+    lReport.Add('');
+    lReport.Add('F:                        %8.3f', [F]);
+    lReport.Add('   with probability       %8.4f', [Prob]);
+    lReport.Add('   D.F.1                  %8.0f', [df1]);
+    lReport.Add('   D.F.2                  %8.0f', [df2]);
 
-    // clean up the heap
+    DisplayReport(lReport);
+
+  finally
+    lReport.Free;
     MatVars := nil;
     Betas := nil;
     W := nil;
@@ -392,14 +417,26 @@ begin
     v := nil;
     W1 := nil;
     vtimesw := nil;
+  end;
 end;
 
-procedure TPartialsFrm.DepOutBtnClick(Sender: TObject);
+procedure TPartialsFrm.UpdateBtnStates;
+var
+  lSelected: Boolean;
 begin
-     VarList.Items.Add(DepVar.Text);
-     DepVar.Text := '';
-     DepInBtn.Enabled := true;
-     DepOutBtn.Enabled := false;
+  lSelected := AnySelected(VarList);
+  DepInBtn.Enabled := lSelected and (DepVar.Text = '');
+  PredInBtn.Enabled := lSelected;
+  PartInBtn.Enabled := lSelected;
+
+  DepOutBtn.Enabled := DepVar.Text <> '';
+  PredOutBtn.Enabled := AnySelected(PredList);
+  PartOutBtn.Enabled := AnySelected(Partlist);
+end;
+
+procedure TPartialsFrm.VarListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 
