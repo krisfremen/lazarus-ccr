@@ -54,6 +54,7 @@ object runstestform: Trunstestform
     BorderSpacing.Right = 8
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 0
   end
   object InBtn: TBitBtn
@@ -100,6 +101,7 @@ object runstestform: Trunstestform
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 12
+    ReadOnly = True
     TabOrder = 3
     Text = 'TestVarEdit'
   end
@@ -220,6 +222,8 @@ object runstestform: Trunstestform
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 4
     Text = 'MeanEdit'
@@ -239,9 +243,11 @@ object runstestform: Trunstestform
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 5
-    Text = 'Edit1'
+    Text = 'StdDevEdit'
   end
   object NUpEdit: TEdit
     AnchorSideLeft.Control = StdDevEdit
@@ -257,9 +263,11 @@ object runstestform: Trunstestform
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 6
-    Text = 'Edit1'
+    Text = 'NUpEdit'
   end
   object NDownEdit: TEdit
     AnchorSideLeft.Control = StdDevEdit
@@ -274,9 +282,11 @@ object runstestform: Trunstestform
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 7
-    Text = 'Edit1'
+    Text = 'NDownEdit'
   end
   object NRunsEdit: TEdit
     AnchorSideLeft.Control = StdDevEdit
@@ -291,9 +301,11 @@ object runstestform: Trunstestform
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 8
-    Text = 'Edit1'
+    Text = 'NRunsEdit'
   end
   object StatEdit: TEdit
     AnchorSideLeft.Control = StdDevEdit
@@ -307,9 +319,11 @@ object runstestform: Trunstestform
     Alignment = taRightJustify
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Bottom = 4
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 9
-    Text = 'Edit1'
+    Text = 'StatEdit'
   end
   object ProbEdit: TEdit
     AnchorSideLeft.Control = StdDevEdit
@@ -323,9 +337,11 @@ object runstestform: Trunstestform
     Alignment = taRightJustify
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Bottom = 8
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 10
-    Text = 'Edit1'
+    Text = 'ProbEdit'
   end
   object ConclusionEdit: TEdit
     AnchorSideLeft.Control = Label10
@@ -340,83 +356,70 @@ object runstestform: Trunstestform
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
+    Font.Style = [fsBold]
+    ParentFont = False
     ReadOnly = True
     TabOrder = 11
-    Text = 'Edit1'
+    Text = 'ConclusionEdit'
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 79
+    Left = 167
     Height = 25
     Top = 405
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 12
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 145
-    Height = 25
-    Top = 405
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Cancel = True
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 13
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 219
+    Left = 229
     Height = 25
     Top = 405
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Right = 12
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 14
+    TabOrder = 13
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 307
+    Left = 313
     Height = 25
     Top = 405
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 15
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 14
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 389
