@@ -25,7 +25,7 @@ object RMatFrm: TRMatFrm
     ParentColor = False
   end
   object Label2: TLabel
-    AnchorSideLeft.Control = ListBox1
+    AnchorSideLeft.Control = SelList
     AnchorSideTop.Control = Owner
     Left = 235
     Height = 15
@@ -166,7 +166,7 @@ object RMatFrm: TRMatFrm
     Spacing = 0
     TabOrder = 3
   end
-  object ListBox1: TListBox
+  object SelList: TListBox
     AnchorSideLeft.Control = AllBtn
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Label2
@@ -184,6 +184,7 @@ object RMatFrm: TRMatFrm
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     ItemHeight = 0
+    MultiSelect = True
     TabOrder = 4
   end
   object GroupBox1: TGroupBox
@@ -283,92 +284,74 @@ object RMatFrm: TRMatFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 108
+    Left = 200
     Height = 25
     Top = 449
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 7
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 174
-    Height = 25
-    Top = 449
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 8
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 248
+    Left = 262
     Height = 25
     Top = 449
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 9
+    TabOrder = 8
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 336
+    Left = 346
     Height = 25
     Top = 449
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 10
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 9
   end
   object HelpBtn: TButton
     Tag = 144
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 45
+    Left = 141
     Height = 25
     Top = 449
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -378,7 +361,7 @@ object RMatFrm: TRMatFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 433

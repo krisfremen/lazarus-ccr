@@ -527,6 +527,7 @@ begin
   CUMSUMFrm.ShowModal;
 end;
 
+// Menu "Correlation" > "Product-Moment"
 procedure TOS3MainFrm.MenuItem71Click(Sender: TObject);
 begin
   if RMatFrm = nil then

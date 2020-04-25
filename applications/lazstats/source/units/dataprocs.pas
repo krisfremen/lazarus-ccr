@@ -53,7 +53,7 @@ procedure ClearGrid;
 procedure CopyIt;
 procedure PasteIt;
 procedure RowColSwap;
-procedure MatToGrid(VAR mat : DblDyneMat; nsize : integer);
+procedure MatToGrid(const mat: DblDyneMat; nsize: integer);
 procedure GetTypes;
 function StringsToInt(strcol : integer; VAR newcol : integer; prompt : boolean) : boolean;
 
@@ -465,7 +465,7 @@ var
    col, i, j : integer;
    buf : pchar;
    size : integer;
-   strarray : array[0..100000] of char;
+   strarray : array[0..100000] of char;     // wp: Wow! What's this?
 
 begin
      col := OS3MainFrm.DataGrid.Col;
@@ -483,7 +483,7 @@ begin
 //           NoVariables := NoVariables + 1;
            OS3MainFrm.NoVarsEdit.Text := IntToStr(NoVariables);
      end;
-     buf := strarray;
+     buf := strarray;               // wp: Is this needed?
      size := 100000;
      ClipBoard.GetTextBuf(buf,size);
      OS3MainFrm.DataGrid.Cols[col].SetText(buf);
@@ -535,7 +535,7 @@ procedure PasteaRow;
 var
    row, i, j : integer;
    buf : pchar;
-   strarray : array[0..100000] of char;
+   strarray : array[0..100000] of char;      // wp: Like above
    size : integer;
 
 begin
@@ -549,7 +549,7 @@ begin
                    OS3MainFrm.DataGrid.Cells[j,i+1] := OS3MainFrm.DataGrid.Cells[j,i];
      end;
      OS3MainFrm.DataGrid.Row := row;
-     buf := strarray;
+     buf := strarray;                       // wp: is this needed?
      size := 100000;
      ClipBoard.GetTextBuf(buf,size);
      OS3MainFrm.DataGrid.Rows[row].SetText(buf);
@@ -1530,48 +1530,48 @@ begin
      tempgrid := nil;
 end;
 
-procedure MatToGrid(VAR mat : DblDyneMat; nsize : integer);
+procedure MatToGrid(const mat: DblDyneMat; nsize: integer);
 VAR
    i, j : integer;
 Begin
   Assert(OS3MainFrm <> nil);
   Assert(DictionaryFrm <> nil);
 
-     // clear grid
-     ClearGrid;
+  // clear grid
+  ClearGrid;
 
-     // clear dictionary
-     DictionaryFrm.DictGrid.ColCount := 8;
-     DictionaryFrm.DictGrid.RowCount := 1;
-     OS3MainFrm.FileNameEdit.Text := '';
+  // clear dictionary
+  DictionaryFrm.DictGrid.ColCount := 8;
+  DictionaryFrm.DictGrid.RowCount := 1;
+  OS3MainFrm.FileNameEdit.Text := '';
 
-     // create new variables = NoCases
-     NoVariables := 0;
-     for i := 1 to nsize do
-     begin
-          OS3MainFrm.DataGrid.ColCount := i;
-          DictionaryFrm.NewVar(i);
-          NoVariables := i;
-     end;
-     // store matrix into the grid rows
-     OS3MainFrm.DataGrid.RowCount := nsize + 1;
-     for i := 0 to nsize-1 do
-     begin
-          for j := 0 to nsize-1 do
-          begin
+  // create new variables = NoCases
+  NoVariables := 0;
+  for i := 1 to nsize do
+  begin
+    OS3MainFrm.DataGrid.ColCount := i;
+    DictionaryFrm.NewVar(i);
+    NoVariables := i;
+  end;
+
+  // store matrix into the grid rows
+  OS3MainFrm.DataGrid.RowCount := nsize + 1;
+  for i := 0 to nsize-1 do
+  begin
+    for j := 0 to nsize-1 do
                OS3MainFrm.DataGrid.Cells[i+1,j+1] := FloatToStr(mat[i,j]);
-          end;
-     end;
-     for i := 1 to nsize do
-     begin
-         OS3MainFrm.DataGrid.Cells[0,i] := 'VAR ' + IntToStr(i);
-         OS3MainFrm.DataGrid.Cells[i,0] := 'VAR ' + IntToStr(i);
-     end;
-     // finish up
-     NoCases := nsize;
-     OS3MainFrm.FileNameEdit.Text := 'MATtemp.LAZ';
-     OS3MainFrm.NoCasesEdit.Text := IntToStr(nsize);
-     OS3MainFrm.NoVarsEdit.Text := IntToStr(nsize);
+  end;
+  for i := 1 to nsize do
+  begin
+    OS3MainFrm.DataGrid.Cells[0,i] := 'VAR ' + IntToStr(i);
+    OS3MainFrm.DataGrid.Cells[i,0] := 'VAR ' + IntToStr(i);
+  end;
+
+  // finish up
+  NoCases := nsize;
+  OS3MainFrm.FileNameEdit.Text := 'MATtemp.laz';
+  OS3MainFrm.NoCasesEdit.Text := IntToStr(nsize);
+  OS3MainFrm.NoVarsEdit.Text := IntToStr(nsize);
 end;
 
 procedure GetTypes;

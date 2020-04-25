@@ -220,12 +220,12 @@ end;
 procedure TPartialsFrm.ComputeBtnClick(Sender: TObject);
 var
   rmatrix, workmat: DblDyneMat;
-  Means, Variances, StdDevs, W, Betas: DblDyneVec;
+  Means, Variances, StdDevs, W: DblDyneVec;
   R2Full, R2Cntrl, SemiPart, Partial, df1, df2, F, Prob: double;
   NoPredVars, NoCntrlVars, DepVarNo, TotNoVars, pcnt, ccnt, count: integer;
   PredVars, CntrlVars: IntDyneVec;
   MatVars: IntDyneVec;
-  outline, varstring: string;
+  varstring: string;
   i, j, K, L: integer;
   errorcode: boolean;
   vtimesw, W1, v: DblDyneMat;
@@ -264,7 +264,6 @@ begin
   SetLength(Variances,NoVariables);
   SetLength(StdDevs,NoVariables);
   SetLength(W,NoVariables);
-  SetLength(Betas,NoVariables);
   SetLength(MatVars,NoVariables);
 
   lReport := TStringList.Create;
@@ -405,7 +404,6 @@ begin
   finally
     lReport.Free;
     MatVars := nil;
-    Betas := nil;
     W := nil;
     Variances := nil;
     StdDevs := nil;
