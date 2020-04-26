@@ -1431,6 +1431,7 @@
       </Item3>
       <Item4>
         <Name Value="EGridException"/>
+        <Enabled Value="False"/>
       </Item4>
       <Item5>
         <Name Value="EConvertError"/>
