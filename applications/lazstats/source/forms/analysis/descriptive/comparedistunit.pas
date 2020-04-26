@@ -122,7 +122,7 @@ var
   Cumfreq2 : DblDyneVec;
   i, j, k, col1, col2, Ncases, noints : integer;
   min1, max1, min2, max2, range1, range2, value : double;
-  incrsize1, incrsize2, prob1,prob2, KS, mean, DegFree : double;
+  incrsize1, incrsize2, prob1,prob2, {%H-}KS, mean, DegFree : double;
   cellval, name1, name2 : string;
   df1, df2 : integer;
   xtitle : string;

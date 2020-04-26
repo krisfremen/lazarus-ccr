@@ -188,7 +188,6 @@ var
    prob       : double; // probability of chi square
    SurvT      : DblDyneVec;
    Stat       : DblDyneVec;
-   Dupl       : DblDyneVec;
    Alpha      : DblDyneVec;
    a          : DblDyneVec;
    b          : DblDyneVec;
@@ -277,7 +276,6 @@ begin
 
   SetLength(SurvT,nC + 1);
   SetLength(Stat,nC + 1);
-  SetLength(Dupl,nC + 1);
   SetLength(Alpha,nC + 1);
   SetLength(x,(nC + 1) * (nR + 1));
   SetLength(b,nC + 1);
@@ -533,7 +531,6 @@ begin
 
     SurvT := nil;
     Stat := nil;
-    Dupl := nil;
     Alpha := nil;
     x := nil;
     b := nil;

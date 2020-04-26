@@ -103,7 +103,6 @@ end;
 procedure TResistanceLineForm.ComputeBtnClick(Sender: TObject);
 var
   XYPoints : DblDyneMat;
-  XYMedians : DblDyneMat;
   XMedians : DblDyneVec;
   YMedians : DblDyneVec;
   XVector, YVector : DblDyneVec;
@@ -122,7 +121,6 @@ var
   lReport: TStrings;
 begin
   SetLength(XYPoints, NoCases, NoCases);
-  SetLength(XYMedians, 3, 3);
   SetLength(XMedians, 3);
   SetLength(YMedians, 3);
   SetLength(XVector, NoCases);
@@ -383,7 +381,6 @@ begin
      XVector := nil;
      YMedians := nil;
      XMedians := nil;
-     XYMedians := nil;
      XYPoints := nil;
   end;
 end;

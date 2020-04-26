@@ -104,7 +104,7 @@ end;
 
 procedure TMedianPolishForm.ComputeBtnClick(Sender: TObject);
 var
-  NoSelected, DepVarCol, F1Col, F2Col, i, j, k : integer;
+  DepVarCol, F1Col, F2Col, i, j, k : integer;
   minrow, maxrow, mincol, maxcol : integer;
   intvalue, xrange, yrange, row, col, N, count, iteration : integer;
   X, M, sumrowmedians, sumcolmedians, GrandMedian, scale, TotResid : double;
@@ -167,8 +167,7 @@ begin
       if cellstring = Factor1.Text then F1Col := i;
       if cellstring = Factor2.Text then F2Col := i;
     end;
-    NoSelected := 3;
-    SetLength(ColNoSelected,3);
+    SetLength(ColNoSelected, 3);
     ColNoSelected[0] := DepVarCol;
     ColNoSelected[1] := F1Col;
     ColNoSelected[2] := F2Col;

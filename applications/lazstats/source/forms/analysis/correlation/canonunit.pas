@@ -153,15 +153,13 @@ begin
 end;
 
 procedure TCannonFrm.ComputeBtnClick(Sender: TObject);
-const
-  SEPARATOR = '===========================================================================';
 var
-  i, j, k, count, a_size, b_size, no_factors, novars, IER: integer;
+  i, j, k, count, a_size, b_size, no_factors, novars: integer;
   cellstring, gridstring: string;
   s, m, n, df1, df2, q, w, pcnt_extracted, trace : double;
   minroot, critical_prob, Lambda, Pillia : double;
   chisqr, HLTrace, chiprob, ftestprob, Roys, f, Hroot : double;
-  raa, rbb, rab, rba, bigmat, prod, first_prod, second_prod : DblDyneMat;
+  raa, rbb, rab, rba, bigmat, first_prod, second_prod : DblDyneMat;
   char_equation, raainv, rbbinv, eigenvectors, norm_a, norm_b : DblDyneMat;
   raw_a, raw_b, a_cors, b_cors, eigentrans, theta, tempmat : DblDyneMat;
   mean, variance, stddev, roots, root_chi, chi_prob, pv_a, pv_b : DblDyneVec;
@@ -209,7 +207,6 @@ begin
   SetLength(rab,a_size,b_size);
   SetLength(rba,b_size,a_size);
   SetLength(bigmat,novars+1,novars+1);
-  SetLength(prod,novars,novars);
   SetLength(first_prod,novars,novars);
   SetLength(second_prod,novars,novars);
   SetLength(char_equation,novars,novars);
@@ -296,7 +293,7 @@ begin
     // Get means, standard deviations, etc. for total matrix
     Correlations(novars,selected,bigmat,mean,variance,stddev,errorcode,Ncases);
     count := Ncases;
-    if (IER = 1)then
+    if errorcode then   // wp: was "if (IER = 1) then", but IER is not initialized...
     begin
       MessageDlg('Zero variance found for a variable-terminating', mtError, [mbOK], 0);
       exit;
@@ -327,7 +324,7 @@ begin
       title := 'Left-Right Correlation Matrix';
       MatPrint(rab, a_size, b_size, title, RowLabels, ColLabels, NCases, lReport);
       lReport.Add('');
-      lReport.Add(SEPARATOR);
+      lReport.Add(DIVIDER);
       lReport.Add('');
     end;
 
@@ -367,7 +364,7 @@ begin
     MatPrint(char_equation, b_size, b_size, title, CanLabels, CanLabels, NCases, lReport);
 
     lReport.Add('');
-    lReport.Add(SEPARATOR);
+    lReport.Add(DIVIDER);
     lReport.Add('');
 
     //  now get roots and vectors of the characteristic equation using
@@ -503,7 +500,7 @@ begin
     lReport.Add('Roys Largest Root         F-Test         %10.4f %2.0f %2.0f %12.4f', [Roys, df1, df2, ftestprob]);
 
     lReport.Add('');
-    lReport.Add(SEPARATOR);
+    lReport.Add(DIVIDER);
     lReport.Add('');
 
     if EigenChk.Checked then
@@ -511,7 +508,7 @@ begin
       title := 'Eigenvectors';
       MatPrint(eigenvectors, b_size, b_size, title, CanLabels, CanLabels, NCases, lReport);
       lReport.Add('');
-      lReport.Add(SEPARATOR);
+      lReport.Add(DIVIDER);
       lReport.Add('');
     end;
 
@@ -522,7 +519,7 @@ begin
     MatPrint(norm_b, b_size, b_size, title, ColLabels, CanLabels, NCases, lReport);
 
     lReport.Add('');
-    lReport.Add(SEPARATOR);
+    lReport.Add(DIVIDER);
     lReport.Add('');
 
     title := 'Raw Right Side Weights';
@@ -532,7 +529,7 @@ begin
     MatPrint(raw_b, b_size, b_size, title, ColLabels, CanLabels, NCases, lReport);
 
     lReport.Add('');
-    lReport.Add(SEPARATOR);
+    lReport.Add(DIVIDER);
     lReport.Add('');
 
     title := 'Right Side Correlations with Function';
@@ -542,7 +539,7 @@ begin
     MatPrint(b_cors, b_size, b_size, title, ColLabels, CanLabels, NCases, lReport);
 
     lReport.Add('');
-    lReport.Add(SEPARATOR);
+    lReport.Add(DIVIDER);
     lReport.Add('');
 
     if RedundChk.Checked then
@@ -563,7 +560,7 @@ begin
         lReport.Add('%8d   %15.5f %12.5f', [i, pv_b[i-1], rd_b[i-1]]);
 
       lReport.Add('');
-      lReport.Add(SEPARATOR);
+      lReport.Add(DIVIDER);
       lReport.Add('');
     end;
 
@@ -604,7 +601,6 @@ begin
     char_equation := nil;
     second_prod := nil;
     first_prod := nil;
-    prod := nil;
     rba := nil;
     rab := nil;
     rbb := nil;

@@ -1017,7 +1017,7 @@ end;
 
 procedure TAutoCorrFrm.realft(var data: DblDyneVec; n: longword; isign: integer);
 var
-	i,i1,i2,i3,i4,np3 : longword;
+	i,i1,i2,i3,i4,np3 : integer;  // was: longword;
 	c1,c2,h1r,h1i,h2r,h2i : double;
 	wr,wi,wpr,wpi,wtemp,theta : double;
 

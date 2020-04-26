@@ -165,7 +165,7 @@ procedure TDiscrimFrm.ComputeBtnClick(Sender: TObject);
 var
   i, j, k, grp, grpvalue, matrow, matcol, noroots, dfchi, n2, k2 : integer;
   NoSelected : integer;
-  outline, GroupLabel, ColHead : string;
+  outline, ColHead: string;
   Title : string;
   GrpVar, NoGrps, nowithin, TotalCases, value, grpno : integer;
   ColNoSelected : IntDyneVec;
@@ -229,7 +229,6 @@ begin
             if GroupVar.Text = OS3MainFrm.DataGrid.Cells[j,0] then
             begin
                 GrpVar := j;
-                GroupLabel := OS3MainFrm.DataGrid.Cells[j,0];
                 ColNoSelected[NoSelected-1] := j;
             end;
         end; // next j variable

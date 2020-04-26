@@ -75,24 +75,11 @@ procedure MReg(NoIndep : integer;
                VAR errorcode : boolean;
                PrintAll : boolean);
 
-procedure MReg(NoIndep : integer;
-               {VAR} IndepCols : IntDyneVec;
-               DepCol : integer;
-               {VAR} RowLabels : StrDyneVec;
-               {VAR} Means : DblDyneVec;
-               {VAR} Variances : DblDyneVec;
-               {VAR} StdDevs : DblDyneVec;
-               {VAR} BWeights : DblDyneVec;
-               {VAR} BetaWeights : DblDyneVec;
-               {VAR} BStdErrs : DblDyneVec;
-               {VAR} Bttests : DblDyneVec;
-               {VAR} tProbs : DblDyneVec;
-               VAR R2 : double;
-               VAR stderrest : double;
-               VAR NCases : integer;
-               VAR errorcode : boolean;
-               PrintAll : boolean;
-               AReport: TStrings);
+procedure MReg(NoIndep: integer; const IndepCols: IntDyneVec; DepCol: integer;
+  const RowLabels: StrDyneVec;
+  const Means, Variances, StdDevs, BWeights, BetaWeights, BStdErrs, Bttests, tProbs: DblDyneVec;
+  out R2, StdErrEst: double; out NCases: integer; out ErrorCode: boolean;
+  PrintAll: boolean; AReport: TStrings);
 
 procedure Dynnonsymroots(var a : DblDyneMat; nv : integer;
                       var nf : integer; c : real;
@@ -132,7 +119,7 @@ procedure MReg2(NCases : integer;
                VAR BetaWeights : DblDyneVec;
                VAR Means : DblDyneVec;
                VAR Variances : DblDyneVec;
-               VAR errorcode : integer;
+               out errorcode : integer;
                out StdErrEst: double;
                out constant: double;
                probout : double;
@@ -180,8 +167,8 @@ procedure MatPrint(const xmat: DblDyneMat; Rows,Cols: Integer; const Title: Stri
 
 procedure DynVectorPrint(var AVector: DblDyneVec; NoVars: integer;
   Title: string; var Labels: StrDyneVec; NCases: integer); overload;
-procedure DynVectorPrint(var AVector: DblDyneVec; NoVars: integer;
-  Title: string; var Labels: StrDyneVec; NCases: integer; AReport: TStrings); overload;
+procedure DynVectorPrint(const AVector: DblDyneVec; NoVars: integer;
+  Title: string; const Labels: StrDyneVec; NCases: integer; AReport: TStrings); overload;
 
 procedure scatplot(const x, y: DblDyneVec; NoCases: integer;
   const TitleStr, x_axis, y_axis: string; x_min, x_max, y_min, y_max: double;
@@ -709,24 +696,11 @@ begin
     ErrorCode, PrintAll, OutputFrm.RichEdit.Lines);
 end;
 
-procedure MReg(NoIndep : integer;
-               {var} IndepCols : IntDyneVec;
-               DepCol : integer;
-               {var} RowLabels : StrDyneVec;
-               {var} Means : DblDyneVec;
-               {var} Variances : DblDyneVec;
-               {var} StdDevs : DblDyneVec;
-               {var} BWeights : DblDyneVec;
-               {var} BetaWeights : DblDyneVec;
-               {var} BStdErrs : DblDyneVec;
-               {var} Bttests : DblDyneVec;
-               {var} tProbs : DblDyneVec;
-               var R2 : double;
-               var StdErrEst : double;
-               var NCases : integer;
-               var ErrorCode : boolean;
-               PrintAll : boolean;
-               AReport: TStrings);
+procedure MReg(NoIndep: integer; const IndepCols: IntDyneVec; DepCol: integer;
+  const RowLabels: StrDyneVec;
+  const Means, Variances, StdDevs, BWeights, BetaWeights, BStdErrs, Bttests, tProbs: DblDyneVec;
+  out R2, StdErrEst: double; out NCases: integer; out ErrorCode: boolean;
+  PrintAll: boolean; AReport: TStrings);
 var
   i, j, N: integer;
   X: DblDyneMat;
@@ -754,6 +728,7 @@ begin
   SetLength(ColLabels, NCases);
 
   // initialize
+  errcode := false;
   for i := 0 to NCases do
   begin
     for j := 0 to NoIndep do X[i, j] := 0;
@@ -770,7 +745,6 @@ begin
     StdDevs[i] := 0.0;
     BWeights[i] := 0.0;
     BetaWeights[i] := 0.0;
-    errcode := false;
     for j := 0 to NoCases-1 do XT[i, j] := 0.0;
     for j := 0 to NoIndep do XTX[i, j] := 0.0;
   end;
@@ -888,7 +862,7 @@ begin
   // Get standard errors, squared multiple correlation, tests of significance
   SSres := 0.0;
   for i := 0 to NoIndep do
-    SSres := SSres + (BWeights[i] * XTY[i]);
+    SSres := SSres + BWeights[i] * XTY[i];
   SSres := SSY - SSres;
   resvar := SSres / (NCases - N);
   if resvar > 0.0 then StdErrEst := sqrt(resvar) else StdErrest := 0.0;
@@ -1290,7 +1264,7 @@ procedure MReg2(NCases : integer;
                VAR BetaWeights : DblDyneVec;
                VAR Means : DblDyneVec;
                VAR Variances : DblDyneVec;
-               VAR errorcode : integer;
+               out errorcode : integer;
                out StdErrEst: double;
                out constant: double;
                probout : double;
@@ -1900,10 +1874,10 @@ begin
   DynVectorPrint(AVector, NoVars, Title, Labels, NCases, OutputFrm.RichEdit.Lines);
 end;
 
-procedure DynVectorPrint(var AVector: DblDyneVec;
+procedure DynVectorPrint(const AVector: DblDyneVec;
                          NoVars: integer;
                          Title: string;
-                         var Labels: StrDyneVec;
+                         const Labels: StrDyneVec;
                          NCases: integer;
                          AReport: TStrings);
 var

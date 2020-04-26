@@ -23,8 +23,8 @@ function probf(f,df1,df2 : extended) : extended;
 FUNCTION alnorm(x : double; upper : boolean): double;
 procedure ppnd7 (p : double; VAR normal_dev : double; VAR ifault : integer);
 FUNCTION poly(c : Array of double; nord : integer; x : double): double; // RESULT(fn_val)
-procedure swilk (var init : boolean; var x : DblDyneVec; n : integer; n1 : integer;
-                 n2 : integer; var a : DblDyneVec; var w : double; var pw : double; var ifault : integer);
+procedure swilk (var init : boolean; const x: DblDyneVec; n, n1, n2: integer;
+  const a: DblDyneVec; var w, pw: double; out ifault: integer);
 procedure SVDinverse(VAR a : DblDyneMat; N : integer);
 function probt(t,df1 : double) : double;
 function inverset(Probt, DF : double) : double;
@@ -824,8 +824,8 @@ begin
 END; // FUNCTION poly
 //-----------------------------------------------------------------------
 
-procedure swilk (var init : boolean; var x : DblDyneVec; n : integer; n1 : integer;
-                 n2 : integer; var a : DblDyneVec; var w : double; var pw : double; var ifault : integer);
+procedure swilk (var init: boolean; const x: DblDyneVec; n, n1, n2: integer;
+  const a: DblDyneVec; var w, pw: double; out ifault: integer);
 
 //        ALGORITHM AS R94 APPL. STATIST. (1995) VOL.44, NO.4
 //        Calculates the Shapiro-Wilk W test and its significance level

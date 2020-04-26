@@ -140,16 +140,16 @@ end;
 procedure TNormalityFrm.ApplyBtnClick(Sender: TObject);
 var
   w: Double = 0.0;
-  temp, pw : double;
+  pw: Double = 0.0;
+  temp: double;
   skew, kurtosis : double;
   mean, variance, stddev, deviation, devsqr, M2, M3, M4 : double;
   i, j, n, n1, n2, ier : integer;
-  varlabel : string;
   selcol : integer;
   data, a, z, x : DblDyneVec;
   freq : IntDyneVec;
   fval, jval, DP : DblDyneVec;
-  F1, DPP, D, D1, A0, C1, D15, D10, D05, D025, t2 : double;
+  F1, DPP, D, A0, C1, D15, D10, D05, D025, t2 : double;
   init : boolean;
   msg : string;
 
@@ -181,7 +181,6 @@ begin
 
   init := false;
   n := 0;
-  varlabel := TestVarEdit.Text;
 
   // place values into the data array
   SetLength(data, NoCases+1); // arrays start at 1
@@ -225,8 +224,8 @@ begin
     Cleanup;
     exit;
   end;
-  WEdit.Text := Format('%8.4f', [w]);
-  ProbEdit.Text := Format('%8.4f', [pw]);
+  WEdit.Text := Format('%.4f', [w]);
+  ProbEdit.Text := Format('%.4f', [pw]);
 
   // Now do Lilliefors
   // Get unique scores and their frequencies
@@ -280,8 +279,8 @@ begin
     skew := (n * M3) / ((n - 1) * (n - 2) * stddev * variance);
   kurtosis := (n * (n + 1) * M4) - (3 * M2 * M2 * (n - 1));
   kurtosis := kurtosis /( (n - 1) * (n - 2) * (n - 3) * (variance * variance) );
-  SkewEdit.Text := Format('%8.3f', [skew]);
-  KurtosisEdit.Text := Format('%8.3f', [kurtosis]);
+  SkewEdit.Text := Format('%.3f', [skew]);
+  KurtosisEdit.Text := Format('%.3f', [kurtosis]);
 
   // obtain the test statistic
   for i := 1 to n1 do
@@ -313,8 +312,7 @@ begin
   end;
   DPP := DP[n1];
   D := DPP;
-  D1 := D;
-  StatEdit.Text := Format('%8.3f', [D]);
+  StatEdit.Text := Format('%.3f', [D]);
   A0 := sqrt(n);
   C1 := A0 - 0.01 + (0.85 / A0);
   D15 := 0.775 / C1;
