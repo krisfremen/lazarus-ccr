@@ -8,6 +8,7 @@ object ErrorCurvesFrm: TErrorCurvesFrm
   Caption = 'Alpha and Beta Curves for z tests'
   ClientHeight = 306
   ClientWidth = 350
+  OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
@@ -47,7 +48,6 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     Height = 15
     Top = 154
     Width = 199
-    Anchors = [akTop]
     BorderSpacing.Left = 24
     Caption = 'Standard Deviation of the Distribution'
     ParentColor = False
@@ -105,7 +105,7 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     Alignment = taRightJustify
     BorderSpacing.Top = 8
     TabOrder = 2
-    Text = 'Edit1'
+    Text = 'AltMeanEdit'
   end
   object SDEdit: TEdit
     AnchorSideLeft.Control = Label3
@@ -121,7 +121,7 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     BorderSpacing.Top = 8
     BorderSpacing.Right = 24
     TabOrder = 3
-    Text = 'Edit1'
+    Text = 'SDEdit'
   end
   object TypeIEdit: TEdit
     AnchorSideLeft.Control = SDEdit
@@ -134,7 +134,7 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     Alignment = taRightJustify
     BorderSpacing.Top = 8
     TabOrder = 4
-    Text = 'Edit1'
+    Text = 'TypeIEdit'
   end
   object TypeIIEdit: TEdit
     AnchorSideLeft.Control = SDEdit
@@ -146,9 +146,9 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     Width = 60
     Alignment = taRightJustify
     BorderSpacing.Top = 8
-    BorderSpacing.Bottom = 8
+    BorderSpacing.Bottom = 12
     TabOrder = 5
-    Text = 'Edit1'
+    Text = 'TypeIIEdit'
   end
   object NullType: TRadioGroup
     AnchorSideLeft.Control = Owner
@@ -156,15 +156,15 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = SDEdit
     AnchorSideRight.Side = asrBottom
-    Left = 60
+    Left = 48
     Height = 72
     Top = 8
-    Width = 231
-    Anchors = [akTop, akLeft, akRight]
+    Width = 255
     AutoFill = True
     AutoSize = True
     BorderSpacing.Left = 12
     BorderSpacing.Top = 8
+    BorderSpacing.Right = 12
     Caption = 'Null Hypothesis Characteristic:'
     ChildSizing.LeftRightSpacing = 12
     ChildSizing.TopBottomSpacing = 6
@@ -176,11 +176,11 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 52
-    ClientWidth = 227
+    ClientWidth = 251
     ItemIndex = 1
     Items.Strings = (
-      'One-tailed (Directional alterntive)'
-      'Two-tailed (non-directional alterntive)'
+      'One-tailed (directional alternative)'
+      'Two-tailed (non-directional alternative)'
     )
     TabOrder = 0
   end
@@ -192,80 +192,64 @@ object ErrorCurvesFrm: TErrorCurvesFrm
     AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 8
-    Top = 243
+    Top = 247
     Width = 350
     Anchors = [akTop, akLeft, akRight]
     Shape = bsBottomLine
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 277
+    Left = 287
     Height = 25
-    Top = 259
-    Width = 61
+    Top = 263
+    Width = 55
     Anchors = [akTop, akRight]
     AutoSize = True
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 6
-  end
-  object CancelBtn: TButton
-    AnchorSideTop.Control = Bevel1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = ResetBtn
-    Left = 115
-    Height = 25
-    Top = 259
-    Width = 62
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 7
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 8
   end
   object ResetBtn: TButton
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = ComputeBtn
-    Left = 49
+    Left = 141
     Height = 25
-    Top = 259
+    Top = 263
     Width = 54
     Anchors = [akTop, akRight]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
-    TabOrder = 8
+    TabOrder = 6
   end
   object ComputeBtn: TButton
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = ReturnBtn
-    AnchorSideBottom.Control = ReturnBtn
-    Left = 189
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = CloseBtn
+    Left = 203
     Height = 25
-    Top = 259
+    Top = 263
     Width = 76
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 9
+    TabOrder = 7
   end
 end
