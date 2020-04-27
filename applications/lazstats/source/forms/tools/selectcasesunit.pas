@@ -463,7 +463,7 @@ begin
                   if OS3MainFrm.DataGrid.Cells[filtcol,delrow] = 'NO' then
                   begin
                        OS3MainFrm.DataGrid.Row := delrow;
-                       CutaRow;
+                       CutRow;
                   end
                   else delrow := delrow + 1;
              end;

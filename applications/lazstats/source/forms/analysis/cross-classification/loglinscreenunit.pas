@@ -1,3 +1,13 @@
+// File for testing: ABCLogLinData.laz
+// Use all variables in original order
+// Click the button and define Min/max values:
+//   variable "Row":   1 .. 2
+//   variable "Col":   1 .. 2
+//   variable "Slice": 1 .. 3
+//   variable  "X":    1 .. 9
+//
+// NOTE: the calculation crashes
+
 unit LogLinScreenUnit;
 
 {$mode objfpc}{$H+}
@@ -22,9 +32,8 @@ type
     OutBtn: TBitBtn;
     AllBtn: TBitBtn;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     MarginsChk: TCheckBox;
     GenlModelChk: TCheckBox;
     GroupBox1: TGroupBox;
@@ -44,7 +53,6 @@ type
     CountVarChk: TCheckBox;
     Label1: TLabel;
     procedure AllBtnClick(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -55,8 +63,9 @@ type
     procedure MinEditKeyPress(Sender: TObject; var Key: char);
     procedure OutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure ReturnBtnClick(Sender: TObject);
+    procedure CloseBtnClick(Sender: TObject);
     procedure ScrollBar1Change(Sender: TObject);
+    procedure SelectListSelectionChange(Sender: TObject; User: boolean);
     procedure Step2BtnClick(Sender: TObject);
     function ArrayPosition(Sender: TObject; NoDims : integer;
                            VAR Data : DblDyneVec;
@@ -68,10 +77,12 @@ type
                         VAR Indexes : IntDyneMat;
                         VAR Data : DblDyneVec;
                         VAR Margins : IntDyneMat);
+    procedure VarListSelectionChange(Sender: TObject; User: boolean);
 
   private
     { private declarations }
     FAutoSized: Boolean;
+    procedure UpdateBtnStates;
   procedure Screen(VAR NVAR : integer;
                  VAR MP : integer; VAR MM : integer;
                  VAR NTAB : integer; VAR TABLE : DblDyneVec;
@@ -130,7 +141,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TLogLinScreenFrm }
 
@@ -156,7 +167,7 @@ begin
      for i := 1 to NoVariables do VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
 end;
 
-procedure TLogLinScreenFrm.ReturnBtnClick(Sender: TObject);
+procedure TLogLinScreenFrm.CloseBtnClick(Sender: TObject);
 begin
      Maximums := nil;
      Minimums := nil;
@@ -167,7 +178,13 @@ end;
 
 procedure TLogLinScreenFrm.ScrollBar1Change(Sender: TObject);
 begin
-     VarNoEdit.Text := IntToStr(ScrollBar1.Position);
+  VarNoEdit.Text := IntToStr(ScrollBar1.Position);
+end;
+
+procedure TLogLinScreenFrm.SelectListSelectionChange(Sender: TObject;
+  User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 procedure TLogLinScreenFrm.Step2BtnClick(Sender: TObject);
@@ -186,16 +203,23 @@ begin
 end;
 
 procedure TLogLinScreenFrm.InBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  i: integer;
 begin
-     index := VarList.ItemIndex;
-     SelectList.Items.Add(VarList.Items.Strings[index]);
-     VarList.Items.Delete(index);
-     OutBtn.Enabled := true;
-     NoDims := NoDims + 1;
-     ScrollBar1.Max := NoDims;
-     index := VarList.Items.Count;
-     if index <= 0 then InBtn.Enabled := false;
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      SelectList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      NoDims := NoDims + 1;
+      i := 0;
+    end else
+      i := i + 1;
+  end;
+  Scrollbar1.Max := NoDims;
+  UpdateBtnStates;
 end;
 
 procedure TLogLinScreenFrm.MaxEditKeyPress(Sender: TObject; var Key: char);
@@ -227,12 +251,11 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
@@ -243,7 +266,6 @@ end;
 procedure TLogLinScreenFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TLogLinScreenFrm.FormShow(Sender: TObject);
@@ -258,25 +280,16 @@ begin
   ContextHelpForm.HelpMessage((Sender as TButton).Tag);
 end;
 
-procedure TLogLinScreenFrm.CancelBtnClick(Sender: TObject);
-begin
-     Maximums := nil;
-     Minimums := nil;
-     Response := nil;
-     Interact := nil;
-     Close;
-end;
-
 procedure TLogLinScreenFrm.AllBtnClick(Sender: TObject);
-VAR i, count : integer;
+var
+  i: integer;
 begin
-     count := VarList.Items.Count;
-     for i := 0 to count-1 do
-         SelectList.Items.Add(VarList.Items.Strings[i]);
-     InBtn.Enabled := false;
-     OutBtn.Enabled := true;
-     NoDims := SelectList.Items.Count;
-     ScrollBar1.Max := NoDims;
+  for i := 0 to VarList.Items.Count-1 do
+    SelectList.Items.Add(VarList.Items[i]);
+  VarList.Clear;
+  NoDims := SelectList.Items.Count;
+  ScrollBar1.Max := NoDims;
+  UpdateBtnStates;
 end;
 
 procedure TLogLinScreenFrm.ComputeBtnClick(Sender: TObject);
@@ -320,9 +333,10 @@ var
    IFAULT : integer;
    TABLE : DblDyneVec;
    DIM : IntDyneVec;
+   lReport: TStrings;
 begin
-     OutputFrm.RichEdit.Clear;
-
+  lReport := TStringList.Create;
+  try
      // Allocate space for labels, DimSize and SubScripts
      NoVars := SelectList.Items.Count;
      SetLength(Labels,NoVars);
@@ -407,21 +421,21 @@ begin
      // Print Marginal totals if requested
      if MarginsChk.Checked then
      begin
-          OutputFrm.RichEdit.Clear;
-          OutputFrm.RichEdit.Lines.Add('FILE: '+ OS3MainFrm.FileNameEdit.Text);
-          OutputFrm.RichEdit.Lines.Add('');
+          lReport.Add('FILE: '+ OS3MainFrm.FileNameEdit.Text);
+          lReport.Add('');
           for i := 1 to NoDims do
           begin
                HeadStr := 'Marginal Totals for ' + Labels[i-1];
                k := DimSize[i-1];
                for j := 0 to k-1 do WorkVec[j] := Margins[i-1,j];
-               VecPrint(WorkVec,k,HeadStr);
+               VecPrint(WorkVec,k,HeadStr, lReport);
           end;
      end;
-     OutputFrm.RichEdit.Lines.Add('');
-     astr := Format('Total Frequencies = %d',[N]);
-     OutputFrm.RichEdit.Lines.Add(astr);
-     OutputFrm.ShowModal;
+     lReport.Add('');
+     lReport.Add('Total Frequencies: %d', [N]);
+     lReport.Add('');
+     lReport.Add(DIVIDER);
+     lReport.Add('');
 
      // Get Expected cell values
      U := 0.0; // overall mean (mu) of log linear model
@@ -440,18 +454,23 @@ begin
      U := U / ArraySize;
 
      // print expected values
-     OutputFrm.RichEdit.Clear;
-     OutputFrm.RichEdit.Lines.Add('FILE: '+ OS3MainFrm.FileNameEdit.Text);
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.RichEdit.Lines.Add('EXPECTED CELL VALUES FOR MODEL OF COMPLETE INDEPENDENCE');
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.RichEdit.Lines.Add('Cell          Observed  Expected  Log Expected');
+     lReport.Add('FILE: '+ OS3MainFrm.FileNameEdit.Text);
+     lReport.Add('');
+     lReport.Add('EXPECTED CELL VALUES FOR MODEL OF COMPLETE INDEPENDENCE');
+     lReport.Add('');
+     astr := 'Cell';
+     for j := 2 to NoDims do astr := astr + '    ';
+     lReport.Add(astr + 'Observed  Expected  Log Expected');
+     astr := '';
+     for j := 1 to NoDims do astr := astr + '--- ';
+     astr := astr + '---------- ---------- ----------';
+     lReport.Add(astr);
      for i := 1 to ArraySize do
      begin
           astr := '';
           for j := 1 to NoDims do astr := astr + format('%3d ',[Indexes[i-1,j-1]]);
           astr := astr + format('%10.0f %10.2f %10.3f',[Data[i-1],Expected[i-1],LogM[i-1]]);
-          OutputFrm.RichEdit.Lines.Add(astr);
+          lReport.Add(astr);
      end;
      chi2 := 0.0;
      G2 := 0.0;
@@ -467,24 +486,22 @@ begin
      for i := 1 to NoDims do DF := DF * (DimSize[i-1]-1);
      ProbChi2 := 1.0 - Chisquaredprob(chi2,DF);
      ProbG2 := 1.0 - Chisquaredprob(G2,DF);
-     astr := format('Chisquare = %10.3f with probability = %10.3f (DF = %d)',[chi2,ProbChi2,DF]);
-     OutputFrm.RichEdit.Lines.Add(astr);
-     astr := format('G squared = %10.3f with probability = %10.3f (DF = %d)',[G2,ProbG2,DF]);
-     OutputFrm.RichEdit.Lines.Add(astr);
-     OutputFrm.RichEdit.Lines.Add('');
-     astr := format('U (mu) for general loglinear model = %10.2f',[U]);
-     OutputFrm.RichEdit.Lines.Add(astr);
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.ShowModal;
+     lReport.Add('Chisquare: %10.3f with probability %10.3f (DF = %d)',[chi2, ProbChi2, DF]);
+     lReport.Add('G squared: %10.3f with probability %10.3f (DF = %d)',[G2, ProbG2, DF]);
+     lReport.Add('');
+     lReport.Add('U (mu) for general loglinear model: %10.2f', [U]);
+
+     lReport.Add('');
+     lReport.Add(DIVIDER);
+     lReport.Add('');
 
      // Get log linear model values for each cell
      // get M's for each cell
-     OutputFrm.RichEdit.Clear;
-     OutputFrm.RichEdit.Lines.Add('First Order LogLinear Model Factors and N of Cells in Each');
+     lReport.Add('First Order LogLinear Model Factors and N of Cells in Each');
      astr := 'CELL              ';
      for i := 1 to NoDims do astr := astr + format(' U%d  N Cells   ',[i]);
-     OutputFrm.RichEdit.Lines.Add(astr);
-     OutputFrm.RichEdit.Lines.Add('');
+     lReport.Add(astr);
+     lReport.Add('');
      for i := 1 to ArraySize do // cell
      begin
           astr := '';
@@ -506,20 +523,20 @@ begin
                Mu := Mu / count - U;
                astr := astr + format('%10.3f %3d ',[Mu,count]);
           end;
-          OutputFrm.RichEdit.Lines.Add(astr);
+          lReport.Add(astr);
      end;
-     OutputFrm.ShowModal;
+     lReport.Add('');
+     lReport.Add(DIVIDER);
+     lReport.Add('');
 
      // get second order interactions
-     OutputFrm.RichEdit.Clear;
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.RichEdit.Lines.Add('Second Order Loglinear Model Terms and N of Cells in Each');
+     lReport.Add('Second Order Loglinear Model Terms and N of Cells in Each');
      astr := 'CELL              ';
      for i := 1 to NoDims-1 do
          for j := i + 1 to NoDims do
              astr := astr + format('U%d%d  N Cells  ',[i,j]);
-     OutputFrm.RichEdit.Lines.Add(astr);
-     OutputFrm.RichEdit.Lines.Add('');
+     lReport.Add(astr);
+     lReport.Add('');
      for i := 1 to ArraySize do // cell
      begin
           astr := '';
@@ -542,14 +559,15 @@ begin
                          end;
                     end; // next l
                     Mu := Mu / count - U;
-                    astr := astr + format('%10.3f %3d',[Mu,count]);
+                    astr := astr + Format('%10.3f %3d', [Mu, count]);
                end; // next k (second term subscript)
           end; // next j (first term subscript)
-          OutputFrm.RichEdit.Lines.Add(astr);
+          lReport.Add(astr);
      end; // next i
 
-     OutputFrm.ShowModal;
-     OutputFrm.RichEdit.Clear;
+     lReport.Add('');
+     lReport.Add(DIVIDER);
+     lReport.Add('');
 
      // get maximum no. of interactions in saturated model
      MaxCombos(NoDims, MM, MP);
@@ -581,43 +599,37 @@ begin
           COORD,X,Y,IFAULT);
 
      // show results
-     astr := 'SCREEN FOR INTERACTIONS AMONG THE VARIABLES';
-     OutputFrm.RichEdit.Lines.Add(astr);
-     astr := 'Adapted from the Fortran program by Lustbader and Stodola printed in';
-     OutputFrm.RichEdit.Lines.Add(astr);
-     astr := 'Applied Statistics, Volume 30, Issue 1, 1981, pages 97-105 as Algorithm';
-     OutputFrm.RichEdit.Lines.Add(astr);
-     astr := 'AS 160 Partial and Marginal Association in Multidimensional Contingency Tables';
-     OutputFrm.RichEdit.Lines.Add(astr);
-     OutputFrm.RichEdit.Lines.Add('');
-     astr := 'Statistics for tests that the interactions of a given order are zero';
-     OutputFrm.RichEdit.Lines.Add(astr);
-     astr := 'ORDER     STATISTIC    D.F.         PROB.';
-     OutputFrm.RichEdit.Lines.Add(astr);
+     lReport.Add('SCREEN FOR INTERACTIONS AMONG THE VARIABLES');
+     lReport.Add('Adapted from the Fortran program by Lustbader and Stodola printed in');
+     lReport.Add('Applied Statistics, Volume 30, Issue 1, 1981, pages 97-105 as Algorithm');
+     lReport.Add('AS 160 Partial and Marginal Association in Multidimensional Contingency Tables');
+     lReport.Add('');
+     lReport.Add('Statistics for tests that the interactions of a given order are zero');
+     lReport.Add('ORDER     STATISTIC      D.F.       PROB.');
+     lReport.Add('-----     ----------     ----     ----------');
      for i := 1 to NoDims do
      begin
           ProbChi2 := 1.0 - ChiSquaredProb(GSQ[i],DGFR[i]);
-          astr := format('%5d     %10.3f      %3d  %10.3f',[i,GSQ[i],DGFR[i],ProbChi2]);
-          OutputFrm.RichEdit.Lines.Add(astr);
+          lReport.Add('%5d     %10.3f     %4d     %10.3f',[i,GSQ[i],DGFR[i],ProbChi2]);
      end;
-     OutputFrm.RichEdit.Lines.Add('');
-     astr := 'Statistics for Marginal Association Tests';
-     OutputFrm.RichEdit.Lines.Add(astr);
-     astr := 'VARIABLE  ASSOC.  PART ASSOC. MARGINAL ASSOC. D.F.    PROB';
-     OutputFrm.RichEdit.Lines.Add(astr);
+     lReport.Add('');
+     lReport.Add('Statistics for Marginal Association Tests');
+     lReport.Add('VARIABLE     ASSOC.    PART ASSOC.   MARGINAL ASSOC.   D.F.   PROB');
+     lReport.Add('--------     ------    -----------   ---------------   ----   ----------');
      for i := 1 to NoDims-1 do
      begin
           for j := 1 to MP do
           begin
                ProbChi2 := 1.0 - ChiSquaredProb(MARG[i,j],DFS[i,j]);
-               astr := format('%5d     %5d    %10.3f  %10.3f  %3d   %10.3f',
+               lReport.Add('%6d        %5d     %10.3f    %12.3f      %3d    %10.3f',
                        [i,j,Part[i,j],MARG[i,j], DFS[i,j],ProbChi2]);
-               OutputFrm.RichEdit.Lines.Add(astr);
           end;
      end;
-     OutputFrm.ShowModal;
-     OutputFrm.RichEdit.Clear;
 
+     DisplayReport(lReport);
+
+  finally
+     lReport.Free;
      TABLE := nil;
      DIM := nil;
      Y := nil;
@@ -647,20 +659,27 @@ begin
      Subscripts := nil;
      DimSize := nil;
      Labels := nil;
+  end;
 end;
 
 procedure TLogLinScreenFrm.OutBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  i: integer;
 begin
-     index := SelectList.ItemIndex;
-     if index < 0 then exit;
-     VarList.Items.Add(SelectList.Items.Strings[index]);
-     SelectList.Items.Delete(index);
-     index := SelectList.Items.Count;
-     if index <= 0 then OutBtn.Enabled := false;
-     InBtn.Enabled := true;
-     NoDims := NoDims - 1;
-     if NoDims > 0 then ScrollBar1.Max := NoDims else ScrollBar1.Max := 1;
+  i := 0;
+  while i < SelectList.Items.Count do
+  begin
+    if SelectList.Selected[i] then
+    begin
+      VarList.Items.Add(SelectList.Items[i]);
+      SelectList.Items.Delete(i);
+      i := 0;
+      NoDims := NoDims - 1;
+    end else
+      i := i + 1;
+  end;
+  if NoDims > 0 then ScrollBar1.Max := NoDims else ScrollBar1.Max := 1;
+  UpdateBtnStates;
 end;
 
 procedure TLogLinScreenFrm.Screen(var NVAR: integer; var MP: integer;
@@ -1163,6 +1182,18 @@ begin
                Margins[j-1,category-1] := Margins[j-1,category-1] + Round(Data[i-1]);
           end;
      end;
+end;
+
+procedure TLogLinScreenFrm.UpdateBtnStates;
+begin
+  InBtn.Enabled := AnySelected(VarList);
+  OutBtn.Enabled := AnySelected(SelectList);
+  AllBtn.Enabled := VarList.Items.Count > 0;
+end;
+
+procedure TLogLinScreenFrm.VarListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 initialization

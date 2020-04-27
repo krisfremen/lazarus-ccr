@@ -7,13 +7,13 @@ interface
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Clipbrd,
-  Globals, OptionsUnit, DictionaryUnit, OutputUnit;
+  Globals, OptionsUnit, DictionaryUnit;
 
 Function GoodRecord(Row, NoVars: integer; const GridPos: IntDyneVec): boolean;
 procedure FormatCell(Col, Row : integer);
 procedure FormatGrid;
 function IsNumeric(s : string) : boolean;
-procedure VecPrint(vector : IntDyneVec; Size : integer; Heading : string);
+procedure VecPrint(vector: IntDyneVec; Size: integer; Heading: string; AReport: TStrings);
 procedure SaveOS2File;
 procedure OpenOS2File;
 procedure OpenOS2File(const AFileName: String; ShowDictionaryForm: Boolean);
@@ -22,11 +22,11 @@ procedure CopyColumn;
 procedure PasteColumn;
 procedure InsertCol;
 procedure InsertRow;
-procedure CutaRow;
-procedure CopyaRow;
-procedure PasteaRow;
-procedure PrintDict;
-procedure PrintData;
+procedure CutRow;
+procedure CopyRow;
+procedure PasteRow;
+procedure PrintDict(AReport: TStrings);
+procedure PrintData(AReport: TStrings);
 procedure OpenTabFile;
 procedure SaveTabFile;
 function ValidValue(row, col : integer) : boolean;
@@ -193,43 +193,44 @@ begin
 end;
 //-----------------------------------------------------------------------------
 
-procedure VecPrint(vector : IntDyneVec; Size : integer; Heading : string);
+procedure VecPrint(vector: IntDyneVec; Size: integer; Heading: string; AReport: TStrings);
 var
-   i, start, last : integer;
-   nvals : integer;
-   done : boolean;
-   astr : string;
-
+  i, start, last: integer;
+  nvals: integer;
+  done: boolean;
+  astr: string;
 begin
-     nvals := 8;
-     done := false;
-     OutPutFrm.RichEdit.Lines.Add('');
-     OutPutFrm.RichEdit.Lines.Add(Heading);
-     OutPutFrm.RichEdit.Lines.Add('');
-     start := 1;
-     last := nvals;
-     if last > Size then last := Size;
-     while not done do
-     begin
-          astr := '';
-          for i := start to last do
-               astr := astr + format('%8d ',[i]);
-          OutPutFrm.RichEdit.Lines.Add(astr);
-          astr := '';
-          for i := start to last do
-               astr := astr + format('%8d ',[vector[i-1]]);
-          OutPutFrm.RichEdit.Lines.Add(astr);
-          if last < Size then
-          begin
-               OutPutFrm.RichEdit.Lines.Add('');
-               start := last + 1;
-               last := start + nvals - 1;
-               if last > Size then last := Size;
-          end
-          else done := true;
-     end;
+  nvals := 8;
+  done := false;
+  AReport.Add('');
+  AReport.Add(Heading);
+  Areport.Add('');
+  start := 1;
+  last := nvals;
+  if last > Size then last := Size;
+
+  while not done do
+  begin
+    astr := '';
+    for i := start to last do
+      astr := astr + Format('%8d ',[i]);
+    AReport.Add(astr);
+
+    astr := '';
+    for i := start to last do
+      astr := astr + Format('%8d ',[vector[i-1]]);
+    AReport.Add(astr);
+    if last < Size then
+    begin
+      AReport.Add('');
+      start := last + 1;
+      last := start + nvals - 1;
+      if last > Size then last := Size;
+    end else
+      done := true;
+  end;
 end;
-//-------------------------------------------------------------------
+
 procedure SaveOS2File;
 var
    F: TextFile;
@@ -462,11 +463,11 @@ end;
 
 procedure PasteColumn;
 var
-   col, i, j : integer;
-   buf : pchar;
-   size : integer;
-   strarray : array[0..100000] of char;     // wp: Wow! What's this?
-
+  col, i, j: integer;
+  //buf: pchar;
+  //size: integer;
+  s: String;
+   //strarray : array[0..100000] of char;     // wp: Wow! What's this?
 begin
      col := OS3MainFrm.DataGrid.Col;
      NoVariables := OS3MainFrm.DataGrid.ColCount-1;
@@ -483,159 +484,163 @@ begin
 //           NoVariables := NoVariables + 1;
            OS3MainFrm.NoVarsEdit.Text := IntToStr(NoVariables);
      end;
+
+     s := Clipboard.AsText;
+     OS3MainFrm.DataGrid.Cols[col].Text := s;
+     {
      buf := strarray;               // wp: Is this needed?
      size := 100000;
      ClipBoard.GetTextBuf(buf,size);
      OS3MainFrm.DataGrid.Cols[col].SetText(buf);
+     }
 end;
 //-------------------------------------------------------------------
 
-procedure CutaRow;
+procedure CutRow;
 var
-   row, i, j : integer;
-   buf : pchar;
-
+  row, i, j: integer;
+  buf: pchar;
 begin
-   row := OS3MainFrm.DataGrid.Row;
-   buf := OS3MainFrm.DataGrid.Rows[row].GetText;
-   ClipBoard.SetTextBuf(buf);
-//   TempStream.Clear;
-//   OS3MainFrm.DataGrid.Rows[row].SaveToStream(TempStream);
-   for i := 1 to NoVariables do OS3MainFrm.DataGrid.Cells[i,row] := '';
+  row := OS3MainFrm.DataGrid.Row;
+  buf := OS3MainFrm.DataGrid.Rows[row].GetText;
+  ClipBoard.SetTextBuf(buf);
+
+   for i := 1 to NoVariables do
+     OS3MainFrm.DataGrid.Cells[i,row] := '';
    if row < NoCases then
    begin // move rows below up 1
          for i := row + 1 to NoCases do
              for j := 1 to NoVariables do OS3MainFrm.DataGrid.Cells[j,i-1] := OS3MainFrm.DataGrid.Cells[j,i];
          for j := 1 to NoVariables do OS3MainFrm.DataGrid.Cells[j,NoCases] := '';
    end;
+
    OS3MainFrm.DataGrid.RowCount := OS3MainFrm.DataGrid.RowCount - 1;
    OS3MainFrm.RowEdit.Text := IntToStr(OS3MainFrm.DataGrid.RowCount-1);
    NoCases := NoCases - 1;
    OS3MainFrm.NoCasesEdit.Text := IntToStr(NoCases);
+
    // renumber cases
    for i := 1 to NoCases do OS3MainFrm.DataGrid.Cells[0,i] := 'CASE ' + IntToStr(i);
 end;
 //-------------------------------------------------------------------
 
-procedure CopyaRow;
+procedure CopyRow;
 var
-   row : integer;
-   buf : pchar;
-
+  row: integer;
+  buf: pchar;
 begin
-     row := OS3MainFrm.DataGrid.Row;
-     buf := OS3MainFrm.DataGrid.Rows[row].GetText;
-     ClipBoard.SetTextBuf(buf);
+  row := OS3MainFrm.DataGrid.Row;
+  buf := OS3MainFrm.DataGrid.Rows[row].GetText;
+  ClipBoard.SetTextBuf(buf);
 //     TempStream.Clear;
 //     OS3MainFrm.DataGrid.Rows[row].SaveToStream(TempStream);
 end;
 //-------------------------------------------------------------------
 
-procedure PasteaRow;
+procedure PasteRow;
 var
-   row, i, j : integer;
-   buf : pchar;
-   strarray : array[0..100000] of char;      // wp: Like above
-   size : integer;
+  row, i, j: integer;
+  {
+  buf: pchar;
+  strarray: array[0..100000] of char;      // wp: Like above
+  size: integer; }
 
 begin
-     row := OS3MainFrm.DataGrid.Row;
-     OS3MainFrm.DataGrid.RowCount := OS3MainFrm.DataGrid.RowCount + 1;
-     OS3MainFrm.RowEdit.Text := IntToStr(OS3MainFrm.DataGrid.RowCount-1);
-     if row <= NoCases then // move all down before inserting
-     begin
-          for i := NoCases downto row do
-               for j := 1 to NoVariables do
-                   OS3MainFrm.DataGrid.Cells[j,i+1] := OS3MainFrm.DataGrid.Cells[j,i];
-     end;
-     OS3MainFrm.DataGrid.Row := row;
+  row := OS3MainFrm.DataGrid.Row;
+  OS3MainFrm.DataGrid.RowCount := OS3MainFrm.DataGrid.RowCount + 1;
+  OS3MainFrm.RowEdit.Text := IntToStr(OS3MainFrm.DataGrid.RowCount-1);
+  if row <= NoCases then // move all down before inserting
+  begin
+    for i := NoCases downto row do
+      for j := 1 to NoVariables do
+        OS3MainFrm.DataGrid.Cells[j,i+1] := OS3MainFrm.DataGrid.Cells[j,i];
+  end;
+  OS3MainFrm.DataGrid.Row := row;
+  OS3MainFrm.DataGrid.Rows[row].Text := Clipboard.AsText;
+
+     {
      buf := strarray;                       // wp: is this needed?
      size := 100000;
      ClipBoard.GetTextBuf(buf,size);
      OS3MainFrm.DataGrid.Rows[row].SetText(buf);
+     }
 //   Use the following instead of the previous 4 if clipboard is unavailable
 //     TempStream.Position := 0;
 //     OS3MainFrm.DataGrid.Rows[row].LoadFromStream(TempStream);
-     NoCases := NoCases + 1;
-     OS3MainFrm.NoCasesEdit.Text := IntToStr(NoCases);
-     // renumber cases
-     for i := 1 to NoCases do OS3MainFrm.DataGrid.Cells[0,i] := 'CASE ' + IntToStr(i);
 
+   NoCases := NoCases + 1;
+   OS3MainFrm.NoCasesEdit.Text := IntToStr(NoCases);
+
+  // renumber cases
+  for i := 1 to NoCases do OS3MainFrm.DataGrid.Cells[0,i] := 'CASE ' + IntToStr(i);
 end;
 //-------------------------------------------------------------------
 
-procedure PrintDict;
+procedure PrintDict(AReport: TStrings);
 var
-   outline: string;
-   i : integer;
-
+  outline: string;
+  i: integer;
 begin
-     OutputFrm.RichEdit.Clear;
-     OutputFrm.RichEdit.Alignment := taLeftJustify;
-     outline := OS3MainFrm.FileNameEdit.Text + ' VARIABLE DICTIONARY';
-     OutputFrm.RichEdit.Lines.Add(outline);
-     OutputFrm.RichEdit.Lines.Add('');
-     for i:= 0 to NoVariables do
-     begin
-          outline := '';
-          outline := outline + '| ' + format('%9s',[DictionaryFrm.DictGrid.Cells[0,i]]);
-          outline := outline + ' | ' + format('%10s',[DictionaryFrm.DictGrid.Cells[1,i]]);
-          outline := outline + ' | ' + format('%15s',[DictionaryFrm.DictGrid.Cells[2,i]]);
-          outline := outline + ' | ' + format('%6s',[DictionaryFrm.DictGrid.Cells[3,i]]);
-          outline := outline + ' | ' + format('%6s',[DictionaryFrm.DictGrid.Cells[4,i]]);
-          outline := outline + ' | ' + format('%8s',[DictionaryFrm.DictGrid.Cells[5,i]]);
-          outline := outline + ' | ' + format('%7s',[DictionaryFrm.DictGrid.Cells[6,i]]);
-          outline := outline + ' | ' + format('%6s',[DictionaryFrm.DictGrid.Cells[7,i]]);
-          OutPutFrm.RichEdit.Lines.Add(outline);
-     end;
-     OutputFrm.ShowModal;
+  AReport.Add(OS3MainFrm.FileNameEdit.Text + ' VARIABLE DICTIONARY');
+  AReport.Add('');
+
+  for i:= 0 to NoVariables do
+  begin
+    outline := '';
+    outline := outline +  '| ' + Format('%9s',[DictionaryFrm.DictGrid.Cells[0,i]]);
+    outline := outline + ' | ' + Format('%10s',[DictionaryFrm.DictGrid.Cells[1,i]]);
+    outline := outline + ' | ' + Format('%15s',[DictionaryFrm.DictGrid.Cells[2,i]]);
+    outline := outline + ' | ' + Format('%6s',[DictionaryFrm.DictGrid.Cells[3,i]]);
+    outline := outline + ' | ' + Format('%6s',[DictionaryFrm.DictGrid.Cells[4,i]]);
+    outline := outline + ' | ' + Format('%8s',[DictionaryFrm.DictGrid.Cells[5,i]]);
+    outline := outline + ' | ' + Format('%7s',[DictionaryFrm.DictGrid.Cells[6,i]]);
+    outline := outline + ' | ' + Format('%6s',[DictionaryFrm.DictGrid.Cells[7,i]]);
+    AReport.Add(outline);
+  end;
 end;
 //-------------------------------------------------------------------
 
-procedure PrintData;
+procedure PrintData(AReport: TStrings);
 var
-   outline: string;
-   startcol: integer;
-   endcol: integer;
-   done: boolean;
-   cellstring: string;
-   i, j: integer;
-
+  outline: string;
+  startcol: integer;
+  endcol: integer;
+  done: boolean;
+  i, j: integer;
 begin
-     OutPutFrm.RichEdit.Clear;
-     OutPutFrm.RichEdit.Alignment := taLeftJustify;
-     outline := OS3MainFrm.FileNameEdit.Text;
-     OutPutFrm.RichEdit.Lines.Add(outline);
-     outline := IntToStr(NoCases);
-     outline := 'No. of Cases = ' + outline;
-     outline := outline + ', No. of Variables = ';
-     outline := outline + IntToStr(NoVariables);
-     OutPutFrm.RichEdit.Lines.Add(outline);
-     OutPutFrm.RichEdit.Lines.Add('');
-     done := false;
-     startcol := 1;
-     while done = false do
-     begin
-          endcol := startcol + 7;
-          if endcol > NoVariables then endcol := NoVariables;
-          for i:= 0 to NoCases do
-          begin
-               outline := '';
-               outline := format('%10s',[Trim(OS3MainFrm.DataGrid.Cells[0,i])]);
-               for j := startcol to endcol do
-               begin
-                    cellstring := format('%10s',[Trim(OS3MainFrm.DataGrid.Cells[j,i])]);
-                    outline := outline + cellstring;
-               end;
-               OutPutFrm.RichEdit.Lines.Add(outline);
-          end;
-          if endcol = NoVariables then done := true else
-          begin
-               startcol := endcol+1;
-               OutPutFrm.RichEdit.Lines.Add('');
-          end;
-     end;
-     OutPutFrm.ShowModal;
+  AReport.Add(OS3MainFrm.FileNameEdit.Text);
+
+  outline := IntToStr(NoCases);
+  outline := 'No. of Cases = ' + outline;
+  outline := outline + ', No. of Variables = ';
+  outline := outline + IntToStr(NoVariables);
+  AReport.Add(outline);
+  AReport.Add('');
+
+  done := false;
+  startcol := 1;
+
+  while not done do
+  begin
+    endcol := startcol + 7;
+    if endcol > NoVariables then endcol := NoVariables;
+    for i:= 0 to NoCases do
+    begin
+      outline := '';
+      outline := Format('%10s',[Trim(OS3MainFrm.DataGrid.Cells[0,i])]);
+      for j := startcol to endcol do
+        outline := outline + Format('%10s', [Trim(OS3MainFrm.DataGrid.Cells[j,i])]);
+      AReport.Add(outline);
+    end;
+
+    if endcol = NoVariables then
+      done := true
+    else
+    begin
+      startcol := endcol+1;
+      AReport.Add('');
+    end;
+  end;
 end;
 //-------------------------------------------------------------------
 
@@ -1654,8 +1659,7 @@ begin
 end;
 
 function StringsToInt(strcol: integer; VAR newcol : integer; prompt : boolean) : boolean;
-label endit;
-VAR
+var
    i, j, k, NoStrings: integer;
    TempString, response : string;
    dup, savenewcol, strtype : boolean;
@@ -1675,10 +1679,11 @@ begin
         SetLength(OneString,NoCases+1);
 
         // check to see if strcol is a string variable
-        if DictionaryFrm.DictGrid.Cells[4,strcol] = 'S' then strtype :=true
+        if DictionaryFrm.DictGrid.Cells[4,strcol] = 'S' then
+          strtype :=true
         else begin
-                ShowMessage('ERROR! Column selected is not defined as a string variable');
-                goto endit;
+          MessageDlg('Column selected is not defined as a string variable', mtError, [mbOK], 0);
+          exit;
         end;
 
         // read the strings into the StrGrps array
@@ -1753,11 +1758,11 @@ begin
         end;
 
         // clean up memory
-endit:  OneString := nil;
+        OneString := nil;
         StrGrps := nil;
 
         // return results
-        StringsToInt := savenewcol;
+        Result := savenewcol;
 end;
 
 

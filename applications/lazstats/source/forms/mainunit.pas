@@ -134,9 +134,9 @@ type
     CutCol: TMenuItem;
     PasteCol: TMenuItem;
     NewRow: TMenuItem;
-    CopyRow: TMenuItem;
-    CutRow: TMenuItem;
-    PasteRow: TMenuItem;
+    CopyRowMenu: TMenuItem;
+    CutRowMenu: TMenuItem;
+    PasteRowMenu: TMenuItem;
     MenuItem71: TMenuItem;
     MenuItem72: TMenuItem;
     MenuItem73: TMenuItem;
@@ -264,14 +264,14 @@ type
     procedure CloseFileBtnClick(Sender: TObject);
     procedure CompareDistsClick(Sender: TObject);
     procedure CopyColClick(Sender: TObject);
-    procedure CopyRowClick(Sender: TObject);
+    procedure CopyRowMenuClick(Sender: TObject);
     procedure CorrDiffClick(Sender: TObject);
     procedure CorrespondenceClick(Sender: TObject);
     procedure CrossTabsClick(Sender: TObject);
     procedure CSVFileInClick(Sender: TObject);
     procedure CSVFileOutClick(Sender: TObject);
     procedure CutColClick(Sender: TObject);
-    procedure CutRowClick(Sender: TObject);
+    procedure CutRowMenuClick(Sender: TObject);
     procedure DataGridClick(Sender: TObject);
     procedure DataGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
       );
@@ -381,7 +381,7 @@ type
     procedure OpenFileBtnClick(Sender: TObject);
     procedure OptionClick(Sender: TObject);
     procedure PasteColClick(Sender: TObject);
-    procedure PasteRowClick(Sender: TObject);
+    procedure PasteRowMenuClick(Sender: TObject);
     procedure pcontrochartClick(Sender: TObject);
 //    procedure PicViewClick(Sender: TObject);
     procedure PlotXvsYClick(Sender: TObject);
@@ -858,9 +858,9 @@ begin
   PasteColumn;
 end;
 
-procedure TOS3MainFrm.PasteRowClick(Sender: TObject);
+procedure TOS3MainFrm.PasteRowMenuClick(Sender: TObject);
 begin
-  PasteARow;
+  PasteRow;
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "p Control Chart"
@@ -888,13 +888,28 @@ begin
 end;
 
 procedure TOS3MainFrm.PrintDefsClick(Sender: TObject);
+var
+  lReport: TStrings;
 begin
-  PrintDict;
+  lReport := TStringList.Create;
+  try
+    PrintDict(lReport);
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
+  end;
 end;
 
 procedure TOS3MainFrm.PrintGridClick(Sender: TObject);
+var
+  lReport: TStrings;
 begin
-  PrintData;
+  lReport := TStringList.Create;
+  try
+    PrintData(lReport);
+  finally
+    lReport.Free;
+  end;
 end;
 
 // Menu "Simulations" > "Probability > z"
@@ -1489,9 +1504,9 @@ begin
   CopyColumn;
 end;
 
-procedure TOS3MainFrm.CopyRowClick(Sender: TObject);
+procedure TOS3MainFrm.CopyRowMenuClick(Sender: TObject);
 begin
-  CopyaRow;
+  CopyRow;
 end;
 
 // Menu "Analysis" > "Comparisons" > "Difference Between Correlations"
@@ -1528,18 +1543,15 @@ begin
   DeleteCol;
 end;
 
-procedure TOS3MainFrm.CutRowClick(Sender: TObject);
+procedure TOS3MainFrm.CutRowMenuClick(Sender: TObject);
 begin
-  CutaRow;
+  CutRow;
 end;
 
 procedure TOS3MainFrm.DataGridClick(Sender: TObject);
-VAR row, col : integer;
 begin
-     row := DataGrid.Row;
-     col := DataGrid.Col;
-     RowEdit.Text := IntToStr(row);
-     ColEdit.Text := IntToStr(col);
+  RowEdit.Text := IntToStr(DataGrid.Row);
+  ColEdit.Text := IntToStr(DataGrid.Col);
 end;
 
 procedure TOS3MainFrm.FormShow(Sender: TObject);

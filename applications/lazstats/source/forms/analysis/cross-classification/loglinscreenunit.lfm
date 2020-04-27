@@ -22,6 +22,7 @@ object LogLinScreenFrm: TLogLinScreenFrm
     Width = 337
     BorderSpacing.Left = 8
     BorderSpacing.Top = 12
+    BorderSpacing.Right = 16
     Caption = '1.  Select the variables of the Grid that define your classifications'
     ParentColor = False
   end
@@ -93,6 +94,7 @@ object LogLinScreenFrm: TLogLinScreenFrm
     Constraints.MinHeight = 220
     ItemHeight = 0
     MultiSelect = True
+    OnSelectionChange = VarListSelectionChange
     TabOrder = 3
   end
   object InBtn: TBitBtn
@@ -157,6 +159,7 @@ object LogLinScreenFrm: TLogLinScreenFrm
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     ItemHeight = 0
+    OnSelectionChange = SelectListSelectionChange
     TabOrder = 7
   end
   object Panel1: TPanel
@@ -313,94 +316,75 @@ object LogLinScreenFrm: TLogLinScreenFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 101
+    Left = 193
     Height = 25
     Top = 551
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 10
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 167
-    Height = 25
-    Top = 551
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    OnClick = CancelBtnClick
-    TabOrder = 11
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 241
+    Left = 255
     Height = 25
     Top = 551
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 12
+    TabOrder = 11
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 329
+    Left = 339
     Height = 25
     Top = 551
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    OnClick = ReturnBtnClick
-    TabOrder = 13
+    Caption = 'Close'
+    ModalResult = 11
+    OnClick = CloseBtnClick
+    TabOrder = 12
   end
   object HelpBtn: TButton
     Tag = 131
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 38
+    Left = 134
     Height = 25
     Top = 551
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -410,7 +394,7 @@ object LogLinScreenFrm: TLogLinScreenFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 535
@@ -431,6 +415,7 @@ object LogLinScreenFrm: TLogLinScreenFrm
     ParentColor = False
   end
   object Label11: TLabel
+    AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = Label10
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner

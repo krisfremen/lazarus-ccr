@@ -411,17 +411,17 @@ object OS3MainFrm: TOS3MainFrm
         Caption = 'Insert New  Row'
         OnClick = NewRowClick
       end
-      object CopyRow: TMenuItem
+      object CopyRowMenu: TMenuItem
         Caption = 'Copy Row'
-        OnClick = CopyRowClick
+        OnClick = CopyRowMenuClick
       end
-      object CutRow: TMenuItem
+      object CutRowMenu: TMenuItem
         Caption = 'Cut Row'
-        OnClick = CutRowClick
+        OnClick = CutRowMenuClick
       end
-      object PasteRow: TMenuItem
+      object PasteRowMenu: TMenuItem
         Caption = 'Paste Row'
-        OnClick = PasteRowClick
+        OnClick = PasteRowMenuClick
       end
     end
     object MenuItem5: TMenuItem
