@@ -1,160 +1,132 @@
 object LogLinScreenFrm: TLogLinScreenFrm
-  Left = 456
-  Height = 584
-  Top = 135
-  Width = 402
+  Left = 417
+  Height = 379
+  Top = 130
+  Width = 662
   AutoSize = True
   Caption = 'Cross-Classification Log Linear Screen'
-  ClientHeight = 584
-  ClientWidth = 402
+  ClientHeight = 379
+  ClientWidth = 662
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
-  object Label1: TLabel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = CountVarChk
-    AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 15
-    Top = 39
-    Width = 337
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 12
-    BorderSpacing.Right = 16
-    Caption = '1.  Select the variables of the Grid that define your classifications'
-    ParentColor = False
-  end
   object Label2: TLabel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Panel1
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = Owner
     Left = 8
     Height = 15
-    Top = 208
+    Top = 8
     Width = 97
     BorderSpacing.Left = 8
-    BorderSpacing.Top = 12
+    BorderSpacing.Top = 8
     Caption = 'Available Variables'
     ParentColor = False
   end
   object Label3: TLabel
     AnchorSideLeft.Control = SelectList
     AnchorSideTop.Control = Label2
-    Left = 232
+    Left = 255
     Height = 15
-    Top = 208
+    Top = 8
     Width = 44
     Caption = 'Selected'
     ParentColor = False
   end
   object CountVarChk: TCheckBox
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
-    Left = 8
+    AnchorSideLeft.Control = SelectList
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GroupBox1
+    Left = 255
     Height = 19
-    Top = 8
+    Top = 252
     Width = 247
-    BorderSpacing.Left = 8
+    Anchors = [akLeft, akBottom]
     BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'Last Variable Selected is a Frequency Count'
-    TabOrder = 0
-  end
-  object Step2Btn: TButton
-    AnchorSideLeft.Control = Label10
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = Label10
-    AnchorSideTop.Side = asrCenter
-    Left = 234
-    Height = 25
-    Top = 55
-    Width = 52
-    AutoSize = True
-    BorderSpacing.Left = 16
-    Caption = 'Click'
-    OnClick = Step2BtnClick
-    TabOrder = 1
+    OnChange = CountVarChkChange
+    TabOrder = 4
   end
   object VarList: TListBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = AllBtn
-    AnchorSideBottom.Control = GroupBox1
+    AnchorSideBottom.Control = CountVarChk
+    AnchorSideBottom.Side = asrBottom
     Left = 8
-    Height = 230
-    Top = 225
-    Width = 162
+    Height = 246
+    Top = 25
+    Width = 185
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 2
     BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Constraints.MinHeight = 220
     ItemHeight = 0
     MultiSelect = True
     OnSelectionChange = VarListSelectionChange
-    TabOrder = 3
+    TabOrder = 0
   end
   object InBtn: TBitBtn
-    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Control = Bevel2
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = VarList
-    Left = 187
+    Left = 210
     Height = 28
-    Top = 225
+    Top = 25
     Width = 28
     Images = MainDataModule.ImageList
     ImageIndex = 1
     OnClick = InBtnClick
     Spacing = 0
-    TabOrder = 4
+    TabOrder = 1
   end
   object OutBtn: TBitBtn
-    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Control = Bevel2
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = InBtn
     AnchorSideTop.Side = asrBottom
-    Left = 187
+    Left = 210
     Height = 28
-    Top = 257
+    Top = 57
     Width = 28
     BorderSpacing.Top = 4
     Images = MainDataModule.ImageList
     ImageIndex = 0
     OnClick = OutBtnClick
     Spacing = 0
-    TabOrder = 5
+    TabOrder = 2
   end
   object AllBtn: TBitBtn
-    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Control = Bevel2
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = OutBtn
     AnchorSideTop.Side = asrBottom
-    Left = 178
+    AnchorSideBottom.Side = asrBottom
+    Left = 201
     Height = 25
-    Top = 289
+    Top = 89
     Width = 46
     AutoSize = True
     BorderSpacing.Top = 4
+    BorderSpacing.Bottom = 24
     Caption = 'ALL'
     OnClick = AllBtnClick
     Spacing = 0
-    TabOrder = 6
+    TabOrder = 3
   end
   object SelectList: TListBox
     AnchorSideLeft.Control = AllBtn
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = VarList
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = VarList
-    AnchorSideBottom.Side = asrBottom
-    Left = 232
-    Height = 230
-    Top = 225
-    Width = 162
+    AnchorSideRight.Control = MinMaxGrid
+    AnchorSideBottom.Control = CountVarChk
+    Left = 255
+    Height = 219
+    Top = 25
+    Width = 185
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
@@ -162,154 +134,40 @@ object LogLinScreenFrm: TLogLinScreenFrm
     OnSelectionChange = SelectListSelectionChange
     TabOrder = 7
   end
-  object Panel1: TPanel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Label11
-    AnchorSideTop.Side = asrBottom
-    Left = 24
-    Height = 85
-    Top = 111
-    Width = 244
-    AutoSize = True
-    BorderSpacing.Left = 24
-    BevelOuter = bvNone
-    ClientHeight = 85
-    ClientWidth = 244
-    TabOrder = 2
-    object Label7: TLabel
-      AnchorSideTop.Control = VarNoEdit
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = VarNoEdit
-      Left = 137
-      Height = 15
-      Top = 12
-      Width = 44
-      Anchors = [akTop, akRight]
-      BorderSpacing.Right = 8
-      Caption = 'Variable:'
-      ParentColor = False
-    end
-    object Label8: TLabel
-      AnchorSideTop.Control = MinEdit
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = MinEdit
-      Left = 98
-      Height = 15
-      Top = 39
-      Width = 87
-      Anchors = [akTop, akRight]
-      BorderSpacing.Right = 4
-      Caption = 'Minimum Value:'
-      ParentColor = False
-    end
-    object Label9: TLabel
-      AnchorSideTop.Control = MaxEdit
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = MaxEdit
-      Left = 92
-      Height = 15
-      Top = 66
-      Width = 89
-      Anchors = [akTop, akRight]
-      BorderSpacing.Right = 8
-      Caption = 'Maximum Value:'
-      ParentColor = False
-    end
-    object ScrollBar1: TScrollBar
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = VarNoEdit
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = Label7
-      Left = 0
-      Height = 17
-      Top = 11
-      Width = 121
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Right = 16
-      PageSize = 0
-      TabOrder = 0
-      OnChange = ScrollBar1Change
-    end
-    object VarNoEdit: TEdit
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 189
-      Height = 23
-      Top = 8
-      Width = 55
-      Alignment = taRightJustify
-      Anchors = [akTop, akRight]
-      BorderSpacing.Top = 8
-      TabOrder = 1
-      Text = 'VarNoEdit'
-    end
-    object MinEdit: TEdit
-      AnchorSideLeft.Control = VarNoEdit
-      AnchorSideTop.Control = VarNoEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 189
-      Height = 23
-      Top = 35
-      Width = 55
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 4
-      OnKeyPress = MinEditKeyPress
-      TabOrder = 2
-      Text = 'MinEdit'
-    end
-    object MaxEdit: TEdit
-      AnchorSideLeft.Control = VarNoEdit
-      AnchorSideTop.Control = MinEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 189
-      Height = 23
-      Top = 62
-      Width = 55
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 4
-      OnKeyPress = MaxEditKeyPress
-      TabOrder = 3
-      Text = 'MaxEdit'
-    end
-  end
   object GroupBox1: TGroupBox
     AnchorSideLeft.Control = Owner
+    AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 8
-    Height = 72
-    Top = 463
-    Width = 241
+    Height = 51
+    Top = 279
+    Width = 390
     Anchors = [akLeft, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     Caption = 'Options'
     ChildSizing.LeftRightSpacing = 12
     ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 20
     ChildSizing.VerticalSpacing = 2
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 1
-    ClientHeight = 52
-    ClientWidth = 237
-    TabOrder = 8
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 31
+    ClientWidth = 386
+    TabOrder = 6
     object MarginsChk: TCheckBox
       Left = 12
       Height = 19
       Top = 6
-      Width = 213
+      Width = 129
       Caption = 'Print Marginal Totals'
       TabOrder = 0
     end
     object GenlModelChk: TCheckBox
-      Left = 12
+      Left = 161
       Height = 19
-      Top = 27
+      Top = 6
       Width = 213
       Caption = 'Print General Linear Modle Estimates'
       TabOrder = 1
@@ -319,9 +177,9 @@ object LogLinScreenFrm: TLogLinScreenFrm
     AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 193
+    Left = 453
     Height = 25
-    Top = 551
+    Top = 346
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -331,15 +189,15 @@ object LogLinScreenFrm: TLogLinScreenFrm
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
-    TabOrder = 10
+    TabOrder = 9
   end
   object ComputeBtn: TButton
     AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 255
+    Left = 515
     Height = 25
-    Top = 551
+    Top = 346
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -349,16 +207,16 @@ object LogLinScreenFrm: TLogLinScreenFrm
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 11
+    TabOrder = 10
   end
   object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 339
+    Left = 599
     Height = 25
-    Top = 551
+    Top = 346
     Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -368,17 +226,16 @@ object LogLinScreenFrm: TLogLinScreenFrm
     BorderSpacing.Bottom = 8
     Caption = 'Close'
     ModalResult = 11
-    OnClick = CloseBtnClick
-    TabOrder = 12
+    TabOrder = 11
   end
   object HelpBtn: TButton
     Tag = 131
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 134
+    Left = 394
     Height = 25
-    Top = 551
+    Top = 346
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -388,7 +245,7 @@ object LogLinScreenFrm: TLogLinScreenFrm
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
-    TabOrder = 9
+    TabOrder = 8
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
@@ -397,38 +254,69 @@ object LogLinScreenFrm: TLogLinScreenFrm
     AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 535
-    Width = 402
+    Top = 330
+    Width = 662
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
-  object Label10: TLabel
-    AnchorSideLeft.Control = Label1
-    AnchorSideTop.Control = Label1
-    AnchorSideTop.Side = asrBottom
-    Left = 8
-    Height = 15
-    Top = 60
-    Width = 210
-    BorderSpacing.Top = 6
-    Caption = '2. Click here when variables are selected'
-    ParentColor = False
-  end
-  object Label11: TLabel
-    AnchorSideLeft.Control = Label1
-    AnchorSideTop.Control = Label10
-    AnchorSideTop.Side = asrBottom
+  object MinMaxGrid: TStringGrid
+    AnchorSideLeft.Control = SelectList
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = SelectList
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 8
-    Height = 30
-    Top = 81
-    Width = 386
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 6
+    AnchorSideBottom.Control = SelectList
+    AnchorSideBottom.Side = asrBottom
+    Left = 448
+    Height = 219
+    Top = 25
+    Width = 206
+    Anchors = [akTop, akRight, akBottom]
+    AutoFillColumns = True
+    BorderSpacing.Left = 8
     BorderSpacing.Right = 8
-    Caption = '3.  For each variable complete the specifications below. Press the ENTER key following each entry.'
+    ColCount = 3
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goSmoothScroll]
+    RowCount = 1
+    TabOrder = 5
+    ColWidths = (
+      64
+      69
+      69
+    )
+    Cells = (
+      3
+      0
+      0
+      'Variable'
+      1
+      0
+      'Minimum'
+      2
+      0
+      'Maximum'
+    )
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = MinMaxGrid
+    AnchorSideTop.Control = Label2
+    AnchorSideBottom.Control = MinMaxGrid
+    Left = 448
+    Height = 15
+    Top = 8
+    Width = 142
+    Caption = 'Min/Max for each variable:'
     ParentColor = False
-    WordWrap = True
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = VarList
+    AnchorSideRight.Control = SelectList
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 4
+    Top = 2
+    Width = 432
+    Anchors = [akTop, akLeft, akRight]
+    Shape = bsSpacer
   end
 end

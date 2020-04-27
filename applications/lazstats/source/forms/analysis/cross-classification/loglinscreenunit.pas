@@ -16,7 +16,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Buttons, ExtCtrls,
+  StdCtrls, Buttons, ExtCtrls, Grids,
   Globals, MainUnit, FunctionsLib, OutputUnit, DataProcs, ContextHelpUnit;
 
 type
@@ -25,10 +25,10 @@ type
 
   TLogLinScreenFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     HelpBtn: TButton;
     InBtn: TBitBtn;
-    Label10: TLabel;
-    Label11: TLabel;
+    Label1: TLabel;
     OutBtn: TBitBtn;
     AllBtn: TBitBtn;
     ResetBtn: TButton;
@@ -37,53 +37,37 @@ type
     MarginsChk: TCheckBox;
     GenlModelChk: TCheckBox;
     GroupBox1: TGroupBox;
-    MaxEdit: TEdit;
-    MinEdit: TEdit;
-    Label8: TLabel;
-    Label9: TLabel;
-    VarNoEdit: TEdit;
     Label2: TLabel;
     Label3: TLabel;
-    Label7: TLabel;
-    Panel1: TPanel;
-    ScrollBar1: TScrollBar;
     SelectList: TListBox;
+    MinMaxGrid: TStringGrid;
     VarList: TListBox;
-    Step2Btn: TButton;
     CountVarChk: TCheckBox;
-    Label1: TLabel;
     procedure AllBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
+    procedure CountVarChkChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure InBtnClick(Sender: TObject);
-    procedure MaxEditKeyPress(Sender: TObject; var Key: char);
-    procedure MinEditKeyPress(Sender: TObject; var Key: char);
     procedure OutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure CloseBtnClick(Sender: TObject);
-    procedure ScrollBar1Change(Sender: TObject);
     procedure SelectListSelectionChange(Sender: TObject; User: boolean);
-    procedure Step2BtnClick(Sender: TObject);
-    function ArrayPosition(Sender: TObject; NoDims : integer;
-                           VAR Data : DblDyneVec;
-                           VAR Subscripts : IntDyneVec;
-                           VAR DimSize : IntDyneVec) : integer;
-    procedure Marginals(Sender: TObject;
-                        NoDims : integer;
-                        ArraySize : integer;
-                        VAR Indexes : IntDyneMat;
-                        VAR Data : DblDyneVec;
-                        VAR Margins : IntDyneMat);
+    function ArrayPosition(NumDims: integer; const Data: DblDyneVec;
+      const Subscripts, DimSize: IntDyneVec): integer;
+    procedure Marginals(NumDims, ArraySize: integer; const Indexes: IntDyneMat;
+      const Data: DblDyneVec; const Margins: IntDyneMat);
+
     procedure VarListSelectionChange(Sender: TObject; User: boolean);
 
   private
     { private declarations }
     FAutoSized: Boolean;
     procedure UpdateBtnStates;
-  procedure Screen(VAR NVAR : integer;
+    procedure UpdateMinMaxGrid;
+
+    procedure Screen(VAR NVAR : integer;
                  VAR MP : integer; VAR MM : integer;
                  VAR NTAB : integer; VAR TABLE : DblDyneVec;
                  VAR DIM : IntDyneVec; VAR GSQ : DblDyneVec;
@@ -96,35 +80,35 @@ type
                  VAR X : DblDyneVec; VAR Y : DblDyneVec;
                  VAR IFAULT : integer);
 
-  procedure CONF(VAR N : integer; VAR M : integer;
+    procedure CONF(VAR N : integer; VAR M : integer;
                VAR MP : integer;
                VAR MM : integer;
                VAR ISET : IntDyneVec; VAR JSET : IntDyneVec;
                VAR IP : IntDyneMat; VAR IM : IntDyneMat; VAR NP : integer);
 
-  procedure COMBO(VAR ISET : IntDyneVec;
+    procedure COMBO(VAR ISET : IntDyneVec;
                    N, M : Integer;
                    VAR LAST : boolean);
 
-  procedure EVAL(VAR IAR : IntDyneMat;
+    procedure EVAL(VAR IAR : IntDyneMat;
                  NC, NV, IBEG, NVAR, MAX : integer;
                  VAR CONFIG : IntDyneMat;
                  VAR DIM : IntDyneVec; VAR DF : integer);
 
-  procedure RESET(VAR FIT : DblDyneVec; NTAB : Integer;
+    procedure RESET(VAR FIT : DblDyneVec; NTAB : Integer;
                   AVG : Double);
 
-  procedure LIKE(VAR GSQ : Double; VAR FIT : DblDyneVec;
+    procedure LIKE(VAR GSQ : Double; VAR FIT : DblDyneVec;
                  VAR TABLE : DblDyneVec; NTAB : integer);
 
-  procedure LOGFIT(NVAR, NTAB, NCON : integer;
+    procedure LOGFIT(NVAR, NTAB, NCON : integer;
                  VAR DIM : IntDyneVec;
                  VAR CONFIG : IntDyneMat; VAR TABLE : DblDyneVec;
                  VAR FIT : DblDyneVec; VAR SIZE : IntDyneVec;
                  VAR COORD : IntDyneVec; VAR X : DblDyneVec;
                  VAR Y : DblDyneVec);
 
-  procedure MaxCombos(NoDims : integer; VAR MM : integer; VAR MP : integer);
+    procedure MaxCombos(NumDims: integer; out MM, MP: integer);
 
   public
     { public declarations }
@@ -132,74 +116,29 @@ type
 
 var
   LogLinScreenFrm: TLogLinScreenFrm;
-  Minimums : IntDyneVec;
-  Maximums : IntDyneVec;
-  Response : BoolDyneVec;
-  Interact : BoolDyneVec;
-  NoDims   : integer;
 
 implementation
 
 uses
-  Math, Utils;
+  Math, LCLIntf, LCLType, Utils;
 
 { TLogLinScreenFrm }
 
 procedure TLogLinScreenFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i : integer;
 begin
-     Panel1.Visible := false;
-     VarList.Clear;
-     SelectList.Clear;
-     VarNoEdit.Text := '1';
-     MaxEdit.Text := '';
-     MinEdit.Text := '';
-     InBtn.Enabled := true;
-     OutBtn.Enabled := false;
-     NoDims := 0;
-     Minimums := nil;
-     Maximums := nil;
-     Response := nil;
-     Interact := nil;
-     ScrollBar1.Min := 1;
-     ScrollBar1.Max := 1;
-     ScrollBar1.Position := 1;
-     for i := 1 to NoVariables do VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
-end;
-
-procedure TLogLinScreenFrm.CloseBtnClick(Sender: TObject);
-begin
-     Maximums := nil;
-     Minimums := nil;
-     Response := nil;
-     Interact := nil;
-     Close;
-end;
-
-procedure TLogLinScreenFrm.ScrollBar1Change(Sender: TObject);
-begin
-  VarNoEdit.Text := IntToStr(ScrollBar1.Position);
+  VarList.Clear;
+  for i := 1 to NoVariables do VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  SelectList.Clear;
+  UpdateBtnStates;
+  UpdateMinMaxGrid;
 end;
 
 procedure TLogLinScreenFrm.SelectListSelectionChange(Sender: TObject;
   User: boolean);
 begin
   UpdateBtnStates;
-end;
-
-procedure TLogLinScreenFrm.Step2BtnClick(Sender: TObject);
-begin
-     if CountVarChk.Checked then
-     begin
-          NoDims := NoDims - 1;
-          ScrollBar1.Max := NoDims;
-     end;
-     Panel1.Visible := true;
-     setLength(Maximums,NoDims);
-     SetLength(Minimums,NoDims);
-     SetLength(Response,NoDims);
-     SetLength(Interact,NoDims);
-     MaxEdit.SetFocus;
 end;
 
 procedure TLogLinScreenFrm.InBtnClick(Sender: TObject);
@@ -213,35 +152,12 @@ begin
     begin
       SelectList.Items.Add(VarList.Items[i]);
       VarList.Items.Delete(i);
-      NoDims := NoDims + 1;
       i := 0;
     end else
       i := i + 1;
   end;
-  Scrollbar1.Max := NoDims;
+  UpdateMinMaxGrid;
   UpdateBtnStates;
-end;
-
-procedure TLogLinScreenFrm.MaxEditKeyPress(Sender: TObject; var Key: char);
-VAR DimNo : integer;
-begin
-     if ord(Key) = 13 then // return key
-     begin
-          DimNo := StrToInt(VarNoEdit.Text);
-          Maximums[DimNo-1] := StrToInt(MaxEdit.Text);
-          ScrollBar1.SetFocus;
-     end;
-end;
-
-procedure TLogLinScreenFrm.MinEditKeyPress(Sender: TObject; var Key: char);
-VAR DimNo : integer;
-begin
-     if ord(Key) = 13 then // return key
-     begin
-          DimNo := StrToInt(VarNoEdit.Text);
-          Minimums[DimNo-1] := StrToInt(MinEdit.Text);
-          MaxEdit.SetFocus;
-     end;
 end;
 
 procedure TLogLinScreenFrm.FormActivate(Sender: TObject);
@@ -257,8 +173,14 @@ begin
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
 
-  Constraints.MinWidth := Width;
+  MinMaxGrid.ClientWidth := 3 * MinMaxGrid.Canvas.TextWidth('Maximum ') + 6*varCellPadding;
+
+  Constraints.MinWidth := MinMaxGrid.Width * 3 + AllBtn.Width + 4 * VarList.BorderSpacing.Left;
   Constraints.MinHeight := Height;
+  AutoSize := false;
+  Height := 2*Height;
+
+  Position := poMainFormCenter;
 
   FAutoSized := true;
 end;
@@ -287,9 +209,8 @@ begin
   for i := 0 to VarList.Items.Count-1 do
     SelectList.Items.Add(VarList.Items[i]);
   VarList.Clear;
-  NoDims := SelectList.Items.Count;
-  ScrollBar1.Max := NoDims;
   UpdateBtnStates;
+  UpdateMinMaxGrid;
 end;
 
 procedure TLogLinScreenFrm.ComputeBtnClick(Sender: TObject);
@@ -308,7 +229,6 @@ var
    WorkVec : IntDyneVec;
    Indexes : IntDyneMat;
    LogM : DblDyneVec;
-   NSize : IntDyneVec;
    M : DblDyneMat;
    astr, HeadStr : string;
    MaxDim, MP, MM  : integer;
@@ -333,30 +253,53 @@ var
    IFAULT : integer;
    TABLE : DblDyneVec;
    DIM : IntDyneVec;
+   NoDims: Integer;
+   Minimums: IntDyneVec;
+   Maximums: IntDyneVec;
+//   Response: BoolDyneVec;
+//   Interact: BoolDyneVec;
    lReport: TStrings;
 begin
   lReport := TStringList.Create;
   try
      // Allocate space for labels, DimSize and SubScripts
+     NoDims := MinMaxGrid.RowCount - 1;
      NoVars := SelectList.Items.Count;
-     SetLength(Labels,NoVars);
-     SetLength(DimSize,NoDims);
-     SetLength(Subscripts,NoDims);
-     SetLength(GridPos,NoVars);
+
+     SetLength(Labels, NoVars);
+     SetLength(GridPos, NoVars);
+     SetLength(Minimums, NoDims);
+     SetLength(Maximums, NoDims);
+     SetLength(DimSize, NoDims);
+     SetLength(Subscripts, NoDims);
+
+     for i := 1 to NoDims do
+     begin
+       if not TryStrToInt(MinMaxGrid.Cells[1, i], Minimums[i-1]) then
+       begin
+         MessageDlg('Integer number > 0 expected.', mtError, [mbOK], 0);
+         exit;
+       end;
+       if not TryStrToInt(MinMaxGrid.Cells[2, i], Maximums[i-1]) then
+       begin
+         MessageDlg('Integer number > 0 expected.', mtError, [mbOK], 0);
+         exit;
+       end;
+     end;
 
      // get variable labels and column positions
      for i := 1 to NoVars do
      begin
-          astr := SelectList.Items.Strings[i-1];
-          for j := 1 to NoVariables do
-          begin
-               if OS3MainFrm.DataGrid.Cells[j,0] = astr then
-               begin
-                    Labels[i-1] := astr;
-                    GridPos[i-1] := j;
-                    break;
-               end;
-          end;
+       astr := SelectList.Items.Strings[i-1];
+       for j := 1 to NoVariables do
+       begin
+         if OS3MainFrm.DataGrid.Cells[j,0] = astr then
+         begin
+           Labels[i-1] := astr;
+           GridPos[i-1] := j;
+           break;
+         end;
+       end;
      end;
 
      // Get no. of categories for each dimension (DimSize)
@@ -364,9 +307,9 @@ begin
      ArraySize := 1;
      for i := 0 to NoDims - 1 do
      begin
-          DimSize[i] := Maximums[i] - Minimums[i] + 1;
-          if DimSize[i] > MaxDim then MaxDim := DimSize[i];
-          ArraySize := ArraySize * DimSize[i];
+       DimSize[i] := Maximums[i] - Minimums[i] + 1;
+       if DimSize[i] > MaxDim then MaxDim := DimSize[i];
+       ArraySize := ArraySize * DimSize[i];
      end;
 
      // Allocate space for Data and marginals
@@ -377,46 +320,49 @@ begin
      SetLength(Indexes,ArraySize+1,NoDims);
      SetLength(LogM,ArraySize);
      SetLength(M,ArraySize,NoDims);
-     SetLength(NSize,NoDims);
 
      // Initialize data and margins arrays
      for i := 1 to NoDims do
-         for j := 1 to MaxDim do
-             Margins[i-1,j-1] := 0;
-     for i := 1 to ArraySize do Data[i-1] := 0;
-     N := 0;
+       for j := 1 to MaxDim do
+         Margins[i-1,j-1] := 0;
+     for i := 1 to ArraySize do
+       Data[i-1] := 0;
 
      // Read and store frequencies in Data
      for i := 1 to NoCases do
      begin
-          if GoodRecord(i, NoVars, GridPos) then // casewise check
-          begin
-               for j := 1 to NoDims do // get cell subscripts
-               begin
-                    index := StrToInt(OS3MainFrm.DataGrid.Cells[GridPos[j-1],i]);
-                    index := index - Minimums[j-1] + 1;
-                    Subscripts[j-1] := index;
-               end;
+       if GoodRecord(i, NoVars, GridPos) then // casewise check
+       begin
+         // get cell subscripts
+         for j := 1 to NoDims do
+         begin
+           index := StrToInt(OS3MainFrm.DataGrid.Cells[GridPos[j-1],i]);
+           index := index - Minimums[j-1] + 1;
+           Subscripts[j-1] := index;
+         end;
 
-               index := ArrayPosition(Self, NoDims, Data, Subscripts, DimSize);
+         index := ArrayPosition(NoDims, Data, Subscripts, DimSize);
 
-               for j := 1 to NoDims do // save subscripts for later use
-                   Indexes[index,j-1] := Subscripts[j-1];
+         // save subscripts for later use
+         for j := 1 to NoDims do
+           Indexes[index,j-1] := Subscripts[j-1];
 
-               if CountVarChk.Checked then
-               begin
-                    k := GridPos[NoVars-1];
-                    Data[index] := Data[index] + StrToInt(OS3MainFrm.DataGrid.Cells[k,i]);
-               end
-               else Data[index] := Data[index] + 1;
-          end;
+         if CountVarChk.Checked then
+         begin
+           k := GridPos[NoVars-1];
+           Data[index] := Data[index] + StrToInt(OS3MainFrm.DataGrid.Cells[k,i]);
+         end else
+           Data[index] := Data[index] + 1;
+       end;
      end;
 
      // get total N
-     for i := 1 to ArraySize do N := N + Round(Data[i-1]);
+     N := 0;
+     for i := 1 to ArraySize do
+       N := N + Round(Data[i-1]);
 
      // Get marginal frequencies
-      Marginals(Self,NoDims,ArraySize,Indexes,Data,Margins);
+     Marginals(NoDims, ArraySize, Indexes, Data, Margins);
 
      // Print Marginal totals if requested
      if MarginsChk.Checked then
@@ -472,10 +418,10 @@ begin
           astr := astr + format('%10.0f %10.2f %10.3f',[Data[i-1],Expected[i-1],LogM[i-1]]);
           lReport.Add(astr);
      end;
-     chi2 := 0.0;
-     G2 := 0.0;
 
      // Calculate chi-squared and G squared statistics
+     chi2 := 0.0;
+     G2 := 0.0;
      for i := 1 to ArraySize do
      begin
           chi2 := chi2 + Sqr(Data[i-1] - Expected[i-1]) / Expected[i-1];
@@ -484,10 +430,10 @@ begin
      G2 := 2.0 * G2;
      DF := 1;
      for i := 1 to NoDims do DF := DF * (DimSize[i-1]-1);
-     ProbChi2 := 1.0 - Chisquaredprob(chi2,DF);
-     ProbG2 := 1.0 - Chisquaredprob(G2,DF);
-     lReport.Add('Chisquare: %10.3f with probability %10.3f (DF = %d)',[chi2, ProbChi2, DF]);
-     lReport.Add('G squared: %10.3f with probability %10.3f (DF = %d)',[G2, ProbG2, DF]);
+     ProbChi2 := 1.0 - ChiSquaredProb(chi2,DF);
+     ProbG2 := 1.0 - ChiSquaredProb(G2,DF);
+     lReport.Add('Chisquare: %10.3f with probability %10.3f (DF = %d)', [chi2, ProbChi2, DF]);
+     lReport.Add('G squared: %10.3f with probability %10.3f (DF = %d)', [G2, ProbG2, DF]);
      lReport.Add('');
      lReport.Add('U (mu) for general loglinear model: %10.2f', [U]);
 
@@ -647,7 +593,6 @@ begin
      PART := nil;
      DGFR := nil;
      GSQ := nil;
-     NSize := nil;
      M := nil;
      LogM := nil;
      Indexes := nil;
@@ -674,12 +619,11 @@ begin
       VarList.Items.Add(SelectList.Items[i]);
       SelectList.Items.Delete(i);
       i := 0;
-      NoDims := NoDims - 1;
     end else
       i := i + 1;
   end;
-  if NoDims > 0 then ScrollBar1.Max := NoDims else ScrollBar1.Max := 1;
   UpdateBtnStates;
+  UpdateMinMaxGrid;
 end;
 
 procedure TLogLinScreenFrm.Screen(var NVAR: integer; var MP: integer;
@@ -878,6 +822,11 @@ begin
 	     IM[I,NM] := ISET[JS];
       end; // 130 CONTINUE
       GOTO 120;
+end;
+
+procedure TLogLinScreenFrm.CountVarChkChange(Sender: TObject);
+begin
+  UpdateMinMaxGrid;
 end;
 
 procedure TLogLinScreenFrm.COMBO(var ISET: IntDyneVec; N, M: Integer;
@@ -1121,67 +1070,70 @@ begin
       end; // 230 CONTINUE
 end;
 
-procedure TLogLinScreenFrm.MaxCombos(NoDims: integer; var MM: integer;
-  var MP: integer);
+procedure TLogLinScreenFrm.MaxCombos(NumDims: integer; out MM, MP: integer);
 var
-   combos : integer;
-   i,j : integer;
-
+  combos: integer;
+  i,j: integer;
 begin
-     MM := 0;
-     MP := 0;
-     for i := 1 to NoDims do
-     begin
-          combos := 1;
-          // get numerator factorial products down to i
-          for j := NoDims downto i + 1 do
-              combos := combos * j;
-          // divide by factorial of NoDims - i;
-          for j := (NoDims - i) downto 2 do
-              combos := combos div j;
-          if combos > MP then MP := combos;
-          if i * combos > MM then MM := i * combos;
-     end;
+  MM := 0;
+  MP := 0;
+  for i := 1 to NumDims do
+  begin
+    combos := 1;
+
+    // get numerator factorial products down to i
+    for j := NumDims downto i + 1 do
+      combos := combos * j;
+
+    // divide by factorial of NumDims - i;
+    for j := (NumDims - i) downto 2 do
+      combos := combos div j;
+
+    if combos > MP then
+      MP := combos;
+    if i * combos > MM then
+      MM := i * combos;
+  end;
 end;
 
-function TLogLinScreenFrm.ArrayPosition(Sender: TObject; NoDims : integer;
-                           VAR Data : DblDyneVec;
-                           VAR Subscripts : IntDyneVec;
-                           VAR DimSize : IntDyneVec) : integer;
-
+function TLogLinScreenFrm.ArrayPosition(NumDims: integer;
+  const Data: DblDyneVec; const Subscripts, DimSize: IntDyneVec): integer;
 var
-   Pos         : integer;
-   i, j        : integer;
-   PriorSizes  : IntDyneVec;
-
+  Pos         : integer;
+  i, j        : integer;
+  PriorSizes  : IntDyneVec;
 begin
-     // allocate space for PriorSizes
-     SetLength(PriorSizes,NoDims);
-     // calculate PriorSizes values
-     for i := 0 to NoDims - 2 do PriorSizes[i] := 1; // initialize
-     for i := NoDims - 2 downto 0 do
-          for j := 0 to i do PriorSizes[i] := PriorSizes[i] * DimSize[j];
-     Pos := Subscripts[0] - 1;
-     for i := 0 to NoDims - 2 do
-         Pos := Pos + (PriorSizes[i] * (Subscripts[i+1]-1));
-     Result := Pos;
-     PriorSizes := nil;
+  // allocate space for PriorSizes
+  SetLength(PriorSizes, NumDims);
+
+  // calculate PriorSizes values
+  for i := 0 to NumDims - 2 do
+    PriorSizes[i] := 1; // initialize
+
+  for i := NumDims - 2 downto 0 do
+    for j := 0 to i do PriorSizes[i] := PriorSizes[i] * DimSize[j];
+
+  Pos := Subscripts[0] - 1;
+  for i := 0 to NumDims - 2 do
+    Pos := Pos + (PriorSizes[i] * (Subscripts[i+1]-1));
+
+  Result := Pos;
+  PriorSizes := nil;
 end;
 
-procedure TLogLinScreenFrm.Marginals(Sender: TObject; NoDims: integer;
-  ArraySize: integer; var Indexes: IntDyneMat; var Data: DblDyneVec;
-  var Margins: IntDyneMat);
-var i, j, category : integer;
-
+procedure TLogLinScreenFrm.Marginals(NumDims, ArraySize: integer;
+  const Indexes: IntDyneMat; const Data: DblDyneVec; const Margins: IntDyneMat);
+var
+  i, j, category: integer;
 begin
-     for i := 1 to ArraySize do
-     begin
-          for j := 1 to NoDims do
-          begin
-               category := Indexes[i-1,j-1];
-               Margins[j-1,category-1] := Margins[j-1,category-1] + Round(Data[i-1]);
-          end;
-     end;
+  for i := 1 to ArraySize do
+  begin
+    for j := 1 to NumDims do
+    begin
+      category := Indexes[i-1,j-1];
+      Margins[j-1,category-1] := Margins[j-1,category-1] + Round(Data[i-1]);
+    end;
+  end;
 end;
 
 procedure TLogLinScreenFrm.UpdateBtnStates;
@@ -1189,6 +1141,24 @@ begin
   InBtn.Enabled := AnySelected(VarList);
   OutBtn.Enabled := AnySelected(SelectList);
   AllBtn.Enabled := VarList.Items.Count > 0;
+end;
+
+procedure TLogLinScreenFrm.UpdateMinMaxGrid;
+var
+  NumDims, j: Integer;
+begin
+  if CountVarChk.Checked then
+    NumDims := SelectList.Count - 1
+  else
+    NumDims := SelectList.Count;
+  if NumDims < 0 then NumDims := 0;
+  MinMaxGrid.RowCount := NumDims + 1;
+  for j := 1 to MinMaxGrid.RowCount-1 do
+  begin
+    MinMaxGrid.Cells[0, j] := SelectList.Items[j-1];
+    MinMaxGrid.Cells[1, j] := '';
+    MinMaxGrid.Cells[2, j] := '';
+  end;
 end;
 
 procedure TLogLinScreenFrm.VarListSelectionChange(Sender: TObject; User: boolean);
