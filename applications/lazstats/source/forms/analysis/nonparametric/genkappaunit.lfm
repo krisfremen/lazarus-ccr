@@ -13,92 +13,74 @@ object GenKappaFrm: TGenKappaFrm
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 167
+    Left = 259
     Height = 25
     Top = 323
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 2
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 233
-    Height = 25
-    Top = 323
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 3
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 307
+    Left = 321
     Height = 25
     Top = 323
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 4
+    TabOrder = 3
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 395
+    Left = 405
     Height = 25
     Top = 323
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    TabOrder = 5
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 4
   end
   object HelpBtn: TButton
     Tag = 125
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 104
+    Left = 200
     Height = 25
     Top = 323
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -195,6 +177,7 @@ object GenKappaFrm: TGenKappaFrm
       BorderSpacing.Top = 2
       BorderSpacing.Right = 8
       ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object CatIn: TBitBtn
@@ -306,6 +289,7 @@ object GenKappaFrm: TGenKappaFrm
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 3
       Text = 'CatEdit'
     end
@@ -323,8 +307,9 @@ object GenKappaFrm: TGenKappaFrm
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 6
-      Text = 'Edit1'
+      Text = 'ObjectEdit'
     end
     object RaterEdit: TEdit
       AnchorSideLeft.Control = RaterOut
@@ -341,8 +326,9 @@ object GenKappaFrm: TGenKappaFrm
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 9
-      Text = 'Edit1'
+      Text = 'RaterEdit'
     end
   end
 end
