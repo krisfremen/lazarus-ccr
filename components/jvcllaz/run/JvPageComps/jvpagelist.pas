@@ -10,34 +10,29 @@ the specific language governing rights and limitations under the License.
 
 The Original Code is: JvPageList.PAS, released on 2003-04-25.
 
-The Initial Developer of the Original Code is Peter ThÃ¶rnqvist [peter3 at sourceforge dot net] .
-Portions created by Peter ThÃ¶rnqvist are Copyright (C) 2004 Peter ThÃ¶rnqvist.
+The Initial Developer of the Original Code is Peter Thörnqvist [peter3 at sourceforge dot net] .
+Portions created by Peter Thörnqvist are Copyright (C) 2004 Peter Thörnqvist.
 All Rights Reserved.
 
 Contributor(s):
 
 You may retrieve the latest version of this file at the Project JEDI's JVCL home page,
-located at http://jvcl.sourceforge.net
+located at http://jvcl.delphi-jedi.org
 
 Known Issues:
 
 -----------------------------------------------------------------------------}
-// $Id: JvPageList.pas 11400 2007-06-28 21:24:06Z ahuser $
-
-// Initial port to Lazarus by Sergio Samayoa - september 2007.
-// Conversion is done in incremental way: as types / classes / routines
-// are needed they are converted.
-
-{$mode objfpc}{$H+}
+// $Id$
 
 unit JvPageList;
+
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics,
-  JvComponent;
+  SysUtils, Classes, Graphics, Controls, Types, LMessages, LCLIntf, LCLType,
+  JvComponent, JvThemes;
 
 type
   EPageListError = class(Exception);
@@ -62,7 +57,6 @@ type
   { TJvCustomPage is the base class for pages in a TJvPageList and implements the basic behaviour of such
     a control. It has support for accepting components, propagating it's Enabled state, changing it's order in the
     page list and custom painting }
-    
   TJvCustomPage = class(TJvCustomControl)
   private
     FPageList: TJvCustomPageList;
@@ -114,13 +108,12 @@ type
    TJvCustomPageList is a base class for components that implements the IPageList interface.
     It works like TPageControl but does not have any tabs
    }
-  TJvShowDesignCaption = (sdcNone, sdcTopLeft, sdcTopCenter, sdcTopRight, sdcLeftCenter, sdcCenter, sdcRightCenter, sdcBottomLeft, sdcBottomCenter, sdcBottomRight, sdcRunTime);
+  TJvShowDesignCaption = (
+    sdcNone, sdcTopLeft, sdcTopCenter, sdcTopRight, sdcLeftCenter, sdcCenter,
+    sdcRightCenter, sdcBottomLeft, sdcBottomCenter, sdcBottomRight, sdcRunTime
+  );
 
-  //TODO: 25.09.2007 - SESS - Find a better place...
-  TCMDesignHitTest = TLMMouse;
-
-   TJvCustomPageList = class(TJvCustomControl, IUnknown, IPageList)
-  //TJvCustomPageList = class(TJvCustomControl)
+  TJvCustomPageList = class(TJvCustomControl, IUnknown, IPageList)
   private
     FPages: TList;
     FActivePage: TJvCustomPage;
@@ -130,6 +123,7 @@ type
     FShowDesignCaption: TJvShowDesignCaption;
     FHiddenPages: TList;
     procedure CMDesignHitTest(var Msg: TCMDesignHitTest); message CM_DESIGNHITTEST;
+    procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
     procedure UpdateEnabled;
     procedure SetPropagateEnable(const Value: Boolean);
     procedure SetShowDesignCaption(const Value: TJvShowDesignCaption);
@@ -144,15 +138,16 @@ type
     function GetActivePageIndex: Integer; virtual;
     procedure SetActivePageIndex(AIndex: Integer); virtual;
     function GetPageFromIndex(AIndex: Integer): TJvCustomPage; virtual;
-    function GetPageCount: Integer;virtual;
+    function GetPageCount: Integer; virtual;
     function GetPageCaption(AIndex: Integer): string; virtual;
     procedure Paint; override;
     procedure PageCaptionChanged(Index: Integer; const NewCaption: string); virtual;
+
     procedure Change; dynamic;
     procedure Loaded; override;
-    procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     procedure ShowControl(AControl: TControl); override;
     function InternalGetPageClass: TJvCustomPageClass; virtual;
+
     procedure SetActivePage(Page: TJvCustomPage); virtual;
     procedure InsertPage(APage: TJvCustomPage); virtual;
     procedure RemovePage(APage: TJvCustomPage); virtual;
@@ -160,11 +155,14 @@ type
     property HiddenPageList: TList read FHiddenPages;
     property PropagateEnable: Boolean read FPropagateEnable write SetPropagateEnable;
     property ShowDesignCaption: TJvShowDesignCaption read FShowDesignCaption write SetShowDesignCaption default sdcCenter;
+
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnChanging: TJvPageChangingEvent read FOnChanging write FOnChanging;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+    procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;  // public in D2009
     function FindNextPage(CurPage: TJvCustomPage; GoForward: Boolean; IncludeDisabled: Boolean): TJvCustomPage;
     procedure PrevPage;
     procedure NextPage;
@@ -174,6 +172,7 @@ type
     function GetVisiblePageCount: Integer;
     property Height default 200;
     property Width default 300;
+
     property ActivePageIndex: Integer read GetActivePageIndex write SetActivePageIndex;
     property ActivePage: TJvCustomPage read FActivePage write SetActivePage;
     property Pages[Index: Integer]: TJvCustomPage read GetPage; default;
@@ -194,6 +193,7 @@ type
     property PopupMenu;
     property ShowHint;
     property PageIndex;
+
     property OnContextPopup;
     property OnDragDrop;
     property OnDragOver;
@@ -207,15 +207,14 @@ type
     property OnResize;
     property OnShow;
     property OnStartDrag;
+
     property OnBeforePaint;
     property OnPaint;
     property OnAfterPaint;
     property OnMouseEnter;
     property OnMouseLeave;
     property OnParentColorChange;
-    {$IFDEF JVCLThemesEnabled}
     property ParentBackground default False;
-    {$ENDIF JVCLThemesEnabled}
   end;
 
   TJvPageList = class(TJvCustomPageList)
@@ -227,6 +226,7 @@ type
     property ActivePage;
     property PropagateEnable;
     property ShowDesignCaption;
+
     property Action;
     property Align;
     property Anchors;
@@ -237,7 +237,6 @@ type
     property OnStartDock;
     property OnUnDock;
     property OnEndDock;
-//    property OnCanResize;
     property OnDockDrop;
     property OnDockOver;
     property OnGetSiteInfo;
@@ -247,9 +246,11 @@ type
     property PopupMenu;
     property ShowHint;
     property Visible;
+
     property OnMouseEnter;
     property OnMouseLeave;
     property OnParentColorChange;
+
     property OnChange;
     property OnChanging;
     property OnConstrainedResize;
@@ -268,9 +269,7 @@ type
     property OnMouseWheelUp;
     property OnResize;
     property OnStartDrag;
-    {$IFDEF JVCLThemesEnabled}
     property ParentBackground default False;
-    {$ENDIF JVCLThemesEnabled}
   end;
 
 implementation
@@ -280,20 +279,20 @@ uses
 
 function GetUniqueName(AOwner: TComponent; const AClassName: string): string;
 var
-  i: Integer;
+  I: Integer;
 begin
-  i := 0;
+  I := 0;
   if AOwner = nil then
   begin
     repeat
-      Inc(i);
-      Result := AClassName + IntToStr(i);
+      Inc(I);
+      Result := AClassName + IntToStr(I);
     until FindGlobalComponent(Result) = nil;
   end
   else
     repeat
-      Inc(i);
-      Result := AClassName + IntToStr(i);
+      Inc(I);
+      Result := AClassName + IntToStr(I);
     until AOwner.FindComponent(Result) = nil;
 end;
 
@@ -304,10 +303,17 @@ begin
   inherited Create(AOwner);
   FPageIndex := -1;
   Align := alClient;
+  //ControlStyle := ControlStyle + [csAcceptsControls, csDesignFixedBounds, csNoDesignVisible, csNoFocus];
   ControlStyle := ControlStyle + [csOpaque, csAcceptsControls, csNoDesignVisible];
 //  IncludeThemeStyle(Self, [csParentBackground]);
   Visible := False;
   DoubleBuffered := True;
+end;
+
+destructor TJvCustomPage.Destroy;
+begin
+  PageList := nil;
+  inherited Destroy;
 end;
 
 procedure TJvCustomPage.CreateParams(var Params: TCreateParams);
@@ -315,12 +321,6 @@ begin
   inherited CreateParams(Params);
   with Params.WindowClass do
     Style := Style and not (CS_HREDRAW or CS_VREDRAW);
-end;
-
-destructor TJvCustomPage.Destroy;
-begin
-  PageList := nil;  // This removes the page from the PageList.
-  inherited Destroy;
 end;
 
 procedure TJvCustomPage.DoAfterPaint(ACanvas: TCanvas; ARect: TRect);
@@ -366,41 +366,35 @@ procedure TJvCustomPage.DoPaint(ACanvas: TCanvas; ARect: TRect);
 var
   S: string;
 begin
-  with ACanvas do
+  ACanvas.Font := Font;
+  ACanvas.Brush.Style := bsSolid;
+  ACanvas.Brush.Color := Color;
+  DrawThemedBackground(Self, ACanvas, ARect);
+  if csDesigning in ComponentState then
   begin
-    Font := Self.Font;
-    Brush.Style := bsSolid;
-    Brush.Color := Self.Color;
-    //SESS
-    //DrawThemedBackground(Self, Canvas, ARect);
-    DoEraseBackground(Canvas, 0);
-    if (csDesigning in ComponentState) then
+    ACanvas.Pen.Style := psDot;
+    ACanvas.Pen.Color := clBlack;
+    ACanvas.Brush.Style := bsClear;
+    ACanvas.Rectangle(ARect);
+    ACanvas.Brush.Style := bsSolid;
+    ACanvas.Brush.Color := Color;
+    if (PageList <> nil) and (PageList.ShowDesignCaption <> sdcNone) then
     begin
-      Pen.Style := psDot;
-      Pen.Color := clBlack;
-      Brush.Style := bsClear;
-      Rectangle(ARect);
-      Brush.Style := bsSolid;
-      Brush.Color := Color;
-      if (PageList <> nil) and (PageList.ShowDesignCaption <> sdcNone) then
+      S := Caption;
+      if S = '' then
+        S := Name;
+      // make some space around the edges
+      InflateRect(ARect, -4, -4);
+      if not Enabled then
       begin
-        S := Caption;
-        if S = '' then
-          S := Name;
-        // make some space around the edges
-        InflateRect(ARect, -4, -4);
-        if not Enabled then
-        begin
-          SetBkMode(Handle, TRANSPARENT);
-          Canvas.Font.Color := clHighlightText;
-          //TODO: Use JCLUtils one?
-          DrawText(Handle, PChar(S), Length(S), ARect, GetDesignCaptionFlags(PageList.ShowDesignCaption) or DT_SINGLELINE);
-          OffsetRect(ARect, -1, -1);
-          Canvas.Font.Color := clGrayText;
-        end;
-        DrawText(Handle, PChar(S), Length(S), ARect, GetDesignCaptionFlags(PageList.ShowDesignCaption) or DT_SINGLELINE);
-        InflateRect(ARect, 4, 4);
+        SetBkMode(ACanvas.Handle, LCLType.TRANSPARENT);
+        ACanvas.Font.Color := clHighlightText;
+        DrawText(ACanvas.Handle, PChar(S), Length(S), ARect, GetDesignCaptionFlags(PageList.ShowDesignCaption) or DT_SINGLELINE);
+        OffsetRect(ARect, -1, -1);
+        ACanvas.Font.Color := clGrayText;
       end;
+      DrawText(ACanvas.Handle, PChar(S), Length(S), ARect, GetDesignCaptionFlags(PageList.ShowDesignCaption) or DT_SINGLELINE);
+      InflateRect(ARect, 4, 4);
     end;
   end;
   if Assigned(FOnPaint) then
@@ -459,13 +453,37 @@ begin
 end;
 
 function TJvCustomPage.DoEraseBackground(ACanvas: TCanvas; Param: Integer): Boolean;
+{$IFDEF JVCLStylesEnabled}
+var
+  BrushRecall: TBrushRecall;
+{$ENDIF JVCLStylesEnabled}
 begin
-  exit;
-
-  ACanvas.Brush.Color := Self.Color;
-  ACanvas.Brush.Style := bsSolid;
-  ACanvas.FillRect(Rect(0, 0, Width, Height));
-  Result := True;
+  if DoubleBuffered then
+  begin
+    {$IFDEF JVCLStylesEnabled}
+    BrushRecall := nil;
+    try
+      if StyleServices.Enabled and not StyleServices.IsSystemStyle then
+      begin
+        BrushRecall := TBrushRecall.Create(Brush);
+        Brush.Color := StyleServices.GetSystemColor(Brush.Color);
+      end;
+    {$ENDIF JVCLStylesEnabled}
+      Result := inherited DoEraseBackground(ACanvas, Param);
+    {$IFDEF JVCLStylesEnabled}
+    finally
+      BrushRecall.Free;
+    end;
+    {$ENDIF JVCLStylesEnabled}
+  end
+  else
+  begin
+    {$IFDEF JVCLStylesEnabled}
+    if StyleServices.Enabled then
+      DrawThemedBackground(Self, Canvas, ClientRect, Color, ParentBackground);
+    {$ENDIF JVCLStylesEnabled}
+    Result := True;
+  end;
 end;
 
 procedure TJvCustomPage.TextChanged;
@@ -490,19 +508,14 @@ end;
 procedure TJvCustomPage.ShowingChanged;
 begin
   inherited ShowingChanged;
-  if Showing then
-    try
+  try
+    if Showing then
       DoShow
-    except
-      Application.HandleException(Self);
-    end
-  else
-  if not Showing then
-    try
+    else
       DoHide;
-    except
-      Application.HandleException(Self);
-    end;
+  except
+    Application.HandleException(Self);
+  end;
 end;
 
 //=== { TJvCustomPageList } ==================================================
@@ -510,10 +523,7 @@ end;
 constructor TJvCustomPageList.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  // TNotebook has a comment: "Do not add csAcceptsControls" !!!!
-  // ControlStyle := ControlStyle + [csAcceptsControls];
-  ControlStyle := [];
-
+  ControlStyle := ControlStyle + [csAcceptsControls];
 //  IncludeThemeStyle(Self, [csParentBackground]);
   FPages := TList.Create;
   FHiddenPages := TList.Create;
@@ -536,7 +546,7 @@ end;
 
 function TJvCustomPageList.CanChange(AIndex: Integer): Boolean;
 begin
-  Result := (AIndex >= 0) and (AIndex < GetPageCount);
+  Result := (AIndex >= 0) and (AIndex < PageCount);
   if Result and Assigned(FOnChanging) then
     FOnChanging(Self, AIndex, Result);
 end;
@@ -552,9 +562,32 @@ var
   Pt: TPoint;
 begin
   inherited;
-  Pt := SmallPointToPoint(Msg.Pos);
-  if Assigned(ActivePage) and PtInRect(ActivePage.BoundsRect, Pt) then
-    Msg.Result := 1;
+  //Pt := SmallPointToPoint(Msg.Pos);
+  //if Assigned(ActivePage) and PtInRect(ActivePage.BoundsRect, Pt) then
+  //  Msg.Result := 1;
+end;
+
+procedure TJvCustomPageList.WMEraseBkgnd(var Message: TLMEraseBkgnd);
+{$IFDEF JVCLStylesEnabled}
+var
+  BrushRecall: TBrushRecall;
+{$ENDIF JVCLStylesEnabled}
+begin
+  {$IFDEF JVCLStylesEnabled}
+  BrushRecall := nil;
+  try
+    if StyleServices.Enabled and not StyleServices.IsSystemStyle then
+    begin
+      BrushRecall := TBrushRecall.Create(Brush);
+      Brush.Color := StyleServices.GetSystemColor(Brush.Color);
+    end;
+  {$ENDIF JVCLStylesEnabled}
+  inherited;
+  {$IFDEF JVCLStylesEnabled}
+  finally
+    BrushRecall.Free;
+  end;
+  {$ENDIF JVCLStylesEnabled}
 end;
 
 procedure TJvCustomPageList.GetChildren(Proc: TGetChildProc;
@@ -575,7 +608,7 @@ end;
 
 function TJvCustomPageList.GetPageCaption(AIndex: Integer): string;
 begin
-  if (AIndex >= 0) and (AIndex < GetPageCount) then
+  if (AIndex >= 0) and (AIndex < PageCount) then
     Result := TJvCustomPage(FPages[AIndex]).Caption
   else
     Result := '';
@@ -603,34 +636,37 @@ end;
 procedure TJvCustomPageList.Loaded;
 begin
   inherited Loaded;
-  if (GetPageCount > 0) and (ActivePage = nil) then
+  if (PageCount > 0) and (ActivePage = nil) then
     ActivePage := Pages[0];
 end;
 
 procedure TJvCustomPageList.Paint;
 begin
-  if (csDesigning in ComponentState) and (GetPageCount = 0) then
-    with Canvas do
-    begin
-      Pen.Color := clBlack;
-      Pen.Style := psDot;
-      Brush.Style := bsClear;
-      Rectangle(ClientRect);
-    end;
+  if (csDesigning in ComponentState) and (PageCount = 0) then
+  begin
+    Canvas.Pen.Color := clBlack;
+    Canvas.Pen.Style := psDot;
+    Canvas.Brush.Style := bsClear;
+    Canvas.Rectangle(ClientRect);
+  end;
 end;
 
 procedure TJvCustomPageList.RemovePage(APage: TJvCustomPage);
 var
   I: Integer;
-  WNextPage: TJvCustomPage;
+  FNextPage: TJvCustomPage;
 begin
-  WNextPage := FindNextPage(APage, True, not (csDesigning in ComponentState));
-  if WNextPage = APage then
-    WNextPage := nil;
+  FNextPage := FindNextPage(APage, True, not (csDesigning in ComponentState));
+  if FNextPage = APage then
+    FNextPage := nil;
+  { If the last page is removed, go back to the prior page }
+  if (FNextPage <> nil) and (FNextPage.PageIndex = 0) and (APage.PageIndex > 0) then
+    FNextPage := Pages[APage.PageIndex - 1];
+
   APage.Visible := False;
   APage.FPageList := nil;
   FPages.Remove(APage);
-  SetActivePage(WNextPage);
+  SetActivePage(FNextPage);
   // (ahuser) In some cases SetActivePage does not change FActivePage
   //          so we force FActivePage not to be "APage"
   if (FActivePage = APage) or (FActivePage = nil) then
@@ -647,7 +683,7 @@ end;
 
 function TJvCustomPageList.GetPageFromIndex(AIndex: Integer): TJvCustomPage;
 begin
-  if (AIndex >= 0) and (AIndex < GetPageCount) then
+  if (AIndex >= 0) and (AIndex < PageCount) then
     Result := TJvCustomPage(Pages[AIndex])
   else
     Result := nil;
@@ -674,7 +710,8 @@ end;
 procedure TJvCustomPageList.ShowControl(AControl: TControl);
 begin
   if AControl is TJvCustomPage then
-    ActivePage := TJvCustomPage(AControl);
+    if ActivePage <> AControl then
+      ActivePage := TJvCustomPage(AControl);
   inherited ShowControl(AControl);
 end;
 
@@ -727,17 +764,14 @@ end;
 procedure TJvCustomPageList.SetActivePage(Page: TJvCustomPage);
 var
   ParentForm: TCustomForm;
-  //TODO: why?
-  //{$IFDEF COMPILER9_UP}
   I: Integer;
-  //{$ENDIF COMPILER9_UP}
 begin
   // Mantis 3227: Checking if the page can be changed has to be done at the
   // beginning or the page would change but not the index...
   if not (csLoading in ComponentState) and not CanChange(FPages.IndexOf(Page)) then
     Exit;
 
-  if GetPageCount = 0 then
+  if PageCount = 0 then
     FActivePage := nil;
   if (Page = nil) or (Page.PageList <> Self) then
     Exit
@@ -745,7 +779,7 @@ begin
   begin
     ParentForm := GetParentForm(Self);
     if (ParentForm <> nil) and (FActivePage <> nil) and
-      FActivePage.ContainsControl(ParentForm.ActiveControl) then
+      FActivePage.ContainsControl(ParentForm.ActiveControl) and not (csDesigning in ComponentState) then
     begin
       ParentForm.ActiveControl := FActivePage;
       if ParentForm.ActiveControl <> FActivePage then
@@ -755,16 +789,17 @@ begin
       end;
     end;
 
-    //TODO: why?
-    //{$IFDEF COMPILER9_UP}
-    for I := 0 to GetPageCount - 1 do
-      if Pages[i] <> Page then
-        Pages[i].Hide;
-    //{$ELSE}
-    //Page.BringToFront;
-    //{$ENDIF COMPILER9_UP}
     Page.Visible := True;
-    if (ParentForm <> nil) and (FActivePage <> nil) and (ParentForm.ActiveControl = FActivePage) then
+    Page.ControlStyle := Page.ControlStyle - [csNoDesignVisible];
+    for I := 0 to PageCount - 1 do
+      if Pages[i] <> Page then
+      begin
+        Pages[i].Visible := False;
+        Pages[i].ControlStyle := Pages[i].ControlStyle + [csNoDesignVisible];
+      end;
+    if csDesigning in ComponentState then // Visible:=False has no real effect when in design mode
+      Page.BringToFront;
+    if (ParentForm <> nil) and (FActivePage <> nil) and (ParentForm.ActiveControl = FActivePage) and not (csDesigning in ComponentState) then
     begin
       if Page.CanFocus then
         ParentForm.ActiveControl := Page
@@ -782,7 +817,7 @@ begin
         Change;
     end;
     if (ParentForm <> nil) and (FActivePage <> nil) and
-      (ParentForm.ActiveControl = FActivePage) then
+      (ParentForm.ActiveControl = FActivePage) and not (csDesigning in ComponentState) then
     begin
       FActivePage.SelectFirst;
     end;
@@ -849,7 +884,7 @@ begin
       if GoForward then
       begin
         Inc(I);
-        if I >= FPages.Count - 1 then
+        if I >= FPages.Count then
           I := 0;
       end
       else
@@ -871,12 +906,8 @@ begin
   if FShowDesignCaption <> Value then
   begin
     FShowDesignCaption := Value;
-    if ActivePage <> nil then ActivePage.Invalidate;
-    //TODO:
-    (*
     if HandleAllocated and (csDesigning in ComponentState) then
       RedrawWindow(Handle, nil, 0, RDW_UPDATENOW or RDW_INVALIDATE or RDW_ALLCHILDREN);
-    *)
   end;
 end;
 
@@ -906,6 +937,14 @@ begin
   else
     Result := nil;
 end;
+
+//===TJvPageList =============================================================
+
+function TJvPageList.InternalGetPageClass: TJvCustomPageClass;
+begin
+  Result := TJvStandardPage;
+end;
+
 procedure TJvCustomPageList.DeletePage(Index: Integer);
 begin
   if (Index >= 0) and (Index < PageCount) then
@@ -932,14 +971,6 @@ procedure TJvCustomPageList.PageCaptionChanged(Index: Integer;
 begin
   if (Index >= 0) and (Index < PageCount) then
     Pages[Index].Caption := NewCaption;
-end;
-
-
-//===TJvPageList =============================================================
-
-function TJvPageList.InternalGetPageClass: TJvCustomPageClass;
-begin
-  Result := TJvStandardPage;
 end;
 
 end.

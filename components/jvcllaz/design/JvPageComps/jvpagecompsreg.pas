@@ -16,7 +16,7 @@ implementation
 uses
   ImgList,
   PropEdits, ComponentEditors,
-  JvDsgnConsts,
+  JvDsgnConsts, JvPageList,
   JvNavigationPane, JvNavPaneEditors,
   JvTabBar, JvTabBarXPPainter,
   JvNotebookPageList,
@@ -26,6 +26,7 @@ uses
 procedure Register;
 const
   cImageIndex = 'ImageIndex';
+  cActivePage = 'ActivePage';
 begin
   // JvNavigationPanel
   RegisterComponents(RsPaletteJvclVisual, [  // was: RsPaletteNavPane
@@ -47,20 +48,18 @@ begin
 
   // JvPageList
   RegisterComponents(RsPaletteJvclVisual, [        // was: RsPaletteListComboTree
-    //TJvPageList,
+    TJvPageList,
     TJvNotebookPageList]);
-  {
+
   RegisterClasses([TJvPageList, TJvStandardPage]);
-  RegisterComponentEditor(TJvCustomPageList, TJvCustomPageListEditor);  // was: TJvCustomPageEditor
+  RegisterNoIcon([TJvStandardPage]);
+  RegisterComponentEditor(TJvCustomPageList, TJvCustomPageEditor);  // was: TJvCustomPageEditor
   RegisterComponentEditor(TJvCustomPage, TJvCustomPageEditor);
   RegisterPropertyEditor(TypeInfo(TJvShowDesignCaption), nil, '',
-    TJvShowDesignCaptionProperty);#
-  }
+    TJvShowDesignCaptionProperty);
 
-  {
   RegisterPropertyEditor(TypeInfo(TJvCustomPage),
     TJvCustomPageList, cActivePage, TJvActivePageProperty);
-  }
 
   // JvPageTree
   RegisterComponents(RsPaletteJvclVisual, [  // was: TsPaletteListComboTree
