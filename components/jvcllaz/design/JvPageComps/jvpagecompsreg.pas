@@ -48,8 +48,8 @@ begin
 
   // JvPageList
   RegisterComponents(RsPaletteJvclVisual, [        // was: RsPaletteListComboTree
-    TJvPageList,
-    TJvNotebookPageList]);
+    TJvNotebookPageList,
+    TJvPageList]);
 
   RegisterClasses([TJvPageList, TJvStandardPage]);
   RegisterNoIcon([TJvStandardPage]);
@@ -63,7 +63,8 @@ begin
 
   // JvPageTree
   RegisterComponents(RsPaletteJvclVisual, [  // was: TsPaletteListComboTree
-    TJvSettingsTreeView, TJvPageListTreeView
+    TJvPageListTreeView,
+    TJvSettingsTreeView
   ]);
   RegisterClasses([TJvSettingsTreeView, TJvPageListTreeView]);
 

@@ -32,7 +32,7 @@ interface
 uses
   SysUtils, ImgList, Graphics, Classes,
   PropEdits, ComponentEditors, GraphPropEdits, PropEditUtils,
-  JvPageList, JvDsgnEditors;
+  JvPageList; //, JvDsgnEditors;
 
 type
   { a property editor for the ActivePage property of TJvPageList }

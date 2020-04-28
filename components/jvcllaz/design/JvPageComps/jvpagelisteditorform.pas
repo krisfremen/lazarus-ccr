@@ -31,7 +31,7 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, ActnList, ImgList, ComCtrls, StdCtrls, ToolWin, Menus,
+  Dialogs, ActnList, ImgList, ComCtrls, StdCtrls, {ToolWin, }Menus,
   PropEdits, PropEditUtils, ComponentEditors,
   JvPageList, JvPageListEditors, IDEWindowIntf;
 
@@ -244,8 +244,6 @@ begin
 end;
 
 procedure TfrmPageListEditor.OnPersistentDeleting(APersistent: TPersistent);
-var
-  I: Integer;
 begin
   if FIgnoreEvents then Exit;
   if (APersistent is TJvCustomPage) then
