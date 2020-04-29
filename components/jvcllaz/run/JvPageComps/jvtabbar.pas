@@ -1476,8 +1476,9 @@ begin
   CalcTabsRects;
   Bmp := TBitmap.Create;
   try
-    Bmp.Width := ClientWidth;
-    Bmp.Height := ClientHeight;
+    Bmp.SetSize(ClientWidth, ClientHeight);
+    Bmp.Canvas.Brush.Color := clWhite;
+    Bmp.Canvas.FillRect(0, 0, Bmp.Width, Bmp.Height);
     CurrentPainter.DrawBackground(Bmp.Canvas, Self, ClientRect);
     if (FBtnLeftScroll.State <> sbsHidden) and (FBtnRightScroll.State <> sbsHidden) then
     begin

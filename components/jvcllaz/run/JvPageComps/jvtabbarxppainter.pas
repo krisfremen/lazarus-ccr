@@ -128,6 +128,7 @@ begin
     end
     else
       Dec(TextRect.Right, 3);
+    Canvas.Brush.Style := bsClear;
     ThemeServices.DrawText(Canvas.Handle, TabDetails, Tab.Caption, TextRect, DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS, 0);
 
     if Tab.TabBar.CloseButton then
