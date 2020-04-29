@@ -53,7 +53,7 @@ type
 implementation
 
 uses
-  Math, Themes;
+  LCLVersion, Math, Themes, imgList;
 
 { TJvTabBarXPPainter }
 
@@ -87,36 +87,55 @@ end;
 procedure TJvTabBarXPPainter.DrawTab(Canvas: TCanvas; Tab: TJvTabBarItem;
   R: TRect);
 var
-  TabDetails, ButtonDetails: TThemedElementDetails;
+  tabBar: TJvCustomTabBar;
+  tabDetails, buttonDetails: TThemedElementDetails;
   CloseRect, TextRect: TRect;
+  imgsize: TSize;
+  x, y: Integer;
+  {$IF LCL_FullVersion >= 1090000}
+   imageRes: TScaledImageListResolution;
+   f: Double;
+   ppi: Integer;
+  {$IFEND}
 begin
+  tabBar := GetTabBar(Tab);
+
   if ThemeServices.ThemesEnabled then
   begin
     if Tab.Selected then
     begin
-      ButtonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonNormal);
-      TabDetails := ThemeServices.GetElementDetails(ttTabItemSelected);
+      buttonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonNormal);
+      tabDetails := ThemeServices.GetElementDetails(ttTabItemSelected);
     end
     else if Tab.Hot then
     begin
-      ButtonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonHot);
-      TabDetails := ThemeServices.GetElementDetails(ttTabItemHot);
+      buttonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonHot);
+      tabDetails := ThemeServices.GetElementDetails(ttTabItemHot);
     end
     else
     begin
-      ButtonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonNormal);
-      TabDetails := ThemeServices.GetElementDetails(ttTabItemNormal);
+      buttonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonNormal);
+      tabDetails := ThemeServices.GetElementDetails(ttTabItemNormal);
     end;
 
     if Tab.Closing then
-      ButtonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonPushed);
-    ThemeServices.DrawElement(Canvas.Handle, TabDetails, R);
+      buttonDetails := ThemeServices.GetElementDetails(twSmallCloseButtonPushed);
+    ThemeServices.DrawElement(Canvas.Handle, tabDetails, R);
 
     if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then
     begin
-      Tab.GetImages.Draw(Canvas, R.Left + 4, R.Top + (R.Bottom - R.Top - Tab.GetImages.Height) div 2,
-        Tab.ImageIndex, Tab.Enabled);
-      Inc(R.Left, Tab.GetImages.Width + 2);
+      imgSize := GetRealImageSize(Tab);
+      x := R.Left + Scale(tabBar, 4);
+      y := (R.Top + R.Bottom - imgSize.CY) div 2;
+      {$IF LCL_FullVersion >= 1090000}
+      f := tabBar.GetCanvasScaleFactor;
+      ppi := GetPixelsPerInch;
+      imageRes := Tab.GetImages.ResolutionForPPI[tabBar.ImagesWidth, ppi, f];
+      imageRes.Draw(Canvas, x, y, Tab.ImageIndex, Tab.Enabled);
+    {$ELSE}
+      Tab.GetImages.Draw(Canvas, x, y, Tab.ImageIndex, Tab.Enabled);
+    {$IFEND}
+      Inc(R.Left, imgSize.CX + Scale(tabBar, 2));
     end;
 
     TextRect := R;
@@ -124,10 +143,10 @@ begin
     if Tab.TabBar.CloseButton then
     begin
       CloseRect := GetCloseRect(Canvas, Tab, R);
-      TextRect.Right := CloseRect.Left - 3;
+      TextRect.Right := CloseRect.Left - Scale(tabBar, 3);
     end
     else
-      Dec(TextRect.Right, 3);
+      Dec(TextRect.Right, Scale(tabBar, 3));
     Canvas.Brush.Style := bsClear;
     ThemeServices.DrawText(Canvas.Handle, TabDetails, Tab.Caption, TextRect, DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS, 0);
 
@@ -140,13 +159,19 @@ end;
 
 function TJvTabBarXPPainter.GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem;
   R: TRect): TRect;
+var
+  tabBar: TJvCustomTabBar;
+  p15: Integer;
 begin
   if ThemeServices.ThemesEnabled then
   begin
-    Result.Right := R.Right - 5;
-    Result.Top := R.Top + ((R.Bottom div 2) - 8);
-    Result.Left := Result.Right - 15;
-    Result.Bottom := Result.Top + 15;
+    tabBar := GetTabBar(Tab);
+    p15 := Scale(tabBar, 15);
+//    Result.Top := R.Top + R.Bottom div 2 - Scale(tabBar, 8);
+    Result.Top := (R.Top + R.Bottom - p15) div 2;
+    Result.Bottom := Result.Top + p15;
+    Result.Right := R.Right - Scale(tabBar, 5);
+    Result.Left := Result.Right - p15;
   end
   else
     Result := inherited GetCloseRect(Canvas, Tab, R);
@@ -161,28 +186,31 @@ begin
 end;
 
 function TJvTabBarXPPainter.GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize;
+var
+  tabBar: TJvCustomTabBar;
 begin
+  tabBar := GetTabBar(Tab);
   if FixedTabSize > 0 then
   begin
     if ThemeServices.ThemesEnabled then
       Result.cx := FixedTabSize
     else
-      Result.cx := Min(FixedTabSize + 40, Canvas.TextWidth(Tab.Caption) + 26);
+      Result.cx := Min(FixedTabSize + Scale(tabBar, 40), Canvas.TextWidth(Tab.Caption) + Scale(tabBar, 26));
   end
   else
   begin
     if ThemeServices.ThemesEnabled then
     begin
-      Result.cx := Canvas.TextWidth(Tab.Caption) + 16;
+      Result.cx := Canvas.TextWidth(Tab.Caption) + Scale(tabBar, 16);
       if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then
-        Inc(Result.cx, Tab.GetImages.Width + 2);
+        Inc(Result.cx, GetRealImageSize(Tab).CX + Scale(tabBar, 2));
       if Tab.TabBar.CloseButton then
-        Inc(Result.cx, 18);
+        Inc(Result.cx, Scale(tabBar, 18));
     end
     else
       Result := inherited GetTabSize(Canvas, Tab);
   end;
-  Result.cy := Tab.TabBar.Height - 3;
+  Result.cy := Tab.TabBar.Height - Scale(tabBar, 3);
 end;
 
 procedure TJvTabBarXPPainter.SetFixedTabSize(const Value: Integer);

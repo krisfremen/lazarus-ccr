@@ -153,7 +153,8 @@ type
     function GetTabBar(ATab: TJvTabBarItem): TJvCustomTabBar;
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; virtual; abstract;
     function Options: TJvTabBarPainterOptions; virtual; abstract;
-  public
+    function Scale(ABar: TJvCustomTabBar; n: Integer): Integer;
+public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   end;
@@ -314,12 +315,6 @@ type
     procedure SetOrientation(const Value: TJvTabBarOrientation);
     procedure TimerExpired(Sender: TObject);
     procedure SetHeight(AValue: Integer);
- {$IF LCL_FullVersion >= 1090000}
-  private
-    procedure SetImagesWidth(const AValue: Integer);
-  protected
-    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth default 0;
-{$ENDIF}
   protected
     procedure CalcTabsRects;
     procedure CalculatePreferredSize(var PreferredWidth, PreferredHeight: integer;
@@ -371,6 +366,9 @@ type
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
     {$IFEND}
+    {$IF LCL_FullVersion >= 1090000}
+    procedure SetImagesWidth(const AValue: Integer);
+   {$ENDIF}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -389,6 +387,9 @@ type
     property PageList: TCustomControl read FPageList write SetPageList;
     property Painter: TJvTabBarPainter read FPainter write SetPainter;
     property Images: TCustomImageList read FImages write SetImages;
+   {$IF LCL_FullVersion >= 1090000}
+    property ImagesWidth: Integer read FImagesWidth write SetImagesWidth default 0;
+   {$ENDIF}
     property Tabs: TJvTabBarItems read FTabs write SetTabs;
 
     // Status
@@ -2226,10 +2227,26 @@ begin
 end;
 {$ELSE}
 begin
-  Result.CX := ATab.GetImages.Width;
-  Result.CY := ATab.GetImages.Height;
+  if Assigned(ATab.GetImages) then
+  begin
+    Result.CX := ATab.GetImages.Width;
+    Result.CY := ATab.GetImages.Height;
+  end else
+  begin
+    Result.CX := 0;
+    Result.CY := 0;
+  end;
 end;
 {$ENDIF}
+
+function TJvTabBarPainter.Scale(ABar: TJvCustomTabBar; n: Integer): Integer;
+begin
+  {$IF LCL_FullVersion >= 1080000}
+  Result := ABar.Scale96ToFont(n);
+  {$ELSE}
+  Result := MulDiv(n, Screen.PixelsPerInch, 96);
+  {$IFEND}
+end;
 
 procedure TJvTabBarPainter.GetScrollButtons(TabBar: TJvCustomTabBar; var LeftButton, RightButton: TRect);
 begin
@@ -2366,18 +2383,21 @@ begin
 end;
 
 procedure TJvModernTabBarPainter.DrawDivider(Canvas: TCanvas; LeftTab: TJvTabBarItem; R: TRect);
+var
+  delta: Integer;
 begin
   if not LeftTab.Selected then
   begin
     if (LeftTab.TabBar.SelectedTab = nil) or
       (LeftTab.GetNextVisible <> LeftTab.TabBar.SelectedTab) then
     begin
+      delta := Scale(LeftTab.TabBar, 3);
       with Canvas do
       begin
         Pen.Color := DividerColor;
         Pen.Width := 1;
-        MoveTo(R.Right - 1, R.Top + 3);
-        LineTo(R.Right - 1, R.Bottom - 3);
+        MoveTo(R.Right - 1, R.Top + delta);
+        LineTo(R.Right - 1, R.Bottom - delta);
       end;
     end;
   end;
@@ -2386,21 +2406,23 @@ end;
 procedure TJvModernTabBarPainter.DrawMoveDivider(Canvas: TCanvas; Tab: TJvTabBarItem; MoveLeft: Boolean);
 var
   R: TRect;
+  delta: integer;
 begin
+  delta := Scale(Tab.TabBar, 4);
   with Canvas do
   begin
     R := Tab.DisplayRect;
-    Inc(R.Top, 4);
-    Dec(R.Bottom, 2);
+    Inc(R.Top, delta);
+    Dec(R.Bottom, delta div 2);
     if MoveLeft then
     begin
       Dec(R.Left);
-      R.Right := R.Left + 4
+      R.Right := R.Left + delta
     end
     else
     begin
       Dec(R.Right, 1);
-      R.Left := R.Right - 4;
+      R.Left := R.Right - delta;
     end;
     Brush.Color := MoveDividerColor;
     FillRect(R);

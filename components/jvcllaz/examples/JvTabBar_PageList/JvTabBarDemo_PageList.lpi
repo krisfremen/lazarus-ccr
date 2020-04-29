@@ -57,7 +57,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvTabBarDemo_PageList/JvTabBarDemo_PageList"/>
+      <Filename Value="../../bin/$(TargetCPU)-$(TargetOS)/JvTabBarDemo_PageList"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
