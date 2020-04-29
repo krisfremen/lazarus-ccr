@@ -129,7 +129,11 @@ begin
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
 
-  Constraints.MinWidth := Width;
+  w := MaxValue([Label1.Width, Label2.Width, Label3.Width]) + LeftIn.Width + 4 * VarList.BorderSpacing.Left;
+  if w > Width then
+    Constraints.MinWidth := w
+  else
+    Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
 
   FAutoSized := true;

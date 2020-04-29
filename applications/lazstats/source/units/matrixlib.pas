@@ -928,7 +928,7 @@ begin
   AReport.Add('');
   AReport.Add('SOURCE      DF       SS             MS             F        Prob. > F');
   AReport.Add('---------- --- -------------- -------------- -------------- ----------');
-  AReport.Add('Regression %3d  %14.3f %14.3f %14.4f %10.4', [N-1, SSreg, SSreg/(N-1), F, Prob]);     // df1
+  AReport.Add('Regression %3d  %14.3f %14.3f %14.4f %10.4f', [N-1, SSreg, SSreg/(N-1), F, Prob]);     // df1
   AReport.Add('Residual   %3d  %14.3f %14.3f', [(NCases-N), SSres, SSres/(NCases-N)]);            // df2
   AReport.Add('Total      %3d  %14.3f', [NCases-1, SSY]);
   AReport.Add('');
