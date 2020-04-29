@@ -353,7 +353,9 @@ procedure TImgInfo.LoadFromFile(const AFileName: String);
 var
   stream: TStream;
 begin
-  if not FileExists(AFileName) then
+  if not FileExists(AFileName {$IF FPC_FullVersion >=30200}, false{$IFEND}) then
+    // false ---> Fix bug accessing image on OneDrive For Business
+    // https://forum.lazarus.freepascal.org/index.php/topic,49564.msg359676/topicseen.html
     Error(Format(rsFileNotFoundError, [AFileName]));
 
   FWarnings.Clear;
