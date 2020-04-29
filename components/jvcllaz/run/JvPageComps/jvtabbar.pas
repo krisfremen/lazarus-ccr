@@ -26,7 +26,7 @@ Known Issues:
 unit JvTabBar;
 
 {$MODE objfpc}{$H+}
-{.$DEFINE JVCLThemesEnabled}
+{$DEFINE JVCLThemesEnabled}
 
 interface
 
@@ -46,20 +46,6 @@ type
 
   TJvGetModifiedEvent = procedure(Sender: TJvTabBarItem; var Modified: Boolean) of object;
   TJvGetEnabledEvent = procedure(Sender: TJvTabBarItem; var Enabled: Boolean) of object;
-
-  (*
-  IPageList = interface
-    ['{6BB90183-CFB1-4431-9CFD-E9A032E0C94C}']
-    function CanChange(AIndex: Integer): Boolean;
-    procedure SetActivePageIndex(AIndex: Integer);
-    function GetPageCount: Integer;
-    function GetPageCaption(AIndex: Integer): string;
-    procedure AddPage(const ACaption: string);
-    procedure DeletePage(Index: Integer);
-    procedure MovePage(CurIndex, NewIndex: Integer);
-    procedure PageCaptionChanged(Index: Integer; const NewCaption: string);
-  end;
-  *)
 
   TJvTabBarItem = class(TCollectionItem)
   private
@@ -167,7 +153,6 @@ type
     function GetTabBar(ATab: TJvTabBarItem): TJvCustomTabBar;
     function GetTabSize(Canvas: TCanvas; Tab: TJvTabBarItem): TSize; virtual; abstract;
     function Options: TJvTabBarPainterOptions; virtual; abstract;
-    function Scale96(AValue: Integer): Integer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -381,6 +366,12 @@ type
 
     procedure SetHint(const Value: TCaption); override;
 
+    // LCL scaling
+    {$IF LCL_FullVersion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$IFEND}
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -513,6 +504,16 @@ const
   BOTTOM_MARGIN = 4;      // Distance bottom edge to text/image/close btn (whichever is lowest)
   CLOSE_BUTTON_SIZE = 12; // size of the close button box
   CROSS_MARGIN = 8;       // Margin of the "x" inside the close button
+
+var
+  LeftMargin: Integer = LEFT_MARGIN;
+  RightMargin: Integer = RIGHT_MARGIN;
+  TextMarginLeft: Integer = TEXT_MARGIN_LEFT;
+  TextMarginRight: Integer = TEXT_MARGIN_RIGHT;
+  TopMargin: Integer = TOP_MARGIN;
+  BottomMargin: Integer = BOTTOM_MARGIN;
+  CloseButtonSize: Integer = CLOSE_BUTTON_SIZE;
+  CrossMargin: Integer = CROSS_MARGIN;
 
 
 function DrawButtonFace(ACanvas: TCanvas; const ARect: TRect; AFlat: Boolean;
@@ -1428,8 +1429,6 @@ end;
 procedure TJvCustomTabBar.CalculatePreferredSize(
   var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean);
 var
-//  tabSize: TSize;
-//  imgSize: TSize;
   h: Integer;
  {$IF LCL_FullVersion >= 1090000}
   imgRes: TScaledImageListResolution;
@@ -1459,13 +1458,13 @@ begin
 
   // Close button height
   if FCloseButton then begin
-    h := Scale96ToForm(CLOSE_BUTTON_SIZE);
+   h := CloseButtonSize;
     if h > PreferredHeight then
       PreferredHeight := h;
   end;
 
   // Margins
-  inc(PreferredHeight, Scale96ToForm(TOP_MARGIN) + Scale96ToForm(BOTTOM_MARGIN));
+  inc(PreferredHeight, TopMargin + BottomMargin);
 end;
 
 procedure TJvCustomTabBar.Paint;
@@ -1822,6 +1821,27 @@ begin
     Repaint;
   end;
 end;
+
+{$IF LCL_FullVersion >= 1080000}
+procedure TJvCustomTabBar.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+  if AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI] then
+  begin
+    FMargin := round(FMargin * AXProportion);
+
+    LeftMargin := round(LEFT_MARGIN * AXProportion);
+    RightMargin := round(RIGHT_MARGIN * AXProportion);
+    TextMarginLeft := round(TEXT_MARGIN_LEFT * AXProportion);
+    TextMarginRight := round(TEXT_MARGIN_RIGHT * AXProportion);
+    TopMargin := round(TOP_MARGIN * AYProportion);
+    BottomMargin := round(BOTTOM_MARGIN * AYProportion);
+    CloseButtonSize := round(CLOSE_BUTTON_SIZE * AXProportion);
+    CrossMargin := round(CROSS_MARGIN * AXProportion);
+  end;
+end;
+{$IFEND}
 
 //=== { TJvTabBarItem } ======================================================
 
@@ -2233,6 +2253,8 @@ const
 var
   details: TThemedElementDetails;
 {$ENDIF JVCLThemesEnabled}
+var
+  dx, dy: Integer;
 begin
   {$IFDEF JVCLThemesEnabled}
   if ThemeServices.ThemesEnabled then begin
@@ -2244,16 +2266,20 @@ begin
     DrawButtonFace(Canvas, R, TabBar.FlatScrollButtons, State = sbsPressed, false);
     if State = sbsPressed then
       OffsetRect(R, 1, 1);
+    {$IF LCL_FullVersion >= 1080000}
+    dx := TabBar.Scale96ToFont(4);
+    dy := TabBar.Scale96ToFont(7);
+    {$ELSE}
+    dx := MulDiv(4, GetPixelsPerInch, 96);
+    dy := MulDiv(7, GetPixelsPerInch, 96);
+    {$IFEND}
     TabBar.DrawScrollBarGlyph(Canvas,
-      R.Left + (R.Right - R.Left - 4) div 2,
-      R.Top + (R.Bottom - R.Top - 7) div 2,
-      Button = sbScrollLeft, State = sbsDisabled);
+      R.Left + (R.Right - R.Left - dx) div 2,
+      R.Top + (R.Bottom - R.Top - dy) div 2,
+      Button = sbScrollLeft,
+      State = sbsDisabled
+    );
   end;
-end;
-
-function TJvTabBarPainter.Scale96(AValue: Integer): Integer;
-begin
-  Result := MulDiv(AValue, GetPixelsPerInch, 96);
 end;
 
 
@@ -2436,8 +2462,8 @@ begin
       LineTo(R.Right - 1 - 1, R.Top);
     end;
 
-    inc(R.Left, Scale96(LEFT_MARGIN));
-    dec(R.Right, Scale96(RIGHT_MARGIN));
+    inc(R.Left, LeftMargin);
+    dec(R.Right, RightMargin);
 
     if Tab.TabBar.CloseButton then
     begin
@@ -2471,7 +2497,7 @@ begin
       Pen.Width := 2;
 
       { Draw close cross }
-      margin := Scale96(CROSS_MARGIN);
+      margin := CrossMargin;
       Line(CloseR.Left + margin, CloseR.Top + margin, CloseR.Right - margin - 1, CloseR.Bottom - margin - 1);
       Line(CloseR.Left + margin, CloseR.Bottom - margin - 1, CloseR.Right - margin - 1, CloseR.Top + margin);
       {
@@ -2479,7 +2505,7 @@ begin
       if Tab.Modified then
         FillRect(Rect(CloseR.Left + 5, CloseR.Top + 4, CloseR.Right - 5, CloseR.Bottom - 4));
       }
-      R.Right := CloseR.Left - Scale96(TEXT_MARGIN_RIGHT);
+      R.Right := CloseR.Left - TextMarginRight;
     end;
 
     { Draw image from image list }
@@ -2498,7 +2524,7 @@ begin
      {$ELSE}
        Tab.GetImages.Draw(Canvas, x, y, Tab.ImageIndex, Tab.Enabled);
       {$ENDIF}
-      Inc(R.Left, imgSize.CX + Scale96(TEXT_MARGIN_LEFT));
+      Inc(R.Left, imgSize.CX + TextMarginLeft);
     end;
 
     if Tab.Enabled then
@@ -2525,8 +2551,8 @@ function TJvModernTabBarPainter.GetCloseRect(Canvas: TCanvas; Tab: TJvTabBarItem
 var
   btnSize: TSize;
 begin
-  btnSize := Size(Scale96(CLOSE_BUTTON_SIZE), Scale96(CLOSE_BUTTON_SIZE));
-  Result.Right := ATabRect.Right - Scale96(RIGHT_MARGIN);
+  btnSize := Size(CloseButtonSize, CloseButtonSize);
+  Result.Right := ATabRect.Right - RightMargin;
   Result.Left := Result.Right - btnSize.CX;
   Result.Top := (ATabRect.Top + ATabRect.Bottom - btnSize.CY) div 2;
   Result.Bottom := Result.Top + btnSize.CY;
@@ -2562,12 +2588,12 @@ begin
     Result := Size(0, Canvas.TextHeight('Tg'))
   else
     Result := Canvas.TextExtent(Tab.Caption);
-  inc(Result.CX, Scale96(LEFT_MARGIN) + Scale96(RIGHT_MARGIN));
+  inc(Result.CX, LeftMargin + RightMargin);
 
   // Extend width by close button
   if Tab.TabBar.CloseButton then begin
-    w := Scale96(CLOSE_BUTTON_SIZE);
-    inc(Result.CX, w + Scale96(TEXT_MARGIN_RIGHT));
+    w := CloseButtonSize;
+    inc(Result.CX, w + TextMarginRight);
     h := w;
     if Result.CY < h then
       Result.CY := h;
@@ -2576,11 +2602,11 @@ begin
   // Extend width and height by image
   if (Tab.ImageIndex <> -1) and (Tab.GetImages <> nil) then begin
     imgSize := GetRealImageSize(Tab);
-    inc(Result.CX, imgSize.CX + Scale96(TEXT_MARGIN_LEFT));
+    inc(Result.CX, imgSize.CX + TextMarginLeft);
     if Result.CY < imgSize.CY then
       Result.CY := imgSize.CY;
   end;
-  inc(Result.CY, Scale96(TOP_MARGIN) + Scale96(BOTTOM_MARGIN));
+  inc(Result.CY, TopMargin + BottomMargin);
 
   // Override width if TabWidth/TabHeight is fixed.
   if TabWidth > 0 then

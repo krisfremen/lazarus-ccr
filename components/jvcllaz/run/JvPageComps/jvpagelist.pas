@@ -231,7 +231,9 @@ type
     property Align;
     property Anchors;
     property BiDiMode;
+    property BorderSpacing;
     property BorderWidth;
+    property ChildSizing;
     property DragCursor;
     property DragKind;
     property OnStartDock;
@@ -365,6 +367,7 @@ end;
 procedure TJvCustomPage.DoPaint(ACanvas: TCanvas; ARect: TRect);
 var
   S: string;
+  margin: Integer;
 begin
   ACanvas.Font := Font;
   ACanvas.Brush.Style := bsSolid;
@@ -384,7 +387,8 @@ begin
       if S = '' then
         S := Name;
       // make some space around the edges
-      InflateRect(ARect, -4, -4);
+      margin := Scale96ToFont(4);
+      InflateRect(ARect, -margin, -margin);
       if not Enabled then
       begin
         SetBkMode(ACanvas.Handle, LCLType.TRANSPARENT);
@@ -394,7 +398,7 @@ begin
         ACanvas.Font.Color := clGrayText;
       end;
       DrawText(ACanvas.Handle, PChar(S), Length(S), ARect, GetDesignCaptionFlags(PageList.ShowDesignCaption) or DT_SINGLELINE);
-      InflateRect(ARect, 4, 4);
+      InflateRect(ARect, +margin, +margin);
     end;
   end;
   if Assigned(FOnPaint) then
