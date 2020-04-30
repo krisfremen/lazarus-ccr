@@ -562,8 +562,8 @@ begin
 end;
 
 procedure TJvCustomPageList.CMDesignHitTest(var Msg: TCMDesignHitTest);
-var
-  Pt: TPoint;
+//var
+//  Pt: TPoint;
 begin
   inherited;
   //Pt := SmallPointToPoint(Msg.Pos);
@@ -963,6 +963,8 @@ begin
   Page.Caption := ACaption;
   Page.Name := GetUniqueName(Owner, Copy(Page.ClassName, 2, MaxInt));
   Page.PageList := Self;
+  if (csDesigning in ComponentState) and (ActivePage = nil) then
+    ActivePage := Page;
 end;
 
 procedure TJvCustomPageList.MovePage(CurIndex, NewIndex: Integer);
