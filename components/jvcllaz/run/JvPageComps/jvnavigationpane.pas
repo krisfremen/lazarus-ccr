@@ -213,7 +213,7 @@ type
     procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMMouseMove(var Msg: TLMMouseMove); message LM_MOUSEMOVE;
     procedure RequestAlign; override;
-    procedure SetCursor(Value: TCursor); //override;   // FIX ME: Crash when override is active !!!
+    procedure SetCursor(Value: TCursor); reintroduce; //override;   // FIX ME: Crash when override is active !!!
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -490,7 +490,7 @@ type
     procedure DoStyleChange(Sender: TObject);
     procedure SetAlignment(const Value: TAlignment);
     procedure SetWordWrap(const Value: Boolean);
-    procedure CMDialogChar(var Msg: TCMDialogChar); message CM_DIALOGCHAR;
+    //procedure CMDialogChar(var Msg: TCMDialogChar); message CM_DIALOGCHAR;
     procedure ParentStyleManagerChanged(var Msg: TMsgStyleManagerChange); message CM_PARENTSTYLEMANAGERCHANGED;
     procedure SetParentStyleManager(const Value: Boolean);
     function IsColorsStored: Boolean;
@@ -2493,6 +2493,7 @@ begin
   end;
 end;
 
+{ wp: Warning: "Symbol 'CM_DIALOGCHAR' is not implemented." --> this method cannot be called.
 
 procedure TJvNavPanelButton.CMDialogChar(var Msg: TCMDialogChar);
 begin
@@ -2504,6 +2505,7 @@ begin
   else
     inherited;
 end;
+}
 
 procedure TJvNavPanelButton.ParentStyleManagerChanged(
   var Msg: TMsgStyleManagerChange);
