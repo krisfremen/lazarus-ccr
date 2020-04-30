@@ -1,6 +1,3 @@
-tjvtabbar.bmp
-tjvmoderntabbarpainter.bmp
-tjvtabbarxppainter.bmp
 tjvgammapanel.png
 tjvgammapanel_150.png
 tjvgammapanel_200.png

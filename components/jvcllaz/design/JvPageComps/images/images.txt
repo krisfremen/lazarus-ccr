@@ -6,6 +6,9 @@ tjvnavpanelheader.bmp
 tjvnavpanestylemanager.bmp
 tjvnavpanetoolpanel.bmp
 tjvoutlooksplitter.bmp
+tjvtabbar.bmp
+tjvmoderntabbarpainter.bmp
+tjvtabbarxppainter.bmp
 tjvsettingstreeview.png
 tjvsettingstreeview_150.png
 tjvsettingstreeview_200.png
