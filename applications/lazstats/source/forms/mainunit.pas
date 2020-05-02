@@ -7,11 +7,18 @@ unit MainUnit;
 
 {$mode objfpc}{$H+}
 
+{$DEFINE USE_EXTERNAL_HELP_VIEWER}
+
 interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
   Menus, ExtCtrls, StdCtrls, Grids,
+ {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+  {$IFDEF MSWINDOWS}
+  HtmlHelp,
+  {$ENDIF}
+ {$ENDIF}
   Globals, DataProcs, DictionaryUnit;
 
 type
@@ -424,6 +431,11 @@ type
     procedure XvsMultYClick(Sender: TObject);
   private
     { private declarations }
+   {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+    {$IFDEF MSWINDOWS}
+    function HelpHandler(Command: Word; Data: PtrInt; var CallHelp: Boolean): Boolean;
+    {$ENDIF}
+   {$ENDIF}
     procedure Init;
   public
     { public declarations }
@@ -1280,9 +1292,15 @@ begin
   if OutputFrm = nil then
     Application.CreateForm(TOutputFrm, OutputFrm);
 
-(*  if OptionsFrm = nil then
-    Application.CreateForm(TOptionsFrm, OptionsFrm);
-    *)
+ {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+  {$IFDEF MSWINDOWS}
+  Application.HelpFile := Application.Location + 'LazStats.chm';
+  if FileExists(Application.HelpFile) then
+    Application.OnHelp := @HelpHandler
+  else
+    Application.HelpFile := '';
+  {$ENDIF}
+ {$ENDIF}
 end;
 
 procedure TOS3MainFrm.DataGridKeyPress(Sender: TObject; var Key: char);
@@ -1563,6 +1581,25 @@ begin
     NoCasesEdit.Text := IntToStr(DataGrid.RowCount-1);
   end;
 end;
+
+{$IFDEF USE_EXTERNAL_HELP_VIEWER}
+{$IFDEF MSWINDOWS}
+// Call HTML help (.chm file)
+// Is is expected that help topics are specified as HelpKeyword (HelpType = htContext).
+// Using numeric HelpContext values will crash the application.
+function TOS3MainFrm.HelpHandler(Command:word; Data:PtrInt;
+  var CallHelp:Boolean): Boolean;
+var
+  topic: UnicodeString;
+begin
+  topic := Application.HelpFile + '::/' + PChar(Data);
+  htmlhelp.HtmlHelpW(0, PWideChar(topic), HH_DISPLAY_TOPIC, 0);
+
+  // Don't call regular help
+  CallHelp := False;
+end;
+{$ENDIF}
+{$ENDIF}
 
 procedure TOS3MainFrm.Init;
 var

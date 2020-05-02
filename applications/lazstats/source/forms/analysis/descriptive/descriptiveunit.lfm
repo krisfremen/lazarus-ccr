@@ -3,6 +3,8 @@ object DescriptiveFrm: TDescriptiveFrm
   Height = 393
   Top = 226
   Width = 453
+  HelpType = htKeyword
+  HelpKeyword = 'DistributionStatistics.htm'
   AutoSize = True
   Caption = 'Descriptive Statistics'
   ClientHeight = 393

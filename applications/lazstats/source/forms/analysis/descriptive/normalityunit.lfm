@@ -3,6 +3,8 @@ object NormalityFrm: TNormalityFrm
   Height = 396
   Top = 294
   Width = 402
+  HelpType = htKeyword
+  HelpKeyword = 'NormalityTests.htm'
   Caption = 'Normality Tests'
   ClientHeight = 396
   ClientWidth = 402

@@ -3,6 +3,8 @@ object ResistanceLineForm: TResistanceLineForm
   Height = 480
   Top = 301
   Width = 535
+  HelpType = htKeyword
+  HelpKeyword = 'ResistantLineforBivariateData.htm'
   Caption = 'Resistant Line for Bivariate Data'
   ClientHeight = 480
   ClientWidth = 535

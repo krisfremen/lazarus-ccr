@@ -3,6 +3,8 @@ object BubbleForm: TBubbleForm
   Height = 454
   Top = 253
   Width = 500
+  HelpType = htKeyword
+  HelpKeyword = 'RepeatedMeasuresBubblePlot.htm'
   AutoSize = True
   Caption = 'Repeated Measures Bubble Plot'
   ClientHeight = 454

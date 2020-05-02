@@ -3,6 +3,8 @@ object GroupFreqForm: TGroupFreqForm
   Height = 341
   Top = 233
   Width = 444
+  HelpType = htKeyword
+  HelpKeyword = 'GroupFrequencyHistograms.htm'
   AutoSize = True
   Caption = 'Group Frequency Analysis'
   ClientHeight = 341

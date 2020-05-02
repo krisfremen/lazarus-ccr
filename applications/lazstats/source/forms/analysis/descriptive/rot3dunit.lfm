@@ -3,6 +3,8 @@ object Rot3DFrm: TRot3DFrm
   Height = 527
   Top = 153
   Width = 710
+  HelpType = htKeyword
+  HelpKeyword = 'ThreeDimensionalRotation.htm'
   Caption = 'Three Dimension Rotation'
   ClientHeight = 527
   ClientWidth = 710

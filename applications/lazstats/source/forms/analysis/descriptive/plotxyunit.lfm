@@ -3,6 +3,8 @@ object PlotXYFrm: TPlotXYFrm
   Height = 367
   Top = 262
   Width = 490
+  HelpType = htKeyword
+  HelpKeyword = 'XVersusYPlot.htm'
   AutoSize = True
   Caption = 'Plot X versus Y'
   ClientHeight = 367

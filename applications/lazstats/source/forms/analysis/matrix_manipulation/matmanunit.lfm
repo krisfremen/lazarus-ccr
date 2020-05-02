@@ -3,6 +3,8 @@ object MatManFrm: TMatManFrm
   Height = 575
   Top = 176
   Width = 943
+  HelpType = htKeyword
+  HelpKeyword = 'DistributionStatistics.htm'
   Caption = 'Matrix Manipulation'
   ClientHeight = 555
   ClientWidth = 943

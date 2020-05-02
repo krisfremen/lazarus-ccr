@@ -3,6 +3,8 @@ object MultXvsYFrm: TMultXvsYFrm
   Height = 416
   Top = 216
   Width = 395
+  HelpType = htKeyword
+  HelpKeyword = 'MultipleGroupXVersusYPlot.htm'
   Anchors = [akLeft]
   AutoSize = True
   Caption = 'Multiple X Versus Y Plot'

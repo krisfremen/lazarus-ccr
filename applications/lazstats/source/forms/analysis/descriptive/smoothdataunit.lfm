@@ -3,6 +3,8 @@ object DataSmoothingForm: TDataSmoothingForm
   Height = 388
   Top = 284
   Width = 372
+  HelpType = htKeyword
+  HelpKeyword = 'DataSmoothing.htm'
   AutoSize = True
   Caption = 'Smooth Data'
   ClientHeight = 388

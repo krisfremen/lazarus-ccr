@@ -3,6 +3,8 @@ object FreqFrm: TFreqFrm
   Height = 388
   Top = 228
   Width = 502
+  HelpType = htKeyword
+  HelpKeyword = 'FrequencyAnalysis.htm'
   Caption = 'Frequency Distribution'
   ClientHeight = 388
   ClientWidth = 502

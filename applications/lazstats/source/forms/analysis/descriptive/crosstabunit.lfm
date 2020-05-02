@@ -3,6 +3,8 @@ object CrossTabFrm: TCrossTabFrm
   Height = 347
   Top = 230
   Width = 421
+  HelpType = htKeyword
+  HelpKeyword = 'Cross-tabulation.htm'
   AutoSize = True
   Caption = 'Cross Tabulation'
   ClientHeight = 347
