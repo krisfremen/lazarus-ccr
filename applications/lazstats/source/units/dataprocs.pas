@@ -296,7 +296,7 @@ end;
 procedure OpenOS2File;
 begin
   OS3MainFrm.OpenDialog1.DefaultExt := '.laz';
-  OS3MainFrm.OpenDialog1.Filter := 'LazStats (*.laz)|*.laz;*.LAZ|All files (*.*)|*.*';
+  OS3MainFrm.OpenDialog1.Filter := 'LazStats files (*.laz)|*.laz;*.LAZ|All files (*.*)|*.*';
   OS3MainFrm.OpenDialog1.FilterIndex := 1;
   if OS3MainFrm.OpenDialog1.Execute then
     OpenOS2File(OS3MainFrm.OpenDialog1.FileName, true);
@@ -309,6 +309,12 @@ var
   i, j: integer;
   NRows, NCols: integer;
 begin
+  if Lowercase(ExtractFileExt(AFileName)) <> '.laz' then
+  begin
+    MessageDlg(Format('Incorrect file format ("%s")', [AFileName]), mtError, [mbOK], 0);
+    exit;
+  end;
+
   DictLoaded := false;
 
   OS3MainFrm.FileNameEdit.Text := ExpandFileName(AFileName);
