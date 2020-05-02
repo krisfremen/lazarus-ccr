@@ -7,9 +7,9 @@ object GradingFrm: TGradingFrm
   ClientHeight = 441
   ClientWidth = 622
   OnActivate = FormActivate
-  OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
+  ShowHint = True
   LCLVersion = '2.1.0.0'
   object Label1: TLabel
     AnchorSideLeft.Control = ScoresGrid
@@ -131,7 +131,7 @@ object GradingFrm: TGradingFrm
     AnchorSideRight.Control = LoadBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 123
+    Left = 136
     Height = 25
     Top = 408
     Width = 86
@@ -149,98 +149,80 @@ object GradingFrm: TGradingFrm
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 221
+    Left = 234
     Height = 25
     Top = 408
     Width = 88
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Load Specs.'
     OnClick = LoadBtnClick
     TabOrder = 5
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = Cancelbtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 321
+    Left = 330
     Height = 25
     Top = 408
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 6
   end
-  object Cancelbtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 387
-    Height = 25
-    Top = 408
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 7
-  end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 549
+    Left = 559
     Height = 25
     Top = 408
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
+    Caption = 'Close'
     ModalResult = 1
-    TabOrder = 9
+    TabOrder = 8
   end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CancelBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 461
+    Left = 392
     Height = 25
     Top = 408
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 8
+    TabOrder = 7
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 392
@@ -439,9 +421,11 @@ object GradingFrm: TGradingFrm
         AnchorSideBottom.Side = asrBottom
         Left = 0
         Height = 245
+        Hint = 'Enter low score value for the given grade. '#13#10'IMPORTANT: Press ENTER key.'
         Top = 17
         Width = 77
         Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoAdvance = aaDown
         AutoFillColumns = True
         BorderSpacing.Top = 2
         ColCount = 1
@@ -500,6 +484,22 @@ object GradingFrm: TGradingFrm
         )
       end
     end
+  end
+  object CancelBtn: TButton
+    AnchorSideRight.Control = CloseBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 476
+    Height = 25
+    Top = 408
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 9
   end
   object OpenDialog1: TOpenDialog
     left = 496

@@ -311,7 +311,7 @@ var
 begin
   if Lowercase(ExtractFileExt(AFileName)) <> '.laz' then
   begin
-    MessageDlg(Format('Incorrect file format ("%s")', [AFileName]), mtError, [mbOK], 0);
+    MessageDlg(Format('"%s" is not a .laz file.', [AFileName]), mtError, [mbOK], 0);
     exit;
   end;
 
@@ -1295,9 +1295,11 @@ begin
           OS3MainFrm.NoVarsEdit.Text := IntToStr(NCols);
           NoVariables := NCols;
           NoCases := NRows;
-          for i := 0 to NRows do // note - labels in row 0
+          // Labels in row 0
+          for i := 0 to NRows do
           begin
-               for j := 0 to NCols do // note - case no. in col. 0
+               // case no. in col. 0
+               for j := 0 to NCols do
                begin
                     Readln(F,astr);
                     OS3MainFrm.DataGrid.Cells[j,i] := astr;
