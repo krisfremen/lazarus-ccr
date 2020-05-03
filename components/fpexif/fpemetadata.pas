@@ -57,8 +57,9 @@ type
     FImgHeight: Integer;
     FWarnings: TStrings;
     FMetadataKinds: TMetadataKinds;
-    FHeaderSegment: TBytes;
+    FJFIFSegment: TBytes;
     FJFXXThumbnail: TBytes;
+    FWriteJFIFandEXIF: Boolean;
     FComment: String;
   private
     FExifData: TExifData;
@@ -110,6 +111,8 @@ type
     property MetadataKinds: TMetadataKinds read FMetadataKinds write FMetadataKinds default mdkAll;
     { Warning message - NOTE: Reading of warnings is erasing the warnings list! }
     property Warnings: String read GetWarnings;
+    { Write both JFIF and EXIF data if available. Normally they are mutually exclusive. }
+    property WriteJFIFandEXIF: Boolean read FWriteJFIFandEXIF write FWriteJFIFandEXIF;
 
     property ExifData: TExifData read FExifData;
     property IptcData: TIptcData read FIptcData;  // to do: rename to IptcData
@@ -394,15 +397,20 @@ type
     Marker: byte;
     Size: Word;
   end;
+const
+  SOI_MARKER: array[0..1] of byte = ($FF, $D8);
 var
   header: TSegmentHeader;
   n, count: Int64;
   savedPos: Int64;
+  jfif: TJpegJFIFSegment;
 begin
   // Write the header segment and all metadata segments stored in TImgInfo
   // to the beginning of the stream
   AOutputStream.Position := 0;
   WriteJpeg(AOutputStream);
+
+  AInputStream.Position := 0;
 
   // Now write copy all other segments.
   AInputStream.Position := 0;
@@ -539,8 +547,8 @@ begin
             if CompareMem(@Identifier[0], @sJFIF[1], Length(sJFIF)) then
             begin
               // JFIF APP0 marker segment
-              SetLength(FHeaderSegment, size);
-              Move(hdr[0], FHeaderSegment[0], size);
+              SetLength(FJFIFSegment, size);
+              Move(hdr[0], FJFIFSegment[0], size);
               if (JFIFVersion[0] <> 1) then
                 exit;
             end else
@@ -680,7 +688,7 @@ const
   SOI_MARKER: array[0..1] of byte = ($FF, $D8);
   COM_MARKER: array[0..1] of byte = ($FF, $FE);
   JFIF_MARKER: array[0..1] of byte = ($FF, $E0);
-  JFIF: ansistring = 'JFIF'#0;
+  JFIF_ID: ansistring = 'JFIF'#0;
 var
   jfifSegment: TJpegJFIFSegment;
   writer: TBasicMetadataWriter;
@@ -691,29 +699,37 @@ begin
   // Write Start-of-image segment (SOI)
   AStream.WriteBuffer(SOI_MARKER, SizeOf(SOI_MARKER));
 
-  // No Exif --> write an APP0 segment
-  if not HasExif or (FMetadataKinds * [mdkExif, mdkExifNoMakerNotes] = []) then begin
-    if Length(FHeaderSegment) = 0 then begin
-      Move(JFIF[1], {%H-}JFIFSegment.Identifier[0], Length(JFIF));
-      JFIFSegment.JFIFVersion[0] := 1;
-      JFIFSegment.JFIFVersion[1] := 2;
-      JFIFSegment.DensityUnit := 1;       // inch
-      JFIFSegment.XDensity := NtoBE(72);  // 72 ppi
-      JFIFSegment.YDensity := NtoBE(72);
-      JFIFSegment.ThumbnailWidth := 0;    // no thumbnail in APP0 segment
-      JFIFSegment.ThumbnailHeight := 0;
-      AStream.WriteBuffer(JFIF_MARKER, SizeOf(JFIF_MARKER));
-      WriteWord(AStream, NtoBE(Word(SizeOf(JFIFSegment) + 2)));
-      AStream.WriteBuffer(JFIFSegment, SizeOf(JFIFSegment));
-    end else
-    begin
-      AStream.WriteBuffer(JFIF_MARKER, SizeOf(JFIF_MARKER));
-      WriteWord(AStream, NtoBE(Word(Length(FHeaderSegment) + 2)));
-      AStream.WriteBuffer(FHeaderSegment[0], Length(FHeaderSegment));
-    end;
-  end else
+  // No EXIF or JFIF requested: write APP0 segment
+  if (not HasExif) or
+     (FMetaDataKinds * [mdkExif, mdkExifNoMakerNotes] = []) or
+     FWriteJFIFandEXIF then
   begin
-    // Exif --> Write APP1 segment
+    // No Exif, no JFIF --> write a default APP0 segment
+    if Length(FJFIFSegment) = 0 then
+    begin
+      Move(JFIF_ID[1], {%H-}jfifSegment.Identifier[0], Length(JFIF_ID));
+      jfifSegment.JFIFVersion[0] := 1;
+      jfifSegment.JFIFVersion[1] := 2;
+      jfifSegment.DensityUnit := 1;       // inch
+      jfifSegment.XDensity := NtoBE(72);  // 72 ppi
+      jfifSegment.YDensity := NtoBE(72);
+      jfifSegment.ThumbnailWidth := 0;    // no thumbnail in APP0 segment
+      jfifSegment.ThumbnailHeight := 0;
+      AStream.WriteBuffer(JFIF_MARKER, SizeOf(JFIF_MARKER));
+      WriteWord(AStream, NtoBE(Word(SizeOf(jfifSegment) + 2)));
+      AStream.WriteBuffer(jfifSegment, SizeOf(jfifSegment));
+    end
+    // No Exif, but JFIF --> write the JFIF segment of the file
+    else begin
+      AStream.WriteBuffer(JFIF_MARKER, SizeOf(JFIF_MARKER));
+      WriteWord(AStream, NToBE(Word(LengtH(FJFIFSegment) + 2)));
+      AStream.WriteBuffer(FJFIFSegment[0], Length(FJFIFSegment));
+    end;
+  end;
+
+  // Exif --> Write APP1 segment
+  if HasExif then
+  begin
     writer := TExifWriter.Create(Self);
     try
       TExifWriter(writer).BigEndian:= FExifData.BigEndian;
