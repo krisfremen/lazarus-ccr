@@ -465,6 +465,7 @@ var
   reader: TBasicMetadataReader;
   bigEndian: Boolean;
   hdr: TBytes;
+  hasJFIF: Boolean;
  {$IFNDEF FPC}
   sa: ansistring;
  {$ENDIF}
@@ -568,6 +569,7 @@ begin
               Move(hdr[SizeOf(TJpegJFXXSegment)], FJFXXThumbnail[0], Length(FJFXXThumbnail));
             end;
           end;
+          hasJFIF := true;
         end;
       M_SOF0:
         begin
@@ -584,6 +586,9 @@ begin
     end;
     AStream.Position := p + size;
   end;
+
+  // Force writing of JFIF if it coexists with EXIF.
+  FWriteJFIFandEXIF := hasJFIF and HasExif;
 end;
 
 procedure TImgInfo.ReadTiff(AStream: TStream);
