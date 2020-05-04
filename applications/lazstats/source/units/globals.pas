@@ -89,10 +89,13 @@ const
   );
 
   DIVIDER = '===========================================================================';
+  DIVIDER_SMALL = '---------------------------------------------------------------------------';
 
   GRAPH_BACK_COLOR = clCream;
   GRAPH_WALL_COLOR = clGray;
   GRAPH_FLOOR_COLOR = clLtGray;
+
+  TWO_PI = 2.0 * PI;
 
 implementation
 

@@ -45,6 +45,7 @@ object PolynomialFrm: TPolynomialFrm
     BorderSpacing.Bottom = 8
     Caption = 'OK'
     ModalResult = 1
+    OnClick = OKBtnClick
     TabOrder = 3
   end
   object HelpBtn: TButton

@@ -21,6 +21,7 @@ type
     Label1: TLabel;
     Panel1: TPanel;
     procedure FormActivate(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -44,6 +45,24 @@ begin
   w := MaxValue([CancelBtn.Width, OKBtn.Width]);
   CancelBtn.Constraints.MinWidth := w;
   OKBtn.Constraints.MinWidth := w;
+end;
+
+procedure TFFTFrm.OKBtnClick(Sender: TObject);
+var
+  n: Integer;
+begin
+  if NptsEdit.Text = '' then
+  begin
+    NptsEdit.SetFocus;
+    MessageDlg('Number of points not specified.', mtError, [mbOK], 0);
+    ModalResult := mrNone;
+  end else
+  if not TryStrToInt(NptsEdit.Text, n) or (n <= 0) then
+  begin
+    NptsEdit.SetFocus;
+    MessageDlg('Number of points must be a valid and positive integer.', mtError, [mbOK], 0);
+    ModalResult := mrNone;
+  end;
 end;
 
 initialization

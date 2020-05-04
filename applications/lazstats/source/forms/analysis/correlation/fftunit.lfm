@@ -2,11 +2,11 @@ object FFTFrm: TFFTFrm
   Left = 648
   Height = 127
   Top = 346
-  Width = 305
+  Width = 224
   BorderStyle = bsDialog
   Caption = 'Fourier Transform Form'
   ClientHeight = 127
-  ClientWidth = 305
+  ClientWidth = 224
   OnActivate = FormActivate
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
@@ -14,7 +14,7 @@ object FFTFrm: TFFTFrm
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = OKBtn
-    Left = 177
+    Left = 96
     Height = 25
     Top = 93
     Width = 62
@@ -32,7 +32,7 @@ object FFTFrm: TFFTFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 251
+    Left = 170
     Height = 25
     Top = 93
     Width = 42
@@ -43,6 +43,7 @@ object FFTFrm: TFFTFrm
     BorderSpacing.Bottom = 8
     Caption = 'OK'
     ModalResult = 1
+    OnClick = OKBtnClick
     TabOrder = 2
   end
   object Memo1: TLabel
@@ -53,7 +54,7 @@ object FFTFrm: TFFTFrm
     Left = 8
     Height = 30
     Top = 8
-    Width = 289
+    Width = 208
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
@@ -64,17 +65,16 @@ object FFTFrm: TFFTFrm
   end
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
-    AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Memo1
     AnchorSideTop.Side = asrBottom
-    Left = 66
+    Left = 24
     Height = 23
     Top = 50
     Width = 172
     AutoSize = True
-    BorderSpacing.Left = 64
+    BorderSpacing.Left = 24
     BorderSpacing.Top = 12
-    BorderSpacing.Right = 64
+    BorderSpacing.Right = 24
     BorderSpacing.Bottom = 4
     BevelOuter = bvNone
     ClientHeight = 23
@@ -115,7 +115,7 @@ object FFTFrm: TFFTFrm
     Left = 0
     Height = 8
     Top = 77
-    Width = 305
+    Width = 224
     Anchors = [akTop, akLeft, akRight]
     Shape = bsBottomLine
   end

@@ -63,12 +63,15 @@ const
 
 procedure DisplayReport(AReport: TStrings);
 begin
-  if OutputFrm = nil then
-    OutputFrm := TOutputFrm.Create(Application)
-  else
-    OutputFrm.Clear;
-  OutputFrm.AddLines(AReport);
-  OutputFrm.ShowModal;
+  if AReport.Count > 0 then
+  begin
+    if OutputFrm = nil then
+      OutputFrm := TOutputFrm.Create(Application)
+    else
+      OutputFrm.Clear;
+    OutputFrm.AddLines(AReport);
+    OutputFrm.ShowModal;
+  end;
 end;
 
 

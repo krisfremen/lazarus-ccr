@@ -9,27 +9,27 @@ object ExpSmoothFrm: TExpSmoothFrm
   ClientHeight = 131
   ClientWidth = 352
   OnActivate = FormActivate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object Label1: TLabel
     AnchorSideTop.Control = AlphaEdit
     AnchorSideTop.Side = asrCenter
     AnchorSideRight.Control = AlphaEdit
-    Left = 101
+    Left = 115
     Height = 15
     Top = 12
-    Width = 45
+    Width = 31
     Anchors = [akTop, akRight]
+    BorderSpacing.Left = 16
     BorderSpacing.Right = 8
-    Caption = 'Alpha = '
+    Caption = 'Alpha'
     ParentColor = False
   end
   object Label2: TLabel
-    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Control = AlphaScroll
     AnchorSideTop.Control = AlphaScroll
     AnchorSideTop.Side = asrBottom
-    Left = 8
+    Left = 24
     Height = 15
     Top = 66
     Width = 15
@@ -41,9 +41,9 @@ object ExpSmoothFrm: TExpSmoothFrm
   object Label3: TLabel
     AnchorSideTop.Control = AlphaScroll
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
+    AnchorSideRight.Control = AlphaScroll
     AnchorSideRight.Side = asrBottom
-    Left = 329
+    Left = 313
     Height = 15
     Top = 66
     Width = 15
@@ -63,6 +63,7 @@ object ExpSmoothFrm: TExpSmoothFrm
     Width = 44
     Alignment = taRightJustify
     BorderSpacing.Top = 8
+    BorderSpacing.Right = 16
     TabOrder = 0
     Text = '0.99'
   end
@@ -72,17 +73,18 @@ object ExpSmoothFrm: TExpSmoothFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 8
+    Left = 16
     Height = 23
     Top = 39
-    Width = 336
+    Width = 320
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 8
+    BorderSpacing.Left = 16
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    Max = 1
+    BorderSpacing.Right = 16
+    Max = 99
+    Min = 1
     PageSize = 0
-    Position = 1
+    Position = 99
     TabOrder = 1
     OnChange = AlphaScrollChange
   end
@@ -90,12 +92,13 @@ object ExpSmoothFrm: TExpSmoothFrm
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = OKBtn
-    Left = 228
+    Left = 220
     Height = 25
     Top = 97
     Width = 62
     Anchors = [akTop, akRight]
     AutoSize = True
+    BorderSpacing.Left = 16
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
@@ -108,17 +111,18 @@ object ExpSmoothFrm: TExpSmoothFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 302
+    Left = 294
     Height = 25
     Top = 97
     Width = 42
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
+    BorderSpacing.Right = 16
     BorderSpacing.Bottom = 8
     Caption = 'OK'
     ModalResult = 1
+    OnClick = OKBtnClick
     TabOrder = 3
   end
   object Bevel1: TBevel

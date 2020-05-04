@@ -1,7 +1,7 @@
 object AutoCorrFrm: TAutoCorrFrm
   Left = 456
   Height = 459
-  Top = 163
+  Top = 145
   Width = 684
   AutoSize = True
   Caption = 'Autocorrelation'
@@ -35,8 +35,10 @@ object AutoCorrFrm: TAutoCorrFrm
       Width = 99
       BorderSpacing.Left = 16
       Caption = 'A Grid Column'
+      Checked = True
       OnClick = ColBtnClick
       TabOrder = 0
+      TabStop = True
     end
     object RowBtn: TRadioButton
       AnchorSideLeft.Control = ColBtn
@@ -138,86 +140,67 @@ object AutoCorrFrm: TAutoCorrFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 387
+    Left = 475
     Height = 25
     Top = 426
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 5
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 453
-    Height = 25
-    Top = 426
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 6
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 527
+    Left = 537
     Height = 25
     Top = 426
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
-    ModalResult = 1
     OnClick = ComputeBtnClick
-    TabOrder = 7
+    TabOrder = 6
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 615
+    Left = 621
     Height = 25
     Top = 426
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    OnClick = ReturnBtnClick
-    TabOrder = 8
+    Caption = 'Close'
+    ModalResult = 11
+    OnClick = CloseBtnClick
+    TabOrder = 7
   end
   object HelpBtn: TButton
     Tag = 104
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 324
+    Left = 416
     Height = 25
     Top = 426
     Width = 51
@@ -225,7 +208,7 @@ object AutoCorrFrm: TAutoCorrFrm
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
@@ -235,7 +218,7 @@ object AutoCorrFrm: TAutoCorrFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 410
@@ -383,6 +366,7 @@ object AutoCorrFrm: TAutoCorrFrm
       BorderSpacing.Right = 8
       Constraints.MinHeight = 220
       ItemHeight = 0
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object InBtn: TBitBtn
@@ -500,6 +484,7 @@ object AutoCorrFrm: TAutoCorrFrm
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 12
+      ReadOnly = True
       TabOrder = 3
       Text = 'DepVarEdit'
     end
@@ -659,31 +644,31 @@ object AutoCorrFrm: TAutoCorrFrm
         Left = 12
         Height = 19
         Top = 6
-        Width = 142
-        Caption = 'Correlogram'
+        Width = 148
+        Caption = 'Plot correlogram'
         TabOrder = 0
       end
       object StatsChk: TCheckBox
         Left = 12
         Height = 19
         Top = 27
-        Width = 142
-        Caption = 'Statistics'
+        Width = 148
+        Caption = 'Print statistics'
         TabOrder = 1
       end
       object RMatChk: TCheckBox
         Left = 12
         Height = 19
         Top = 48
-        Width = 142
-        Caption = 'Print correlation Mat.'
+        Width = 148
+        Caption = 'Print correlation matrix'
         TabOrder = 2
       end
       object PartialsChk: TCheckBox
         Left = 12
         Height = 19
         Top = 69
-        Width = 142
+        Width = 148
         Caption = 'Partial autocorrelations'
         TabOrder = 3
       end
@@ -691,16 +676,16 @@ object AutoCorrFrm: TAutoCorrFrm
         Left = 12
         Height = 19
         Top = 90
-        Width = 142
-        Caption = 'Yule-Walker Coef.s'
+        Width = 148
+        Caption = 'Yule-Walker coefficients'
         TabOrder = 4
       end
       object ResidChk: TCheckBox
         Left = 12
         Height = 19
         Top = 111
-        Width = 142
-        Caption = 'Residual Plot'
+        Width = 148
+        Caption = 'Residual plot'
         TabOrder = 5
       end
     end

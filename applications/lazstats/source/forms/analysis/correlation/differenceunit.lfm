@@ -2,29 +2,30 @@ object DifferenceFrm: TDifferenceFrm
   Left = 611
   Height = 115
   Top = 292
-  Width = 318
+  Width = 308
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Differencing Specification'
   ClientHeight = 115
-  ClientWidth = 318
+  ClientWidth = 308
   OnActivate = FormActivate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object CancelBtn: TButton
-    AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    Left = 128
+    AnchorSideRight.Control = OKBtn
+    Left = 188
     Height = 25
     Top = 78
     Width = 62
+    Anchors = [akTop, akRight]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Cancel'
     ModalResult = 2
@@ -35,16 +36,20 @@ object DifferenceFrm: TDifferenceFrm
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    Left = 202
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 258
     Height = 25
     Top = 78
     Width = 42
+    Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 16
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'OK'
     ModalResult = 1
+    OnClick = OKBtnClick
     TabOrder = 3
   end
   object HelpBtn: TButton
@@ -52,13 +57,13 @@ object DifferenceFrm: TDifferenceFrm
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = CancelBtn
-    Left = 65
+    Left = 129
     Height = 25
     Top = 78
     Width = 51
     Anchors = [akTop, akRight]
     AutoSize = True
-    BorderSpacing.Left = 16
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Bottom = 8
     Caption = 'Help'
@@ -69,14 +74,14 @@ object DifferenceFrm: TDifferenceFrm
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Owner
-    Left = 68
+    Left = 63
     Height = 50
     Top = 8
     Width = 183
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 24
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 24
     BevelOuter = bvNone
     ClientHeight = 50
     ClientWidth = 183
@@ -118,7 +123,7 @@ object DifferenceFrm: TDifferenceFrm
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
       TabOrder = 0
-      Text = '1'
+      Text = 'LagEdit'
     end
     object OrderEdit: TEdit
       AnchorSideTop.Control = LagEdit
@@ -133,7 +138,7 @@ object DifferenceFrm: TDifferenceFrm
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 4
       TabOrder = 1
-      Text = '1'
+      Text = 'OrderEdit'
     end
   end
   object Bevel1: TBevel
@@ -145,7 +150,7 @@ object DifferenceFrm: TDifferenceFrm
     Left = 0
     Height = 8
     Top = 62
-    Width = 318
+    Width = 308
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
     Shape = bsBottomLine

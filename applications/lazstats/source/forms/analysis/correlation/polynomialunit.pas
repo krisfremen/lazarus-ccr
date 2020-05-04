@@ -24,6 +24,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -60,6 +61,24 @@ begin
   if ContextHelpForm = nil then
     Application.CreateForm(TContextHelpForm, ContextHelpForm);
   ContextHelpForm.HelpMessage((Sender as TButton).tag);
+end;
+
+procedure TPolynomialFrm.OKBtnClick(Sender: TObject);
+var
+  n: Integer;
+begin
+  if PolyEdit.Text = '' then
+  begin
+    PolyEdit.SetFocus;
+    MessageDlg('Polynomial order not specified.', mtError, [mbOK], 0);
+    ModalResult := mrNone;
+  end else
+  if not TryStrToInt(PolyEdit.Text, n) or (n < 0) then
+  begin
+    PolyEdit.SetFocus;
+    MessageDlg('Polynomial order must be a valid integer > 0', mtError, [mbOK], 0);
+    ModalResult := mrNone;
+  end;
 end;
 
 initialization
