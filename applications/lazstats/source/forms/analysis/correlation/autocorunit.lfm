@@ -9,7 +9,6 @@ object AutoCorrFrm: TAutoCorrFrm
   ClientWidth = 684
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object GroupBox1: TGroupBox

@@ -6,41 +6,46 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls,
-  ContextHelpUnit;
+  StdCtrls, ExtCtrls, Grids,
+  Globals, ContextHelpUnit;
 
 type
 
   { TMoveAvgFrm }
 
   TMoveAvgFrm = class(TForm)
+    Bevel1: TBevel;
     HelpBtn: TButton;
     ResetBtn: TButton;
     CancelBtn: TButton;
-    ApplyBtn: TButton;
     OKBtn: TButton;
-    ThetaList: TListBox;
-    ThetaEdit: TEdit;
-    Label2: TLabel;
     OrderEdit: TEdit;
     Label1: TLabel;
-    procedure ApplyBtnClick(Sender: TObject);
+    WeightGrid: TStringGrid;
     procedure FormActivate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure OrderEditEditingDone(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure ThetaEditEditingDone(Sender: TObject);
-    procedure ThetaListClick(Sender: TObject);
+    procedure WeightGridEditingDone(Sender: TObject);
+    procedure WeightGridSelectEditor(Sender: TObject; aCol, aRow: Integer;
+      var Editor: TWinControl);
   private
     { private declarations }
+    FOrder: Integer;
+    FWeights: DblDyneVec;
+    FRawWeights: DblDyneVec;
+    function GetRawWeights: DblDyneVec;
+    procedure NormalizeWeights;
+    procedure SetOrder(AValue: Integer);
+    procedure SetRawWeights(const AValue: DblDyneVec);
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
   public
     { public declarations }
-    W: array[0..20] of double;
-    order : integer;
-    currentindex : integer;
+    property RawWeights: DblDyneVec read GetRawWeights write SetRawWeights;
+    property Weights: DblDyneVec read FWeights;
+    property Order: Integer read FOrder write SetOrder;
 
   end; 
 
@@ -54,54 +59,32 @@ uses
 
 { TMoveAvgFrm }
 
-procedure TMoveAvgFrm.ResetBtnClick(Sender: TObject);
+procedure TMoveAvgFrm.FormActivate(Sender: TObject);
 var
-  i: integer;
+  w: Integer;
 begin
-  OrderEdit.Text := '';
-  ThetaEdit.Text := '';
-  ThetaList.Clear;
-  CurrentIndex := 0;
-  for i := 0 to 20 do W[i] := 1.0;
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, OKBtn.Width]);
+  HelpBtn.Constraints.MinWidth := w;
+  ResetBtn.Constraints.MinWidth := w;
+  CancelBtn.Constraints.MinWidth := w;
+  OKBtn.Constraints.MinWidth := w;
 end;
 
-procedure TMoveAvgFrm.ThetaEditEditingDone(Sender: TObject);
-var
-  cellString: String;
-begin
-  if CurrentIndex < 1 then
-    exit;
-  cellString := Format('Theta(%d) = %s', [currentIndex + 1, ThetaEdit.Text]);
-  ThetaList.Items[CurrentIndex] := cellString;
-  W[currentIndex + 1] := StrToFloat(ThetaEdit.Text);
-end;
-                        (*
-procedure TMoveAvgFrm.ThetaEditKeyPress(Sender: TObject; var Key: char);
-var
-  cellstring: string;
-begin
-  if currentindex < 1 then exit;
-  if ord(Key) <> 13 then exit;
-  cellstring := 'Theta(' + IntToStr(currentindex + 1) + ') = ' + ThetaEdit.Text;
-  W[currentindex + 1] := StrToFloat(ThetaEdit.Text);
-end;                      *)
-
-procedure TMoveAvgFrm.ThetaListClick(Sender: TObject);
-var
-  index: integer;
-begin
-  index := ThetaList.ItemIndex;
-  if index >= 0 then
-  begin
-    currentindex := index;
-    ThetaEdit.Text := '1.0';
-    ThetaEdit.SetFocus;
-  end;
-end;
-
-procedure TMoveAvgFrm.FormShow(Sender: TObject);
+procedure TMoveAvgFrm.FormCreate(Sender: TObject);
 begin
   ResetBtnClick(self);
+end;
+
+function TMoveAvgFrm.GetRawWeights: DblDyneVec;
+var
+  r: Integer;
+begin
+  SetLength(Result, WeightGrid.RowCount - 1);
+  for r := 1 to WeightGrid.RowCount - 1 do
+    if WeightGrid.cells[1, r] = '' then
+      Result[r-1] := 0.0
+    else
+      Result[r-1] := StrToFloat(WeightGrid.Cells[1, r]);
 end;
 
 procedure TMoveAvgFrm.HelpBtnClick(Sender: TObject);
@@ -109,6 +92,38 @@ begin
   if ContextHelpForm = nil then
     Application.CreateForm(TContextHelpForm, ContextHelpForm);
   ContextHelpForm.HelpMessage((Sender as TButton).tag);
+end;
+
+// Normalize all values so that their sum 1.
+// (Except for center weight w[0] which must remain 1.0)
+procedure TMoveAvgFrm.NormalizeWeights;
+var
+  sum, x: double;
+  r: integer;
+begin
+  if WeightGrid.RowCount = 1 then
+    exit;
+
+  r := 1;
+  if not TryStrToFloat(WeightGrid.Cells[1, r], sum) then
+    sum := 0;
+  for r := 2 to WeightGrid.RowCount-1 do
+    if TryStrToFloat(WeightGrid.Cells[1, r], x) then
+      sum := sum + x * 2;
+
+  if sum = 0 then
+  begin
+    FWeights[0] := 1.0;
+    for r := 1 to FOrder do Weights[r] := 0;
+  end else
+    for r := 1 to WeightGrid.RowCount-1 do
+    begin
+      if not TryStrToFloat(WeightGrid.Cells[1, r], x) then x := 0;
+      FWeights[r-1] := x / sum;
+    end;
+
+  for r := 1 to WeightGrid.RowCount-1 do
+    WeightGrid.Cells[2, r] := FormatFloat('0.000', FWeights[r-1]);
 end;
 
 procedure TMoveAvgFrm.OKBtnClick(Sender: TObject);
@@ -121,74 +136,57 @@ begin
     C.SetFocus;
     MessageDlg(msg, mtError, [mbOK], 0);
     ModalResult := mrNone;
+    exit;
   end;
-end;
-
-procedure TMoveAvgFrm.ApplyBtnClick(Sender: TObject);
-var
-  sum: double;
-  i: integer;
-  cellstring: string;
-begin
-  ThetaList.Clear;
-  sum := W[0];
-  for i := 1 to order do
-    sum := sum + 2.0 * W[i];
-  for i := 0 to order do
-  begin
-    W[i] := W[i] / sum;
-    cellstring := 'Theta(' + IntToStr(i+1) + ') = ' + FloatToStr(W[i]);
-    ThetaList.Items.Add(cellstring);
-  end;
-end;
-
-procedure TMoveAvgFrm.FormActivate(Sender: TObject);
-var
-  wid: Integer;
-begin
-  wid := MaxValue([HelpBtn.Width, ResetBtn.Width, ApplyBtn.Width, CancelBtn.Width, OKBtn.Width]);
-  HelpBtn.Constraints.MinWidth := wid;
-  ResetBtn.Constraints.MinWidth := wid;
-  ApplyBtn.Constraints.MinWidth := wid;
-  CancelBtn.Constraints.MinWidth := wid;
-  OKBtn.Constraints.MinWidth := wid;
+  NormalizeWeights;
 end;
 
 procedure TMoveAvgFrm.OrderEditEditingDone(Sender: TObject);
 var
-  i: Integer;
+  n: Integer;
 begin
-  ThetaList.Items.BeginUpdate;
-  try
-    ThetaList.Clear;
-    Order := StrToInt(orderEdit.Text);
-    for i := 1 to Order do
-      ThetaList.Items.Add('Theta(' + IntToStr(i) + ')');
-  finally
-    ThetaList.Items.EndUpdate;
-  end;
+  if TryStrToInt(OrderEdit.Text, n) then
+    SetOrder(n);
 end;
 
-           (*
-procedure TMoveAvgFrm.OrderEditKeyPress(Sender: TObject; var Key: char);
-var
-  cellstring: string;
-  i: integer;
+procedure TMoveAvgFrm.ResetBtnClick(Sender: TObject);
 begin
-  if ord(Key) <> 13 then exit;
-  ThetaList.Clear;
-  order := StrToInt(OrderEdit.Text);
-  for i := 1 to order do
-  begin
-    cellstring := 'Theta(' + IntToStr(i) + ')';
-    ThetaList.Items.Add(cellstring);
-  end;
+  SetOrder(FOrder);
 end;
-*)
+
+procedure TMoveAvgFrm.SetOrder(AValue: Integer);
+var
+  i: Integer;
+begin
+  FOrder := AValue;
+  SetLength(FWeights, FOrder + 1);
+  OrderEdit.Text := IntToStr(FOrder);
+  WeightGrid.RowCount := Length(FWeights) + WeightGrid.FixedRows;
+  WeightGrid.Cells[0, 1] := '0 (center)';
+  for i := 2 to WeightGrid.RowCount-1 do
+    WeightGrid.Cells[0, i] := IntToStr(i-1);
+  NormalizeWeights;
+end;
+
+procedure TMoveAvgFrm.SetRawWeights(const AValue: DblDyneVec);
+var
+  r: Integer;
+begin
+  FRawWeights := AValue;
+  if Length(FRawWeights) > FOrder+1 then
+    SetOrder(Length(FRawWeights) - 1);
+  for r := 1 to WeightGrid.RowCount-1 do
+    if r-1 < Length(FRawWeights) then
+      WeightGrid.Cells[1, r] := Format('%.3g', [FRawWeights[r-1]])
+    else
+      WeightGrid.Cells[1, r] := '';
+  NormalizeWeights;
+end;
 
 function TMoveAvgFrm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;
 var
   n: Integer;
+  x: Double;
 begin
   Result := false;
 
@@ -205,14 +203,39 @@ begin
     exit;
   end;
 
-  if ThetaEdit.Text <> '' then
+  for n := 1 to WeightGrid.RowCount-1 do
   begin
-    AControl := ThetaEdit;
-    AMsg := 'Please press ENTER to add this input.';
-    exit;
+    if WeightGrid.Cells[1, n] = '' then
+    begin
+      AMsg := 'Input required.';
+      WeightGrid.Row := n;
+      WeightGrid.Col := 1;
+      AControl := WeightGrid;
+      exit;
+    end;
+    if not TryStrToFloat(WeightGrid.Cells[1, n], x) then
+    begin
+      AMsg := 'Number required.';
+      WeightGrid.Row := n;
+      WeightGrid.Col := 1;
+      AControl := WeightGrid;
+      exit;
+    end;
   end;
 
   Result := true;
+end;
+
+procedure TMoveAvgFrm.WeightGridEditingDone(Sender: TObject);
+begin
+  NormalizeWeights;
+end;
+
+procedure TMoveAvgFrm.WeightGridSelectEditor(Sender: TObject; aCol,
+  aRow: Integer; var Editor: TWinControl);
+begin
+  if ACol = 2 then
+    Editor := nil;
 end;
 
 initialization

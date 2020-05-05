@@ -72,7 +72,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure InBtnClick(Sender: TObject);
     procedure OutBtnClick(Sender: TObject);
@@ -88,6 +87,8 @@ type
 
   private
     FExpSmoothAlpha: Double;
+    FMovAvgRawWeights: DblDyneVec;
+    FMovAvgOrder: Integer;
     function CalcMean(const pts: DblDyneVec; NoPts: Integer): Double;
     procedure ExponentialSmooth(var Pts: DblDyneVec; NoPts: Integer);
     procedure Four1(var data: DblDyneVec; nn: LongWord; isign: integer);
@@ -149,7 +150,11 @@ begin
       if IsFiltered(i) then continue;
       VarList.Items.Add(OS3MainFrm.DataGrid.Cells[0,i]);
     end;
+
+  FMovAvgOrder := 1;
+  FMovAvgRawWeights := nil;
   FExpSmoothAlpha := 0.99;
+
   UpdateBtnStates;
 end;
 
@@ -198,10 +203,6 @@ begin
   Assert(OS3MainFrm <> nil);
   if PointsFrm = nil then Application.CreateForm(TPointsFrm, PointsFrm);
   FExpSmoothAlpha := 0.99;
-end;
-
-procedure TAutoCorrFrm.FormShow(Sender: TObject);
-begin
   ResetBtnClick(self);
 end;
 
@@ -1241,7 +1242,6 @@ procedure TAutoCorrFrm.MovingAverage(var Pts: DblDyneVec; NoPts: Integer);
 var
   F: TMoveAvgFrm;
   i, j: Integer;
-  nValues: Integer;
   avg: DblDyneVec;
   residual: DblDyneVec;
   noProj: Integer;
@@ -1250,10 +1250,14 @@ var
 begin
   F := TMoveAvgFrm.Create(nil);
   try
+    F.Order := FMovAvgOrder;
+    F.RawWeights := FMovAvgRawWeights;
     if F.ShowModal <> mrOK then
       exit;
-    nValues := F.Order;
-    if nValues <= 0 then
+
+    FMovAvgRawWeights := F.RawWeights;
+    FMovAvgOrder := F.Order;
+    if FMovAvgOrder <= 0 then
       exit;
 
     if ProjectChk.Checked then
@@ -1263,26 +1267,25 @@ begin
 
     // Calculate moving average
     SetLength(avg, NoPts + NoProj);
-    for i := nValues to NoPts - nValues - 1 do
+    for i := F.Order to NoPts - F.Order - 1 do
     begin
-      avg[i] := Pts[i] * F.W[0]; // middle value
-      for j := 1 to nValues do
-        avg[i] := avg[i] + Pts[i-j] * F.W[j] + Pts[i+j] * F.W[j];
-                            // left values       right values
+      avg[i] := Pts[i] * F.Weights[0]; // middle value
+      for j := 1 to F.Order do
+        avg[i] := avg[i] + (Pts[i-j] + Pts[i+j]) * F.Weights[j];
     end;
 
     // fill in unestimable averages with original points
-    for i := 0 to nValues - 1 do  // left values
+    for i := 0 to F.Order - 1 do  // left values
     begin
-      avg[i] := pts[i] * F.W[0];
-      for j := 1 to nvalues do
-        avg[i] := avg[i] + (pts[i+j] * 2.0 * F.W[j]);
+      avg[i] := pts[i] * F.Weights[0];
+      for j := 1 to F.Order do
+        avg[i] := avg[i] + pts[i+j] * 2.0 * F.Weights[j];
     end;
-    for i := NoPts - nValues to NoPts - 1 do   //right values
+    for i := NoPts - F.Order to NoPts - 1 do   //right values
     begin
-      avg[i] := pts[i] * F.W[0];
-      for j := 1 to nvalues do
-        avg[i] := avg[i] + (pts[i-j] * 2.0 * F.W[j]);
+      avg[i] := pts[i] * F.Weights[0];
+      for j := 1 to F.Order do
+        avg[i] := avg[i] + (pts[i-j] * 2.0 * F.Weights[j]);
     end;
 
     if ProjectChk.Checked then
