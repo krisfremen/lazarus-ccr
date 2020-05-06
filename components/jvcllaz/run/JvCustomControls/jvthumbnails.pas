@@ -388,7 +388,11 @@ begin
     FDFileAccessed := UnixToDateTime(info.st_atime);
     FDFileChanged := UnixToDateTime(info.st_mtime);
     FDFileCreated := UnixToDateTime(info.st_ctime);
+    {$IFDEF DARWIN}
+    FDFileSize := info.st_size;
+    {$ELSE}
     FDFileSize := info.Size;
+    {$ENDIF}
   end;
   {$ENDIF}
 end;

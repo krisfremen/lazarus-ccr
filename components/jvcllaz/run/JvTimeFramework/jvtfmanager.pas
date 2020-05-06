@@ -1094,12 +1094,12 @@ end;
 
 function TJvTFCustomImageMap.GetImage(MapIndex: Integer): Integer;
 begin
-  Result := Integer(FMap.Objects[MapIndex]);
+  Result := PtrInt(FMap.Objects[MapIndex]);
 end;
 
 procedure TJvTFCustomImageMap.SetImage(MapIndex, Value: Integer);
 begin
-  FMap.Objects[MapIndex] := TObject(Value);
+  FMap.Objects[MapIndex] := TObject(PtrInt(Value));
 end;
 
 function TJvTFCustomImageMap.GetImageName(MapIndex: Integer): string;
@@ -1126,7 +1126,7 @@ procedure TJvTFCustomImageMap.Add(const ImageName: string; ImageIndex: Integer);
 begin
   if FMap.IndexOf(ImageName) = -1 then
   begin
-    FMap.AddObject(ImageName, TObject(ImageIndex));
+    FMap.AddObject(ImageName, TObject(PtrInt(ImageIndex)));
     Change;
   end;
 end;

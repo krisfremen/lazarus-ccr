@@ -15,12 +15,12 @@ implementation
 
 uses
   ImgList,
-  PropEdits, ComponentEditors,
+  PropEdits, ComponentEditors, TreeViewPropEdit,
   JvDsgnConsts, JvPageList,
   JvNavigationPane, JvNavPaneEditors,
   JvTabBar, JvTabBarXPPainter,
   JvNotebookPageList,
-  JvPageListEditors,
+  JvPageListEditors, JvPageLinkEditorForm,
   JvPageListTreeView;
 
 procedure Register;
@@ -67,7 +67,10 @@ begin
     TJvSettingsTreeView
   ]);
   RegisterClasses([TJvSettingsTreeView, TJvPageListTreeView]);
+  RegisterComponentEditor(TJvCustomPageListTreeView, TTreeViewComponentEditor);
 
+  RegisterPropertyEditor(TypeInfo(TJvPageLinks),
+    TJvCustomPageListTreeView, '', TJvPageLinksProperty);
   RegisterPropertyEditor(TypeInfo(TImageIndex), TJvSettingsTreeImages, '',
     TJvSettingsTreeImagesProperty);
 

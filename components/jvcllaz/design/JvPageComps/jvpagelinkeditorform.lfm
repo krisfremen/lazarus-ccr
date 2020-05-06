@@ -61,7 +61,6 @@ object frmJvTreeViewLinksEditor: TfrmJvTreeViewLinksEditor
       Width = 155
       Height = 167
       Align = alClient
-      ChangeDelay = 60
       HideSelection = False
       Indent = 19
       PopupMenu = popTree

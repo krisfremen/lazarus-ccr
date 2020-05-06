@@ -142,7 +142,7 @@ begin
   JvFullColorDialog.Options := JvFullColorDialog.Options - [foShowApply];
   if JvFullColorDialog.Execute then
     ListBoxColors.Items.InsertObject(ListBoxColors.ItemIndex, '',
-      TObject(JvFullColorDialog.FullColor));
+      TObject(PtrInt(JvFullColorDialog.FullColor)));
 end;
 
 procedure TJvFullColorListFrm.ActionInsertUpdate(Sender: TObject);
@@ -153,9 +153,9 @@ end;
 procedure TJvFullColorListFrm.ActionModifyExecute(Sender: TObject);
 begin
   JvFullColorDialog.Options := JvFullColorDialog.Options + [foShowApply];
-  JvFullColorDialog.FullColor := TJvFullColor(ListBoxColors.Items.Objects[ListBoxColors.ItemIndex]);
+  JvFullColorDialog.FullColor := TJvFullColor(PtrInt(ListBoxColors.Items.Objects[ListBoxColors.ItemIndex]));
   if JvFullColorDialog.Execute then
-    ListBoxColors.Items.Objects[ListBoxColors.ItemIndex] := TObject(JvFullColorDialog.FullColor);
+    ListBoxColors.Items.Objects[ListBoxColors.ItemIndex] := TObject(PtrInt(JvFullColorDialog.FullColor));
 end;
 
 procedure TJvFullColorListFrm.ActionModifyUpdate(Sender: TObject);
@@ -203,7 +203,7 @@ procedure TJvFullColorListFrm.ActionNewExecute(Sender: TObject);
 begin
   JvFullColorDialog.Options := JvFullColorDialog.Options - [foShowApply];
   if JvFullColorDialog.Execute then begin
-    ListBoxColors.Items.AddObject('', TObject(JvFullColorDialog.FullColor));
+    ListBoxColors.Items.AddObject('', TObject(PtrInt(JvFullColorDialog.FullColor)));
     ListBoxColors.ItemIndex := ListBoxColors.Items.Count-1;
   end;
 end;
@@ -259,7 +259,7 @@ begin
   FColorList.BeginUpdate;
   FColorList.Clear;
   for Index := 0 to ListBoxColors.Items.Count - 1 do
-    FColorList.Add(TJvFullColor(ListBoxColors.Items.Objects[Index]));
+    FColorList.Add(TJvFullColor(PtrInt(ListBoxColors.Items.Objects[Index])));
   FColorList.EndUpdate;
   Result := FColorList;
 end;
@@ -272,7 +272,7 @@ begin
   begin
     BeginUpdate;
     for I := 0 to Value.Count - 1 do
-      AddObject('', TObject(Value.Items[I]));
+      AddObject('', TObject(PtrInt(Value.Items[I])));
     EndUpdate;
   end;
 end;
@@ -286,7 +286,7 @@ end;
 procedure TJvFullColorListFrm.JvFullColorDialogApply(Sender: TObject;
   AFullColor: TJvFullColor);
 begin
-  ListBoxColors.Items.Objects[ListBoxColors.ItemIndex] := TObject(JvFullColorDialog.FullColor);
+  ListBoxColors.Items.Objects[ListBoxColors.ItemIndex] := TObject(PtrInt(JvFullColorDialog.FullColor));
 end;
 
 procedure TJvFullColorListFrm.ListBoxColorsDrawItem(Control: TWinControl;
@@ -306,7 +306,7 @@ begin
 
     Rectangle(Rect);
 
-    AFullColor := TJvFullColor(Items.Objects[Index]);
+    AFullColor := TJvFullColor(PtrInt(Items.Objects[Index]));
 
     with ColorSpaceManager do
     begin

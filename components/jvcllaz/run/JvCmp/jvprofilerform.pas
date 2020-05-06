@@ -116,8 +116,11 @@ implementation
 
 uses
   LCLVersion,
- {$IFDEF LINUX}
-  baseunix, unix, linux, users,
+  {$IFDEF UNIX}  // RPH 16Apr2020 - Fix for Darwin
+    baseunix, unix,
+   {$IFDEF LINUX}
+    linux, users,
+   {$ENDIF}
  {$ELSE}
   Windows,
  {$ENDIF}

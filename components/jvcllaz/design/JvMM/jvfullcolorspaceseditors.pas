@@ -647,10 +647,10 @@ begin
   if PropCount > 1 then
   begin
     FullColorList := TJvFullColorList.Create;
-    FullColorList.Assign(TJvFullColorList(GetOrdValue));
+    FullColorList.Assign(TJvFullColorList(PtrInt(GetOrdValue)));
 
     for IndexList := 1 to PropCount - 1 do
-      with TJvFullColorList(GetOrdValueAt(IndexList)) do
+      with TJvFullColorList(PtrInt(GetOrdValueAt(PtrInt(IndexList)))) do
         for IndexColor:=0 to Count - 1 do
           if FullColorList.Items[IndexColor] <> Items[IndexColor] then
             Exit;
@@ -669,7 +669,7 @@ begin
     FullColorList:=TJvFullColorList.Create;
     try
       for IndexList := 0 to PropCount - 1 do
-        with TJvFullColorList(GetOrdValueAt(IndexList)) do
+        with TJvFullColorList(PtrInt(GetOrdValueAt(IndexList))) do
           for IndexColor := 0 to Count - 1 do
             if FullColorList.IndexOf(Items[IndexColor]) = -1 then
               FullColorList.Add(Items[IndexColor]);
@@ -688,7 +688,7 @@ end;
 
 procedure TJvFullColorListEditor.FormApply(Sender: TObject);
 begin
-  SetOrdValue(Cardinal((Sender as TJvFullColorListFrm).ColorList));
+  SetOrdValue(PtrInt((Sender as TJvFullColorListFrm).ColorList));
 end;
 
 function TJvFullColorListEditor.GetAttributes: TPropertyAttributes;

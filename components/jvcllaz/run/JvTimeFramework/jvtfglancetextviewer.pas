@@ -1247,7 +1247,7 @@ var
 begin
   I := FTopLines.IndexOf(GetCellString(ACell));
   if I > -1 then
-    Result := Integer(FTopLines.Objects[I])
+    Result := PtrInt(FTopLines.Objects[I])
   else
     Result := 0;
 end;
@@ -1395,10 +1395,10 @@ begin
     if Value = 0 then
       FTopLines.Delete(I)
     else
-      FTopLines.Objects[I] := TObject(Value)
+      FTopLines.Objects[I] := TObject(PtrInt(Value))
   else
   if Value <> 0 then
-    FTopLines.AddObject(CellStr, TObject(Value));
+    FTopLines.AddObject(CellStr, TObject(PtrInt(Value)));
   Refresh;
 end;
 

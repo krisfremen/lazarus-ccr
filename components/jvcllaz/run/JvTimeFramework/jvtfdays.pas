@@ -2506,7 +2506,7 @@ var
 begin
   MapCols := FData[MapSearchRow, 0];
   Col := 1;
-  ApptVal := Integer(Appt);
+  ApptVal := PtrInt(Appt);
 
   while (Col <= MapCols) and (FData[MapSearchRow, Col] <> ApptVal) do
     Inc(Col);

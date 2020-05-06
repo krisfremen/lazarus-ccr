@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="JvMMLazD"/>
     <Type Value="RunAndDesignTime"/>
@@ -44,19 +44,16 @@ bmp animator, id3v1 and id3v2 tags,  full color components and dialogs, gradient
         <UnitName Value="JvFullColorListForm"/>
       </Item6>
     </Files>
-    <RequiredPkgs Count="4">
+    <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="IDEIntf"/>
+        <PackageName Value="JvMMLazR"/>
       </Item2>
       <Item3>
-        <PackageName Value="JvMMLazR"/>
-      </Item3>
-      <Item4>
         <PackageName Value="FCL"/>
-      </Item4>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

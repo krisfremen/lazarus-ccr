@@ -31,7 +31,8 @@ $Id$
 
 unit JvPageLinkEditorForm;
 
-{$I jvcl.inc}
+{$mode objfpc}{$H+}
+//{$I jvcl.inc}
 
 interface
 
@@ -39,7 +40,8 @@ uses
   Classes, SysUtils, Windows, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls,
   ActnList, Menus,
   Variants,
-  DesignEditors, DesignIntf,
+  //DesignEditors, DesignIntf,
+  PropEdits,
   JvPageList, JvPageListTreeView, JvComponent;
 
 type
@@ -50,7 +52,7 @@ type
     procedure Edit; override;
   end;
 
-  TfrmJvTreeViewLinksEditor = class(TJvForm)
+  TfrmJvTreeViewLinksEditor = class(TForm) //TJvForm)
     tvItems: TTreeView;
     btnLink: TButton;
     lbPages: TListBox;
@@ -69,8 +71,7 @@ type
     Splitter2: TSplitter;
     procedure tvItemsChange(Sender: TObject; Node: TTreeNode);
     procedure acLinkExecute(Sender: TObject);
-    procedure acMainUpdate(Action: TBasicAction;
-      var Handled: Boolean);
+    procedure acMainUpdate(AnAction: TBasicAction; var Handled: Boolean);
     procedure FormResize(Sender: TObject);
   private
     FTreeView:TCustomTreeView;
@@ -89,7 +90,7 @@ implementation
 uses
   JvDsgnConsts;
 
-{$R *.dfm}
+{$R *.lfm}
 
 type
   THackTreeView = class(TJvCustomPageListTreeView);
@@ -154,7 +155,7 @@ begin
   else
   if (Index >= 10) and (Index < 36) then
     Result.ShortCut := ShortCut(Ord('A') + Index - 10, [ssCtrl]);
-  Result.OnClick := DoPopClick;
+  Result.OnClick := @DoPopClick;
 end;
 
 procedure TfrmJvTreeViewLinksEditor.AssignComponents(TreeView: TCustomTreeView;
@@ -258,7 +259,7 @@ begin
   N.Text := GetNewTreeText(N.Text, lbPages.ItemIndex);
 end;
 
-procedure TfrmJvTreeViewLinksEditor.acMainUpdate(Action: TBasicAction;
+procedure TfrmJvTreeViewLinksEditor.acMainUpdate(AnAction: TBasicAction;
   var Handled: Boolean);
 begin
   acLink.Enabled := (tvItems.Selected <> nil) and (lbPages.ItemIndex > -1);
