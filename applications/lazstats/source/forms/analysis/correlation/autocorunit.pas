@@ -1,8 +1,6 @@
-// File for testing:
-// --- not found (the pdf docs mention "strikes.tab" - but this does not exist.
-// -- created test file autocorr.laz
-
-// TODO: Crashes when multiple smoothing options are applied.
+// File for testing: "strkkes.tab"
+// - original file not found, but could be reconstructed from graphs.
+// --> there is no EXACT agreement of numbers with the pdf file "autocorrelation.pdf".
 
 unit AutoCorUnit;
 
@@ -72,6 +70,7 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure InBtnClick(Sender: TObject);
     procedure OutBtnClick(Sender: TObject);
@@ -204,8 +203,11 @@ procedure TAutoCorrFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if PointsFrm = nil then Application.CreateForm(TPointsFrm, PointsFrm);
+end;
 
-  ResetBtnClick(self);
+procedure TAutoCorrFrm.FormShow(Sender: TObject);
+begin
+  ResetBtnClick(nil);
 end;
 
 procedure TAutoCorrFrm.HelpBtnClick(Sender: TObject);
@@ -423,7 +425,7 @@ begin
       lReport.Add('Variance:     %8.3f', [covzero]);
       lReport.Add('');
 
-      lReport.Add(' Lag     Rxy      MeanX     MeanY   Std.Dev.X   Std.Dev.Y    Cases      LCL       UCL   ');
+      lReport.Add(' Lag     Rxy      MeanX     MeanY    Std.Dev.X   Std.Dev.Y    Cases      LCL       UCL   ');
       lReport.Add('-----  --------  --------  --------  ----------  ----------  --------  --------  --------');
     end;
 
@@ -589,6 +591,8 @@ begin
       DynVectorPrint(PartCors, maxlag, Title, ColLabels, NoPts, lReport);
     end;
 
+    DisplayReport(lReport);
+
     // plot correlations if elected
     uplimit := 1.96 * (1.0 / sqrt(count));
     lowlimit := -1.96 * (1.0 / sqrt(count));
@@ -658,8 +662,6 @@ begin
         PointsFrm.ShowModal;
       end;
     end;
-
-    DisplayReport(lReport);
 
   finally
     lReport.Free;

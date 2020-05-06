@@ -92,10 +92,10 @@ var
 begin
     height := Image1.Canvas.Height;
     width := Image1.Canvas.Width;
-    topmarg := height div 10;
-    verthi := height - (2 * topmarg);
+    topmarg := height div 12; // 10;
+    verthi := height - 4 * topmarg;
     botmarg := topmarg + verthi;
-    botmarg := height;
+    //botmarg := height;
     leftmarg := width div 10;
     horizlong := width - 2 * leftmarg;
     rightmarg := leftmarg + horizlong;
@@ -157,8 +157,8 @@ begin
         Y := botmarg;
     end;
     labelstring := 'CASES';
-    X := (leftmarg + horizlong div 2) - (Canvas.TextWidth(labelstring) div 2);
-    Y := botmarg + Image1.Canvas.TextHeight(labelstring);
+    X := (leftmarg + horizlong div 2) - Canvas.TextWidth(labelstring) div 2;
+    Y := botmarg + Image1.Canvas.TextHeight(labelstring) + 10;
     Image1.Canvas.TextOut(X,Y,labelstring);
 
     // Plot lines from point to point
