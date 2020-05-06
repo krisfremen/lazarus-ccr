@@ -22,13 +22,15 @@ type
     PolyEdit: TEdit;
     Label1: TLabel;
     procedure FormActivate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
   private
     { private declarations }
+    function GetOrder: Integer;
+    procedure SetOrder(const AValue: Integer);
   public
     { public declarations }
+    property Order: Integer read GetOrder write SetOrder;
   end; 
 
 var
@@ -51,9 +53,9 @@ begin
   OKBtn.Constraints.MinWidth := w;
 end;
 
-procedure TPolynomialFrm.FormShow(Sender: TObject);
+function TPolynomialFrm.GetOrder: Integer;
 begin
-    PolyEdit.Text := '1';
+  Result := StrToInt(PolyEdit.Text);
 end;
 
 procedure TPolynomialFrm.HelpBtnClick(Sender: TObject);
@@ -79,6 +81,11 @@ begin
     MessageDlg('Polynomial order must be a valid integer > 0', mtError, [mbOK], 0);
     ModalResult := mrNone;
   end;
+end;
+
+procedure TPolynomialFrm.SetOrder(const AValue: Integer);
+begin
+  PolyEdit.Text := IntToStr(AValue);
 end;
 
 initialization

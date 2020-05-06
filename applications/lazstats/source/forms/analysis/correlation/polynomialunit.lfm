@@ -9,7 +9,6 @@ object PolynomialFrm: TPolynomialFrm
   ClientHeight = 99
   ClientWidth = 351
   OnActivate = FormActivate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object CancelBtn: TButton
@@ -76,9 +75,9 @@ object PolynomialFrm: TPolynomialFrm
     Top = 16
     Width = 152
     AutoSize = True
-    BorderSpacing.Left = 100
+    BorderSpacing.Left = 32
     BorderSpacing.Top = 16
-    BorderSpacing.Right = 100
+    BorderSpacing.Right = 32
     BorderSpacing.Bottom = 8
     BevelOuter = bvNone
     ClientHeight = 23

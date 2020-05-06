@@ -89,6 +89,7 @@ type
     FExpSmoothAlpha: Double;
     FMovAvgRawWeights: DblDyneVec;
     FMovAvgOrder: Integer;
+    FPolyOrder: Integer;
     function CalcMean(const pts: DblDyneVec; NoPts: Integer): Double;
     procedure ExponentialSmooth(var Pts: DblDyneVec; NoPts: Integer);
     procedure Four1(var data: DblDyneVec; nn: LongWord; isign: integer);
@@ -97,7 +98,7 @@ type
     procedure GetPts(var pts: DblDyneVec; var NoPts: Integer; DepVar: Integer);
     procedure MovingAverage(var Pts: DblDyneVec; NoPts: Integer);
     procedure PlotDifferencesForLag(var Pts: DblDyneVec; NoPts: Integer);
-    procedure PolyFit(const pts: DblDyneVec; var avg: DblDyneVec; NoPts: integer);
+    procedure PolyFit(const pts: DblDyneVec; var avg: DblDyneVec; NoPts, Order: integer);
     procedure PolynomialSmooth(var Pts: DblDyneVec; NoPts: Integer);
     procedure RealFT(var data: DblDyneVec; n: LongWord; isign: integer);
     procedure RemoveMeans(var Pts: DblDyneVec; NoPts: Integer; AMean: Double);
@@ -154,6 +155,7 @@ begin
   FMovAvgOrder := 1;
   FMovAvgRawWeights := nil;
   FExpSmoothAlpha := 0.99;
+  FPolyOrder := 1;
 
   UpdateBtnStates;
 end;
@@ -202,7 +204,7 @@ procedure TAutoCorrFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if PointsFrm = nil then Application.CreateForm(TPointsFrm, PointsFrm);
-  FExpSmoothAlpha := 0.99;
+
   ResetBtnClick(self);
 end;
 
@@ -890,23 +892,22 @@ begin
 end;
 
 procedure TAutoCorrFrm.PolyFit(const pts: DblDyneVec; var avg: DblDyneVec;
-  NoPts: integer);
+  NoPts, Order: integer);
 var
   X: DblDyneMat;
   XY: DblDyneVec;
   XTX: DblDyneMat;
   Beta: DblDyneVec;
   t, Yhat: double;
-  i, j, k, order: integer;
+  i, j, k: integer;
   RowLabels, ColLabels: StrDyneVec;
 begin
-  order := StrToInt(PolynomialFrm.PolyEdit.Text);
-  SetLength(X,NoPts,order+1);
-  SetLength(XTX,order+2,order+2);
-  SetLength(XY,order+1);
-  SetLength(Beta,order+1);
-  SetLength(RowLabels,NoPts+1);
-  SetLength(ColLabels,NoPts+1);
+  SetLength(X, NoPts, order+1);
+  SetLength(XTX, order+2, order+2);
+  SetLength(XY, order+1);
+  SetLength(Beta, order+1);
+  SetLength(RowLabels, NoPts+1);
+  SetLength(ColLabels, NoPts+1);
 
   // initialize
   for i := 0 to NoPts - 1 do
@@ -1424,8 +1425,11 @@ var
 begin
   F := TPolynomialFrm.Create(nil);
   try
+    F.Order := FPolyOrder;
     if F.ShowModal <> mrOK then
       exit;
+
+    FPolyOrder := F.Order;
 
     if ProjectChk.Checked then
       noProj := StrToInt(ProjPtsEdit.Text)
@@ -1442,7 +1446,7 @@ begin
       end;
     end;
 
-    PolyFit(pts, avg, NoPts + noproj);
+    PolyFit(pts, avg, NoPts + noproj, FPolyOrder);
 
     // plot original and smoothed data
     PointsFrm.pts := pts;
