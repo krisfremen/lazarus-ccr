@@ -125,7 +125,6 @@ var
   cumfreq : DblDyneVec;
   prank : DblDyneVec;
   grpsize : IntDyneVec;
-  scrgrp : DblDyneVec;
   done : boolean;
   NoSelected : integer;
   ColNoSelected : IntDyneVec;
@@ -173,7 +172,7 @@ begin
     NoGrps := maxgrp - mingrp + 1;
     if NoGrps > 30 then
     begin
-      MessageDlg('Too many groups for meaningful plot.', mtError, [mbOK], 0);
+      MessageDlg('Too many groups for a meaningful plot.', mtError, [mbOK], 0);
       exit;
     end;
 
@@ -189,7 +188,6 @@ begin
     SetLength(tenpcntile,NoGrps+1);
     SetLength(ninetypcntile,NoGrps+1);
     SetLength(median,NoGrps+1);
-    SetLength(scrgrp,NoGrps+1);
 
     // initialize
     for j := 1 to NoGrps do
@@ -325,7 +323,6 @@ begin
     lReport.Free;
 
     // Clean up
-    scrgrp := nil;
     median := nil;
     ninetypcntile := nil;
     tenpcntile := nil;

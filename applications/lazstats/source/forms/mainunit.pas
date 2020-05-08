@@ -1589,8 +1589,8 @@ end;
 // Call HTML help (.chm file)
 // Is is expected that help topics are specified as HelpKeyword (HelpType = htContext).
 // Using numeric HelpContext values will crash the application.
-function TOS3MainFrm.HelpHandler(Command:word; Data:PtrInt;
-  var CallHelp:Boolean): Boolean;
+function TOS3MainFrm.HelpHandler(Command: Word; Data: PtrInt;
+  var CallHelp: Boolean): Boolean;
 var
   topic: UnicodeString;
 begin
@@ -1599,6 +1599,9 @@ begin
 
   // Don't call regular help
   CallHelp := False;
+
+  // silence the compiler, function result not needed
+  Result := true;
 end;
 {$ENDIF}
 {$ENDIF}

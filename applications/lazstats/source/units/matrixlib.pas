@@ -78,7 +78,7 @@ procedure MReg(NoIndep : integer;
 procedure MReg(NoIndep: integer; const IndepCols: IntDyneVec; DepCol: integer;
   const RowLabels: StrDyneVec;
   const Means, Variances, StdDevs, BWeights, BetaWeights, BStdErrs, Bttests, tProbs: DblDyneVec;
-  out R2, StdErrEst: double; out NCases: integer; out ErrorCode: boolean;
+  out R2, StdErrEst: double; NCases: integer; out ErrorCode: boolean;
   PrintAll: boolean; AReport: TStrings);
 
 procedure Dynnonsymroots(var a : DblDyneMat; nv : integer;
@@ -699,7 +699,7 @@ end;
 procedure MReg(NoIndep: integer; const IndepCols: IntDyneVec; DepCol: integer;
   const RowLabels: StrDyneVec;
   const Means, Variances, StdDevs, BWeights, BetaWeights, BStdErrs, Bttests, tProbs: DblDyneVec;
-  out R2, StdErrEst: double; out NCases: integer; out ErrorCode: boolean;
+  out R2, StdErrEst: double; NCases: integer; out ErrorCode: boolean;
   PrintAll: boolean; AReport: TStrings);
 var
   i, j, N: integer;

@@ -81,7 +81,7 @@ var
   i, j, btn, nscores: integer;
   RawScores: array[0..50] of double;
   RawFreq: array[0..50] of double;
-  temp, X, Y: double;
+  X: double;
 begin
   if DistUseGroup.ItemIndex < 0 then
     exit;
@@ -105,12 +105,8 @@ begin
   for i := 1 to ncases - 1 do
   begin
     for j := i+1 to ncases do
-    begin
-      X := RawScores[i-1];
-      Y := RawScores[j-1];
       if RawScores[i-1] < RawScores[j-1] then // switch
         Exchange(RawScores[i-1], RawScores[j-1]);
-    end;
   end;
 
    // get frequency of each score
