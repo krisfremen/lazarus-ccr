@@ -4,7 +4,7 @@ object GenRndValsFrm: TGenRndValsFrm
   Top = 203
   Width = 429
   AutoSize = True
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Generate Random Values'
   ClientHeight = 349
   ClientWidth = 429
@@ -108,7 +108,8 @@ object GenRndValsFrm: TGenRndValsFrm
     ClientHeight = 145
     ClientWidth = 400
     TabOrder = 2
-    object Label2: TLabel
+    object LowIntLabel: TLabel
+      Tag = 1
       AnchorSideLeft.Control = rbFDistributionValues
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = rbFlatInteger
@@ -121,10 +122,11 @@ object GenRndValsFrm: TGenRndValsFrm
       Caption = 'Between '
       ParentColor = False
     end
-    object Label3: TLabel
-      AnchorSideLeft.Control = Label10
+    object AndIntLabel: TLabel
+      Tag = 1
+      AnchorSideLeft.Control = FDF2Label
       AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Label2
+      AnchorSideTop.Control = LowIntLabel
       Left = 297
       Height = 15
       Top = 6
@@ -135,9 +137,10 @@ object GenRndValsFrm: TGenRndValsFrm
       ParentColor = False
     end
     object LowIntEdit: TEdit
-      AnchorSideLeft.Control = Label2
+      Tag = 1
+      AnchorSideLeft.Control = LowIntLabel
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Label2
+      AnchorSideTop.Control = LowIntLabel
       AnchorSideTop.Side = asrCenter
       Left = 228
       Height = 23
@@ -150,8 +153,9 @@ object GenRndValsFrm: TGenRndValsFrm
       Text = 'LowIntEdit'
     end
     object HiIntEdit: TEdit
+      Tag = 1
       AnchorSideLeft.Control = FDF2Edit
-      AnchorSideTop.Control = Label2
+      AnchorSideTop.Control = LowIntLabel
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = FDF2Edit
       AnchorSideRight.Side = asrBottom
@@ -178,19 +182,24 @@ object GenRndValsFrm: TGenRndValsFrm
       OnChange = DistTypeChange
       TabOrder = 0
     end
-    object Label4: TLabel
-      AnchorSideLeft.Control = Label2
+    object LowRealLabel: TLabel
+      Tag = 2
+      AnchorSideLeft.Control = LowIntLabel
       AnchorSideTop.Control = rbFlatFloatingPoint
       AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = LowRealEdit
       Left = 168
       Height = 15
       Top = 33
       Width = 48
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 12
       Caption = 'Between '
       ParentColor = False
     end
-    object Label5: TLabel
-      AnchorSideLeft.Control = Label10
+    object AndRealLabel: TLabel
+      Tag = 2
+      AnchorSideLeft.Control = FDF2Label
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = LowRealEdit
       AnchorSideTop.Side = asrCenter
@@ -202,8 +211,9 @@ object GenRndValsFrm: TGenRndValsFrm
       ParentColor = False
     end
     object LowRealEdit: TEdit
+      Tag = 2
       AnchorSideLeft.Control = LowIntEdit
-      AnchorSideTop.Control = Label4
+      AnchorSideTop.Control = LowRealLabel
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = LowIntEdit
       AnchorSideRight.Side = asrBottom
@@ -218,8 +228,9 @@ object GenRndValsFrm: TGenRndValsFrm
       Text = 'LowRealEdit'
     end
     object HiRealEdit: TEdit
+      Tag = 2
       AnchorSideLeft.Control = FDF2Edit
-      AnchorSideTop.Control = Label5
+      AnchorSideTop.Control = AndRealLabel
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = FDF2Edit
       AnchorSideRight.Side = asrBottom
@@ -260,31 +271,37 @@ object GenRndValsFrm: TGenRndValsFrm
       OnChange = DistTypeChange
       TabOrder = 6
     end
-    object Label6: TLabel
-      AnchorSideLeft.Control = Label4
+    object MeanLabel: TLabel
+      Tag = 3
+      AnchorSideLeft.Control = LowRealLabel
       AnchorSideTop.Control = rbNormalZValues
       AnchorSideTop.Side = asrCenter
-      Left = 168
+      AnchorSideRight.Control = zMeanEdit
+      Left = 183
       Height = 15
       Top = 60
-      Width = 44
-      Caption = 'Mean = '
+      Width = 33
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 12
+      Caption = 'Mean:'
       ParentColor = False
     end
-    object Label7: TLabel
-      AnchorSideLeft.Control = Label10
+    object SDLabel: TLabel
+      Tag = 3
+      AnchorSideLeft.Control = FDF2Label
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = rbNormalZValues
       AnchorSideTop.Side = asrCenter
-      Left = 291
+      Left = 297
       Height = 15
       Top = 60
-      Width = 34
+      Width = 23
       BorderSpacing.Left = 7
-      Caption = 'S.D. = '
+      Caption = 'S.D.:'
       ParentColor = False
     end
     object zMeanEdit: TEdit
+      Tag = 3
       AnchorSideLeft.Control = LowRealEdit
       AnchorSideTop.Control = rbNormalZValues
       AnchorSideTop.Side = asrCenter
@@ -301,6 +318,7 @@ object GenRndValsFrm: TGenRndValsFrm
       Text = 'zMeanEdit'
     end
     object zSDEdit: TEdit
+      Tag = 3
       AnchorSideLeft.Control = FDF2Edit
       AnchorSideTop.Control = rbNormalZValues
       AnchorSideTop.Side = asrCenter
@@ -329,18 +347,23 @@ object GenRndValsFrm: TGenRndValsFrm
       OnChange = DistTypeChange
       TabOrder = 9
     end
-    object Label8: TLabel
-      AnchorSideLeft.Control = Label4
+    object ChiSqDFLabel: TLabel
+      Tag = 4
+      AnchorSideLeft.Control = LowRealLabel
       AnchorSideTop.Control = rbChiSquaredValues
       AnchorSideTop.Side = asrCenter
-      Left = 168
+      AnchorSideRight.Control = ChiDFEdit
+      Left = 190
       Height = 15
       Top = 87
-      Width = 40
-      Caption = 'D.F. 1 ='
+      Width = 26
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 12
+      Caption = 'D.F. :'
       ParentColor = False
     end
     object ChiDFEdit: TEdit
+      Tag = 4
       AnchorSideLeft.Control = zMeanEdit
       AnchorSideTop.Control = rbChiSquaredValues
       AnchorSideTop.Side = asrCenter
@@ -369,31 +392,37 @@ object GenRndValsFrm: TGenRndValsFrm
       OnChange = DistTypeChange
       TabOrder = 11
     end
-    object Label9: TLabel
-      AnchorSideLeft.Control = Label8
+    object FDF1Label: TLabel
+      Tag = 5
+      AnchorSideLeft.Control = ChiSqDFLabel
       AnchorSideTop.Control = rbFDistributionValues
       AnchorSideTop.Side = asrCenter
-      Left = 168
+      AnchorSideRight.Control = FDF1Edit
+      Left = 184
       Height = 15
       Top = 114
-      Width = 40
-      Caption = 'D.F. 1 ='
+      Width = 32
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 12
+      Caption = 'D.F. 1:'
       ParentColor = False
     end
-    object Label10: TLabel
+    object FDF2Label: TLabel
+      Tag = 5
       AnchorSideLeft.Control = FDF1Edit
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = rbFDistributionValues
       AnchorSideTop.Side = asrCenter
-      Left = 288
+      Left = 292
       Height = 15
       Top = 114
-      Width = 40
-      BorderSpacing.Left = 8
-      Caption = 'D.F. 2 ='
+      Width = 32
+      BorderSpacing.Left = 12
+      Caption = 'D.F. 2:'
       ParentColor = False
     end
     object FDF1Edit: TEdit
+      Tag = 5
       AnchorSideLeft.Control = ChiDFEdit
       AnchorSideTop.Control = rbFDistributionValues
       AnchorSideTop.Side = asrCenter
@@ -410,7 +439,8 @@ object GenRndValsFrm: TGenRndValsFrm
       Text = 'FDF1Edit'
     end
     object FDF2Edit: TEdit
-      AnchorSideLeft.Control = Label10
+      Tag = 5
+      AnchorSideLeft.Control = FDF2Label
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = rbFDistributionValues
       AnchorSideTop.Side = asrCenter
@@ -420,7 +450,7 @@ object GenRndValsFrm: TGenRndValsFrm
       Top = 110
       Width = 52
       Alignment = taRightJustify
-      BorderSpacing.Left = 8
+      BorderSpacing.Left = 12
       BorderSpacing.Right = 12
       BorderSpacing.Bottom = 12
       TabOrder = 13
@@ -448,8 +478,8 @@ object GenRndValsFrm: TGenRndValsFrm
     object ResetBtn: TButton
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = CancelBtn
-      Left = 136
+      AnchorSideRight.Control = ComputeBtn
+      Left = 208
       Height = 25
       Top = 1
       Width = 54
@@ -460,27 +490,11 @@ object GenRndValsFrm: TGenRndValsFrm
       OnClick = ResetBtnClick
       TabOrder = 0
     end
-    object CancelBtn: TButton
-      AnchorSideTop.Control = Panel1
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = ComputeBtn
-      Left = 198
-      Height = 25
-      Top = 1
-      Width = 62
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Right = 8
-      Cancel = True
-      Caption = 'Cancel'
-      ModalResult = 2
-      TabOrder = 1
-    end
     object ComputeBtn: TButton
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = ReturnBtn
-      Left = 268
+      AnchorSideRight.Control = CloseBtn
+      Left = 270
       Height = 25
       Top = 1
       Width = 76
@@ -489,22 +503,23 @@ object GenRndValsFrm: TGenRndValsFrm
       BorderSpacing.Right = 8
       Caption = 'Compute'
       OnClick = ComputeBtnClick
-      TabOrder = 2
+      TabOrder = 1
     end
-    object ReturnBtn: TButton
+    object CloseBtn: TButton
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
-      Left = 352
+      Left = 354
       Height = 25
       Top = 1
-      Width = 61
+      Width = 55
       Anchors = [akTop, akRight]
       AutoSize = True
-      Caption = 'Return'
-      ModalResult = 1
-      TabOrder = 3
+      BorderSpacing.Right = 4
+      Caption = 'Close'
+      ModalResult = 11
+      TabOrder = 2
     end
   end
   object Bevel1: TBevel

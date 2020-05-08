@@ -91,7 +91,7 @@ object GenSeqFrm: TGenSeqFrm
       Top = 6
       Width = 80
       Caption = ' '
-      TabOrder = 1
+      TabOrder = 0
     end
     object NoCasesEdit: TEdit
       Left = 129
@@ -100,7 +100,7 @@ object GenSeqFrm: TGenSeqFrm
       Width = 80
       Alignment = taRightJustify
       BorderSpacing.Left = 3
-      TabOrder = 0
+      TabOrder = 1
       Text = 'NoCasesEdit'
     end
   end
@@ -162,7 +162,7 @@ object GenSeqFrm: TGenSeqFrm
     BorderSpacing.Bottom = 8
     Caption = 'Close'
     ModalResult = 11
-    TabOrder = 4
+    TabOrder = 6
   end
   object ComputeBtn: TButton
     AnchorSideTop.Control = CloseBtn
@@ -191,7 +191,7 @@ object GenSeqFrm: TGenSeqFrm
     BorderSpacing.Right = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
-    TabOrder = 6
+    TabOrder = 4
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
