@@ -967,6 +967,9 @@ object OS3MainFrm: TOS3MainFrm
         Caption = 'Distribution Plots and Critical Values'
         OnClick = DistPlotsClick
       end
+      object MenuItem52: TMenuItem
+        Caption = '-'
+      end
       object SeqValues: TMenuItem
         Caption = 'Generate Sequential Values'
         OnClick = SeqValuesClick
@@ -974,6 +977,9 @@ object OS3MainFrm: TOS3MainFrm
       object RandomVals: TMenuItem
         Caption = 'Random Theoretical Values'
         OnClick = RandomValsClick
+      end
+      object MenuItem51: TMenuItem
+        Caption = '-'
       end
       object Probabilities: TMenuItem
         Caption = 'Probabilities'

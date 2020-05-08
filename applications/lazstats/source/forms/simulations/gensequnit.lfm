@@ -3,6 +3,8 @@ object GenSeqFrm: TGenSeqFrm
   Height = 231
   Top = 114
   Width = 367
+  HelpType = htKeyword
+  HelpKeyword = 'GenerateSequentialValues.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Generation of Sequential Values'

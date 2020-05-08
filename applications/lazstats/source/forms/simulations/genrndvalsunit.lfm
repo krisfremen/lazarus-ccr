@@ -3,6 +3,8 @@ object GenRndValsFrm: TGenRndValsFrm
   Height = 349
   Top = 203
   Width = 429
+  HelpType = htKeyword
+  HelpKeyword = 'RandomTheoreticalValues.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Generate Random Values'

@@ -108,6 +108,8 @@ type
     MenuItem48: TMenuItem;
     MenuItem49: TMenuItem;
     MenuItem50: TMenuItem;
+    MenuItem51: TMenuItem;
+    MenuItem52: TMenuItem;
     SimpChiSqr: TMenuItem;
     SRHItem: TMenuItem;
     OneCaseAnova: TMenuItem;

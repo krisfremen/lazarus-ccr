@@ -3,6 +3,8 @@ object DistribFrm: TDistribFrm
   Height = 223
   Top = 215
   Width = 384
+  HelpType = htKeyword
+  HelpKeyword = 'DistributionPlotsandCriticalValu.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Distributions'

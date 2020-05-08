@@ -3,6 +3,8 @@ object PCurvesFrm: TPCurvesFrm
   Height = 240
   Top = 161
   Width = 280
+  HelpType = htKeyword
+  HelpKeyword = 'PowerCurvesforazTest.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Power Analysis for a z Test'
