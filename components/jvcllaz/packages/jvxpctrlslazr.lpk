@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="JvXPCtrlsLazR"/>
     <Author Value="Lazarus port by: Sergio Samayoa, Werner Pamler"/>
@@ -14,7 +14,7 @@
     </CompilerOptions>
     <Description Value="XP style controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code)"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
-    <Version Major="1" Release="6"/>
+    <Version Major="1" Release="7"/>
     <Files Count="6">
       <Item1>
         <Filename Value="..\run\JvXPCtrls\jvxpbar.pas"/>
