@@ -1302,7 +1302,7 @@ var
   end;
 
 begin
-  if AutoSize then
+  if AutoSize and HandleAllocated then
   begin
     Canvas.Font.Assign(Font);
     Canvas.Font.Style := [fsBold];
