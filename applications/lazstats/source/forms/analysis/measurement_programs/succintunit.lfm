@@ -3,6 +3,8 @@ object SuccIntFrm: TSuccIntFrm
   Height = 282
   Top = 391
   Width = 335
+  HelpType = htKeyword
+  HelpKeyword = 'SuccessiveIntervalScaling.htm'
   AutoSize = True
   Caption = 'Successive Interval Scaling'
   ClientHeight = 282
