@@ -15,12 +15,12 @@ type
 
   TRelChangeFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     HelpBtn: TButton;
     Panel1: TPanel;
     ResetBtn: TButton;
-    CancelBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     OldRelEdit: TEdit;
     OldVarEdit: TEdit;
     NewVarEdit: TEdit;
@@ -53,10 +53,10 @@ uses
 
 procedure TRelChangeFrm.ResetBtnClick(Sender: TObject);
 begin
-     OldRelEdit.Text := '';
-     NewRelEdit.Text := '';
-     OldVarEdit.Text := '';
-     NewVarEdit.Text := '';
+  OldRelEdit.Text := '';
+  NewRelEdit.Text := '';
+  OldVarEdit.Text := '';
+  NewVarEdit.Text := '';
 end;
 
 procedure TRelChangeFrm.FormActivate(Sender: TObject);
@@ -66,12 +66,11 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, CancelBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
-  CancelBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Constraints.MinHeight := Height;
   Constraints.MaxHeight := Height;
@@ -93,13 +92,28 @@ end;
 
 procedure TRelChangeFrm.ComputeBtnClick(Sender: TObject);
 var
-   OldRel, NewRel, OldVar, NewVar : double;
+  oldRel, newRel, oldVar, newVar: double;
 begin
-     OldRel := StrToFloat(OldRelEdit.Text);
-     OldVar := StrToFloat(OldVarEdit.Text);
-     NewVar := StrToFloat(NewVarEdit.Text);
-     NewRel := 1.0 - ((OldVar / NewVar) * (1.0 - OldRel));
-     NewRelEdit.Text := FormatFloat('0.00000', NewRel);  //FloatToStr(NewRel);
+  if (OldRelEdit.Text = '') or not TryStrToFloat(OldRelEdit.Text, oldRel) then
+  begin
+    OldRelEdit.SetFocus;
+    MessageDlg('Valid number required.', mtError, [mbOK], 0);
+    exit;
+  end;
+  if (OldVarEdit.Text = '') or not TryStrToFloat(OldVarEdit.Text, oldVar) then
+  begin
+    OldVarEdit.SetFocus;
+    MessageDlg('Valid number required.', mtError, [mbOK], 0);
+    exit;
+  end;
+  if (NewVarEdit.Text = '') or not TryStrToFloat(NewVarEdit.Text, newVar) then
+  begin
+    NewVarEdit.SetFocus;
+    MessageDlg('Valid number required.', mtError, [mbOK], 0);
+    exit;
+  end;
+  newRel := 1.0 - (oldVar / newVar) * (1.0 - oldRel);
+  NewRelEdit.Text := FormatFloat('0.00000', newRel);
 end;
 
 
