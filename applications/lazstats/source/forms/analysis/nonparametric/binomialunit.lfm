@@ -3,6 +3,8 @@ object BinomialFrm: TBinomialFrm
   Height = 175
   Top = 338
   Width = 340
+  HelpType = htKeyword
+  HelpKeyword = 'ProbabilityofaBinomialEvent.htm'
   AutoSize = True
   BorderStyle = bsSingle
   Caption = 'Binomial Probability Calculator'
@@ -17,7 +19,7 @@ object BinomialFrm: TBinomialFrm
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = ComputeBtn
-    Left = 121
+    Left = 127
     Height = 25
     Top = 145
     Width = 54
@@ -34,8 +36,8 @@ object BinomialFrm: TBinomialFrm
   object ComputeBtn: TButton
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = ReturnBtn
-    Left = 183
+    AnchorSideRight.Control = CloseBtn
+    Left = 189
     Height = 25
     Top = 145
     Width = 76
@@ -49,23 +51,23 @@ object BinomialFrm: TBinomialFrm
     OnClick = ComputeBtnClick
     TabOrder = 1
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideTop.Control = Bevel1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 267
+    Left = 273
     Height = 25
     Top = 145
-    Width = 61
+    Width = 55
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
+    Caption = 'Close'
+    ModalResult = 11
     TabOrder = 2
   end
   object Bevel1: TBevel

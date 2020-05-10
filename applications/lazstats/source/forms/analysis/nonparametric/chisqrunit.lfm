@@ -3,6 +3,8 @@ object ChiSqrFrm: TChiSqrFrm
   Height = 566
   Top = 216
   Width = 474
+  HelpType = htKeyword
+  HelpKeyword = 'ContingencyChi-Square.htm'
   AutoSize = True
   Caption = 'Contingency Chi Squared'
   ClientHeight = 566

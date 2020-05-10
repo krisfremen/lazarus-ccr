@@ -19,7 +19,7 @@ type
     PlotChk: TCheckBox;
     ResetBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     FreqAEdit: TEdit;
     FreqBEdit: TEdit;
     PropAEdit: TEdit;
@@ -60,10 +60,10 @@ procedure TBinomialFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 procedure TBinomialFrm.FormCreate(Sender: TObject);
@@ -104,12 +104,13 @@ begin
     lReport.Add('BINOMIAL PROBABILITY TEST');
     lReport.Add('');
     lReport.Add('Frequency of %d out of %d observed', [A, N]);
-    lReport.Add('The theoretical proportion expected in category A is %.3f', [p]);
+    lReport.Add('The theoretical proportion expected in category A is %.f', [p]);
     lReport.Add('');
     lReport.Add('The test is for the probability of a value in category A as small or smaller');
     lReport.Add('than that observed given the expected proportion.');
 
-    if (N > 35) then //Use normal distribution approximation
+    //Use normal distribution approximation
+    if (N > 35) then
     begin
       CorrectedA := A;
       if A < N * p then CorrectedA := A + 0.5;
@@ -117,14 +118,14 @@ begin
       z := (CorrectedA - N * p) / sqrt(N * p * Q);
       lReport.Add('Z value for Normal Distribution approximation: %.3f', [z]);
       Probability := probz(z);
-      lReport.Add('Probability: %.4f', [Probability]);
-    end
-    else //Use binomial fomula
+      lReport.Add('Probability: %6.4f', [Probability]);
+    end else
+    //Use binomial fomula
     begin
       for X := 0 to A do
       begin
-        Probability := combos(X, N) * Power(p,X) * Power(Q,(N - X));
-        lReport.Add('Probability of %d = %6.4f', [X, Probability]);
+        Probability := combos(X, N) * Power(p, X) * Power(Q, N - X);
+        lReport.Add('Probability of %2d: %6.4f', [X, Probability]);
         SumProb := SumProb + Probability;
       end;
       lReport.Add('Binomial Probability of %d or less out of %d: %.4f', [A, N, SumProb]);

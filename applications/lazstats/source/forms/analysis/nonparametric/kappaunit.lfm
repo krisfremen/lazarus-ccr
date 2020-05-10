@@ -3,6 +3,8 @@ object WeightedKappaFrm: TWeightedKappaFrm
   Height = 560
   Top = 184
   Width = 539
+  HelpType = htKeyword
+  HelpKeyword = 'KappaandWeightedKappa.htm'
   AutoSize = True
   Caption = 'Kappa and Weighted Kappa'
   ClientHeight = 560

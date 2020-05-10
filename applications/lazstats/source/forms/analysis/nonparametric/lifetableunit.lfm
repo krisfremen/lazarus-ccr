@@ -3,6 +3,8 @@ object LifeTableForm: TLifeTableForm
   Height = 590
   Top = 122
   Width = 818
+  HelpType = htKeyword
+  HelpKeyword = 'LifeTable.htm'
   AutoSize = True
   Caption = 'Life Table'
   ClientHeight = 590

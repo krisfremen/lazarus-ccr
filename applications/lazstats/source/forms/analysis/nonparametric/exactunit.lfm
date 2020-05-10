@@ -3,6 +3,8 @@ object FisherFrm: TFisherFrm
   Height = 472
   Top = 234
   Width = 672
+  HelpType = htKeyword
+  HelpKeyword = 'FishersExactTest.htm'
   Caption = 'Fisher''s Exact Test for a 2 by 2 Table'
   ClientHeight = 472
   ClientWidth = 672

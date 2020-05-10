@@ -3,6 +3,8 @@ object WilcoxonFrm: TWilcoxonFrm
   Height = 352
   Top = 336
   Width = 436
+  HelpType = htKeyword
+  HelpKeyword = 'WilcoxonMatched-PairsSignedRanks.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Wilcoxon Matched Pairs Signed Ranks Test'

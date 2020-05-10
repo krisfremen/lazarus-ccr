@@ -3,6 +3,8 @@ object KWAnovaFrm: TKWAnovaFrm
   Height = 365
   Top = 283
   Width = 421
+  HelpType = htKeyword
+  HelpKeyword = 'Kruskal-WallisOne-WayANOVA.htm'
   AutoSize = True
   Caption = 'Kruskal-Wallis One Way ANOVA on Ranks'
   ClientHeight = 365
