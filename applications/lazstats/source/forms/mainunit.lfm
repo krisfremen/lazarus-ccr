@@ -992,33 +992,33 @@ object OS3MainFrm: TOS3MainFrm
           OnClick = ProbltzClick
         end
         object probzbetween: TMenuItem
-          Caption = 'Prob between 2 z values'
+          Caption = 'Probability between two z Values'
           OnClick = probzbetweenClick
         end
         object MenuItem45: TMenuItem
           Caption = '-'
         end
         object inversez: TMenuItem
-          Caption = 'z for a given cum. Probability'
+          Caption = 'z for a given Cumulative Probability'
           OnClick = inversezClick
         end
         object MenuItem44: TMenuItem
           Caption = '-'
         end
         object Chiprob: TMenuItem
-          Caption = 'Chisquare Probability'
+          Caption = 'Chi-Square Probability'
           OnClick = ChiprobClick
         end
         object tprob: TMenuItem
-          Caption = 'Student t probability'
+          Caption = 'Student t Probability'
           OnClick = tprobClick
         end
         object Fprob: TMenuItem
-          Caption = 'F probability'
+          Caption = 'F Probability'
           OnClick = FprobClick
         end
         object HypergeoProb: TMenuItem
-          Caption = 'Hypergeometric probability'
+          Caption = 'Hypergeometric Probability'
           OnClick = HypergeoProbClick
         end
       end

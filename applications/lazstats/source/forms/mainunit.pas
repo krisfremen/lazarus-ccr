@@ -453,6 +453,7 @@ implementation
 { TOS3MainFrm }
 
 uses
+  Utils,
   OptionsUnit, OutputUnit, LicenseUnit, TransFrmUnit, DescriptiveUnit,
   FreqUnit, CrossTabUnit, BreakDownUnit, BoxPlotUnit, NormalityUnit, Rot3DUnit,
   PlotXYUnit, BubblePlotUnit, StemLeafUnit, MultXvsYUnit, OneSampUnit,
@@ -1163,17 +1164,16 @@ end;
 // Menu "Variables" > "Transform Variables"
 procedure TOS3MainFrm.TransformClick(Sender: TObject);
 var
-  MyErrorString : string;
+  err: string;
 begin
-   try
-       if TransFrm = nil then
-         Application.CreateForm(TTransFrm, TransFrm);
-       TransFrm.ShowModal;
-   except
-//    MyErrorString := 'ErrorCode: ' + IntToStr(Error) + #13#10;
-    MyErrorString := 'Error in showing transformations';
-    MessageDlg(MyErrorString , mtError, [mbOk], 0);
-   end;
+  try
+    if TransFrm = nil then
+      Application.CreateForm(TTransFrm, TransFrm);
+    TransFrm.ShowModal;
+  except
+    err := 'Error in showing transformations';
+    ErrorMsg(err);
+  end;
 end;
 
 // Menu "Analysis" > "Comparisons" > "t-tests"
@@ -1722,7 +1722,7 @@ begin
     if TryStrToInt(response, GroupCol) and (GroupCol > 0) then
       break
     else
-      MessageDlg('Illegal value entered for index of group column.', mtError, [mbOk], 0);
+      ErrorMsg('Illegal value entered for index of group column.');
   until false;
 
   response := '2';
@@ -1732,7 +1732,7 @@ begin
     if TryStrToInt(response, VarCol) then
       break
     else
-      MessageDlg('Illegal value entered for index of variable column.', mtError, [mbOK], 0);
+      ErrorMsg('Illegal value entered for index of variable column.');
   until false;
 
   NoCases := StrToInt(NoCasesEdit.text);

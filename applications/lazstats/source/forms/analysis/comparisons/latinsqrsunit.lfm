@@ -13,41 +13,40 @@ object LatinSqrsFrm: TLatinSqrsFrm
   OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
-  object CancelBtn: TButton
+  object ComputeBtn: TButton
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Plan
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = OKBtn
-    Left = 399
+    AnchorSideRight.Control = CloseBtn
+    Left = 372
     Height = 25
     Top = 214
-    Width = 62
+    Width = 76
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
+    Caption = 'Compute'
+    OnClick = ComputeBtnClick
     TabOrder = 2
   end
-  object OKBtn: TButton
+  object CloseBtn: TButton
     AnchorSideTop.Control = Plan
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 473
+    Left = 460
     Height = 25
     Top = 214
-    Width = 42
+    Width = 55
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'OK'
-    ModalResult = 1
-    OnClick = OKBtnClick
+    Caption = 'Close'
+    ModalResult = 11
     TabOrder = 3
   end
   object Plan: TRadioGroup
@@ -84,15 +83,14 @@ object LatinSqrsFrm: TLatinSqrsFrm
       'Plan 7.   Plan 5 with superimposing of an orthogonal Latin square.'
       'Plan 9.   AxBxC (same square used for all levels of Factor C.)'
     )
-    OnClick = PlanClick
     TabOrder = 0
   end
   object HelpBtn: TButton
     Tag = 130
     AnchorSideTop.Control = Plan
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = CancelBtn
-    Left = 340
+    AnchorSideRight.Control = ComputeBtn
+    Left = 313
     Height = 25
     Top = 214
     Width = 51

@@ -47,7 +47,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TRelChangeFrm }
 
@@ -97,19 +97,19 @@ begin
   if (OldRelEdit.Text = '') or not TryStrToFloat(OldRelEdit.Text, oldRel) then
   begin
     OldRelEdit.SetFocus;
-    MessageDlg('Valid number required.', mtError, [mbOK], 0);
+    ErrorMsg('Valid number required.');
     exit;
   end;
   if (OldVarEdit.Text = '') or not TryStrToFloat(OldVarEdit.Text, oldVar) then
   begin
     OldVarEdit.SetFocus;
-    MessageDlg('Valid number required.', mtError, [mbOK], 0);
+    ErrorMsg('Valid number required.');
     exit;
   end;
   if (NewVarEdit.Text = '') or not TryStrToFloat(NewVarEdit.Text, newVar) then
   begin
     NewVarEdit.SetFocus;
-    MessageDlg('Valid number required.', mtError, [mbOK], 0);
+    ErrorMsg('Valid number required.');
     exit;
   end;
   newRel := 1.0 - (oldVar / newVar) * (1.0 - oldRel);

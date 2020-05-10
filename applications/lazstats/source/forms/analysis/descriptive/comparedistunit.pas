@@ -67,7 +67,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TCompareDistFrm }
 
@@ -159,7 +159,7 @@ begin
   end;
   if msg <> '' then
   begin
-    MessageDlg(msg, mtError, [mbOK], 0);
+    ErrorMsg(msg);
     exit;
   end;
 
@@ -360,7 +360,7 @@ begin
       max2 := max1;
       if max2 > 13 then
       begin
-        MessageDlg('Value > 13 found. Factorial too large - exiting.', mtError, [mbOK], 0);
+        ErrorMsg('Value > 13 found. Factorial too large - exiting.');
         exit;
       end;
       for i := 1 to Ncases do

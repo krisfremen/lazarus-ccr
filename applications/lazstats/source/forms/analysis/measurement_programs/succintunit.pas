@@ -52,7 +52,7 @@ var
 implementation
 
 uses
-  Math;
+  Math, Utils;
 
 { TSuccIntFrm }
 
@@ -127,7 +127,7 @@ var
 begin
   if ItemList.Items.Count = 0 then
   begin
-    MessageDlg('No variables selected.', mtError, [mbOK], 0);
+    ErrorMsg('No variables selected.');
     exit;
   end;
 

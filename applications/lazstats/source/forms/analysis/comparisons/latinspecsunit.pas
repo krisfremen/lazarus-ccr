@@ -70,12 +70,15 @@ type
     procedure GrpOutBtnClick(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure VarListSelectionChange(Sender: TObject; User: boolean);
   private
     { private declarations }
     FAutoSized: Boolean;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
+    procedure UpdateBtnStates;
   public
     { public declarations }
+    procedure PrepareForPlan(APlan: integer);
   end; 
 
 var
@@ -85,17 +88,65 @@ implementation
 
 uses
   Math,
-  LatinSqrsUnit;
+  Utils, LatinSqrsUnit;
 
 
 { TLatinSpecsFrm }
 
-procedure TLatinSpecsFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+procedure TLatinSpecsFrm.PrepareForPlan(APlan: Integer);
 begin
-     VarList.Clear;
-     for i := 1 to NoVariables do
-         VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  ResetBtnClick(nil);
+  case APlan of
+    1: begin
+         PanelD.Visible := false;
+         PanelGrp.Visible := false;
+       end;
+    2: begin
+         PanelD.Visible := true;
+         PanelGrp.Visible := false;
+       end;
+    3: begin
+         PanelD.Visible := true;
+         PanelGrp.Visible := false;
+       end;
+    4: begin
+         PanelD.Visible := true;
+         PanelGrp.Visible := false;
+       end;
+    5: begin
+         PanelD.Visible := false;
+         PanelGrp.Visible := true;
+        end;
+    6: begin
+         PanelD.Visible := false;
+         PanelGrp.Visible := true;
+       end;
+    7: begin
+         PanelD.Visible := true;
+         PanelGrp.Visible := true;
+       end;
+    9: begin
+         PanelD.Visible := true;
+         PanelGrp.Visible := true;
+       end;
+  end;
+end;
+
+procedure TLatinSpecsFrm.ResetBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  VarList.Clear;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  ACodeEdit.Text := '';
+  BCodeEdit.Text := '';
+  CCodeEdit.Text := '';
+  DCodeEdit.Text := '';
+  GrpCodeEdit.Text := '';
+  DepVarEdit.Text := '';
+  nPerCellEdit.Text := '';
+  UpdatebtnStates;
 end;
 
 procedure TLatinSpecsFrm.FormActivate(Sender: TObject);
@@ -127,112 +178,142 @@ begin
   ResetBtnClick(Self);
 end;
 
-procedure TLatinSpecsFrm.GrpInBtnClick(Sender: TObject);
-VAR index : integer;
-begin
-     index := VarList.ItemIndex;
-     GrpCodeEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     GrpInBtn.Enabled := false;
-     GrpOutBtn.Enabled := true;
-end;
-
-procedure TLatinSpecsFrm.GrpOutBtnClick(Sender: TObject);
-begin
-     VarList.Items.Add(GrpCodeEdit.Text);
-     GrpCodeEdit.Text := '';
-     GrpInBtn.Enabled := true;
-     GrpOutBtn.Enabled := false;
-end;
-
 procedure TLatinSpecsFrm.AInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := VarList.ItemIndex;
-     ACodeEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     AinBtn.Enabled := false;
-     AOutBtn.Enabled := true;
+  index := VarList.ItemIndex;
+  if (index > -1) and (ACodeEdit.Text = '') then
+  begin
+    ACodeEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.AOutBtnClick(Sender: TObject);
 begin
-     VarList.Items.Add(ACodeEdit.Text);
-     ACodeEdit.Text := '';
-     AinBtn.Enabled := true;
-     AOutBtn.Enabled := false;
+  if ACodeEdit.Text <> '' then
+  begin
+    VarList.Items.Add(ACodeEdit.Text);
+    ACodeEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.BInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := VarList.ItemIndex;
-     BCodeEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     BinBtn.Enabled := false;
-     BOutBtn.Enabled := true;
+  index := VarList.ItemIndex;
+  if (index > -1) and (BCodeEdit.Text = '') then
+  begin
+    BCodeEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.BOutBtnClick(Sender: TObject);
 begin
-     VarList.Items.Add(BCodeEdit.Text);
-     BCodeEdit.Text := '';
-     BinBtn.Enabled := true;
-     BOutBtn.Enabled := false;
+  if BCodeEdit.Text <> '' then
+  begin
+    VarList.Items.Add(BCodeEdit.Text);
+    BCodeEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.CInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := VarList.ItemIndex;
-     CCodeEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     CinBtn.Enabled := false;
-     COutBtn.Enabled := true;
+  index := VarList.ItemIndex;
+  if (index > -1) and (CCodeEdit.Text = '') then
+  begin
+    CCodeEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.COutBtnClick(Sender: TObject);
 begin
-     VarList.Items.Add(CCodeEdit.Text);
-     CCodeEdit.Text := '';
-     CinBtn.Enabled := true;
-     COutBtn.Enabled := false;
+  if CCodeEdit.Text <> '' then
+  begin
+    VarList.Items.Add(CCodeEdit.Text);
+    CCodeEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.DataInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := VarList.ItemIndex;
-     DepVarEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     DataInBtn.Enabled := false;
-     DataOutBtn.Enabled := true;
+  index := VarList.ItemIndex;
+  if (index > -1) and (DepVarEdit.Text = '') then
+  begin
+    DepVarEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.DataOutBtnClick(Sender: TObject);
 begin
-     VarList.Items.Add(DepVarEdit.Text);
-     DepVarEdit.Text := '';
-     DataInBtn.Enabled := true;
-     DataOutBtn.Enabled := false;
+  if DepVarEdit.Text <> '' then
+  begin
+    VarList.Items.Add(DepVarEdit.Text);
+    DepVarEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.DInBtnClick(Sender: TObject);
-VAR index : integer;
+var
+  index: integer;
 begin
-     index := VarList.ItemIndex;
-     DCodeEdit.Text := VarList.Items.Strings[index];
-     VarList.Items.Delete(index);
-     DinBtn.Enabled := false;
-     DOutBtn.Enabled := true;
+  index := VarList.ItemIndex;
+  if (index > -1) and (DCodeEdit.Text = '') then
+  begin
+    DCodeEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.DOutBtnClick(Sender: TObject);
 begin
-     VarList.Items.Add(DCodeEdit.Text);
-     DCodeEdit.Text := '';
-     DinBtn.Enabled := true;
-     DOutBtn.Enabled := false;
+  if DCodeEdit.Text <> '' then
+  begin
+    VarList.Items.Add(DCodeEdit.Text);
+    DCodeEdit.Text := '';
+    UpdateBtnStates;
+  end;
+end;
+
+procedure TLatinSpecsFrm.GrpInBtnClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (GrpCodeEdit.Text = '') then
+  begin
+    GrpCodeEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+procedure TLatinSpecsFrm.GrpOutBtnClick(Sender: TObject);
+begin
+  if GrpCodeEdit.Text <> '' then
+  begin
+    VarList.Items.Add(GrpCodeEdit.Text);
+    GrpCodeEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 procedure TLatinSpecsFrm.OKBtnClick(Sender: TObject);
@@ -242,9 +323,26 @@ var
 begin
   if not Validate(msg, C) then begin
     C.SetFocus;
-    MessageDlg(msg, mtError, [mbOK], 0);
+    ErrorMsg(msg);
     ModalResult := mrNone;
   end;
+end;
+
+procedure TLatinSpecsFrm.UpdateBtnStates;
+begin
+  AInBtn.Enabled := (VarList.ItemIndex > -1) and (ACodeEdit.Text = '');
+  BInBtn.Enabled := (VarList.ItemIndex > -1) and (BCodeEdit.Text = '');
+  CInBtn.Enabled := (VarList.ItemIndex > -1) and (CCodeEdit.Text = '');
+  DInBtn.Enabled := (VarList.ItemIndex > -1) and (DCodeEdit.Text = '');
+  GrpInBtn.Enabled := (VarList.ItemIndex > -1) and (GrpCodeEdit.Text = '');
+  DataInBtn.Enabled := (VarList.ItemIndex > -1) and (DepVarEdit.Text = '');
+
+  AOutBtn.Enabled := (ACodeEdit.Text <> '');
+  BOutBtn.Enabled := (BCodeEdit.Text <> '');
+  COutBtn.Enabled := (CCodeEdit.Text <> '');
+  DOutBtn.Enabled := (DCodeEdit.Text <> '');
+  GrpOutBtn.Enabled := (GrpCodeEdit.Text <> '');
+  DataOutBtn.Enabled := (DepVarEdit.Text <> '');
 end;
 
 function TLatinSpecsFrm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;
@@ -252,17 +350,61 @@ var
   n: Integer;
 begin
   Result := false;
+
   if (nPerCellEdit.Text = '') then begin
     AMsg := 'Please specify the number of cases per cell.';
     AControl := nPercellEdit;
     exit;
   end;
-  if not TryStrToInt(nPercellEdit.Text, n) or (n <= 0) then begin
-    AMsg := 'Please specify a valid number for the cases per cell.';
+  if not TryStrToInt(nPerCellEdit.Text, n) or (n <= 0) then begin
+    AMsg := 'Please specify a valid (positive) number for the cases per cell.';
     AControl := nPercellEdit;
     exit;
   end;
+
+  if PanelA.Visible and (ACodeEdit.Text = '') then
+  begin
+    AMsg := 'Factor A code variable is not specified.';
+    AControl := ACodeEdit;
+    exit;
+  end;
+  if PanelB.Visible and (BCodeEdit.Text = '') then
+  begin
+    AMsg := 'Factor B code variable is not specified.';
+    Acontrol := BCodeEdit;
+    exit;
+  end;
+  if PanelC.Visible and (CCodeEdit.Text = '') then
+  begin
+    AMsg := 'Factor C code variable is not specified.';
+    Acontrol := CCodeEdit;
+    exit;
+  end;
+  if PanelD.Visible and (DCodeEdit.Text = '') then
+  begin
+    AMsg := 'Factor D code variable is not specified.';
+    Acontrol := DCodeEdit;
+    exit;
+  end;
+  if PanelGrp.Visible and (GrpCodeEdit.Text = '') then
+  begin
+    AMsg := 'Group code variable is not specified.';
+    Acontrol := GrpCodeEdit;
+    exit;
+  end;
+  if PanelDep.Visible and (DepVarEdit.Text = '') then
+  begin
+    AMsg := 'Dependent variable is not specified.';
+    Acontrol := DepVarEdit;
+    exit;
+  end;
+
   Result := true;
+end;
+
+procedure TLatinSpecsFrm.VarListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
 end;
 
 

@@ -5,9 +5,11 @@ unit Utils;
 interface
 
 uses
-  Classes, SysUtils, StdCtrls;
+  Classes, SysUtils, StdCtrls, Dialogs;
 
 function AnySelected(AListbox: TListBox): Boolean;
+
+procedure ErrorMsg(const AMsg: String);
 
 procedure Exchange(var a, b: Double); overload;
 procedure Exchange(var a, b: Integer); overload;
@@ -26,6 +28,11 @@ begin
       Result := true;
       exit;
     end;
+end;
+
+procedure ErrorMsg(const AMsg: String);
+begin
+  MessageDlg(AMsg, mtError, [mbOK], 0);
 end;
 
 procedure Exchange(var a, b: Double);
