@@ -398,11 +398,11 @@ begin
       name1, name1, name1, name2, name2, name2
     ]);
     lReport.Add('%10s   %10s   %10s   %10s   %10s   %10s', [
-      'X1 Value','Frequency','Cum. Freq.','X2 Value','Frequency','Cum. Freq.'
+      'X1 Value', 'Frequency', 'Cum. Freq.', 'X2 Value', 'Frequency', 'Cum. Freq.'
     ]);
     for i := 1 to noints do
       lReport.Add('%10.3f   %10d   %10.3f   %10.3f   %10d   %10.3f', [
-        XValue1[i-1],Var1Freq[i-1],Cumfreq1[i-1],XValue2[i-1],Var2Freq[i-1],Cumfreq2[i-1]
+        XValue1[i-1], Var1Freq[i-1], Cumfreq1[i-1], XValue2[i-1], Var2Freq[i-1], Cumfreq2[i-1]
       ]);
     cellval := 'D';
     KS := KolmogorovTest(noints, Cumfreq1,noints, Cumfreq2, cellval);
