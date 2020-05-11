@@ -1,26 +1,29 @@
 object AboutBox: TAboutBox
   Left = 202
-  Height = 170
+  Height = 200
   Top = 145
-  Width = 295
+  Width = 387
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About LazStats'
-  ClientHeight = 170
-  ClientWidth = 295
+  ClientHeight = 200
+  ClientWidth = 387
   Color = clBtnFace
   Font.Color = clWindowText
+  OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object OKButton: TButton
-    AnchorSideLeft.Control = Panel1
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Panel1
     AnchorSideTop.Side = asrBottom
-    Left = 111
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    Left = 295
     Height = 25
-    Top = 134
+    Top = 164
     Width = 75
+    Anchors = [akTop, akRight]
     BorderSpacing.Bottom = 8
     Caption = 'OK'
     Default = True
@@ -32,72 +35,96 @@ object AboutBox: TAboutBox
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     Left = 8
-    Height = 118
+    Height = 148
     Top = 8
-    Width = 280
+    Width = 362
     AutoSize = True
     BorderSpacing.Around = 8
     BevelInner = bvRaised
     BevelOuter = bvLowered
-    ClientHeight = 118
-    ClientWidth = 280
+    ClientHeight = 148
+    ClientWidth = 362
     Constraints.MinWidth = 280
     TabOrder = 1
-    object Label1: TLabel
+    object Image1: TImage
       AnchorSideLeft.Control = Panel1
-      AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel1
-      Left = 95
-      Height = 32
+      Left = 10
+      Height = 128
       Top = 10
+      Width = 128
+      BorderSpacing.Around = 8
+      Proportional = True
+    end
+    object Label1: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideLeft.Side = asrCenter
+      Left = 204
+      Height = 32
+      Top = 18
       Width = 91
       BorderSpacing.Top = 8
       Caption = 'LazStats'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -24
-      Font.Pitch = fpVariable
-      Font.Quality = fqDraft
+      Font.Quality = fqAntialiased
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
     end
     object Label2: TLabel
-      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Control = Label4
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      Left = 83
+      Left = 192
       Height = 21
-      Top = 50
+      Top = 54
       Width = 115
-      BorderSpacing.Top = 8
+      BorderSpacing.Top = 4
       Caption = 'William G. Miller'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      Left = 188
+      Height = 17
+      Top = 79
+      Width = 122
+      BorderSpacing.Top = 4
+      Caption = 'Copyright 2013-2020'
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
       ParentColor = False
       ParentFont = False
     end
-    object Label3: TLabel
-      AnchorSideLeft.Control = Panel1
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Label2
+    object Label4: TLabel
+      AnchorSideLeft.Control = Image1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label3
       AnchorSideTop.Side = asrBottom
-      Left = 65
-      Height = 21
-      Top = 79
-      Width = 151
-      BorderSpacing.Top = 8
+      Left = 154
+      Height = 17
+      Top = 108
+      Width = 190
+      BorderSpacing.Left = 16
+      BorderSpacing.Top = 12
+      BorderSpacing.Right = 16
       BorderSpacing.Bottom = 16
-      Caption = 'Copyright 2013-2020'
-      Font.CharSet = ANSI_CHARSET
+      Caption = 'Application icon by Roland Hahn'
       Font.Color = clWindowText
-      Font.Height = -16
-      Font.Pitch = fpVariable
-      Font.Quality = fqDraft
+      Font.Height = -13
       ParentColor = False
       ParentFont = False
     end
