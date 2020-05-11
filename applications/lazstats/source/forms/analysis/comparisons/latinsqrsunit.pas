@@ -25,6 +25,8 @@ type
     procedure HelpBtnClick(Sender: TObject);
   private
     { private declarations }
+    function CheckDataCol(ACol: Integer): boolean;
+    function GetRange(ACol: Integer; out ARange, AMin, AMax: Integer): boolean;
     procedure Plan1;
     procedure Plan2;
     procedure Plan3;
@@ -47,7 +49,25 @@ implementation
 uses
   Math, Utils;
 
+const
+  NO_VALID_NUMBER_ERROR = 'No valid number in row %d of variable "%s"';
+
 { TLatinSqrsFrm }
+
+function TLatinSqrsFrm.CheckDataCol(ACol: Integer): Boolean;
+var
+  i: Integer;
+  value: Double;
+begin
+  Result := false;
+  for i := 1 to NoCases do
+    if not TryStrToFloat(OS3MainFrm.DataGrid.Cells[ACol, i], value) then
+    begin
+      ErrorMsg(NO_VALID_NUMBER_ERROR, [i, OS3MainFrm.DataGrid.Cells[ACol, 0]]);
+      exit;
+    end;
+  Result := true;
+end;
 
 procedure TLatinSqrsFrm.ComputeBtnClick(Sender: TObject);
 var
@@ -83,6 +103,32 @@ begin
     Application.CreateForm(TLatinSpecsFrm, LatinSpecsFrm);
 end;
 
+function TLatinSqrsFrm.GetRange(ACol: Integer; out ARange, AMin, AMax: Integer): boolean;
+var
+  i: Integer;
+  mn, mx, value: Double;
+begin
+  Result := true;
+  mn := MaxInt;
+  mx := -MaxInt;
+  for i := 1 to NoCases do
+  begin
+    if TryStrToFloat(OS3MainFrm.DataGrid.Cells[ACol, i], value) then
+    begin
+      if value < mn then mn := value;
+      if value > mx then mx := value;
+    end else
+    begin
+      ErrorMsg(NO_VALID_NUMBER_ERROR, [i, OS3MainFrm.DataGrid.Cells[ACol, 0]]);
+      Result := false;
+      exit;
+    end;
+  end;
+  AMin := round(mn);
+  AMax := round(mx);
+  ARange := AMax - AMin + 1;
+end;
+
 procedure TLatinSqrsFrm.HelpBtnClick(Sender: TObject);
 begin
   if ContextHelpForm = nil then
@@ -99,8 +145,7 @@ var
   FactorC: string;
   DataVar: string;
   cellstring: string;
-  i, j, minA, minB, minC, maxA, maxB, maxC, rangeA, rangeB, rangeC: integer;
-  value: integer;
+  i, j, rangeA, rangeB, rangeC, mn, mx: integer;
   cellcnts: IntDyneMat;
   celltotals: DblDyneMat;
   Ctotals: DblDyneVec;
@@ -136,29 +181,10 @@ begin
   end;
 
   // determine no. of levels in A, B and C
-  minA := MaxInt;
-  minB := MaxInt;
-  minC := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  maxC := -MaxInt;
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[ACol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[BCol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    if value < minC then minC := value;
-    if value > maxC then maxC := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeC := maxC - minC + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(CCol, rangeC, mn, mx) then exit;
+  if not CheckDataCol(Datacol) then exit;
 
   // check for squareness
   if  (rangeA <> rangeB) or (rangeA <> rangeC) or (rangeB <> rangeC) then
@@ -201,9 +227,9 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
+    row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := Round(StrTofloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
     cellcnts[row-1,col-1] := cellcnts[row-1,col-1] + 1;
     celltotals[row-1,col-1] := celltotals[row-1,col-1] + data;
@@ -280,7 +306,7 @@ begin
   // show ANOVA table results
   lReport := TStringList.Create;
   try
-    lReport.Add('LATIN SQUARE ANALYSIS PLAN 1 RESULTS');
+    lReport.Add('LATIN SQUARE ANALYSIS Plan 1 Results');
     lReport.Add('');
     lReport.Add('-----------------------------------------------------------');
     lReport.Add('Source         SS        DF        MS        F      Prob.>F');
@@ -308,9 +334,9 @@ begin
     lReport.Add('%10s', [FactorA]);
     for i := 1 to NoCases do
     begin
-      row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-      col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-      slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
+      row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+      col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+      slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
       Design[row-1, col-1] := 'C' + IntToStr(slice);
     end;
     for i := 0 to p - 1 do
@@ -412,9 +438,9 @@ var
   FactorD: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, minA, minB, minC, maxA, maxB, maxC: integer;
-  minD, maxD, rangeD, rangeA, rangeB, rangeC: integer;
-  value: integer;
+  i, j, k: integer;
+  rangeA, rangeB, rangeC, rangeD: integer;
+  mn, mx, minD: Integer;
   cellcnts: IntDyneCube;
   celltotals: DblDyneCube;
   Ctotals: DblDyneVec;
@@ -457,33 +483,13 @@ begin
   end;
 
   // determine no. of levels in A, B and C
-  minA := MaxInt;
-  minB := MaxInt;
-  minC := MaxInt;
-  minD := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  maxC := -MaxInt;
-  maxD := -MaxInt;
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[ACol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[BCol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    if value < minC then minC := value;
-    if value > maxC then maxC := value;
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
-    if value < minD then minD := value;
-    if value > maxD then maxD := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeC := maxC - minC + 1;
-  rangeD := maxD - minD + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(CCol, rangeC, mn, mx) then exit;
+  if not GetRange(DCol, rangeD, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  minD := mn;
+  p := rangeA;
 
   // check for squareness
   if (rangeA <> rangeB) or (rangeA <> rangeC) or (rangeB <> rangeC) then
@@ -491,7 +497,6 @@ begin
     ErrorMsg('In a Latin square the range of values should all be equal.');
     exit;
   end;
-  p := rangeA;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(cellcnts, rangeA+1, rangeB+1, rangeD+1);
@@ -545,10 +550,10 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    block := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
+    row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
+    block := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Dcol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
     cellcnts[row-1,col-1,block-1] := cellcnts[row-1,col-1,block-1] + 1;
     celltotals[row-1,col-1,block-1] := celltotals[row-1,col-1,block-1] + data;
@@ -683,7 +688,7 @@ begin
   lReport := TStringList.Create;
   try
     lReport.Add('');
-    lReport.Add('LATIN SQUARE ANALYSIS PLAN 2 RESULTS');
+    lReport.Add('LATIN SQUARE ANALYSIS Plan 2 Results');
     lReport.Add('');
     lReport.Add('-----------------------------------------------------------');
     lReport.Add('Source         SS        DF        MS        F      Prob.>F');
@@ -721,10 +726,10 @@ begin
       lReport.Add('%10s', [FactorA]);
       for i := 1 to NoCases do
       begin
-        row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol, i]);
-        col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol, i]);
-        slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol, i]);
-        block := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol, i]);
+        row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol, i]));
+        col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol, i]));
+        slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol, i]));
+        block := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Dcol, i]));
         if block = minD + k then
           Design[row-1, col-1] := 'C' + IntToStr(slice);
       end;
@@ -847,9 +852,9 @@ var
   FactorD: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, m, minA, minB, minC, maxA, maxB, maxC: integer;
-  minD, maxD, rangeA, rangeB, rangeC, rangeD: integer;
-  value: integer;
+  i, j, k, m: integer;
+  rangeA, rangeB, rangeC, rangeD: integer;
+  minD, mn, mx: Integer;
   cellcnts: IntDyneCube;
   celltotals: DblDyneQuad;
   ABmat, ACmat, BCmat: DblDyneMat;
@@ -895,37 +900,13 @@ begin
   end;
 
   // determine no. of levels in A, B and C
-  minA := MaxInt;
-  minB := MaxInt;
-  minC := MaxInt;
-  minD := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  maxC := -MaxInt;
-  maxD := -MaxInt;
-
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[ACol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[BCol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    if value < minC then minC := value;
-    if value > maxC then maxC := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
-    if value < minD then minD := value;
-    if value > maxD then maxD := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeC := maxC - minC + 1;
-  rangeD := maxD - minD + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(CCol, rangeC, mn, mx) then exit;
+  if not GetRange(DCol, rangeD, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  minD := mn;
+  p := rangeA;
 
   // check for squareness
   if (rangeA <> rangeB) or (rangeA <> rangeC) or (rangeB <> rangeC) or (rangeA <> rangeD) then
@@ -933,7 +914,6 @@ begin
     ErrorMsg('In a Latin square the range of values should all be equal.');
     exit;
   end;
-  p := rangeA;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(cellcnts, p+1, p+1, p+1);
@@ -1003,10 +983,10 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    block := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
+    row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
+    block := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Dcol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
     cellcnts[row-1,col-1,slice-1] := cellcnts[row-1,col-1,slice-1] + 1;
     celltotals[row-1,col-1,slice-1,block-1] := celltotals[row-1,col-1,slice-1,block-1] + data;
@@ -1149,7 +1129,7 @@ begin
   // show ANOVA table results
   lReport := TStringList.Create;
   try
-    lReport.Add('LATIN SQUARE ANALYSIS PLAN 3 RESULTS');
+    lReport.Add('LATIN SQUARE ANALYSIS Plan 3 Results');
     lReport.Add('');
     lReport.Add('-----------------------------------------------------------');
     lReport.Add('Source         SS        DF        MS        F      Prob.>F');
@@ -1188,10 +1168,10 @@ begin
 
       for i := 1 to NoCases do
       begin
-        row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-        col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-        slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-        block := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
+        row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+        col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+        slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
+        block := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Dcol,i]));
         if block = minD + k then
           Design[row-1,col-1] := 'C' + IntToStr(slice);
       end;
@@ -1427,9 +1407,9 @@ var
   FactorD: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, minA, minB, minC, maxA, maxB, maxC: integer;
-  minD, maxD, rangeA, rangeB, rangeC, rangeD: integer;
-  value: integer;
+  i, j, k: integer;
+  rangeA, rangeB, rangeC, rangeD: integer;
+  mn, mx: Integer;
   cellcnts: IntDyneMat;
   ABmat: DblDyneMat;
   ABCmat: DblDyneCube;
@@ -1473,37 +1453,12 @@ begin
   end;
 
   // determine no. of levels in A, B and C
-  minA := MaxInt;
-  minB := MaxInt;
-  minC := MaxInt;
-  minD := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  maxC := -MaxInt;
-  maxD := -MaxInt;
-
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[ACol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[BCol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    if value < minC then minC := value;
-    if value > maxC then maxC := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
-    if value < minD then minD := value;
-    if value > maxD then maxD := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeC := maxC - minC + 1;
-  rangeD := maxD - minD + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(CCol, rangeC, mn, mx) then exit;
+  if not GetRange(DCol, rangeD, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  p := rangeA;
 
   // check for squareness
   if (rangeA <> rangeB) or (rangeA <> rangeC) or (rangeB <> rangeC) then
@@ -1511,7 +1466,6 @@ begin
     ErrorMsg('In a Latin square the range of values should be equal for A,B and C.');
     exit;
   end;
-  p := rangeA;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(ABmat, p+1, p+1);
@@ -1562,10 +1516,10 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    block := StrToInt(OS3MainFrm.DataGrid.Cells[Dcol,i]);
+    row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
+    block := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Dcol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
     cellcnts[row-1,col-1] := cellcnts[row-1,col-1] + 1;
     ABCmat[row-1,col-1,slice-1] := ABCmat[row-1,col-1,slice-1] + data;
@@ -1684,9 +1638,9 @@ begin
 
     for i := 1 to NoCases do
     begin
-      row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-      col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-      slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
+      row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+      col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+      slice := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
       Design[row-1,col-1] := 'C' + IntToStr(slice);
     end;
     for i := 0 to p - 1 do
@@ -1933,9 +1887,9 @@ var
   GroupFactor: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, minA, minB, minGrp, maxA, maxB, maxGrp: integer;
+  i, j, k: integer;
+  mn, mx: Integer;
   rangeA, rangeB, rangeGrp: integer;
-  value: integer;
   cellcnts: IntDyneMat;
   ABmat: DblDyneMat;
   ABCmat: DblDyneCube;
@@ -1982,30 +1936,11 @@ begin
   end;
 
   // determine no. of levels in A, B and Group
-  minA := MaxInt;
-  minB := MaxInt;
-  minGrp := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  maxGrp := -MaxInt;
-
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[ACol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[BCol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    if value < minGrp then minGrp := value;
-    if value > maxGrp then maxGrp := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeGrp := maxGrp - minGrp + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(GrpCol, rangeGrp, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  p := rangeA;
 
   // check for squareness
   if (rangeA <> rangeGrp) then
@@ -2013,7 +1948,6 @@ begin
     ErrorMsg('ERROR! In a Latin square the range of values should be equal for A,B and C.');
     exit;
   end;
-  p := rangeA;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(ABmat, p+1, p+1);
@@ -2074,10 +2008,10 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    subject := StrToInt(OS3MainFrm.DataGrid.Cells[Sbjcol,i]);
+    row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    group := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i]));
+    subject := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Sbjcol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
     cellcnts[group-1,row-1] := cellcnts[group-1,row-1] + 1;
     ABCmat[group-1,row-1,subject-1] := ABCmat[group-1,row-1,subject-1] + data;
@@ -2272,9 +2206,9 @@ begin
 
     for i := 1 to NoCases do
     begin
-      row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]); // A (column) effect
-      col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]); // B (cell) effect
-      group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]); // group (row)
+      row := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i])); // A (column) effect
+      col := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i])); // B (cell) effect
+      group := Round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i])); // group (row)
       Design[group-1,row-1] := 'B' + IntToStr(col);
     end;
 
@@ -2444,17 +2378,17 @@ end;
 
 procedure TLatinSqrsFrm.Plan6;
 var
-  n : integer; // no. of subjects per cell
-  Acol, Bcol, SbjCol, Grpcol, DataCol: integer; // variable columns in grid
+  n: integer; // no. of subjects per cell
+  Acol, Bcol, SbjCol, GrpCol, DataCol: Integer;    // variable columns in grid
   FactorA: string;
   FactorB: string;
   SubjectFactor: string;
   GroupFactor: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, minA, minB, minGrp, maxA, maxB, maxGrp: integer;
+  i, j, k: integer;
   rangeA, rangeB, rangeGrp: integer;
-  value: integer;
+  mn, mx: Integer;
   cellcnts: IntDyneMat;
   ABmat: DblDyneMat;
   ABCmat: DblDyneCube;
@@ -2501,39 +2435,18 @@ begin
   end;
 
   // determine no. of levels in A, B and Group
-  minA := MaxInt;
-  minB := MaxInt;
-  minGrp := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  maxGrp := -MaxInt;
-
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[ACol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[BCol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    if value < minGrp then minGrp := value;
-
-    if value > maxGrp then maxGrp := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeGrp := maxGrp - minGrp + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(GrpCol, rangeGrp, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  p := rangeA;
 
   // check for squareness
   if  (rangeA <> rangeGrp) then
   begin
-    ErrorMsg('In a Latin square the range of values should be equal for A,B and C.');
+    ErrorMsg('In a Latin square the range of values should be equal for A, B and C.');
     exit;
   end;
-  p := rangeA;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(ABmat, p+1, p+1);
@@ -2594,11 +2507,12 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    subject := StrToInt(OS3MainFrm.DataGrid.Cells[Sbjcol,i]);
+    row := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i]));
+    subject := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Sbjcol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
+
     cellcnts[group-1,row-1] := cellcnts[group-1,row-1] + 1;
     ABCmat[group-1,row-1,subject-1] := ABCmat[group-1,row-1,subject-1] + data;
     Subjtotals[group-1,subject-1] := Subjtotals[group-1,subject-1] + data;
@@ -2791,9 +2705,9 @@ begin
 
     for i := 1 to NoCases do
     begin
-      row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]); // A (column) effect
-      col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]); // B (cell) effect
-      group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]); // group (row)
+      row := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i])); // A (column) effect
+      col := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i])); // B (cell) effect
+      group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i])); // group (row)
       Design[group-1,row-1] := 'B' + IntToStr(col);
     end;
 
@@ -2828,7 +2742,6 @@ begin
     // show table of means for ABmat
     lReport.Add('');
     lReport.Add('Cell means and totals');
-    lReport.Add('');
 
     cellstring := '----------';
     for i := 1 to p + 1 do cellstring := cellstring + '----------';
@@ -2971,9 +2884,9 @@ var
   GroupFactor: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, minA, minB, minC, minGrp, maxA, maxB, maxC, maxGrp: integer;
+  i, j, k: integer;
   rangeA, rangeB, rangeC, rangeGrp: integer;
-  value: integer;
+  mn, mx: Integer;
   cellcnts: IntDyneMat;
   ABmat: DblDyneMat;
   ABCmat: DblDyneCube;
@@ -3024,45 +2937,19 @@ begin
   end;
 
   // determine no. of levels in A, B, C and Group
-  minA := MaxInt;
-  minB := MaxInt;
-  minGrp := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  minC := MaxInt;
-  maxC := -MaxInt;
-  maxGrp := -MaxInt;
-
-  for i := 1 to NoCases do
-  begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    if value < minC then minC := value;
-    if value > maxC then maxC := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    if value < minGrp then minGrp := value;
-    if value > maxGrp then maxGrp := value;
-  end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeC := maxC - minC + 1;
-  rangeGrp := maxGrp - minGrp + 1;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(CCol, rangeC, mn, mx) then exit;
+  if not GetRange(GrpCol, rangeGrp, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  p := rangeA;
 
   // check for squareness
   if (rangeA <> rangeB) or (rangeA <> rangeC) or (rangeA <> rangeGrp) then
   begin
-    ErrorMsg('In a Latin square the range of values should be equal for A,B and C.');
+    ErrorMsg('In a Latin square the range of values should be equal for A, B and C.');
     exit;
   end;
-  p := rangeA;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(ABmat, p+1, p+1);
@@ -3129,11 +3016,11 @@ begin
   //  Read in the data
   for i := 1 to NoCases do
   begin
-    row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    subject := StrToInt(OS3MainFrm.DataGrid.Cells[Sbjcol,i]);
+    row := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i]));
+    col := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i]));
+    slice := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i]));
+    group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i]));
+    subject := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Sbjcol,i]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,i]);
     cellcnts[group-1,row-1] := cellcnts[group-1,row-1] + 1;
     ABCmat[group-1,row-1,slice-1] := ABCmat[group-1,row-1,slice-1] + data;
@@ -3198,7 +3085,7 @@ begin
   lReport := TStringList.Create;
   try
     // test block
-    lReport.Add('LATIN SQUARES REPEATED ANALYSIS PLAN 7 (superimposed squares)');
+    lReport.Add('LATIN SQUARES REPEATED ANALYSIS Plan 7 (superimposed squares)');
     lReport.Add('');
     lReport.Add('Sums for ANOVA Analysis');
     lReport.Add('');
@@ -3315,7 +3202,7 @@ begin
     probab := probf(fab, dfab, dferrwithin);
 
     // show ANOVA table results
-    lReport.Add('LATIN SQUARES REPEATED ANALYSIS PLAN 7 (superimposed squares)');
+    lReport.Add('LATIN SQUARES REPEATED ANALYSIS Plan 7 (superimposed squares)');
     lReport.Add('');
     lReport.Add('-----------------------------------------------------------');
     lReport.Add('Source         SS        DF        MS        F      Prob.>F');
@@ -3357,10 +3244,10 @@ begin
 
     for i := 1 to NoCases do
     begin
-      row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]); // A (column) effect
-      col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]); // B (cell) effect
-      slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]); // C (cell) effect
-      group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]); // group (row)
+      row := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i])); // A (column) effect
+      col := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i])); // B (cell) effect
+      slice := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i])); // C (cell) effect
+      group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i])); // group (row)
       Design[group-1,row-1] := 'BC' + IntToStr(col) + IntToStr(slice);
     end;
 
@@ -3571,9 +3458,10 @@ var
   GroupFactor: string;
   DataVar: string;
   cellstring: string;
-  i, j, k, m, minA, minB, minC, minGrp, maxA, maxB, maxC, maxGrp: integer;
+  i, j, k, m: integer;
+  mn, mx: Integer;
   n, subject, nosubjects, rangeA, rangeB, rangeC, rangeGrp: integer;
-  p, q, rows, value: integer;
+  p, q, rows: integer;
   ABC, AGC: DblDyneCube;
   AB, AC, BC, RC: DblDyneMat;
   A, B, C, Persons, Gm, R: DblDyneVec;
@@ -3595,7 +3483,7 @@ var
   fc, frows, fcxrow, fsubwgrps, fa, fb, fac, fbc, fabprime, fabcprime: double;
   probc, probrows, probcxrow, probsubwgrps, proba, probb: double;
   probac, probbc, probabprime, probabcprime: double;
-  data : double;
+  data, value: double;
   lReport: TStrings;
 
 begin
@@ -3627,40 +3515,26 @@ begin
   end;
 
   // determine no. of levels in A, B, C and Group
-  minA := MaxInt;
-  minB := MaxInt;
-  minGrp := MaxInt;
-  maxA := -MaxInt;
-  maxB := -MaxInt;
-  minC := MaxInt;
-  maxC := -MaxInt;
-  maxGrp := -MaxInt;
+  if not GetRange(ACol, rangeA, mn, mx) then exit;
+  if not GetRange(BCol, rangeB, mn, mx) then exit;
+  if not GetRange(CCol, rangeC, mn, mx) then exit;
+  if not GetRange(GrpCol, rangeGrp, mn, mx) then exit;
+  if not CheckDataCol(DataCol) then exit;
+  p := rangeA;
+  q := rangeC;
+
   nosubjects := 0;
   for i := 1 to NoCases do
   begin
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]);
-    if value < minA then minA := value;
-    if value > maxA then maxA := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]);
-    if value < minB then minB := value;
-    if value > maxB then maxB := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]);
-    if value < minC then minC := value;
-    if value > maxC then maxC := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[sbjcol,i]);
-    if value > nosubjects then nosubjects := value;
-
-    value := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]);
-    if value < minGrp then minGrp := value;
-    if value > maxGrp then maxGrp := value;
+    if TryStrToFloat(OS3MainFrm.DataGrid.Cells[SbjCol,i], value) then
+    begin
+      if value > nosubjects then nosubjects := round(value);
+    end else
+    begin
+      ErrorMsg(NO_VALID_NUMBER_ERROR, [i, SubjectFactor]);
+      exit;
+    end;
   end;
-  rangeA := maxA - minA + 1;
-  rangeB := maxB - minB + 1;
-  rangeC := maxC - minC + 1;
-  rangeGrp := maxGrp - minGrp + 1;
 
   // check for squareness
   if (rangeA <> rangeB) then
@@ -3668,8 +3542,6 @@ begin
     ErrorMsg('In a Latin square the range of values should be equal for A,B and C.');
     exit;
   end;
-  p := rangeA;
-  q := rangeC;
 
   // set up an array for cell counts and for cell sums and marginal sums
   SetLength(ABC, p+1, p+1, q+1);
@@ -3686,8 +3558,8 @@ begin
   SetLength(R, p+1);
   SetLength(cellcnts, p+1);
   SetLength(Design, rangegrp, p);
-  SetLength(RowLabels, 100);   // TODO: create RowLabels and ColLabels with proper size
-  SetLength(ColLabels, 100);
+  SetLength(RowLabels, MaxValue([n, p, rangegrp, nosubjects])+1);
+  SetLength(ColLabels, MaxValue([n, p, rangeGrp, nosubjects])+1);
 
   // initialize arrays
   for i := 0 to p-1 do
@@ -3760,11 +3632,11 @@ begin
   //  Read in the data
   for index := 1 to NoCases do
   begin
-    i := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,index]);
-    j := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,index]);
-    k := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,index]);
-    m := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,index]);
-    subject := StrToInt(OS3MainFrm.DataGrid.Cells[Sbjcol,index]);
+    i := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,index]));
+    j := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,index]));
+    k := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,index]));
+    m := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,index]));
+    subject := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Sbjcol,index]));
     data := StrToFloat(OS3MainFrm.DataGrid.Cells[DataCol,index]);
     cellcnts[j-1] := cellcnts[j-1] + 1;
     ABC[i-1,j-1,k-1] := ABC[i-1,j-1,k-1] + data;
@@ -3862,7 +3734,7 @@ begin
   // test block
   lReport := TStringList.Create;
   try
-    lReport.Add('LATIN SQUARES REPEATED ANALYSIS PLAN 9');
+    lReport.Add('LATIN SQUARES REPEATED ANALYSIS Plan 9');
     lReport.Add('');
     lReport.Add('Sums for ANOVA Analysis');
     lReport.Add('');
@@ -4031,7 +3903,7 @@ begin
     probabcprime := probf(fabcprime,dfabcprime,dferrwithin);
 
     // show ANOVA table results
-    lReport.Add('LATIN SQUARES REPEATED ANALYSUS PLAN 9');
+    lReport.Add('LATIN SQUARES REPEATED ANALYSIS Plan 9');
     lReport.Add('');
     lReport.Add('-----------------------------------------------------------');
     lReport.Add('Source         SS        DF        MS        F      Prob.>F');
@@ -4077,10 +3949,10 @@ begin
     lReport.Add('%10s', [GroupFactor]);
     for i := 1 to NoCases do
     begin
-      row := StrToInt(OS3MainFrm.DataGrid.Cells[Acol,i]); // A (column) effect
-      col := StrToInt(OS3MainFrm.DataGrid.Cells[Bcol,i]); // B (cell) effect
-      slice := StrToInt(OS3MainFrm.DataGrid.Cells[Ccol,i]); // C (cell) effect
-      group := StrToInt(OS3MainFrm.DataGrid.Cells[Grpcol,i]); // group (row)
+      row := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Acol,i])); // A (column) effect
+      col := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Bcol,i])); // B (cell) effect
+      slice := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Ccol,i])); // C (cell) effect
+      group := round(StrToFloat(OS3MainFrm.DataGrid.Cells[Grpcol,i])); // group (row)
       Design[group-1, row-1] := 'B' + IntToStr(col);
     end;
 

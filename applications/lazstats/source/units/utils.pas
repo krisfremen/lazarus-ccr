@@ -10,6 +10,7 @@ uses
 function AnySelected(AListbox: TListBox): Boolean;
 
 procedure ErrorMsg(const AMsg: String);
+procedure ErrorMsg(const AMsg: String; const AParams: array of const);
 
 procedure Exchange(var a, b: Double); overload;
 procedure Exchange(var a, b: Integer); overload;
@@ -33,6 +34,11 @@ end;
 procedure ErrorMsg(const AMsg: String);
 begin
   MessageDlg(AMsg, mtError, [mbOK], 0);
+end;
+
+procedure ErrorMsg(const AMsg: String; const AParams: array of const);
+begin
+  ErrorMsg(Format(AMsg, AParams));
 end;
 
 procedure Exchange(var a, b: Double);

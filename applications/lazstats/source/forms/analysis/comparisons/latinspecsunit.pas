@@ -74,8 +74,8 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
-    function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
     procedure UpdateBtnStates;
+    function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
   public
     { public declarations }
     procedure PrepareForPlan(APlan: integer);

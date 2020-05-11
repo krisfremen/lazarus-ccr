@@ -1435,12 +1435,14 @@
       </Item4>
       <Item5>
         <Name Value="EConvertError"/>
+        <Enabled Value="False"/>
       </Item5>
       <Item6>
         <Name Value="EPrinter"/>
       </Item6>
       <Item7>
         <Name Value="Exception"/>
+        <Enabled Value="False"/>
       </Item7>
     </Exceptions>
   </Debugging>
