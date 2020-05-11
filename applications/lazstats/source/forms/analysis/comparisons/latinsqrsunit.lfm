@@ -3,6 +3,8 @@ object LatinSqrsFrm: TLatinSqrsFrm
   Height = 248
   Top = 108
   Width = 523
+  HelpType = htKeyword
+  HelpKeyword = 'LatinandGreco-LatinSquares'
   ActiveControl = Plan
   AutoSize = True
   BorderStyle = bsDialog
