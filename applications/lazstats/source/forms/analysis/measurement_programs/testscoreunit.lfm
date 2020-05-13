@@ -462,79 +462,59 @@ object TestScoreFrm: TTestScoreFrm
     end
   end
   object ResetBtn: TButton
-    AnchorSideRight.Control = CancelBtn
+    AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 340
+    Left = 432
     Height = 25
     Top = 510
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
     TabOrder = 4
   end
-  object CancelBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 406
-    Height = 25
-    Top = 510
-    Width = 62
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 12
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = 'Cancel'
-    ModalResult = 2
-    OnClick = CancelBtnClick
-    TabOrder = 5
-  end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 480
+    Left = 494
     Height = 25
     Top = 510
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
     OnClick = ComputeBtnClick
-    TabOrder = 6
+    TabOrder = 5
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 568
+    Left = 578
     Height = 25
     Top = 510
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
-    BorderSpacing.Left = 12
+    BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
-    OnClick = ReturnBtnClick
-    TabOrder = 7
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 6
   end
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
@@ -625,6 +605,7 @@ object TestScoreFrm: TTestScoreFrm
       BorderSpacing.Right = 8
       ItemHeight = 0
       MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
     object InBtn: TBitBtn
@@ -720,6 +701,8 @@ object TestScoreFrm: TTestScoreFrm
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 16
       ItemHeight = 0
+      MultiSelect = True
+      OnSelectionChange = VarListSelectionChange
       TabOrder = 3
     end
     object LastNameEdit: TEdit
@@ -737,6 +720,7 @@ object TestScoreFrm: TTestScoreFrm
       Width = 172
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
+      ReadOnly = True
       TabOrder = 5
     end
     object FirstNameEdit: TEdit
@@ -752,6 +736,7 @@ object TestScoreFrm: TTestScoreFrm
       Width = 172
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
+      ReadOnly = True
       TabOrder = 7
     end
     object IDNoEdit: TEdit
@@ -767,6 +752,7 @@ object TestScoreFrm: TTestScoreFrm
       Width = 172
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
+      ReadOnly = True
       TabOrder = 9
     end
   end
@@ -774,7 +760,7 @@ object TestScoreFrm: TTestScoreFrm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 494

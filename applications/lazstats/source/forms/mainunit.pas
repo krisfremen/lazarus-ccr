@@ -719,7 +719,7 @@ procedure TOS3MainFrm.MenuItem93Click(Sender: TObject);
 begin
   if TestScoreFrm = nil then
     Application.CreateForm(TTestScoreFrm, TestScoreFrm);
-  TestScoreFrm.Show;
+  TestScoreFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Measurement Programs" > "Rasch Test Calibration"
