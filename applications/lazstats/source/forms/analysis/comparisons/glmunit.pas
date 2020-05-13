@@ -198,11 +198,11 @@ type
     procedure PartIEntry;
     procedure PartIIEntry;
     procedure ModelIAnalysis(AReport: TStrings);
-    procedure ModelIIAnalysis;
+    procedure ModelIIAnalysis(AReport: TStrings);
     procedure ModelIIIAnalysis(AReport: TStrings);
     function CntIntActVecs(linestr : string) : integer;
     procedure GenInterVecs(linestr : string);
-    procedure CanCor(NLeft : integer; NRight : integer; GridPlace : IntDyneVec);
+    procedure CanCor(NLeft : integer; NRight : integer; GridPlace : IntDyneVec; AReport: TStrings);
     procedure UpdateBtnStates;
 
   public
@@ -603,13 +603,13 @@ var
 begin
   if (NContDep = 0) and (NCatDep = 0) and (NReptDep = 0) then
   begin
-    MessageDlg('No variables selected.', mtError, [mbOK], 0);
+    ErrorMsg('No variables selected.');
     exit;
   end;
 
   if (NContDep > 0) and (NReptDep > 0) then
   begin
-    MessageDlg('One cannot have both continuous and repeated dependent variables!', mtError, [mbOK], 0);
+    ErrorMsg('One cannot have both continuous and repeated dependent variables!');
     exit;
   end;
 
@@ -619,6 +619,7 @@ begin
   GetIDs; // get var. no.s of dependent and independent variables
   novars := GetVarCount; // get total no. of variables to generate
   AllocateGridMem; // create data array for values and codes
+
   // Note, the Data Grid first subscript is row (subject) and second the var.
   if (NCatDep > 0) or (NContDep > 1) then
     model := 2
@@ -649,7 +650,7 @@ begin
     // Now, do the analyses
     case model of
       1: ModelIAnalysis(lReport);    // models with 1 dependent variable
-      2: ModelIIAnalysis;            // models with 2 or more dependent var.s
+      2: ModelIIAnalysis(lReport);   // models with 2 or more dependent var.s
       3: ModelIIIAnalysis(lReport);  // Repeated measures designs
     end;
 
@@ -1187,7 +1188,7 @@ begin
   DynCorrelations(nvars, ColSelected, DataGrid, rmatrix, means, vars, StdDevs, ncases, 3);
 
   AReport.Add('');
-  AReport.Add('=======================================================================================');
+  AReport.Add(DIVIDER);
   AReport.Add('');
 
   if DescChk.Checked then
@@ -1371,7 +1372,7 @@ begin
                 DataGrid[i-1,gencount + vect - 1] := CodePattern[group,vect];
             end;
             ReptIndepPos[vect-1] := gencount + vect - 1;
-            cellstring := format('p%d',[vect]);
+            cellstring := Format('p%d', [vect]);
             GenLabels[gencount + vect - 1] := cellstring;
         end;
         gencount := gencount + (max - min); // new no. of variables
@@ -1701,7 +1702,7 @@ begin
       StdErrEst := sqrt(VarEst)
     else
     begin
-      MessageDlg('Error in computing variance estimate.', mtError, [mbOK], 0);
+      ErrorMsg('Error in computing variance estimate.');
       StdErrEst := 0.0;
     end;
     if (R2 < 1.0) and (df2 > 0.0) then
@@ -1765,7 +1766,7 @@ begin
     AReport.Add('    and Prob > F        %10.3f', [FProbF]);
 
     AReport.Add('');
-    AReport.Add('=======================================================================================');
+    AReport.Add(DIVIDER);
     AReport.Add('');
 
     OldR2 := R2;
@@ -1851,7 +1852,7 @@ begin
               for k := 0 to NRndVecIndep[index]-1 do
               begin
                 ColSelected[NEntered] := RndIndepPos[index] + k;
-                Labels[NEntered] := Format('%s_%d',[RndIndepCode.Items[index], k+1]);
+                Labels[NEntered] := Format('%s_%d', [RndIndepCode.Items[index], k+1]);
                 NEntered := NEntered + 1;
               end;
             end;
@@ -1890,7 +1891,7 @@ begin
       StdErrEst := sqrt(VarEst)
     else
     begin
-      MessageDlg('Error in computing variance estimate.', mtError, [mbOk], 0);
+      ErrorMsg('Error in computing variance estimate.');
       StdErrEst := 0.0;
     end;
     if (R2 < 1.0) and (df2 > 0.0) then F := (R2 / df1) / ((1.0-R2)/ df2)
@@ -1945,7 +1946,7 @@ begin
     AReport.Add('    and Prob > F        %10.3f', [FProbF]);
 
     AReport.Add('');
-    AReport.Add('=======================================================================================');
+    AReport.Add(DIVIDER);
     AReport.Add('');
 
     // setup for next block analysis
@@ -1987,7 +1988,7 @@ begin
   end;
 
   AReport.Add('');
-  AReport.Add('=======================================================================================');
+  AReport.Add(DIVIDER);
   AReport.Add('');
 
   // Show Anova Results for fixed and/or covariates
@@ -2016,7 +2017,7 @@ begin
       AReport.Add('%20s %4.0f %10.3f %10.3f', ['Residual', df2, SSres, VarEst]);
       AReport.Add('%20s %4d %10.3f', ['Total', totalobs-1, SSt]);
       AReport.Add('');
-      AReport.Add('=======================================================================================');
+      AReport.Add(DIVIDER);
       AReport.Add('');
     end;
   end;
@@ -2046,7 +2047,7 @@ begin
       AReport.Add('%20s %4.0f %10.3f %10.3f', ['Residual', df2, SSres, VarEst]);
       AReport.Add('%20s %4d %10.3f', ['Total', totalobs-1, SSt]);
       AReport.Add('');
-      AReport.Add('=======================================================================================');
+      AReport.Add(DIVIDER);
       AReport.Add('');
     end;
   end;
@@ -2074,7 +2075,7 @@ begin
     AReport.Add('%20s %4.0f %10.3f %10.3f', ['Residual', df2, SSres, VarEst]);
     AReport.Add('%20s %4d %10.3f', ['Total', totalobs-1, SSt]);
     AReport.Add('');
-    AReport.Add('=======================================================================================');
+    AReport.Add(DIVIDER);
     AReport.Add('');
   end;
 
@@ -2093,13 +2094,12 @@ begin
   TypeISS := nil;
 end;
 
-procedure TGLMFrm.ModelIIAnalysis;
+procedure TGLMFrm.ModelIIAnalysis(AReport: TStrings);
 var
     block, i, j, NEntered, index, noblocks : integer;
     NLeft, NRight : integer;
     cellstring : string;
     labelstr : string;
-
 begin
     NEntered := 0;
     OldR2 := 0;
@@ -2252,7 +2252,7 @@ begin
         NRight := NEntered - NLeft;
 
         // call cancor routine for this block
-        cancor(NLeft,NRight,ColSelected);
+        CanCor(NLeft, NRight, ColSelected, AReport);
     end; // next block
 
     TypeIIProb := nil;
@@ -2348,7 +2348,7 @@ begin
           for j := 0 to NFixVecIndep[index]-1 do
           begin
             ColSelected[NEntered] := FixedIndepPos[index] + j;
-            labelstr := format('%s_%d',[FixedIndepCode.Items.Strings[index],j+1]);
+            labelstr := Format('%s_%d', [FixedIndepCode.Items[index], j+1]);
             Labels[NEntered] := labelstr;
             NEntered := NEntered + 1;
           end;
@@ -2368,7 +2368,7 @@ begin
           for j := 0 to NRndVecIndep[index]-1 do
           begin
             ColSelected[NEntered] := RndIndepPos[index] + j;
-            labelstr := format('%s_%d',[RndIndepCode.Items.Strings[index],j+1]);
+            labelstr := Format('%s_%d', [RndIndepCode.Items[index], j+1]);
             Labels[NEntered] := labelstr;
             NEntered := NEntered + 1;
           end;
@@ -2390,7 +2390,7 @@ begin
           for j := 0 to NInteractVecs[i]-1 do
           begin
             ColSelected[NEntered] := InteractPos[i] + j;
-            labelstr := format('%s%d_%d',['IA',i+1,j+1]);
+            labelstr := Format('%s%d_%d', ['IA',i+1,j+1]);
             Labels[NEntered] := labelstr;
             NEntered := NEntered + 1;
           end;
@@ -2408,7 +2408,7 @@ begin
         begin
           index := i; // index of covariate code
           ColSelected[NEntered] := CovIndepPos[index];
-          labelstr := format('%s',[CovariateCode.Items.Strings[index]]);
+          labelstr := Format('%s', [CovariateCode.Items[index]]);
           Labels[NEntered] := labelstr;
           NEntered := NEntered + 1;
           break;
@@ -2430,7 +2430,7 @@ begin
       StdErrEst := sqrt(VarEst)
     else
     begin
-      ShowMessage('ERROR! Error in computing variance estimate.');
+      ErrorMsg('Error in computing variance estimate.');
       StdErrEst := 0.0;
     end;
 
@@ -2479,7 +2479,7 @@ begin
     AReport.Add('SS for %-10s: %10.3f',[effstr,TypeISS[block]]);
     AReport.Add('SS TOTAL:          %10.3f',[SST]);
     AReport.Add('');
-    AReport.Add('=======================================================================================');
+    AReport.Add(DIVIDER);
     AReport.Add('');
   end;
 
@@ -2522,7 +2522,7 @@ begin
   end;
   AReport.Add('%20s %4.0f %10.3f %10.3f', ['Error Between', dferrbetween, sserrbetween, mserrbetween]);
   AReport.Add('');
-  AReport.Add('=======================================================================================');
+  AReport.Add(DIVIDER);
   AReport.Add('');
 
   // Now, get within subject effects
@@ -2635,7 +2635,7 @@ begin
     AReport.Add('SS for %-10s: %10.3f',[effstr, TypeIISS[block]]);
     AReport.Add('SS TOTAL:          %10.3f',[SST]);
     AReport.Add('');
-    AReport.Add('=======================================================================================');
+    AReport.Add(DIVIDER);
     AReport.Add('');
   end;
 
@@ -2670,7 +2670,7 @@ begin
   AReport.Add('%20s %4d %10.3f', ['TOTAL', totalobs-1, SST]);
 
   AReport.Add('');
-  AReport.Add('=======================================================================================');
+  AReport.Add(DIVIDER);
   AReport.Add('');
 
   // clean up the heap
@@ -2954,7 +2954,7 @@ begin
                                 datagrid[m,col] := datagrid[m,pos1] *
                                    datagrid[m,pos2] * datagrid[m,pos3] *
                                    datagrid[m,pos4] * datagrid[m,pos5];
-                            cellstring := format('%s*%s*%s*%s*%s',[GenLabels[pos1],
+                            cellstring := Format('%s*%s*%s*%s*%s',[GenLabels[pos1],
                                    GenLabels[pos2],GenLabels[pos3],GenLabels[pos4],
                                    GenLabels[pos5]]);
                             GenLabels[col] := cellstring;
@@ -2967,11 +2967,10 @@ begin
     end; // if listcnt = 3
 end;
 
-procedure TGLMFrm.CanCor(NLeft: integer; NRight: integer; GridPlace: IntDyneVec);
-label cleanup;
+procedure TGLMFrm.CanCor(NLeft: integer; NRight: integer; GridPlace: IntDyneVec;
+  AReport: TStrings);
 var
    i, j, k, count, a_size, b_size, no_factors, IER: integer;
-   outline: string;
    s, m, n, df1, df2, q, w, pcnt_extracted, trace : double;
    minroot, critical_prob, Lambda, Pillia : double;
    chisqr, HLTrace, chiprob, ftestprob, Roys, f, Hroot : double;
@@ -3067,16 +3066,16 @@ begin
           selected[NLeft+i] := GridPlace[NLeft+i];
      end;
 
-     OutputFrm.RichEdit.Clear;
-     OutputFrm.RichEdit.Lines.Add('CANONICAL CORRELATION ANALYSIS');
-     OutputFrm.RichEdit.Lines.Add('');
+     AReport.Add('CANONICAL CORRELATION ANALYSIS');
+     AReport.Add('');
+
      count := NoCases;
      // Get means, standard deviations, etc. for total matrix
-     IER := Dyncorrelations(novars,selected,datagrid,bigmat,mean,variance,stddev,totalobs,3);
-     if (IER = 1)then
+     IER := DynCorrelations(novars,selected,datagrid,bigmat,mean,variance,stddev,totalobs,3);
+     if (IER = 1) then
      begin
-          ShowMessage('ERROR! Zero variance found for a variable-terminating');
-          goto cleanup;
+          ErrorMsg('Zero variance found for a variable-terminating');
+          exit;
      end;
 
      //partition matrix into quadrants
@@ -3098,13 +3097,15 @@ begin
      if CorsChk.Checked then
      begin
           title := 'Left Correlation Matrix';
-          MAT_PRINT(raa,NLeft,NLeft,title,a_vars,a_vars,totalobs);
+          MatPrint(raa, NLeft, NLeft, title, a_vars, a_vars, totalobs, AReport);
           title := 'Right Correlation Matrix';
-          MAT_PRINT(rbb,NRight,NRight,title,b_vars,b_vars,totalobs);
+          MatPrint(rbb, NRight, NRight, title, b_vars, b_vars, totalobs, AReport);
           title := 'Left-Right Correlation Matrix';
-          MAT_PRINT(rab,NLeft,NRight,title,a_vars,b_vars,totalobs);
-          OutputFrm.ShowModal;
-          OutputFrm.RichEdit.Clear;
+          MatPrint(rab, NLeft, NRight, title, a_vars, b_vars, totalobs, AReport);
+
+          AReport.Add('');
+          AReport.Add(DIVIDER);
+          AReport.Add('');
      end;
 
      // get inverses of left and right hand matrices raa and rbb
@@ -3117,7 +3118,7 @@ begin
      if CorsChk.Checked then
      begin
           title := 'Inverse of Left Matrix';
-          MAT_PRINT(raainv,a_size,a_size,title,a_vars,a_vars,totalobs);
+          MatPrint(raainv, a_size, a_size, title, a_vars, a_vars, totalobs, AReport);
      end;
 
      for i := 0 to b_size-1 do
@@ -3129,7 +3130,7 @@ begin
      if CorsChk.Checked then
      begin
           title := 'Inverse of Right Matrix';
-          MAT_PRINT(rbbinv,b_size,b_size,title,b_vars,b_vars,totalobs);
+          MatPrint(rbbinv, b_size, b_size, title, b_vars, b_vars, totalobs, AReport);
      end;
 
      // get products of raainv x rab and the rbbinv x rba matrix
@@ -3140,9 +3141,9 @@ begin
          for j := 0 to b_size-1 do second_prod[i,j] := 0.0;
      MatAxB(second_prod,raainv,rab,a_size,a_size,a_size,b_size,errorcode);
      title := 'Right Inverse x Right-Left Matrix';
-     MAT_PRINT(first_prod,b_size,a_size,title,b_vars,a_vars,totalobs);
+     MatPrint(first_prod, b_size, a_size, title, b_vars, a_vars, totalobs, AReport);
      title := 'Left Inverse x Left-Right Matrix';
-     MAT_PRINT(second_prod,a_size,b_size,title,a_vars,b_vars,totalobs);
+     MatPrint(second_prod, a_size, b_size, title, a_vars, b_vars, totalobs, AReport);
 
      //get characteristic equations matrix (product of last two product matrices
      //The product should yeild rows and cols representing the smaller of the two sets
@@ -3150,9 +3151,11 @@ begin
          for j := 0 to b_size - 1 do char_equation[i,j] := 0.0;
      MatAxB(char_equation,first_prod,second_prod,b_size,a_size,a_size,b_size,errorcode);
      title := 'Canonical Function';
-     MAT_PRINT(char_equation,b_size,b_size,title,CanLabels,CanLabels,totalobs);
-     OutputFrm.ShowModal;
-     OutputFrm.RichEdit.Clear;
+     MatPrint(char_equation, b_size, b_size, title, CanLabels, CanLabels, totalobs, AReport);
+
+     AReport.Add('');
+     AReport.Add(DIVIDER);
+     AReport.Add('');
 
      //  now get roots and vectors of the characteristic equation using
      // NonSymRoots routine
@@ -3169,10 +3172,8 @@ begin
                 pcnt_trace, trace, pcnt_extracted);
 
 
-     outline := format('Trace of the matrix:=%10.4f',[trace]);
-     OutputFrm.RichEdit.Lines.Add(outline);
-     outline := format('Percent of trace extracted: %10.4f',[pcnt_extracted]);
-     OutputFrm.RichEdit.Lines.Add(outline);
+     AReport.Add('Trace of the matrix:        %10.4f', [trace]);
+     AReport.Add('Percent of trace extracted: %10.4f', [pcnt_extracted]);
 
      // Normalize smaller set weights and coumpute larger set weights
      for i := 0 to b_size - 1 do // transpose eigenvectors
@@ -3266,24 +3267,20 @@ begin
      end;
 
      // Print remaining results
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.RichEdit.Lines.Add('');
-     outline := '   Canonical R   Root  % Trace   Chi-Sqr    D.F.    Prob.';
-     OutputFrm.RichEdit.Lines.Add(outline);
+     AReport.Add('');
+     AReport.Add('');
+     AReport.Add('   Canonical R   Root  % Trace   Chi-Sqr    D.F.    Prob.');
      for i := 0 to b_size-1 do
-     begin
-         outline := format('%2d %10.6f %8.3f %7.3f %8.3f      %2d %8.3f',
-          [i+1, sqrt(roots[i]), roots[i], pcnt_trace[i], root_chi[i], root_df[i], chi_prob[i]]);
-         OutputFrm.RichEdit.Lines.Add(outline);
-     end;
+         AReport.Add('%2d %10.6f %8.3f %7.3f %8.3f      %2d %8.3f',
+            [i+1, sqrt(roots[i]), roots[i], pcnt_trace[i], root_chi[i], root_df[i], chi_prob[i]]);
+
      chisqr := -ln(Lambda) * (count - 1.0 - 0.5 * (a_size + b_size - 1.0));
      chiprob := 1.0 - chisquaredprob(chisqr,a_size * b_size);
-     OutputFrm.RichEdit.Lines.Add('');
-     OutputFrm.RichEdit.Lines.Add('Overall Tests of Significance:');
-     OutputFrm.RichEdit.Lines.Add('         Statistic      Approx. Stat.   Value   D.F.  Prob.>Value');
-     outline := format('Wilk''s Lambda           Chi-Squared %10.4f  %3d   %6.4f',
-                [chisqr,a_size * b_size,chiprob]);
-     OutputFrm.RichEdit.Lines.Add(outline);
+     AReport.Add('');
+     AReport.Add('Overall Tests of Significance:');
+     AReport.Add('         Statistic      Approx. Stat.   Value   D.F.  Prob.>Value');
+     AReport.Add('Wilk''s Lambda           Chi-Squared %10.4f  %3d   %6.4f', [chisqr,a_size * b_size,chiprob]);
+
      s := b_size;
      m := 0.5 * (a_size - b_size - 1);
      n := 0.5 * (count - b_size - a_size - 2);
@@ -3291,78 +3288,80 @@ begin
      df1 := s * (2.0 * m + s + 1.0);
      df2 := 2.0 * ( s * n  + 1.0);
      ftestprob := probf(f,df1,df2);
-     outline := format('Hotelling-Lawley Trace  F-Test      %10.4f %2.0f %2.0f  %6.4f',
-                [f, df1,df2, ftestprob]);
-     OutputFrm.RichEdit.Lines.Add(outline);
+     AReport.Add('Hotelling-Lawley Trace  F-Test      %10.4f %2.0f %2.0f  %6.4f', [f, df1, df2, ftestprob]);
+
      df2 := s * (2.0 * n + s + 1.0);
      f := (Pillia / (s - Pillia)) * ( (2.0 * n + s +1.0) / (2.0 * m + s + 1.0) );
      ftestprob := probf(f,df1,df2);
-     outline := format('Pillai Trace            F-Test      %10.4f %2.0f %2.0f  %6.4f',
-                [f, df1,df2, ftestprob]);
-     OutputFrm.RichEdit.Lines.Add(outline);
+     AReport.Add('Pillai Trace            F-Test      %10.4f %2.0f %2.0f  %6.4f', [f, df1, df2, ftestprob]);
+
      Roys := Roys * (count - 1 - a_size + b_size)/ a_size ;
      df1 := a_size;
      df2 := count - 1 - a_size + b_size;
      ftestprob := probf(Roys,df1,df2);
-     outline := format('Roys Largest Root       F-Test      %10.4f %2.0f %2.0f  %6.4f',
-                [Roys, df1, df2, ftestprob]);
-     OutputFrm.RichEdit.Lines.Add(outline);
-     OutputFrm.ShowModal;
-     OutputFrm.RichEdit.Clear;
+     AReport.Add('Roys Largest Root       F-Test      %10.4f %2.0f %2.0f  %6.4f', [Roys, df1, df2, ftestprob]);
+
+     AReport.Add('');
+     AReport.Add(DIVIDER);
+     AReport.Add('');
 
      if CorsChk.Checked then
      begin
           title := 'Eigenvectors';
-          MAT_PRINT(eigenvectors,b_size,b_size,title,CanLabels,CanLabels,totalobs);
-          OutputFrm.ShowModal();
-          OutputFrm.RichEdit.Clear;
+          MatPrint(eigenvectors, b_size, b_size, title, CanLabels, CanLabels, totalobs, AReport);
+          AReport.Add('');
+          AReport.Add(DIVIDER);
+          AReport.Add('');
      end;
 
      title := 'Standardized Right Side Weights';
-     MAT_PRINT(norm_a,a_size,b_size,title,RowLabels,CanLabels,totalobs);
+     MatPrint(norm_a, a_size, b_size, title, RowLabels, CanLabels, totalobs, AReport);
+
      title := 'Standardized Left Side Weights';
-     MAT_PRINT(norm_b,b_size,b_size,title,ColLabels,CanLabels,totalobs);
-     OutputFrm.ShowModal;
+     MatPrint(norm_b, b_size, b_size, title, ColLabels, CanLabels, totalobs, AReport);
+
+     AReport.Add('');
+     AReport.Add(DIVIDER);
+     AReport.Add('');
+
      title := 'Raw Right Side Weights';
-     MAT_PRINT(raw_a,a_size,b_size,title,RowLabels,CanLabels,totalobs);
+     MatPrint(raw_a, a_size, b_size, title, RowLabels, CanLabels, totalobs, AReport);
+
      title := 'Raw Left Side Weights';
-     MAT_PRINT(raw_b,b_size,b_size,title,ColLabels,CanLabels,totalobs);
-     OutputFrm.ShowModal;
+     MatPrint(raw_b, b_size, b_size, title, ColLabels, CanLabels, totalobs, AReport);
+
+     AReport.Add('');
+     AReport.Add(DIVIDER);
+     AReport.Add('');
+
      title := 'Right Side Correlations with Function';
-     MAT_PRINT(a_cors,a_size,b_size,title,RowLabels,CanLabels,totalobs);
+     MatPrint(a_cors, a_size, b_size, title, RowLabels, CanLabels, totalobs, AReport);
      title := 'Left Side Correlations with Function';
-     MAT_PRINT(b_cors,b_size,b_size,title,ColLabels,CanLabels,totalobs);
-     OutputFrm.ShowModal;
-     OutputFrm.RichEdit.Clear;
+     MatPrint(b_cors, b_size, b_size, title, ColLabels, CanLabels, totalobs, AReport);
+
+     AReport.Add('');
+     AReport.Add(DIVIDER);
+     AReport.Add('');
 
      if CorsChk.Checked then
      begin
-          outline := 'Redundancy Analysis for Right Side Variables';
-          OutputFrm.RichEdit.Lines.Add(outline);
-          OutputFrm.RichEdit.Lines.Add('');
-          outline := '            Variance Prop.    Redundancy';
-          OutputFrm.RichEdit.Lines.Add(outline);
+          AReport.Add('Redundancy Analysis for Right Side Variables');
+          AReport.Add('');
+          AReport.Add('            Variance Prop.    Redundancy');
           for i := 0 to b_size-1 do
-          begin
-               outline := format('%10d %10.5f     %10.5f',[i,pv_a[i],rd_a[i]]);
-               OutputFrm.RichEdit.Lines.Add(outline);
-          end;
-          OutputFrm.RichEdit.Lines.Add('');
-          outline := 'Redundancy Analysis for Left Side Variables';
-          OutputFrm.RichEdit.Lines.Add(outline);
-          outline := '            Variance Prop.    Redundancy';
-          OutputFrm.RichEdit.Lines.Add(outline);
+               AReport.Add('%10d %10.5f     %10.5f', [i, pv_a[i], rd_a[i]]);
+          AReport.Add('');
+          AReport.Add('Redundancy Analysis for Left Side Variables');
+          AReport.Add('            Variance Prop.    Redundancy');
           for i := 0 to b_size-1 do
-          begin
-               outline := format('%10d %10.5f     %10.5f',[i,pv_b[i],rd_b[i]]);
-               OutputFrm.RichEdit.Lines.Add(outline);
-               end;
-          OutputFrm.ShowModal;
-          OutputFrm.RichEdit.Clear;
+               AReport.Add('%10d %10.5f     %10.5f', [i, pv_b[i], rd_b[i]]);
+
+          AReport.Add('');
+          AReport.Add(DIVIDER);
+          AReport.Add('');
      end;
 
      //------------- Now, clean up memory mess ----------------------------
-cleanup:
     selected := nil;
     ColLabels := nil;
     RowLabels := nil;

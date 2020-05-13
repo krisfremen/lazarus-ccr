@@ -303,8 +303,6 @@ end;
 procedure TANCOVAfrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
   if GraphFrm = nil then
     Application.CreateForm(TGraphFrm, GraphFrm);
 end;
