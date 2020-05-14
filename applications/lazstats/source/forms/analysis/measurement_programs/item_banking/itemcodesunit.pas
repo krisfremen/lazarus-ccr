@@ -73,7 +73,6 @@ procedure TCodesForm.DisplayBtnClick(Sender: TObject);
 var
   currentno: integer;
   i: integer;
-  outline: string;
   lReport: TStrings;
 begin
   lReport := TStringList.Create;

@@ -84,32 +84,33 @@ type
     procedure ResetBtnClick(Sender: TObject);
     procedure ResponseScrollChange(Sender: TObject);
     procedure VarListSelectionChange(Sender: TObject; User: boolean);
+
   private
     { private declarations }
-   FAutoSized: Boolean;
-   NoItems : integer;
-   NoSelected : integer;
-   NCases : integer; // count of good records (not counting key if included)
-   ColNoSelected : IntDyneVec;
-   ColLabels, RowLabels : StrDyneVec;
-   Responses: array[1..5] of StrDyneVec;
-   RespWghts: array[1..5] of DblDyneVec;
-   Means, Variances, StdDevs : DblDyneVec;
-   CorMat : DblDyneMat; // correlations among items and total score
-   Data : DblDyneMat; //store item scores and total score
-   IDCol, FNameCol, LNameCol : integer;
-   MaxRespNo: integer;
-   procedure ItemScores;
-   procedure ScoreReport(AReport: TStrings);
-   procedure Alpha(AReport: TStrings);
-   procedure Cors(AReport: TStrings);
-   procedure SimMR(AReport: TStrings);
-   procedure Hoyt(AReport: TStrings);
-   procedure StepKR(AReport: TStrings);
-   procedure PlotScores;
-   procedure PlotMeans;
+    FAutoSized: Boolean;
+    NoItems : integer;
+    NoSelected : integer;
+    NCases : integer; // count of good records (not counting key if included)
+    ColNoSelected : IntDyneVec;
+    ColLabels, RowLabels : StrDyneVec;
+    Responses: array[1..5] of StrDyneVec;
+    RespWghts: array[1..5] of DblDyneVec;
+    Means, Variances, StdDevs : DblDyneVec;
+    CorMat : DblDyneMat; // correlations among items and total score
+    Data : DblDyneMat; //store item scores and total score
+    IDCol, FNameCol, LNameCol : integer;
+    MaxRespNo: integer;
+    procedure ItemScores;
+    procedure ScoreReport(AReport: TStrings);
+    procedure Alpha(AReport: TStrings);
+    procedure Cors(AReport: TStrings);
+    procedure SimMR(AReport: TStrings);
+    procedure Hoyt(AReport: TStrings);
+    procedure StepKR(AReport: TStrings);
+    procedure PlotScores;
+    procedure PlotMeans;
 
-   procedure UpdateBtnStates;
+    procedure UpdateBtnStates;
 
   public
     { public declarations }
@@ -194,21 +195,25 @@ end;
 
 procedure TTestScoreFrm.ResponseScrollChange(Sender: TObject);
 var
-   item, respno : integer;
+  item, respno: integer;
 begin
-     item := StrToInt(ItemNoEdit.Text);
-     if item <= 0 then exit;
-     respno := StrToInt(RespNoEdit.Text);
-     if respno > 5 then exit; // already at max
-     if respno > MaxRespNo then MaxRespNo := respno;
-     // save current response
-     Responses[respno][item-1] := ResponseEdit.Text;
-     RespWghts[respno][item-1] := StrToFloat(ScoreEdit.Text);
-     // display new position response
-     respno := ResponseScroll.Position;
-     RespNoEdit.Text := IntToStr(respno);
-     ResponseEdit.Text := Responses[respno][item-1];
-     ScoreEdit.Text := FloatToStr(RespWghts[respno][item-1]);
+  item := StrToInt(ItemNoEdit.Text);
+  if item <= 0 then exit;
+
+  respno := StrToInt(RespNoEdit.Text);
+  if respno > 5 then exit; // already at max
+
+  if respno > MaxRespNo then MaxRespNo := respno;
+
+  // save current response
+  Responses[respno][item-1] := ResponseEdit.Text;
+  RespWghts[respno][item-1] := StrToFloat(ScoreEdit.Text);
+
+  // display new position response
+  respno := ResponseScroll.Position;
+  RespNoEdit.Text := IntToStr(respno);
+  ResponseEdit.Text := Responses[respno][item-1];
+  ScoreEdit.Text := FloatToStr(RespWghts[respno][item-1]);
 end;
 
 procedure TTestScoreFrm.FormActivate(Sender: TObject);
@@ -278,26 +283,28 @@ end;
 
 procedure TTestScoreFrm.ItemScrollChange(Sender: TObject);
 var
-   item, respno : integer;
+  item, respno: integer;
 begin
-     item := StrToInt(ItemNoEdit.Text);
-     respno := StrToInt(RespNoEdit.Text);
-     if respno > MaxRespNo then MaxRespNo := respno;
-     // save last one
-     if (item <> ItemScroll.Position) then
-     begin
-          Responses[respno][item-1] := ResponseEdit.Text;
-          RespWghts[respno][item-1] := StrToFloat(ScoreEdit.Text);
-     end;
-     item := ItemScroll.Position;
-     ItemNoEdit.Text := IntToStr(item);
-     respno := 1;
-     ResponseScroll.Position := 1; // first response
-     RespNoEdit.Text := '1'; // default
-     ScoreEdit.Text := '1'; // default
-     // load previous one
-     ResponseEdit.Text := Responses[respno][item-1];
-     ScoreEdit.Text := FloatToStr(RespWghts[respno][item-1]);
+  item := StrToInt(ItemNoEdit.Text);
+  respno := StrToInt(RespNoEdit.Text);
+  if respno > MaxRespNo then MaxRespNo := respno;
+
+  // save last one
+  if (item <> ItemScroll.Position) then
+  begin
+    Responses[respno][item-1] := ResponseEdit.Text;
+    RespWghts[respno][item-1] := StrToFloat(ScoreEdit.Text);
+  end;
+  item := ItemScroll.Position;
+  ItemNoEdit.Text := IntToStr(item);
+  respno := 1;
+  ResponseScroll.Position := 1; // first response
+  RespNoEdit.Text := '1'; // default
+  ScoreEdit.Text := '1'; // default
+
+  // load previous one
+  ResponseEdit.Text := Responses[respno][item-1];
+  ScoreEdit.Text := FloatToStr(RespWghts[respno][item-1]);
 end;
 
 procedure TTestScoreFrm.LastInBtnClick(Sender: TObject);

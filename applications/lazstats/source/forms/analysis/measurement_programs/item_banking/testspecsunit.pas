@@ -14,6 +14,7 @@ type
 
   TTestSpecsForm = class(TForm)
     GroupBox1: TGroupBox;
+    Memo: TMemo;
     NoItemsEdit: TEdit;
     Label8: TLabel;
     SelectedEdit: TEdit;
@@ -42,14 +43,15 @@ type
     ReturnBtn: TButton;
     SaveDialog1: TSaveDialog;
     procedure FormShow(Sender: TObject);
+    procedure Panel1Paint(Sender: TObject);
     procedure ReturnBtnClick(Sender: TObject);
     procedure SelectItemBtnClick(Sender: TObject);
     procedure SelectChoiceBoxItemClick(Sender: TObject; Index: integer);
     procedure SkipBtnClick(Sender: TObject);
-    procedure ShowMCItem(Sender: TObject; index : integer);
-    procedure ShowTFItem(Sender: TObject; index : integer);
-    procedure ShowEssayItem(Sender: TObject; index : integer);
-    procedure ShowMatchItem(Sender: TObject; index : integer);
+    procedure ShowMCItem(AIndex: integer);
+    procedure ShowTFItem(AIndex: integer);
+    procedure ShowEssayItem(AIndex: integer);
+    procedure ShowMatchItem(AIndex: integer);
   private
     { private declarations }
   public
@@ -90,50 +92,70 @@ begin
   NoItemsEdit.Text := '0';
 end;
 
+procedure TTestSpecsForm.Panel1Paint(Sender: TObject);
+begin
+  //
+end;
+
 procedure TTestSpecsForm.SelectChoiceBoxItemClick(Sender: TObject; Index: integer);
 var
-  nomc, notf, nomatch, noessay, i : integer;
-  response : string;
+  //nomc, notf, nomatch, noessay, i : integer;
+  //response: string;
+  i, response: Integer;
 begin
-  nomc := StrToInt(MCNoEdit.Text);
-  notf := StrToInt(TFNoEdit.Text);
-  nomatch := StrToInt(MatchNoEdit.Text);
-  noessay := StrToInt(EssayNoEdit.Text);
+  //nomc := StrToInt(MCNoEdit.Text);
+  //notf := StrToInt(TFNoEdit.Text);
+  //nomatch := StrToInt(MatchNoEdit.Text);
+  //noessay := StrToInt(EssayNoEdit.Text);
   case Index of
     0 : begin // Select multiple choice items
           SelectedEdit.Text := 'MC';
-          for i := 1 to nomc do
+          for i := 1 to StrToInt(MCNoEdit.Text) do
           begin
-            ShowMCItem(self,i);
-            response := InputBox('Add item to test','Add?','Y');
-            if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
+            ShowMCItem(i);
+            response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
+            if response = mrYes then SelectItemBtnClick(self) else SkipBtnClick(self);
+            //response := InputBox('Add item to test','Add?','Y');
+            //if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
           end;
         end;
     1 : begin // Select true or false items
           SelectedEdit.Text := 'TF';
-          for i := 1 to notf do
+          for i := 1 to StrToInt(TFNoEdit.Text) do
           begin
-            ShowTFItem(self,i);
+            ShowTFItem(i);
+            response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
+            if response = mrYes then SelectItemBtnclick(self) else SkipBtnClick(self);
+            {
             response := InputBox('Add item to test','Add?','Y');
             if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
+            }
           end;
         end;
     2 : begin // Select Essay items
           SelectedEdit.Text := 'Essay';
-          for i := 1 to noessay do
+          for i := 1 to StrToInt(EssayNoEdit.Text) do
           begin
-            ShowEssayItem(self,i);
+            ShowEssayItem(i);
+            response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
+            if response = mrYes then selectItemBtnClick(self) else SkipBtnClick(self);
+            {
             response := InputBox('Add item to test','Add?','Y');
             if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
+            }
           end;
         end;
     3 : begin // Select matching items
           SelectedEdit.Text := 'Matching';
-          for i := 1 to nomc do
+          for i := 1 to StrToInt(MatchNoEdit.Text) do // was: "nomc", should probably be "nomatch"
           begin
-            ShowMatchItem(self,i);
+            ShowMatchItem(i);
+            response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
+            if response = mrYes then SelectItemBtnClick(self) else SkipBtnClick(self);
+            {
             response := InputBox('Add item to test','Add?','Y');
             if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
+            }
           end;
         end;
   end;
@@ -144,159 +166,90 @@ begin
   ShowMessage('Item skipped');
 end;
 
-// ToDoo: This must be moved to OnPaint handler.
-procedure TTestSpecsForm.ShowMCItem(Sender: TObject; index : integer);
+procedure TTestSpecsForm.ShowMCItem(AIndex : integer);
 var
-  outline: string;
   nochoices: integer;
-  space: integer;
 begin
-  Panel1.Canvas.Clear;
-  space := Panel1.Canvas.Height div 9;
-  ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[index].itemnumber);
-  MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[index].MajorCode);
-  MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[index].MinorCode);
+  ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[AIndex].itemnumber);
+  MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[AIndex].MajorCode);
+  MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[AIndex].MinorCode);
 
-  outline := ItemBankFrm.MCItemInfo[index].ItemStem;
-  Panel1.Canvas.TextOut(1, space, outline);
+  Memo.Lines.Clear;
+  Memo.Lines.Add(ItemBankFrm.MCItemInfo[AIndex].ItemStem);
 
-  nochoices := ItemBankFrm.MCItemInfo[index].NoChoices ;
+  nochoices := ItemBankFrm.MCItemInfo[AIndex].NoChoices ;
   if nochoices > 0 then
-  begin
-    outline := Format('Choice A %s', [ItemBankFrm.MCItemInfo[index].ChoiceOne]);
-    Panel1.Canvas.TextOut(1, space*2, outline);
-  end;
-
+    Memo.Lines.Add(Format('Choice A %s', [ItemBankFrm.MCItemInfo[AIndex].ChoiceOne]));
   if nochoices > 1 then
-  begin
-    outline := Format('Choice B %s', [ItemBankFrm.MCItemInfo[index].ChoiceTwo]);
-    Panel1.Canvas.TextOut(1, space*3, outline);
-  end;
-
+    Memo.Lines.Add(Format('Choice B %s', [ItemBankFrm.MCItemInfo[AIndex].ChoiceTwo]));
   if nochoices > 2 then
-  begin
-    outline := Format('Choice C %s', [ItemBankFrm.MCItemInfo[index].ChoiceThree]);
-    Panel1.Canvas.TextOut(1, space*4, outline);
-  end;
-
+    Memo.Lines.Add(Format('Choice C %s', [ItemBankFrm.MCItemInfo[AIndex].ChoiceThree]));
   if nochoices > 3 then
-  begin
-    outline := Format('Choice D %s', [ItemBankFrm.MCItemInfo[index].ChoiceFour]);
-    Panel1.Canvas.TextOut(1, space*5, outline);
-  end;
-
+    Memo.Lines.Add(Format('Choice D %s', [ItemBankFrm.MCItemInfo[AIndex].ChoiceFour]));
   if nochoices > 4 then
-  begin
-    outline := Format('Choice E %s', [ItemBankFrm.MCItemInfo[index].ChoiceFive]);
-    Panel1.Canvas.TextOut(1, space*6, outline);
-  end;
-
-  outline := Format('Correct Choice %s', [ItemBankFrm.MCItemInfo[index].CorrectChoice]);
-  Panel1.Canvas.TextOut(1, space*7, outline);
-
-  outline := Format('Graphic Image %s', [ItemBankFrm.MCItemInfo[index].PicName]);
-  Panel1.Canvas.TextOut(1, space*8, outline);
+    Memo.Lines.Add(Format('Choice E %s', [ItemBankFrm.MCItemInfo[AIndex].ChoiceFive]));
+  Memo.Lines.Add(Format('Correct Choice %s', [ItemBankFrm.MCItemInfo[AIndex].CorrectChoice]));
+  Memo.Lines.Add(Format('Graphic Image %s', [ItemBankFrm.MCItemInfo[AIndex].PicName]));
 end;
 
-// ToDoo: This must be moved to OnPaint handler.
-procedure TTestSpecsForm.ShowTFItem(Sender: TObject; index : integer);
-var
-  outline: string;
-  space: integer;
+procedure TTestSpecsForm.ShowTFItem(AIndex : integer);
 begin
-  Panel1.Canvas.Clear;
-  space := Panel1.Canvas.Height div 9;
-  ItemNoEdit.Text := IntToStr(ItemBankFrm.TFItemInfo[index].itemnumber);
-  MajorCodeEdit.Text := IntToStr(ItemBankFrm.TFItemInfo[index].MajorCode);
-  MinorCodeEdit.Text := IntToStr(ItemBankFrm.TFItemInfo[index].MinorCode);
-  Panel1.Canvas.TextOut(1,space,ItemBankFrm.TFItemInfo[index].ItemStem);
-  Panel1.Canvas.TextOut(1,space*2,ItemBankFrm.TFItemInfo[index].CorrectChoice);
-  Panel1.Canvas.TextOut(1,space*3,ItemBankFrm.TFItemInfo[index].PicName);
+  ItemNoEdit.Text := IntToStr(ItemBankFrm.TFItemInfo[AIndex].itemnumber);
+  MajorCodeEdit.Text := IntToStr(ItemBankFrm.TFItemInfo[AIndex].MajorCode);
+  MinorCodeEdit.Text := IntToStr(ItemBankFrm.TFItemInfo[AIndex].MinorCode);
+
+  Memo.Lines.Clear;
+  Memo.Lines.Add(ItemBankFrm.TFItemInfo[AIndex].ItemStem);
+  Memo.Lines.Add(ItemBankFrm.TFItemInfo[AIndex].CorrectChoice);
+  Memo.Lines.Add(ItemBankFrm.TFItemInfo[AIndex].PicName);
 end;
 
-// ToDo: This must be moved to OnPaint handler
-procedure TTestSpecsForm.ShowEssayItem(Sender: TObject; index : integer);
-var
-  outline: string;
-  space: integer;
+procedure TTestSpecsForm.ShowEssayItem(AIndex : integer);
 begin
-  Panel1.Canvas.Clear;
-  space := Panel1.Canvas.Height div 9;
-  ItemNoEdit.Text := IntToStr(ItemBankFrm.EssayInfo[index].itemnumber);
-  MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[index].MajorCode);
-  MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[index].MinorCode);
-  Panel1.Canvas.TextOut(1, space, ItemBankFrm.EssayInfo[index].ItemStem);
-  Panel1.Canvas.TextOut(1, space*2, ItemBankFrm.EssayInfo[index].Answer);
-  Panel1.Canvas.TextOut(1, space*3, ItemBankFrm.EssayInfo[index].PicName);
+  ItemNoEdit.Text := IntToStr(ItemBankFrm.EssayInfo[AIndex].itemnumber);
+  MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[AIndex].MajorCode);
+  MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[AIndex].MinorCode);
+
+  Memo.Lines.Clear;
+  Memo.Lines.Add(ItemBankFrm.EssayInfo[Aindex].ItemStem);
+  Memo.Lines.Add(ItemBankFrm.EssayInfo[AIndex].Answer);
+  Memo.Lines.Add(ItemBankFrm.EssayInfo[AIndex].PicName);
 end;
 
-// ToDo: This must be moved to OnPaint handler
-procedure TTestSpecsForm.ShowMatchItem(Sender: TObject; index : integer);
+procedure TTestSpecsForm.ShowMatchItem(AIndex : integer);
 var
-  outline: string;
-  space: integer;
   noleft, noright: integer;
 begin
-  Panel1.Canvas.Clear;
-  noleft := ItemBankFrm.MatchInfo[index].NLeft;
-  noright := ItemBankFrm.MatchInfo[index].NRight;
-  space := Panel1.Canvas.Height div 13;
-  ItemNoEdit.Text := IntToStr(ItemBankFrm.MatchInfo[index].itemnumber);
-  MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[index].MajorCode);
-  MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[index].MinorCode);
+  noleft := ItemBankFrm.MatchInfo[AIndex].NLeft;
+  noright := ItemBankFrm.MatchInfo[AIndex].NRight;
+  ItemNoEdit.Text := IntToStr(ItemBankFrm.MatchInfo[AIndex].itemnumber);
+  MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[AIndex].MajorCode);
+  MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[AIndex].MinorCode);
+
   // do left and right stems
+  Memo.Lines.Clear;
   if noleft > 0 then
-  begin
-    outline := Format('Left Item 1 %s', [ItemBankFrm.MatchInfo[index].Left1]);
-    Panel1.Canvas.TextOut(1, space, outline);
-  end;
+    Memo.Lines.Add(Format('Left Item 1 %s', [ItemBankFrm.MatchInfo[AIndex].Left1]));
   if noright > 0 then
-  begin
-    outline := Format('   Right Item 1 %s', [ItemBankFrm.MatchInfo[index].Right1]);
-    Panel1.Canvas.TextOut(1, space*2, outline);
-  end;
+    Memo.Lines.Add(Format('   Right Item 1 %s', [ItemBankFrm.MatchInfo[AIndex].Right1]));
   if noleft > 1 then
-  begin
-    outline := Format('Left Item 2 %s', [ItemBankFrm.MatchInfo[index].Left2]);
-    Panel1.Canvas.TextOut(1, space*3, outline);
-  end;
+    Memo.Lines.Add(Format('Left Item 2 %s', [ItemBankFrm.MatchInfo[AIndex].Left2]));
   if noright > 1 then
-  begin
-    outline := Format('   Right Item 2 %s', [ItemBankFrm.MatchInfo[index].Right2]);
-    Panel1.Canvas.TextOut(1, space*4, outline);
-  end;
+    Memo.Lines.Add(Format('   Right Item 2 %s', [ItemBankFrm.MatchInfo[AIndex].Right2]));
   if noleft > 2 then
-  begin
-    outline := Format('Left Item 3 %s', [ItemBankFrm.MatchInfo[index].Left3]);
-    Panel1.Canvas.TextOut(1, space*5, outline);
-  end;
+    Memo.Lines.Add(Format('Left Item 3 %s', [ItemBankFrm.MatchInfo[AIndex].Left3]));
   if noright > 2 then
-  begin
-    outline := Format('   Right Item 3 %s', [ItemBankFrm.MatchInfo[index].Right3]);
-    Panel1.Canvas.TextOut(1, space*6, outline);
-  end;
+    Memo.Lines.Add(Format('   Right Item 3 %s', [ItemBankFrm.MatchInfo[AIndex].Right3]));
   if noleft > 3 then
-  begin
-    outline := Format('Left Item 4 %s', [ItemBankFrm.MatchInfo[index].Left4]);
-    Panel1.Canvas.TextOut(1, space*7, outline);
-  end;
+    Memo.Lines.Add(Format('Left Item 4 %s', [ItemBankFrm.MatchInfo[AIndex].Left4]));
   if noright > 3 then
-  begin
-    outline := Format('   Right Item 4 %s', [ItemBankFrm.MatchInfo[index].Right4]);
-    Panel1.Canvas.TextOut(1, space*8, outline);
-  end;
+    Memo.Lines.Add(Format('   Right Item 4 %s', [ItemBankFrm.MatchInfo[AIndex].Right4]));
   if noleft > 4 then
-  begin
-    outline := Format('Left Item 5 %s', [ItemBankFrm.MatchInfo[index].Left5]);
-    Panel1.Canvas.TextOut(1, space*9, outline);
-  end;
+    Memo.Lines.Add(Format('Left Item 5 %s', [ItemBankFrm.MatchInfo[AIndex].Left5]));
   if noright > 4 then
-  begin
-    outline := Format('   Right Item 5 %s', [ItemBankFrm.MatchInfo[index].Right5]);
-    Panel1.Canvas.TextOut(1, space*10, outline);
-  end;
-  Panel1.Canvas.TextOut(1, space*11, ItemBankFrm.MatchInfo[index].CorrectChoice);
-  Panel1.Canvas.TextOut(1, space*12, ItemBankFrm.MatchInfo[index].PicName);
+    Memo.Lines.Add(Format('   Right Item 5 %s', [ItemBankFrm.MatchInfo[AIndex].Right5]));
+  Memo.Lines.Add(ItemBankFrm.MatchInfo[AIndex].CorrectChoice);
+  Memo.Lines.Add(ItemBankFrm.MatchInfo[AIndex].PicName);
 end;
 
 initialization

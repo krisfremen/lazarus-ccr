@@ -5,8 +5,8 @@ unit MatrixLib;
 interface
 
 uses
-  Classes, SysUtils, Globals, DictionaryUnit, OutputUnit, Dialogs,
-  FunctionsLib, DataProcs, MainUnit;
+  Classes, SysUtils, Dialogs,
+  Globals, DictionaryUnit, FunctionsLib, DataProcs, MainUnit;
 
 procedure GridDotProd(col1, col2: integer; out Product: double; var Ngood: integer);
 
@@ -16,23 +16,13 @@ procedure GridXProd(NoSelected : integer;
                     Augment : boolean;
                     VAR Ngood : integer);
 
-procedure GridCovar(NoSelected : integer;
-                    {VAR} Selected : IntDyneVec;
-                    {VAR} Covar : DblDyneMat;
-                    {VAR} Means : DblDyneVec;
-                    {VAR} Variances : DblDyneVec;
-                    {VAR} StdDevs : DblDyneVec;
-                    VAR errorcode : boolean;
-                    VAR Ngood : integer);
+procedure GridCovar(NoSelected: integer; const Selected: IntDyneVec;
+  const Covar: DblDyneMat; const Means, Variances, StdDevs: DblDyneVec;
+  var ErrorCode: boolean; var NGood: Integer);
 
-procedure Correlations(NoSelected : integer;
-                       {VAR} Selected : IntDyneVec;
-                       {VAR} Correlations : DblDyneMat;
-                       {VAR} Means : DblDyneVec;
-                       {VAR} Variances : DblDyneVec;
-                       {VAR} StdDevs : DblDyneVec;
-                       VAR errorcode : boolean;
-                       VAR Ngood : integer);
+procedure Correlations(NoSelected: integer; const Selected: IntDyneVec;
+  const Correlations: DblDyneMat; const Means, Variances, StdDevs: DblDyneVec;
+  var ErrorCode: boolean; var NGood: integer);
 
 procedure MatAxB(const A, B, C: DblDyneMat; BRows, BCols, CRows, CCols: Integer;
   out ErrorCode: boolean);
@@ -56,25 +46,6 @@ procedure EffectCode(GridCol, min, max : integer;
                     VAR startcol : integer;
                     VAR endcol : integer;
                     VAR novectors : integer);
-
-procedure MReg(NoIndep : integer;
-               {VAR} IndepCols : IntDyneVec;
-               DepCol : integer;
-               {VAR} RowLabels : StrDyneVec;
-               {VAR} Means : DblDyneVec;
-               {VAR} Variances : DblDyneVec;
-               {VAR} StdDevs : DblDyneVec;
-               {VAR} BWeights : DblDyneVec;
-               {VAR} BetaWeights : DblDyneVec;
-               {VAR} BStdErrs : DblDyneVec;
-               {VAR} Bttests : DblDyneVec;
-               {VAR} tProbs : DblDyneVec;
-               VAR R2 : double;
-               VAR stderrest : double;
-               VAR NCases : integer;
-               VAR errorcode : boolean;
-               PrintAll : boolean);
-
 procedure MReg(NoIndep: integer; const IndepCols: IntDyneVec; DepCol: integer;
   const RowLabels: StrDyneVec;
   const Means, Variances, StdDevs, BWeights, BetaWeights, BStdErrs, Bttests, tProbs: DblDyneVec;
@@ -131,18 +102,9 @@ procedure MReg2(NCases : integer;
 procedure MatSub(const a, b, c: DblDyneMat;
   brows, bcols, crows, ccols: integer; out errorcode: boolean);
 
-procedure IntArrayPrint(mat : IntDyneMat;
-                        rows, cols : integer;
-                        ytitle : string;
-                        RowLabels, ColLabels : StrDyneVec;
-                        Title : string;
-                        AReport: TStrings);
-
-procedure IntArrayPrint(mat : IntDyneMat;
-                        rows, cols : integer;
-                        ytitle : string;
-                        RowLabels, ColLabels : StrDyneVec;
-                        Title : string);
+procedure IntArrayPrint(const mat: IntDyneMat; rows, cols: integer;
+  const YTitle: string; const RowLabels, ColLabels: StrDyneVec;
+  const Title: string; AReport: TStrings);
 
 procedure eigens(VAR a: DblDyneMat; Var d : DblDyneVec; n : integer);
 
@@ -160,24 +122,18 @@ function SEVS(nv,nf : integer;
 
 function SCPF(VAR x,y : DblDyneMat; kx,ky,n,nd : integer) : double;
 
-procedure Mat_Print(var xmat: DblDyneMat; Rows,Cols: Integer; var Title: String;
-  var RowLabels, ColLabels: StrDyneVec; NCases: Integer);
 procedure MatPrint(const xmat: DblDyneMat; Rows,Cols: Integer; const Title: String;
   const RowLabels, ColLabels: StrDyneVec; NCases: Integer; AReport: TStrings);
 
-procedure DynVectorPrint(var AVector: DblDyneVec; NoVars: integer;
-  Title: string; var Labels: StrDyneVec; NCases: integer); overload;
 procedure DynVectorPrint(const AVector: DblDyneVec; NoVars: integer;
-  Title: string; const Labels: StrDyneVec; NCases: integer; AReport: TStrings); overload;
+  Title: string; const Labels: StrDyneVec; NCases: integer; AReport: TStrings);
 
-procedure scatplot(const x, y: DblDyneVec; NoCases: integer;
+procedure ScatPlot(const x, y: DblDyneVec; NoCases: integer;
   const TitleStr, x_axis, y_axis: string; x_min, x_max, y_min, y_max: double;
   const VarLabels: StrDyneVec; AReport: TStrings);
 
 procedure DynIntMatPrint(Mat: IntDyneMat; Rows, Cols: integer; YTitle: string;
-  RowLabels, ColLabels: StrDyneVec; Title: string); overload;
-procedure DynIntMatPrint(Mat: IntDyneMat; Rows, Cols: integer; YTitle: string;
-  RowLabels, ColLabels: StrDyneVec; Title: string; AReport: TStrings); overload;
+  RowLabels, ColLabels: StrDyneVec; Title: string; AReport: TStrings);
 
 procedure SymMatRoots(A : DblDyneMat; M : integer; VAR E : DblDyneVec; VAR V : DblDyneMat);
 procedure matinv(a, vtimesw, v, w: DblDyneMat; n: integer);
@@ -292,35 +248,30 @@ begin
 end;
 //-------------------------------------------------------------------
 
-procedure GridCovar(NoSelected : integer;
-                    {VAR} Selected : IntDyneVec;
-                    {VAR} Covar : DblDyneMat;
-                    {VAR} Means : DblDyneVec;
-                    {VAR} Variances : DblDyneVec;
-                    {VAR} StdDevs : DblDyneVec;
-                    VAR errorcode : boolean;
-                    VAR Ngood : integer);
-// Obtains the variance/covariance matrix of variables in the grid
-// NoSelected is the number of variables selected from the grid
-// Selected is a vector of integers for the grid columns of selected variables
-// Covar is the variance/covariance matrix returned
-// Means, StdDevs, Variances are double vectors obtained from the augmented matrix
-// errorcode is true if an error occurs due to 0 variance
-// Ngood is the number of records in the cross-product of vectors
-// This procedure calls the GridXProd procedure with augmentation true
-// in order to obtain the means, variances and standard deviations
+{ Obtains the variance/covariance matrix of variables in the grid
+  NoSelected is the number of variables selected from the grid
+  Selected is a vector of integers for the grid columns of selected variables
+  Covar is the variance/covariance matrix returned
+  Means, StdDevs, Variances are double vectors obtained from the augmented matrix
+  errorcode is true if an error occurs due to 0 variance
+  Ngood is the number of records in the cross-product of vectors
+  This procedure calls the GridXProd procedure with augmentation true
+  in order to obtain the means, variances and standard deviations }
+procedure GridCovar(NoSelected: integer; const Selected: IntDyneVec;
+  const Covar: DblDyneMat; const Means, Variances, StdDevs: DblDyneVec;
+  var errorcode: boolean; var NGood: integer);
 var
   i, j: integer;
   N: double;
   Augment: boolean;
 begin
   // initialize
-  errorcode := false;
-  for i := 1 to NoSelected do
+  ErrorCode := false;
+  for i := 0 to NoSelected-1 do
   begin
-    Means[i-1] := 0.0;
-    Variances[i-1] := 0.0;
-    StdDevs[i-1] := 0.0;
+    Means[i] := 0.0;
+    Variances[i] := 0.0;
+    StdDevs[i] := 0.0;
   end;
   Augment := true; // augment to get intercept, means, variances, std.devs.
 
@@ -333,68 +284,61 @@ begin
   //  Sums of squares are in diagonal, cross-products in off-diagonal cells
   //  Sums of X's are in the augmented column
   //  Get means and standard deviations first
-  for i := 1 to NoSelected do
+  for i := 0 to NoSelected-1 do
   begin
-    Means[i-1] := Covar[i-1,NoSelected] / N;
-    Variances[i-1] := Covar[i-1,i-1] - (Sqr(Covar[i-1,NoSelected]) / N);
-    Variances[i-1] := Variances[i-1] / (N - 1.0);
-    if Variances[i-1] > 0.0 then
-      StdDevs[i-1] := sqrt(Variances[i-1])
+    Means[i] := Covar[i, NoSelected] / N;
+    Variances[i] := Covar[i, i] - (Sqr(Covar[i, NoSelected]) / N);
+    Variances[i] := Variances[i] / (N - 1.0);
+    if Variances[i] > 0.0 then
+      StdDevs[i] := sqrt(Variances[i])
     else
     begin
-      StdDevs[i-1] := 0.0;
-      errorcode := true;
+      StdDevs[i] := 0.0;
+      ErrorCode := true;
     end;
   end;
 
   // Now get covariances
-  for i := 1 to NoSelected do
+  for i := 0 to NoSelected-1 do
   begin
-    for j := 1 to NoSelected do
+    for j := 0 to NoSelected-1 do
     begin
-      Covar[i-1,j-1] := Covar[i-1,j-1] - ((Covar[i-1,NoSelected] * Covar[j-1,NoSelected]) / N);
-      Covar[i-1,j-1] := Covar[i-1,j-1] / (N - 1);
+      Covar[i, j] := Covar[i, j] - ((Covar[i, NoSelected] * Covar[j, NoSelected]) / N);
+      Covar[i, j] := Covar[i, j] / (N - 1);
     end;
   end;
 end;
 //-------------------------------------------------------------------
 
-procedure Correlations(NoSelected : integer;
-                       {VAR} Selected : IntDyneVec;
-                       {VAR} Correlations : DblDyneMat;
-                       {VAR} Means : DblDyneVec;
-                       {VAR} Variances : DblDyneVec;
-                       {VAR} StdDevs : DblDyneVec;
-                       VAR errorcode : boolean;
-                       VAR Ngood : integer);
-// Obtains the correlation matrix among grid variables
-// NoSelected is the no. of grid variables selected for analysis
-// Selected is a vector of integers of the grid variable columns selected
-// Correlations are returned in the Correlations matrix
-// Means, Variances, StdDevs are returned as double vectors
-// errorcode is true if a 0 variance is detected
-// Ngood is the number cases that do not contain missing values or are filtered
-// This procedure calls the GridCovar procedure
+{ Obtains the correlation matrix among grid variables
+  NoSelected is the no. of grid variables selected for analysis
+  Selected is a vector of integers of the grid variable columns selected
+  Correlations are returned in the Correlations matrix
+  Means, Variances, StdDevs are returned as double vectors
+  errorcode is true if a 0 variance is detected
+  Ngood is the number cases that do not contain missing values or are filtered
+  This procedure calls the GridCovar procedure }
+procedure Correlations(NoSelected: integer; const Selected: IntDyneVec;
+  const Correlations: DblDyneMat; const Means, Variances, StdDevs: DblDyneVec;
+  var ErrorCode: boolean; var NGood: integer);
 var
-   i, j : integer;
-
+  i, j: integer;
 begin
-     // get covariance matrix, means and standard deviations
-     GridCovar(NoSelected,Selected,Correlations,Means,Variances,StdDevs,errorcode, Ngood);
-     for i := 1 to NoSelected do
-     begin
-          for j := 1 to NoSelected do
-          begin
-               if (StdDevs[i-1] > 0.0) and (StdDevs[j-1] > 0.0) then
-                   Correlations[i-1,j-1] := Correlations[i-1,j-1] /
-                   (StdDevs[i-1] * StdDevs[j-1])
-               else
-               begin
-                    Correlations[i-1,j-1] := 0.0;
-                    errorcode := true;
-               end;
-          end;
-     end;
+  // get covariance matrix, means and standard deviations
+  GridCovar(NoSelected, Selected, Correlations, Means, Variances, StdDevs, ErrorCode, Ngood);
+  for i := 0 to NoSelected-1 do
+  begin
+    for j := 0 to NoSelected-1 do
+    begin
+      if (StdDevs[i] > 0.0) and (StdDevs[j] > 0.0) then
+        Correlations[i, j] := Correlations[i, j] / (StdDevs[i] * StdDevs[j])
+      else
+      begin
+        Correlations[i, j] := 0.0;
+        ErrorCode := true;
+      end;
+    end;
+  end;
 end;
 //-------------------------------------------------------------------
 
@@ -595,21 +539,21 @@ BEGIN
 end;
 //-------------------------------------------------------------------
 
-procedure DETERM(const a: DblDyneMat; Rows, Cols: integer; out determ: double;
-  out errorcode: boolean);
+procedure Determ(const a: DblDyneMat; Rows, Cols: integer; out determ: double;
+  out ErrorCode: boolean);
 var
   indx: IntDyneVec;
   i: integer;
 begin
   SetLength(indx,rows);
-  errorcode := false;
+  ErrorCode := false;
   if (rows <> cols) then
-    errorcode := true
+    ErrorCode := true
   else
   begin
     LUDCMP(a, rows, indx, determ);
-    for i := 1 to rows do
-      determ := determ * a[i-1,i-1];
+    for i := 0 to rows-1 do
+      determ := determ * a[i, i];
   end;
 end; { of determ }
 //-------------------------------------------------------------------
@@ -670,30 +614,6 @@ begin
 
    OS3MainFrm.NoVarsEdit.Text := IntToStr(NoVariables);
    coef := nil;
-end;
-//-------------------------------------------------------------------
-
-procedure MReg(NoIndep : integer;
-               {VAR} IndepCols : IntDyneVec;
-               DepCol : integer;
-               {VAR} RowLabels : StrDyneVec;
-               {VAR} Means : DblDyneVec;
-               {VAR} Variances : DblDyneVec;
-               {VAR} StdDevs : DblDyneVec;
-               {VAR} BWeights : DblDyneVec;
-               {VAR} BetaWeights : DblDyneVec;
-               {VAR} BStdErrs : DblDyneVec;
-               {VAR} Bttests : DblDyneVec;
-               {VAR} tProbs : DblDyneVec;
-               VAR R2 : double;
-               VAR stderrest : double;
-               VAR NCases : integer;
-               VAR errorcode : boolean;
-               PrintAll : boolean);
-begin
-  MReg(NoIndep, IndepCols, Depcol, RowLabels,means, Variances, StdDevs,
-    BWeights, BetaWeights, BStdErrs, BtTests, tProbs, R2, StdErrEst, NCases,
-    ErrorCode, PrintAll, OutputFrm.RichEdit.Lines);
 end;
 
 procedure MReg(NoIndep: integer; const IndepCols: IntDyneVec; DepCol: integer;
@@ -788,7 +708,6 @@ begin
   AReport.Add('Variance Y: %10.3f', [VarY]);
   AReport.Add('SSY:        %10.3f', [SSY]);
   AReport.Add('SDY:        %10.3f', [SDY]);
-  // OutputFrm.ShowModal ;
 
   // augment the matrix
   for i := 1 to NCases do
@@ -829,9 +748,6 @@ begin
     DynVectorPrint(Means, NoIndep+1, 'MEANS', RowLabels, NCases, AReport);
     DynVectorPrint(Variances, NoIndep+1,'VARIANCES',RowLabels, NCases, AReport);
     DynVectorPrint(StdDevs, NoIndep+1, 'STD. DEV.S', RowLabels, NCases, AReport);
-
-    //OutputFrm.ShowModal;
-    //OutPutFrm.RichEdit.Clear;
   end;
 
   // get product of the augmented X transpose matrix times the Y vector
@@ -1302,7 +1218,6 @@ var
    outcount       : integer;
    varsout        : IntDyneVec;
 begin
-  Assert(OutputFrm <> nil);
   Assert(AReport <> nil);
 
   SetLength(IndRowLabels,NoVars);
@@ -1484,24 +1399,10 @@ begin
         a[i,j] := b[i,j] - c[i,j];
   end;
 end;  { of matsub }
-//---------------------------------------------------------------------------
 
-procedure IntArrayPrint(mat : IntDyneMat;
-                        rows, cols : integer;
-                        ytitle : string;
-                        RowLabels, ColLabels : StrDyneVec;
-                        Title : string);
-begin
-  Assert(OutputFrm <> nil);
-  IntArrayPrint(mat, rows, cols, ytitle, RowLabels, ColLabels, Title, OutputFrm.RichEdit.Lines);
-end;
-
-procedure IntArrayPrint(Mat: IntDyneMat;
-                        Rows, Cols: integer;
-                        YTitle: string;
-                        RowLabels, ColLabels: StrDyneVec;
-                        Title: string;
-                        AReport: TStrings);
+procedure IntArrayPrint(const Mat: IntDyneMat; Rows, Cols: integer;
+  const YTitle: string; const RowLabels, ColLabels: StrDyneVec;
+  const Title: string; AReport: TStrings);
 var
   i, j, first, last, nflds: integer;
   done : boolean;
@@ -1516,7 +1417,6 @@ begin
 
   while not done do
   begin
-//    AReport.Add('');
     AReport.Add('                        ' + ytitle);;
     AReport.Add('Variables');
 
@@ -1542,7 +1442,6 @@ begin
     first := last + 1;
   end;
   AReport.Add('');
-//  AReport.Add('');
 end;
 //---------------------------------------------------------------------------
 
@@ -1810,13 +1709,6 @@ begin
      end;
      scpf := scp;
 end; { of SCPF }
-//-------------------------------------------------------------------
-
-procedure Mat_Print(var xmat: DblDyneMat; Rows, Cols: Integer; var Title: String;
-  var RowLabels, ColLabels: StrDyneVec; NCases: integer);
-begin
-  MatPrint(xmat, Rows, Cols, Title, RowLabels, ColLabels, NCases, OutputFrm.RichEdit.Lines);
-end;
 
 procedure MatPrint(const xmat: DblDyneMat; Rows, Cols: integer; const Title: string;
   const RowLabels, ColLabels: StrDyneVec; NCases: integer; AReport: TStrings);
@@ -1861,25 +1753,10 @@ begin
     first := last + 1;
   end;
   AReport.Add('');
-//  AReport.Add('');
-end;
-//--------------------------------------------------------------------
-
-procedure DynVectorPrint(var AVector: DblDyneVec;
-                         NoVars: integer;
-                         Title: string;
-                         var Labels: StrDyneVec;
-                         NCases: integer);
-begin
-  DynVectorPrint(AVector, NoVars, Title, Labels, NCases, OutputFrm.RichEdit.Lines);
 end;
 
-procedure DynVectorPrint(const AVector: DblDyneVec;
-                         NoVars: integer;
-                         Title: string;
-                         const Labels: StrDyneVec;
-                         NCases: integer;
-                         AReport: TStrings);
+procedure DynVectorPrint(const AVector: DblDyneVec; NoVars: integer;
+  Title: string; const Labels: StrDyneVec; NCases: integer; AReport: TStrings);
 var
   i, j, first, last, nflds: integer;
   done: boolean;
@@ -1922,7 +1799,7 @@ begin
 end;
 //--------------------------------------------------------------------------
 
-procedure scatplot(const x, y: DblDyneVec; NoCases: integer;
+procedure ScatPlot(const x, y: DblDyneVec; NoCases: integer;
   const TitleStr, x_axis, y_axis: string; x_min, x_max, y_min, y_max: double;
   const VarLabels: StrDyneVec; AReport: TStrings);
 var
@@ -1937,8 +1814,6 @@ var
   outline     : string;
   Labels      : StrDyneVec;
 begin
-  Assert(OutputFrm <> nil);
-
   SetLength(Labels,NoVariables);
   for i := 1 to nocases do Labels[i-1] := VarLabels[i-1];
   height := 40;
@@ -2049,13 +1924,6 @@ begin
 
   Labels := nil;
 end; { of scatplot procedure }
-//-------------------------------------------------------------------
-
-procedure DynIntMatPrint(Mat: IntDyneMat; Rows, Cols: integer; YTitle: string;
-  RowLabels, ColLabels: StrDyneVec; Title: string);
-begin
-  DynIntMatPrint(Mat, Rows, Cols, YTitle, RowLabels, ColLabels, Title, OutputFrm.RichEdit.Lines);
-end;
 
 procedure DynIntMatPrint(Mat: IntDyneMat; Rows, Cols: integer; YTitle: string;
   RowLabels, ColLabels: StrDyneVec; Title: string; AReport: TStrings);

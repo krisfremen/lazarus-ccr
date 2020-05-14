@@ -143,7 +143,6 @@ end;
 procedure TTFItemForm.CodeBrowseBtnClick(Sender: TObject);
 var
   i: integer;
-  outline: string;
   lReport: TStrings;
 begin
   lReport := TStringList.Create;

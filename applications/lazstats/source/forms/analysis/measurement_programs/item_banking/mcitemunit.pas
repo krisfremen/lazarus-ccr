@@ -246,7 +246,6 @@ end;
 procedure TMCItemForm.CodeBrowseBtnClick(Sender: TObject);
 var
   i: integer;
-  outline: string;
   nochoices: integer;
   lReport: TStrings;
 begin
