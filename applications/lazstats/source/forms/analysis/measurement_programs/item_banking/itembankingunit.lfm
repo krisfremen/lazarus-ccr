@@ -3,10 +3,13 @@ object ItemBankFrm: TItemBankFrm
   Height = 585
   Top = 241
   Width = 387
+  HelpType = htKeyword
+  HelpKeyword = 'ItemBanking.htm'
   Caption = 'Item Banking'
   ClientHeight = 565
   ClientWidth = 387
   Menu = MainMenu1
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
@@ -295,7 +298,6 @@ object ItemBankFrm: TItemBankFrm
       end
       object ExitThis: TMenuItem
         Caption = 'Exit this procedure'
-        OnClick = ExitThisClick
       end
     end
     object Operations: TMenuItem

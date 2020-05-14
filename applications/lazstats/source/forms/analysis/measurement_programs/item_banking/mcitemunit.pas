@@ -80,8 +80,8 @@ uses
 { TMCItemForm }
 
 procedure TMCItemForm.jpegBrowseBtnClick(Sender: TObject);
-VAR
-  JPEG : TJPEGImage;
+var
+  JPEG: TJPEGImage;
 begin
   OpenPictureDialog1.Options := OpenPictureDialog1.Options+[ofFileMustExist];
   if not OpenPictureDialog1.Execute then exit;
@@ -104,22 +104,22 @@ end;
 
 procedure TMCItemForm.NoChoicesEditChange(Sender: TObject);
 var
-  nochoices : integer;
+  nochoices: integer;
 begin
-     nochoices := StrToInt(NoChoicesEdit.Text);
-     if nochoices > 0 then ChoiceAEdit.Visible := true else ChoiceAEdit.Visible := false;
-     if nochoices > 1 then ChoiceBEdit.Visible := true else ChoiceBEdit.Visible := false;
-     if nochoices > 2 then ChoiceCEdit.Visible := true else ChoiceCEdit.Visible := false;
-     if nochoices > 3 then ChoiceDEdit.Visible := true else ChoiceDEdit.Visible := false;
-     if nochoices > 4 then ChoiceEEdit.Visible := true else ChoiceEEdit.Visible := false;
+  nochoices := StrToInt(NoChoicesEdit.Text);
+  ChoiceAEdit.Visible := (nochoices > 0);
+  ChoiceBEdit.Visible := (nochoices > 1);
+  ChoiceCEdit.Visible := (nochoices > 2);
+  ChoiceDEdit.Visible := (nochoices > 3);
+  ChoiceEEdit.Visible := (nochoices > 4);
 end;
 
 procedure TMCItemForm.PreviousBtnClick(Sender: TObject);
-Var
-  response : string;
-  itemno : integer;
-  JPEG : TJPEGImage;
-  nochoices : integer;
+var
+  response: string;
+  itemno: integer;
+  JPEG: TJPEGImage;
+  nochoices: integer;
 begin
   response := InputBox('Save current item?','Save','Y');
   if response = 'Y' then ItemSaveBtnClick(self);
@@ -133,44 +133,43 @@ begin
   itemno := StrToInt(response);
   if itemno <= ItemBankFrm.BankInfo.NMCItems then
   begin
-       nochoices := ItemBankFrm.MCItemInfo[itemno].NoChoices;
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].majorcode);
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].minorcode);
-       NoChoicesEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].NoChoices);
-       ItemStemEdit.Text := ItemBankFrm.MCItemInfo[itemno].ItemStem ;
-       if nochoices > 0 then ChoiceAEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceOne;
-       if nochoices > 1 then ChoiceBEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceTwo;
-       if nochoices > 2 then ChoiceCEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceThree;
-       if nochoices > 3 then ChoiceDEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFour;
-       if nochoices > 4 then ChoiceEEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFive;
-       AnswerEdit.Text := ItemBankFrm.MCItemInfo[itemno].CorrectChoice;
-       jpegnameEdit.Text := ItemBankFrm.MCItemInfo[itemno].PicName;
-       if jpegnameEdit.Text <> 'none' then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-          JPEG.Free;
-          Image1.Proportional := true;
-          end;
-       end;
+    nochoices := ItemBankFrm.MCItemInfo[itemno].NoChoices;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].majorcode);
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].minorcode);
+    NoChoicesEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].NoChoices);
+    ItemStemEdit.Text := ItemBankFrm.MCItemInfo[itemno].ItemStem ;
+    if nochoices > 0 then ChoiceAEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceOne;
+    if nochoices > 1 then ChoiceBEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceTwo;
+    if nochoices > 2 then ChoiceCEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceThree;
+    if nochoices > 3 then ChoiceDEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFour;
+    if nochoices > 4 then ChoiceEEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFive;
+    AnswerEdit.Text := ItemBankFrm.MCItemInfo[itemno].CorrectChoice;
+    jpegnameEdit.Text := ItemBankFrm.MCItemInfo[itemno].PicName;
+    if jpegnameEdit.Text <> 'none' then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end;
   end;
 end;
 
 procedure TMCItemForm.ReturnBtnClick(Sender: TObject);
 begin
-  MCItemForm.Hide;
   Close;
 end;
 
 procedure TMCItemForm.ItemSaveBtnClick(Sender: TObject);
 var
-  currentno : integer;
-  count : integer;
-  nochoices : integer;
+  currentno: integer;
+  count: integer;
+  nochoices: integer;
 begin
   count := ItemBankFrm.BankInfo.NMCItems;
   currentno := StrToInt(ItemNoEdit.Text);
@@ -195,9 +194,9 @@ begin
 end;
 
 procedure TMCItemForm.FormShow(Sender: TObject);
-Var
-  JPEG : TJPEGImage;
-  nochoices : integer;
+var
+  JPEG: TJPEGImage;
+  nochoices: integer;
 begin
   ChoiceAEdit.Text := '';
   ChoiceBEdit.Text := '';
@@ -207,105 +206,86 @@ begin
   Image1.Canvas.Clear;
   if ItemBankFrm.BankInfo.NMCItems  > 0 then
   begin
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[1].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[1].majorcode) ;
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[1].minorcode);
-       nochoices := ItemBankFrm.MCItemInfo[1].NoChoices;
-       NoChoicesEdit.Text := IntToStr(nochoices);
-       ItemStemEdit.Text := ItemBankFrm.MCItemInfo[1].ItemStem;
-       AnswerEdit.Text := ItemBankFrm.MCItemInfo[1].CorrectChoice;
-       if nochoices > 0 then ChoiceAEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceOne;
-       if nochoices > 1 then ChoiceBEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceTwo;
-       if nochoices > 2 then ChoiceCEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceThree;
-       if nochoices > 3 then ChoiceDEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceFour;
-       if nochoices > 4 then ChoiceEEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceFive;
-       jpegnameEdit.Text := ItemBankFrm.MCItemInfo[1].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-          JPEG.Free;
-          Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[1].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[1].majorcode) ;
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[1].minorcode);
+    nochoices := ItemBankFrm.MCItemInfo[1].NoChoices;
+    NoChoicesEdit.Text := IntToStr(nochoices);
+    ItemStemEdit.Text := ItemBankFrm.MCItemInfo[1].ItemStem;
+    AnswerEdit.Text := ItemBankFrm.MCItemInfo[1].CorrectChoice;
+    if nochoices > 0 then ChoiceAEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceOne;
+    if nochoices > 1 then ChoiceBEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceTwo;
+    if nochoices > 2 then ChoiceCEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceThree;
+    if nochoices > 3 then ChoiceDEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceFour;
+    if nochoices > 4 then ChoiceEEdit.Text := ItemBankFrm.MCItemInfo[1].ChoiceFive;
+    jpegnameEdit.Text := ItemBankFrm.MCItemInfo[1].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end else
   begin
-       ItemNoEdit.Text := '1';
-       MajorCodeEdit.Text := '1';
-       MinorCodeEdit.Text := '0';
-       ItemStemEdit.Text := '';
-       AnswerEdit.Text := '';
-       jpegnameEdit.Text := 'none';
-       Image1.Picture.Clear;
+    ItemNoEdit.Text := '1';
+    MajorCodeEdit.Text := '1';
+    MinorCodeEdit.Text := '0';
+    ItemStemEdit.Text := '';
+    AnswerEdit.Text := '';
+    jpegnameEdit.Text := 'none';
+    Image1.Picture.Clear;
   end;
 end;
 
 procedure TMCItemForm.CodeBrowseBtnClick(Sender: TObject);
 var
-  count : integer;
-  i : integer;
-  outline : string;
-  nochoices : integer;
+  i: integer;
+  outline: string;
+  nochoices: integer;
+  lReport: TStrings;
 begin
-  OutputFrm.RichEdit.Clear;
-  count := ItemBankFrm.BankInfo.NMCItems;
-  OutputFrm.RichEdit.Lines.Add('Current Items');
-  OutputFrm.RichEdit.Lines.Add('');
+  lReport := TStringList.Create;
+  try
+    lReport.Add('Current Items');
+    lReport.Add('');
 
-  for i := 1 to count do
-  begin
-       ChoiceAEdit.Text := '';
-       ChoiceBEdit.Text := '';
-       ChoiceCEdit.Text := '';
-       ChoiceDEdit.Text := '';
-       ChoiceEEdit.Text := '';
-       nochoices := ItemBankFrm.MCItemInfo[i].NoChoices;
-       outline := format('Item number %3d',[ItemBankFrm.MCItemInfo[i].itemnumber]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Major Code %3d',[ItemBankFrm.MCItemInfo[i].majorcode]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Minor Code %3d',[ItemBankFrm.MCItemInfo[i].minorcode]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('No. of Choices %3d',[ItemBankFrm.MCItemInfo[i].NoChoices]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Item Stem %s',[ItemBankFrm.MCItemInfo[i].ItemStem]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       if nochoices > 0 then
-       begin
-            outline := format('Choice A %s',[ItemBankFrm.MCItemInfo[i].ChoiceOne]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if nochoices > 1 then
-       begin
-          outline := format('Choice B %s',[ItemBankFrm.MCItemInfo[i].ChoiceTwo]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if nochoices > 2 then
-       begin
-          outline := format('Choice C %s',[ItemBankFrm.MCItemInfo[i].ChoiceThree]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if nochoices > 3 then
-       begin
-          outline := format('Choice D %s',[ItemBankFrm.MCItemInfo[i].ChoiceFour]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if nochoices > 4 then
-       begin
-          outline := format('Choice E %s',[ItemBankFrm.MCItemInfo[i].ChoiceFive]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       outline := format('Correct Choice %s',[ItemBankFrm.MCItemInfo[i].CorrectChoice]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Graphic Image %s',[ItemBankFrm.MCItemInfo[i].PicName]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       OutputFrm.RichEdit.Lines.Add('');
+    for i := 1 to ItemBankFrm.BankInfo.NMCItems do
+    begin
+      ChoiceAEdit.Text := '';
+      ChoiceBEdit.Text := '';
+      ChoiceCEdit.Text := '';
+      ChoiceDEdit.Text := '';
+      ChoiceEEdit.Text := '';
+      nochoices := ItemBankFrm.MCItemInfo[i].NoChoices;
+      lReport.Add('Item number    %d', [ItemBankFrm.MCItemInfo[i].itemnumber]);
+      lReport.Add('Major Code     %d', [ItemBankFrm.MCItemInfo[i].majorcode]);
+      lReport.Add('Minor Code     %d', [ItemBankFrm.MCItemInfo[i].minorcode]);
+      lReport.Add('No. of Choices %d', [ItemBankFrm.MCItemInfo[i].NoChoices]);
+      lReport.Add('Item Stem      %s', [ItemBankFrm.MCItemInfo[i].ItemStem]);
+      if nochoices > 0 then
+        lReport.Add('Choice A       %s', [ItemBankFrm.MCItemInfo[i].ChoiceOne]);
+      if nochoices > 1 then
+        lReport.Add('Choice B       %s', [ItemBankFrm.MCItemInfo[i].ChoiceTwo]);
+      if nochoices > 2 then
+        lReport.Add('Choice C       %s', [ItemBankFrm.MCItemInfo[i].ChoiceThree]);
+      if nochoices > 3 then
+        lReport.Add('Choice D       %s', [ItemBankFrm.MCItemInfo[i].ChoiceFour]);
+      if nochoices > 4 then
+        lReport.Add('Choice E       %s', [ItemBankFrm.MCItemInfo[i].ChoiceFive]);
+      lReport.Add('Correct Choice %s', [ItemBankFrm.MCItemInfo[i].CorrectChoice]);
+      lReport.Add('Graphic Image  %s', [ItemBankFrm.MCItemInfo[i].PicName]);
+      lReport.Add('');
+    end;
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
   end;
-  OutputFrm.ShowModal;
 end;
 
 procedure TMCItemForm.FormActivate(Sender: TObject);
@@ -320,8 +300,6 @@ end;
 procedure TMCItemForm.FormCreate(Sender: TObject);
 begin
   Assert(ItemBankFrm <> nil);
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TMCItemForm.SelectImageBtnClick(Sender: TObject);
@@ -331,11 +309,11 @@ end;
 
 procedure TMCItemForm.ShowNextBtnClick(Sender: TObject);
 var
-  count : integer;
-  itemno : integer;
-  JPEG : TJPEGImage;
-  nochoices : integer;
-  response : string;
+  count: integer;
+  itemno: integer;
+  JPEG: TJPEGImage;
+  nochoices: integer;
+  response: string;
 begin
   response := InputBox('Save current item?','Save','Y');
   if response = 'Y' then ItemSaveBtnClick(self);
@@ -344,42 +322,42 @@ begin
   count :=  ItemBankFrm.BankInfo.NMCItems;
   if count <= itemno then
   begin
-       ChoiceAEdit.Text := '';
-       ChoiceBEdit.Text := '';
-       ChoiceCEdit.Text := '';
-       ChoiceDEdit.Text := '';
-       ChoiceEEdit.Text := '';
-       nochoices := ItemBankFrm.MCItemInfo[itemno].NoChoices;
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].majorcode) ;
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].minorcode);
-       ItemStemEdit.Text := ItemBankFrm.MCItemInfo[itemno].ItemStem;
-       if nochoices > 0 then ChoiceAEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceOne;
-       if nochoices > 1 then ChoiceBEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceTwo;
-       if nochoices > 2 then ChoiceCEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceThree;
-       if nochoices > 3 then ChoiceDEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFour;
-       if nochoices > 4 then ChoiceEEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFive;
-       AnswerEdit.Text := ItemBankFrm.MCItemInfo[itemno].CorrectChoice;
-       jpegnameEdit.Text := ItemBankFrm.MCItemInfo[itemno].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-          JPEG.Free;
-          Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    ChoiceAEdit.Text := '';
+    ChoiceBEdit.Text := '';
+    ChoiceCEdit.Text := '';
+    ChoiceDEdit.Text := '';
+    ChoiceEEdit.Text := '';
+    nochoices := ItemBankFrm.MCItemInfo[itemno].NoChoices;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].majorcode) ;
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.MCItemInfo[itemno].minorcode);
+    ItemStemEdit.Text := ItemBankFrm.MCItemInfo[itemno].ItemStem;
+    if nochoices > 0 then ChoiceAEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceOne;
+    if nochoices > 1 then ChoiceBEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceTwo;
+    if nochoices > 2 then ChoiceCEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceThree;
+    if nochoices > 3 then ChoiceDEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFour;
+    if nochoices > 4 then ChoiceEEdit.Text := ItemBankFrm.MCItemInfo[itemno].ChoiceFive;
+    AnswerEdit.Text := ItemBankFrm.MCItemInfo[itemno].CorrectChoice;
+    jpegnameEdit.Text := ItemBankFrm.MCItemInfo[itemno].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end;
 end;
 
 procedure TMCItemForm.StartNewBtnClick(Sender: TObject);
 var
-  currentno : integer;
-  response : string;
+  currentno: integer;
+  response: string;
 begin
   response := InputBox('Save current item?','Save','Y');
   if response = 'Y' then ItemSaveBtnClick(self);

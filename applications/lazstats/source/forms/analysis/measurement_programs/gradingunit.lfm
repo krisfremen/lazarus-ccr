@@ -3,6 +3,8 @@ object GradingFrm: TGradingFrm
   Height = 441
   Top = 163
   Width = 622
+  HelpType = htKeyword
+  HelpKeyword = 'GradeBook.htm'
   Caption = 'Specification for Grades'
   ClientHeight = 441
   ClientWidth = 622

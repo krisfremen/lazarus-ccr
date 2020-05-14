@@ -1,11 +1,13 @@
 object PolyDIFFrm: TPolyDIFFrm
   Left = 984
-  Height = 413
+  Height = 438
   Top = 356
   Width = 657
+  HelpType = htKeyword
+  HelpKeyword = 'PolytomousDIFAnalysis.htm'
   AutoSize = True
   Caption = 'Polytomous Item DIF'
-  ClientHeight = 413
+  ClientHeight = 438
   ClientWidth = 657
   OnActivate = FormActivate
   OnCreate = FormCreate
@@ -18,7 +20,7 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideBottom.Side = asrBottom
     Left = 448
     Height = 25
-    Top = 380
+    Top = 405
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -36,7 +38,7 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideBottom.Side = asrBottom
     Left = 510
     Height = 25
-    Top = 380
+    Top = 405
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -55,7 +57,7 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideBottom.Side = asrBottom
     Left = 594
     Height = 25
-    Top = 380
+    Top = 405
     Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -74,7 +76,7 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideBottom.Side = asrBottom
     Left = 389
     Height = 25
-    Top = 380
+    Top = 405
     Width = 51
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -92,7 +94,7 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideRight.Control = Panel3
     AnchorSideBottom.Control = Bevel1
     Left = 8
-    Height = 356
+    Height = 381
     Top = 8
     Width = 437
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -100,7 +102,7 @@ object PolyDIFFrm: TPolyDIFFrm
     BorderSpacing.Top = 8
     BorderSpacing.Right = 16
     BevelOuter = bvNone
-    ClientHeight = 356
+    ClientHeight = 381
     ClientWidth = 437
     Constraints.MinWidth = 400
     TabOrder = 0
@@ -129,7 +131,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideBottom.Control = GroupVarEdit
       Left = 249
       Height = 15
-      Top = 296
+      Top = 321
       Width = 94
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 2
@@ -144,7 +146,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 339
+      Height = 364
       Top = 17
       Width = 187
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -208,7 +210,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideBottom.Control = GrpOutBtn
       Left = 204
       Height = 28
-      Top = 288
+      Top = 313
       Width = 28
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 4
@@ -225,7 +227,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideBottom.Side = asrBottom
       Left = 204
       Height = 28
-      Top = 320
+      Top = 345
       Width = 28
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 8
@@ -243,7 +245,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideBottom.Side = asrBottom
       Left = 249
       Height = 23
-      Top = 313
+      Top = 338
       Width = 188
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Bottom = 12
@@ -260,7 +262,7 @@ object PolyDIFFrm: TPolyDIFFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = GrpInBtn
       Left = 249
-      Height = 247
+      Height = 272
       Top = 17
       Width = 188
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -280,7 +282,7 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 364
+    Top = 389
     Width = 657
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
@@ -291,12 +293,12 @@ object PolyDIFFrm: TPolyDIFFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 461
-    Height = 364
+    Height = 389
     Top = 0
     Width = 196
     Anchors = [akTop, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 364
+    ClientHeight = 389
     ClientWidth = 196
     TabOrder = 1
     object Label4: TLabel

@@ -61,13 +61,12 @@ var
 implementation
 
 uses
-  ItemBankingUnit;
+  ItemBankingUnit, Utils;
 
 { TEssayItemForm }
 
 procedure TEssayItemForm.ReturnBtnClick(Sender: TObject);
 begin
-  EssayItemForm.Hide;
   Close;
 end;
 
@@ -78,38 +77,38 @@ end;
 
 procedure TEssayItemForm.ShowNextBtnClick(Sender: TObject);
 var
-  count : integer;
-  itemno : integer;
-  JPEG : TJPEGImage;
+  count: integer;
+  itemno: integer;
+  JPEG: TJPEGImage;
 begin
   itemno := StrToInt(ItemNoEdit.Text) + 1;
   count :=  ItemBankFrm.BankInfo.NEssayItems;
   if count <= itemno then
   begin
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].majorcode) ;
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].minorcode);
-       ItemStemEdit.Text := ItemBankFrm.EssayInfo[itemno].ItemStem;
-       AnswerEdit.Text := ItemBankFrm.EssayInfo[itemno].Answer;
-       jpegnameEdit.Text := ItemBankFrm.EssayInfo[itemno].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-            JPEG.Free;
-            Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].majorcode) ;
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].minorcode);
+    ItemStemEdit.Text := ItemBankFrm.EssayInfo[itemno].ItemStem;
+    AnswerEdit.Text := ItemBankFrm.EssayInfo[itemno].Answer;
+    jpegnameEdit.Text := ItemBankFrm.EssayInfo[itemno].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end;
 end;
 
 procedure TEssayItemForm.StartNewBtnClick(Sender: TObject);
 var
-  currentno : integer;
+  currentno: integer;
 begin
   currentno := ItemBankFrm.BankInfo.NEssayItems + 1;
   ItemNoEdit.Text := IntToStr(currentno);
@@ -123,8 +122,8 @@ end;
 
 procedure TEssayItemForm.ItemSaveBtnClick(Sender: TObject);
 var
-  currentno : integer;
-  count : integer;
+  currentno: integer;
+  count: integer;
 begin
   count := ItemBankFrm.BankInfo.NEssayItems;
   currentno := StrToInt(ItemNoEdit.Text);
@@ -142,71 +141,70 @@ begin
 end;
 
 procedure TEssayItemForm.FormShow(Sender: TObject);
-Var
-  nitems : integer;
-  JPEG : TJPEGImage;
+var
+  //nitems: integer;
+  JPEG: TJPEGImage;
 begin
   if ItemBankFrm.BankInfo.NEssayItems  > 0 then
   begin
-       nitems := ItemBankFrm.BankInfo.NEssayItems;
-       ItemNoEdit.Text := '1'; //IntToStr(ItemBankFrm.TFItemInfo[1].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[1].majorcode) ;
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[1].minorcode);
-       ItemStemEdit.Text := ItemBankFrm.EssayInfo[1].ItemStem;
-       AnswerEdit.Text := ItemBankFrm.EssayInfo[1].Answer;
-       jpegnameEdit.Text := ItemBankFrm.EssayInfo[1].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-            JPEG.Free;
-            Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    //nitems := ItemBankFrm.BankInfo.NEssayItems;
+    ItemNoEdit.Text := '1'; //IntToStr(ItemBankFrm.TFItemInfo[1].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[1].majorcode) ;
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[1].minorcode);
+    ItemStemEdit.Text := ItemBankFrm.EssayInfo[1].ItemStem;
+    AnswerEdit.Text := ItemBankFrm.EssayInfo[1].Answer;
+    jpegnameEdit.Text := ItemBankFrm.EssayInfo[1].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end else
   begin
-       ItemNoEdit.Text := '1';
-       MajorCodeEdit.Text := '1';
-       MinorCodeEdit.Text := '0';
-       ItemStemEdit.Text := '';
-       AnswerEdit.Text := '';
-       jpegnameEdit.Text := 'none';
-       Image1.Picture.Clear;
+    ItemNoEdit.Text := '1';
+    MajorCodeEdit.Text := '1';
+    MinorCodeEdit.Text := '0';
+    ItemStemEdit.Text := '';
+    AnswerEdit.Text := '';
+    jpegnameEdit.Text := 'none';
+    Image1.Picture.Clear;
   end;
 end;
 
 procedure TEssayItemForm.CodeBrowseBtnClick(Sender: TObject);
 var
-  count : integer;
-  i : integer;
-  outline : string;
+  count: integer;
+  i: integer;
+  lReport: TStrings;
 begin
-  OutputFrm.RichEdit.Clear;
   count := ItemBankFrm.BankInfo.NTFItems;
-  OutputFrm.RichEdit.Lines.Add('Current Items');
-  OutputFrm.RichEdit.Lines.Add('');
+  lReport := TStringList.Create;
+  try
+    lReport.Add('Current Items');
+    lReport.Add('');
 
-  for i := 1 to count do
-  begin
-       outline := format('Item number %3d',[ItemBankFrm.EssayInfo[i].itemnumber]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Major Code %3d',[ItemBankFrm.EssayInfo[i].majorcode]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Minor Code %3d',[ItemBankFrm.EssayInfo[i].minorcode]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Item Stem %s',[ItemBankFrm.EssayInfo[i].ItemStem]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Breif Answer %s',[ItemBankFrm.EssayInfo[i].Answer]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Graphic Image %s',[ItemBankFrm.EssayInfo[i].PicName]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       OutputFrm.RichEdit.Lines.Add('');
+    for i := 1 to count do
+    begin
+       lReport.Add('Item number   %d', [ItemBankFrm.EssayInfo[i].itemnumber]);
+       lReport.Add('Major Code    %d', [ItemBankFrm.EssayInfo[i].majorcode]);
+       lReport.Add('Minor Code    %d', [ItemBankFrm.EssayInfo[i].minorcode]);
+       lReport.Add('Item Stem     %s',  [ItemBankFrm.EssayInfo[i].ItemStem]);
+       lReport.Add('Breif Answer  %s',  [ItemBankFrm.EssayInfo[i].Answer]);
+       lReport.Add('Graphic Image %s',  [ItemBankFrm.EssayInfo[i].PicName]);
+       lReport.Add('');
+    end;
+
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
   end;
-  OutputFrm.ShowModal;
 end;
 
 procedure TEssayItemForm.FormActivate(Sender: TObject);
@@ -221,14 +219,11 @@ end;
 procedure TEssayItemForm.FormCreate(Sender: TObject);
 begin
   Assert(ItemBankFrm <> nil);
-
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TEssayItemForm.jpegBrowseBtnClick(Sender: TObject);
-VAR
-  JPEG : TJPEGImage;
+var
+  JPEG: TJPEGImage;
 begin
   OpenPictureDialog1.Options := OpenPictureDialog1.Options+[ofFileMustExist];
   if not OpenPictureDialog1.Execute then exit;
@@ -243,39 +238,39 @@ begin
   except
     on E: Exception do begin
       Image1.Picture.Clear;
-      MessageDlg('Error','Error: '+E.Message,mtError,[mbOk],0);
+      ErrorMsg(E.Message);
     end;
   end;
   Image1.Proportional := true;
 end;
 
 procedure TEssayItemForm.PreviousBtnClick(Sender: TObject);
-Var
-  response : string;
-  itemno : integer;
-  JPEG : TJPEGImage;
+var
+  response: string;
+  itemno: integer;
+  JPEG: TJPEGImage;
 begin
   response := InputBox('Code Number:','Number:','1');
   itemno := StrToInt(response);
   if itemno <= ItemBankFrm.BankInfo.NEssayItems then
   begin
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].majorcode);
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].minorcode);
-       ItemStemEdit.Text := ItemBankFrm.EssayInfo[itemno].ItemStem ;
-       AnswerEdit.Text := ItemBankFrm.EssayInfo[itemno].Answer;
-       jpegnameEdit.Text := ItemBankFrm.EssayInfo[itemno].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-            JPEG.Free;
-            Image1.Proportional := true;
-          end;
-       end;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].majorcode);
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.EssayInfo[itemno].minorcode);
+    ItemStemEdit.Text := ItemBankFrm.EssayInfo[itemno].ItemStem ;
+    AnswerEdit.Text := ItemBankFrm.EssayInfo[itemno].Answer;
+    jpegnameEdit.Text := ItemBankFrm.EssayInfo[itemno].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end;
   end;
 end;
 

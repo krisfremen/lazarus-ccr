@@ -82,16 +82,18 @@ var
 implementation
 
 uses
-  ItemBankingUnit;
+  Utils, ItemBankingUnit;
 
 { TMatchItemForm }
 
 procedure TMatchItemForm.jpegBrowseBtnClick(Sender: TObject);
 VAR
-  JPEG : TJPEGImage;
+  JPEG: TJPEGImage;
 begin
   OpenPictureDialog1.Options := OpenPictureDialog1.Options+[ofFileMustExist];
-  if not OpenPictureDialog1.Execute then exit;
+  if not OpenPictureDialog1.Execute then
+    exit;
+
   try
     JPEG := TJPEGImage.Create;
     try
@@ -103,7 +105,7 @@ begin
   except
     on E: Exception do begin
       Image1.Picture.Clear;
-      MessageDlg('Error','Error: '+E.Message,mtError,[mbOk],0);
+      ErrorMsg(E.Message);
     end;
   end;
   Image1.Proportional := true;
@@ -111,59 +113,58 @@ end;
 
 procedure TMatchItemForm.PreviousBtnClick(Sender: TObject);
 Var
-  response : string;
-  itemno : integer;
-  JPEG : TJPEGImage;
-  noleft, noright : integer;
+  response: string;
+  itemno: integer;
+  JPEG: TJPEGImage;
+  noleft, noright: integer;
 begin
-  response := InputBox('Code Number:','Number:','1');
+  response := InputBox('Code Number:', 'Number:', '1');
   itemno := StrToInt(response);
   if itemno <= ItemBankFrm.BankInfo.NMatchItems then
   begin
-       Image1.Canvas.Clear;
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].majorcode);
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].minorcode);
-       noleft := ItemBankFrm.MatchInfo[itemno].NLeft;
-       noright := ItemBankFrm.MatchInfo[itemno].NRight;
-       if noleft > 0 then Left1Edit.Text := ItemBankFrm.MatchInfo[itemno].Left1;
-       if noleft > 1 then Left2Edit.Text := ItemBankFrm.MatchInfo[itemno].Left2;
-       if noleft > 2 then Left3Edit.Text := ItemBankFrm.MatchInfo[itemno].Left3;
-       if noleft > 3 then Left4Edit.Text := ItemBankFrm.MatchInfo[itemno].Left4;
-       if noleft > 4 then Left5Edit.Text := ItemBankFrm.MatchInfo[itemno].Left5;
-       if noright > 0 then Right1Edit.Text := ItemBankFrm.MatchInfo[itemno].Right1;
-       if noright > 1 then Right2Edit.Text := ItemBankFrm.MatchInfo[itemno].Right2;
-       if noright > 2 then Right3Edit.Text := ItemBankFrm.MatchInfo[itemno].Right3;
-       if noright > 3 then Right4Edit.Text := ItemBankFrm.MatchInfo[itemno].Right4;
-       if noright > 4 then Right5Edit.Text := ItemBankFrm.MatchInfo[itemno].Right5;
-       AnswerEdit.Text := ItemBankFrm.MatchInfo[itemno].CorrectChoice;
-       jpegnameEdit.Text := ItemBankFrm.MatchInfo[itemno].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-            JPEG.Free;
-            Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    Image1.Canvas.Clear;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].majorcode);
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].minorcode);
+    noleft := ItemBankFrm.MatchInfo[itemno].NLeft;
+    noright := ItemBankFrm.MatchInfo[itemno].NRight;
+    if noleft > 0 then Left1Edit.Text := ItemBankFrm.MatchInfo[itemno].Left1;
+    if noleft > 1 then Left2Edit.Text := ItemBankFrm.MatchInfo[itemno].Left2;
+    if noleft > 2 then Left3Edit.Text := ItemBankFrm.MatchInfo[itemno].Left3;
+    if noleft > 3 then Left4Edit.Text := ItemBankFrm.MatchInfo[itemno].Left4;
+    if noleft > 4 then Left5Edit.Text := ItemBankFrm.MatchInfo[itemno].Left5;
+    if noright > 0 then Right1Edit.Text := ItemBankFrm.MatchInfo[itemno].Right1;
+    if noright > 1 then Right2Edit.Text := ItemBankFrm.MatchInfo[itemno].Right2;
+    if noright > 2 then Right3Edit.Text := ItemBankFrm.MatchInfo[itemno].Right3;
+    if noright > 3 then Right4Edit.Text := ItemBankFrm.MatchInfo[itemno].Right4;
+    if noright > 4 then Right5Edit.Text := ItemBankFrm.MatchInfo[itemno].Right5;
+    AnswerEdit.Text := ItemBankFrm.MatchInfo[itemno].CorrectChoice;
+    jpegnameEdit.Text := ItemBankFrm.MatchInfo[itemno].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end;
 end;
 
 procedure TMatchItemForm.ReturnBtnClick(Sender: TObject);
 begin
-  MatchItemForm.Hide;
   Close;
 end;
 
 procedure TMatchItemForm.ItemSaveBtnClick(Sender: TObject);
 var
-  currentno : integer;
-  count : integer;
-  noleft, noright : integer;
+  currentno: integer;
+  count: integer;
+  noleft, noright: integer;
 begin
   count := ItemBankFrm.BankInfo.NMatchItems;
   currentno := StrToInt(ItemNoEdit.Text);
@@ -204,10 +205,10 @@ begin
 end;
 
 procedure TMatchItemForm.FormShow(Sender: TObject);
-Var
-  nitems : integer;
-  noleft, noright : integer;
-  JPEG : TJPEGImage;
+var
+  nitems: integer;
+  noleft, noright: integer;
+  JPEG: TJPEGImage;
 begin
   Image1.Canvas.Clear;
   Left1Edit.Text := '';
@@ -224,139 +225,105 @@ begin
 
   if ItemBankFrm.BankInfo.NMatchItems  > 0 then
   begin
-       nitems := ItemBankFrm.BankInfo.NMatchItems;
-       ItemNoEdit.Text := '1'; //IntToStr(ItemBankFrm.TFItemInfo[1].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[1].majorcode) ;
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[1].minorcode);
-       noleft := ItemBankFrm.MatchInfo[1].NLeft;
-       if noleft > 0 then Left1Edit.Text := ItemBankFrm.MatchInfo[1].Left1 ;
-       if noleft > 1 then Left2Edit.Text := ItemBankFrm.MatchInfo[1].Left2 ;
-       if noleft > 2 then Left3Edit.Text := ItemBankFrm.MatchInfo[1].Left3 ;
-       if noleft > 3 then Left4Edit.Text := ItemBankFrm.MatchInfo[1].Left4 ;
-       if noleft > 4 then Left5Edit.Text := ItemBankFrm.MatchInfo[1].Left5 ;
-       noright  := ItemBankFrm.MatchInfo[1].NRight;
-       if noright > 0 then Right1Edit.Text := ItemBankFrm.MatchInfo[1].Right1 ;
-       if noright > 1 then Right2Edit.Text := ItemBankFrm.MatchInfo[1].Right2 ;
-       if noright > 2 then Right3Edit.Text := ItemBankFrm.MatchInfo[1].Right3 ;
-       if noright > 3 then Right4Edit.Text := ItemBankFrm.MatchInfo[1].Right4 ;
-       if noright > 4 then Right5Edit.Text := ItemBankFrm.MatchInfo[1].Right5 ;
-       AnswerEdit.Text := ItemBankFrm.MatchInfo[1].CorrectChoice;
-       jpegnameEdit.Text := ItemBankFrm.MatchInfo[1].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegNameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-            JPEG.Free;
-            Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    nitems := ItemBankFrm.BankInfo.NMatchItems;
+    ItemNoEdit.Text := '1'; //IntToStr(ItemBankFrm.TFItemInfo[1].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[1].majorcode) ;
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[1].minorcode);
+    noleft := ItemBankFrm.MatchInfo[1].NLeft;
+    if noleft > 0 then Left1Edit.Text := ItemBankFrm.MatchInfo[1].Left1 ;
+    if noleft > 1 then Left2Edit.Text := ItemBankFrm.MatchInfo[1].Left2 ;
+    if noleft > 2 then Left3Edit.Text := ItemBankFrm.MatchInfo[1].Left3 ;
+    if noleft > 3 then Left4Edit.Text := ItemBankFrm.MatchInfo[1].Left4 ;
+    if noleft > 4 then Left5Edit.Text := ItemBankFrm.MatchInfo[1].Left5 ;
+    noright  := ItemBankFrm.MatchInfo[1].NRight;
+    if noright > 0 then Right1Edit.Text := ItemBankFrm.MatchInfo[1].Right1 ;
+    if noright > 1 then Right2Edit.Text := ItemBankFrm.MatchInfo[1].Right2 ;
+    if noright > 2 then Right3Edit.Text := ItemBankFrm.MatchInfo[1].Right3 ;
+    if noright > 3 then Right4Edit.Text := ItemBankFrm.MatchInfo[1].Right4 ;
+    if noright > 4 then Right5Edit.Text := ItemBankFrm.MatchInfo[1].Right5 ;
+    AnswerEdit.Text := ItemBankFrm.MatchInfo[1].CorrectChoice;
+    jpegnameEdit.Text := ItemBankFrm.MatchInfo[1].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegNameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end else
   begin
-       ItemNoEdit.Text := '1';
-       MajorCodeEdit.Text := '1';
-       MinorCodeEdit.Text := '0';
-       Left1Edit.Text := '';
-       Left2Edit.Text := '';
-       Left3Edit.Text := '';
-       Left4Edit.Text := '';
-       Left5Edit.Text := '';
-       Right1Edit.Text := '';
-       Right2Edit.Text := '';
-       Right3Edit.Text := '';
-       Right3Edit.Text := '';
-       Right5Edit.Text := '';
-       AnswerEdit.Text := '';
-       jpegnameEdit.Text := 'none';
-       Image1.Picture.Clear;
+    ItemNoEdit.Text := '1';
+    MajorCodeEdit.Text := '1';
+    MinorCodeEdit.Text := '0';
+    Left1Edit.Text := '';
+    Left2Edit.Text := '';
+    Left3Edit.Text := '';
+    Left4Edit.Text := '';
+    Left5Edit.Text := '';
+    Right1Edit.Text := '';
+    Right2Edit.Text := '';
+    Right3Edit.Text := '';
+    Right3Edit.Text := '';
+    Right5Edit.Text := '';
+    AnswerEdit.Text := '';
+    jpegnameEdit.Text := 'none';
+    Image1.Picture.Clear;
   end;
 end;
 
 procedure TMatchItemForm.CodeBrowseBtnClick(Sender: TObject);
 var
-  count : integer;
-  i : integer;
-  outline : string;
-  noleft, noright : integer;
+  i: integer;
+  noleft, noright: integer;
+  lReport: TStrings;
 begin
-  OutputFrm.RichEdit.Clear;
-  count := ItemBankFrm.BankInfo.NMatchItems ;
-  OutputFrm.RichEdit.Lines.Add('Current Items');
-  OutputFrm.RichEdit.Lines.Add('');
+  lReport := TStringList.Create;
+  try
+    lReport.Add('Current Items');
+    lReport.Add('');
 
-  for i := 1 to count do
-  begin
-       noleft := ItemBankFrm.MatchInfo[i].NLeft;
-       noright := ItemBankFrm.MatchInfo[i].NRight;
-       outline := format('Item number %3d',[ItemBankFrm.MatchInfo[i].itemnumber]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Major Code %3d',[ItemBankFrm.MatchInfo[i].majorcode]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Minor Code %3d',[ItemBankFrm.MatchInfo[i].minorcode]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('No. Left items = %3d, No. Right items = %3d',
-          [ItemBankFrm.MatchInfo[i].NLeft,ItemBankFrm.MatchInfo[i].NRight]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       if noleft > 0 then
-       begin
-            outline := format('Left Item 1 %s',[ItemBankFrm.MatchInfo[i].Left1]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noright > 0 then
-       begin
-          outline := format('   Right Item 1 %s',[ItemBankFrm.MatchInfo[i].Right1]);
-          OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noleft > 1 then
-       begin
-            outline := format('Left Item 2 %s',[ItemBankFrm.MatchInfo[i].Left2]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noright > 1 then
-       begin
-            outline := format('   Right Item 2 %s',[ItemBankFrm.MatchInfo[i].Right2]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noleft > 2 then
-       begin
-            outline := format('Left Item 3 %s',[ItemBankFrm.MatchInfo[i].Left3]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noright > 2 then
-       begin
-            outline := format('   Right Item 3 %s',[ItemBankFrm.MatchInfo[i].Right3]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noleft > 3 then
-       begin
-            outline := format('Left Item 4 %s',[ItemBankFrm.MatchInfo[i].Left4]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noright > 3 then
-       begin
-            outline := format('   Right Item 4 %s',[ItemBankFrm.MatchInfo[i].Right4]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noleft > 4 then
-       begin
-            outline := format('Left Item 5 %s',[ItemBankFrm.MatchInfo[i].Left5]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       if noright > 4 then
-       begin
-            outline := format('   Right Item 5 %s',[ItemBankFrm.MatchInfo[i].Right5]);
-            OutputFrm.RichEdit.Lines.Add(outline);
-       end;
-       outline := format('Correct Choice %s',[ItemBankFrm.MatchInfo[i].CorrectChoice]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       outline := format('Graphic Image %s',[ItemBankFrm.MatchInfo[i].PicName]);
-       OutputFrm.RichEdit.Lines.Add(outline);
-       OutputFrm.RichEdit.Lines.Add('');
+    for i := 1 to ItemBankFrm.BankInfo.NMatchItems do
+    begin
+      noleft := ItemBankFrm.MatchInfo[i].NLeft;
+      noright := ItemBankFrm.MatchInfo[i].NRight;
+      lReport.Add('Item number      %d',[ItemBankFrm.MatchInfo[i].itemnumber]);
+      lReport.Add('Major Code       %d',[ItemBankFrm.MatchInfo[i].majorcode]);
+      lReport.Add('Minor Code       %d',[ItemBankFrm.MatchInfo[i].minorcode]);
+      lReport.Add('No. Left items:  %d', [ItemBankFrm.MatchInfo[i].NLeft]);
+      lReport.Add('No. Right items: %d', [ItemBankFrm.MatchInfo[i].NRight]);
+      if noleft > 0 then
+        lReport.Add('Left Item 1      %s',[ItemBankFrm.MatchInfo[i].Left1]);
+      if noright > 0 then
+        lReport.Add('   Right Item 1  %s',[ItemBankFrm.MatchInfo[i].Right1]);
+      if noleft > 1 then
+        lReport.Add('Left Item 2      %s',[ItemBankFrm.MatchInfo[i].Left2]);
+      if noright > 1 then
+        lReport.Add('   Right Item 2  %s',[ItemBankFrm.MatchInfo[i].Right2]);
+      if noleft > 2 then
+        lReport.Add('Left Item 3      %s',[ItemBankFrm.MatchInfo[i].Left3]);
+      if noright > 2 then
+        lReport.Add('   Right Item 3  %s',[ItemBankFrm.MatchInfo[i].Right3]);
+      if noleft > 3 then
+        lReport.Add('Left Item 4      %s',[ItemBankFrm.MatchInfo[i].Left4]);
+      if noright > 3 then
+        lReport.Add('   Right Item 4  %s',[ItemBankFrm.MatchInfo[i].Right4]);
+      if noleft > 4 then
+        lReport.Add('Left Item 5      %s',[ItemBankFrm.MatchInfo[i].Left5]);
+      if noright > 4 then
+        lReport.Add('   Right Item 5  %s',[ItemBankFrm.MatchInfo[i].Right5]);
+      lReport.Add('Correct Choice   %s',[ItemBankFrm.MatchInfo[i].CorrectChoice]);
+      lReport.Add('Graphic Image    %s',[ItemBankFrm.MatchInfo[i].PicName]);
+      lReport.Add('');
+    end;
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
   end;
-  OutputFrm.ShowModal;
 end;
 
 procedure TMatchItemForm.FormActivate(Sender: TObject);
@@ -371,9 +338,6 @@ end;
 procedure TMatchItemForm.FormCreate(Sender: TObject);
 begin
   Assert(ItemBankFrm <> nil);
-
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
 end;
 
 procedure TMatchItemForm.SelectImageBtnClick(Sender: TObject);
@@ -383,52 +347,51 @@ end;
 
 procedure TMatchItemForm.ShowNextBtnClick(Sender: TObject);
 var
-  count : integer;
-  itemno : integer;
-  JPEG : TJPEGImage;
-  noleft, noright : integer;
+  count: integer;
+  itemno: integer;
+  JPEG: TJPEGImage;
+  noleft, noright: integer;
 begin
   itemno := StrToInt(ItemNoEdit.Text) + 1;
   count :=  ItemBankFrm.BankInfo.NMatchItems;
   if count <= itemno then
   begin
-       Image1.Canvas.Clear;
-       ItemNoEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].ItemNumber);
-       MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].majorcode) ;
-       MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].minorcode);
-       noleft := ItemBankFrm.MatchInfo[itemno].NLeft;
-       noright := ItemBankFrm.MatchInfo[itemno].NRight;
-       if noleft > 0 then Left1Edit.Text := ItemBankFrm.MatchInfo[itemno].Left1 ;
-       if noleft > 1 then Left2Edit.Text := ItemBankFrm.MatchInfo[itemno].Left2;
-       if noleft > 2 then Left3Edit.Text := ItemBankFrm.MatchInfo[itemno].Left3;
-       if noleft > 3 then Left4Edit.Text := ItemBankFrm.MatchInfo[itemno].Left4;
-       if noleft > 4 then Left5Edit.Text := ItemBankFrm.MatchInfo[itemno].Left5;
-       if noright > 0 then Right1Edit.Text := ItemBankFrm.MatchInfo[itemno].Right1;
-       if noright > 1 then Right2Edit.Text := ItemBankFrm.MatchInfo[itemno].Right2;
-       if noright > 2 then Right3Edit.Text := ItemBankFrm.MatchInfo[itemno].Right3;
-       if noright > 3 then Right4Edit.Text := ItemBankFrm.MatchInfo[itemno].Right4;
-       if noright > 4 then Right5Edit.Text := ItemBankFrm.MatchInfo[itemno].Right5;
-       AnswerEdit.Text := ItemBankFrm.MatchInfo[itemno].CorrectChoice;
-       jpegnameEdit.Text := ItemBankFrm.MatchInfo[itemno].PicName;
-       if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
-       begin
-          JPEG := TJPEGImage.Create;
-          try
-             JPEG.LoadFromFile(jpegnameEdit.Text);
-             Image1.Picture.Assign(JPEG);
-          finally
-            JPEG.Free;
-            Image1.Proportional := true;
-          end;
-       end else
-         Image1.Picture.Clear;
+    Image1.Canvas.Clear;
+    ItemNoEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].ItemNumber);
+    MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].majorcode) ;
+    MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[itemno].minorcode);
+    noleft := ItemBankFrm.MatchInfo[itemno].NLeft;
+    noright := ItemBankFrm.MatchInfo[itemno].NRight;
+    if noleft > 0 then Left1Edit.Text := ItemBankFrm.MatchInfo[itemno].Left1 ;
+    if noleft > 1 then Left2Edit.Text := ItemBankFrm.MatchInfo[itemno].Left2;
+    if noleft > 2 then Left3Edit.Text := ItemBankFrm.MatchInfo[itemno].Left3;
+    if noleft > 3 then Left4Edit.Text := ItemBankFrm.MatchInfo[itemno].Left4;
+    if noleft > 4 then Left5Edit.Text := ItemBankFrm.MatchInfo[itemno].Left5;
+    if noright > 0 then Right1Edit.Text := ItemBankFrm.MatchInfo[itemno].Right1;
+    if noright > 1 then Right2Edit.Text := ItemBankFrm.MatchInfo[itemno].Right2;
+    if noright > 2 then Right3Edit.Text := ItemBankFrm.MatchInfo[itemno].Right3;
+    if noright > 3 then Right4Edit.Text := ItemBankFrm.MatchInfo[itemno].Right4;
+    if noright > 4 then Right5Edit.Text := ItemBankFrm.MatchInfo[itemno].Right5;
+    AnswerEdit.Text := ItemBankFrm.MatchInfo[itemno].CorrectChoice;
+    jpegnameEdit.Text := ItemBankFrm.MatchInfo[itemno].PicName;
+    if (jpegnameEdit.Text <> 'none') and FileExists(jpegnameEdit.Text) then
+    begin
+      JPEG := TJPEGImage.Create;
+      try
+        JPEG.LoadFromFile(jpegnameEdit.Text);
+        Image1.Picture.Assign(JPEG);
+      finally
+        JPEG.Free;
+        Image1.Proportional := true;
+      end;
+    end else
+      Image1.Picture.Clear;
   end;
 end;
 
 procedure TMatchItemForm.StartNewBtnClick(Sender: TObject);
 var
-  currentno : integer;
-
+  currentno: integer;
 begin
   Image1.Canvas.Clear;
   currentno := ItemBankFrm.BankInfo.NMatchItems + 1;

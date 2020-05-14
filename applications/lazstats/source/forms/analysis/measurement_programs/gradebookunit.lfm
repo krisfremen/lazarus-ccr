@@ -3,6 +3,8 @@ object GradebookFrm: TGradebookFrm
   Height = 541
   Top = 275
   Width = 956
+  HelpType = htKeyword
+  HelpKeyword = 'GradeBook.htm'
   Caption = 'Gradebook'
   ClientHeight = 521
   ClientWidth = 956
