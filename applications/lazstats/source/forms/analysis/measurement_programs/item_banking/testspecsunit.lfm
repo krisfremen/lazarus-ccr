@@ -1,20 +1,19 @@
 object TestSpecsForm: TTestSpecsForm
-  Left = 496
+  Left = 755
   Height = 574
-  Top = 192
-  Width = 965
+  Top = 340
+  Width = 943
   Caption = 'Test Specification'
   ClientHeight = 574
-  ClientWidth = 965
+  ClientWidth = 943
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object ReturnBtn: TButton
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Panel1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 896
+    Left = 874
     Height = 25
     Top = 541
     Width = 61
@@ -45,7 +44,7 @@ object TestSpecsForm: TTestSpecsForm
     Left = 146
     Height = 23
     Top = 8
-    Width = 393
+    Width = 788
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     TabOrder = 1
@@ -53,7 +52,6 @@ object TestSpecsForm: TTestSpecsForm
   end
   object SelectChoiceBox: TCheckGroup
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Panel1
     AnchorSideRight.Control = GroupBox1
     AnchorSideRight.Side = asrBottom
     Left = 8
@@ -89,7 +87,6 @@ object TestSpecsForm: TTestSpecsForm
     }
   end
   object TFItemNoLabel: TLabel
-    AnchorSideLeft.Control = Panel1
     AnchorSideTop.Control = ItemNoEdit
     AnchorSideTop.Side = asrCenter
     Left = 228
@@ -168,45 +165,7 @@ object TestSpecsForm: TTestSpecsForm
     TabOrder = 5
     Text = '0'
   end
-  object Panel1: TPanel
-    AnchorSideLeft.Control = GroupBox1
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = ItemNoEdit
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
-    Left = 228
-    Height = 463
-    Top = 70
-    Width = 729
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Left = 16
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    BevelOuter = bvNone
-    BorderStyle = bsSingle
-    ClientHeight = 459
-    ClientWidth = 725
-    TabOrder = 6
-    OnPaint = Panel1Paint
-    object Memo: TMemo
-      Left = 4
-      Height = 451
-      Top = 4
-      Width = 717
-      Align = alClient
-      BorderSpacing.Around = 4
-      Font.Height = -13
-      Font.Name = 'Courier New'
-      Font.Pitch = fpFixed
-      Font.Quality = fqDraft
-      ParentFont = False
-      TabOrder = 0
-    end
-  end
   object SelectItemBtn: TButton
-    AnchorSideLeft.Control = Panel1
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
@@ -219,7 +178,7 @@ object TestSpecsForm: TTestSpecsForm
     BorderSpacing.Bottom = 8
     Caption = 'Select this item'
     OnClick = SelectItemBtnClick
-    TabOrder = 7
+    TabOrder = 6
   end
   object SkipBtn: TButton
     AnchorSideLeft.Control = SelectItemBtn
@@ -237,14 +196,16 @@ object TestSpecsForm: TTestSpecsForm
     BorderSpacing.Bottom = 8
     Caption = 'Skip this item'
     OnClick = SkipBtnClick
-    TabOrder = 8
+    TabOrder = 7
   end
   object Label7: TLabel
     AnchorSideLeft.Control = MinorCodeEdit
     AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = SelectedEdit
+    AnchorSideTop.Side = asrCenter
     Left = 689
     Height = 15
-    Top = 45
+    Top = 43
     Width = 54
     BorderSpacing.Left = 16
     Caption = 'Item Type:'
@@ -259,7 +220,7 @@ object TestSpecsForm: TTestSpecsForm
     Top = 39
     Width = 183
     BorderSpacing.Left = 8
-    TabOrder = 9
+    TabOrder = 8
     Text = 'SelectedEdit'
   end
   object Label8: TLabel
@@ -290,7 +251,7 @@ object TestSpecsForm: TTestSpecsForm
     Anchors = [akTop, akRight]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 16
-    TabOrder = 10
+    TabOrder = 9
     Text = 'NoItemsEdit'
   end
   object GroupBox1: TGroupBox
@@ -314,7 +275,7 @@ object TestSpecsForm: TTestSpecsForm
     ChildSizing.ControlsPerLine = 2
     ClientHeight = 116
     ClientWidth = 200
-    TabOrder = 11
+    TabOrder = 10
     object Label4: TLabel
       Left = 14
       Height = 23
@@ -328,6 +289,8 @@ object TestSpecsForm: TTestSpecsForm
       Height = 23
       Top = 6
       Width = 80
+      Alignment = taRightJustify
+      ReadOnly = True
       TabOrder = 0
       Text = 'Edit1'
     end
@@ -344,6 +307,8 @@ object TestSpecsForm: TTestSpecsForm
       Height = 23
       Top = 33
       Width = 80
+      Alignment = taRightJustify
+      ReadOnly = True
       TabOrder = 1
       Text = 'TFNoEdit'
     end
@@ -360,6 +325,8 @@ object TestSpecsForm: TTestSpecsForm
       Height = 23
       Top = 60
       Width = 80
+      Alignment = taRightJustify
+      ReadOnly = True
       TabOrder = 2
       Text = 'Edit1'
     end
@@ -376,9 +343,36 @@ object TestSpecsForm: TTestSpecsForm
       Height = 23
       Top = 87
       Width = 80
+      Alignment = taRightJustify
+      ReadOnly = True
       TabOrder = 3
       Text = 'Edit1'
     end
+  end
+  object Memo: TMemo
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ItemNoEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ReturnBtn
+    Left = 228
+    Height = 463
+    Top = 70
+    Width = 707
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    Font.Quality = fqDraft
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 11
   end
   object OpenDialog1: TOpenDialog
     left = 256

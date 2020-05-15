@@ -121,9 +121,10 @@ var
   JPEG: TJPEGImage;
   nochoices: integer;
 begin
-  response := InputBox('Save current item?','Save','Y');
-  if response = 'Y' then ItemSaveBtnClick(self);
-  Image1.Canvas.Clear;
+  if MessageDlg('Save current item?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    ItemSaveBtnClick(self);
+
+  Image1.Picture.Clear;
   ChoiceAEdit.Text := '';
   ChoiceBEdit.Text := '';
   ChoiceCEdit.Text := '';
@@ -314,9 +315,10 @@ var
   nochoices: integer;
   response: string;
 begin
-  response := InputBox('Save current item?','Save','Y');
-  if response = 'Y' then ItemSaveBtnClick(self);
-  Image1.Canvas.Clear;
+  if MessageDlg('Save current item?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    ItemSaveBtnClick(self);
+
+  Image1.Picture.Clear;
   itemno := StrToInt(ItemNoEdit.Text) + 1;
   count :=  ItemBankFrm.BankInfo.NMCItems;
   if count <= itemno then
@@ -358,8 +360,9 @@ var
   currentno: integer;
   response: string;
 begin
-  response := InputBox('Save current item?','Save','Y');
-  if response = 'Y' then ItemSaveBtnClick(self);
+  if MessageDlg('Save current item?', mtInformation, [mbYes, mbNo], 0) = mrYes then
+    ItemSaveBtnClick(self);
+
   currentno := ItemBankFrm.BankInfo.NMCItems + 1;
   ItemNoEdit.Text := IntToStr(currentno);
   currentno := StrToInt(MinorCodeEdit.Text);

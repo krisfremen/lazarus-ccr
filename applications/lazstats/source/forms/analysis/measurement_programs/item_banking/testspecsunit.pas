@@ -26,7 +26,6 @@ type
     MajorCodeEdit: TEdit;
     MinorCodeEdit: TEdit;
     MinorCodeLabel: TLabel;
-    Panel1: TPanel;
     TFItemNoLabel: TLabel;
     TFNoEdit: TEdit;
     EssayNoEdit: TEdit;
@@ -43,7 +42,6 @@ type
     ReturnBtn: TButton;
     SaveDialog1: TSaveDialog;
     procedure FormShow(Sender: TObject);
-    procedure Panel1Paint(Sender: TObject);
     procedure ReturnBtnClick(Sender: TObject);
     procedure SelectItemBtnClick(Sender: TObject);
     procedure SelectChoiceBoxItemClick(Sender: TObject; Index: integer);
@@ -92,21 +90,10 @@ begin
   NoItemsEdit.Text := '0';
 end;
 
-procedure TTestSpecsForm.Panel1Paint(Sender: TObject);
-begin
-  //
-end;
-
 procedure TTestSpecsForm.SelectChoiceBoxItemClick(Sender: TObject; Index: integer);
 var
-  //nomc, notf, nomatch, noessay, i : integer;
-  //response: string;
   i, response: Integer;
 begin
-  //nomc := StrToInt(MCNoEdit.Text);
-  //notf := StrToInt(TFNoEdit.Text);
-  //nomatch := StrToInt(MatchNoEdit.Text);
-  //noessay := StrToInt(EssayNoEdit.Text);
   case Index of
     0 : begin // Select multiple choice items
           SelectedEdit.Text := 'MC';
@@ -115,8 +102,6 @@ begin
             ShowMCItem(i);
             response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
             if response = mrYes then SelectItemBtnClick(self) else SkipBtnClick(self);
-            //response := InputBox('Add item to test','Add?','Y');
-            //if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
           end;
         end;
     1 : begin // Select true or false items
@@ -126,10 +111,6 @@ begin
             ShowTFItem(i);
             response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
             if response = mrYes then SelectItemBtnclick(self) else SkipBtnClick(self);
-            {
-            response := InputBox('Add item to test','Add?','Y');
-            if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
-            }
           end;
         end;
     2 : begin // Select Essay items
@@ -139,10 +120,6 @@ begin
             ShowEssayItem(i);
             response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
             if response = mrYes then selectItemBtnClick(self) else SkipBtnClick(self);
-            {
-            response := InputBox('Add item to test','Add?','Y');
-            if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
-            }
           end;
         end;
     3 : begin // Select matching items
@@ -152,10 +129,6 @@ begin
             ShowMatchItem(i);
             response := MessageDlg('Add item to test?', mtConfirmation, [mbYes, mbNo], 0);
             if response = mrYes then SelectItemBtnClick(self) else SkipBtnClick(self);
-            {
-            response := InputBox('Add item to test','Add?','Y');
-            if response = 'Y' then SelectItemBtnClick(self) else SkipBtnClick(self);
-            }
           end;
         end;
   end;

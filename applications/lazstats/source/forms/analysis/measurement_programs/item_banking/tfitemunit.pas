@@ -91,7 +91,7 @@ var
   itemno: integer;
   JPEG: TJPEGImage;
 begin
-  response := InputBox('Code Number:','Number:','1');
+  response := InputBox('Code Number:', 'Number:','1');
   itemno := StrToInt(response);
   if itemno <= ItemBankFrm.BankInfo.NTFItems then
   begin
@@ -261,7 +261,8 @@ begin
   ItemStemEdit.Text := '';
   AnswerEdit.Text := '';
   jpegnameEdit.Text := 'none';
-  Image1.Canvas.Clear;
+  Image1.Picture.Clear;
+//  Image1.Canvas.Clear;
 end;
 
 initialization

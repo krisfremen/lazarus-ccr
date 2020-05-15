@@ -1,5 +1,5 @@
-// No test file found.
-// Unit (and related units) not tested...
+// Test file: "testitembank.bnk"
+// Not fully tested
 
 unit ItemBankingUnit;
 
@@ -9,7 +9,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  Menus, StdCtrls, FileCtrl,
+  Menus, StdCtrls, FileCtrl, Buttons,
   Globals, OutputUnit, ItemCodesUnit, TFItemUnit, EssayItemUnit,
   MCItemUnit, MatchItemUnit, TestSpecsUnit;
 
@@ -107,8 +107,11 @@ type
     BankNameText: TEdit;
     Button1: TButton;
     DirectoryEdit1: TEdit;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     NSpecifiedEdit: TEdit;
     Label3: TLabel;
+    SpeedButton1: TSpeedButton;
     TestSpecifiedEdit: TEdit;
     FileListBox1: TFileListBox;
     FilesLabel: TLabel;
@@ -145,6 +148,7 @@ type
     OpenItemBank: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure CreateCodesClick(Sender: TObject);
+    procedure DirectoryEdit1Change(Sender: TObject);
     procedure EssayItemsClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
@@ -157,6 +161,7 @@ type
     procedure PrintTestClick(Sender: TObject);
     procedure SaveBankMenuClick(Sender: TObject);
     procedure ShowCodesClick(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
     procedure TestSpecsClick(Sender: TObject);
     procedure TFItemsClick(Sender: TObject);
   private
@@ -170,7 +175,6 @@ type
     EssayInfo  : array[1..100] of EssayItem;
     TestContents  : array[1..100] of testspec;
     BankInfo : Bank;
- //   FileName : string;
 
   end; 
 
@@ -403,9 +407,9 @@ begin
           lReport.Add(TFItemInfo[tfitem].ItemStem);
           lReport.Add('A.  TRUE');
           lReport.Add('B.  False');
+          lReport.Add('');
         end;
       end;
-      lReport.Add('');
      end;
     if nessay > 0 then
     begin
@@ -419,12 +423,13 @@ begin
           lReport.Add('Item %d', [itemno]);
           essayitem := TestContents[i].ItemNumber;
           lReport.Add(EssayInfo[essayitem].ItemStem);
+          lReport.Add('');
         end;
       end;
-      lReport.Add('');
     end;
     if nmatch > 0 then
     begin
+      lReport.Add('');
       lReport.Add('MATCHING ITEMS:');
       for i := 1 to BankInfo.TestItems do
       begin
@@ -482,9 +487,9 @@ begin
             end;
             lReport.Add(outline);
           end;
+          lReport.Add('');
         end;
       end;
-      lReport.Add('');
     end;
 
     DisplayReport(lReport);
@@ -661,6 +666,15 @@ begin
   end;
 end;
 
+procedure TItemBankFrm.SpeedButton1Click(Sender: TObject);
+begin
+  SelDir.InitialDir := FileListbox1.Directory;
+  if SelDir.Execute then begin
+    FileListBox1.Directory := SelDir.FileName;
+    DirectoryEdit1.Text := SelDir.FileName;
+  end;
+end;
+
 procedure TItemBankFrm.TestSpecsClick(Sender: TObject);
 begin
   if TestSpecsForm = nil then
@@ -695,11 +709,14 @@ var
   response: TModalResult;
 begin
   CanClose := true;
-  response := MessageDlg('Save current item bank?', mtConfirmation, [mbYes, mbNo, mbCancel], 0);
-  case response of
-    mrYes: SaveBankMenuClick(self);
-    mrNo: ;
-    mrCancel: CanClose := false;
+  if BankNameText.Text <> '' then
+  begin
+    response := MessageDlg('Save current item bank?', mtConfirmation, [mbYes, mbNo, mbCancel], 0);
+    case response of
+      mrYes: SaveBankMenuClick(self);
+      mrNo: ;
+      mrCancel: CanClose := false;
+    end;
   end;
 end;
 
@@ -744,6 +761,7 @@ begin
         lReport.Add('Major code:  %d', [TestContents[i].MajorCode]);
         lReport.Add('Minor code:  %d', [TestContents[i].MinorCode]);
         lReport.Add('Item type:   %s', [TestContents[i].ItemType]);
+        lReport.Add('');
       end;
       DisplayReport(lReport);
     finally
@@ -771,6 +789,12 @@ begin
   if CodesForm = nil then
     Application.CreateForm(TCodesForm, CodesForm);
   CodesForm.ShowModal;
+end;
+
+procedure TItemBankFrm.DirectoryEdit1Change(Sender: TObject);
+begin
+  if DirectoryExists(DirectoryEdit1.Text) then
+    FileListbox1.Directory := DirectoryEdit1.Text;
 end;
 
 procedure TItemBankFrm.Button1Click(Sender: TObject);

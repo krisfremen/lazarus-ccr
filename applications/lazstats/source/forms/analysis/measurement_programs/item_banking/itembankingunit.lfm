@@ -35,7 +35,8 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
-    TabOrder = 0
+    ReadOnly = True
+    TabOrder = 1
   end
   object BankNameLabel: TLabel
     AnchorSideTop.Control = BankNameText
@@ -61,7 +62,8 @@ object ItemBankFrm: TItemBankFrm
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
-    TabOrder = 1
+    ReadOnly = True
+    TabOrder = 0
   end
   object NMCItemsLabel: TLabel
     AnchorSideTop.Control = NMCItemsText
@@ -85,6 +87,7 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     BorderSpacing.Left = 8
     BorderSpacing.Top = 4
+    ReadOnly = True
     TabOrder = 2
   end
   object TFItemsLabel: TLabel
@@ -110,6 +113,7 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
+    ReadOnly = True
     TabOrder = 3
   end
   object NMatchLabel: TLabel
@@ -135,6 +139,7 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
+    ReadOnly = True
     TabOrder = 4
   end
   object NEssayLabel: TLabel
@@ -160,6 +165,7 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
+    ReadOnly = True
     TabOrder = 5
   end
   object FilesLabel: TLabel
@@ -194,7 +200,7 @@ object ItemBankFrm: TItemBankFrm
     BorderSpacing.Bottom = 8
     Directory = 'C:\Users\wgmiller\Desktop'
     ItemHeight = 0
-    TabOrder = 6
+    TabOrder = 10
   end
   object Button1: TButton
     AnchorSideLeft.Control = Owner
@@ -209,23 +215,23 @@ object ItemBankFrm: TItemBankFrm
     BorderSpacing.Top = 16
     Caption = 'Click to Change Directory to Options Default Directory'
     OnClick = Button1Click
-    TabOrder = 7
+    TabOrder = 8
   end
   object DirectoryEdit1: TEdit
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Button1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
+    AnchorSideRight.Control = SpeedButton1
     Left = 8
     Height = 23
     Top = 265
-    Width = 371
+    Width = 344
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 4
-    BorderSpacing.Right = 8
-    TabOrder = 8
+    BorderSpacing.Right = 4
+    OnChange = DirectoryEdit1Change
+    TabOrder = 9
     Text = 'DirectoryEdit1'
   end
   object Label2: TLabel
@@ -251,7 +257,8 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
-    TabOrder = 9
+    ReadOnly = True
+    TabOrder = 6
   end
   object Label3: TLabel
     AnchorSideTop.Control = NSpecifiedEdit
@@ -276,25 +283,46 @@ object ItemBankFrm: TItemBankFrm
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
-    TabOrder = 10
+    ReadOnly = True
+    TabOrder = 7
     Text = 'NSpecifiedEdit'
+  end
+  object SpeedButton1: TSpeedButton
+    AnchorSideTop.Control = DirectoryEdit1
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 356
+    Height = 22
+    Top = 265
+    Width = 23
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = '...'
+    OnClick = SpeedButton1Click
   end
   object MainMenu1: TMainMenu
     left = 272
     top = 72
     object MenuItem1: TMenuItem
       Caption = 'Item Bank'
-      object OpenItemBank: TMenuItem
-        Caption = 'Open an existing item bank'
-        OnClick = OpenItemBankClick
-      end
       object NewItemBank: TMenuItem
         Caption = 'Create a new item bank'
         OnClick = NewItemBankClick
       end
+      object MenuItem3: TMenuItem
+        Caption = '-'
+      end
+      object OpenItemBank: TMenuItem
+        Caption = 'Open an existing item bank'
+        OnClick = OpenItemBankClick
+      end
       object SaveBankMenu: TMenuItem
-        Caption = 'Save Current Item Bank'
+        Caption = 'Save current item bank'
         OnClick = SaveBankMenuClick
+      end
+      object MenuItem2: TMenuItem
+        Caption = '-'
       end
       object ExitThis: TMenuItem
         Caption = 'Exit this procedure'
@@ -352,7 +380,7 @@ object ItemBankFrm: TItemBankFrm
     top = 128
   end
   object SelDir: TSelectDirectoryDialog
-    left = 208
-    top = 184
+    left = 216
+    top = 368
   end
 end
