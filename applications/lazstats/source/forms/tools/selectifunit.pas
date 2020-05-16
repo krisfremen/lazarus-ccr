@@ -87,10 +87,8 @@ type
                        VAR RightCnt : integer;
                        VAR Expression : string);
 
-    procedure GetExpression(VAR Expression : string;
-                        VAR SubExpr : string;
-                        VAR LeftParen : integer;
-                        VAR RightParen : integer);
+    procedure GetExpression(const Expression: string; var SubExpr: string;
+      out LeftParen, RightParen: integer);
 
     procedure DelSubSt(VAR Expression : string;
                    FromPos, ToPos : integer);
@@ -384,46 +382,48 @@ begin
      end;
 end;
 
-procedure TSelectIfFrm.GetExpression(var Expression: string;
-  var SubExpr: string; var LeftParen: integer; var RightParen: integer);
-  VAR i, j : integer;
+
+{ Search from left for first right paren.
+  Search back for first left paren (corresponding paren.)
+  Extract sub string. }
+procedure TSelectIfFrm.GetExpression(const Expression: string;
+  var SubExpr: string; out LeftParen, RightParen: integer);
+var
+  i, j : integer;
 begin
-     // Search from left for for first right paren.
-     // Search back for first left paren (corresponding paren.)
-     // Extract sub string.
-    RightParen := 0;
-    LeftParen := 0;
-    for i := 1 to Length(Expression) do
+  RightParen := 0;
+  LeftParen := 0;
+  for i := 1 to Length(Expression) do
+  begin
+    if Expression[i] = ')' then
     begin
-    	if Expression[i] = ')' then
-        begin
-        	RightParen := i;
-        	break;
-        end;
+      RightParen := i;
+      break;
     end;
+  end;
 
-    for i := RightParen downto 1 do
+  for i := RightParen downto 1 do
+  begin
+    if Expression[i] = '(' then
     begin
-    	if Expression[i] = '(' then
-        begin
-             LeftParen := i;
-             break;
-        end;
+      LeftParen := i;
+      break;
     end;
+  end;
 
-    if RightParen = 0 then  // no parentheses - take whole expression
-    begin
-    	SubExpr := Expression;
-        exit;
-    end;
+  if RightParen = 0 then  // no parentheses - take whole expression
+  begin
+    SubExpr := Expression;
+    exit;
+  end;
 
-    j := 0;
-    for i := LeftParen to RightParen do
-    begin
-         j := j + 1;
-    	 SubExpr := SubExpr + Expression[i];
-    end;
-    SetLength(SubExpr,j);
+  j := 0;
+  for i := LeftParen to RightParen do
+  begin
+    j := j + 1;
+    SubExpr := SubExpr + Expression[i];
+  end;
+  SetLength(SubExpr,j);
 end;
 
 procedure TSelectIfFrm.DelSubSt(var Expression: string; FromPos, ToPos: integer

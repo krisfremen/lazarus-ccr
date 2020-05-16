@@ -313,7 +313,6 @@ var
   itemno: integer;
   JPEG: TJPEGImage;
   nochoices: integer;
-  response: string;
 begin
   if MessageDlg('Save current item?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     ItemSaveBtnClick(self);
@@ -358,7 +357,6 @@ end;
 procedure TMCItemForm.StartNewBtnClick(Sender: TObject);
 var
   currentno: integer;
-  response: string;
 begin
   if MessageDlg('Save current item?', mtInformation, [mbYes, mbNo], 0) = mrYes then
     ItemSaveBtnClick(self);

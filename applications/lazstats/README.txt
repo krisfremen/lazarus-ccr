@@ -6,7 +6,9 @@ Clone of the LazStats statistics application by William Miller
 
 What is different?
 ------------------
-- Update form layout.
+- Updated form layout. More consistent user interface. Use anchoring and 
+  autosizing to avoid widgetset-dependent layout issues.
+- Input validation for more robust user interface.
 - Move units into subfolders for each major menu command in order to avoid the 
   extremely long file list in the project manager.
 - Include data and documentation folders of the original site. 
@@ -14,6 +16,8 @@ What is different?
   pdf help files.
 - Create chm help from the original pdf help files of the original site,
   tool used: HelpNDoc.
+- Refactoring of code to write text output into a TStringList instead of to 
+  the memo of TOutputFrm directly.
 
 License
 -------

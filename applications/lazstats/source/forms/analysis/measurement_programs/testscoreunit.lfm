@@ -1,149 +1,152 @@
 object TestScoreFrm: TTestScoreFrm
   Left = 501
-  Height = 543
+  Height = 575
   Top = 204
-  Width = 641
+  Width = 505
+  HelpType = htKeyword
+  HelpKeyword = 'ClassicalTestAnalysis.htm'
   AutoSize = True
   Caption = 'Test Scoring and Analysis'
-  ClientHeight = 543
-  ClientWidth = 641
+  ClientHeight = 575
+  ClientWidth = 505
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
-  object GroupBox1: TGroupBox
+  object OptionsGroup: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 8
     Height = 156
-    Top = 338
-    Width = 625
-    Anchors = [akLeft, akRight, akBottom]
+    Top = 370
+    Width = 496
+    Anchors = [akLeft, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     Caption = 'Options'
-    ChildSizing.LeftRightSpacing = 12
+    ChildSizing.LeftRightSpacing = 16
     ChildSizing.TopBottomSpacing = 6
-    ChildSizing.HorizontalSpacing = 8
+    ChildSizing.HorizontalSpacing = 32
     ChildSizing.VerticalSpacing = 2
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 2
     ClientHeight = 136
-    ClientWidth = 621
+    ClientWidth = 492
     TabOrder = 3
     object FirstChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 6
-      Width = 287
+      Width = 206
       Caption = 'First data record is the scoring key'
       OnClick = FirstChkClick
       TabOrder = 0
     end
     object SimultChk: TCheckBox
-      Left = 307
+      Left = 254
       Height = 19
       Top = 6
-      Width = 302
+      Width = 222
       Caption = 'Simultaneous Multiple Regression'
       TabOrder = 1
     end
     object ReplaceChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 27
-      Width = 287
+      Width = 206
       Caption = 'Replace grid items with item scores'
       TabOrder = 7
     end
     object CorrsChk: TCheckBox
-      Left = 307
+      Left = 254
       Height = 19
       Top = 27
-      Width = 302
+      Width = 222
       Caption = 'Intercorrelations Matrix'
       TabOrder = 2
     end
     object AddChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 48
-      Width = 287
+      Width = 206
       Caption = 'Add Test scores to the grid'
       TabOrder = 8
     end
     object PlotChk: TCheckBox
-      Left = 307
+      Left = 254
       Height = 19
       Top = 48
-      Width = 302
+      Width = 222
       Caption = 'Plot Total Score Distribution'
       TabOrder = 3
     end
     object ListChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 69
-      Width = 287
+      Width = 206
       Caption = 'List test scores'
       TabOrder = 9
     end
     object DescChk: TCheckBox
-      Left = 307
+      Left = 254
       Height = 19
       Top = 69
-      Width = 302
+      Width = 222
       Caption = 'Means, Variances, Standard Deviations'
       TabOrder = 4
     end
     object AlphaChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 90
-      Width = 287
+      Width = 206
       Caption = 'Cronbach Alpha Reliability'
       TabOrder = 10
     end
     object HoytChk: TCheckBox
-      Left = 307
+      Left = 254
       Height = 19
       Top = 90
-      Width = 302
+      Width = 222
       Caption = 'Hoyt''s Intraclass Reliability Estimates'
       TabOrder = 5
     end
     object StepChk: TCheckBox
-      Left = 12
+      Left = 16
       Height = 19
       Top = 111
-      Width = 287
+      Width = 206
       Caption = 'Stepwise KR#20 Reliability'
       TabOrder = 11
     end
     object MeansPlotChk: TCheckBox
-      Left = 307
+      Left = 254
       Height = 19
       Top = 111
-      Width = 302
+      Width = 222
       Caption = 'Plot Item Means'
       TabOrder = 6
     end
   end
-  object GroupBox2: TGroupBox
+  object ItemScoringGroup: TGroupBox
+    AnchorSideLeft.Control = ObtainScoreGroup
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 411
+    Left = 275
     Height = 215
     Top = 8
     Width = 221
-    Anchors = [akTop, akRight]
+    Anchors = [akTop, akLeft, akRight]
     AutoSize = True
     BorderSpacing.Top = 8
     BorderSpacing.Right = 9
@@ -152,7 +155,7 @@ object TestScoreFrm: TTestScoreFrm
     ClientWidth = 217
     TabOrder = 1
     object Label7: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = ItemNoEdit
       AnchorSideTop.Side = asrCenter
       Left = 16
@@ -164,7 +167,7 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object Label8: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = ItemScroll
       AnchorSideTop.Side = asrCenter
       Left = 16
@@ -178,7 +181,7 @@ object TestScoreFrm: TTestScoreFrm
     object Label9: TLabel
       AnchorSideTop.Control = ItemScroll
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
       Left = 194
       Height = 15
@@ -190,7 +193,7 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object Label10: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = ItemScroll
       AnchorSideTop.Side = asrBottom
       Left = 16
@@ -204,7 +207,7 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object Label11: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = RespNoEdit
       AnchorSideTop.Side = asrCenter
       Left = 16
@@ -216,7 +219,7 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object Label12: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = ResponseEdit
       AnchorSideTop.Side = asrCenter
       Left = 16
@@ -228,7 +231,7 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object Label13: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = ScoreEdit
       AnchorSideTop.Side = asrCenter
       Left = 16
@@ -240,10 +243,10 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object Label14: TLabel
-      AnchorSideLeft.Control = GroupBox2
+      AnchorSideLeft.Control = ItemScoringGroup
       AnchorSideTop.Control = ResponseScroll
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
       Left = 16
       Height = 15
@@ -257,7 +260,7 @@ object TestScoreFrm: TTestScoreFrm
     object Label15: TLabel
       AnchorSideTop.Control = ResponseScroll
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
       Left = 194
       Height = 15
@@ -269,8 +272,8 @@ object TestScoreFrm: TTestScoreFrm
       ParentColor = False
     end
     object ItemNoEdit: TEdit
-      AnchorSideTop.Control = GroupBox2
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideTop.Control = ItemScoringGroup
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
       Left = 157
       Height = 23
@@ -306,7 +309,7 @@ object TestScoreFrm: TTestScoreFrm
     object RespNoEdit: TEdit
       AnchorSideTop.Control = Label10
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
       Left = 157
       Height = 23
@@ -320,16 +323,16 @@ object TestScoreFrm: TTestScoreFrm
       Text = '1'
     end
     object ResponseEdit: TEdit
-      AnchorSideLeft.Control = Label12
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = RespNoEdit
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
-      Left = 77
+      Left = 157
       Height = 23
       Top = 115
-      Width = 132
+      Width = 52
+      Alignment = taRightJustify
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 4
@@ -339,7 +342,7 @@ object TestScoreFrm: TTestScoreFrm
     object ScoreEdit: TEdit
       AnchorSideTop.Control = ResponseEdit
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Control = ItemScoringGroup
       AnchorSideRight.Side = asrBottom
       Left = 157
       Height = 23
@@ -375,17 +378,19 @@ object TestScoreFrm: TTestScoreFrm
       OnChange = ResponseScrollChange
     end
   end
-  object GroupBox3: TGroupBox
-    AnchorSideLeft.Control = GroupBox2
-    AnchorSideTop.Control = GroupBox2
+  object ObtainScoreGroup: TGroupBox
+    AnchorSideLeft.Control = ItemScoringGroup
+    AnchorSideTop.Control = ItemScoringGroup
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 411
+    AnchorSideBottom.Control = Panel1
+    AnchorSideBottom.Side = asrBottom
+    Left = 275
     Height = 93
-    Top = 239
+    Top = 269
     Width = 222
-    Anchors = [akTop, akLeft, akRight]
+    Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Top = 16
     BorderSpacing.Right = 8
@@ -403,13 +408,13 @@ object TestScoreFrm: TTestScoreFrm
       Top = 27
       Width = 34
       BorderSpacing.Left = 8
-      BorderSpacing.Right = 8
+      BorderSpacing.Right = 16
       Caption = 'wrong'
       ParentColor = False
     end
     object NoCorBtn: TRadioButton
-      AnchorSideLeft.Control = GroupBox3
-      AnchorSideTop.Control = GroupBox3
+      AnchorSideLeft.Control = ObtainScoreGroup
+      AnchorSideTop.Control = ObtainScoreGroup
       Left = 12
       Height = 19
       Top = 4
@@ -420,7 +425,7 @@ object TestScoreFrm: TTestScoreFrm
       TabOrder = 0
     end
     object FractWrongBtn: TRadioButton
-      AnchorSideLeft.Control = GroupBox3
+      AnchorSideLeft.Control = ObtainScoreGroup
       AnchorSideTop.Control = NoCorBtn
       AnchorSideTop.Side = asrBottom
       Left = 12
@@ -447,7 +452,7 @@ object TestScoreFrm: TTestScoreFrm
       Text = '1'
     end
     object SumRespBtn: TRadioButton
-      AnchorSideLeft.Control = GroupBox3
+      AnchorSideLeft.Control = ObtainScoreGroup
       AnchorSideTop.Control = FractWrongBtn
       AnchorSideTop.Side = asrBottom
       Left = 12
@@ -465,9 +470,9 @@ object TestScoreFrm: TTestScoreFrm
     AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 432
+    Left = 296
     Height = 25
-    Top = 510
+    Top = 542
     Width = 54
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -483,9 +488,9 @@ object TestScoreFrm: TTestScoreFrm
     AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 494
+    Left = 358
     Height = 25
-    Top = 510
+    Top = 542
     Width = 76
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -502,9 +507,9 @@ object TestScoreFrm: TTestScoreFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 578
+    Left = 442
     Height = 25
-    Top = 510
+    Top = 542
     Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
@@ -519,19 +524,19 @@ object TestScoreFrm: TTestScoreFrm
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = GroupBox3
-    AnchorSideBottom.Control = GroupBox1
+    AnchorSideRight.Control = ObtainScoreGroup
+    AnchorSideBottom.Control = OptionsGroup
     Left = 8
-    Height = 322
+    Height = 354
     Top = 8
-    Width = 387
+    Width = 259
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 16
+    BorderSpacing.Right = 8
     BevelOuter = bvNone
-    ClientHeight = 322
-    ClientWidth = 387
+    ClientHeight = 354
+    ClientWidth = 259
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
@@ -546,7 +551,7 @@ object TestScoreFrm: TTestScoreFrm
     object Label2: TLabel
       AnchorSideLeft.Control = ItemList
       AnchorSideTop.Control = Panel1
-      Left = 215
+      Left = 151
       Height = 15
       Top = 0
       Width = 76
@@ -557,9 +562,9 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideLeft.Control = LastNameEdit
       AnchorSideTop.Control = LastInBtn
       AnchorSideBottom.Control = LastNameEdit
-      Left = 215
+      Left = 151
       Height = 15
-      Top = 172
+      Top = 204
       Width = 59
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 2
@@ -569,9 +574,9 @@ object TestScoreFrm: TTestScoreFrm
     object Label4: TLabel
       AnchorSideLeft.Control = FirstNameEdit
       AnchorSideBottom.Control = FirstNameEdit
-      Left = 215
+      Left = 151
       Height = 15
-      Top = 228
+      Top = 260
       Width = 60
       Anchors = [akLeft, akBottom]
       Caption = 'First Name:'
@@ -580,9 +585,9 @@ object TestScoreFrm: TTestScoreFrm
     object Label5: TLabel
       AnchorSideLeft.Control = IDNoEdit
       AnchorSideBottom.Control = IDNoEdit
-      Left = 215
+      Left = 151
       Height = 15
-      Top = 282
+      Top = 314
       Width = 58
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 2
@@ -597,9 +602,9 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
       Left = 0
-      Height = 305
+      Height = 337
       Top = 17
-      Width = 171
+      Width = 107
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Top = 2
       BorderSpacing.Right = 8
@@ -612,7 +617,7 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = VarList
-      Left = 179
+      Left = 115
       Height = 28
       Top = 17
       Width = 28
@@ -627,7 +632,7 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = InBtn
       AnchorSideTop.Side = asrBottom
-      Left = 179
+      Left = 115
       Height = 28
       Top = 49
       Width = 28
@@ -642,9 +647,9 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = Label4
-      Left = 179
+      Left = 115
       Height = 28
-      Top = 184
+      Top = 216
       Width = 28
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 16
@@ -658,9 +663,9 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = Label5
-      Left = 179
+      Left = 115
       Height = 28
-      Top = 238
+      Top = 270
       Width = 28
       Anchors = [akLeft, akBottom]
       BorderSpacing.Bottom = 16
@@ -675,9 +680,9 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideLeft.Side = asrCenter
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
-      Left = 179
+      Left = 115
       Height = 28
-      Top = 294
+      Top = 326
       Width = 28
       Anchors = [akLeft, akBottom]
       Images = MainDataModule.ImageList
@@ -693,10 +698,10 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Label3
-      Left = 215
-      Height = 139
+      Left = 151
+      Height = 171
       Top = 17
-      Width = 172
+      Width = 108
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 16
@@ -714,10 +719,10 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = LastInBtn
       AnchorSideBottom.Side = asrBottom
-      Left = 215
+      Left = 151
       Height = 23
-      Top = 189
-      Width = 172
+      Top = 221
+      Width = 108
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       ReadOnly = True
@@ -730,10 +735,10 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = FirstInBtn
       AnchorSideBottom.Side = asrBottom
-      Left = 215
+      Left = 151
       Height = 23
-      Top = 243
-      Width = 172
+      Top = 275
+      Width = 108
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       ReadOnly = True
@@ -746,10 +751,10 @@ object TestScoreFrm: TTestScoreFrm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = IDInBtn
       AnchorSideBottom.Side = asrBottom
-      Left = 215
+      Left = 151
       Height = 23
-      Top = 299
-      Width = 172
+      Top = 331
+      Width = 108
       Anchors = [akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       ReadOnly = True
@@ -763,8 +768,8 @@ object TestScoreFrm: TTestScoreFrm
     AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 494
-    Width = 641
+    Top = 526
+    Width = 505
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end

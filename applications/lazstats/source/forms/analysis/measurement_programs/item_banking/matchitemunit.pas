@@ -206,7 +206,6 @@ end;
 
 procedure TMatchItemForm.FormShow(Sender: TObject);
 var
-  nitems: integer;
   noleft, noright: integer;
   JPEG: TJPEGImage;
 begin
@@ -225,7 +224,6 @@ begin
 
   if ItemBankFrm.BankInfo.NMatchItems  > 0 then
   begin
-    nitems := ItemBankFrm.BankInfo.NMatchItems;
     ItemNoEdit.Text := '1'; //IntToStr(ItemBankFrm.TFItemInfo[1].ItemNumber);
     MajorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[1].majorcode) ;
     MinorCodeEdit.Text := IntToStr(ItemBankFrm.MatchInfo[1].minorcode);

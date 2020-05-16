@@ -60,7 +60,8 @@ function StringsToInt(strcol : integer; VAR newcol : integer; prompt : boolean) 
 
 implementation
 
-uses MainUnit;
+uses
+  Utils, MainUnit;
 
 Function GoodRecord(Row, NoVars: integer; const GridPos: IntDyneVec): boolean;
 var
@@ -76,20 +77,18 @@ begin
 end;
 //-------------------------------------------------------------------
 
-procedure FormatCell(Col, Row : integer);
+procedure FormatCell(Col, Row: integer);
 var
   VarType : char;
   NoDec : integer;
-  Justify : char;
+  //Justify : char;
   missing : string;
   astr : string;
-  cellstr : string;
-  newcell : string;
+  cellStr : string;
+  newcellStr : string;
   X : double;
   Width : integer;
   cellsize : integer;
-  I: Integer;
-
 begin
   if OS3MainFrm.DataGrid.Cells[Col,Row] = '' then
     exit;
@@ -101,42 +100,27 @@ begin
 
   NoDec := StrToInt(DictionaryFrm.DictGrid.Cells[5,Col]);
 
-  astr := DictionaryFrm.DictGrid.Cells[7,Col];
-  if astr <> '' then Justify := astr[1] else Justify := 'L';
-
   missing := DictionaryFrm.DictGrid.Cells[6,Col];
-  cellstr := Trim(OS3MainFrm.DataGrid.Cells[Col,Row]);
-  if missing = cellstr then
+  cellStr := Trim(OS3MainFrm.DataGrid.Cells[Col,Row]);
+  if missing = cellStr then
     exit;
 
+  newCellStr := cellStr;
   if (VarType = 'F') and TryStrToFloat(cellStr, X) then
-    newcell := FloatToStrF(X, ffFixed, Width, NoDec)
+    newCellStr := FloatToStrF(X, ffFixed, Width, NoDec)
   else
-  if (VarType = 'I') and TryStrToInt(cellStr, I) then
-    newCell := IntToStr(I)
-   (*
-   if (VarTyp
-   if ((VarType = 'F') or (VarType = 'I')) then
-   begin
-     if TryStrToFloat(cellstr, X) then
-       newcell := FloatToStrF(X, ffFixed, Width, NoDec);
-     {
-          if IsNumeric(cellstr) then
-          begin
-               X := StrToFloat(cellstr);
-               newcell := FloatToStrF(X,ffFixed,Width,NoDec);
-//               Str(X:Width:NoDec,newcell);
-          end;
-
-   }
-     end
-   *)
-  else
-    newcell := cellstr;
+  if (VarType = 'I') and TryStrToFloat(cellStr, X) then
+    newCellStr := IntToStr(trunc(X));
 
   // now set justification
   cellsize := OS3MainFrm.DataGrid.ColWidths[Col]; // in pixels
   cellsize := cellsize div 8;
+
+  {  wp: justification should be done by the grid, not by adding spaces!
+
+  astr := DictionaryFrm.DictGrid.Cells[7,Col];
+  if astr <> '' then Justify := astr[1] else Justify := 'L';
+
   case Justify of
     'L' : newcell := TrimLeft(newcell);
     'C' : begin
@@ -149,17 +133,19 @@ begin
             while Length(newcell) < cellsize do  newcell := ' ' + newcell;
           end;
   end;
-  OS3MainFrm.DataGrid.Cells[Col,Row] := newcell;
+  }
+
+  OS3MainFrm.DataGrid.Cells[Col,Row] := newCellStr;
 end;
 //-------------------------------------------------------------------
 
 procedure FormatGrid;
 var
-   i, j : integer;
+  i, j: integer;
 
 begin
-     for i := 1 to NoCases do
-          for j := 1 to NoVariables do FormatCell(j,i);
+  for i := 1 to NoCases do
+    for j := 1 to NoVariables do FormatCell(j,i);
 end;
 //-------------------------------------------------------------------
 
@@ -1371,17 +1357,15 @@ begin
 end;
 
 procedure PasteIt;
-VAR
-     astring, cellstr : string;
-     col, howlong, startcol : integer;
-     startrows :integer;
-     row, i, j : integer;
-     buf : pchar;
-     strarray : array[0..100000] of char;
-     size : integer;
-     achar : char;
-     pos : integer;
-
+var
+  astring, cellstr : string;
+  col, howlong, startcol : integer;
+  startrows :integer;
+  row, i, j : integer;
+//     buf : pchar;
+//     strarray : array[0..100000] of char;
+  achar : char;
+  pos : integer;
 begin
    Assert(OS3MainFrm <> nil);
    Assert(DictionaryFrm <> nil);
@@ -1407,30 +1391,37 @@ begin
      end;
      OS3MainFrm.DataGrid.Row := startrows;
      OS3MainFrm.DataGrid.Col := startcol;
+
+     {
      buf := strarray;
      size := 100000;
+     }
 
     // get clipboard info
-    if (Clipboard.HasFormat(CF_TEXT)) then astring := Clipboard.AsText
+    if (Clipboard.HasFormat(CF_TEXT)) then
+      astring := Clipboard.AsText
     else
     begin
-       ShowMessage('The clipboard does not contain text.');
+       ErrorMsg('The clipboard does not contain text.');
        exit;
     end;
 
-     buf := strarray;
-     size := 100000;
-     ClipBoard.GetTextBuf(buf,size);
-     // put buf in a string to parse
-     astring := buf;
-     howlong := Length(astring);
-     pos := 1;
-     cellstr := '';
-     DictionaryFrm.DictGrid.ColCount := 8;
-     DictionaryFrm.DictGrid.RowCount := 2;
-     NoVariables := OS3MainFrm.DataGrid.ColCount - 1;
-     while howlong > 0 do
-     begin
+    {
+    buf := strarray;
+    size := 100000;
+    ClipBoard.GetTextBuf(buf,size);
+    // put buf in a string to parse
+    astring := buf;
+    }
+
+    howlong := Length(astring);
+    pos := 1;
+    cellstr := '';
+    DictionaryFrm.DictGrid.ColCount := 8;
+    DictionaryFrm.DictGrid.RowCount := 2;
+    NoVariables := OS3MainFrm.DataGrid.ColCount - 1;
+    while howlong > 0 do
+    begin
           achar := astring[pos];
           if ord(achar) = 9 then // tab character - end of a grid cell value
           begin
@@ -1478,14 +1469,13 @@ begin
                pos := pos + 1;
                howlong := howlong - 1;
           end;
-     end;
-     // delete extraneous row and column
-     OS3MainFrm.DataGrid.Col := NoVariables;
-//     DeleteCol;
-     OS3MainFrm.DataGrid.Row := NoCases+1;
-//     CutaRow;
-     OS3MainFrm.NoCasesEdit.Text := IntToStr(NoCases+1);
-     OS3MainFrm.NoVarsEdit.Text := IntToStr(NoVariables);
+    end;
+
+    // delete extraneous row and column
+    OS3MainFrm.DataGrid.Col := NoVariables;
+    OS3MainFrm.DataGrid.Row := NoCases+1;
+    OS3MainFrm.NoCasesEdit.Text := IntToStr(NoCases+1);
+    OS3MainFrm.NoVarsEdit.Text := IntToStr(NoVariables);
 end;
 
 procedure RowColSwap;

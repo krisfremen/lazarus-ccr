@@ -249,7 +249,6 @@ end;
 procedure TTwoWayLogLinFrm.ComputeBtnClick(Sender: TObject);
 var
    Data : DblDyneMat;
-   NewData : DblDyneMat = nil;
    Prop : DblDyneMat;
    LogData : DblDyneMat;
    Expected : DblDyneMat;
@@ -313,7 +312,6 @@ begin
       SetLength(Prop, Nrows + 1, Ncols + 1);
       SetLength(LogData, Nrows + 1, Ncols + 1);
       SetLength(Expected, Nrows + 1, Ncols + 1);
-      SetLength(NewData, Nrows + 1, Ncols + 1);
       SetLength(NewRowMarg, Nrows + 1);
       SetLength(NewColMarg, Ncols + 1);
 
@@ -348,7 +346,6 @@ begin
       SetLength(Prop,Nrows+1,Ncols+1);
       SetLength(LogData,Nrows+1,Ncols+1);
       SetLength(Expected,Nrows+1,Ncols+1);
-      SetLength(NewData,Nrows+1,Ncols+1);
       SetLength(NewRowMarg,Nrows+1);
       SetLength(NewColMarg,Ncols+1);
   end;
@@ -705,7 +702,6 @@ begin
 
     NewColMarg := nil;
     NewRowMarg := nil;
-    NewData := nil;
     Expected := nil;
     LogData := nil;
     Prop := nil;

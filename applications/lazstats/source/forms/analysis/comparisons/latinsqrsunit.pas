@@ -1899,7 +1899,7 @@ var
   Grptotals: DblDyneVec;
   Subjtotals: DblDyneMat;
   design: StrDyneMat;
-  G, term1, term2, term3, term4, term5, term6, term7: double;
+  term1, term2, term3, term4, term5, term6, term7: double;
   sumxsqr: double;
   SSbetsubj, SSgroups, SSsubwGrps, SSwithinsubj, SSa, SSb, SSab: double;
   SSerrwithin, SStotal, MSgroups, MSsubwGrps, MSa, MSb, MSab: double;
@@ -1994,7 +1994,6 @@ begin
     for j := 0 to n do
       Subjtotals[i,j] := 0.0;
 
-  G := 0.0;
   sumxsqr := 0.0;
   term1 := 0.0;
   term2 := 0.0;
@@ -2398,7 +2397,7 @@ var
   Grptotals: DblDyneVec;
   Subjtotals: DblDyneMat;
   design: StrDyneMat;
-  G, term1, term2, term3, term4, term5, term6, term7: double;
+  term1, term2, term3, term4, term5, term6, term7: double;
   sumxsqr: double;
   SSbetsubj, SSgroups, SSsubwGrps, SSwithinsubj, SSa, SSb, SSab: double;
   SSerrwithin, SStotal, MSgroups, MSsubwGrps, MSa, MSb, MSab: double;
@@ -2493,7 +2492,6 @@ begin
     for j := 0 to n do
       Subjtotals[i,j] := 0.0;
 
-  G := 0.0;
   sumxsqr := 0.0;
   term1 := 0.0;
   term2 := 0.0;
@@ -2898,7 +2896,7 @@ var
   Grptotals: DblDyneVec;
   Subjtotals: DblDyneMat;
   design: StrDyneMat;
-  G, term1, term2, term3, term4, term5, term6, term7, term8, term9: double;
+  term1, term2, term3, term4, term5, term6, term7, term8, term9: double;
   sumxsqr: double;
   SSbetsubj, SSgroups, SSsubwGrps, SSwithinsubj, SSa, SSb, SSc, SSab: double;
   SSerrwithin, SStotal, MSgroups, MSsubwGrps, MSa, MSb, MSc, MSab: double;
@@ -3000,7 +2998,6 @@ begin
     for j := 0 to n do
       Subjtotals[i,j] := 0.0;
 
-  G := 0.0;
   sumxsqr := 0.0;
   term1 := 0.0;
   term2 := 0.0;

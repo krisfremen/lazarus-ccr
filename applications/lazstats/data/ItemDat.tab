@@ -1,0 +1,17 @@
+VAR1	VAR2	VAR3	VAR4	VAR5	LastName	FirstName	IDNO
+1	1	1	1	1	Miller	Bill	1
+1	1	1	1	0	Benton	Barb	2
+1	1	1	0	0	Richards	Tom	3
+1	1	0	0	0	Thomas	Keith	4
+1	0	0	0	0	King	Bob	5
+0	0	0	0	0	Moreland	Rob	6
+1	0	0	0	0	Landis	Sandy	7
+1	1	0	0	0	Moore	Vernil	8
+1	1	1	0	0	Tyler	Dick	9
+1	1	1	1	0	Cook	Harry	10
+1	1	1	1	1	Rains	Claude	11
+1	0	1	0	1	Kent	Clark	12
+0	1	1	1	0	Clinton	Bill	13
+1	1	1	0	1	Bush	George	14
+1	1	0	1	1	Jefferson	Tom	15
+1	0	0	1	0	Lincoln	Abe	16

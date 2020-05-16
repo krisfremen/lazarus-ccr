@@ -1,3 +1,5 @@
+// File for testing: ItemDat.laz
+
 unit TestScoreUnit;
 
 {$mode objfpc}{$H+}
@@ -46,9 +48,9 @@ type
     RespNoEdit: TEdit;
     ItemNoEdit: TEdit;
     FractEdit: TEdit;
-    GroupBox1: TGroupBox;
-    GroupBox2: TGroupBox;
-    GroupBox3: TGroupBox;
+    OptionsGroup: TGroupBox;
+    ItemScoringGroup: TGroupBox;
+    ObtainScoreGroup: TGroupBox;
     Label10: TLabel;
     Label11: TLabel;
     Label6: TLabel;
@@ -107,8 +109,8 @@ type
     procedure SimMR(AReport: TStrings);
     procedure Hoyt(AReport: TStrings);
     procedure StepKR(AReport: TStrings);
-    procedure PlotScores;
-    procedure PlotMeans;
+    function PlotScores: Boolean;
+    function PlotMeans: Boolean;
 
     procedure UpdateBtnStates;
 
@@ -134,12 +136,11 @@ begin
   ResponseScroll.Min := 1;
   ItemScroll.Position := 1;
   ResponseScroll.Position := 1;
-  //InBtn.Enabled := true;
-  //OutBtn.Enabled := false;
   VarList.Items.Clear;
   ItemList.Items.Clear;
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+
   ItemNoEdit.Text := '1';
   RespNoEdit.Text := '1';
   ResponseEdit.Text := '1';
@@ -148,6 +149,7 @@ begin
   LastNameEdit.Text := '';
   FirstNameEdit.Text := '';
   IDNoEdit.Text := '';
+
   NoCorBtn.Checked := true;
   ReplaceChk.Checked := false;
   AddChk.Checked := false;
@@ -158,11 +160,10 @@ begin
   PlotChk.Checked := false;
   DescChk.Checked := false;
   FirstChk.Checked := true;
-  GroupBox2.Visible := false;
+
+  ItemScoringGroup.Visible := false;
+
   MaxRespNo := 0;
-  //LastInBtn.Visible := true;
-  //FirstInBtn.Visible := true;
-  //IDInBtn.Visible := true;
   StepChk.Checked := false;
   HoytChk.Checked := false;
   MeansPlotChk.Checked := false;
@@ -228,6 +229,7 @@ begin
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
 
+  Panel1.Constraints.MinHeight := ItemScoringGroup.Top + ItemScoringGroup.Height + ObtainScoreGroup.Height + ObtainScoreGroup.BorderSpacing.Top - Panel1.Top;
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
 
@@ -295,6 +297,7 @@ begin
     Responses[respno][item-1] := ResponseEdit.Text;
     RespWghts[respno][item-1] := StrToFloat(ScoreEdit.Text);
   end;
+
   item := ItemScroll.Position;
   ItemNoEdit.Text := IntToStr(item);
   respno := 1;
@@ -343,6 +346,7 @@ var
   i, j, col, start, count: integer;
   cellstring: string;
   lReport: TStrings;
+  canContinue: Boolean;
 begin
   NoItems := ItemList.Items.Count;
 
@@ -402,7 +406,12 @@ begin
     end;
   end;
 
-  // now score the responses
+
+  // Avoid crashing when the scrollbar has not been clicked.
+  if not FirstChk.checked and (MaxRespNo = 0) then
+    MaxRespNo := 1;
+
+    // now score the responses
   ItemScores();
 
   // place item scores in grid if elected
@@ -462,13 +471,13 @@ begin
     // Get simultaneous multiple regressions if elected
     if SimultChk.Checked then SimMR(lReport);
 
-    if lReport.Count > 0 then DisplayReport(lReport);
+    if lReport.Count > 0 then canContinue := DisplayReport(lReport);
 
     // plot subject scores if elected
-    if PlotChk.Checked then PlotScores();
+    if PlotChk.Checked and canContinue then canContinue := PlotScores();
 
     // Plot item means if elected
-    if MeansPlotChk.Checked then PlotMeans();
+    if MeansPlotChk.Checked and canContinue then PlotMeans();
 
   finally
     lReport.Free;
@@ -477,8 +486,7 @@ end;
 
 procedure TTestScoreFrm.FirstChkClick(Sender: TObject);
 begin
-     if FirstChk.Checked then GroupBox2.Visible := false else
-        GroupBox2.Visible := true;
+  ItemScoringGroup.Visible := not FirstChk.Checked;
 end;
 
 procedure TTestScoreFrm.FirstInBtnClick(Sender: TObject);
@@ -508,32 +516,32 @@ begin
     score := 0.0;
     if (not GoodRecord(i,NoSelected,ColNoSelected)) then continue;
     count := count + 1;
-    for j := 1 to NoItems do
+    for j := 0 to NoItems-1 do
     begin
-      col := ColNoSelected[j-1];
-      response := Trim(OS3MainFrm.DataGrid.Cells[col,i]);
+      col := ColNoSelected[j];
+      response := Trim(OS3MainFrm.DataGrid.Cells[col, i]);
       for k := 1 to MaxRespNo do
       begin
-        if (response = Responses[k][j-1])then
+        if response = Responses[k, j]then
         begin
           if SumRespBtn.Checked then
           begin
-            score := score + RespWghts[k][j-1];
-            Data[count-1,j-1] := RespWghts[k][j-1];
+            score := score + RespWghts[k, j];
+            Data[count-1, j] := RespWghts[k, j];
           end;
 
           if NoCorBtn.Checked then
           begin
             score := score + 1;
-            Data[count-1,j-1] := 1;
+            Data[count-1, j] := 1;
           end;
 
           if FractWrongBtn.Checked then
           begin
             denom := StrToFloat(FractEdit.Text);
             fract := 1.0 / denom;
-            score := score + RespWghts[k][j-1] - (fract * RespWghts[k][j-1]);
-            Data[count-1,j-1] :=RespWghts[k][j-1] - (fract * RespWghts[k][j-1]);
+            score := score + RespWghts[k, j] - fract * RespWghts[k, j];
+            Data[count-1,j] := RespWghts[k, j] - fract * RespWghts[k, j];
           end;
         end;
       end;
@@ -557,13 +565,13 @@ begin
 
   outline := '';
   if IDNoEdit.Text <> '' then
-    outline := outline + 'PERSON ID NUMBER '
+    outline := outline + 'PERSON ID NUMBER  '
   else
-    outline := outline + 'CASE            ';
+    outline := outline + 'CASE              ';
   if FirstNameEdit.Text <> '' then
-    outline := outline + 'FIRST NAME ';
+    outline := outline + 'FIRST NAME  ';
   if LastNameEdit.Text <> '' then
-  outline := outline + 'LAST NAME TEST SCORE';
+  outline := outline + 'LAST NAME  TEST SCORE';
   AReport.Add(outline);
 
   count := 0;
@@ -578,28 +586,28 @@ begin
     begin
       col := IDCol;
       namestr := Trim(OS3MainFrm.DataGrid.Cells[col,i]);
-      outline := outline + Format('%16s ', [namestr]);
+      outline := outline + Format('%16s  ', [namestr]);
     end else
     begin
       namestr := Trim(OS3MainFrm.DataGrid.Cells[0,i]);
-      outline := outline + Format('%-16s ', [namestr]);
+      outline := outline + Format('%-16s  ', [namestr]);
     end;
 
     if FirstNameEdit.Text <> '' then
     begin
       col := FNameCol;
       namestr := Trim(OS3MainFrm.DataGrid.Cells[col,i]);
-      outline := outline + Format('%10s ', [namestr]);
+      outline := outline + Format('%10s  ', [namestr]);
     end;
 
     if LastNameEdit.Text <> '' then
     begin
       col := LNameCol;
       namestr := Trim(OS3MainFrm.DataGrid.Cells[col,i]);
-      outline := outline + Format('%10s ', [namestr]);
+      outline := outline + Format('%9s  ', [namestr]);
     end;
 
-    outline := outline + Format('%6.2f', [Data[count-1,NoItems]]);
+    outline := outline + Format('%7.2f', [Data[count-1,NoItems]]);
     AReport.Add(outline);
   end;
 
@@ -706,19 +714,21 @@ begin
 
   if DescChk.Checked then
   begin
+    AReport.Add('');
     title := 'Means';
     DynVectorPrint(means, NoItems+1, title, ColLabels, NCases, AReport);
 
+    AReport.Add('');
     title := 'Variances';
     DynVectorPrint(variances, NoItems+1, title, ColLabels, NCases, AReport);
 
+    AReport.Add('');
     title := 'Standard Deviations';
     DynVectorPrint(stddevs, NoItems+1, title, ColLabels, NCases, AReport);
   end;
 
   if CorrsChk.Checked or DescChk.Checked then
   begin
-    AReport.Add('');
     AReport.Add(DIVIDER);
     AReport.Add('');
   end;
@@ -768,7 +778,8 @@ begin
 
   AReport.Add('Multiple Correlation Coefficients for Each Variable');
   AReport.Add('');
-  AReport.Add('%10s%8s%10s%10s%12s%5s%5s', ['Variable','R','R2','F','Prob.>F','DF1','DF2']);
+  AReport.Add(' Variable      R         R2        F      Prob > F   DF1    DF2 ');
+  AReport.Add('----------  --------  --------  --------  --------  -----  -----');
 
   df1 := NoItems - 1.0;
   df2 := NCases - NoItems;
@@ -780,18 +791,20 @@ begin
     W[i] := (R2s[i] / df1) / ((1.0-R2s[i]) / df2);
     FProbs[i] := probf(W[i],df1,df2);
     valstring := Format('%10s', [ColLabels[i]]);
-    AReport.Add('%10s%10.3f%10.3f%10.3f%10.3f%5.0f%5.0f', [valstring,sqrt(R2s[i]),R2s[i],W[i],FProbs[i],df1,df2]);
+    AReport.Add('%10s  %7.3f   %7.3f   %7.3f   %7.3f   %4.0f   %4.0f', [valstring,sqrt(R2s[i]),R2s[i],W[i],FProbs[i],df1,df2]);
+
     // betas
     for j := 0 to NoItems-1 do
       ProdMat[i,j] := -CorrMat[i,j] / CorrMat[j,j];
   end;
 
+  AReport.Add('');
   title := 'Betas in Columns';
   MatPrint(ProdMat, NoItems, NoItems, title, RowLabels, ColLabels, NCases, AReport);
 
+  AReport.Add('');
   AReport.Add('Standard Errors of Prediction');
   AReport.Add('Variable     Std.Error');
-
   for i := 0 to NoItems-1 do
   begin
     StdErr := (NCases-1) * Variances[i] * (1.0 / CorrMat[i,i]);
@@ -803,6 +816,7 @@ begin
     for j := 0 to NoItems-1 do
       if (i <> j) then ProdMat[i,j] := ProdMat[i,j] * (StdDevs[j]/StdDevs[i]);
 
+  AReport.Add('');
   title := 'Raw Regression Coefficients';
   MatPrint(ProdMat, NoItems, NoItems, title, RowLabels, ColLabels, NCases,AReport);
   AReport.Add('Variable   Constant');
@@ -887,12 +901,13 @@ begin
 
   AReport.Add('Analysis of Variance for Hoyt Reliabilities');
   AReport.Add('');
-  AReport.Add('SOURCE    D.F.          SS        MS        F        PROB');
-  AReport.Add('Subjects  %3.0f       %8.2f  %8.2f  %8.2f  %8.2f', [dfcases, SSCases, MSCases, F1, prob1]);
-  AReport.Add('Within    %3.0f       %8.2f  %8.2f', [dfwithin, SSWithin, MSWithin]);
-  AReport.Add('Items     %3.0f       %8.2f  %8.2f  %8.2f  %8.2f', [dfitems, SSItems, MSItems, F2, prob2]);
-  AReport.Add('Error     %3.0f       %8.2f  %8.2f', [dferror, SSerror, MSerror]);
-  AReport.Add('Total     %3.0f       %8.2f', [dftotal, TotalSS,  MSTotal]);
+  AReport.Add('SOURCE     D.F.       SS         MS         F        PROB   ');
+  AReport.Add('--------  ------   ---------  ---------  --------  ---------');
+  AReport.Add('Subjects   %3.0f     %8.2f   %8.2f   %8.2f   %8.2f', [dfcases, SSCases, MSCases, F1, prob1]);
+  AReport.Add('Within     %3.0f     %8.2f   %8.2f', [dfwithin, SSWithin, MSWithin]);
+  AReport.Add('Items      %3.0f     %8.2f   %8.2f   %8.2f   %8.2f', [dfitems, SSItems, MSItems, F2, prob2]);
+  AReport.Add('Error      %3.0f     %8.2f   %8.2f', [dferror, SSerror, MSerror]);
+  AReport.Add('Total      %3.0f     %8.2f', [dftotal, TotalSS,  MSTotal]);
   AReport.Add('');
 
   Hoyt1 := 1.0 - (MSWithin / MSCases);
@@ -901,16 +916,16 @@ begin
   Hoyt3 := (MSCases - MSWithin) / (MSCases + (NoItems-1.0) * MSWithin);
 
   SEMeas1 := stddevs[NoItems] * sqrt(1.0 - Hoyt1);
-  AReport.Add('Hoyt Unadjusted Test Rel. for scale %s  = %6.4f  S.E. of Measurement = %8.3f', [ColLabels[NoItems], Hoyt1, SEMeas1]);
+  AReport.Add('Hoyt Unadjusted Test Rel. for scale %s: %6.4f;  S.E. of Measurement: %8.3f', [ColLabels[NoItems], Hoyt1, SEMeas1]);
 
   SEMeas2 := stddevs[NoItems] * sqrt(1.0 - Hoyt2);
-  AReport.Add('Hoyt Adjusted Test Rel. for scale %s    = %6.4f  S.E. of Measurement = %8.3f', [ColLabels[NoItems], Hoyt2, SEMeas2]);
+  AReport.Add('Hoyt Adjusted Test Rel. for scale %s:   %6.4f;  S.E. of Measurement: %8.3f', [ColLabels[NoItems], Hoyt2, SEMeas2]);
 
   SEMeas3 := stddevs[NoItems] * sqrt(1.0 - Hoyt3);
-  AReport.Add('Hoyt Unadjusted Item Rel. for scale %s  = %6.4f  S.E. of Measurement = %8.3f', [ColLabels[NoItems], Hoyt3, SEMeas3]);
+  AReport.Add('Hoyt Unadjusted Item Rel. for scale %s: %6.4f;  S.E. of Measurement: %8.3f', [ColLabels[NoItems], Hoyt3, SEMeas3]);
 
   SEMeas4 := stddevs[NoItems] * sqrt(1.0 - Hoyt4);
-  AReport.Add('Hoyt Adjusted Item Rel. for scale %s    = %6.4f  S.E. of Measurement = %8.3f', [ColLabels[NoItems], Hoyt4, SEMeas4]);
+  AReport.Add('Hoyt Adjusted Item Rel. for scale %s:   %6.4f;  S.E. of Measurement: %8.3f', [ColLabels[NoItems], Hoyt4, SEMeas4]);
 
   AReport.Add('');
   AReport.Add(DIVIDER);
@@ -1030,6 +1045,7 @@ begin
       incount := incount + 1;
       invalues[incount-1] := v1;
     end;
+    AReport.Add('');
 
   until done;
 
@@ -1048,7 +1064,7 @@ begin
   UpdateBtnStates;
 end;
 
-procedure TTestScoreFrm.PlotScores;
+function TTestScoreFrm.PlotScores: Boolean;
 var
   rowvar: DblDyneVec;
   totscrs: DblDyneVec;
@@ -1096,7 +1112,7 @@ begin
   GraphFrm.WallColor := GRAPH_WALL_COLOR;
   GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
   GraphFrm.ShowBackWall := true;
-  GraphFrm.ShowModal;
+  Result := GraphFrm.ShowModal = mrOK;
 
   rowvar := nil;
   totscrs := nil;
@@ -1104,7 +1120,7 @@ begin
   GraphFrm.Ypoints := nil;
 end;
 
-procedure TTestScoreFrm.PlotMeans;
+function TTestScoreFrm.PlotMeans: Boolean;
 var
   rowvar: DblDyneVec;
   i: integer;
@@ -1133,7 +1149,7 @@ begin
   GraphFrm.WallColor := GRAPH_WALL_COLOR;
   GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
   GraphFrm.ShowBackWall := true;
-  GraphFrm.ShowModal;
+  Result := GraphFrm.ShowModal = mrOK;
 
   rowvar := nil;
   GraphFrm.Xpoints := nil;

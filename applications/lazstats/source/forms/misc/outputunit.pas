@@ -50,7 +50,7 @@ type
 var
   OutputFrm: TOutputFrm;
 
-procedure DisplayReport(AReport: TStrings);
+function DisplayReport(AReport: TStrings): Boolean;
 
 
 implementation
@@ -61,8 +61,9 @@ const
   TOP_MARGIN = 150;
   BOTTOM_MARGIN = 200;
 
-procedure DisplayReport(AReport: TStrings);
+function DisplayReport(AReport: TStrings): Boolean;
 begin
+  Result := false;
   if AReport.Count > 0 then
   begin
     if OutputFrm = nil then
@@ -70,7 +71,7 @@ begin
     else
       OutputFrm.Clear;
     OutputFrm.AddLines(AReport);
-    OutputFrm.ShowModal;
+    Result := OutputFrm.ShowModal = mrOK;
   end;
 end;
 
