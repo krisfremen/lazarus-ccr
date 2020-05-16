@@ -476,13 +476,13 @@ object MainForm: TMainForm
           AnchorSideTop.Control = BtnGPSPoints
           AnchorSideRight.Control = BtnGPSPoints
           Left = 8
-          Height = 30
+          Height = 45
           Top = 4
           Width = 178
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Left = 8
           BorderSpacing.Top = 4
-          Caption = 'Click with right mouse button to add a GPS point.'
+          Caption = 'Click with right mouse button to add a GPS point.'#13#10'Settings on page "Config".'
           ParentColor = False
           WordWrap = True
         end
@@ -495,8 +495,8 @@ object MainForm: TMainForm
           AnchorSideBottom.Control = GbGPS
           AnchorSideBottom.Side = asrBottom
           Left = 8
-          Height = 35
-          Top = 50
+          Height = 20
+          Top = 65
           Width = 237
           Anchors = [akTop, akLeft, akRight, akBottom]
           AutoSize = False
@@ -716,32 +716,18 @@ object MainForm: TMainForm
         OnChange = CbDebugTilesChange
         TabOrder = 3
       end
-      object CbShowPOIImage: TCheckBox
-        AnchorSideLeft.Control = CbDebugTiles
-        AnchorSideTop.Control = Bevel1
-        AnchorSideTop.Side = asrBottom
-        Left = 6
-        Height = 19
-        Top = 143
-        Width = 107
-        BorderSpacing.Top = 6
-        Caption = 'Show POI image'
-        OnChange = CbShowPOIImageChange
-        TabOrder = 4
-      end
       object BtnPOITextFont: TButton
-        AnchorSideLeft.Control = CbShowPOIImage
-        AnchorSideTop.Control = CbShowPOIImage
+        AnchorSideTop.Control = rgPOIMode
         AnchorSideTop.Side = asrBottom
-        Left = 6
+        Left = 16
         Height = 25
-        Top = 170
+        Top = 230
         Width = 93
         AutoSize = True
         BorderSpacing.Top = 8
         Caption = 'POI text font'
         OnClick = BtnPOITextFontClick
-        TabOrder = 5
+        TabOrder = 4
       end
       object cbPOITextBgColor: TColorBox
         AnchorSideLeft.Control = LblPOITextBgColor
@@ -749,26 +735,26 @@ object MainForm: TMainForm
         AnchorSideTop.Control = BtnPOITextFont
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Side = asrBottom
-        Left = 154
+        Left = 164
         Height = 22
-        Top = 171
-        Width = 107
+        Top = 231
+        Width = 97
         NoneColorColor = clWhite
         Style = [cbStandardColors, cbExtendedColors, cbIncludeNone, cbCustomColor, cbPrettyNames, cbCustomColors]
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 8
         ItemHeight = 16
         OnChange = cbPOITextBgColorChange
-        TabOrder = 6
+        TabOrder = 5
       end
       object LblPOITextBgColor: TLabel
         AnchorSideLeft.Control = BtnPOITextFont
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = BtnPOITextFont
         AnchorSideTop.Side = asrCenter
-        Left = 107
+        Left = 117
         Height = 15
-        Top = 175
+        Top = 235
         Width = 39
         BorderSpacing.Left = 8
         Caption = 'Backgr.'
@@ -786,6 +772,36 @@ object MainForm: TMainForm
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 8
         Shape = bsTopLine
+      end
+      object rgPOIMode: TRadioGroup
+        AnchorSideLeft.Control = CbProviders
+        AnchorSideTop.Control = Bevel1
+        AnchorSideTop.Side = asrBottom
+        Left = 6
+        Height = 77
+        Top = 145
+        Width = 143
+        AutoFill = True
+        AutoSize = True
+        BorderSpacing.Top = 8
+        Caption = 'POI Mode'
+        ChildSizing.LeftRightSpacing = 12
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 57
+        ClientWidth = 139
+        ItemIndex = 0
+        Items.Strings = (
+          'default drawing'
+          'default POI image'
+          'custom drawing'
+        )
+        OnClick = rgPOIModeClick
+        TabOrder = 6
       end
     end
   end

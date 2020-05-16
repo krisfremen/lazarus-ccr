@@ -33,7 +33,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="MapViewer_Demo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -57,6 +57,13 @@
         <Filename Value="globals.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="gpsptform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GPSPointForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

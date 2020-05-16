@@ -29,7 +29,6 @@ type
     CbMouseCoords: TGroupBox;
     CbDistanceUnits: TComboBox;
     CbDebugTiles: TCheckBox;
-    CbShowPOIImage: TCheckBox;
     cbPOITextBgColor: TColorBox;
     FontDialog: TFontDialog;
     GbCenterCoords: TGroupBox;
@@ -62,6 +61,7 @@ type
     PageControl: TPageControl;
     PgData: TTabSheet;
     PgConfig: TTabSheet;
+    rgPOIMode: TRadioGroup;
     ZoomTrackBar: TTrackBar;
     procedure BtnGoToClick(Sender: TObject);
     procedure BtnLoadGPXFileClick(Sender: TObject);
@@ -93,6 +93,7 @@ type
     procedure MapViewZoomChange(Sender: TObject);
     procedure BtnLoadMapProvidersClick(Sender: TObject);
     procedure BtnSaveMapProvidersClick(Sender: TObject);
+    procedure rgPOIModeClick(Sender: TObject);
     procedure ZoomTrackBarChange(Sender: TObject);
 
   private
@@ -119,7 +120,7 @@ implementation
 uses
   LCLType, IniFiles, Math, FPCanvas, FPImage, GraphType,
   mvEngine, mvGPX,
-  globals, gpslistform;
+  globals, gpsPtForm, gpslistform;
 
 type
   TLocationParam = class
@@ -292,10 +293,12 @@ end;
 
 procedure TMainForm.CbShowPOIImageChange(Sender: TObject);
 begin
+  {
   if CbShowPOIImage.Checked then
     MapView.POIImage.Assign(POIImage)
   else
     MapView.POIImage.Clear;
+    }
 end;
 
 procedure TMainForm.CbUseThreadsChange(Sender: TObject);
@@ -379,20 +382,91 @@ end;
 
 procedure TMainForm.MapViewDrawGpsPoint(Sender: TObject;
   ADrawer: TMvCustomDrawingEngine; APoint: TGpsPoint);
-const
-  R = 5;
 var
   P: TPoint;
+  d: Integer;
+  sym: TGPSSymbol;
+  clr: TColor;
+  extent: TSize;
 begin
   // Screen coordinates of the GPS point
   P := TMapView(Sender).LonLatToScreen(APoint.RealPoint);
 
-  // Draw the GPS point as a circle
-  ADrawer.BrushColor := clRed;
+  // Draw the GPS point as specified by the data in the point's ExtraData
+  if not (APoint.ExtraData is TGPSExtraData) then
+    exit;
+
+  // Get the POI attributes
+  with TGPSExtraData(APoint.ExtraData) do
+  begin
+    clr := Color;
+    sym := Symbol;
+    d := Size div 2;
+  end;
+
+  // Draw the POI symbol
+  ADrawer.PenColor := clr;
+  case sym of
+    gpsPlus:
+      begin
+        ADrawer.Line(P.X - d, P.Y, P.X + d, P.Y);
+        ADrawer.Line(P.X, P.Y - d, P.X , P.Y + d);
+      end;
+    gpsCross:
+      begin
+        ADrawer.Line(P.x - d, P.Y - d, P.X + d, P.Y + d);
+        ADrawer.Line(P.x - d, P.Y + d, P.X + d, P.Y - d);
+      end;
+    gpsFilledCircle:
+      begin
+        ADrawer.BrushStyle := bsSolid;
+        ADrawer.BrushColor := clr;
+        ADrawer.Ellipse(P.X - d, P.Y - d, P.X + d, P.Y + d);
+      end;
+    gpsOpenCircle:
+      begin
+        ADrawer.BrushStyle := bsClear;
+        ADrawer.Ellipse(P.X - d, P.Y - d, P.X + d, P.Y + d);
+      end;
+    gpsFilledRect:
+      begin
+        ADrawer.BrushStyle := bsSolid;
+        ADrawer.BrushColor := clr;
+        ADrawer.Rectangle(P.X - d, P.Y - d, P.X + d, P.Y + d);
+      end;
+    gpsOpenRect:
+      begin
+        ADrawer.BrushStyle := bsClear;
+        ADrawer.Rectangle(P.X - d, P.Y - d, P.X + d, P.Y + d);
+      end;
+  end;
+
+  // Prepare text output: background color...
+  inc(P.Y, d + 4);
+  extent := ADrawer.TextExtent(APoint.Name);
+  if cbPOITextBgColor.selected = clNone then
+    ADrawer.BrushStyle := bsClear
+  else
+  begin
+    ADrawer.BrushStyle := bsSolid;
+    ADrawer.BrushColor := cbPOITextBgColor.Selected;
+  end;
+
+  // ... and font
+  ADrawer.FontColor := MapView.Font.Color;
+  ADrawer.FontName := MapView.Font.Name;
+  ADrawer.FontSize := MapView.Font.Size;
+  ADrawer.FontStyle := MapView.Font.Style;
+
+  // Write the POI text
+  ADrawer.TextOut(P.X - extent.CX div 2, P.Y, APoint.Name);
+end;
+
+{  ADrawer.BrushColor := clRed;
   ADrawer.BrushStyle := bsSolid;
   ADrawer.Ellipse(P.X - R, P.Y - R, P.X + R, P.Y + R);
 end;
-
+ }
 procedure TMainForm.MapViewMouseLeave(Sender: TObject);
 begin
   UpdateCoords(MaxInt, MaxInt);
@@ -440,13 +514,41 @@ var
   rPt: TRealPoint;
   gpsPt: TGpsPoint;
   gpsName: String;
+  gpsSize: Integer;
+  gpsSymbol: TGPSSymbol;
+  gpsColor: TColor;
+  F: TGPSPointForm;
 begin
   if (Button = mbRight) then begin
-    if not InputQuery('Name of GPS location', 'Please enter name', gpsName) then
-      exit;
     rPt := MapView.ScreenToLonLat(Point(X, Y));
-    gpsPt := TGpsPoint.CreateFrom(rPt);
-    gpsPt.Name := gpsName;
+
+    if rgPOIMode.ItemIndex in [0, 1] then
+    begin
+      if not InputQuery('Name of GPS location', 'Please enter name', gpsName) then
+        exit;
+      gpsPt := TGpsPoint.CreateFrom(rPt);
+      gpsPt.Name := gpsName;
+    end else
+    begin
+      if GPSPointForm = nil then begin
+        GPSPointForm := TGPSPointForm.Create(Application);
+        GPSPointForm.Position := poMainformCenter;
+        GPSPointForm.SetData('', clRed, gpsPlus, 10);
+      end;
+      if GPSPointForm.ShowModal <> mrOK then
+        exit;
+
+      GPSPointForm.GetData(gpsName, gpsColor, gpsSymbol, gpsSize);
+      gpsPt := TGpsPoint.CreateFrom(rPt);
+      gpsPt.Name := gpsName;
+      gpsPt.ExtraData := TGPSExtraData.Create(_CLICKED_POINTS_);
+      with TGPSExtraData(gpsPt.ExtraData) do
+      begin
+        Color := gpsColor;
+        Symbol := gpsSymbol;
+        Size := gpsSize;
+      end;
+    end;
     MapView.GpsItems.Add(gpsPt, _CLICKED_POINTS_);
   end;
 end;
@@ -529,6 +631,24 @@ begin
 
   finally
     ini.Free;
+  end;
+end;
+
+procedure TMainForm.rgPOIModeClick(Sender: TObject);
+begin
+  case rgPOIMode.ItemIndex of
+    0: begin   // default
+         MapView.POIImage.Clear;
+         MapView.OnDrawGPSPoint := nil;
+       end;
+    1: begin
+         MapView.POIImage.Assign(POIImage);
+         MapView.OnDrawGPSPoint := nil;
+       end;
+    2: begin
+         MapView.POIImage.Clear;
+         MapView.OnDrawGPSPoint := @MapViewDrawGpsPoint;
+       end;
   end;
 end;
 
