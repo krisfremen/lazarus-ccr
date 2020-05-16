@@ -15,11 +15,12 @@ type
 
   TDblDeclineFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     HelpBtn: TButton;
     Panel1: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     CostEdit: TEdit;
     LifeEdit: TEdit;
     EndEdit: TEdit;
@@ -143,11 +144,11 @@ procedure TDblDeclineFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 function TDblDeclineFrm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;

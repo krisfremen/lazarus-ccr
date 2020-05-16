@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Math, ContextHelpUnit;
+  StdCtrls, ExtCtrls, Buttons, Math, ContextHelpUnit;
 
 type
 
@@ -14,10 +14,11 @@ type
 
   TSumYrsDepFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     HelpBtn: TButton;
     ResetBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     CostEdit: TEdit;
     SalvageEdit: TEdit;
     LifeEdit: TEdit;
@@ -28,14 +29,20 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    PrevBtn: TSpeedButton;
+    NextBtn: TSpeedButton;
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
+    procedure LifeEditChange(Sender: TObject);
+    procedure NextBtnClick(Sender: TObject);
+    procedure PrevBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
   private
     { private declarations }
     function SYDDepreciation(Cost, Salvage: Extended; Life, Period: Integer): Extended;
+    procedure UpdateBtnStates;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
   public
     { public declarations }
@@ -50,11 +57,12 @@ implementation
 
 procedure TSumYrsDepFrm.ResetBtnClick(Sender: TObject);
 begin
-     CostEdit.Text := '';
-     SalvageEdit.Text := '';
-     LifeEdit.Text := '';
-     DepreciationEdit.Text := '';
-     PeriodEdit.Text := '';
+  CostEdit.Text := '';
+  SalvageEdit.Text := '';
+  LifeEdit.Text := '';
+  DepreciationEdit.Text := '';
+  PeriodEdit.Text := '1';
+  UpdateBtnstates;
 end;
 
 procedure TSumYrsDepFrm.ComputeBtnClick(Sender: TObject);
@@ -88,11 +96,11 @@ begin
   Constraints.MaxHeight := Height;
   Constraints.MinWidth := Width;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 procedure TSumYrsDepFrm.FormShow(Sender: TObject);
@@ -107,12 +115,41 @@ begin
   ContextHelpForm.HelpMessage((Sender as TButton).tag);
 end;
 
+procedure TSumYrsDepFrm.LifeEditChange(Sender: TObject);
+begin
+  UpdateBtnStates;
+end;
+
+procedure TSumYrsDepFrm.NextBtnClick(Sender: TObject);
+var
+  p, np: Integer;
+begin
+  if TryStrToInt(PeriodEdit.Text, p) and TryStrToInt(LifeEdit.Text, np) and (p < np) then
+  begin
+    inc(p);
+    PeriodEdit.Text := IntToStr(p);
+  end;
+  UpdateBtnStates;
+end;
+
+procedure TSumYrsDepFrm.PrevBtnClick(Sender: TObject);
+var
+  p: Integer;
+begin
+  if TryStrToInt(PeriodEdit.Text, p) and (p > 1) then
+  begin
+    dec(p);
+    PeriodEdit.Text := IntToStr(p);
+  end;
+  UpdateBtnStates;
+end;
+
+{ SYD = (cost - salvage) * (life - period + 1) / (life*(life + 1)/2)
+  Note: life*(life+1)/2 = 1+2+3+...+life "sum of years"
+  The depreciation factor varies from life/sum_of_years in first period = 1
+  down to  1/sum_of_years in last period = life.
+  Total depreciation over life is cost-salvage.}
 function TSumYrsDepFrm.SYDDepreciation(Cost, Salvage: Extended; Life, Period: Integer): Extended;
-{ SYD = (cost - salvage) * (life - period + 1) / (life*(life + 1)/2) }
-{ Note: life*(life+1)/2 = 1+2+3+...+life "sum of years"
-				The depreciation factor varies from life/sum_of_years in first period = 1
-																			 downto  1/sum_of_years in last period = life.
-				Total depreciation over life is cost-salvage.}
 var
   X1, X2: Extended;
 begin
@@ -183,6 +220,15 @@ begin
   end;
 
   Result := true;
+end;
+
+procedure TSumYrsDepFrm.UpdateBtnStates;
+var
+  p: Integer = 0;
+  np: Integer = 0;
+begin
+  PrevBtn.Enabled := TryStrToInt(PeriodEdit.Text, p) and (p > 1);
+  NextBtn.Enabled := TryStrToInt(LifeEdit.Text, np) and (p < np);
 end;
 
 initialization

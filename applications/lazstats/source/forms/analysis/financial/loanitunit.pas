@@ -14,6 +14,8 @@ type
 
   TLoanItFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
+    Bevel4: TBevel;
     CalendarBtn: TButton;
     CalendarDialog1: TCalendarDialog;
     Panel1: TPanel;
@@ -21,14 +23,14 @@ type
     DayEdit: TEdit;
     YearEdit: TEdit;
     MonthEdit: TEdit;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
+    MonthLabel: TLabel;
+    DayLabel: TLabel;
+    YearLabel: TLabel;
     NameEdit: TEdit;
     Label6: TLabel;
     ResetBtn: TButton;
     AmortizeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     AmountEdit: TEdit;
     InterestEdit: TEdit;
     YearsEdit: TEdit;
@@ -44,7 +46,6 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure Heading(AReport: TStrings);
   private
     { private declarations }
     function Validate(out AMsg: String; out AControl: TWinControl): boolean;
@@ -64,15 +65,15 @@ uses
 
 procedure TLoanItFrm.ResetBtnClick(Sender: TObject);
 begin
-     NameEdit.Text := '';
-     MonthEdit.Text := '';
-     DayEdit.Text := '';
-     YearEdit.Text := '';
-     YearsEdit.Text := '30';
-     AmountEdit.Text := '10000';
-     InterestEdit.Text := '6.5';
-     PayPerYrEdit.Text := '12';
-     RepayEdit.Text := '';
+  NameEdit.Text := '';
+  MonthEdit.Text := '';
+  DayEdit.Text := '';
+  YearEdit.Text := '';
+  YearsEdit.Text := '';
+  AmountEdit.Text := '';
+  InterestEdit.Text := '';
+  PayPerYrEdit.Text := '';
+  RepayEdit.Text := '';
 end;
 
 procedure TLoanItFrm.FormShow(Sender: TObject);
@@ -81,85 +82,87 @@ begin
 end;
 
 procedure TLoanItFrm.AmortizeBtnClick(Sender: TObject);
-VAR
-   no_per_year, year_payed, month_payed, day, month, j, k : integer;
-   fraction, interest, numerator, denominator, payment, total_interest : double;
-   amount, interest_payment, total_payed, pcnt_interest, years, no_years : double;
-   aname: string;
-   msg: String;
-   C: TWinControl;
-   lReport: TStrings;
+var
+  no_per_year, year_payed, month_payed, day, month, j, k : integer;
+  fraction, interest, numerator, denominator, payment, total_interest : double;
+  amount, interest_payment, total_payed, pcnt_interest, years, no_years : double;
+  aname: string;
+  msg: String;
+  C: TWinControl;
+  lReport: TStrings;
 begin
-   if not Validate(msg, C) then begin
-     C.SetFocus;
-     MessageDlg(msg, mtError, [mbOk], 0);
-     ModalResult := mrNone;
-     exit;
-   end;
+  if not Validate(msg, C) then begin
+    C.SetFocus;
+    MessageDlg(msg, mtError, [mbOk], 0);
+    ModalResult := mrNone;
+    exit;
+  end;
 
-   aname := NameEdit.Text;
-   no_per_year := StrToInt(PayPerYrEdit.Text);
-   day := StrToInt(DayEdit.Text);
-   month := StrToInt(MonthEdit.Text);
-   years := StrToFloat(YearEdit.Text);
-   amount := StrToFloat(AmountEdit.Text);
-   no_years := StrToFloat(YearsEdit.Text);
-   pcnt_interest := StrToFloat(InterestEdit.Text);
+  aname := NameEdit.Text;
+  no_per_year := StrToInt(PayPerYrEdit.Text);
+  day := StrToInt(DayEdit.Text);
+  month := StrToInt(MonthEdit.Text);
+  years := StrToFloat(YearEdit.Text);
+  amount := StrToFloat(AmountEdit.Text);
+  no_years := StrToFloat(YearsEdit.Text);
+  pcnt_interest := StrToFloat(InterestEdit.Text);
 
-   interest := pcnt_interest / 100.0;
-   numerator := interest * amount /  no_per_year ;
-   denominator := 1.0 - (1.0 / power((interest / no_per_year + 1.0),
-                            (no_per_year * no_years) ) );
-   payment := numerator / denominator;
-   RePayEdit.Text := Format('%10.2f', [payment]);
+  interest := pcnt_interest / 100.0;
+  numerator := interest * amount /  no_per_year;
+  denominator := 1.0 - (1.0 / power((interest / no_per_year + 1.0), (no_per_year * no_years) ) );
+  payment := numerator / denominator;
+  RePayEdit.Text := Format('%.2f', [payment]);
 
-   if not PrintChk.Checked then
-     exit;
+  if not PrintChk.Checked then
+    exit;
 
-   if (no_per_year < 12) then
-      fraction := 12.0 / no_per_year else fraction := 1.0;
+  if (no_per_year < 12) then
+    fraction := 12.0 / no_per_year else fraction := 1.0;
 
-   lReport := TStringList.Create;
-   try
-     lReport.Add('Payment Schedule Program by W. G. Miller');
-     lReport.Add('');
-     lReport.Add('----------------------------------------------------------------------------');
-     lReport.Add('');
-     lReport.Add('Name of Borrower: ' + aname);
-     lReport.Add('Amount borrowed: $%.2f at %.2f percent over %.1f years.', [amount, pcnt_interest, no_years]);
-     lReport.Add('');
-     total_interest := 0.0;
-     total_payed := 0.0;
-     for j := 1 to round(no_years) do
-     begin
-        Heading(lReport);
-        for k := 1 to no_per_year do
+  lReport := TStringList.Create;
+  try
+    lReport.Add(  'PAYMENT SCHEDULE PROGRAM by W. G. Miller');
+    lReport.Add(  '');
+    lReport.Add(  '---------------------------------------------------------------------------');
+    lReport.Add(  '');
+    lReport.Add(  'Name of Borrower: ' + aname);
+    lReport.Add(  'Amount borrowed: $%.2f at %.2f percent over %.1f years.', [amount, pcnt_interest, no_years]);
+    lReport.Add(  '');
+    total_interest := 0.0;
+    total_payed := 0.0;
+    for j := 1 to round(no_years) do
+    begin
+      lReport.Add('---------------------------------------------------------------------------');
+      lReport.Add(' PAYMENT        PAYMENT     INTEREST     BALANCE        TOTAL         TOTAL');
+      lReport.Add('   DATE          AMOUNT       PAYED     REMAINING     INTEREST         PAID');
+      lReport.Add('---------------------------------------------------------------------------');
+      //          'xx/xx/xxxx xxxxxxxxxxxx xxxxxxxxxxxx xxxxxxxxxxxx xxxxxxxxxxxx xxxxxxxxxxxx
+      for k := 1 to no_per_year do
+      begin
+        year_payed := round(years) + j - 1 ;
+        month_payed := round(k * fraction + (month - fraction));
+        if (month_payed > 12) then
         begin
-          year_payed := round(years) + j - 1 ;
-          month_payed := round(k * fraction + (month - fraction));
-          if (month_payed > 12) then
-          begin
-             year_payed := year_payed + 1;
-             month_payed := month_payed - 12;
-          end;
-          interest_payment := amount * interest / no_per_year;
-          amount := amount - payment + interest_payment;
-          total_interest := total_interest + interest_payment;
-          total_payed := total_payed + payment;
-          lReport.Add(' %2d/%2d/%2d %12.2f %12.2f %12.2f %12.2f %12.2f', [
-            month_payed, day, year_payed, payment, interest_payment,
-            amount, total_interest, total_payed
-          ]);
-        end; // next k
-        lReport.Add('');
-        //lReport.Add('----------------------------------------------------------------------------');
-     end; // next j
+          year_payed := year_payed + 1;
+          month_payed := month_payed - 12;
+        end;
+        interest_payment := amount * interest / no_per_year;
+        amount := amount - payment + interest_payment;
+        total_interest := total_interest + interest_payment;
+        total_payed := total_payed + payment;
+        lReport.Add('%2d/%2d/%4d %12.2f %12.2f %12.2f %12.2f %12.2f', [
+          month_payed, day, year_payed, payment, interest_payment,
+          amount, total_interest, total_payed
+        ]);
+      end; // next k
+      lReport.Add('');
+    end; // next j
 
-     DisplayReport(lReport);
+    DisplayReport(lReport);
 
-   finally
-     lReport.Free;
-   end;
+  finally
+    lReport.Free;
+  end;
 end;
 
 procedure TLoanItFrm.CalendarBtnClick(Sender: TObject);
@@ -187,24 +190,16 @@ procedure TLoanItFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([ResetBtn.Width, AmortizeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([ResetBtn.Width, AmortizeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
   AmortizeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
               {
   w := DayEdit.Width;
   DayEdit.Constraints.MaxWidth := w;
   MonthEdit.Constraints.MaxWidth := w;
   YearEdit.Constraints.MaxWidth := w;
   }
-end;
-
-procedure TLoanItFrm.Heading(AReport: TStrings);
-begin
-   AReport.Add('----------------------------------------------------------------------------');
-   AReport.Add('PAYMENT        PAYMENT      INTEREST      BALANCE      TOTAL           TOTAL');
-   AReport.Add('NUMBER         AMOUNT       PAYED         REMAINING    INTEREST        PAID');
-   AReport.Add('----------------------------------------------------------------------------');
 end;
 
 function TLoanItFrm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;

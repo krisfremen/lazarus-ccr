@@ -15,10 +15,11 @@ type
 
   TSLDepFrm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     HelpBtn: TButton;
     ResetBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     CostEdit: TEdit;
     SalvageEdit: TEdit;
     PeriodsEdit: TEdit;
