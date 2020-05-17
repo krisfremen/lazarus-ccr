@@ -3,6 +3,8 @@ object UChartFrm: TUChartFrm
   Height = 339
   Top = 233
   Width = 425
+  HelpType = htKeyword
+  HelpKeyword = 'DefectsperUnituChart.htm'
   AutoSize = True
   Caption = 'Defects per unit U Chart'
   ClientHeight = 339

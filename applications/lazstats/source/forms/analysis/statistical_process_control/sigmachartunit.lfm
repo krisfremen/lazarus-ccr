@@ -3,6 +3,8 @@ object SigmaChartFrm: TSigmaChartFrm
   Height = 298
   Top = 243
   Width = 397
+  HelpType = htKeyword
+  HelpKeyword = 'SControlChart.htm'
   AutoSize = True
   Caption = 'Sigma Charting'
   ClientHeight = 298

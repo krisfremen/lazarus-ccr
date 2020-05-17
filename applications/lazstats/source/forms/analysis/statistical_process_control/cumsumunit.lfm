@@ -3,6 +3,8 @@ object CUMSUMFrm: TCUMSUMFrm
   Height = 346
   Top = 262
   Width = 476
+  HelpType = htKeyword
+  HelpKeyword = 'CUMSUMChart.htm'
   AutoSize = True
   Caption = 'CUMSUM Chart'
   ClientHeight = 346
