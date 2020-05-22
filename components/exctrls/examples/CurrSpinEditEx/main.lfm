@@ -1,0 +1,156 @@
+object MainForm: TMainForm
+  Left = 353
+  Height = 223
+  Top = 132
+  Width = 304
+  AutoSize = True
+  BorderStyle = bsSingle
+  Caption = 'Savings calculator'
+  ClientHeight = 223
+  ClientWidth = 304
+  OnCreate = Calculate
+  LCLVersion = '2.1.0.0'
+  object sePayment: TCurrSpinEditEx
+    AnchorSideLeft.Control = Label1
+    AnchorSideLeft.Side = asrBottom
+    Left = 168
+    Height = 23
+    Top = 24
+    Width = 103
+    BorderSpacing.Top = 24
+    BorderSpacing.Right = 24
+    MaxLength = 0
+    TabOrder = 0
+    OnChange = Calculate
+    CurrencyFormat = secfValSpaceCurr
+    CurrencyString = '€'
+    Decimals = 2
+    DecimalSeparator = '.'
+    MaxValue = 0
+    MinValue = 0
+    NegCurrencyFormat = sencfMinusValSpaceCurr
+    NullValue = 0
+    ThousandSeparator = ','
+    Value = 100
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = sePayment
+    AnchorSideTop.Side = asrCenter
+    Left = 24
+    Height = 15
+    Top = 28
+    Width = 136
+    BorderSpacing.Left = 24
+    BorderSpacing.Right = 8
+    Caption = 'Amount saved per month'
+    ParentColor = False
+  end
+  object seInterestRate: TFloatSpinEditEx
+    AnchorSideLeft.Control = sePayment
+    Left = 168
+    Height = 23
+    Top = 57
+    Width = 103
+    MaxLength = 0
+    TabOrder = 1
+    OnChange = Calculate
+    Increment = 0.1
+    MinValue = 0
+    NullValue = 0
+    Value = 2
+  end
+  object seYears: TSpinEditEx
+    AnchorSideLeft.Control = sePayment
+    Left = 168
+    Height = 23
+    Top = 88
+    Width = 103
+    MaxLength = 0
+    TabOrder = 2
+    OnChange = Calculate
+    Value = 10
+  end
+  object Label2: TLabel
+    AnchorSideTop.Control = seInterestRate
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = seInterestRate
+    Left = 77
+    Height = 15
+    Top = 61
+    Width = 83
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Interest rate (%)'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideTop.Control = seYears
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = seYears
+    Left = 133
+    Height = 15
+    Top = 92
+    Width = 27
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Years'
+    ParentColor = False
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = sePayment
+    AnchorSideTop.Control = seYears
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = sePayment
+    AnchorSideRight.Side = asrBottom
+    Left = 168
+    Height = 8
+    Top = 123
+    Width = 103
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 12
+    Shape = bsBottomLine
+  end
+  object seFutureValue: TCurrSpinEditEx
+    AnchorSideLeft.Control = sePayment
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 168
+    Height = 23
+    Top = 147
+    Width = 103
+    BorderSpacing.Top = 16
+    BorderSpacing.Bottom = 24
+    Font.Style = [fsBold]
+    MaxLength = 0
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 3
+    CurrencyFormat = secfValSpaceCurr
+    CurrencyString = '€'
+    Decimals = 2
+    DecimalSeparator = '.'
+    MaxValue = 0
+    MinValue = 0
+    NegCurrencyFormat = sencfMinusValSpaceCurr
+    NullValue = 0
+    ThousandSeparator = ','
+    UpDownVisible = False
+    Value = 0
+  end
+  object Label4: TLabel
+    AnchorSideTop.Control = seFutureValue
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = seFutureValue
+    Left = 90
+    Height = 15
+    Top = 151
+    Width = 70
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    Caption = 'Future value'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+end

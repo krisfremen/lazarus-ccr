@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="ExCtrlsPkg"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="Lazarus team"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="source"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Description Value="Extended standard controls: 
+- CurrencyEdit
+- TRadioButton, TCheckbox, TRadioGroup and TCheckGroup: drawn by ThemeServices/Canvas, not by widgetset, button/text layout, wordwrap, user-provided check images"/>
+    <License Value="LGPL with linking exception (like Lazarus LCL)."/>
+    <Files Count="3">
+      <Item1>
+        <Filename Value="source\excheckctrls.pas"/>
+        <UnitName Value="ExCheckCtrls"/>
+      </Item1>
+      <Item2>
+        <Filename Value="source\exeditctrls.pas"/>
+        <UnitName Value="exeditctrls"/>
+      </Item2>
+      <Item3>
+        <Filename Value="source\exctrlsreg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ExCtrlsReg"/>
+      </Item3>
+    </Files>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="LazControls"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

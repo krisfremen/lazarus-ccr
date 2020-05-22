@@ -1,0 +1,1 @@
+lazres ..\source\exctrlsreg.res @imagelist.txt
