@@ -48,11 +48,11 @@ type
     procedure FontChanged(Sender: TObject); override;
     procedure Paint; override;
     procedure Resize; override;
-    procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
     procedure ToggleMouseDown(Sender: TObject; AButton: TMouseButton;
       AShift: TShiftState; X, Y: Integer);
 

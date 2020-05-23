@@ -37,12 +37,12 @@ unit JvPageLinkEditorForm;
 interface
 
 uses
-  Classes, SysUtils, Windows, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls,
+  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, ComCtrls,
   ActnList, Menus,
   Variants,
   //DesignEditors, DesignIntf,
   PropEdits,
-  JvPageList, JvPageListTreeView, JvComponent;
+  JvPageList, JvPageListTreeView;
 
 type
   { a property editor for the PageLinks property of TJvCustomPageListTreeView}
@@ -178,7 +178,7 @@ begin
     N2 := tvItems.Items.GetFirstNode;
     while Assigned(N1) and Assigned(N2) do
     begin
-      N2.Data := Pointer(N1.PageIndex);
+      N2.Data := {%H-}Pointer(PtrInt(N1.PageIndex));
       N2.Text := Format('%s (%d)', [N1.Text, N1.PageIndex]);
       N1 := TJvPageIndexNode(N1.GetNext);
       N2 := N2.GetNext;
@@ -215,7 +215,7 @@ begin
     N2 := tvItems.Items.GetFirstNode;
     while Assigned(N1) and Assigned(N2) do
     begin
-      N1.PageIndex := Integer(N2.Data);
+      N1.PageIndex := {%H-}PtrInt(N2.Data);
       N1.Text := GetStrippedText(N2.Text);
       N1 := TJvPageIndexNode(N1.GetNext);
       N2 := N2.GetNext;
@@ -230,7 +230,7 @@ begin
     if Node is TJvPageIndexNode then
       lbPages.ItemIndex := TJvPageIndexNode(Node).PageIndex
     else
-      lbPages.ItemIndex := Integer(Node.Data);
+      lbPages.ItemIndex := {%H-}PtrInt(Node.Data);
 end;
 
 procedure TfrmJvTreeViewLinksEditor.acLinkExecute(Sender: TObject);
@@ -238,19 +238,19 @@ var
   N: TTreeNode;
 begin
   N := tvItems.Selected;
-  N.Data := Pointer(lbPages.ItemIndex);
+  N.Data := {%H-}Pointer(PtrInt(lbPages.ItemIndex));
   if FTreeView is TJvCustomSettingsTreeView then
   begin
     // make the editor behave like the component
     if (N.Parent <> nil) and (N.Parent.GetFirstChild = N) then
     begin
-      N.Parent.Data := Pointer(lbPages.ItemIndex);
+      N.Parent.Data := {%H-}Pointer(PtrInt(lbPages.ItemIndex));
       N.Parent.Text := GetNewTreeText(N.Parent.Text, lbPages.ItemIndex);
     end
     else
     if N.HasChildren then
     begin
-      N.GetFirstChild.Data := Pointer(lbPages.ItemIndex);
+      N.GetFirstChild.Data := {%H-}Pointer(PtrInt(lbPages.ItemIndex));
       N.GetFirstChild.Text := GetNewTreeText(N.GetFirstChild.Text, lbPages.ItemIndex);
     end;
   end;

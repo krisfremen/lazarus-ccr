@@ -30,7 +30,7 @@ interface
 
 uses
   LCLVersion,
-  SysUtils, Classes, Controls, Graphics, StdCtrls, ComCtrls, ImgList,
+  SysUtils, Classes, Controls, Graphics, ComCtrls, ImgList,
   JvCustomItemViewer;
 
 type

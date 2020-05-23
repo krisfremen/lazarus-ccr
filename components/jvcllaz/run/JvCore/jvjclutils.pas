@@ -1605,7 +1605,7 @@ begin
   LocalFormatSettings.ThousandSeparator := GetLocaleChar(LOCALE_USER_DEFAULT, LOCALE_STHOUSAND, '.');
   LocalFormatSettings.DecimalSeparator := GetLocaleChar(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, '.');
   {$ELSE}
-  LocalFormatSettings.DecimalSeparator := DecimalSeparator;
+  LocalFormatSettings.DecimalSeparator := DefaultFormatSettings.DecimalSeparator;
   {$ENDIF RTL150_UP}
   if aDecimalSeparator = ' ' then {magic mode}
     aDecimalSeparator := LocalFormatSettings.DecimalSeparator { default case! use system defaults! }

@@ -329,7 +329,7 @@ begin
   inherited Create;
   Self.Msg.Msg := AMsg;
   Self.Msg.WParam := WParam;
-  Self.Msg.LParam := PtrInt(@LParam);
+  Self.Msg.LParam := {%H-}PtrInt(@LParam);
   Self.Msg.Result := 0;
 end;
 

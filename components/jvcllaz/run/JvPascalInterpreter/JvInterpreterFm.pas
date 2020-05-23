@@ -57,7 +57,7 @@ interface
 
 uses
   SysUtils, Classes, Controls, Forms,
-  JvInterpreter, JvJVCLUtils, JvComponent;
+  JvInterpreter;
 
 type
   TJvInterpreterGetDfmFileName = procedure(Sender: TObject; UnitName: string;
@@ -285,7 +285,7 @@ end;
 
 function TJvInterpreterFm.MakeForm(const FileName: TFileName): TForm;
 var
-  S: string;
+  S: string = '';
   UnitName: string;
 begin
   FFileName := FileName;
@@ -302,7 +302,7 @@ end; { MakeForm }
 
 function TJvInterpreterFm.MakeInheritedForm(F: TJvInterpreterForm; const FileName: TFileName): TForm;
 var
-  S: string;
+  S: string = '';
   UnitName: string;
 begin
   FFileName := FileName;
@@ -320,7 +320,7 @@ end;
 procedure TJvInterpreterFm.CreateDfmStream(const UnitName: string; var Stream: TStream);
 var
   Done: Boolean;
-  DfmFile: string;
+  DfmFile: string = '';
 begin
   Done := False;
   if Assigned(FOnCreateDfmStream) then
@@ -350,7 +350,7 @@ end;
 
 procedure TJvInterpreterFm.LoadForm(AForm: TJvInterpreterForm);
 var
-  Stream: TStream;
+  Stream: TStream = nil;
   SrcClass: TJvInterpreterIdentifier;                // Class Fields support
   i: integer;
 begin
@@ -611,7 +611,7 @@ end;
 function TJvInterpreterFm.RunUnit(const FileName: TFileName): Variant;
 var
   UnitName: string;
-  S: string;
+  S: string = '';
 begin
   FFileName := FileName;
   try

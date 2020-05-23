@@ -38,7 +38,7 @@ interface
 
 uses
   LMessages, LCLVersion,
-  Classes, Graphics, Contnrs, Controls, Forms, StdCtrls, ComCtrls,
+  Classes, Graphics, Contnrs, Controls, Forms, ComCtrls,
   ExtCtrls, JvConsts, Types, LCLType;
 
 const

@@ -56,9 +56,6 @@ type
 
 implementation
 
-uses
-  JvConsts;
-
 type
   TGridFilterFunc = function(const FieldValue, FilterValue: string): Boolean;
 

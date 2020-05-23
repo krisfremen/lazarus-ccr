@@ -91,7 +91,7 @@ implementation
 
 uses
   StrUtils,
-  JvConsts, JvResources, JvTypes, JvJCLUtils;
+  JvConsts, JvResources, JvTypes;
 
 {$R *.lfm}
 

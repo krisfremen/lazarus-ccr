@@ -30,7 +30,6 @@ unit JvExtComponent;
 interface
 
 uses
-  Types,
   Classes, Graphics, ExtCtrls,
   JvExExtCtrls;
 //  JvExComCtrls;

@@ -237,7 +237,6 @@ procedure TJvFullColorListFrm.FormShow(Sender: TObject);
 var
   i, w: Integer;
   s: string;
-  cs: TJvColorSpace;
 begin
   w := 0;
   ListBoxColors.Canvas.Font.Assign(ListboxColors.Font);

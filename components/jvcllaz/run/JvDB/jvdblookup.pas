@@ -41,7 +41,7 @@ interface
 uses
   //{$IFDEF WINDOWS}Windows,{$ENDIF}
   Variants, Classes, Graphics, Controls, Forms, DB, DBCtrls,
-  LMessages, LCLType, LCLIntf, LCLProc, EditBtn, Themes,
+  LMessages, LCLType, LCLIntf, LCLProc, Themes,
   JvThemes, JvDBUtils;
 
 const
@@ -3268,7 +3268,7 @@ end;
 
 function TJvDBLookupCombo.GetDropDownButtonRect: TRect;
 begin
-  Result := Rect(ClientWidth - FButtonWidth - Round((Width - ClientWidth) / 2), 0, Width, ClientHeight);
+  Result := Rect(ClientWidth - FButtonWidth - (Width - ClientWidth) div 2, 0, Width, ClientHeight);
 end;
 
 procedure TJvDBLookupCombo.InvalidateFrame;

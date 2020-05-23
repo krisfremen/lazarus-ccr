@@ -471,13 +471,13 @@ begin
     SetFocus;
 end;
 
-{
+(*
 function TJvGradientHeaderPanel.DoEraseBackground(Canvas: TCanvas; Param: LPARAM): Boolean;
 begin
   { Reduce flickering FGradient completely fills the TJvGradientHeaderPanel }
   Result := True;
 end;
-}
+*)
 
 
 //=== { TNoEventLabel } ======================================================

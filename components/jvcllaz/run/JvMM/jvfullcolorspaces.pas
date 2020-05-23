@@ -325,7 +325,7 @@ function RGBToBGR(Value: Cardinal): Cardinal;
 implementation
 
 uses
-  Controls, StdCtrls, ExtCtrls, TypInfo, Math,
+  Controls, ExtCtrls, TypInfo, Math,
   JvResources;
 
 var

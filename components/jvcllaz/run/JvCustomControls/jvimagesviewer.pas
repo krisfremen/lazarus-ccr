@@ -29,7 +29,7 @@ interface
 {$MODE OBJFPC}{$H+}
 
 uses
-  SysUtils, Classes, Controls, Graphics, StdCtrls, ComCtrls,
+  SysUtils, Classes, Controls, Graphics, ComCtrls,
   FPImage, LCLVersion,
   JvCustomItemViewer;
 

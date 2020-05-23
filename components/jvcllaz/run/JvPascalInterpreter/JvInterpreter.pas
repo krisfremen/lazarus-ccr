@@ -327,8 +327,6 @@ type
     FArgs: TJvInterpreterArgs;
     function GetArgs: TJvInterpreterArgs;
   protected
-    constructor Create(AOwner: TJvInterpreterExpression; AInstance: TObject;
-      const AUnitName, AFunctionName, APropName: string); virtual;
     function CallFunction(Args: TJvInterpreterArgs; Params: array of Variant): Variant;
     property Args: TJvInterpreterArgs read GetArgs;
     property Owner: TJvInterpreterExpression read FOwner;
@@ -339,6 +337,8 @@ type
     property FunctionName: string read FFunctionName;
     property PropName: string read FPropName;
   public
+    constructor Create(AOwner: TJvInterpreterExpression; AInstance: TObject;
+      const AUnitName, AFunctionName, APropName: string); virtual;
     destructor Destroy; override;
   end;
 
@@ -386,7 +386,7 @@ type
     FDuplicates: TDuplicates;
   public
     function IndexOf(const UnitName, Identifier: string): TJvInterpreterIdentifier;
-    function Find(const Identifier: string; var Index: Integer): Boolean;
+    function Find(const Identifier: string; out Index: Integer): Boolean;
     procedure Sort(Compare: TListSortCompare = nil); virtual;
     property Duplicates: TDuplicates read FDuplicates write FDuplicates;
   end;
@@ -1211,7 +1211,7 @@ function GlobalJvInterpreterAdapter: TJvInterpreterAdapter;
 const
   prArgsNoCheck = -1;
   noInstance = HINST(0);
-  RFDNull: TJvInterpreterRecField = (Identifier: ''; Offset: 0; Typ: 0);
+  RFDNull: TJvInterpreterRecField = (Identifier: ''; Offset: 0; Typ: 0; DataType: nil);
 
   varByConst = $8000;
 
@@ -1304,7 +1304,7 @@ uses
   {$IFDEF JvInterpreter_OLEAUTO}
   OleConst, ActiveX, ComObj,
   {$ENDIF JvInterpreter_OLEAUTO}
-  JvConsts, JvInterpreterConst, JvJVCLUtils, JvResources, JvTypes,
+  JvInterpreterConst, JvResources, JvTypes,
   JvInterpreterFm; // required uses for class method support
 
 var
@@ -1737,7 +1737,7 @@ end;
 
 function StringLoadFromStream(Stream: TStream): string;
 var
-  L: Integer;
+  L: Integer = 0;
   UTF8Str: UTF8String;
 begin
   Stream.ReadBuffer(L, SizeOf(L));
@@ -1755,7 +1755,7 @@ end;
 
 function IntLoadFromStream(Stream: TStream): Integer;
 begin
-  Stream.ReadBuffer(Result, SizeOf(Result));
+  Stream.ReadBuffer(Result{%H-}, SizeOf(Result));
 end;
 
 procedure WordSaveToStream(Stream: TStream; AWord: Word);
@@ -1765,7 +1765,7 @@ end;
 
 function WordLoadFromStream(Stream: TStream): Word;
 begin
-  Stream.ReadBuffer(Result, SizeOf(Result));
+  Stream.ReadBuffer(Result{%H-}, SizeOf(Result));
 end;
 
 procedure ExtendedSaveToStream(Stream: TStream; AExt: Extended);
@@ -1775,7 +1775,7 @@ end;
 
 function ExtendedLoadFromStream(Stream: TStream): Extended;
 begin
-  Stream.ReadBuffer(Result, SizeOf(Result));
+  Stream.ReadBuffer(Result{%H-}, SizeOf(Result));
 end;
 
 procedure BoolSaveToStream(Stream: TStream; ABool: Boolean);
@@ -1790,7 +1790,7 @@ function BoolLoadFromStream(Stream: TStream): Boolean;
 var
   B: Integer;
 begin
-  Stream.ReadBuffer(B, SizeOf(B));
+  Stream.ReadBuffer(B{%H-}, SizeOf(B));
   Result := (B <> 0);
 end;
 
@@ -2020,7 +2020,7 @@ function CallDll(const DllName, FuncName: string; Args: TJvInterpreterArgs;
   ParamDesc: TTypeArray; ResTyp: Word): Variant;
 var
   Ins: HMODULE;
-  LastError: DWORD;
+  //LastError: DWORD;
 begin
   Result := False;
   Ins := SafeLoadLibrary(DllName);
@@ -2899,7 +2899,7 @@ end;
 //=== { TJvInterpreterIdentifierList } =======================================
 
 function TJvInterpreterIdentifierList.Find(const Identifier: string;
-  var Index: Integer): Boolean;
+  out Index: Integer): Boolean;
 var
   L, H, I, C: Integer;
 begin
@@ -5512,11 +5512,7 @@ end;
 
 procedure TJvInterpreterExpression.ParseToken;
 var
-  {$IFDEF DELPHI7_UP}
   FS: TFormatSettings;
-  {$ELSE}
-  OldDecimalSeparator: Char;
-  {$ENDIF DELPHI7_UP}
   Dob: Extended;
   Int: Integer;
   ValueInt64: Int64;
@@ -5540,22 +5536,10 @@ begin
       end;
     ttDouble:
       begin
-        {$IFDEF DELPHI7_UP}
         FS.ThousandSeparator := ',';
         FS.DecimalSeparator := '.';
         if not TextToFloat(PChar(FTokenStr), Dob, fvExtended, FS) then
           JvInterpreterError(ieInternal, -1);
-        {$ELSE}
-        OldDecimalSeparator := DecimalSeparator;
-        DecimalSeparator := '.';
-        if not TextToFloat(PChar(FTokenStr), Dob, fvExtended) then
-        begin
-          DecimalSeparator := OldDecimalSeparator;
-          JvInterpreterError(ieInternal, -1);
-        end
-        else
-          DecimalSeparator := OldDecimalSeparator;
-        {$ENDIF DELPHI7_UP}
         FToken := Dob;
       end;
     ttString:
@@ -8621,7 +8605,7 @@ const
   EmptyStr: string = '';
 var
   I: Integer;
-  Rec: PAnsiChar;
+  Rec: PAnsiChar = nil;
   // Res: Boolean;
   RecHolder: TJvInterpreterRecHolder;
 begin

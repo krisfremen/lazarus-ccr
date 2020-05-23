@@ -263,9 +263,6 @@ implementation
 uses
   JvJCLUtils, JvInterpreter, JvInterpreterConst, JvConsts;
 
-const
-  K = '''';
-
 {*********************** tokenizer ***********************}
 { modified algorithm from mozilla source }
 

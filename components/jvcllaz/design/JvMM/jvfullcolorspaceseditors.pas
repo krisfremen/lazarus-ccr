@@ -31,7 +31,7 @@ interface
 
 uses
   LCLType,
-  Classes, Graphics, StdCtrls, PropEdits,
+  Classes, Graphics, PropEdits,
   JvFullColorSpaces;
 
 type
