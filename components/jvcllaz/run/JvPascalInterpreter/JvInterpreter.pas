@@ -179,6 +179,8 @@ unit JvInterpreter;
 
 {.$DEFINE JvInterpreter_DEBUG}
 
+{$IFDEF CPUX64}THIS PACKAGE WAS NOT PORTED FOR 64-bit CPU{$ENDIF}
+
 interface
 
 uses
