@@ -3,6 +3,8 @@ object ABCLogLinearFrm: TABCLogLinearFrm
   Height = 432
   Top = 216
   Width = 395
+  HelpType = htKeyword
+  HelpKeyword = 'AxBxCLogLinear.htm'
   AutoSize = True
   Caption = 'Log Linear Analysis for AxBxC Classification Table'
   ClientHeight = 432

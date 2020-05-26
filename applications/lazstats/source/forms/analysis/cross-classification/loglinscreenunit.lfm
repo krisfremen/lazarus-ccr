@@ -3,6 +3,8 @@ object LogLinScreenFrm: TLogLinScreenFrm
   Height = 379
   Top = 130
   Width = 662
+  HelpType = htKeyword
+  HelpKeyword = 'LogLinearScreen.htm'
   AutoSize = True
   Caption = 'Cross-Classification Log Linear Screen'
   ClientHeight = 379
