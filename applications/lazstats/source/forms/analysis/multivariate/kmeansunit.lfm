@@ -3,6 +3,8 @@ object KMeansFrm: TKMeansFrm
   Height = 349
   Top = 318
   Width = 422
+  HelpType = htKeyword
+  HelpKeyword = 'KMeansClustering.htm'
   AutoSize = True
   Caption = 'k Means Clustering '
   ClientHeight = 349

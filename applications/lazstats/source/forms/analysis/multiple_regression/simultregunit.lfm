@@ -3,6 +3,8 @@ object SimultFrm: TSimultFrm
   Height = 447
   Top = 291
   Width = 437
+  HelpType = htKeyword
+  HelpKeyword = 'SimultaneousMultipleRegression.htm'
   AutoSize = True
   Caption = 'Simultaneous Multiple Regression'
   ClientHeight = 447

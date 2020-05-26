@@ -3,6 +3,8 @@ object BlkMregFrm: TBlkMregFrm
   Height = 451
   Top = 292
   Width = 465
+  HelpType = htKeyword
+  HelpKeyword = 'BlockEntryMultipleRegression.htm'
   AutoSize = True
   Caption = 'Block Entry Multiple Regression'
   ClientHeight = 451

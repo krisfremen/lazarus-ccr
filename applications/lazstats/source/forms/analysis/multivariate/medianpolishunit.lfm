@@ -3,6 +3,8 @@ object MedianPolishForm: TMedianPolishForm
   Height = 410
   Top = 340
   Width = 472
+  HelpType = htKeyword
+  HelpKeyword = 'MedianPolishingfora2x2Table.htm'
   AutoSize = True
   Caption = 'Median Polishing for a Two-Way Table'
   ClientHeight = 410

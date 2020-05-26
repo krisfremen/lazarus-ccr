@@ -3,6 +3,8 @@ object FactorFrm: TFactorFrm
   Height = 522
   Top = 211
   Width = 627
+  HelpType = htKeyword
+  HelpKeyword = 'FactorAnalysis.htm'
   AutoSize = True
   Caption = 'Factor Analysis'
   ClientHeight = 522

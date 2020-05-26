@@ -3,6 +3,8 @@ object CoxRegFrm: TCoxRegFrm
   Height = 401
   Top = 291
   Width = 424
+  HelpType = htKeyword
+  HelpKeyword = 'CoxProportionalHazardsSurvivalRe.htm'
   AutoSize = True
   Caption = 'Cox Proportional Hazards Survival Regression'
   ClientHeight = 401

@@ -3,6 +3,8 @@ object StepFwdFrm: TStepFwdFrm
   Height = 470
   Top = 243
   Width = 476
+  HelpType = htKeyword
+  HelpKeyword = 'ForwardStepwise.htm'
   AutoSize = True
   Caption = 'Forward Stepwise Multiple Regression'
   ClientHeight = 470

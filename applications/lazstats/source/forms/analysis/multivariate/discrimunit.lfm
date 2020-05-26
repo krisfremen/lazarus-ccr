@@ -3,6 +3,8 @@ object DiscrimFrm: TDiscrimFrm
   Height = 457
   Top = 229
   Width = 605
+  HelpType = htKeyword
+  HelpKeyword = 'MANOVADiscriminantFunction.htm'
   AutoSize = True
   Caption = 'Discriminant Function and Multivariate Analysis of Variance'
   ClientHeight = 457

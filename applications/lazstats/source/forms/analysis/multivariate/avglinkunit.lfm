@@ -3,6 +3,8 @@ object AvgLinkFrm: TAvgLinkFrm
   Height = 132
   Top = 409
   Width = 383
+  HelpType = htKeyword
+  HelpKeyword = 'AverageLinkClustering.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Average Linkage Hierarchical Clustering'

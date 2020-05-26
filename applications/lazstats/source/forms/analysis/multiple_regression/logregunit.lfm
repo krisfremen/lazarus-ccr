@@ -3,6 +3,8 @@ object LogRegFrm: TLogRegFrm
   Height = 355
   Top = 245
   Width = 353
+  HelpType = htKeyword
+  HelpKeyword = 'BinaryLogisticRegression.htm'
   AutoSize = True
   Caption = 'Binary Logistic Regression'
   ClientHeight = 355

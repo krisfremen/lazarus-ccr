@@ -3,6 +3,8 @@ object SingleLinkFrm: TSingleLinkFrm
   Height = 284
   Top = 362
   Width = 409
+  HelpType = htKeyword
+  HelpKeyword = 'SingleLinkClustering.htm'
   AutoSize = True
   Caption = 'Single Linkage Cluster Analysis'
   ClientHeight = 284

@@ -3,6 +3,8 @@ object BestRegFrm: TBestRegFrm
   Height = 433
   Top = 266
   Width = 474
+  HelpType = htKeyword
+  HelpKeyword = 'BestCombinationMultipleRegressio.htm'
   AutoSize = True
   Caption = 'Best Combination Multiple Regression'
   ClientHeight = 433

@@ -3,6 +3,8 @@ object BackRegFrm: TBackRegFrm
   Height = 436
   Top = 187
   Width = 463
+  HelpType = htKeyword
+  HelpKeyword = 'BackwardStepwise.htm'
   AutoSize = True
   Caption = 'Stepwise Backward Multiple Regression'
   ClientHeight = 436

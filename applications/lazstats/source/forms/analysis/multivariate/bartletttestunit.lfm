@@ -3,6 +3,8 @@ object BartlettTestForm: TBartlettTestForm
   Height = 394
   Top = 304
   Width = 411
+  HelpType = htKeyword
+  HelpKeyword = 'BartlettTestofSphericity.htm'
   AutoSize = True
   Caption = 'Bartlett Test of Sphericity'
   ClientHeight = 394

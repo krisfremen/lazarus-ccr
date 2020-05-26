@@ -3,6 +3,8 @@ object CorrespondenceForm: TCorrespondenceForm
   Height = 536
   Top = 206
   Width = 562
+  HelpType = htKeyword
+  HelpKeyword = 'CorrespondenceAnalysis.htm'
   AutoSize = True
   Caption = 'Correspondence Analysis'
   ClientHeight = 536

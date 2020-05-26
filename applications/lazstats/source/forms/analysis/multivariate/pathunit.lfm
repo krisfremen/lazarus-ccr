@@ -3,6 +3,8 @@ object PathFrm: TPathFrm
   Height = 387
   Top = 192
   Width = 591
+  HelpType = htKeyword
+  HelpKeyword = 'PathAnalysis.htm'
   AutoSize = True
   Caption = 'Path Analysis'
   ClientHeight = 387

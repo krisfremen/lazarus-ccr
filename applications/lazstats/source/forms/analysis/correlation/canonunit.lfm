@@ -3,6 +3,8 @@ object CannonFrm: TCannonFrm
   Height = 379
   Top = 137
   Width = 401
+  HelpType = htKeyword
+  HelpKeyword = 'CanonicalCorrelation.htm'
   AutoSize = True
   Caption = 'Canonical Correlation Analysis'
   ClientHeight = 379
