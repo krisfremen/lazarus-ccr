@@ -3,6 +3,8 @@ object AxSAnovaFrm: TAxSAnovaFrm
   Height = 360
   Top = 278
   Width = 471
+  HelpType = htKeyword
+  HelpKeyword = 'AbySAnalysisofVariance.htm'
   AutoSize = True
   Caption = 'Treatments by Subjects ANOVA (AxS)'
   ClientHeight = 360

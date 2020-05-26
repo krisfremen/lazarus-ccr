@@ -3,6 +3,8 @@ object WithinANOVAFrm: TWithinANOVAFrm
   Height = 362
   Top = 330
   Width = 458
+  HelpType = htKeyword
+  HelpKeyword = 'WithinSubjectsAnalysisofVariance.htm'
   AutoSize = True
   Caption = 'Within Subjects ANOVA and Hoyt Reliability Estimates'
   ClientHeight = 362

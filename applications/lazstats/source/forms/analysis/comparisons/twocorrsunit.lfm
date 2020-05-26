@@ -3,6 +3,8 @@ object TwoCorrsFrm: TTwoCorrsFrm
   Height = 391
   Top = 286
   Width = 462
+  HelpType = htKeyword
+  HelpKeyword = 'DifferencebetweenCorrelations.htm'
   Caption = 'Comparison of Two Correlations'
   ClientHeight = 391
   ClientWidth = 462

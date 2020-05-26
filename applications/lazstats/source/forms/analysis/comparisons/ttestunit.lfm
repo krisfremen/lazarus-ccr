@@ -3,6 +3,8 @@ object TtestFrm: TTtestFrm
   Height = 505
   Top = 216
   Width = 544
+  HelpType = htKeyword
+  HelpKeyword = 'tTests.htm'
   AutoSize = True
   Caption = 'Comparison of Two Sample Means'
   ClientHeight = 505
@@ -196,7 +198,7 @@ object TtestFrm: TTtestFrm
     Height = 360
     Top = 96
     Width = 528
-    PageIndex = 1
+    PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8

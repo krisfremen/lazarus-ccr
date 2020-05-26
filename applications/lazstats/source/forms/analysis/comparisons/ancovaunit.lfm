@@ -3,6 +3,8 @@ object ANCOVAfrm: TANCOVAfrm
   Height = 525
   Top = 250
   Width = 486
+  HelpType = htKeyword
+  HelpKeyword = 'AnalysisofCovariancebyMultipleRe.htm'
   Caption = 'Analysis of Covariance Using Multiple Regression Methods'
   ClientHeight = 525
   ClientWidth = 486

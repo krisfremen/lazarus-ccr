@@ -3,6 +3,8 @@ object TwoPropFrm: TTwoPropFrm
   Height = 427
   Top = 225
   Width = 455
+  HelpType = htKeyword
+  HelpKeyword = 'DifferencebetweenProportions.htm'
   Caption = 'Test of Equality for two Proportions'
   ClientHeight = 427
   ClientWidth = 455
@@ -124,7 +126,7 @@ object TwoPropFrm: TTwoPropFrm
     Height = 259
     Top = 88
     Width = 439
-    PageIndex = 1
+    PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8

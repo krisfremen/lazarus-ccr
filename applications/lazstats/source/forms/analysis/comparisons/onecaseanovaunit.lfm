@@ -3,6 +3,8 @@ object OneCaseAnovaForm: TOneCaseAnovaForm
   Height = 458
   Top = 246
   Width = 567
+  HelpType = htKeyword
+  HelpKeyword = 'TwoorThreeWayFixedANOVAwith1Case.htm'
   AutoSize = True
   Caption = 'OneCaseAnovaForm'
   ClientHeight = 458
