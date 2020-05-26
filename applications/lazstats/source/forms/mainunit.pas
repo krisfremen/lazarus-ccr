@@ -12,8 +12,8 @@ unit MainUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  Menus, ExtCtrls, StdCtrls, Grids,
+  LCLType, Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
+  Dialogs, Menus, ExtCtrls, StdCtrls, Grids,
  {$IFDEF USE_EXTERNAL_HELP_VIEWER}
   {$IFDEF MSWINDOWS}
   HtmlHelp,
@@ -450,8 +450,6 @@ var
 
 implementation
 
-{ TOS3MainFrm }
-
 uses
   Utils,
   OptionsUnit, OutputUnit, LicenseUnit, TransFrmUnit, DescriptiveUnit,
@@ -479,6 +477,8 @@ uses
   CorrespondenceUnit, EquationUnit, CalculatorUnit, JPEGUnit, ResistanceLineUnit,
   MedianPolishUnit, OneCaseAnovaUnit, SmoothDataUnit, SRHTestUnit, AboutUnit,
   ItemBankingUnit, ANOVATESTSUnit, SimpleChiSqrUnit, LifeTableUnit, LSMRunit;
+
+{ TOS3MainFrm }
 
 // Menu "Options" > "Exit"
 procedure TOS3MainFrm.MenuItem16Click(Sender: TObject);
@@ -1587,9 +1587,6 @@ end;
 {$IFDEF USE_EXTERNAL_HELP_VIEWER}
 {$IFDEF MSWINDOWS}
 // Call HTML help (.chm file)
-// Is is expected that help topics are specified as HelpKeyword (HelpType = htContext).
-// Since the menu items provide only a HelpContext number some ticks must be
-// applied to distinguish between number and string...
 function TOS3MainFrm.HelpHandler(Command: Word; Data: PtrInt;
   var CallHelp: Boolean): Boolean;
 var
@@ -1597,12 +1594,13 @@ var
   res: Integer;
   fn: UnicodeString;
 begin
-  if Data < 10000 then   // hopefully these are not pointers...
+  if Command = HELP_CONTEXT then
   begin
     // see: http://www.helpware.net/download/delphi/hh_doc.txt
     fn := UnicodeString(Application.HelpFile);
     res := htmlhelp.HtmlHelpW(0, PWideChar(fn), HH_HELP_CONTEXT, Data);
   end else
+  if Command = HELP_COMMAND then
   begin
     topic := Application.HelpFile + '::/' + PChar(Data);
     res := htmlhelp.HtmlHelpW(0, PWideChar(topic), HH_DISPLAY_TOPIC, 0);
