@@ -298,7 +298,7 @@ object OS3MainFrm: TOS3MainFrm
     object MenuItem2: TMenuItem
       Caption = 'Variables'
       object DefineVar: TMenuItem
-        Caption = 'Define'
+        Caption = 'Define...'
         OnClick = DefineVarClick
       end
       object PrintDefs: TMenuItem
@@ -322,14 +322,17 @@ object OS3MainFrm: TOS3MainFrm
       Caption = 'Tools'
       object FormatGrid: TMenuItem
         Caption = 'Format Grid Cells'
+        HelpContext = 15
         OnClick = FormatGridClick
       end
       object SortCases: TMenuItem
         Caption = 'Sort Cases'
+        HelpContext = 16
         OnClick = SortCasesClick
       end
       object PrintGrid: TMenuItem
         Caption = 'Print Grid File'
+        HelpContext = 17
         OnClick = PrintGridClick
       end
       object MenuItem28: TMenuItem
@@ -338,6 +341,7 @@ object OS3MainFrm: TOS3MainFrm
       end
       object SelectCases: TMenuItem
         Caption = 'Select Cases'
+        HelpContext = 18
         OnClick = SelectCasesClick
       end
       object LoadSubFile: TMenuItem
@@ -375,10 +379,12 @@ object OS3MainFrm: TOS3MainFrm
       Caption = 'Edit'
       object blockcopy: TMenuItem
         Caption = 'Copy a Block of Cells'
+        HelpContext = 20
         OnClick = blockcopyClick
       end
       object BlockPaste: TMenuItem
         Caption = 'Paste a Block of Cells'
+        HelpContext = 21
         OnClick = BlockPasteClick
       end
       object BlockCut: TMenuItem
@@ -389,19 +395,23 @@ object OS3MainFrm: TOS3MainFrm
         Caption = '-'
       end
       object InsNewCol: TMenuItem
-        Caption = 'Insert New Column Before  Current One'
+        Caption = 'Insert New Column'
+        HelpContext = 22
         OnClick = InsNewColClick
       end
       object CopyCol: TMenuItem
         Caption = 'Copy Column'
+        HelpContext = 23
         OnClick = CopyColClick
       end
       object CutCol: TMenuItem
         Caption = 'Cut Column'
+        HelpContext = 24
         OnClick = CutColClick
       end
       object PasteCol: TMenuItem
         Caption = 'Paste Column'
+        HelpContext = 25
         OnClick = PasteColClick
       end
       object MenuItem48: TMenuItem
@@ -409,18 +419,22 @@ object OS3MainFrm: TOS3MainFrm
       end
       object NewRow: TMenuItem
         Caption = 'Insert New  Row'
+        HelpContext = 26
         OnClick = NewRowClick
       end
       object CopyRowMenu: TMenuItem
         Caption = 'Copy Row'
+        HelpContext = 27
         OnClick = CopyRowMenuClick
       end
       object CutRowMenu: TMenuItem
         Caption = 'Cut Row'
+        HelpContext = 28
         OnClick = CutRowMenuClick
       end
       object PasteRowMenu: TMenuItem
         Caption = 'Paste Row'
+        HelpContext = 29
         OnClick = PasteRowMenuClick
       end
     end

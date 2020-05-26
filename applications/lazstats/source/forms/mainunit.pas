@@ -1588,20 +1588,30 @@ end;
 {$IFDEF MSWINDOWS}
 // Call HTML help (.chm file)
 // Is is expected that help topics are specified as HelpKeyword (HelpType = htContext).
-// Using numeric HelpContext values will crash the application.
+// Since the menu items provide only a HelpContext number some ticks must be
+// applied to distinguish between number and string...
 function TOS3MainFrm.HelpHandler(Command: Word; Data: PtrInt;
   var CallHelp: Boolean): Boolean;
 var
   topic: UnicodeString;
+  res: Integer;
+  fn: UnicodeString;
 begin
-  topic := Application.HelpFile + '::/' + PChar(Data);
-  htmlhelp.HtmlHelpW(0, PWideChar(topic), HH_DISPLAY_TOPIC, 0);
+  if Data < 10000 then   // hopefully these are not pointers...
+  begin
+    // see: http://www.helpware.net/download/delphi/hh_doc.txt
+    fn := UnicodeString(Application.HelpFile);
+    res := htmlhelp.HtmlHelpW(0, PWideChar(fn), HH_HELP_CONTEXT, Data);
+  end else
+  begin
+    topic := Application.HelpFile + '::/' + PChar(Data);
+    res := htmlhelp.HtmlHelpW(0, PWideChar(topic), HH_DISPLAY_TOPIC, 0);
+  end;
 
   // Don't call regular help
   CallHelp := False;
 
-  // silence the compiler, function result not needed
-  Result := true;
+  Result := res <> 0;
 end;
 {$ENDIF}
 {$ENDIF}
