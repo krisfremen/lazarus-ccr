@@ -97,6 +97,10 @@ const
 
   TWO_PI = 2.0 * PI;
 
+  TAB_FILE_FILTER = 'Tab field files (*.tab)|*.tab;*.TAB|Text files (*.txt)|*.txt;*.TXT|All files (*.*)|*.*';
+  CSV_FILE_FILTER = 'Comma field files (*.csv)|*.csv;*.CSV|Text files (*.txt)|*.txt;*.TXT|All files (*.*)|*.*';
+  SSV_FILE_FILTER = 'Space field files (*.ssv)|*.ssv;*.SSV|Text files (*.txt)|*.txt;*.TXT|All files (*.*)|*.*';
+
 implementation
 
 end.

@@ -639,11 +639,11 @@ begin
                x4 := x1 + triwidth;
                yprop := (YPoints[i-1,j-1] - YMin) / (YMax - YMin);
                ydist := round(yprop * YAxisLength);
-               y1 := YStart - yoffset - round(ydist);
+               y1 := YStart - yoffset - ydist;
                y2 := y1 - triheight;
                yprop := (YPoints[i-1,j] - YMin) / (YMax - YMin);
                ydist := round(yprop * YAxisLength);
-               y3 := ystart - yoffset {%H-}- round(ydist);
+               y3 := ystart - yoffset - ydist;
                y4 := y3 - triheight;
                points[0] := Point(x1,y1);
                points[1] := Point(x2,y2);

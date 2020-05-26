@@ -132,15 +132,16 @@ const
     1.585,1.575,1.566,1.557,1.548,1.541
   );
 var
-   i, j, GrpVar, MeasVar, mingrp, maxgrp, G, range, grpsize : integer;
-   oldgrpsize : integer;
-   X, UCL, LCL, UpperSpec, LowerSpec, TargetSpec : double;
-   xmin, xmax, GrandMean, GrandSD, semean, D3Value, D4Value : double;
-   GrandSigma, C4, gamma, B : double;
+   i, j, GrpVar, MeasVar, mingrp, maxgrp, G, range, grpsize: integer;
+   oldgrpsize: integer;
+   X, UCL, LCL, UpperSpec, LowerSpec, TargetSpec: double;
+   xmin, xmax, GrandMean, GrandSD, semean: double;
+   GrandSigma, C4, gamma, B: double;
+   D3Value, D4Value: Double;
    means, stddev: DblDyneVec;
-   count : IntDyneVec;
+   count: IntDyneVec;
    cellstring: string;
-   sizeerror : boolean;
+   sizeerror: boolean;
    lReport: TStrings;
 
    procedure CleanUp;
@@ -234,14 +235,14 @@ begin
     if oldgrpsize <> grpsize then sizeerror := true;
   end;
 
-  if (grpsize < 2) or (grpsize > 25) or (sizeerror) then
+  if (grpsize < 2) or (grpsize > 25) or sizeError then
   begin
     MessageDlg('Group sizes error.', mtError, [mbOK], 0);
     CleanUp;
     exit;
   end;
 
-  semean := semean - ((GrandMean * GrandMean) / NoCases);
+  semean := semean - sqr(GrandMean)/NoCases;
   semean := semean / (NoCases - 1);
   semean := sqrt(semean);
   GrandSD := semean;
