@@ -1602,7 +1602,7 @@ begin
   end else
   if Command = HELP_COMMAND then
   begin
-    topic := Application.HelpFile + '::/' + PChar(Data);
+    topic := UnicodeString(Application.HelpFile + '::/' + {%H-}PChar(Data));
     res := htmlhelp.HtmlHelpW(0, PWideChar(topic), HH_DISPLAY_TOPIC, 0);
   end;
 

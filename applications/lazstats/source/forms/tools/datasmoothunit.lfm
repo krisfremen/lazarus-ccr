@@ -3,6 +3,7 @@ object SmoothDataForm: TSmoothDataForm
   Height = 386
   Top = 190
   Width = 387
+  AutoSize = True
   Caption = 'Data Smoothing'
   ClientHeight = 386
   ClientWidth = 387
@@ -86,6 +87,7 @@ object SmoothDataForm: TSmoothDataForm
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
+    ReadOnly = True
     TabOrder = 3
     Text = 'VariableEdit'
   end
@@ -135,38 +137,23 @@ object SmoothDataForm: TSmoothDataForm
   end
   object ResetBtn: TButton
     AnchorSideTop.Control = ComputeBtn
-    AnchorSideRight.Control = CancelBtn
-    Left = 163
+    AnchorSideRight.Control = ComputeBtn
+    Left = 174
     Height = 25
     Top = 353
     Width = 54
     Anchors = [akTop, akRight]
     AutoSize = True
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     Caption = 'Reset'
     OnClick = ResetBtnClick
-    TabOrder = 5
-  end
-  object CancelBtn: TButton
-    AnchorSideTop.Control = ComputeBtn
-    AnchorSideRight.Control = ComputeBtn
-    Left = 229
-    Height = 25
-    Top = 353
-    Width = 62
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    BorderSpacing.Right = 12
-    Caption = 'Cancel'
-    ModalResult = 2
     TabOrder = 6
   end
   object ComputeBtn: TButton
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 303
+    Left = 236
     Height = 25
     Top = 353
     Width = 76
@@ -176,7 +163,6 @@ object SmoothDataForm: TSmoothDataForm
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Compute'
-    ModalResult = 1
     OnClick = ComputeBtnClick
     TabOrder = 7
   end
@@ -184,16 +170,16 @@ object SmoothDataForm: TSmoothDataForm
     Tag = 119
     AnchorSideTop.Control = ComputeBtn
     AnchorSideRight.Control = ResetBtn
-    Left = 100
+    Left = 115
     Height = 25
     Top = 353
     Width = 51
     Anchors = [akTop, akRight]
     AutoSize = True
-    BorderSpacing.Right = 12
+    BorderSpacing.Right = 8
     Caption = 'Help'
     OnClick = HelpBtnClick
-    TabOrder = 8
+    TabOrder = 5
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = InBtn
@@ -233,5 +219,33 @@ object SmoothDataForm: TSmoothDataForm
     Caption = 'This procedure creates a new variable with the label "smoothed" with data points created from the selected variable.  Each new data point is the average of the immediately preceding value and the immediately following value.  New values are therefore  created for the 2nd, 3rd,...,and N-1 values.  The process can be repeated multiple times.'
     ParentColor = False
     WordWrap = True
+  end
+  object CloseBtn: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 320
+    Height = 25
+    Top = 353
+    Width = 55
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    Caption = 'Close'
+    ModalResult = 11
+    TabOrder = 8
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = VariableEdit
+    AnchorSideBottom.Control = VariableEdit
+    Left = 215
+    Height = 15
+    Top = 114
+    Width = 128
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 2
+    Caption = 'Variable to be smoothed'
+    ParentColor = False
   end
 end
