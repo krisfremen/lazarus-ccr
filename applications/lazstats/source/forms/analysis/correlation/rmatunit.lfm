@@ -3,6 +3,8 @@ object RMatFrm: TRMatFrm
   Height = 482
   Top = 185
   Width = 409
+  HelpType = htKeyword
+  HelpKeyword = 'ProductMoment.htm'
   AutoSize = True
   Caption = 'Product-Moment Correlations'
   ClientHeight = 482

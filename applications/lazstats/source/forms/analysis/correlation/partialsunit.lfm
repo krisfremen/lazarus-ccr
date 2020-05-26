@@ -3,6 +3,8 @@ object PartialsFrm: TPartialsFrm
   Height = 398
   Top = 175
   Width = 361
+  HelpType = htKeyword
+  HelpKeyword = 'PartialSemipartial.htm'
   AutoSize = True
   Caption = 'Partial Correlation'
   ClientHeight = 398
