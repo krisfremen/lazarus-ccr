@@ -72,37 +72,7 @@ type
     property ColorFocusedFrom: TColor read FColorFocusedFrom write FColorFocusedFrom;
     property ColorFocusedTo: TColor read FColorFocusedTo write FColorFocusedTo;
   end;
-{
-  TButtonExPictures = class(TPersistent)
-  private
-    FButton: TButtonEx;
-    FAlignment: TLeftRight;
-    FTransparent: boolean;
-    FPictureNormal: TPicture;
-    FPictureHot: TPicture;
-    FPictureDown: TPicture;
-    FPictureDisabled: TPicture;
-    FPictureFocused: TPicture;
-    procedure SetPictureNormal(const Value: TPicture);
-    procedure SetPictureDisabled(const Value: TPicture);
-    procedure SetPictureDown(const Value: TPicture);
-    procedure SetPictureFocused(const Value: TPicture);
-    procedure SetPictureHot(const Value: TPicture);
-    procedure SetAlignment(const Value: TLeftRight);
-    procedure SetTransparent(const Value: boolean);
-  public
-    constructor Create(AButton: TButtonEx);
-    destructor Destroy; override;
-  published
-    property PictureNormal: TPicture read FPictureNormal write SetPictureNormal;
-    property PictureHot: TPicture read FPictureHot write SetPictureHot;
-    property PictureDown: TPicture read FPictureDown write SetPictureDown;
-    property PictureDisabled: TPicture read FPictureDisabled write SetPictureDisabled;
-    property PictureFocused: TPicture read FPictureFocused write SetPictureFocused;
-    property Alignment: TLeftRight read FAlignment write SetAlignment default taLeftJustify;
-    property Transparent: boolean read FTransparent write SetTransparent default False;
-  end;
-}
+
   TButtonEx = class(TCustomButton)
   private
     FAlignment: TAlignment;
@@ -123,7 +93,6 @@ type
     procedure SetDefaultDrawing(const Value: Boolean);
     procedure SetGradient(const Value: Boolean);
     procedure SetShowFocusRect(const Value: Boolean);
-//    procedure SetSpacing(const Value: integer);
     procedure SetMargin(const Value: integer);
     procedure SetWordWrap(const Value: Boolean);
   protected
@@ -142,7 +111,6 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    //procedure Click; override;
   published
     property Align;
     property Anchors;
@@ -154,7 +122,7 @@ type
     property Constraints;
     property Cursor;
     property Default;
-//    property DoubleBuffered;   // PaintButton is not called when this is set.
+    //property DoubleBuffered;   // PaintButton is not called when this is set.
     property DragCursor;
     property DragKind;
     property DragMode;
@@ -168,7 +136,7 @@ type
     property Left;
     property ModalResult;
     property ParentBiDiMode;
-//    property ParentDoubleBuffered;
+    //property ParentDoubleBuffered;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
@@ -269,74 +237,6 @@ begin
 end;
 
 
-(*
-{ TButtonExPictures }
-
-constructor TButtonExPictures.Create(AButton: TButtonEx);
-begin
-  inherited Create;
-  FButton := AButton;
-  FAlignment := taLeftJustify;
-  FTransparent := False;
-  FPictureNormal := TPicture.Create;
-  FPictureHot := TPicture.Create;
-  FPictureDown := TPicture.Create;
-  FPictureDisabled := TPicture.Create;
-  FPictureFocused := TPicture.Create;
-end;
-
-destructor TButtonExPictures.Destroy;
-begin
-  FPictureNormal.Free;
-  FPictureHot.Free;
-  FPictureDown.Free;
-  FPictureDisabled.Free;
-  FPictureFocused.Free;
-  inherited;
-end;
-
-procedure TButtonExPictures.SetAlignment(const Value: TLeftRight);
-begin
-  if FAlignment = Value then
-    exit;
-  FAlignment := Value;
-  FButton.Invalidate;
-end;
-
-procedure TButtonExPictures.SetPictureDisabled(const Value: TPicture);
-begin
-  FPictureDisabled.Assign(Value);
-end;
-
-procedure TButtonExPictures.SetPictureDown(const Value: TPicture);
-begin
-  FPictureDown.Assign(Value);
-end;
-
-procedure TButtonExPictures.SetPictureFocused(const Value: TPicture);
-begin
-  FPictureFocused.Assign(Value);
-end;
-
-procedure TButtonExPictures.SetPictureHot(const Value: TPicture);
-begin
-  FPictureHot.Assign(Value);
-end;
-
-procedure TButtonExPictures.SetPictureNormal(const Value: TPicture);
-begin
-  FPictureNormal.Assign(Value);
-  FButton.Invalidate;
-end;
-
-procedure TButtonExPictures.SetTransparent(const Value: boolean);
-begin
-  FTransparent := Value;
-  FButton.Invalidate;
-end;
-*)
-
-
 { TButtonEx }
 
 constructor TButtonEx.Create(AOwner: TComponent);
@@ -350,11 +250,8 @@ begin
   FGradient := true;
   FShowFocusRect := true;
 
-  FBorder := TButtonExBorder.Create(Self);
+  // Background colors
   FColors := TButtonExColors.Create(Self);
-  //FPictures := TButtonExPictures.Create(Self);
-
-  // Button
   FColors.ColorNormalFrom := $00FCFCFC;
   FColors.ColorNormalTo := $00CFCFCF;
   FColors.ColorHotFrom := $00FCFCFC;
@@ -382,6 +279,7 @@ begin
   FFontHot.OnChange := @FontChanged;
 
   // Border
+  FBorder := TButtonExBorder.Create(Self);
   FBorder.ColorNormal := $00707070;
   FBorder.ColorHot := $00B17F3C;
   FBorder.ColorDown := $008B622C;
@@ -394,16 +292,9 @@ begin
   FBorder.WidthFocused := 1;
 
   // Other
-//  FSpacing := 5;
   FMargin := 5;
   FAlignment := taCenter;
   FState := bxsNormal;
-//  TabStop := True;
-//  FModalResult := 0;
-//  FCancel := False;
-//  FDefault := False;
-//  Width := 85;
-//  Height := 30;
 end;
 
 destructor TButtonEx.Destroy;
@@ -412,7 +303,6 @@ begin
   FFontDown.Free;
   FFontDisabled.Free;
   FFontFocused.Free;
-  //FPictures.Free;
   FColors.Free;
   FBorder.Free;
   FCanvas.Free;
@@ -454,35 +344,7 @@ begin
 
   if not FWordWrap then
     PreferredHeight := 0;
-  {
-  if FWordWrap then //and AutoSize then
-  begin
-    PreferredWidth := 0 ;
-    PreferredHeight := txtSize.CY + 2*FMargin;
-  end else
-  begin
-    PreferredWidth := txtSize.CX + 2 * FMargin;
-    PreferredHeight := 0;
-  end;
-  }
 end;
-
-  (*
-procedure TButtonEx.Click;
-var
-  Form: TCustomForm;
-begin
-  Form := GetParentForm(Self);
-  if Form <> nil then
-    Form.ModalResult := FModalResult;
-  inherited;
-end;
-
-procedure TButtonEx.FontChanged(Sender: TObject);
-begin
-  Invalidate;
-end;
-  *)
 
 class function TButtonEx.GetControlClassDefaultSize: TSize;
 begin
@@ -492,7 +354,7 @@ end;
 
 function TButtonEx.GetDrawTextFlags: Cardinal;
 begin
-  Result := DT_VCENTER;
+  Result := DT_VCENTER or DT_NOPREFIX;
   case FAlignment of
     taLeftJustify:
       if IsRightToLeft then Result := Result or DT_RIGHT else Result := Result or DT_LEFT;
@@ -605,6 +467,7 @@ var
   lColorFrom: TColor;
   lColorTo: TColor;
   lTextFont: TFont;
+  lAlignment: TAlignment;
   flags: Cardinal;
   i: integer;
   txtSize: TSize;
@@ -625,7 +488,6 @@ begin
   lColorTo := Colors.ColorNormalTo;
   lTextFont := Font;
   lBorderWidth := Border.WidthNormal;
-  //lPicture := FPictures.PictureNormal;
 
   if not (csDesigning in ComponentState) then
   begin
@@ -637,10 +499,6 @@ begin
         lColorTo := FColors.ColorFocusedTo;
         lTextFont := FFontFocused;
         lBorderWidth := FBorder.WidthFocused;
-        {
-        if FPictures.PictureFocused.Graphic <> nil then
-          lPicture := FPictures.PictureFocused;
-          }
       end;
       bxsHot:
       begin
@@ -649,10 +507,6 @@ begin
         lColorTo := FColors.ColorHotTo;
         lTextFont := FFontHot;
         lBorderWidth := FBorder.WidthHot;
-        {
-        if FPictures.PictureHot.Graphic <> nil then
-          lPicture := FPictures.PictureHot;
-          }
       end;
       bxsDown:
       begin
@@ -661,10 +515,6 @@ begin
         lColorTo := FColors.ColorDownTo;
         lTextFont := FFontDown;
         lBorderWidth := FBorder.WidthDown;
-        {
-        if FPictures.PictureDown.Graphic <> nil then
-          lPicture := FPictures.PictureDown;
-          }
       end;
       bxsDisabled:
       begin
@@ -673,10 +523,6 @@ begin
         lColorTo := FColors.ColorDisabledTo;
         lTextFont := FFontDisabled;
         lBorderWidth := FBorder.WidthDisabled;
-        {
-        if FPictures.PictureDisabled.Graphic <> nil then
-          lPicture := FPictures.PictureDisabled;
-          }
       end;
     end;
   end;
@@ -684,8 +530,8 @@ begin
   // Background
   lRect.Left := 0;
   lRect.Right := Width;
-  lRect.Top := 0; //lBorderWidth;
-  lRect.Bottom := Height; // - lBorderWidth;
+  lRect.Top := 0;
+  lRect.Bottom := Height;
 
   if FGradient then
     lCanvas.GradientFill(lRect, lColorFrom, lColorTo, gdVertical)
@@ -696,20 +542,6 @@ begin
     lCanvas.FillRect(lRect);
   end;
 
-  {
-  // Image
-  lPicLeft := 0;
-  if lPicture.Graphic <> nil then
-  begin
-    lPicture.Graphic.Transparent := FPictures.Transparent;
-    case FPictures.Alignment of
-      taLeftJustify : lPicLeft := Border.WidthNormal + FMargin;
-      taRightJustify: lPicLeft := Width - Border.WidthNormal - FMargin - lPicture.Graphic.Width;
-    end;
-    lPicTop := (Height - lPicture.Height) div 2;
-    lCanvas.Draw(lPicLeft, lPicTop, lPicture.Graphic);
-  end;
-   }
   // Border
   lCanvas.Pen.Width := 1;
   lCanvas.Pen.Color := lBorderColor;
@@ -722,19 +554,7 @@ begin
     lCanvas.LineTo(i - 1, i - 1);
   end;
 
-  (*
-  // Corner
-  lCanvas.Pixels[0, 0] := Color;
-  lCanvas.Pixels[lBorderWidth, lBorderWidth] := lBorderColor;
-  lCanvas.Pixels[Width - 1, 0] := Color;
-  lCanvas.Pixels[Width - 1 - lBorderWidth, lBorderWidth] := lBorderColor;
-  lCanvas.Pixels[0, Height - 1] := Color;
-  lCanvas.Pixels[lBorderWidth, Height - 1 - lBorderWidth] := lBorderColor;
-  lCanvas.Pixels[Width - 1, Height - 1] := Color;
-  lCanvas.Pixels[Width - 1 - lBorderWidth, Height - 1 - lBorderWidth] := lBorderColor;
-    *)
-
-  // Text
+  // Caption
   lCanvas.Pen.Width := 1;
   lCanvas.Brush.Style := bsClear;
   lCanvas.Font.Assign(lTextFont);
@@ -745,53 +565,30 @@ begin
   txtSize.CX := R.Right - R.Left;
   txtSize.CY := R.Bottom - R.Top;
 
-  case FAlignment of
+  lAlignment := FAlignment;
+  if IsRightToLeft then begin
+    if lAlignment = taLeftJustify then
+      lAlignment := taRightJustify
+    else if lAlignment = taRightJustify then
+      lAlignment := taLeftJustify;
+  end;
+
+  case lAlignment of
     taLeftJustify:
-      if IsRightToLeft then
-        txtPt.X := Width - txtSize.CX - FMargin
-      else
-        txtPt.X := FMargin;
+      txtPt.X := FMargin;
     taRightJustify:
-      if IsRightToLeft then
-        txtPt.X := FMargin
-      else
-        txtPt.X := Width - txtSize.CX - FMargin;
+      txtPt.X := Width - txtSize.CX - FMargin;
     taCenter:
       txtPt.X := (Width - txtSize.CX) div 2;
   end;
   txtPt.Y := (Height - txtSize.CY + 1) div 2;
   R := Rect(txtPt.X, txtPt.Y, txtPt.X + txtSize.CX, txtPt.Y + txtSize.CY);
-                 (*
-  case FAlignment of
-    taLeftJustify:
-    begin
-      lRect.Left := lRect.Left + FBorder.WidthNormal + FMargin;
-      lAlignment := DT_LEFT;
-    end;
-    taRightJustify:
-    begin
-      lRect.Right := lRect.Right - FBorder.WidthNormal - FMargin;
-      lAlignment := DT_RIGHT;
-    end;
-    else
-      lAlignment := DT_CENTER;
-  end;
-  *)
-  {
-  if (lPicture.Graphic <> nil) and (Alignment <> taCenter) then
-  begin
-    case FPictures.Alignment of
-      taLeftJustify: lRect.Left := lPicLeft + lPicture.Graphic.Width + FSpacing;
-      taRightJustify: lRect.Right := lPicLeft - FSpacing;
-    end;
-  end;
-  }
-  DrawText(lCanvas.Handle, PChar(Caption), -1, R, flags); //lAlignment or DT_NOPREFIX or DT_VCENTER or DT_SINGLELINE);
+  DrawText(lCanvas.Handle, PChar(Caption), -1, R, flags);
 
   // Draw focus rectangle
   if FShowFocusRect and Focused then
   begin
-    InflateRect(lRect, -3, -2);
+    InflateRect(lRect, -2, -2);
     DrawFocusRect(lCanvas.Handle, lRect);
   end;
 
@@ -841,22 +638,11 @@ begin
   Invalidate;
 end;
 
-{
-procedure TButtonEx.SetSpacing(const Value: integer);
-begin
-  if FSpacing = Value then
-    exit;
-  FSpacing := Value;
-  Invalidate;
-end;
-}
-
 procedure TButtonEx.SetWordWrap(const Value: Boolean);
 begin
   if FWordWrap = Value then
     exit;
   FWordWrap := Value;
-  //if AutoSize then AdjustSize;
   Invalidate;
 end;
 
@@ -891,118 +677,51 @@ end;
 
 procedure TButtonEx.WndProc(var Message: TLMessage);
 begin
-  {
-  if Message.Msg = LM_PAINT then
-    PaintButton;
-
-  if Message.Msg = CM_TEXTCHANGED then
-    PaintButton;
-
-  if Message.Msg = CM_COLORCHANGED then
-  PaintButton;
-
-  if Message.Msg = CM_BORDERCHANGED then
-  PaintButton;
-
-  if Message.Msg = LM_ERASEBKGND then
-    Exit;
-}
   if not (csDesigning in ComponentState) then
   begin
     case Message.Msg of
-
       LM_KEYDOWN:
-      begin
-        if (Message.WParam = VK_RETURN) or (Message.WParam = VK_SPACE) then
-          if FState <> bxsDisabled then
-            FState := bxsDown;
-            Invalidate;
-          end;
-
+        begin
+          if (Message.WParam = VK_RETURN) or (Message.WParam = VK_SPACE) then
+            if FState <> bxsDisabled then
+              FState := bxsDown;
+              Invalidate;
+            end;
       LM_KEYUP:
-      begin
-        if (Message.WParam = VK_RETURN) or (Message.WParam = VK_SPACE) then
-          if FState <> bxsDisabled then
-            FState := bxsFocused;
-            Invalidate;
-          end;
-
-      {
-      LM_CHAR:
-      begin
-        if (Message.WParam = VK_RETURN) or (Message.WParam = VK_SPACE) and (FState <> bxsDisabled) then
         begin
-          Click;
+          if (Message.WParam = VK_RETURN) or (Message.WParam = VK_SPACE) then
+            if FState <> bxsDisabled then
+              FState := bxsFocused;
+              Invalidate;
+            end;
+      CM_DIALOGKEY:
+        begin
+          if (Message.WParam = VK_RETURN) and Default and (not Focused) and (FState <> bxsDisabled) then
+            Click;
+          if (Message.WParam = VK_ESCAPE) and Cancel and (FState <> bxsDisabled) then
+            Click;
         end;
-      end;
-
-      CM_MOUSEENTER:
-      begin
-        FState := bxsHot;
-        PaintButton;
-      end;
-      CM_MOUSELEAVE:
-      begin
-        if (FState <> bxsDisabled) then
+      CM_ENABLEDCHANGED:
         begin
-          if Focused then
-            FState := bxsFocused
+          if not Enabled then
+            FState := bxsDisabled
           else
             FState := bxsNormal;
-          PaintButton;
-        end;
-      end;
-  }
-      CM_DIALOGKEY:
-      begin
-        if (Message.WParam = VK_RETURN) and Default and (not Focused) and (FState <> bxsDisabled) then
-          Click;
-        if (Message.WParam = VK_ESCAPE) and Cancel and (FState <> bxsDisabled) then
-          Click;
-      end;
-
-      {
-      CM_FOCUSCHANGED:
-      begin
-        if Focused and (FState = bxsNormal) then
-          FState := bxsFocused;
-        if (not Focused) and (FState = bxsFocused) then
-          FState := bxsNormal;
-        PaintButton;
-      end;
-      }
-      CM_ENABLEDCHANGED:
-      begin
-        if not Enabled then
-          FState := bxsDisabled
-        else
-          FState := bxsNormal;
-        Invalidate;
-//        PaintButton;
-      end;
-      LM_LBUTTONDOWN:
-      begin
-        FState := bxsDown;
-        Invalidate;
-//        PaintButton;
-      end;
-      LM_LBUTTONUP:
-      begin
-        if (FState <> bxsNormal) and (FState <> bxsFocused) and (FState <> bxsDisabled) then
-        begin
-          FState := bxsHot;
           Invalidate;
-          //PaintButton;
         end;
+      LM_LBUTTONDOWN:
+        begin
+          FState := bxsDown;
+          Invalidate;
+        end;
+      LM_LBUTTONUP:
+        begin
+          if (FState <> bxsNormal) and (FState <> bxsFocused) and (FState <> bxsDisabled) then
+          begin
+            FState := bxsHot;
+            Invalidate;
+          end;
       end;
-      {
-      LM_LBUTTONDBLCLK:
-      begin
-        FState := bxsDown;
-        PaintButton;
-        Click;
-      end;
-      }
     end;
   end;
 
