@@ -1,3 +1,6 @@
+tbuttonex.png
+tbuttonex_150.png
+tbuttonex_200.png
 tradiobuttonex.png
 tradiobuttonex_150.png
 tradiobuttonex_200.png

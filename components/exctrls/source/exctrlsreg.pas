@@ -12,14 +12,14 @@ procedure Register;
 implementation
 
 uses
-  ExCheckCtrls, ExEditCtrls;
+  ExButtons, ExCheckCtrls, ExEditCtrls;
 
 {$R exctrlsreg.res}
 
 procedure Register;
 begin
   RegisterComponents('ExCtrls', [
-    TCheckboxEx, TRadioButtonEx, TCheckGroupEx, TRadioGroupEx
+    TButtonEx, TCheckboxEx, TRadioButtonEx, TCheckGroupEx, TRadioGroupEx
   ]);
   RegisterComponents('LazControls', [
     TCurrSpinEditEx

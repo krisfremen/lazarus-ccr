@@ -17,7 +17,7 @@
 - CurrencyEdit
 - TRadioButton, TCheckbox, TRadioGroup and TCheckGroup: drawn by ThemeServices/Canvas, not by widgetset, button/text layout, wordwrap, user-provided check images"/>
     <License Value="LGPL with linking exception (like Lazarus LCL)."/>
-    <Files Count="3">
+    <Files Count="4">
       <Item1>
         <Filename Value="source\excheckctrls.pas"/>
         <UnitName Value="ExCheckCtrls"/>
@@ -31,6 +31,10 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="ExCtrlsReg"/>
       </Item3>
+      <Item4>
+        <Filename Value="source\exbuttons.pas"/>
+        <UnitName Value="exbuttons"/>
+      </Item4>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

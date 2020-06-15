@@ -8,7 +8,7 @@ unit ExCtrlsPkg;
 interface
 
 uses
-  ExCheckCtrls, ExEditCtrls, ExCtrlsReg, LazarusPackageIntf;
+  ExCheckCtrls, ExEditCtrls, ExCtrlsReg, ExButtons, LazarusPackageIntf;
 
 implementation
 
