@@ -98,7 +98,7 @@ type
     smFirstWeek, smNextWeek, smNextWeekRange);
 
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish, lgItalian,
-               lgPolish, lgFinnish, lgGreek, lgCustom);
+               lgPolish, lgFinnish, lgGreek, lgRussian, lgCustom);
 
 
   { TCalDateList }
@@ -493,6 +493,12 @@ const
   GreekDays = 'Κυρ,Δευ,Τρί,Τετ,Πεμ,Παρ,Σαβ';
   GreekMonths = 'Ιανουάριος,Φεβρουάριος,Μάρτιος,Απρίλος,Μάιος,Ιούνιος,Ιούλιος,Αύγουστος,Σεπτέμβριος,Οκτώβριος,Νοέμβριος,Δεκέμβριος';
   GreekTexts = 'Σήμερα είναι,"mmm dd"","" yyyy",Καμία γιορτή,Δεν έχει καμία αργία';
+
+  RussianDays = 'Воскресенье|Вс,Понедельник|Пн,Вторник|Вт,Среда|Ср,Четверг|Чт,Пятница|Пт,Суббота|Сб';
+  RussianMonths = 'Январь|Янв,Февраль|Фев,Март|Мар,Апрель|Апр,Май|Май,Июнь|Июн,'+
+    'Июль|Июл,Август|Авг,Сентябрь|Сен,Октябрь|Окт,Ноябрь|Ноя,Декабрь|Дек';
+  RussianTexts = 'Сегодня %s,"dd mmm"", "" yyyy", праздничные дни для %d,'+
+    'Праздники и выходные для %d не установлены,"dddd"", ""dd mmm"", ""yyyy",mmmm yyyy';
 
   DBLCLICK_INTERVAL = 300;   // Interval (ms) for detection of a double-click
   DESIGNTIME_PPI = 96;
@@ -2091,6 +2097,12 @@ begin
                  UseDayNames(GreekDays);
                  UseMonthNames(GreekMonths);
                  UseDisplayTexts(GreekTexts);
+                 BiDiMode := bdLeftToRight;
+               end;
+    lgRussian: begin
+                 UseDayNames(RussianDays);
+                 UseMonthNames(RussianMonths);
+                 UseDisplayTexts(RussianTexts);
                  BiDiMode := bdLeftToRight;
                end;
     lgCustom:  begin
