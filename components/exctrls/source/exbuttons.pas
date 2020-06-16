@@ -102,6 +102,7 @@ type
     function GetDrawTextFlags: Cardinal;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
+    procedure PaintButton;
     procedure PaintCustomButton;
     procedure PaintThemedButton;
     procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
@@ -394,67 +395,12 @@ begin
   inherited;
 end;
 
-procedure TButtonEx.PaintThemedButton;
-var
-  btn: TThemedButton;
-  details: TThemedElementDetails;
-  lRect: TRect;
-  flags: Cardinal;
-  txtSize: TSize;
-  txtPt: TPoint;
+procedure TButtonEx.PaintButton;
 begin
-  if (csDestroying in ComponentState) or not HandleAllocated then
-    exit;
-
-  lRect.Left := 0;
-  lRect.Right := Width;
-  lRect.Top := 0;
-  lRect.Bottom := Height;
-
-  if FState = bxsDisabled then
-    btn := tbPushButtonDisabled
-  else if FState = bxsDown then
-    btn := tbPushButtonPressed
-  else if FState = bxsHot then
-    btn := tbPushButtonHot
+  if FDefaultDrawing then
+    PaintThemedButton
   else
-  if Focused or Default then
-    btn := tbPushButtonDefaulted
-  else
-    btn := tbPushButtonNormal;
-
-  // Background
-  details := ThemeServices.GetElementDetails(btn);
-  InflateRect(lRect, 1, 1);
-  ThemeServices.DrawElement(FCanvas.Handle, details, lRect);
-  InflateRect(lRect, -1, -1);
-
-  // Text
-  FCanvas.Font.Assign(Font);
-  flags := GetDrawTextFlags;
-
-  with ThemeServices.GetTextExtent(FCanvas.Handle, details, Caption, flags, @lRect) do begin
-    txtSize.CX := Right;
-    txtSize.CY := Bottom;
-  end;
-
-  case FAlignment of
-    taLeftJustify:
-      if IsRightToLeft then
-        txtPt.X := Width - txtSize.CX - FMargin
-      else
-        txtPt.X := FMargin;
-    taRightJustify:
-      if IsRightToLeft then
-        txtPt.X := FMargin
-      else
-        txtPt.X := Width - txtSize.CX - FMargin;
-    taCenter:
-      txtPt.X := (Width - txtSize.CX) div 2;
-  end;
-  txtPt.Y := (Height + 1 - txtSize.CY) div 2;
-  lRect := Rect(txtPt.X, txtPt.Y, txtPt.X + txtSize.CX, txtPt.Y + txtSize.CY);
-  ThemeServices.DrawText(FCanvas, details, Caption, lRect, flags, 0);
+    PaintCustomButton;
 end;
 
 procedure TButtonEx.PaintCustomButton;
@@ -528,10 +474,7 @@ begin
   end;
 
   // Background
-  lRect.Left := 0;
-  lRect.Right := Width;
-  lRect.Top := 0;
-  lRect.Bottom := Height;
+  lRect := Rect(0, 0, Width, Height);
 
   if FGradient then
     lCanvas.GradientFill(lRect, lColorFrom, lColorTo, gdVertical)
@@ -596,6 +539,66 @@ begin
   FCanvas.Draw(0, 0, lBitmap);
 
   lBitmap.Free;
+end;
+
+procedure TButtonEx.PaintThemedButton;
+var
+  btn: TThemedButton;
+  details: TThemedElementDetails;
+  lRect: TRect;
+  flags: Cardinal;
+  txtSize: TSize;
+  txtPt: TPoint;
+begin
+  if (csDestroying in ComponentState) or not HandleAllocated then
+    exit;
+
+  lRect := Rect(0, 0, Width, Height);
+
+  if FState = bxsDisabled then
+    btn := tbPushButtonDisabled
+  else if FState = bxsDown then
+    btn := tbPushButtonPressed
+  else if FState = bxsHot then
+    btn := tbPushButtonHot
+  else
+  if Focused or Default then
+    btn := tbPushButtonDefaulted
+  else
+    btn := tbPushButtonNormal;
+
+  // Background
+  details := ThemeServices.GetElementDetails(btn);
+  InflateRect(lRect, 1, 1);
+  ThemeServices.DrawElement(FCanvas.Handle, details, lRect);
+  InflateRect(lRect, -1, -1);
+
+  // Text
+  FCanvas.Font.Assign(Font);
+  flags := GetDrawTextFlags;
+
+  with ThemeServices.GetTextExtent(FCanvas.Handle, details, Caption, flags, @lRect) do begin
+    txtSize.CX := Right;
+    txtSize.CY := Bottom;
+  end;
+
+  case FAlignment of
+    taLeftJustify:
+      if IsRightToLeft then
+        txtPt.X := Width - txtSize.CX - FMargin
+      else
+        txtPt.X := FMargin;
+    taRightJustify:
+      if IsRightToLeft then
+        txtPt.X := FMargin
+      else
+        txtPt.X := Width - txtSize.CX - FMargin;
+    taCenter:
+      txtPt.X := (Width - txtSize.CX) div 2;
+  end;
+  txtPt.Y := (Height + 1 - txtSize.CY) div 2;
+  lRect := Rect(txtPt.X, txtPt.Y, txtPt.X + txtSize.CX, txtPt.Y + txtSize.CY);
+  ThemeServices.DrawText(FCanvas, details, Caption, lRect, flags, 0);
 end;
 
 procedure TButtonEx.SetAlignment(const Value: TAlignment);
@@ -669,10 +672,7 @@ end;
 procedure TButtonEx.WMPaint(var Msg: TLMPaint);
 begin
   inherited;
-  if FDefaultDrawing then
-    PaintThemedButton
-  else
-    PaintCustomButton;
+  PaintButton;
 end;
 
 procedure TButtonEx.WndProc(var Message: TLMessage);
