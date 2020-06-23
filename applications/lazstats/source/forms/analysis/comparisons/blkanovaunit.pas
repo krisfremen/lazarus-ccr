@@ -86,42 +86,43 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
-    NoSelected, N : integer;
-    ColNoSelected : IntDyneVec;
-    outline, cellstring : string;
-    SSDep, SSErr, SSF1, SSF2, SSF3, SSF1F2, SSF1F3, SSF2F3, SSF1F2F3 : double;
-    MSDep, MSErr, MSF1, MSF2, MSF3, MSF1F2, MSF1F3, MSF2F3, MSF1F2F3 : double;
-    DFTot, DFErr, DFF1, DFF2, DFF3, DFF1F2, DFF1F3, DFF2F3, DFF1F2F3 : double;
-    Omega, OmegaF1, OmegaF2, OmegaF3, OmegaF1F2, F, MinSize, MaxSize : double;
-    OmegaF1F3, OmegaF2F3, OmegaF1F2F3 : double;
-    FF1, FF2, FF1F2, ProbF1, ProbF2, ProbF3, ProbF1F2, ProbF1F3 : double;
-    FF3, FF2F3, FF1F3, FF1F2F3, ProbF2F3, ProbF1F2F3 : double;
-    DepVarCol, F1Col, F2Col, F3Col, Nf1cells, Nf2cells, Nf3cells : integer;
+    NoSelected, N: integer;
+    ColNoSelected: IntDyneVec;
+    outline, cellstring: string;
+    SSDep, SSErr, SSF1, SSF2, SSF3, SSF1F2, SSF1F3, SSF2F3, SSF1F2F3: double;
+    MSDep, MSErr, MSF1, MSF2, MSF3, MSF1F2, MSF1F3, MSF2F3, MSF1F2F3: double;
+    DFTot, DFErr, DFF1, DFF2, DFF3, DFF1F2, DFF1F3, DFF2F3, DFF1F2F3: double;
+    Omega, OmegaF1, OmegaF2, OmegaF3, OmegaF1F2, F: Double;
+    MinSize: Double;
+    OmegaF1F3, OmegaF2F3, OmegaF1F2F3: double;
+    FF1, FF2, FF1F2, ProbF1, ProbF2, ProbF3, ProbF1F2, ProbF1F3: double;
+    FF3, FF2F3, FF1F3, FF1F2F3, ProbF2F3, ProbF1F2F3: double;
+    DepVarCol, F1Col, F2Col, F3Col, Nf1cells, Nf2cells, Nf3cells: integer;
     MeanDep, MeanF1, MeanF2, MeanF3: double;
-    minf1, maxf1, minf2, maxf2, minf3, maxf3, nofactors, totcells : integer;
-    cellcnts : IntDyneVec;    // array of cell counts
-    cellvars : DblDyneVec;    // arrray of cell sums of squares then variances
-    cellsums : DblDyneVec;    // array of cell sums then means
-    equal_grp : boolean;   // check for equal groups for post-hoc tests
-    counts : IntDyneMat;      // matrix for 2-way containing cell sizes
-    sums : DblDyneMat;        // matrix for 2-way containing cell sums
-    vars : DblDyneMat;        // matrix for 2-way containing sums of squares
-    RowSums : DblDyneVec;     // 2 way row sums
-    ColSums : DblDyneVec;     // 2 way col sums
-    RowCount : IntDyneVec;    // 2 way row count
-    ColCount : IntDyneVec;    // 2 way col count
-    SlcSums : DblDyneVec;     // 3 way slice sums
-    SlcCount : IntDyneVec;    // 3 way slice counts
-    NoGrpsA, NoGrpsB, NoGrpsC : integer;
-    OrdMeansA, OrdMeansB, OrdMeansC : DblDyneVec; // reordered means for f1, f2, f3
-    allAlpha, PostHocAlpha : double; // alphas for tests
+    minf1, maxf1, minf2, maxf2, minf3, maxf3, nofactors, totcells: integer;
+    cellcnts: IntDyneVec;    // array of cell counts
+    cellvars: DblDyneVec;    // arrray of cell sums of squares then variances
+    cellsums: DblDyneVec;    // array of cell sums then means
+    equal_grp: boolean;   // check for equal groups for post-hoc tests
+    counts: IntDyneMat;      // matrix for 2-way containing cell sizes
+    sums: DblDyneMat;        // matrix for 2-way containing cell sums
+    vars: DblDyneMat;        // matrix for 2-way containing sums of squares
+    RowSums: DblDyneVec;     // 2 way row sums
+    ColSums: DblDyneVec;     // 2 way col sums
+    RowCount: IntDyneVec;    // 2 way row count
+    ColCount: IntDyneVec;    // 2 way col count
+    SlcSums: DblDyneVec;     // 3 way slice sums
+    SlcCount: IntDyneVec;    // 3 way slice counts
+    NoGrpsA, NoGrpsB, NoGrpsC: integer;
+    OrdMeansA, OrdMeansB, OrdMeansC: DblDyneVec; // reordered means for f1, f2, f3
+    AllAlpha, PostHocAlpha: double; // alphas for tests
 //   wsum : array[1..20,1..20,1..20] of double; // sums for 3 way
 //   ncnt : array[1..20,1..20,1..20] of integer; //  n in 3 way cells
 //  wx2 : array[1..20,1..20,1..20] of double; // sums of squares for 3 way cells
-    wsum, wx2 : DblDyneCube;
-    ncnt : IntDyneCube;
-    OKterms : array[1..14] of integer;
-    CompError : boolean;
+    wsum, wx2: DblDyneCube;
+    ncnt: IntDyneCube;
+    OKterms: array[1..14] of integer;
+    CompError: boolean;
 
     procedure GetLevels;
     procedure Calc1Way;
@@ -234,8 +235,8 @@ begin
   begin
     DepVar.Text := VarList.Items[index];
     VarList.Items.Delete(index);
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.ComputeBtnClick(Sender: TObject);
@@ -356,7 +357,7 @@ begin
           if Bonferoni.Checked then
             Bonferroni(cellsums, cellcnts, cellvars, minf1, maxf1, posthocAlpha, lReport);
           if OrthoContrasts.Checked then
-            Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, 0.05, lReport);
+            Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, allAlpha, posthocAlpha, lReport);
           if BrownForsythe.Checked then
             BrownForsytheOneWay(lReport);
           if Welch.Checked then
@@ -479,8 +480,8 @@ begin
   begin
     VarList.Items.Add(Factor1.Text);
     Factor1.Text := '';
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.Fact2InClick(Sender: TObject);
@@ -492,8 +493,8 @@ begin
   begin
     Factor2.Text := VarList.Items[index];
     VarList.Items.Delete(index);
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.Fact2OutClick(Sender: TObject);
@@ -502,8 +503,8 @@ begin
   begin
     VarList.Items.Add(Factor2.Text);
     Factor2.Text := '';
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.Fact3InClick(Sender: TObject);
@@ -515,8 +516,8 @@ begin
   begin
     Factor3.Text := VarList.Items[index];
     VarList.Items.Delete(index);
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.Fact3OutClick(Sender: TObject);
@@ -525,8 +526,8 @@ begin
   begin
     VarList.Items.Add(Factor3.Text);
     Factor3.Text := '';
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.Fact1InClick(Sender: TObject);
@@ -538,8 +539,8 @@ begin
   begin
     Factor1.Text := VarList.Items[index];
     VarList.Items.Delete(index);
+    UpdateBtnStates;
   end;
-  UpdateBtnStates;
 end;
 
 procedure TBlksAnovaFrm.GetLevels;
@@ -647,23 +648,28 @@ var
   i, grpsize: integer;
   minvar, maxvar, sumvar, sumfreqlogvar, sumDFrecip: double;
   c, bartlett, cochran, hartley, chiprob: double;
+  maxSize: Integer;
 begin
+  AReport.Add(DIVIDER);
   AReport.Add('ONE WAY ANALYSIS OF VARIANCE RESULTS');
+  AReport.Add(DIVIDER);
+  AReport.Add('Dependent variable is:   %s', [DepVar.Text]);
+  AReport.Add('Independent variable is: %s', [Factor1.Text]);
   AReport.Add('');
-  AReport.Add('Dependent variable is: %s, Independent variable is: %s', [DepVar.Text, Factor1.Text]);
-  AReport.Add('');
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER_SMALL);
   AReport.Add('SOURCE    D.F.      SS        MS        F         PROB.>F   OMEGA SQR.');
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER_SMALL);
   AReport.Add('BETWEEN   %4.0f%10.2f%10.2f%10.2f%10.2f%10.2f', [DFF1, SSF1, MSF1, F, ProbF1, Omega]);
   AReport.Add('WITHIN    %4.0f%10.2f%10.2f', [DFErr, SSErr, MSErr]);
   AReport.Add('TOTAL     %4.0f%10.2f', [DFTot, SSDep]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER_SMALL);
   AReport.Add('');
-  AReport.Add('MEANS AND VARIABILITY OF THE DEPENDENT VARIABLE FOR LEVELS OF THE INDEPENDENT VARIABLE');
-  AReport.Add('---------------------------------------------------------------------');
-  AReport.Add('GROUP     MEAN      VARIANCE  STD.DEV.  N');
-  Areport.Add('---------------------------------------------------------------------');
+  AReport.Add('MEANS AND VARIABILITY OF THE DEPENDENT VARIABLE');
+  AReport.Add('FOR LEVELS OF THE INDEPENDENT VARIABLE');
+  AReport.Add('');
+  AReport.Add('GROUP    MEAN      VARIANCE    STD.DEV.      N');
+  AReport.Add('-----  ---------  ----------  ----------  ---------');
+  //           xxxx xxxxxxxxx  xxxxxxxxxx  xxxxxxxxxx      xxxx
 
   equal_grp := true;
   minvar := 1e20;
@@ -673,7 +679,7 @@ begin
   sumfreqlogvar := 0.0;
   grpsize := round(cellcnts[0]);
   MinSize := grpsize; // initialized minimum group size
-  MaxSize := grpsize; // initialize maximum group size
+  maxSize := grpsize; // initialize maximum group size
   for i := 0 to NF1cells-1 do
   begin
     grpsize := round(cellcnts[i]);
@@ -682,8 +688,8 @@ begin
       MinSize := grpsize;
       equal_grp := false;
     end;
-    if grpsize > MaxSize then
-      MaxSize := grpsize;
+    if grpsize > maxSize then
+      maxSize := grpsize;
 
     if cellcnts[i] > 1 then
     begin
@@ -697,14 +703,14 @@ begin
     end;
 
     if cellcnts[i] > 0 then
-      AReport.Add('%4d %10.2f%10.2f%10.2f%4d', [
+      AReport.Add('%4d %9.2f  %10.2f  %10.2f    %4d', [
         i+1, cellsums[i] / cellcnts[i], cellvars[i], sqrt(cellvars[i]), cellcnts[i]
       ]);
   end;
 
-  AReport.Add('---------------------------------------------------------------------');
-  AReport.Add('TOTAL%10.2f%10.2f%10.2f%4d', [MeanDep, MSDep, sqrt(MSDep), N]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add('---------------------------------------------------');
+  AReport.Add('TOTAL%9.2f  %10.2f  %10.2f    %4d', [MeanDep, MSDep, sqrt(MSDep), N]);
+  AReport.Add('---------------------------------------------------');
   AReport.Add('');
 
   c := 1.0 + (1.0 / (3 * DFF1)) * (sumDFrecip - (1.0 / DFErr));
@@ -713,12 +719,14 @@ begin
   cochran := maxvar / sumvar;
   hartley := maxvar / minvar;
 
+  AReport.Add(DIVIDER);
   AReport.Add('TESTS FOR HOMOGENEITY OF VARIANCE');
-  AReport.Add('---------------------------------------------------------------------');
-  AReport.Add('Hartley Fmax test statistic = %.2f with deg.s freedom: %d and %.0f.', [hartley, NF1cells, MaxSize - 1]);
-  AReport.Add('Cochran C statistic = %.2f with deg.s freedom: %d and %.0f.', [cochran, NF1cells, MaxSize - 1]);
-  AReport.Add('Bartlett Chi-square = %0.2f with %.0f D.F. Prob. > Chi-Square = %.3f', [bartlett, DFF1, chiprob]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add('');
+  AReport.Add('Hartley Fmax test statistic:                   %8.2f  (%d and %d d.f.)', [hartley, NF1cells, maxSize-1]);
+  AReport.Add('Cochran C statistic:                           %8.2f  (%d and %d d.f.)', [cochran, Nf1cells, maxSize-1]);
+  AReport.Add('Bartlett Chi-square:                           %8.2f  (%.0f d.f)', [bartlett, DFF1]);
+  AReport.Add('   probability > Chi-Square:                   %8.3f', [chiprob]);
+  AReport.Add(DIVIDER);
 end;
 
 procedure TBlksAnovaFrm.OneWayPlot;
@@ -808,7 +816,7 @@ begin
     grpA := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
     grpB := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F2Col,i])));
     X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
-    X := X*X;
+    X2 := X*X;
     grpA := grpA - minf1 + 1;
     grpB := grpB - minf2 + 1;
     counts[grpA-1,grpB-1] := counts[grpA-1,grpB-1] + 1;
@@ -1057,12 +1065,13 @@ begin
   cochran := maxvar / sumvars;
   hartley := maxvar / minvar;
 
+  AReport.Add(DIVIDER);
   AReport.Add('TESTS FOR HOMOGENEITY OF VARIANCE');
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER_SMALL);
   AReport.Add('Hartley Fmax test statistic = %10.2f with deg.s freedom: %d and %d.', [hartley, NoGrpsA*NoGrpsB, groupsize-1]);
   AReport.Add('Cochran C statistic = %10.2f with deg.s freedom: %d and %d.', [cochran, NoGrpsA*NoGrpsB, groupsize - 1]);
   AReport.Add('Bartlett Chi-square statistic = %10.2f with %4d D.F. Prob. larger value = %6.3f', [bartlett, NoGrpsA*NoGrpsB - 1, chiprob]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER);
 end;
 
 procedure TBlksAnovaFrm.TwoWayPlot;
@@ -1817,13 +1826,13 @@ begin
   chiprob := chisquaredprob(bartlett,round(NoGrpsA * NoGrpsB * NoGrpsC - 1));
   cochran := maxvar / sumvars;
   hartley := maxvar / minvar;
+  AReport.Add(DIVIDER);
   AReport.Add('TESTS FOR HOMOGENEITY OF VARIANCE');
-  AReport.Add('---------------------------------------------------------------------');
-  AReport.Add('Hartley Fmax test statistic = %.2f with deg.s freedom: %d and %d.', [hartley, NoGrpsA*NoGrpsB, groupsize-1]);
-  AReport.Add(outline);
-  AReport.Add('Cochran C statistic = %.2f with deg.s freedom: %d and %d.', [cochran, NoGrpsA*NoGrpsB, groupsize - 1]);
-  AReport.Add('Bartlett Chi-square statistic = %.2f with %d D.F. Prob. larger = %.3f', [bartlett, NoGrpsA*NoGrpsB - 1, 1.0 - chiprob]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER_SMALL);
+  AReport.Add('Hartley Fmax test statistic:   %8.2f   with deg.s freedom: %d and %d.', [hartley, NoGrpsA*NoGrpsB, groupsize-1]);
+  AReport.Add('Cochran C statistic:           %8.2f   with deg.s freedom: %d and %d.', [cochran, NoGrpsA*NoGrpsB, groupsize - 1]);
+  AReport.Add('Bartlett Chi-square statistic: %8.2f   with %d D.F. Prob. larger: %.3f', [bartlett, NoGrpsA*NoGrpsB - 1, 1.0 - chiprob]);
+  AReport.Add(DIVIDER);
 end;
 
 procedure TBlksAnovaFrm.ThreeWayPlot;
@@ -2087,7 +2096,7 @@ begin
         if Bonferoni.Checked then
           Bonferroni(RowSums, RowCount, variances, minf1, maxf1, posthocAlpha, AReport);
         if OrthoContrasts.Checked then
-          Contrasts(MSErr, DFErr, RowSums, RowCount, minf1, maxf1, AllAlpha, AReport);
+          Contrasts(MSErr, DFErr, RowSums, RowCount, minf1, maxf1, AllAlpha, posthocAlpha, AReport);
       end;
 
       // Do column comparisons
@@ -2118,7 +2127,7 @@ begin
         if Bonferoni.Checked then
           Bonferroni(ColSums, ColCount, variances, minf2, maxf2, posthocAlpha, AReport);
         if OrthoContrasts.Checked then
-          Contrasts(MSErr, DFErr, ColSums, ColCount, minf2, maxf2, AllAlpha, AReport);
+          Contrasts(MSErr, DFErr, ColSums, ColCount, minf2, maxf2, AllAlpha, postHocAlpha, AReport);
       end;
 
       // do simple effects for columns within each row
@@ -2153,7 +2162,7 @@ begin
           if Bonferoni.Checked then
             Bonferroni(cellsums, cellcnts, cellvars, minf2, maxf2, posthocAlpha, AReport);
           if OrthoContrasts.Checked then
-            Contrasts(MSErr, DFErr, cellsums, cellcnts, minf2, maxf2, 0.05, AReport);
+            Contrasts(MSErr, DFErr, cellsums, cellcnts, minf2, maxf2, allAlpha, PostHocAlpha, AReport);
         end;
       end;
 
@@ -2189,7 +2198,7 @@ begin
             if Bonferoni.Checked then
               Bonferroni(cellsums, cellcnts, cellvars, minf1, maxf1, posthocAlpha, AReport);
             if OrthoContrasts.Checked then
-              Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, 0.05, AReport);
+              Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, allAlpha, postHocAlpha, AReport);
         end;
       end;
       variances := nil;
@@ -2241,7 +2250,7 @@ begin
           if Bonferoni.Checked then
             Bonferroni(RowSums, RowCount, variances, minf1, maxf1, posthocAlpha, AReport);
           if OrthoContrasts.Checked then
-            Contrasts(MSErr, DFErr, RowSums, RowCount, minf1, maxf1, AllAlpha, AReport);
+            Contrasts(MSErr, DFErr, RowSums, RowCount, minf1, maxf1, allAlpha, postHocAlpha, AReport);
      end;
 
      // Do column comparisons
@@ -2273,7 +2282,7 @@ begin
           if Bonferoni.Checked then
             Bonferroni(ColSums, ColCount, variances, minf2, maxf2, posthocAlpha, AReport);
           if OrthoContrasts.Checked then
-            Contrasts(MSErr, DFErr, ColSums, ColCount, minf2, maxf2, AllAlpha, AReport);
+            Contrasts(MSErr, DFErr, ColSums, ColCount, minf2, maxf2, allAlpha, posthocAlpha, AReport);
      end;
 
      // Do slice comparisons
@@ -2305,7 +2314,7 @@ begin
           if Bonferoni.Checked then
             Bonferroni(SlcSums, SlcCount, variances, minf3, maxf3, posthocAlpha, AReport);
           if OrthoContrasts.Checked then
-            Contrasts(MSErr, DFErr, SlcSums, SlcCount, minf3, maxf3, AllAlpha, AReport);
+            Contrasts(MSErr, DFErr, SlcSums, SlcCount, minf3, maxf3, allAlpha, posthocAlpha, AReport);
      end;
 
      // do simple effects for columns within each row
@@ -2343,7 +2352,7 @@ begin
                if Bonferoni.Checked then
                  Bonferroni(cellsums, cellcnts, cellvars, minf2, maxf2, posthocAlpha, AReport);
                if OrthoContrasts.Checked then
-                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf2, maxf2, 0.05, AReport);
+                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf2, maxf2, allAlpha, posthocAlpha, AReport);
           end;
      end;
 
@@ -2382,7 +2391,7 @@ begin
                if Bonferoni.Checked then
                  Bonferroni(cellsums, cellcnts, cellvars, minf1, maxf1, posthocAlpha, AReport);
                if OrthoContrasts.Checked then
-                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, 0.05, AReport);
+                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, allAlpha, posthocAlpha, AReport);
           end;
      end;
 
@@ -2420,7 +2429,7 @@ begin
                if Bonferoni.Checked then
                  Bonferroni(cellsums, cellcnts, cellvars, minf2, maxf2, posthocAlpha, AReport);
                if OrthoContrasts.Checked then
-                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf2, maxf2, 0.05, AReport);
+                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf2, maxf2, allAlpha, posthocAlpha, AReport);
           end;
      end;
 
@@ -2458,7 +2467,7 @@ begin
                if Bonferoni.Checked then
                  Bonferroni(cellsums, cellcnts, cellvars, minf1, maxf1, posthocAlpha, AReport);
                if OrthoContrasts.Checked then
-                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, 0.05, AReport);
+                 Contrasts(MSErr, DFErr, cellsums, cellcnts, minf1, maxf1, allAlpha, posthocAlpha, AReport);
           end;
      end;
      variances := nil
@@ -2539,18 +2548,21 @@ begin
   ProbF1 := probf(F,DFF1,DFErr);
   MeanDep := MeanDep / N;
 
+  AReport.Add('');
+  AReport.Add('');
+  AReport.Add(DIVIDER);
   AReport.Add('BROWN-FORSYTHE ONE WAY ANALYSIS OF VARIANCE RESULTS');
   AReport.Add('');
   AReport.Add('Dependent variable is: %s, Independent variable is: %s', [DepVar.Text, Factor1.Text]);
   AReport.Add('');
   AReport.Add('Traditional One-Way ANOVA Results');
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER_SMALL);
   AReport.Add('SOURCE    D.F.      SS        MS        F         PROB.>F   OMEGA SQR.');
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add('-----------------------------------------------------------------------');
   AReport.Add('BETWEEN   %4.0f%10.2f%10.2f%10.2f%10.2f%10.2f', [DFF1, SSF1, MSF1, F, ProbF1, Omega]);
   AReport.Add('WITHIN    %4.0f%10.2f%10.2f', [DFErr, SSErr, MSErr]);
   AReport.Add('TOTAL     %4.0f%10.2f', [DFTot, SSDep]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER);
 
   sumc1 := 0.0;
   MSErr := 0.0;
@@ -2581,11 +2593,11 @@ begin
   ProbF1 := probf(NewF,DFF1, fdegfree);
 
   AReport.Add('');
-  AReport.Add('---------------------------------------------------------------------');
-  AReport.Add('Brown-Forsythe F statistic = %.3f', [NewF]);
-  AReport.Add('Brown-Forsythe denominator degrees of freedom = %.0f', [fdegfree]);
-  AReport.Add('Brown-Forsythe F probability = %.3f', [probf1]);
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER);
+  AReport.Add('Brown-Forsythe F statistic:                    %8.3f', [NewF]);
+  AReport.Add('Brown-Forsythe denominator degrees of freedom: %8.0f', [fdegfree]);
+  AReport.Add('Brown-Forsythe F probability:                  %8.3f', [probf1]);
+  AReport.Add(DIVIDER);
 
   {
   if Outputfrm = nil then
@@ -2639,7 +2651,7 @@ begin
     if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
     intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
     X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
-    X := X*X;
+    X2 := X*X;
     intvalue := intvalue - minf1;
     cellcnts[intvalue] := cellcnts[intvalue] + 1;
     cellsums[intvalue] := cellsums[intvalue] + X;
@@ -2726,9 +2738,12 @@ begin
 //     F := MSF1 / MSErr;
 //     ProbF1 := probf(F,DFF1, DFErr);
 
+  AReport.Add('');
+  AReport.Add(DIVIDER);
   AReport.Add('WELCH ONE WAY ANALYSIS OF VARIANCE RESULTS');
   AReport.Add('');
-  AReport.Add('Dependent variable is: %s, Independent variable is: %s', [DepVar.Text, Factor1.Text]);
+  AReport.Add('Dependent variable is:   %s', [DepVar.Text]);
+  AReport.Add('Independent variable is: %s', [Factor1.Text]);
   AReport.Add('');
 {     OutputFrm.RichEdit.Lines.Add('---------------------------------------------------------------------');
      OutputFrm.RichEdit.Lines.Add('SOURCE    D.F.      SS        MS        F         PROB.>F   OMEGA SQR.');
@@ -2742,20 +2757,11 @@ begin
      OutputFrm.RichEdit.Lines.Add(outline);
      OutputFrm.RichEdit.Lines.Add('---------------------------------------------------------------------');
      OutputFrm.RichEdit.Lines.Add(''); }
-  AReport.Add('Welch F statistic = %8.4f', [F]);
-  AReport.Add('Welch denominator degrees of freedom = %3.0f', [v]);
+  AReport.Add('Welch F statistic:                             %8.4f', [F]);
+  AReport.Add('Welch denominator degrees of freedom:          %8.0f', [v]);
 
   probF1 := probf(F,DFF1,v);
-  AReport.Add('Welch F probability = %5.3f', [probf1]);
-
-  {
-  if OutputFrm = nil then
-    OutputFrm := TOutputFrm.Create(Application)
-  else
-    OutputFrm.Clear;
-  OutputFrm.AddLines(AReport);
-  OutputFrm.ShowModal;
-  }
+  AReport.Add('Welch F probability:                           %8.3f', [probf1]);
 
   WelchtTests(AReport);
 end;
@@ -2774,9 +2780,9 @@ begin
   NoCompares := Nf1cells;
 
   AReport.Add('');
-  AReport.Add('---------------------------------------------------------------------');
-  AReport.Add('Welch t-tests among groups');
-  AReport.Add('---------------------------------------------------------------------');
+  AReport.Add(DIVIDER);
+  AReport.Add('WELCH T-TESTS AMONG GROUPS');
+  AReport.Add(DIVIDER_SMALL);
 
   for i := 1 to NoCompares - 1 do
   begin
@@ -2791,7 +2797,7 @@ begin
       numerator := mean1 - mean2;
       t := numerator / denominator;
       AReport.Add('Mean %d: %8.3f, Mean %d: %8.3f', [i, mean1, j, mean2]);
-      AReport.Add('Welch t: %8.3f' ,[t]);
+      AReport.Add('Welch t:                                       %8.3f' ,[t]);
 
       numerator := sqr((var1 /cellcnts[i-1]) + (var2 / cellcnts[j-1]));
       term1 := sqr(var1) / (sqr(cellcnts[i-1]) * (cellcnts[i-1]-1.0));
@@ -2799,41 +2805,30 @@ begin
       denominator := term1 + term2;
       numerator := sqr((var1 / cellcnts[i-1]) + (var2 / cellcnts[j-1]));
       gnu := numerator / denominator;
-      AReport.Add('degrees of freedom: %8.3f', [gnu]);
+      AReport.Add('Ddegrees of freedom:                           %8.3f', [gnu]);
 
       v := round(gnu);
-      AReport.Add('Rounded degrees of freedom = %d', [v]);
+      AReport.Add('Rounded degrees of freedom:                    %8d', [v]);
 
       probability := probt(t,gnu);
-      AReport.Add('Probability > t = %8.3f', [probability]);
+      AReport.Add('Probability > t:                               %8.3f', [probability]);
       AReport.Add('');
     end;
-
-    AReport.Add('');
   end;
-
-  {
-  if OutputFrm = nil then
-    OutputFrm := TOutputFrm.Create(Application)
-  else
-    OutputFrm.Clear;
-  OutputFrm.AddLines(AReport);
-  OutputFrm.ShowModal;
-  }
 end;
 
 procedure TBlksAnovaFrm.UpdateBtnStates;
 begin
-  DepIn.Enabled := VarList.ItemIndex > -1;
+  DepIn.Enabled := (VarList.ItemIndex > -1) and (DepVar.Text = '');
   DepOut.Enabled := DepVar.Text <> '';
 
-  Fact1In.Enabled := VarList.ItemIndex > -1;
+  Fact1In.Enabled := (VarList.ItemIndex > -1) and (Factor1.Text = '');
   Fact1Out.Enabled := Factor1.Text <> '';
 
-  Fact2In.Enabled := VarList.ItemIndex > -1;
+  Fact2In.Enabled := (VarList.ItemIndex > -1) and (Factor2.Text = '');
   Fact2Out.Enabled := Factor2.Text <> '';
 
-  Fact3In.Enabled := VarList.ItemIndex > -1;
+  Fact3In.Enabled := (VarList.ItemIndex > -1) and (Factor3.Text = '');
   Fact3Out.Enabled := Factor3.Text <> '';
 end;
 

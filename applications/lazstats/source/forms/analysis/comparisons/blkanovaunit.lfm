@@ -574,7 +574,7 @@ object BlksAnovaFrm: TBlksAnovaFrm
       OnChange = VarChange
       ReadOnly = True
       TabOrder = 3
-      Text = 'Edit1'
+      Text = 'Factor1'
     end
   end
   object Panel3: TPanel
@@ -654,7 +654,7 @@ object BlksAnovaFrm: TBlksAnovaFrm
       OnChange = VarChange
       ReadOnly = True
       TabOrder = 3
-      Text = 'Edit1'
+      Text = 'Factor2'
     end
   end
   object Panel4: TPanel
@@ -734,7 +734,7 @@ object BlksAnovaFrm: TBlksAnovaFrm
       OnChange = VarChange
       ReadOnly = True
       TabOrder = 3
-      Text = 'Edit1'
+      Text = 'Factor3'
     end
   end
   object Bevel1: TBevel
