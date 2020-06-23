@@ -710,49 +710,45 @@ end;
 
 procedure TBlksAnovaFrm.OneWayPlot;
 var
-   i : integer;
-   maxmean : double;
-   XValue : DblDyneVec;
-   setstring : string[11];
-   plottype : integer;
-
+  i : integer;
+  maxmean : double;
+  plottype : integer;
 begin
-     plottype := 2;
-     SetLength(XValue,Nf1cells);
-     if PlotMeans.Checked then plottype := 2;
-     if Plot2DLines.Checked then plottype := 5;
-     if Plot3DLines.Checked then plottype := 6;
-     maxmean := 0.0;
-     setstring := 'FACTOR A';
-     GraphFrm.SetLabels[1] := setstring;
-     SetLength(GraphFrm.YPoints,1,NF1cells);
-     SetLength(GraphFrm.Xpoints,1,NF1cells);
-     for i := 1 to NF1cells do
-     begin
-          cellsums[i-1] := cellsums[i-1] / cellcnts[i-1];
-          GraphFrm.Ypoints[0,i-1] := cellsums[i-1];
-          if cellsums[i-1] > maxmean then maxmean := cellsums[i-1];
-          XValue[i-1] := minF1 + i - 1;
-          GraphFrm.Xpoints[0,i-1] := XValue[i-1];
-     end;
-     GraphFrm.nosets := 1;
-     GraphFrm.nbars := NF1cells;
-     GraphFrm.Heading := Factor1.Text;
-     GraphFrm.XTitle := 'FACTOR A LEVEL';
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype; // 3d Vertical Bar Chart
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
-     XValue := nil;
-     GraphFrm.Xpoints := nil;
-     GraphFrm.Ypoints := nil;
+  plotType := 2;
+  if PlotMeans.Checked then plottype := 2;
+  if Plot2DLines.Checked then plottype := 5;
+  if Plot3DLines.Checked then plottype := 6;
+
+  GraphFrm.SetLabels[1] := 'FACTOR A';
+  SetLength(GraphFrm.YPoints,1,NF1cells);
+  SetLength(GraphFrm.Xpoints,1,NF1cells);
+
+  maxmean := 0.0;
+  for i := 1 to NF1cells do
+  begin
+    cellsums[i-1] := cellsums[i-1] / cellcnts[i-1];
+    GraphFrm.Ypoints[0,i-1] := cellsums[i-1];
+    if cellsums[i-1] > maxmean then maxmean := cellsums[i-1];
+    GraphFrm.Xpoints[0,i-1] := minF1 + i - 1;
+  end;
+  GraphFrm.nosets := 1;
+  GraphFrm.nbars := NF1cells;
+  GraphFrm.Heading := Factor1.Text;
+  GraphFrm.XTitle := 'FACTOR A LEVEL';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype; // 3d Vertical Bar Chart
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  GraphFrm.ShowModal;
+
+  GraphFrm.Xpoints := nil;
+  GraphFrm.Ypoints := nil;
 end;
 
 procedure TBlksAnovaFrm.Calc2Way;
@@ -1047,124 +1043,116 @@ end;
 
 procedure TBlksAnovaFrm.TwoWayPlot;
 var
-   i, j : integer;
-   maxmean, XBar : double;
-   XValue : DblDyneVec;
-   title : string;
-   plottype : integer;
-   setstring : string[11];
-
+  i, j : integer;
+  maxmean, XBar : double;
+  plottype : integer;
 begin
-     if CompError then
-       exit;
+  if CompError then
+    exit;
 
-     SetLength(XValue,Nf1cells+Nf2cells);
-     plottype := 2;
-     if PlotMeans.Checked then plottype := 2;
-     if Plot2DLines.Checked then plottype := 5;
-     if Plot3DLines.Checked then plottype := 6;
+  plottype := 2;
+  if PlotMeans.Checked then plottype := 2;
+  if Plot2DLines.Checked then plottype := 5;
+  if Plot3DLines.Checked then plottype := 6;
 
-     // do Factor A first
-     setstring := 'FACTOR A';
-     GraphFrm.SetLabels[1] := setstring;
-     maxmean := 0.0;
-     SetLength(GraphFrm.Xpoints,1,NF1cells);
-     SetLength(GraphFrm.Ypoints,1,NF1cells);
-     for i := 1 to NF1cells do
-     begin
-          RowSums[i-1] := RowSums[i-1] / RowCount[i-1];
-          GraphFrm.Ypoints[0,i-1] := RowSums[i-1];
-          if RowSums[i-1] > maxmean then maxmean := RowSums[i-1];
-          XValue[i-1] := minF1 + i - 1;
-          GraphFrm.Xpoints[0,i-1] := XValue[i-1];
-     end;
-     GraphFrm.nosets := 1;
-     GraphFrm.nbars := NF1cells;
-     GraphFrm.Heading := Factor1.Text;
-     title :=  Factor1.Text + ' Codes';
-     GraphFrm.XTitle := title;
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype;
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
-     // do Factor B next
-     setstring := 'FACTOR B';
-     GraphFrm.SetLabels[1] := setstring;
-     maxmean := 0.0;
-     SetLength(GraphFrm.Xpoints,1,NF2cells);
-     SetLength(GraphFrm.Ypoints,1,NF2cells);
-     for i := 1 to NF2cells do
-     begin
-          ColSums[i-1] := ColSums[i-1] / ColCount[i-1];
-          GraphFrm.Ypoints[0,i-1] := ColSums[i-1];
-          if ColSums[i-1] > maxmean then maxmean := ColSums[i-1];
-          XValue[i-1] := minF1 + i - 1;
-          GraphFrm.Xpoints[0,i-1] := XValue[i-1];
-     end;
-     GraphFrm.nosets := 1;
-     GraphFrm.nbars := NF2cells;
-     GraphFrm.Heading := Factor2.Text;
-     title :=  Factor2.Text + ' Codes';
-     GraphFrm.XTitle := title;
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype;
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
+  // do Factor A first
+  GraphFrm.SetLabels[1] := 'FACTOR A';
+  SetLength(GraphFrm.Xpoints, 1, NF1cells);
+  SetLength(GraphFrm.Ypoints, 1, NF1cells);
 
-     // do Factor A x B Interaction next
-     maxmean := 0.0;
-     SetLength(GraphFrm.Ypoints,NF1cells,NF2cells);
-     SetLength(GraphFrm.Xpoints,1,NF2cells);
-     for i := 1 to NF1cells do
-     begin
-          setstring := Factor1.Text + ' ' + IntToStr(i);
-          GraphFrm.SetLabels[i] := setstring;
-          for j := 1 to NF2cells do
-          begin
-               XBar := sums[i-1,j-1] / counts[i-1,j-1];
-               if XBar > maxmean then maxmean := XBar;
-               GraphFrm.Ypoints[i-1,j-1] := XBar;
-          end;
-     end;
-     for j := 1 to NF2cells do
-     begin
-        XValue[j-1] := minF2 + j - 1;
-        GraphFrm.Xpoints[0,j-1] := XValue[j-1];
-     end;
+  maxmean := 0.0;
+  for i := 1 to NF1cells do
+  begin
+    RowSums[i-1] := RowSums[i-1] / RowCount[i-1];
+    GraphFrm.Ypoints[0,i-1] := RowSums[i-1];
+    if RowSums[i-1] > maxmean then maxmean := RowSums[i-1];
+    GraphFrm.Xpoints[0,i-1] := minF1 + i - 1;
+  end;
 
-     GraphFrm.nosets := NF1cells;
-     GraphFrm.nbars := NF2cells;
-     GraphFrm.Heading := 'Factor A x Factor B';
-     title :=  Factor2.Text + ' Codes';
-     GraphFrm.XTitle := title;
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype;
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
-     XValue := nil;
-     GraphFrm.Xpoints := nil;
-     GraphFrm.Ypoints := nil;
+  GraphFrm.nosets := 1;
+  GraphFrm.nbars := NF1cells;
+  GraphFrm.Heading := Factor1.Text;
+  GraphFrm.XTitle := Factor1.Text + ' Codes';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype;
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  if GraphFrm.ShowModal <> mroK then
+    exit;
+
+  // do Factor B next
+  GraphFrm.SetLabels[1] := 'FACTOR B';
+  SetLength(GraphFrm.Xpoints, 1, NF2cells);
+  SetLength(GraphFrm.Ypoints, 1, NF2cells);
+
+  maxmean := 0.0;
+  for i := 1 to NF2cells do
+  begin
+    ColSums[i-1] := ColSums[i-1] / ColCount[i-1];
+    GraphFrm.Ypoints[0,i-1] := ColSums[i-1];
+    if ColSums[i-1] > maxmean then maxmean := ColSums[i-1];
+    GraphFrm.Xpoints[0,i-1] := minF1 + i - 1;
+  end;
+
+  GraphFrm.nosets := 1;
+  GraphFrm.nbars := NF2cells;
+  GraphFrm.Heading := Factor2.Text;
+  GraphFrm.XTitle := Factor2.Text + ' Codes';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype;
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  if GraphFrm.ShowModal <> mrOK then
+    exit;
+
+  // do Factor A x B Interaction next
+  SetLength(GraphFrm.Ypoints, NF1cells, NF2cells);
+  SetLength(GraphFrm.Xpoints, 1, NF2cells);
+  maxmean := 0.0;
+  for i := 1 to NF1cells do
+  begin
+    GraphFrm.SetLabels[i] := Factor1.Text + ' ' + IntToStr(i);
+    for j := 1 to NF2cells do
+    begin
+      XBar := sums[i-1,j-1] / counts[i-1,j-1];
+      if XBar > maxmean then maxmean := XBar;
+      GraphFrm.Ypoints[i-1,j-1] := XBar;
+    end;
+  end;
+
+  for j := 1 to NF2cells do
+    GraphFrm.Xpoints[0,j-1] := minF2 + j - 1;
+
+  GraphFrm.nosets := NF1cells;
+  GraphFrm.nbars := NF2cells;
+  GraphFrm.Heading := 'Factor A x Factor B';
+  GraphFrm.XTitle := Factor2.Text + ' Codes';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype;
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  GraphFrm.ShowModal;
+
+  GraphFrm.Xpoints := nil;
+  GraphFrm.Ypoints := nil;
 end;
 
 procedure TBlksAnovaFrm.Calc3Way;
@@ -1806,239 +1794,218 @@ end;
 
 procedure TBlksAnovaFrm.ThreeWayPlot;
 var
-   i, j, k : integer;
-   maxmean, XBar : double;
-   XValue : DblDyneVec;
-   title : string;
-   plottype : integer;
-   setstring : string[11];
-
+  i, j, k : integer;
+  maxmean, XBar : double;
+  plottype : integer;
 begin
-     if CompError then exit;
-     SetLength(XValue,totcells);
-     plottype := 2;
-     if PlotMeans.Checked then plottype := 2;
-     if Plot2DLines.Checked then plottype := 5;
-     if Plot3DLines.Checked then plottype := 6;
+  if CompError then exit;
 
-     // do Factor A first
-     setstring := 'FACTOR A';
-     GraphFrm.SetLabels[1] := setstring;
-     maxmean := 0.0;
-     SetLength(GraphFrm.Xpoints,1,NF1cells);
-     SetLength(GraphFrm.Ypoints,1,NF1cells);
-     for i := 0 to NF1cells-1 do
-     begin
-          RowSums[i] := RowSums[i] / RowCount[i];
-          GraphFrm.Ypoints[0,i] := RowSums[i];
-          if RowSums[i] > maxmean then maxmean := RowSums[i];
-          XValue[i] := minF1 + i;
-          GraphFrm.Xpoints[0,i] := XValue[i];
-     end;
-     GraphFrm.nosets := 1;
-     GraphFrm.nbars := NF1cells;
-     GraphFrm.Heading := Factor1.Text;
-     title :=  Factor1.Text + ' Codes';
-     GraphFrm.XTitle := title;
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype;
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
+  plottype := 2;
+  if PlotMeans.Checked then plottype := 2;
+  if Plot2DLines.Checked then plottype := 5;
+  if Plot3DLines.Checked then plottype := 6;
 
-     // do Factor B next
-     setstring := 'FACTOR B';
-     GraphFrm.SetLabels[1] := setstring;
-     maxmean := 0.0;
-     SetLength(GraphFrm.Xpoints,1,NF2cells);
-     SetLength(GraphFrm.Ypoints,1,NF2cells);
-     for i := 0 to NF2cells-1 do
-     begin
-          ColSums[i] := ColSums[i] / ColCount[i];
-          GraphFrm.Ypoints[0,i] := ColSums[i];
-          if ColSums[i] > maxmean then maxmean := ColSums[i];
-          XValue[i] := minF2 + i;
-          GraphFrm.Xpoints[0,i] := XValue[i];
-     end;
-     GraphFrm.nosets := 1;
-     GraphFrm.nbars := NF2cells;
-     GraphFrm.Heading := Factor2.Text;
-     title :=  Factor2.Text + ' Codes';
-     GraphFrm.XTitle := title;
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype;
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
+  // do Factor A first
+  GraphFrm.SetLabels[1] := 'FACTOR A';
+  SetLength(GraphFrm.Xpoints,1,NF1cells);
+  SetLength(GraphFrm.Ypoints,1,NF1cells);
+  maxmean := 0.0;
+  for i := 0 to NF1cells-1 do
+  begin
+    RowSums[i] := RowSums[i] / RowCount[i];
+    GraphFrm.Ypoints[0,i] := RowSums[i];
+    if RowSums[i] > maxmean then maxmean := RowSums[i];
+    GraphFrm.Xpoints[0,i] := minF1 + i;
+  end;
 
-     // do Factor C next
-     setstring := 'FACTOR C';
-     GraphFrm.SetLabels[1] := setstring;
-     maxmean := 0.0;
-     SetLength(GraphFrm.Xpoints,1,NF3cells);
-     SetLength(GraphFrm.Ypoints,1,NF3cells);
-     for i := 0 to NF3cells-1 do
-     begin
-          SlcSums[i] := SlcSums[i] / SlcCount[i];
-          GraphFrm.Ypoints[0,i] := SlcSums[i];
-          if SlcSums[i] > maxmean then maxmean := SlcSums[i];
-          XValue[i] := minF3 + i;
-          GraphFrm.Xpoints[0,i] := XValue[i];
-     end;
-     GraphFrm.nosets := 1;
-     GraphFrm.nbars := NF3cells;
-     GraphFrm.Heading := Factor3.Text;
-     title :=  Factor2.Text + ' Codes';
-     GraphFrm.XTitle := title;
-     GraphFrm.YTitle := 'Mean';
-     GraphFrm.barwideprop := 0.5;
-     GraphFrm.AutoScaled := false;
-     GraphFrm.miny := 0.0;
-     GraphFrm.maxy := maxmean;
-     GraphFrm.GraphType := plottype;
-     GraphFrm.BackColor := clYellow;
-     GraphFrm.WallColor := clBlack;
-     GraphFrm.FloorColor := clLtGray;
-     GraphFrm.ShowBackWall := true;
-     GraphFrm.ShowModal;
+  GraphFrm.nosets := 1;
+  GraphFrm.nbars := NF1cells;
+  GraphFrm.Heading := Factor1.Text;
+  GraphFrm.XTitle := Factor1.Text + ' Codes';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype;
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  if GraphFrm.ShowModal <> mrOK then
+    exit;
 
-     // do Factor A x B Interaction within each slice next
-     SetLength(GraphFrm.Ypoints,NF1cells,NF2cells);
-     SetLength(GraphFrm.Xpoints,1,NF2cells);
-     for k := 0 to NF3cells-1 do
-     begin
-          maxmean := 0.0;
-          for i := 0 to NF1cells-1 do
-          begin
-               setstring := Factor1.Text + ' ' + IntToStr(i+1);
-               GraphFrm.SetLabels[i+1] := setstring;
-               for j := 0 to NF2cells-1 do
-               begin
-                    XBar := wsum[i,j,k] / ncnt[i,j,k];
-                    if XBar > maxmean then maxmean := XBar;
-                    GraphFrm.Ypoints[i,j] := XBar;
-               end;
-          end;
-          for j := 0 to NF2cells-1 do
-          begin
-            XValue[j] := minF2 + j ;
-            GraphFrm.Xpoints[0,j] := XValue[j];
-          end;
+  // do Factor B next
+  GraphFrm.SetLabels[1] := 'FACTOR B';
+  maxmean := 0.0;
+  SetLength(GraphFrm.Xpoints, 1, NF2cells);
+  SetLength(GraphFrm.Ypoints, 1, NF2cells);
+  for i := 0 to NF2cells-1 do
+  begin
+    ColSums[i] := ColSums[i] / ColCount[i];
+    GraphFrm.Ypoints[0,i] := ColSums[i];
+    if ColSums[i] > maxmean then maxmean := ColSums[i];
+    GraphFrm.Xpoints[0,i] := minF2 + i;
+  end;
+  GraphFrm.nosets := 1;
+  GraphFrm.nbars := NF2cells;
+  GraphFrm.Heading := Factor2.Text;
+  GraphFrm.XTitle := Factor2.Text + ' Codes';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype;
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  if GraphFrm.ShowModal <> mrOK then
+    exit;
 
-          GraphFrm.nosets := NF1cells;
-          GraphFrm.nbars := NF2cells;
-          GraphFrm.Heading := 'Factor A x Factor B Within Slice' + IntToStr(k);
-          title :=  Factor2.Text + ' Codes';
-          GraphFrm.XTitle := title;
-          GraphFrm.YTitle := 'Mean';
-          GraphFrm.barwideprop := 0.5;
-          GraphFrm.AutoScaled := false;
-          GraphFrm.miny := 0.0;
-          GraphFrm.maxy := maxmean;
-          GraphFrm.GraphType := plottype;
-          GraphFrm.BackColor := clYellow;
-          GraphFrm.WallColor := clBlack;
-          GraphFrm.FloorColor := clLtGray;
-          GraphFrm.ShowBackWall := true;
-          GraphFrm.ShowModal;
-     end;
+  // do Factor C next
+  GraphFrm.SetLabels[1] := 'FACTOR C';
+  maxmean := 0.0;
+  SetLength(GraphFrm.Xpoints, 1, NF3cells);
+  SetLength(GraphFrm.Ypoints, 1, NF3cells);
+  for i := 0 to NF3cells-1 do
+  begin
+    SlcSums[i] := SlcSums[i] / SlcCount[i];
+    GraphFrm.Ypoints[0,i] := SlcSums[i];
+    if SlcSums[i] > maxmean then maxmean := SlcSums[i];
+    GraphFrm.Xpoints[0,i] := minF3 + i;
+  end;
+  GraphFrm.nosets := 1;
+  GraphFrm.nbars := NF3cells;
+  GraphFrm.Heading := Factor3.Text;
+  GraphFrm.XTitle := Factor2.Text + ' Codes';
+  GraphFrm.YTitle := 'Mean';
+  GraphFrm.barwideprop := 0.5;
+  GraphFrm.AutoScaled := false;
+  GraphFrm.miny := 0.0;
+  GraphFrm.maxy := maxmean;
+  GraphFrm.GraphType := plottype;
+  GraphFrm.BackColor := GRAPH_BACK_COLOR;
+  GraphFrm.WallColor := GRAPH_WALL_COLOR;
+  GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+  GraphFrm.ShowBackWall := true;
+  if GraphFrm.ShowModal <> mrOK then
+    exit;
 
-     // do Factor A x C Interaction within each Column next
-     SetLength(GraphFrm.Ypoints,NF1cells,NF3cells);
-     SetLength(GraphFrm.Xpoints,1,NF3cells);
-     for j := 0 to NF2cells-1 do
-     begin
-          maxmean := 0.0;
-          for i := 0 to NF1cells-1 do
-          begin
-               setstring := Factor1.Text + ' ' + IntToStr(i+1);
-               GraphFrm.SetLabels[i+1] := setstring;
-               for k := 0 to NF3cells-1 do
-               begin
-                    XBar := wsum[i,j,k] / ncnt[i,j,k];
-                    if XBar > maxmean then maxmean := XBar;
-                    GraphFrm.Ypoints[i,k] := XBar;
-               end;
-          end;
-          for k := 0 to NF3cells-1 do
-          begin
-            XValue[k] := minF3 + k;
-            GraphFrm.Xpoints[0,k] := XValue[k];
-          end;
+  // do Factor A x B Interaction within each slice next
+  SetLength(GraphFrm.Ypoints, NF1cells, NF2cells);
+  SetLength(GraphFrm.Xpoints, 1, NF2cells);
+  for k := 0 to NF3cells-1 do
+  begin
+    maxmean := 0.0;
+    for i := 0 to NF1cells-1 do
+    begin
+      GraphFrm.SetLabels[i+1] := Factor1.Text + ' ' + IntToStr(i+1);
+      for j := 0 to NF2cells-1 do
+      begin
+        XBar := wsum[i,j,k] / ncnt[i,j,k];
+        if XBar > maxmean then maxmean := XBar;
+        GraphFrm.Ypoints[i,j] := XBar;
+      end;
+    end;
+    for j := 0 to NF2cells-1 do
+      GraphFrm.Xpoints[0,j] := minF2 + j ;
 
-          GraphFrm.nosets := NF1cells;
-          GraphFrm.nbars := NF3cells;
-          GraphFrm.Heading := 'Factor A x Factor C Within Column ' + IntToStr(j+1);
-          title :=  Factor3.Text + ' Codes';
-          GraphFrm.XTitle := title;
-          GraphFrm.YTitle := 'Mean';
-          GraphFrm.barwideprop := 0.5;
-          GraphFrm.AutoScaled := false;
-          GraphFrm.miny := 0.0;
-          GraphFrm.maxy := maxmean;
-          GraphFrm.GraphType := plottype;
-          GraphFrm.BackColor := clYellow;
-          GraphFrm.WallColor := clBlack;
-          GraphFrm.FloorColor := clLtGray;
-          GraphFrm.ShowBackWall := true;
-          GraphFrm.ShowModal;
-     end;
+    GraphFrm.nosets := NF1cells;
+    GraphFrm.nbars := NF2cells;
+    GraphFrm.Heading := 'Factor A x Factor B Within Slice' + IntToStr(k);
+    GraphFrm.XTitle := Factor2.Text + ' Codes';
+    GraphFrm.YTitle := 'Mean';
+    GraphFrm.barwideprop := 0.5;
+    GraphFrm.AutoScaled := false;
+    GraphFrm.miny := 0.0;
+    GraphFrm.maxy := maxmean;
+    GraphFrm.GraphType := plottype;
+    GraphFrm.BackColor := GRAPH_BACK_COLOR;
+    GraphFrm.WallColor := GRAPH_WALL_COLOR;
+    GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+    GraphFrm.ShowBackWall := true;
+    if GraphFrm.ShowModal <> mrOK then
+      exit;
+  end;
 
-     // do Factor B x C Interaction within each row next
-     SetLength(GraphFrm.Ypoints,NF2cells,NF3cells);
-     SetLength(GraphFrm.Xpoints,1,NF3cells);
-     for i := 0 to NF1cells-1 do
-     begin
-          maxmean := 0.0;
-          for j := 0 to NF2cells-1 do
-          begin
-               setstring := Factor2.Text + ' ' + IntToStr(j+1);
-               GraphFrm.SetLabels[j+1] := setstring;
-               for k := 0 to NF3cells-1 do
-               begin
-                    XBar := wsum[i,j,k] / ncnt[i,j,k];
-                    if XBar > maxmean then maxmean := XBar;
-                    GraphFrm.Ypoints[j,k] := XBar;
-               end;
-          end;
-          for j := 0 to NF2cells-1 do
-          begin
-            XValue[j] := minF2 + j;
-            GraphFrm.Xpoints[0,j] := XValue[j];
-          end;
+  // do Factor A x C Interaction within each Column next
+  SetLength(GraphFrm.Ypoints, NF1cells, NF3cells);
+  SetLength(GraphFrm.Xpoints, 1, NF3cells);
+  for j := 0 to NF2cells-1 do
+  begin
+    maxmean := 0.0;
+    for i := 0 to NF1cells-1 do
+    begin
+      GraphFrm.SetLabels[i+1] := Factor1.Text + ' ' + IntToStr(i+1);
+      for k := 0 to NF3cells-1 do
+      begin
+        XBar := wsum[i,j,k] / ncnt[i,j,k];
+        if XBar > maxmean then maxmean := XBar;
+        GraphFrm.Ypoints[i,k] := XBar;
+      end;
+    end;
+    for k := 0 to NF3cells-1 do
+      GraphFrm.Xpoints[0,k] := minF3 + k;
 
-          GraphFrm.nosets := NF2cells;
-          GraphFrm.nbars := NF3cells;
-          GraphFrm.Heading := 'Factor B x Factor C Within Row ' + IntToStr(i+1);
-          title :=  Factor3.Text + ' Codes';
-          GraphFrm.XTitle := title;
-          GraphFrm.YTitle := 'Mean';
-          GraphFrm.barwideprop := 0.5;
-          GraphFrm.AutoScaled := false;
-          GraphFrm.miny := 0.0;
-          GraphFrm.maxy := maxmean;
-          GraphFrm.GraphType := plottype;
-          GraphFrm.BackColor := clYellow;
-          GraphFrm.WallColor := clBlack;
-          GraphFrm.FloorColor := clLtGray;
-          GraphFrm.ShowBackWall := true;
-          GraphFrm.ShowModal;
-     end; // next row
-     GraphFrm.Xpoints := nil;
-     GraphFrm.Ypoints := nil;
-     XValue := nil;
+    GraphFrm.nosets := NF1cells;
+    GraphFrm.nbars := NF3cells;
+    GraphFrm.Heading := 'Factor A x Factor C Within Column ' + IntToStr(j+1);
+    GraphFrm.XTitle := Factor3.Text + ' Codes';
+    GraphFrm.YTitle := 'Mean';
+    GraphFrm.barwideprop := 0.5;
+    GraphFrm.AutoScaled := false;
+    GraphFrm.miny := 0.0;
+    GraphFrm.maxy := maxmean;
+    GraphFrm.GraphType := plottype;
+    GraphFrm.BackColor := GRAPH_BACK_COLOR;
+    GraphFrm.WallColor := GRAPH_WALL_COLOR;
+    GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+    GraphFrm.ShowBackWall := true;
+    if GraphFrm.ShowModal <> mrOK then
+      exit;
+  end;
+
+  // do Factor B x C Interaction within each row next
+  SetLength(GraphFrm.Ypoints, NF2cells, NF3cells);
+  SetLength(GraphFrm.Xpoints, 1, NF3cells);
+  for i := 0 to NF1cells-1 do
+  begin
+    maxmean := 0.0;
+    for j := 0 to NF2cells-1 do
+    begin
+      GraphFrm.SetLabels[j+1] := Factor2.Text + ' ' + IntToStr(j+1);
+      for k := 0 to NF3cells-1 do
+      begin
+        XBar := wsum[i,j,k] / ncnt[i,j,k];
+        if XBar > maxmean then maxmean := XBar;
+        GraphFrm.Ypoints[j,k] := XBar;
+      end;
+    end;
+    for j := 0 to NF2cells-1 do
+      GraphFrm.Xpoints[0,j] := minF2 + j;
+
+    GraphFrm.nosets := NF2cells;
+    GraphFrm.nbars := NF3cells;
+    GraphFrm.Heading := 'Factor B x Factor C Within Row ' + IntToStr(i+1);
+    GraphFrm.XTitle := Factor3.Text + ' Codes';
+    GraphFrm.YTitle := 'Mean';
+    GraphFrm.barwideprop := 0.5;
+    GraphFrm.AutoScaled := false;
+    GraphFrm.miny := 0.0;
+    GraphFrm.maxy := maxmean;
+    GraphFrm.GraphType := plottype;
+    GraphFrm.BackColor := GRAPH_BACK_COLOR;
+    GraphFrm.WallColor := GRAPH_WALL_COLOR;
+    GraphFrm.FloorColor := GRAPH_FLOOR_COLOR;
+    GraphFrm.ShowBackWall := true;
+    if GraphFrm.ShowModal <> mrOK then
+      exit;
+  end; // next row
+
+  GraphFrm.Xpoints := nil;
+  GraphFrm.Ypoints := nil;
 end;
 //-------------------------------------------------------------------
 procedure TBlksAnovaFrm.TwoWayContrasts(AReport: TStrings);
