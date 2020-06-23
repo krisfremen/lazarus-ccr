@@ -328,11 +328,11 @@ begin
     SetLength(cellsums, totcells);  // array of cell sums then means
 
     // initialize array values
-    for i := 1 to totcells do
+    for i := 0 to totcells-1 do
     begin
-      cellsums[i-1] := 0.0;
-      cellvars[i-1] := 0.0;
-      cellcnts[i-1] := 0;
+      cellsums[i] := 0.0;
+      cellvars[i] := 0.0;
+      cellcnts[i] := 0;
     end;
 
     // do analysis
@@ -361,6 +361,10 @@ begin
             BrownForsytheOneWay(lReport);
           if Welch.Checked then
             WelchOneWay(lReport);
+
+          if not DisplayReport(lReport) then
+            exit;
+
           if PlotMeans.Checked or Plot2DLines.Checked or Plot3DLines.Checked then
             OneWayPlot;
        end;
@@ -382,6 +386,10 @@ begin
          begin
            TwoWayTable(lReport);
            TwoWayContrasts(lReport);
+
+           if not DisplayReport(lReport) then
+             exit;
+
            if PlotMeans.Checked or Plot2DLines.Checked or Plot3DLines.Checked then
              TwoWayPlot;
          end;
@@ -418,6 +426,10 @@ begin
          begin
            ThreeWayTable(lReport);
            ThreeWayContrasts(lReport);
+
+           if not DisplayReport(lReport) then
+             exit;
+
            if (PlotMeans.Checked) or (Plot2DLines.Checked) or (Plot3DLines.Checked) then
              ThreeWayPlot;
          end;
@@ -436,8 +448,6 @@ begin
          RowSums := nil;
        end;
      end;
-
-     DisplayReport(lReport);
 
   finally
      lReport.Free;
@@ -727,12 +737,12 @@ begin
   SetLength(GraphFrm.Xpoints,1,NF1cells);
 
   maxmean := 0.0;
-  for i := 1 to NF1cells do
+  for i := 0 to NF1cells-1 do
   begin
-    cellsums[i-1] := cellsums[i-1] / cellcnts[i-1];
-    GraphFrm.Ypoints[0,i-1] := cellsums[i-1];
-    if cellsums[i-1] > maxmean then maxmean := cellsums[i-1];
-    GraphFrm.Xpoints[0,i-1] := minF1 + i - 1;
+    cellsums[i] := cellsums[i] / cellcnts[i];
+    GraphFrm.Ypoints[0, i] := cellsums[i];
+    if cellsums[i] > maxmean then maxmean := cellsums[i];
+    GraphFrm.Xpoints[0,i] := minF1 + i;
   end;
   GraphFrm.nosets := 1;
   GraphFrm.nbars := NF1cells;
