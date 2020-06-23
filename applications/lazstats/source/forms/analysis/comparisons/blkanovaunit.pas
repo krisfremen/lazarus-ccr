@@ -86,7 +86,7 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
-    NoSelected, intvalue, N : integer;
+    NoSelected, N : integer;
     ColNoSelected : IntDyneVec;
     outline, cellstring : string;
     SSDep, SSErr, SSF1, SSF2, SSF3, SSF1F2, SSF1F3, SSF2F3, SSF1F2F3 : double;
@@ -99,19 +99,19 @@ type
     DepVarCol, F1Col, F2Col, F3Col, Nf1cells, Nf2cells, Nf3cells : integer;
     MeanDep, MeanF1, MeanF2, MeanF3: double;
     minf1, maxf1, minf2, maxf2, minf3, maxf3, nofactors, totcells : integer;
-    cellcnts : DblDyneVec;    // array of cell counts
+    cellcnts : IntDyneVec;    // array of cell counts
     cellvars : DblDyneVec;    // arrray of cell sums of squares then variances
     cellsums : DblDyneVec;    // array of cell sums then means
     equal_grp : boolean;   // check for equal groups for post-hoc tests
-    counts : DblDyneMat;      // matrix for 2-way containing cell sizes
+    counts : IntDyneMat;      // matrix for 2-way containing cell sizes
     sums : DblDyneMat;        // matrix for 2-way containing cell sums
     vars : DblDyneMat;        // matrix for 2-way containing sums of squares
     RowSums : DblDyneVec;     // 2 way row sums
     ColSums : DblDyneVec;     // 2 way col sums
-    RowCount : DblDyneVec;    // 2 way row count
-    ColCount : DblDyneVec;    // 2 way col count
+    RowCount : IntDyneVec;    // 2 way row count
+    ColCount : IntDyneVec;    // 2 way col count
     SlcSums : DblDyneVec;     // 3 way slice sums
-    SlcCount : DblDyneVec;    // 3 way slice counts
+    SlcCount : IntDyneVec;    // 3 way slice counts
     NoGrpsA, NoGrpsB, NoGrpsC : integer;
     OrdMeansA, OrdMeansB, OrdMeansC : DblDyneVec; // reordered means for f1, f2, f3
     allAlpha, PostHocAlpha : double; // alphas for tests
@@ -534,7 +534,7 @@ end;
 
 procedure TBlksAnovaFrm.GetLevels;
 var
-  i: integer;
+  i, intValue: integer;
 begin
   Nf1cells := 0;
   Nf2Cells := 0;
@@ -545,7 +545,7 @@ begin
   for i := 1 to NoCases do
   begin
     if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-    intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
+    intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col, i])));
     if intvalue > maxf1 then maxf1 := intvalue;
     if intvalue < minf1 then minf1 := intvalue;
   end;
@@ -558,7 +558,7 @@ begin
     for i := 1 to NoCases do
     begin
       if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-      intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F2Col,i])));
+      intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F2Col, i])));
       if intvalue > maxf2 then maxf2 := intvalue;
       if intvalue < minf2 then minf2 := intvalue;
     end;
@@ -572,7 +572,7 @@ begin
     for i := 1 to NoCases do
     begin
       if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-      intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F3Col,i])));
+      intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F3Col, i])));
       if intvalue > maxf3 then maxf3 := intvalue;
       if intvalue < minf3 then minf3 := intvalue;
     end;
@@ -586,7 +586,7 @@ end;
 
 procedure TBlksAnovaFrm.Calc1Way;
 var
-  i: integer;
+  i, intValue: integer;
   X, X2: Double;
 begin
   CompError := false;
@@ -597,11 +597,11 @@ begin
     if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
     intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
     X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
-    X := X*X;
-    intvalue := intvalue - minf1 + 1;
-    cellcnts[intvalue-1] := cellcnts[intvalue-1] + 1;
-    cellsums[intvalue-1] := cellsums[intvalue-1] + X;
-    cellvars[intvalue-1] := cellvars[intvalue-1] + X2;
+    X2 := X*X;
+    intvalue := intvalue - minf1;
+    cellcnts[intvalue] := cellcnts[intvalue] + 1;
+    cellsums[intvalue] := cellsums[intvalue] + X;
+    cellvars[intvalue] := cellvars[intvalue] + X2;
     MeanDep := MeanDep + X;
     SSDep := SSDep + X2;
     N := N + 1;
@@ -687,7 +687,7 @@ begin
     end;
 
     if cellcnts[i] > 0 then
-      AReport.Add('%4d %10.2f%10.2f%10.2f%4.0f', [
+      AReport.Add('%4d %10.2f%10.2f%10.2f%4d', [
         i+1, cellsums[i] / cellcnts[i], cellvars[i], sqrt(cellvars[i]), cellcnts[i]
       ]);
   end;
@@ -761,152 +761,162 @@ var
   Constant, RowsTotCnt, ColsTotCnt, SSCells : double;
   X, X2: Double;
 begin
-     CompError := false;
+  CompError := false;
 
-     // initialize matrix values
-     NoGrpsA := maxf1 - minf1 + 1;
-     NoGrpsB := maxf2 - minf2 + 1;
-     for i := 1 to NoGrpsA  do
-     begin
-          RowSums[i-1] := 0.0;
-          RowCount[i-1] := 0.0;
-          for j := 1 to NoGrpsB do
-          begin
-               counts[i-1,j-1] := 0.0;
-               sums[i-1,j-1] := 0.0;
-               vars[i-1,j-1] := 0.0;
-          end;
-     end;
-     for i := 1 to NoGrpsB do
-     begin
-          ColCount[i-1] := 0.0;
-          ColSums[i-1] := 0.0;
-     end;
-     N := 0;
-     MeanDep := 0.0;
-     SSDep := 0.0;
-     SSCells := 0.0;
-     RowsTotCnt := 0.0;
-     ColsTotCnt := 0.0;
-     // get working totals
-     for i := 1 to NoCases do
-     begin
-          if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-          grpA := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
-          grpB := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F2Col,i])));
-          X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
-          X := X*X;
-          grpA := grpA - minf1 + 1;
-          grpB := grpB - minf2 + 1;
-          counts[grpA-1,grpB-1] := counts[grpA-1,grpB-1] + 1;
-          sums[grpA-1,grpB-1] := sums[grpA-1,grpB-1] + X;
-          vars[grpA-1,grpB-1] := vars[grpA-1,grpB-1] + X2;
-          RowSums[GrpA-1] := RowSums[GrpA-1] + X;
-          ColSums[GrpB-1] := ColSums[GrpB-1] + X;
-          RowCount[GrpA-1] := RowCount[GrpA-1] + 1.0;
-          ColCount[GrpB-1] := ColCount[GrpB-1] + 1.0;
-          MeanDep := MeanDep + X;
-          SSDep := SSDep + X2;
-          N := N + 1;
-     end;
+  // initialize matrix values
+  NoGrpsA := maxf1 - minf1 + 1;
+  NoGrpsB := maxf2 - minf2 + 1;
+  for i := 0 to NoGrpsA-1  do
+  begin
+    RowSums[i] := 0.0;
+    RowCount[i] := 0;
+    for j := 0 to NoGrpsB-1 do
+    begin
+      counts[i, j] := 0;
+      sums[i, j] := 0.0;
+      vars[i, j] := 0.0;
+    end;
+  end;
 
-     // Calculate results
-     for i := 0 to NoGrpsA-1 do
-     begin
-          SSF1 := SSF1 + ((RowSums[i] * RowSums[i]) / RowCount[i]);
-          RowsTotCnt := RowsTotCnt + RowCount[i];
-     end;
-     for j := 0 to NoGrpsB-1 do
-     begin
-          SSF2 := SSF2 + ((ColSums[j] * ColSums[j]) / ColCount[j]);
-          ColsTotCnt := ColsTotCnt + ColCount[j];
-     end;
-     for i := 0 to NoGrpsA-1 do
-     begin
-          for j := 0 to NoGrpsB-1 do
-              if counts[i,j] > 0 then
-                 SSCells := SSCells + ((sums[i,j] * sums[i,j]) / counts[i,j]);
-     end;
-     if N > 0 then Constant := (MeanDep * MeanDep) / N else Constant := 0.0;
-     SSF1 := SSF1 - Constant;
-     SSF2 := SSF2 - Constant;
-     SSF1F2 := SSCells - SSF1 - SSF2 - Constant;
-     SSErr := SSDep - SSCells;
-     SSDep := SSDep - Constant;
+  for i := 0 to NoGrpsB-1 do
+  begin
+    ColCount[i] := 0;
+    ColSums[i] := 0.0;
+  end;
 
-     if (SSF1F2 < 0) or (SSF1 < 0) or (SSF2 < 0) then
-     begin
-       MessageDlg('A negative SS found. Unbalanced design? Ending analysis.', mtError, [mbOK], 0);
-       CompError := true;
-       exit;
-     end;
+  N := 0;
+  MeanDep := 0.0;
+  SSDep := 0.0;
+  SSCells := 0.0;
+  RowsTotCnt := 0.0;
+  ColsTotCnt := 0.0;
 
-     DFTot := N - 1;
-     DFF1 := NoGrpsA - 1;
-     DFF2 := NoGrpsB - 1;
-     DFF1F2 := DFF1 * DFF2;
-     DFErr := DFTot - DFF1 - DFF2 - DFF1F2;
-//     DFCells := N - (NoGrpsA * NoGrpsB);
-     MSF1 := SSF1 / DFF1;
-     MSF2 := SSF2 / DFF2;
-     MSF1F2 := SSF1F2 / DFF1F2;
-     MSErr := SSErr / DFErr;
-     MSDep := SSDep / DFTot;
-     OmegaF1 := (SSF1 - DFF1 * MSErr) / (SSDep + MSErr);
-     OmegaF2 := (SSF2 - DFF2 * MSErr) / (SSDep + MSErr);
-     OmegaF1F2 := (SSF1F2 - DFF1F2 * MSErr) / (SSDep + MSErr);
-     Omega := OmegaF1 + OmegaF2 + OmegaF1F2;
-     MeanDep := MeanDep / N;
-     // f tests for fixed effects
-     if (Fact1Grp.ItemIndex = 0) and (Fact2Grp.ItemIndex = 0) then
-     begin
-          FF1 := abs(MSF1 / MSErr);
-          FF2 := abs(MSF2 / MSErr);
-          FF1F2 := abs(MSF1F2 / MSErr);
-          ProbF1 := probf(FF1,DFF1,DFErr);
-          ProbF2 := probf(FF2,DFF2,DFErr);
-          ProbF1F2 := probf(FF1F2,DFF1F2,DFErr);
-     end;
-     // f tests if both factors are random
-     if (Fact1Grp.ItemIndex = 1) and (Fact2Grp.ItemIndex = 1) then
-     begin
-          FF1 := abs(MSF1 / MSF1F2);
-          FF2 := abs(MSF2 / MSF1F2);
-          FF1F2 := abs(MSF1F2 / MSErr);
-          ProbF1 := probf(FF1,DFF1,DFF1F2);
-          ProbF2 := probf(FF2,DFF2,DFF1F2);
-          ProbF3 := probf(FF1F2,DFF1F2,DFErr);
-     end;
-     // f test if factor A is random
-     if (Fact1Grp.ItemIndex = 1) and (Fact2Grp.ItemIndex = 0) then
-     begin
-          FF1 := abs(MSF1 / MSErr);
-          FF2 := abs(MSF2 / MSF1F2);
-          FF1F2 := abs(MSF1F2 / MSErr);
-          ProbF1 := probf(FF1,DFF1,DFErr);
-          ProbF2 := probf(FF2,DFF2,DFF1F2);
-          ProbF3 := probf(FF1F2,DFF1F2,DFErr);
-     end;
-     // f test if factor b is random
-     if (Fact1Grp.ItemIndex = 0) and (Fact2Grp.ItemIndex = 1) then
-     begin
-          FF1 := abs(MSF1 / MSF1F2);
-          FF2 := abs(MSF2 / MSErr);
-          FF1F2 := abs(MSF1F2 / MSErr);
-          ProbF1 := probf(FF1,DFF1,DFF1F2);
-          ProbF2 := probf(FF2,DFF2,DFErr);
-          ProbF3 := probf(FF1F2,DFF1F2,DFErr);
-     end;
-     if (ProbF1 > 1.0) then ProbF1 := 1.0;
-     if (ProbF2 > 1.0) then ProbF2 := 1.0;
-     if (ProbF1F2 > 1.0) then ProbF1F2 := 1.0;
+  // get working totals
+  for i := 1 to NoCases do
+  begin
+    if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
+    grpA := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
+    grpB := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F2Col,i])));
+    X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
+    X := X*X;
+    grpA := grpA - minf1 + 1;
+    grpB := grpB - minf2 + 1;
+    counts[grpA-1,grpB-1] := counts[grpA-1,grpB-1] + 1;
+    sums[grpA-1,grpB-1] := sums[grpA-1,grpB-1] + X;
+    vars[grpA-1,grpB-1] := vars[grpA-1,grpB-1] + X2;
+    RowSums[GrpA-1] := RowSums[GrpA-1] + X;
+    ColSums[GrpB-1] := ColSums[GrpB-1] + X;
+    RowCount[GrpA-1] := RowCount[GrpA-1] + 1;
+    ColCount[GrpB-1] := ColCount[GrpB-1] + 1;
+    MeanDep := MeanDep + X;
+    SSDep := SSDep + X2;
+    N := N + 1;
+  end;
 
-     // Obtain omega squared (proportion of dependent variable explained)
-     if (OmegaF1 < 0.0) then OmegaF1 := 0.0;
-     if (OmegaF2 < 0.0) then OmegaF2 := 0.0;
-     if (OmegaF1F2 < 0.0) then OmegaF1F2 := 0.0;
-     //Omega = ( (SSF1 + SSF2 + SSF1F2) - (DFF1 + DFF2 + DFF1F2) * MSErr) / (SSDep + MSErr);
-     if (Omega < 0.0) then Omega := 0.0;
+  // Calculate results
+  for i := 0 to NoGrpsA-1 do
+  begin
+    SSF1 := SSF1 + ((RowSums[i] * RowSums[i]) / RowCount[i]);
+    RowsTotCnt := RowsTotCnt + RowCount[i];
+  end;
+
+  for j := 0 to NoGrpsB-1 do
+  begin
+    SSF2 := SSF2 + ((ColSums[j] * ColSums[j]) / ColCount[j]);
+    ColsTotCnt := ColsTotCnt + ColCount[j];
+  end;
+
+  for i := 0 to NoGrpsA-1 do
+  begin
+    for j := 0 to NoGrpsB-1 do
+      if counts[i,j] > 0 then
+        SSCells := SSCells + ((sums[i,j] * sums[i,j]) / counts[i,j]);
+  end;
+
+  if N > 0 then Constant := (MeanDep * MeanDep) / N else Constant := 0.0;
+  SSF1 := SSF1 - Constant;
+  SSF2 := SSF2 - Constant;
+  SSF1F2 := SSCells - SSF1 - SSF2 - Constant;
+  SSErr := SSDep - SSCells;
+  SSDep := SSDep - Constant;
+
+  if (SSF1F2 < 0) or (SSF1 < 0) or (SSF2 < 0) then
+  begin
+    ErrorMsg('A negative SS found. Unbalanced design? Ending analysis.');
+    CompError := true;
+    exit;
+  end;
+
+  DFTot := N - 1;
+  DFF1 := NoGrpsA - 1;
+  DFF2 := NoGrpsB - 1;
+  DFF1F2 := DFF1 * DFF2;
+  DFErr := DFTot - DFF1 - DFF2 - DFF1F2;
+  MSF1 := SSF1 / DFF1;
+  MSF2 := SSF2 / DFF2;
+  MSF1F2 := SSF1F2 / DFF1F2;
+  MSErr := SSErr / DFErr;
+  MSDep := SSDep / DFTot;
+  OmegaF1 := (SSF1 - DFF1 * MSErr) / (SSDep + MSErr);
+  OmegaF2 := (SSF2 - DFF2 * MSErr) / (SSDep + MSErr);
+  OmegaF1F2 := (SSF1F2 - DFF1F2 * MSErr) / (SSDep + MSErr);
+  Omega := OmegaF1 + OmegaF2 + OmegaF1F2;
+  MeanDep := MeanDep / N;
+
+  // F tests for fixed effects
+  if (Fact1Grp.ItemIndex = 0) and (Fact2Grp.ItemIndex = 0) then
+  begin
+    FF1 := abs(MSF1 / MSErr);
+    FF2 := abs(MSF2 / MSErr);
+    FF1F2 := abs(MSF1F2 / MSErr);
+    ProbF1 := probf(FF1,DFF1,DFErr);
+    ProbF2 := probf(FF2,DFF2,DFErr);
+    ProbF1F2 := probf(FF1F2,DFF1F2,DFErr);
+  end;
+
+  // F tests if both factors are random
+  if (Fact1Grp.ItemIndex = 1) and (Fact2Grp.ItemIndex = 1) then
+  begin
+    FF1 := abs(MSF1 / MSF1F2);
+    FF2 := abs(MSF2 / MSF1F2);
+    FF1F2 := abs(MSF1F2 / MSErr);
+    ProbF1 := probf(FF1,DFF1,DFF1F2);
+    ProbF2 := probf(FF2,DFF2,DFF1F2);
+    ProbF3 := probf(FF1F2,DFF1F2,DFErr);
+  end;
+
+  // F test if factor A is random
+  if (Fact1Grp.ItemIndex = 1) and (Fact2Grp.ItemIndex = 0) then
+  begin
+    FF1 := abs(MSF1 / MSErr);
+    FF2 := abs(MSF2 / MSF1F2);
+    FF1F2 := abs(MSF1F2 / MSErr);
+    ProbF1 := probf(FF1,DFF1,DFErr);
+    ProbF2 := probf(FF2,DFF2,DFF1F2);
+    ProbF3 := probf(FF1F2,DFF1F2,DFErr);
+  end;
+
+  // F test if factor b is random
+  if (Fact1Grp.ItemIndex = 0) and (Fact2Grp.ItemIndex = 1) then
+  begin
+    FF1 := abs(MSF1 / MSF1F2);
+    FF2 := abs(MSF2 / MSErr);
+    FF1F2 := abs(MSF1F2 / MSErr);
+    ProbF1 := probf(FF1,DFF1,DFF1F2);
+    ProbF2 := probf(FF2,DFF2,DFErr);
+    ProbF3 := probf(FF1F2,DFF1F2,DFErr);
+  end;
+
+  if (ProbF1 > 1.0) then ProbF1 := 1.0;
+  if (ProbF2 > 1.0) then ProbF2 := 1.0;
+  if (ProbF1F2 > 1.0) then ProbF1F2 := 1.0;
+
+
+  // Obtain omega squared (proportion of dependent variable explained)
+  if (OmegaF1 < 0.0) then OmegaF1 := 0.0;
+  if (OmegaF2 < 0.0) then OmegaF2 := 0.0;
+  if (OmegaF1F2 < 0.0) then OmegaF1F2 := 0.0;
+  if (Omega < 0.0) then Omega := 0.0;
 end;
 
 procedure TBlksAnovaFrm.TwoWayTable(AReport: TStrings);
@@ -968,7 +978,7 @@ begin
   AReport.Add('Descriptive Statistics');
   AReport.Add('');
   AReport.Add('GROUP  Row Col.  N     MEAN   VARIANCE  STD.DEV.');
-  groupsize := round(counts[0,0]);
+  groupsize := counts[0, 0];
   equal_grp := true;
   MaxVar := 0.0;
   MinVar := 1e20;
@@ -1024,7 +1034,7 @@ begin
     if ColCount[j] > 0 then V := ColSS - (ColSums[j] * ColSums[j] / ColCount[j]);
     if ColCount[j] > 1 then V := V / (ColCount[j] - 1.0);
     if V > 0.0 then S := sqrt(V);
-    AReport.Add('Col  %3d      %3.0f  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
+    AReport.Add('Col  %3d      %3d  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
   end;
 
   AReport.Add('TOTAL         %3d  %8.3f  %8.3f  %8.3f', [N, MeanDep, MSDep, sqrt(MSDep)]);
@@ -1177,7 +1187,7 @@ begin
   for i := 0 to NoGrpsA-1  do
   begin
     RowSums[i] := 0.0;
-    RowCount[i] := 0.0;
+    RowCount[i] := 0;
     for j := 0 to NoGrpsB-1 do
     begin
       for k := 0 to NoGrpsC-1 do
@@ -1191,13 +1201,13 @@ begin
 
   for i := 0 to NoGrpsB-1 do
   begin
-    ColCount[i] := 0.0;
+    ColCount[i] := 0;
     ColSums[i] := 0.0;
   end;
 
   for i := 0 to NoGrpsC-1 do
   begin
-    SlcCount[i] := 0.0;
+    SlcCount[i] := 0;
     SlcSums[i] := 0.0;
   end;
 
@@ -1234,9 +1244,9 @@ begin
     RowSums[GrpA-1] := RowSums[GrpA-1] + X;
     ColSums[GrpB-1] := ColSums[GrpB-1] + X;
     SlcSums[GrpC-1] := SlcSums[GrpC-1] + X;
-    RowCount[GrpA-1] := RowCount[GrpA-1] + 1.0;
-    ColCount[GrpB-1] := ColCount[GrpB-1] + 1.0;
-    SlcCount[GrpC-1] := SlcCount[GrpC-1] + 1.0;
+    RowCount[GrpA-1] := RowCount[GrpA-1] + 1;
+    ColCount[GrpB-1] := ColCount[GrpB-1] + 1;
+    SlcCount[GrpC-1] := SlcCount[GrpC-1] + 1;
     MeanDep := MeanDep + X;
     SSDep := SSDep + X2;
     N := N + 1;
@@ -1757,7 +1767,7 @@ begin
     V := RowSS - (RowSums[i] * RowSums[i] / RowCount[i]);
     V := V / (RowCount[i] - 1.0);
     S := sqrt(V);
-    AReport.Add('Row   %3d         %3.0f  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
+    AReport.Add('Row   %3d         %3d  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
   end;
 
   //Display means, variances and standard deviations for columns
@@ -1771,7 +1781,7 @@ begin
     V := ColSS - (ColSums[j] * ColSums[j] / ColCount[j]);
     V := V / (ColCount[j] - 1.0);
     S := sqrt(V);
-    AReport.Add('Col   %3d         %3.0f  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
+    AReport.Add('Col   %3d         %3d  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
   end;
 
   //Display means, variances and standard deviations for slices
@@ -1785,7 +1795,7 @@ begin
     V := SlcSS - (SlcSums[k] * SlcSums[k] / SlcCount[k]);
     V := V / (SlcCount[k] - 1.0);
     S := sqrt(V);
-    AReport.Add('Slice %3d         %3.0f  %8.3f  %8.3f  %8.3f', [minf3+k, SlcCount[k], XBar, V, S]);
+    AReport.Add('Slice %3d         %3d  %8.3f  %8.3f  %8.3f', [minf3+k, SlcCount[k], XBar, V, S]);
   end;
 
   AReport.ADd('TOTAL             %3d  %8.3f  %8.3f  %8.3f', [N, MeanDep, MSDep, sqrt(MSDep)]);
@@ -2447,7 +2457,7 @@ end;
 //-------------------------------------------------------------------
 procedure TBlksAnovaFrm.BrownForsytheOneWay(AReport: TStrings);
 var
-  i: integer;
+  i, intValue: integer;
   c1: array[1..50] of double;
   cellmeans: array[1..50] of double;
   sumc1: double;
@@ -2464,12 +2474,12 @@ begin
   for i := 1 to NoCases do
   begin
     if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-      intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
+    intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
 //      X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
-      intvalue := intvalue - minf1 + 1;
-      cellcnts[intvalue-1] := 0.0;
-      cellsums[intvalue-1] := 0.0;
-      cellvars[intvalue-1] := 0.0;
+    intvalue := intvalue - minf1;
+    cellcnts[intvalue] := 0;
+    cellsums[intvalue] := 0.0;
+    cellvars[intvalue] := 0.0;
   end;
 
   MeanDep := 0.0;
@@ -2484,10 +2494,10 @@ begin
     intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
     X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
     X2 := X*X;
-    intvalue := intvalue - minf1 + 1;
-    cellcnts[intvalue-1] := cellcnts[intvalue-1] + 1;
-    cellsums[intvalue-1] := cellsums[intvalue-1] + X;
-    cellvars[intvalue-1] := cellvars[intvalue-1] + X2;
+    intvalue := intvalue - minf1;
+    cellcnts[intvalue] := cellcnts[intvalue] + 1;
+    cellsums[intvalue] := cellsums[intvalue] + X;
+    cellvars[intvalue] := cellvars[intvalue] + X2;
     MeanDep := MeanDep + X;
     SSDep := SSDep + X2;
     N := N + 1;
@@ -2581,7 +2591,7 @@ end;
 
 procedure TBlksAnovaFrm.WelchOneWay(AReport: TStrings);
 var
-  i: integer;
+  i, intValue: integer;
   W, v, barx, numerator, denominator: double;
   wj: array[1..50] of double;
   c1: array[1..50] of double;
@@ -2602,10 +2612,10 @@ begin
     if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
     intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
 //    X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
-    intvalue := intvalue - minf1 + 1;
-    cellcnts[intvalue-1] := 0.0;
-    cellsums[intvalue-1] := 0.0;
-    cellvars[intvalue-1] := 0.0;
+    intvalue := intvalue - minf1;
+    cellcnts[intvalue] := 0;
+    cellsums[intvalue] := 0.0;
+    cellvars[intvalue] := 0.0;
   end;
 
   MeanDep := 0.0;
@@ -2620,13 +2630,13 @@ begin
     intvalue := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[F1Col,i])));
     X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[DepVarCol,i]));
     X := X*X;
-    intvalue := intvalue - minf1 + 1;
-    cellcnts[intvalue-1] := cellcnts[intvalue-1] + 1;
-    cellsums[intvalue-1] := cellsums[intvalue-1] + X;
-    cellvars[intvalue-1] := cellvars[intvalue-1] + X2;
+    intvalue := intvalue - minf1;
+    cellcnts[intvalue] := cellcnts[intvalue] + 1;
+    cellsums[intvalue] := cellsums[intvalue] + X;
+    cellvars[intvalue] := cellvars[intvalue] + X2;
     MeanDep := MeanDep + X;
     SSDep := SSDep + X2;
-    barxj[intvalue] := barxj[intvalue] + X;
+    barxj[intvalue+1] := barxj[intvalue+1] + X;
     N := N + 1;
   end;
 
@@ -2770,8 +2780,8 @@ begin
       denominator := sqrt((var1 / cellcnts[i-1]) + (var2 / cellcnts[j-1]));
       numerator := mean1 - mean2;
       t := numerator / denominator;
-      AReport.Add('Mean %d = %8.3f, Mean %d = %8.3f', [i, mean1, j, mean2]);
-      AReport.Add('Welch t = %8.3f' ,[t]);
+      AReport.Add('Mean %d: %8.3f, Mean %d: %8.3f', [i, mean1, j, mean2]);
+      AReport.Add('Welch t: %8.3f' ,[t]);
 
       numerator := sqr((var1 /cellcnts[i-1]) + (var2 / cellcnts[j-1]));
       term1 := sqr(var1) / (sqr(cellcnts[i-1]) * (cellcnts[i-1]-1.0));
@@ -2779,7 +2789,7 @@ begin
       denominator := term1 + term2;
       numerator := sqr((var1 / cellcnts[i-1]) + (var2 / cellcnts[j-1]));
       gnu := numerator / denominator;
-      AReport.Add('degrees of freedom = %8.3f', [gnu]);
+      AReport.Add('degrees of freedom: %8.3f', [gnu]);
 
       v := round(gnu);
       AReport.Add('Rounded degrees of freedom = %d', [v]);

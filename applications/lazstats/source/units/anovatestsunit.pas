@@ -18,7 +18,7 @@ procedure Tukey(
   error_df      : double;      { deg. freedom for residual }
   value         : double;      { size of smallest group }
   group_total   : DblDyneVec;  { sum of scores in a group }
-  group_count   : DblDyneVec;  { no. of cases in a group }
+  group_count   : IntDyneVec;  { no. of cases in a group }
   min_grp       : integer;     { minimum group code }
   max_grp       : integer;     { maximum group code }
   Alpha         : Double;      { alpha value }
@@ -27,7 +27,7 @@ procedure Tukey(
 procedure ScheffeTest(
   error_ms      : double;      { mean squared residual }
   group_total   : DblDyneVec;  { sum of scores in a group }
-  group_count   : DblDyneVec;  { count of cases in a group }
+  group_count   : IntDyneVec;  { count of cases in a group }
   min_grp       : integer;     { code of first group }
   max_grp       : integer;     { code of last group  }
   total_n       : double;      { total number of cases }
@@ -39,7 +39,7 @@ procedure Newman_Keuls(
   error_df      : double;      { deg. freedom for error }
   value         : double;      { number in smallest group }
   group_total   : DblDyneVec;  { sum of scores in a group }
-  group_count   : DblDyneVec;  { count of cases in a group }
+  group_count   : IntDyneVec;  { count of cases in a group }
   min_grp       : integer;     { lowest group code }
   max_grp       : integer;     { largest group code }
   Alpha         : double;      { alpha value for testing }
@@ -50,7 +50,7 @@ procedure Tukey_Kramer(
   error_df      : double;      { deg. freedom for error }
   value         : double;      { number in smallest group }
   group_total   : DblDyneVec;  { sum of scores in group }
-  group_count   : DblDyneVec;  { number of caes in group }
+  group_count   : IntDyneVec;  { number of caes in group }
   min_grp       : integer;     { code of lowest group }
   max_grp       : integer;     { code of highst group }
   Alpha         : double;      { Alpha value for testing }
@@ -60,7 +60,7 @@ procedure Contrasts(
   error_ms      : double;      { residual ms }
   error_df      : double;      { residual df }
   group_total   : DblDyneVec;  { group sums  }
-  group_count   : DblDyneVec;  { group cases }
+  group_count   : IntDyneVec;  { group cases }
   min_grp       : integer;     { lowest code }
   max_grp       : integer;     { highest code }
   overall_probf : double;      { prob of overall test }
@@ -68,7 +68,7 @@ procedure Contrasts(
 
 procedure Bonferroni(
   group_total   : DblDyneVec;  { sum of scores in group }
-  group_count   : DblDyneVec;  { number of caes in group }
+  group_count   : IntDyneVec;  { number of caes in group }
   group_var     : DblDyneVec;  { group variances }
   min_grp       : integer;     { code of lowest group }
   max_grp       : integer;     { code of highst group }
@@ -79,7 +79,7 @@ procedure TukeyBTest(
   ErrorMS       : double;      { within groups error }
   ErrorDF       : double;      { degrees of freedom within }
   group_total   : DblDyneVec;  { vector of group sums }
-  group_count   : DblDyneVec;  { vector of group n's }
+  group_count   : IntDyneVec;  { vector of group n's }
   min_grp       : integer;     { smallest group code }
   max_grp       : integer;     { largest group code }
   groupsize     : double;      { size of groups (all equal) }
@@ -102,7 +102,7 @@ procedure Tukey(error_ms    : double;     { mean squared for residual }
                 error_df    : double;      { deg. freedom for residual }
                 value       : double;      { size of smallest group }
                 group_total : DblDyneVec;  { sum of scores in a group }
-                group_count : DblDyneVec;  { no. of cases in a group }
+                group_count : IntDyneVec;  { no. of cases in a group }
                 min_grp     : integer;     { minimum group code }
                 max_grp     : integer;     { maximum group code }
                 Alpha       : double;      { alpha value }
@@ -155,7 +155,7 @@ end;
 
 procedure ScheffeTest(error_ms   : double;     { mean squared residual }
                      group_total : DblDyneVec; { sum of scores in a group }
-                     group_count : DblDyneVec; { count of cases in a group }
+                     group_count : IntDyneVec; { count of cases in a group }
                      min_grp     : integer;    { code of first group }
                      max_grp     : integer;    { code of last group  }
                      total_n     : double;     { total number of cases }
@@ -209,14 +209,15 @@ procedure Newman_Keuls(error_ms    : double;     { residual mean squared }
                        error_df    : double;     { deg. freedom for error }
                        value       : double;     { number in smallest group }
                        group_total : DblDyneVec; { sum of scores in a group }
-                       group_count : DblDyneVec; { count of cases in a group }
+                       group_count : IntDyneVec; { count of cases in a group }
                        min_grp     : integer;    { lowest group code }
                        max_grp     : integer;    { largest group code }
                        alpha       : double;     { alpha value for testing }
                        AReport     : TStrings);
 var
-    i, j : integer;
-    temp1, temp2 : double;
+    i, j: integer;
+    temp1: double;
+    temp2: Integer;
     groupno : IntDyneVec;
     contrast, mean1, mean2 : double;
     q_stat : double;
@@ -232,8 +233,7 @@ begin
      begin
          for j := i + 1 to max_grp do
          begin
-              if group_total[i-1] / group_count[i-1] >
-                 group_total[j-1] / group_count[j-1] then
+              if group_total[i-1] / group_count[i-1] > group_total[j-1] / group_count[j-1] then
               begin
                    temp1 := group_total[i-1];
                    temp2 := group_count[i-1];
@@ -293,7 +293,7 @@ procedure Tukey_Kramer(error_ms      : double;     { residual mean squared }
                        error_df      : double;     { deg. freedom for error }
                        value         : double;     { number in smallest group }
                        group_total   : DblDyneVec; { sum of scores in group }
-                       group_count   : DblDyneVec; { number of caes in group }
+                       group_count   : IntDyneVec; { number of caes in group }
                        min_grp       : integer;    { code of lowest group }
                        max_grp       : integer;    { code of highst group }
                        Alpha         : Double;     { Alpha value for testing }
@@ -341,10 +341,10 @@ end;
 
 { ------------------------------------------------------------------------ }
 
-procedure Contrasts(error_ms         : double;          { residual ms }
-                    error_df         : double;          { residual df }
+procedure Contrasts(error_ms         : double;         { residual ms }
+                    error_df         : double;         { residual df }
                     group_total      : DblDyneVec;     { group sums  }
-                    group_count      : DblDyneVec;     { group cases }
+                    group_count      : IntDyneVec;     { group cases }
                     min_grp          : integer;        { lowest code }
                     max_grp          : integer;        { highest code }
                     overall_probf    : double;         { prob of overall test }
@@ -449,7 +449,7 @@ end; { of procedure CONTRASTS }
 
 
 procedure Bonferroni(  group_total   : DblDyneVec; { sum of scores in group }
-                       group_count   : DblDyneVec; { number of cases in group }
+                       group_count   : IntDyneVec; { number of cases in group }
                        group_var     : DblDyneVec; { group variances }
                        min_grp       : integer;    { code of lowest group }
                        max_grp       : integer;    { code of highst group }
@@ -502,7 +502,7 @@ end;
 procedure TukeyBTest(ErrorMS : double;         { within groups error }
                      ErrorDF : double;         { degrees of freedom within }
                      group_total : DblDyneVec; { vector of group sums }
-                     group_count : DblDyneVec; { vector of group n's }
+                     group_count : IntDyneVec; { vector of group n's }
                      min_grp     : integer;    { smallest group code }
                      max_grp     : integer;    { largest group code }
                      groupsize   : double;     { size of groups (all equal) }
@@ -514,7 +514,8 @@ var
   qstat: double;
   tstat: double;
   groupno: IntDyneVec;
-  temp1, temp2: double;
+  temp1: Double;
+  temp2: Integer;
   tempno: integer;
   NoGrps: integer;
   contrast: double;

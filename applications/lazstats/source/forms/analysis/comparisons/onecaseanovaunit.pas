@@ -86,18 +86,18 @@ type
     MeanDep, MeanF1, MeanF2, MeanF3: double;
     SSNonAdd, SSBalance,MSNonAdd, MSBalance, GrandMean, DFBalance: double;
     FNonAdd, ProbNonAdd: double;
-    cellcnts : DblDyneVec;    // array of cell counts
+    cellcnts : IntDyneVec;    // array of cell counts
     cellvars : DblDyneVec;    // arrray of cell sums of squares then variances
     cellsums : DblDyneVec;    // array of cell sums then means
-    counts : DblDyneMat;      // matrix for 2-way containing cell sizes
+    counts : IntDyneMat;      // matrix for 2-way containing cell sizes
     sums : DblDyneMat;        // matrix for 2-way containing cell sums
     vars : DblDyneMat;        // matrix for 2-way containing sums of squares
     RowSums : DblDyneVec;     // 2 way row sums
     ColSums : DblDyneVec;     // 2 way col sums
-    RowCount : DblDyneVec;    // 2 way row count
-    ColCount : DblDyneVec;    // 2 way col count
+    RowCount : IntDyneVec;    // 2 way row count
+    ColCount : IntDyneVec;    // 2 way col count
     SlcSums : DblDyneVec;     // 3 way slice sums
-    SlcCount : DblDyneVec;    // 3 way slice counts
+    SlcCount : IntDyneVec;    // 3 way slice counts
     OrdMeansA, OrdMeansB, OrdMeansC : DblDyneVec; // reordered means for f1, f2, f3
     OverAll, PostHocAlpha : double; // alphas for tests
     wsum, wx2 : DblDyneCube; // : DblDyneCube
@@ -544,10 +544,10 @@ begin
   for i := 1 to NoGrpsA do
   begin
     RowSums[i-1] := 0.0;
-    RowCount[i-1] := 0.0;
+    RowCount[i-1] := 0;
     for j := 1 to NoGrpsB do
     begin
-      counts[i-1,j-1] := 0.0;
+      counts[i-1,j-1] := 0;
       sums[i-1,j-1] := 0.0;
       vars[i-1,j-1] := 0.0;
     end;
@@ -555,7 +555,7 @@ begin
 
   for i := 1 to NoGrpsB do
   begin
-    ColCount[i-1] := 0.0;
+    ColCount[i-1] := 0;
     ColSums[i-1] := 0.0;
   end;
 
@@ -584,8 +584,8 @@ begin
     vars[grpA-1,grpB-1] := vars[grpA-1,grpB-1] + X * X;
     RowSums[grpA-1] := RowSums[grpA-1] + X;
     ColSums[grpB-1] := ColSums[grpB-1] + X;
-    RowCount[grpA-1] := RowCount[grpA-1] + 1.0;
-    ColCount[grpB-1] := ColCount[grpB-1] + 1.0;
+    RowCount[grpA-1] := RowCount[grpA-1] + 1;
+    ColCount[grpB-1] := ColCount[grpB-1] + 1;
     MeanDep := MeanDep + X;
     SSDep := SSDep + X * X;
     N := N + 1;
@@ -743,7 +743,7 @@ begin
     V := RowSS - sqr(RowSums[i]) / RowCount[i];
     V := V / (RowCount[i] - 1.0);
     S := sqrt(V);
-    AReport.Add('Row  %3d      %3.0f  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
+    AReport.Add('Row  %3d      %3d  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
   end;
 
   //Display means, variances and standard deviations for columns
@@ -756,7 +756,7 @@ begin
     if (ColCount[j] > 0) then V := ColSS - sqr(ColSums[j]) / ColCount[j];
     if (ColCount[j] > 1) then V := V / (ColCount[j] - 1.0);
     if (V > 0.0) then S := sqrt(V);
-    AReport.Add('Col  %3d      %3.0f  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
+    AReport.Add('Col  %3d      %3d  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
   end;
 
   AReport.Add('TOTAL         %3d  %8.3f  %8.3f  %8.3f', [N, MeanDep, MSDep, sqrt(MSDep)]);
@@ -899,7 +899,7 @@ begin
   for i := 0 to NoGrpsA - 1 do
   begin
     RowSums[i] := 0.0;
-    RowCount[i] := 0.0;
+    RowCount[i] := 0;
     for j := 0 to NoGrpsB - 1 do
     begin
       for k := 0 to NoGrpsC - 1 do
@@ -913,14 +913,14 @@ begin
 
   for i := 0 to NoGrpsB - 1 do
   begin
-    ColCount[i] := 0.0;
+    ColCount[i] := 0;
     ColSums[i] := 0.0;
   end;
 
   for i := 0 to NoGrpsC - 1 do
   begin
-    SlcCount[i] := 0.0;
-    SlcSums[i] := 0.0;
+    SlcCount[i] := 0;
+    SlcSums[i] := 0;
   end;
 
   N := 0;
@@ -956,9 +956,9 @@ begin
     RowSums[grpA-1] := RowSums[grpA-1] + X;
     ColSums[grpB-1] := ColSums[grpB-1] + X;
     SlcSums[grpC-1] := SlcSums[grpC-1] + X;
-    RowCount[grpA-1] := RowCount[grpA-1] + 1.0;
-    ColCount[grpB-1] := ColCount[grpB-1] + 1.0;
-    SlcCount[grpC-1] := SlcCount[grpC-1] + 1.0;
+    RowCount[grpA-1] := RowCount[grpA-1] + 1;
+    ColCount[grpB-1] := ColCount[grpB-1] + 1;
+    SlcCount[grpC-1] := SlcCount[grpC-1] + 1;
     MeanDep := MeanDep + X;
     SSDep := SSDep + X * X;
     N := N + 1;
@@ -1222,7 +1222,7 @@ begin
     V := RowSS - (RowSums[i] * RowSums[i] / RowCount[i]);
     V := V / (RowCount[i] - 1.0);
     S := sqrt(V);
-    AReport.Add('Row   %3d         %3.0f  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
+    AReport.Add('Row   %3d         %3d  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
   end;
 
   //Display means, variances and standard deviations for columns
@@ -1237,7 +1237,7 @@ begin
     V := ColSS - (ColSums[j] * ColSums[j] / ColCount[j]);
     V := V / (ColCount[j] - 1.0);
     S := sqrt(V);
-    AReport.Add('Col   %3d         %3.0f  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
+    AReport.Add('Col   %3d         %3d  %8.3f  %8.3f  %8.3f', [minf2+j, ColCount[j], XBar, V, S]);
   end;
 
   //Display means, variances and standard deviations for slices
@@ -1252,7 +1252,7 @@ begin
     V := SlcSS - (SlcSums[k] * SlcSums[k] / SlcCount[k]);
     V := V / (SlcCount[k] - 1.0);
     S := sqrt(V);
-    AReport.Add('Slice %3d         %3.0f  %8.3f  %8.3f  %8.3f', [minf3+k, SlcCount[k], XBar, V, S]);
+    AReport.Add('Slice %3d         %3d  %8.3f  %8.3f  %8.3f', [minf3+k, SlcCount[k], XBar, V, S]);
   end;
 
   AReport.Add('TOTAL             %3d  %8.3f  %8.3f  %8.3f', [N, MeanDep, MSDep, sqrt(MSDep)]);
