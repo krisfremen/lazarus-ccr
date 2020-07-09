@@ -1035,20 +1035,20 @@ begin
     if (FButtonState in [bsBtnHotTrack, bsBtnPressed]) then
     begin
       FAppearance.Element.GetHotTrackColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientKind,
         delta);
     end else
     if (FButtonState = bsDropdownHottrack) then
     begin
       FAppearance.Element.GetHotTrackColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientKind);
     end else
     if (FButtonState = bsDropdownPressed) then
     begin
       FAppearance.Element.GetActiveColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientKind);
     end else
       drawBtn := false;
@@ -1078,26 +1078,26 @@ begin
   if FButtonState = bsBtnHottrack then
   begin
     FAppearance.Element.GetHotTrackColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind);
   end else
   if FButtonState = bsBtnPressed then
   begin
     FAppearance.Element.GetActiveColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientkind);
   end else
   if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
   begin
     FAppearance.Element.GetHotTrackColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind,
       delta);
   end else
   if (FButtonState = bsIdle) and Checked then
   begin
     FAppearance.Element.GetActiveColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind
     );
   end else
@@ -1535,28 +1535,28 @@ begin
   if (FButtonState = bsIdle) and (not FHideFrameWhenIdle) then
   begin
     FAppearance.Element.GetIdleColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind
     );
   end else
   if FButtonState = bsBtnHottrack then
   begin
     FAppearance.Element.GetHotTrackColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind
     );
   end else
   if FButtonState = bsBtnPressed then
   begin
     FAppearance.Element.GetActiveColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind
     );
   end else
   if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
   begin
     FAppearance.Element.GetHotTrackColors(Checked,
-      frameColor, innerLightColor, innerDarkColor,
+      fontColor, frameColor, innerLightColor, innerDarkColor,
       gradientFromColor, gradientToColor, gradientKind,
       delta
     );
@@ -1657,14 +1657,14 @@ begin
     if (FButtonState = bsIdle) and (not FHideFrameWhenIdle) then
     begin
       FAppearance.Element.GetIdleColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientkind
       );
     end else
     if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
     begin
       FAppearance.Element.GetHotTrackColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientKind,
         delta
       );
@@ -1672,14 +1672,14 @@ begin
     if (FButtonState = bsDropdownHottrack) then
     begin
       FAppearance.Element.GetHotTrackColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientkind
       );
     end else
     if (FButtonState = bsDropdownPressed) then
     begin
       FAppearance.Element.GetActiveColors(Checked,
-        frameColor, innerLightColor, innerDarkColor,
+        fontColor, frameColor, innerLightColor, innerDarkColor,
         gradientFromColor, gradientToColor, gradientKind
       );
     end else
