@@ -97,20 +97,20 @@ var
 begin
   L := TStringList.Create;
   try
-    L.Add(FOLDER + 'JvMM/images/tjvbmpanimator.bmp');                  //0
-    L.Add(FOLDER + 'JvMM/images/tjvfullcoloraxiscombo.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolorcircle.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolorcircledialog.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolorgroup.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolorlabel.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolorpanel.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolorspacecombo.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvfullcolortrackbar.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvgradient.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvgradientheaderpanel.bmp');   // 10
-    L.Add(FOLDER + 'JvMM/images/tjvid3v2.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvpicclip.bmp');
-    L.Add(FOLDER + 'JvMM/images/tjvspecialprogress.bmp');
+    L.Add(FOLDER + 'JvMM/images/tjvbmpanimator.png');                  //0
+    L.Add(FOLDER + 'JvMM/images/tjvfullcoloraxiscombo.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorcircle.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorcircledialog.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorgroup.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorlabel.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorpanel.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolorspacecombo.png');
+    L.Add(FOLDER + 'JvMM/images/tjvfullcolortrackbar.png');
+    L.Add(FOLDER + 'JvMM/images/tjvgradient.png');
+    L.Add(FOLDER + 'JvMM/images/tjvgradientheaderpanel.png');   // 10
+    L.Add(FOLDER + 'JvMM/images/tjvid3v2.png');
+    L.Add(FOLDER + 'JvMM/images/tjvpicclip.png');
+    L.Add(FOLDER + 'JvMM/images/tjvspecialprogress.png');
     L.Add(FOLDER + 'JvHMI/images/tjvdialbutton.bmp');
     L.Add(FOLDER + 'JvHMI/images/tjvled.bmp');
     L.Add(FOLDER + 'JvDB/images/tjvdbcalcedit.bmp');
@@ -118,12 +118,12 @@ begin
     L.Add(FOLDER + 'JvDB/images/tjvdbsearchcombobox.bmp');
     L.Add(FOLDER + 'JvDB/images/tjvdbsearchedit.bmp');
     L.Add(FOLDER + 'JvDB/images/tjvdbtreeview.bmp');  // 20
+    L.Add(FOLDER + 'JvPageComps/images/tjvtabbar.bmp');
+    L.Add(FOLDER + 'JvPageComps/images/tjvmoderntabbarpainter.bmp');
+    L.Add(FOLDER + 'JvCustomControls/images/tjvownerdrawviewer.png');
     L.Add(FOLDER + 'JvCustomControls/images/tjvimagelistviewer.png');
     L.Add(FOLDER + 'JvCustomControls/images/tjvimagesviewer.png');
-    L.Add(FOLDER + 'JvCustomControls/images/tjvmoderntabbarpainter.bmp');
     L.Add(FOLDER + 'JvCustomControls/images/tjvoutlookbar.png');
-    L.Add(FOLDER + 'JvCustomControls/images/tjvownerdrawviewer.png');
-    L.Add(FOLDER + 'JvCustomControls/images/tjvtabbar.bmp');
     L.Add(FOLDER + 'JvCustomControls/images/tjvthumbimage.png');
     L.Add(FOLDER + 'JvCustomControls/images/tjvthumbnail.png');
     L.Add(FOLDER + 'JvCustomControls/images/tjvthumbview.png');

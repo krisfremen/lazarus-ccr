@@ -144,7 +144,7 @@ var
 implementation
 
 uses
-  TypInfo, LazFileUtils,
+  Variants, TypInfo, LazFileUtils,
   JvResources, JvTypes, JvJCLUtils;
 
 
@@ -681,28 +681,28 @@ end;
 
 procedure JvInterpreter_JvInterpreterRunFormModal(var Value: Variant; Args: TJvInterpreterArgs);
 begin
-  Value := JvInterpreterRunFormModal(Args.Values[0]);
+  Value := JvInterpreterRunFormModal(VarToStr(Args.Values[0]));
 end;
 
 { function JvInterpreterRunForm(const FileName: TFileName): TForm; }
 
 procedure JvInterpreter_JvInterpreterRunForm(var Value: Variant; Args: TJvInterpreterArgs);
 begin
-  Value := O2V(JvInterpreterRunForm(Args.Values[0]));
+  Value := O2V(JvInterpreterRunForm(VarToStr(Args.Values[0])));
 end;
 
 { function JvInterpreterMakeForm(const FileName: TFileName): TForm; }
 
 procedure JvInterpreter_JvInterpreterMakeForm(var Value: Variant; Args: TJvInterpreterArgs);
 begin
-  Value := O2V(JvInterpreterMakeForm(Args.Values[0]));
+  Value := O2V(JvInterpreterMakeForm(VarToStr(Args.Values[0])));
 end;
 
 { function JvInterpreterRunUnit(const FileName: TFileName): Variant }
 
 procedure JvInterpreter_JvInterpreterRunUnit(var Value: Variant; Args: TJvInterpreterArgs);
 begin
-  Value := JvInterpreterRunUnit(Args.Values[0]);
+  Value := JvInterpreterRunUnit(VarToStr(Args.Values[0]));
 end;
 
 procedure JvInterpreterRunReportPreview(const AFileName: string);

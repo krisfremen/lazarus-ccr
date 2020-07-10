@@ -89,14 +89,14 @@
       <Unit7>
         <Filename Value="..\..\run\JvCore\jvjclutils.pas"/>
         <UnitName Value="JvJCLUtils"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="1062"/>
         <CursorPos X="23" Y="1080"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="c:\lazarus-trunk_fpc304\lcl\lcltype.pp"/>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\lcltype.pp"/>
         <UnitName Value="LCLType"/>
         <EditorIndex Value="8"/>
         <TopLine Value="230"/>
@@ -105,7 +105,7 @@
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="c:\lazarus-trunk_fpc304\lcl\graphics.pp"/>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\graphics.pp"/>
         <UnitName Value="Graphics"/>
         <EditorIndex Value="7"/>
         <TopLine Value="1125"/>
@@ -116,14 +116,14 @@
       <Unit10>
         <Filename Value="..\..\run\JvCore\jvexcontrols.pas"/>
         <UnitName Value="JvExControls"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="237"/>
         <CursorPos X="14" Y="254"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="c:\lazarus-trunk_fpc304\lcl\controls.pp"/>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="6"/>
         <TopLine Value="162"/>
@@ -133,7 +133,7 @@
       </Unit11>
       <Unit12>
         <Filename Value="D:\lazarus202_fpc304_win64\fpc\3.0.4\source\rtl\inc\objpas.inc"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="537"/>
         <CursorPos X="38" Y="550"/>
         <UsageCount Value="10"/>

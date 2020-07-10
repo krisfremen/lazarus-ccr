@@ -88,7 +88,6 @@ implementation
 
 uses
   SysUtils,
-  //Consts,
   JvJVCLUtils, JvConsts;
 
 constructor TJvPicClip.Create(AOwner: TComponent);
