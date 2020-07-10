@@ -5,15 +5,15 @@ unit FunctionsLib;
 interface
 
 uses
-  Forms, Controls, LResources, ExtCtrls, StdCtrls, Classes, SysUtils, Globals,
-  Graphics, Dialogs, Math, MainUnit, OutPutUnit, dataprocs;
+  Forms, Controls, LResources, ExtCtrls, Classes, SysUtils, Globals,
+  Graphics, Dialogs, Math,
+  MainUnit, dataprocs;
 
 function chisquaredprob(X : double; k : integer) : double;
 function gammln(xx : double) : double;
 PROCEDURE matinv(VAR a, vtimesw, v, w: DblDyneMat; n: integer);
 FUNCTION sign(a,b: double): double;
 FUNCTION isign(a,b : integer): integer;
-FUNCTION max(a,b: double): double;
 function inversez(prob : double) : double;
 function zprob(p : double; VAR errorstate : boolean) : double;
 function probz(z : double) : double;
@@ -22,7 +22,7 @@ function zdensity(z : real) : real;
 function probf(f,df1,df2 : extended) : extended;
 FUNCTION alnorm(x : double; upper : boolean): double;
 procedure ppnd7 (p : double; VAR normal_dev : double; VAR ifault : integer);
-FUNCTION poly(c : Array of double; nord : integer; x : double): double; // RESULT(fn_val)
+function poly(const c: Array of double; nord: integer; x: double): double; // RESULT(fn_val)
 procedure swilk (var init : boolean; const x: DblDyneVec; n, n1, n2: integer;
   const a: DblDyneVec; var w, pw: double; out ifault: integer);
 procedure SVDinverse(VAR a : DblDyneMat; N : integer);
@@ -39,7 +39,7 @@ function ProdSums(N, A : double) : double;
 function combos(X, N : double) : double;
 function ordinate(z : double) : double;
 procedure Rank(v1col : integer; VAR Values : DblDyneVec);
-procedure PRank(v1col : integer; VAR Values : DblDyneVec);
+procedure PRank(v1col : integer; VAR Values : DblDyneVec; AReport: TStrings);
 function UniStats(N : integer; VAR X : DblDyneVec; VAR z : DblDyneVec;
                   VAR Mean : double; VAR variance : double; VAR SD : double;
                   VAR Skew : double; VAR Kurtosis : double; VAR SEmean : double;
@@ -50,9 +50,11 @@ function WholeValue(value : double) : double;
 function FractionValue(value : double) : double;
 function Quartiles(TypeQ : integer; pcntile : double; N : integer;
          VAR values : DblDyneVec) : double;
-function KolmogorovProb(z : double) : double;
-function KolmogorovTest(na : integer; VAR a : DblDyneVec; nb : integer;
-         VAR b : DblDyneVec; option : String) : double;
+
+function KolmogorovProb(z: double): double;
+function KolmogorovTest(na: integer; const a: DblDyneVec; nb: integer;
+  const b: DblDyneVec; option: String; AReport: TStrings): double;
+
 procedure poisson_cdf ( x : integer; a : double; VAR cdf : double );
 procedure poisson_cdf_values (VAR n : integer; VAR a : double; VAR x : integer;
                               VAR fx : double );
@@ -61,7 +63,6 @@ procedure poisson_check ( a : double );
 function factorial(x : integer) : integer;
 procedure poisson_pdf ( x : integer; VAR a : double; VAR pdf : double );
 
-function DegToRad(Deg: Double): Double;
 
 implementation
 
@@ -136,9 +137,10 @@ PROCEDURE matinv(VAR a, vtimesw, v, w: DblDyneMat; n: integer);
 (* adapted from the singular value decomposition of a matrix *)
 (* a is a symetric matrix with the inverse returned in a *)
 
-LABEL 1,2,3;
+label
+  Lbl1, Lbl2, Lbl3;
 
-VAR
+var
 //   vtimesw, v, ainverse : matrix;
 //   w : vector;
    ainverse : array of array of double;
@@ -292,10 +294,10 @@ BEGIN
       FOR its := 1 to 30 DO BEGIN
          FOR l := k DOWNTO 0 DO BEGIN
             nm := l-1;
-            IF ((abs(rv1[l])+anorm) = anorm) THEN GOTO 2;
-            IF ((abs(w[nm,nm])+anorm) = anorm) THEN GOTO 1
+            IF ((abs(rv1[l])+anorm) = anorm) THEN GOTO Lbl2;
+            IF ((abs(w[nm,nm])+anorm) = anorm) THEN GOTO Lbl1
          END;
-1:
+Lbl1:
 //         c := 0.0;
          s := 1.0;
          FOR i := l to k DO BEGIN
@@ -315,7 +317,7 @@ BEGIN
                END
             END
          END;
-2:         z := w[k,k];
+Lbl2:    z := w[k,k];
          IF (l = k) THEN BEGIN
             IF (z < 0.0) THEN BEGIN
                w[k,k] := -z;
@@ -323,7 +325,7 @@ BEGIN
                v[j,k] := -v[j,k]
             END
          END;
-         GOTO 3
+         GOTO Lbl3
          END;
          IF (its = 30) THEN BEGIN
            { showmessage('No convergence in 30 SVDCMP iterations');}
@@ -379,7 +381,8 @@ BEGIN
          rv1[k] := f;
          w[k,k] := x
       END;
-3:   END;
+Lbl3:
+   END;
 {     mat_print(m,a,'U matrix');
      mat_print(n,v,'V matrix');
      writeln(lst,'Diagonal values of W inverse matrix');
@@ -420,12 +423,6 @@ END;
 FUNCTION isign(a,b : integer): integer;
 BEGIN
      IF (b >= 0) then isign := abs(a) ELSE isign := -abs(a)
-END;
-//-------------------------------------------------------------------
-
-FUNCTION max(a,b: double): double;
-BEGIN
-      IF (a > b) THEN max := a ELSE max := b
 END;
 //-------------------------------------------------------------------
 
@@ -522,16 +519,15 @@ begin
      until abs(integral - lastint) < error;
      simpsonintegral := integral/3
 end; (* of SimpsonIntegral *)
-//---------------------------------------------------------------------
 
+
+{ Density function of the standard normal distribution }
 function zdensity(z : real) : real;
-(* the density function of the standard normal distribution *)
-const a = 0.39894228; (* 1 / sqrt(2*pi) *)
-
+const
+   a = 0.39894228; (* 1 / sqrt(2*pi) *)
 begin
      Result := a * exp(-0.5 * z*z )
 end; (* of normal *)
-//----------------------------------------------------------------------
 
 
 function probf(f,df1,df2 : extended) : extended;
@@ -572,8 +568,7 @@ BEGIN
 END;
 //-----------------------------------------------------------------
 
-FUNCTION betacf(a,b,x: double): extended;
-LABEL 1;
+function betacf(a,b,x: double): extended;
 CONST
    itmax=100;
    eps=3.0e-7;
@@ -582,7 +577,6 @@ VAR
    bz,bpp,bp,bm,az,app: extended;
    am,aold,ap: extended;
    m: integer;
-
 BEGIN
    am := 1.0;
    bm := 1.0;
@@ -611,10 +605,11 @@ BEGIN
       bm := bp/bpp;
       az := app/bpp;
       bz := 1.0;
-      IF ((abs(az-aold)) < (eps*abs(az))) THEN GOTO 1
+      IF ((abs(az-aold)) < (eps*abs(az))) THEN
+        Break;
    END;
   { ShowMessage('WARNING! a or b too big, or itmax too small in betacf');}
-1:   betacf := az
+   Result := az
 END;
 
 FUNCTION betai(a,b,x: extended): extended;
@@ -648,72 +643,75 @@ begin { fprob function }
 end; // of fprob function
 //--------------------------------------------------------------------
 
-FUNCTION alnorm(x : double; upper : boolean): double;
-//  Algorithm AS66 Applied Statistics (1973) vol.22, no.3
-//  Evaluates the tail area of the standardised normal curve
-//  from x to infinity if upper is .true. or
-//  from minus infinity to x if upper is .false.
-// ELF90-compatible version by Alan Miller
-// Latest revision - 29 November 1997
+{  Algorithm AS66 Applied Statistics (1973) vol.22, no.3
 
-label L10, L20, L30, L40;
+   Evaluates the tail area of the standardised normal curve
+   from x to infinity if upper is .true. or
+   from minus infinity to x if upper is .false.
+   ELF90-compatible version by Alan Miller
+   Latest revision - 29 November 1997 }
+function alnorm(x: double; upper: boolean): double;
+label
+  Lbl20, Lbl30, Lbl40;
+const
+   zero = 0.0;
+   one = 1.0;
+   half = 0.5;
+   con = 1.28;
+   ltone = 7.0;
+   utzero = 18.66;
+   p = 0.398942280444;
+   q = 0.39990348504;
+   r = 0.398942280385;
+   a1 = 5.75885480458;
+   a2 = 2.62433121679;
+   a3 = 5.92885724438;
+   b1 = -29.8213557807;
+   b2 = 48.6959930692;
+   c1 = -3.8052E-8;
+   c2 = 3.98064794E-4;
+   c3 = -0.151679116635;
+   c4 = 4.8385912808;
+   c5 = 0.742380924027;
+   c6 = 3.99019417011;
+   d1 = 1.00000615302;
+   d2 = 1.98615381364;
+   d3 = 5.29330324926;
+   d4 = -15.1508972451;
+   d5 = 30.789933034;
 var
-	fn_val : double;
-//	sp : integer;
-	zero, one, half, con : double;
-	z, y : double;
-	up : boolean;
-	ltone, utzero : double;
-	p, q, r, a1, a2, a3, b1, b2, c1, c2, c3, c4, c5, c6 : double;
-	d1, d2, d3, d4, d5 : double;
-
+  fn_val: double;
+  z, y: double;
+  up: boolean;
 begin
-	zero := 0.0;
-	one := 1.0;
-	half := 0.5;
-	con := 1.28;
-	ltone := 7.0;
-	utzero := 18.66;
-	p := 0.398942280444;
-	q := 0.39990348504;
-	r := 0.398942280385;
-	a1 := 5.75885480458;
-	a2 := 2.62433121679;
-	a3 := 5.92885724438;
-	b1 := -29.8213557807;
-	b2 := 48.6959930692;
-	c1 := -3.8052E-8;
-	c2 := 3.98064794E-4;
-	c3 := -0.151679116635;
-	c4 := 4.8385912808;
-	c5 := 0.742380924027;
-	c6 := 3.99019417011;
-	d1 := 1.00000615302;
-	d2 := 1.98615381364;
-	d3 := 5.29330324926;
-	d4 := -15.1508972451;
-	d5 := 30.789933034;
-	up := upper;
-	z := x;
-	IF(z >=  zero) then GOTO L10;
-	up := NOT up;
-	z := -z;
-L10 :
-    IF ((z <= ltone) OR (up) AND (z <= utzero)) then GOTO L20;
-	fn_val := zero;
-	GOTO L40;
-L20 :
+  up := upper;
+  z := x;
+
+  if (z <  zero) then begin
+    up := not up;
+    z := -z;
+  end;
+
+  if ((z <= ltone) or (up) and (z <= utzero)) then GOTO Lbl20;
+
+  fn_val := zero;
+  GOTO Lbl40;
+
+Lbl20 :
   y := half*z*z;
-	IF(z > con) then GOTO L30;
+  if (z > con) then GOTO Lbl30;
 
-	fn_val := half - z*(p-q*y/(y+a1+b1/(y+a2+b2/(y+a3))));
-	GOTO L40;
-L30 :
-    fn_val := r*EXP(-y)/(z+c1+d1/(z+c2+d2/(z+c3+d3/(z+c4+d4/(z+c5+d5/(z+c6))))));
-L40 :
-    IF(NOT up) then fn_val := one - fn_val;
+  fn_val := half - z*(p-q*y/(y+a1+b1/(y+a2+b2/(y+a3))));
+  GOTO Lbl40;
 
-	result := fn_val;
+Lbl30 :
+  fn_val := r*exp(-y)/(z+c1+d1/(z+c2+d2/(z+c3+d3/(z+c4+d4/(z+c5+d5/(z+c6))))));
+
+Lbl40 :
+  if (not up) then
+    fn_val := one - fn_val;
+
+  result := fn_val;
 END; // FUNCTION alnorm
 //-----------------------------------------------------------------------------------
 
@@ -788,41 +786,40 @@ begin
 		exit;
 	end; // if
 end; // procedure ppnd7
-//---------------------------------------------------------------------
 
-FUNCTION poly(c : Array of double; nord : integer; x : double): double; // RESULT(fn_val)
-//        Algorithm AS 181.2   Appl. Statist.  (1982) Vol. 31, No. 2
-//        Calculates the algebraic polynomial of order nored-1 with
-//        array of coefficients c.  Zero order coefficient is c(1)
-label 20;
+{  Algorithm AS 181.2   Appl. Statist.  (1982) Vol. 31, No. 2
+   Calculates the algebraic polynomial of order nored-1 with
+   array of coefficients c.  Zero order coefficient is c(1) }
+function poly(const c: Array of double; nord: integer; x: double): double;
 var
-	fn_val, p : double;
-	i, j, n2 : integer;
-    c2 : array[1..6] of double;
+  fn_val, p: double;
+  i, j, n2: integer;
+  c2: array[1..6] of double;
 begin
-    // copy into array for access starting at 1 instead of zero
-    for i := 1 to nord do c2[i] := c[i-1];
+  // copy into array for access starting at 1 instead of zero
+  for i := 1 to nord do
+    c2[i] := c[i-1];
 
-	fn_val := c2[1];
-	IF (nord = 1) then
+  fn_val := c2[1];
+  if (nord = 1) then
+  begin
+    result := fn_val;
+    exit;
+  end;
+
+  p := x * c2[nord];
+  if (nord <> 2) then
+  begin
+    n2 := nord - 2;
+    j := n2 + 1;
+    for i := 1 to n2 do
     begin
-         result := fn_val;
-         exit; // RETURN
+      p := (p + c2[j])*x;
+      j := j - 1;
     end;
-	p := x * c2[nord];
-	IF (nord = 2) then GOTO 20;
-	n2 := nord - 2;
-	j := n2 + 1;
-	for i := 1 to n2 do
-	begin
-		p := (p + c2[j])*x;
-  		j := j - 1;
-	END; // DO
-20:	fn_val := fn_val + p;
-
-	result := fn_val;
-END; // FUNCTION poly
-//-----------------------------------------------------------------------
+  end;
+  Result := fn_val + p;
+end; // FUNCTION poly
 
 procedure swilk (var init: boolean; const x: DblDyneVec; n, n1, n2: integer;
   const a: DblDyneVec; var w, pw: double; out ifault: integer);
@@ -1598,7 +1595,7 @@ begin
 end;
 //--------------------------------------------------------------------
 
-procedure PRank(v1col: integer; var Values: DblDyneVec);
+procedure PRank(v1col: integer; var Values: DblDyneVec; AReport: TStrings);
 // computes the percentile ranks of values stored in the data grid
 // at column v1col
 var
@@ -1668,13 +1665,13 @@ begin
     pcntiles[i] := cumfm[i] / ncases;
   end;
 
-  OutPutFrm.AddLine('PERCENTILE RANKS');
-  OutPutFrm.AddLine('Score Value   Frequency  Cum.Freq.  Percentile Rank');
-  OutPutFrm.AddLine('-----------   ---------  ---------  ---------------');
-//  OutPutFrm.AddLine('___________   __________  __________ ______________');
+  AReport.Add('PERCENTILE RANKS');
+  AReport.Add('Score Value   Frequency  Cum.Freq.  Percentile Rank');
+  AReport.Add('-----------   ---------  ---------  ---------------');
+//  AReport.Add('___________   __________  __________ ______________');
   for i := 1 to nocats do
-    OutputFrm.AddLine(' %10.3f    %8d   %8d    %12.2f%%', [CatValues[i-1], freq[i-1], cumf[i-1], pcntiles[i-1]*100.0]);
-  OutPutFrm.AddLine('');
+    AReport.Add(' %10.3f    %8d   %8d    %12.2f%%', [CatValues[i-1], freq[i-1], cumf[i-1], pcntiles[i-1]*100.0]);
+  AReport.Add('');
 
   // convert original values to their corresponding percentile ranks
   for i := 1 to ncases do
@@ -1911,19 +1908,18 @@ begin
    result := p;
 end;
 
-function KolmogorovTest(na : integer; VAR a : DblDyneVec; nb : integer;
-         VAR b : DblDyneVec; option : String) : double;
+function KolmogorovTest(na : integer; const a: DblDyneVec; nb: integer;
+         const b: DblDyneVec; option: String; AReport: TStrings): double;
 VAR
    prob : double;
    opt : string;
    rna : double; // = na;
    rnb : double; // = nb;
-   sa : double; //  = 1./rna;
-   sb : double; // = 1./rnb;
+   sa : double;  // = 1./rna;
+   sb : double;  // = 1./rnb;
    rdiff, rdmax, x, z : double;
    i, ia, ib : integer;
    ok : boolean;
-   bugstr : string;
 begin
 //  Statistical test whether two one-dimensional sets of points are compatible
 //  with coming from the same parent distribution, using the Kolmogorov test.
@@ -1937,20 +1933,21 @@ begin
 //         "M" Return the Maximum Kolmogorov distance instead of prob
 //
 //  Output:
-// The returned value prob is a calculated confidence level which gives a
-// statistical test for compatibility of a and b.
-// Values of prob close to zero are taken as indicating a small probability
-// of compatibility. For two point sets drawn randomly from the same parent
-// distribution, the value of prob should be uniformly distributed between
-// zero and one.
-//   in case of error the function return -1
-//   If the 2 sets have a different number of points, the minimum of
-//   the two sets is used.
+//  The returned value prob is a calculated confidence level which gives a
+//  statistical test for compatibility of a and b.
+//  Values of prob close to zero are taken as indicating a small probability
+//  of compatibility. For two point sets drawn randomly from the same parent
+//  distribution, the value of prob should be uniformly distributed between
+//  zero and one.
 //
-// Method:
-// The Kolmogorov test is used. The test statistic is the maximum deviation
-// between the two integrated distribution functions, multiplied by the
-// normalizing factor (rdmax*sqrt(na*nb/(na+nb)).
+//  in case of error the function return -1
+//  If the 2 sets have a different number of points, the minimum of
+//  the two sets is used.
+//
+//  Method:
+//  The Kolmogorov test is used. The test statistic is the maximum deviation
+//  between the two integrated distribution functions, multiplied by the
+//  normalizing factor (rdmax*sqrt(na*nb/(na+nb)).
 //
 //  Code adapted by Rene Brun from CERNLIB routine TKOLMO (Fred James)
 //   (W.T. Eadie, D. Drijard, F.E. James, M. Roos and B. Sadoulet,
@@ -2066,14 +2063,14 @@ begin
       z := rdmax * Sqrt(rna * rnb / (rna + rnb));
       prob := KolmogorovProb(z);
    end;
+
       // debug printout
    if (opt = 'D') then
-   begin
-      bugstr := format(' Kolmogorov Probability = %g, Max Dist = %g',[prob,rdmax]);
-      OutPutFrm.RichEdit.Lines.Add(bugstr);
-   end;
-   if(opt = 'M') then result := rdmax
-   else result := prob;
+      AReport.Add(' Kolmogorov Probability: %g, Max Dist: %g', [prob, rdmax]);
+   if(opt = 'M') then
+     result := rdmax
+   else
+     result := prob;
 end;
 
 
@@ -2409,11 +2406,6 @@ begin
   else
     pdf := exp ( - a ) * power(a,x) / factorial ( x );
 //      pdf := exp ( - a ) * power(a,x) / exp(logfactorial( x ));
-end;
-
-function DegToRad(Deg: Double): Double;
-begin
-  Result := Deg * Pi / 180.0;
 end;
 
 end.

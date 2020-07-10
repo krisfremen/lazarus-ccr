@@ -142,7 +142,7 @@ procedure matinv(a, vtimesw, v, w: DblDyneMat; n: integer);
 implementation
 
 uses
-  StrUtils, Utils;
+  Math, StrUtils, Utils;
 
 procedure GridDotProd(col1, col2: integer; out Product: double; var Ngood: integer);
 // Get the cross-product of two vectors

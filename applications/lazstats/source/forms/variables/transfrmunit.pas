@@ -71,7 +71,8 @@ var
 
 implementation
 
-uses MainUnit;
+uses
+  MainUnit, OutputUnit, Utils;
 
 procedure TTransFrm.ResetBtnClick(Sender: TObject);
 var i : integer;
@@ -113,35 +114,38 @@ end;
 
 procedure TTransFrm.ComputeBtnClick(Sender: TObject);
 var
-   i, TIndex, v1col, v2col, gridcol : integer;
-   index, pcntile : DblDyneVec;
-   cellstring : string;
-   TwoArgs : boolean;
-   constant, mean, stddev, N, X, Y, Z : double;
-
+  i, TIndex, v1col, v2col, gridcol : integer;
+  index, pcntile : DblDyneVec;
+  cellstring : string;
+  TwoArgs : boolean;
+  constant, mean, stddev, N, X, Y, Z : double;
+  lReport: TStrings;
 begin
-    constant := 0.0;
-    TwoArgs := false;
-    v1col := 1;
-    v2col := 2;
-    Y := 0.0;
-    Z := 0.0;
-    mean := 0.0;
-    stddev := 0.0;
+  constant := 0.0;
+  TwoArgs := false;
+  v1col := 1;
+  v2col := 2;
+  Y := 0.0;
+  Z := 0.0;
+  mean := 0.0;
+  stddev := 0.0;
+
+  lReport := TStringList.Create;
+  try
     if (TransEdit.Text = '') then
     begin
-        ShowMessage('ERROR! First click on the desired transformation.');
-        exit;
+      ErrorMsg('First click on the desired transformation.');
+      exit;
     end;
     if (V1Edit.Text = '') then
     begin
-        ShowMessage('ERROR! First click on a variable to transform.');
-        exit;
+      ErrorMsg('First click on a variable to transform.');
+      exit;
     end;
     if (SaveEdit.Text = '') then
     begin
-        ShowMessage('ERROR! Enter a label for the new variable.');
-        exit;
+      ErrorMsg('Enter a label for the new variable.');
+      exit;
     end;
 
     // Check to see if the transformation requires two variables
@@ -151,7 +155,7 @@ begin
         TwoArgs := true;
         if (V2Edit.Text = '') then
         begin
-            ShowMessage('Select a variable for the V2 arguement.');
+            ErrorMsg('Select a variable for the V2 arguement.');
             exit;
         end;
     end;
@@ -187,9 +191,11 @@ begin
     // Do the appropriate transformation
     if (TIndex = 21) then Rank(v1col, index); // get ranks
 
-    if ((TIndex = 22) or (TIndex = 24)) then PRank(v1col, pcntile); // get percentile ranks
+    // get percentile ranks
+    if (TIndex = 22) or (TIndex = 24) then
+      PRank(v1col, pcntile, lReport);
 
-    if ((TIndex = 20) or (TIndex = 23)) then // z transformation - need mean and stddev
+    if (TIndex = 20) or (TIndex = 23) then // z transformation - need mean and stddev
     begin
         mean := 0.0;
         stddev := 0.0;
@@ -260,9 +266,13 @@ begin
     end;
     OS3MainFrm.DataGrid.Cells[gridcol,0] := SaveEdit.Text;
 
-    // cleanup
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
+
     index := nil;
     pcntile := nil;
+  end;
 end;
 
 procedure TTransFrm.FormActivate(Sender: TObject);

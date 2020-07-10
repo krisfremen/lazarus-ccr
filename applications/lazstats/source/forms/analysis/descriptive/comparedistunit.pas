@@ -405,7 +405,7 @@ begin
         XValue1[i-1], Var1Freq[i-1], Cumfreq1[i-1], XValue2[i-1], Var2Freq[i-1], Cumfreq2[i-1]
       ]);
     cellval := 'D';
-    KS := KolmogorovTest(noints, Cumfreq1,noints, Cumfreq2, cellval);
+    KS := KolmogorovTest(noints, Cumfreq1,noints, Cumfreq2, cellval, lReport);
   // lReport.Add('Kolmogorov-Smirnov statistic := %5.3f', [KS]);
 
     DisplayReport(lReport);

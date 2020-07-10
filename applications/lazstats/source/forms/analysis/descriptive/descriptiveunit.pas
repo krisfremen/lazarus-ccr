@@ -323,7 +323,7 @@ begin
       if ncases > 4 then  // get percentiles and quartiles
       begin
         // get percentile ranks
-        if pcntileChk.Checked then PRank(k, pcntRank);
+        if pcntileChk.Checked then PRank(k, pcntRank, lReport);
 
         // sort values and get quartiles
         for i := 0 to ncases - 2 do
