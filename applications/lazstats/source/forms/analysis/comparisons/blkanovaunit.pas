@@ -1025,7 +1025,7 @@ begin
         sumfreqlogvar := sumfreqlogvar + ((counts[i,j] - 1.0) * ln(V));
         if counts[i,j] <> groupsize then equal_grp := false;
       end;
-      AReport.Add('Cell  %3d %3d  %3.0f  %8.3f  %8.3f  %8.3f', [minf1+i, minf2+j, counts[i,j], XBar, V, S]);
+      AReport.Add('Cell  %3d %3d  %3d  %8.3f  %8.3f  %8.3f', [minf1+i, minf2+j, counts[i,j], XBar, V, S]);
     end;
   end;
 
@@ -1039,7 +1039,7 @@ begin
     V := RowSS - (RowSums[i] * RowSums[i] / RowCount[i]);
     V := V / (RowCount[i] - 1.0);
     S := sqrt(V);
-    AReport.Add('Row  %3d      %3.0f  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
+    AReport.Add('Row  %3d      %3d  %8.3f  %8.3f  %8.3f', [minf1+i, RowCount[i], XBar, V, S]);
   end;
 
   //Display means, variances and standard deviations for columns
@@ -1068,9 +1068,9 @@ begin
   AReport.Add(DIVIDER);
   AReport.Add('TESTS FOR HOMOGENEITY OF VARIANCE');
   AReport.Add(DIVIDER_SMALL);
-  AReport.Add('Hartley Fmax test statistic = %10.2f with deg.s freedom: %d and %d.', [hartley, NoGrpsA*NoGrpsB, groupsize-1]);
-  AReport.Add('Cochran C statistic = %10.2f with deg.s freedom: %d and %d.', [cochran, NoGrpsA*NoGrpsB, groupsize - 1]);
-  AReport.Add('Bartlett Chi-square statistic = %10.2f with %4d D.F. Prob. larger value = %6.3f', [bartlett, NoGrpsA*NoGrpsB - 1, chiprob]);
+  AReport.Add('Hartley Fmax test statistic: %.2f with deg.s freedom: %d and %d.', [hartley, NoGrpsA*NoGrpsB, groupsize-1]);
+  AReport.Add('Cochran C statistic: %.2f with deg.s freedom: %d and %d.', [cochran, NoGrpsA*NoGrpsB, groupsize - 1]);
+  AReport.Add('Bartlett Chi-square statistic: %.2f with %d D.F.; prob. larger value %.3f', [bartlett, NoGrpsA*NoGrpsB - 1, chiprob]);
   AReport.Add(DIVIDER);
 end;
 

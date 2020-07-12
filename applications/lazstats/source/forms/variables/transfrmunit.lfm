@@ -1,7 +1,7 @@
 object TransFrm: TTransFrm
-  Left = 464
+  Left = 452
   Height = 386
-  Top = 126
+  Top = 146
   Width = 672
   AutoSize = True
   Caption = 'Transformations'
