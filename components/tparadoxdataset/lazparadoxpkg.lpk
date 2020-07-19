@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="lazparadoxpkg"/>
     <Type Value="RunAndDesignTime"/>
@@ -26,7 +26,7 @@
 Read-only, no indexes, no sorting
 Tested on Win and Linux gtk2/qt (32bit/64bit)"/>
     <License Value="Mozilla Public License 1.1, or LGPL"/>
-    <Version Minor="2"/>
+    <Version Minor="2" Release="1"/>
     <Files Count="2">
       <Item1>
         <Filename Value="paradoxreg.pas"/>
@@ -38,6 +38,7 @@ Tested on Win and Linux gtk2/qt (32bit/64bit)"/>
         <UnitName Value="paradoxds"/>
       </Item2>
     </Files>
+    <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="LCL"/>
