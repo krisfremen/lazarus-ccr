@@ -11,6 +11,12 @@ procedure Register;
 
 implementation
 
+{$IFDEF CPU64}
+procedure Register;
+begin
+end;
+{$ELSE}
+
 {$R ..\..\resource\jvpascalinterpreterreg.res}
 
 uses
@@ -18,8 +24,9 @@ uses
 
 procedure Register;
 begin
-  RegisterComponents(RsPaletteJvclNonVisual, [TJvInterpreterProgram]); //, TJvInterpreterFm]);
+  RegisterComponents(RsPaletteJvclNonVisual, [TJvInterpreterProgram]);
 end;
+{$ENDIF}
 
 end.
 

@@ -35,6 +35,14 @@ unit JvInterpreterParser;
 
 {$mode objfpc}{$H+}
 
+{$IFDEF CPU64}
+
+interface
+implementation
+end.
+
+{$ELSE}
+
 interface
 
 uses
@@ -790,3 +798,4 @@ end;
 
 
 end.
+{$ENDIF}

@@ -13,8 +13,7 @@
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvPascalInterpreter"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Pascal scripting engine of the JVCL library (https://sourceforge.net/projects/jvcl/) (designime code)
-"/>
+    <Description Value="Pascal scripting engine of the JVCL library (https://sourceforge.net/projects/jvcl/) (designime code)."/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="6"/>
     <Files Count="1">
@@ -29,7 +28,7 @@
         <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="jvpascalinterpreterr"/>
+        <PackageName Value="JvPascalInterpreterR"/>
       </Item2>
     </RequiredPkgs>
     <UsageOptions>

@@ -53,6 +53,13 @@ unit JvInterpreterFm;
 
 {$mode Delphi}
 
+{$IFDEF CPU64}
+
+interface
+implementation
+end.
+
+{$ELSE}
 interface
 
 uses
@@ -734,3 +741,4 @@ begin
 end;
 
 end.
+{$ENDIF}
