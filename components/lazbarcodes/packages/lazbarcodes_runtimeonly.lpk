@@ -28,7 +28,7 @@ Change to BSD-license is done for backend and therefore for ZINT shared library 
 the frontends and Qt4-backend the GPL is still valid. Since BSD-license is GPL-compatible
 this gives the possibility to include ZINT library in own products or link against it from
 own software."/>
-    <Version Major="1" Release="3"/>
+    <Version Major="1" Release="4"/>
     <Files Count="9">
       <Item1>
         <Filename Value="..\src\zint.pp"/>

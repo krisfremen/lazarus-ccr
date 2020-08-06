@@ -42,6 +42,9 @@ public
   procedure CopyToClipboard(AWidth: Integer = -1; AHeight: Integer = -1);
   procedure PaintOnCanvas(const aTargetCanvas: TCanvas; const aRect: TRect);
   procedure Generate; virtual; abstract;
+  procedure SaveToFile(const AFileName: String;
+    AClass: TFPImageBitmapClass = nil;
+    AWidth: Integer = -1; AHeight: Integer = -1);
 published
   property StrictSize: Boolean read GetStrictSize write SetStrictSize;
   property BackgroundColor: TColor read GetBackgroundColor write SetBackgroundColor default clWhite;
@@ -307,7 +310,8 @@ begin
   FBackgroundColor:=clWhite;
   FForegroundColor:=clBlack;
   FStrictSize:=true;
-  SetInitialBounds(0,0,88,88);
+  Width := 88;
+  Height := 88;
 end;
 
 destructor TLazBarcodeCustomBase.Destroy;
@@ -392,6 +396,29 @@ begin
                               round(Line^.x+Line^.width)+aRect.Left,round(Line^.y+Line^.length)+aRect.Top);
       Line:=Line^.next;
     end;
+  end;
+end;
+
+procedure TLazBarcodeCustomBase.SaveToFile(const AFileName: String;
+  AClass: TFPImageBitmapClass = nil;
+  AWidth: Integer = -1; AHeight: Integer = -1);
+var
+  bmp: TFPImageBitmap;
+begin
+  if AClass = nil then
+    bmp := TBitmap.Create
+  else
+    bmp := AClass.Create;
+  if AWidth = -1 then AWidth := Width;
+  if AHeight = -1 then AHeight := Height;
+  try
+    bmp.SetSize(AWidth, AHeight);
+    bmp.Canvas.Brush.Color := clWhite;
+    bmp.Canvas.FillRect(0, 0, bmp.Width, bmp.Height);
+    PaintOnCanvas(bmp.Canvas, Rect(0, 0, bmp.Width, bmp.Height));
+    bmp.SaveToFile(AFileName);
+  finally
+    bmp.Free;
   end;
 end;
 
