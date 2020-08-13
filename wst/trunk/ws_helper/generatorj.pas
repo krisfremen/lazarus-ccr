@@ -23,6 +23,9 @@ uses
 
 type
 
+{$SCOPEDENUMS ON}
+  TSimpleTypeItem = (Simple, Extendable);
+
   { TInftGenerator }
 
   TInftGenerator = class(TBaseGenerator)
@@ -30,7 +33,7 @@ type
     FStream : ISourceStream;
   private
     function GenerateIntfName(AIntf : TPasElement):string;
-    function GenerateTypeText(AType : TPasType) : string;
+    function GenerateTypeText(AType : TPasType; const AItem : TSimpleTypeItem = TSimpleTypeItem.Simple) : string;
 
     procedure GenerateIntfProcParamsTypes(AProc : TPasProcedure);
     procedure GenerateIntf(AIntf : TPasClassType);
@@ -58,15 +61,26 @@ begin
   Result := AIntf.Name;
 end;
 
-function TInftGenerator.GenerateTypeText(AType : TPasType) : string;
+function TInftGenerator.GenerateTypeText(AType : TPasType; const AItem : TSimpleTypeItem) : string;
 var
   t : TPasType;
 begin
   t := GetUltimeType(AType);
   if not t.InheritsFrom(TPasArrayType) then begin
+    if (AItem = TSimpleTypeItem.Extendable) and
+       t.InheritsFrom(TPasNativeSimpleType) and
+       (TPasNativeSimpleType(t).ExtendableType <> nil)
+    then begin
+      t := TPasNativeSimpleType(t).ExtendableType;
+    end;
     Result := t.Name;
   end else begin
     t := GetUltimeType(TPasArrayType(t).ElType);
+    if t.InheritsFrom(TPasNativeSimpleType) and
+       Assigned(TPasNativeSimpleType(t).ExtendableType)
+    then begin
+      t := TPasNativeSimpleType(t).ExtendableType;
+    end;
     Result := Format('java.util.List<%s>',[t.Name]);
   end;
 end;
@@ -423,7 +437,7 @@ procedure TInftGenerator.GenerateClass(ASymbol : TPasClassType);
       locLine := locLine+';';
     end else begin
       locType := GetUltimeType(TPasArrayType(locType).ElType);
-      locLine := Format('public java.util.List<%s> %s = new java.util.ArrayList<>();',[GenerateTypeText(locType),SymbolTable.GetExternalName(AProp)]);
+      locLine := Format('public java.util.List<%s> %s = new java.util.ArrayList<>();',[GenerateTypeText(locType,TSimpleTypeItem.Extendable),SymbolTable.GetExternalName(AProp)]);
     end;
     Indent(); WriteLn(locLine);
   end;

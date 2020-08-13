@@ -306,14 +306,14 @@ const
 // JAVA
     JAVA_SIMPLE_TYPES_COUNT = 11;
       JAVA_SIMPLE_TYPES : Array[0..Pred(JAVA_SIMPLE_TYPES_COUNT)] Of array[0..2] of string = (
-          ('char', '', ''),
-          ('byte', '', ''),
-          ('short', '', ''),
-          ('int', '', ''),
-          ('long', '', ''),
-          ('float', '', ''),
-          ('double', '', ''),
-          ('boolean', '', ''),
+          ('char', 'Character', ''),
+          ('byte', 'Byte', ''),
+          ('short', 'Short', ''),
+          ('int', 'Integer', ''),
+          ('long', 'Long', ''),
+          ('float', 'Float', ''),
+          ('double', 'Double', ''),
+          ('boolean', 'Boolean', ''),
           ('String', '', 'string'),
           ('String', '', 'dateTime') , //('java.util.OffsetDateTime', '', 'dateTime') ,
           //('java.time.OffsetTime', '', 'time') ,
