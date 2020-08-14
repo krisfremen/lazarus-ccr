@@ -10,7 +10,7 @@ interface
 uses
   PdfTypes, PdfDoc, PdfJpCMap, PdfJPFonts, PdfGBFonts, PdfFonts, PdfImages, 
   PReport, PdfJpegImage, PRJpegImage, PRAnnotation, PowerPdf, 
-  LazarusPackageIntf;
+  PdfImageLazTools, LazarusPackageIntf;
 
 implementation
 

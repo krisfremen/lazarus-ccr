@@ -283,6 +283,7 @@ type
 
   EPdfInvalidValue = class(Exception);
   EPdfInvalidOperation = class(Exception);
+  EPdfInvalidImageFormat = class(Exception);
 
   {*
    * utility functions.

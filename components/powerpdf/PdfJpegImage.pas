@@ -27,10 +27,12 @@ interface
 uses
   SysUtils, Classes, Graphics, PdfTypes, PdfDoc, PdfImages
   {$IFDEF LAZ_POWERPDF}
+  ,FPImage, FPReadJPEG, PdfImageLazTools
   {$ELSE}
   ,JPEG
   {$ENDIF}
   ;
+
 type
   { TPdfJpegImage }
   TPdfJpegImage = class(TPdfImageCreator)
@@ -41,7 +43,48 @@ type
 implementation
 
 // CreateImage
+
+{$IFDEF LAZ_POWERPDF}
 function TPdfJpegImage.CreateImage(AImage: TGraphic; ObjectMgr: TPdfObjectMgr=nil): TPdfImage;
+var
+  fpImg: TFPCustomImage;
+begin
+  // check whether specified graphic is valid image.
+  if not (AImage is TJpegImage) then
+    raise EPdfInvalidValue.Create('only jpeg image is allowed.');
+
+  result := TPdfImage.CreateStream(nil);
+  try
+    ConvertGraphicToFPImage(AImage, fpImg);
+
+    TJpegImage(AImage).SaveToStream(result.Stream);
+
+    with result.Attributes do
+    begin
+      AddItem('Type', TPdfName.CreateName('XObject'));
+      AddItem('Subtype', TPdfName.CreateName('Image'));
+      if TJPegImage(AImage).GrayScale then
+        AddItem('ColorSpace', TPdfName.CreateName('DeviceGray'))
+      else
+        AddItem('ColorSpace', TPdfName.CreateName('DeviceRGB'));
+      AddItem('Width', TPdfNumber.CreateNumber(fpImg.Width));
+      AddItem('Height', TPdfNumber.CreateNumber(fpImg.Height));
+      AddItem('BitsPerComponent', TPdfNumber.CreateNumber(8));
+      PdfArrayByName('Filter').AddItem(TPdfName.CreateName('DCTDecode'));
+    end;
+
+    fpImg.Free;
+
+  except
+    result.Free;
+    raise;
+  end;
+
+end;
+
+{$ELSE}
+function TPdfJpegImage.CreateImage(AImage: TGraphic; ObjectMgr: TPdfObjectMgr=nil): TPdfImage;
+
 begin
   // check whether specified graphic is valid image.
   if not (AImage is TJpegImage) then
@@ -70,6 +113,7 @@ begin
   end;
 
 end;
+{$ENDIF}
 
 initialization
 
