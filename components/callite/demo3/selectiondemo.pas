@@ -15,11 +15,13 @@ type
   TForm1 = class(TForm)
     CalendarLite1: TCalendarLite;
     CbMultiselect: TCheckBox;
+    CbPersistentSelectedDates: TCheckBox;
     ListBox1: TListBox;
     Panel1: TPanel;
     Splitter1: TSplitter;
     procedure CalendarLite1DateChange(Sender: TObject);
     procedure CbMultiselectChange(Sender: TObject);
+    procedure CbPersistentSelectedDatesChange(Sender: TObject);
   private
 
   public
@@ -54,6 +56,14 @@ end;
 procedure TForm1.CbMultiselectChange(Sender: TObject);
 begin
   CalendarLite1.MultiSelect := cbMultiSelect.Checked;
+end;
+
+procedure TForm1.CbPersistentSelectedDatesChange(Sender: TObject);
+begin
+  if CbPersistentSelectedDates.Checked then
+    CalendarLite1.Options := CalendarLite1.Options + [coPersistentSelectedDates]
+  else
+    CalendarLite1.Options := CalendarLite1.Options - [coPersistentSelectedDates];
 end;
 
 end.

@@ -88,7 +88,8 @@ type
   TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
                 coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
                 coShowTodayFrame, coShowTodayName, coShowTodayRow,
-                coShowWeekend, coShowDayNames, coShowTopRow, coUseTopRowColors
+                coShowWeekend, coShowDayNames, coShowTopRow, coUseTopRowColors,
+                coPersistentSelectedDates
   );
   TCalOptions = set of TCalOption;
 
@@ -1503,7 +1504,8 @@ begin
   case ASelMode of
     smFirstSingle:
       begin
-        FSelDates.Clear;
+        if not (coPersistentSelectedDates in FOptions) then
+          FSelDates.Clear;
         FSelDates.AddDate(ADate);
         FPrevDate := ADate;
       end;
@@ -1518,7 +1520,7 @@ begin
       begin
         if (DayOfWeek(ADate) in [ord(dowSunday), ord(dowSaturday)]) then
           exit;
-        if ASelMode = smFirstWeek then
+        if (ASelMode = smFirstWeek) and not (coPersistentSelectedDates in FOptions) then
           FSelDates.Clear;
         // Collect all weekdays
         if ASelMode = smNextWeekRange then begin
@@ -1546,7 +1548,7 @@ begin
 
     smFirstRange, smNextRange:
       begin
-        if (ASelMode = smFirstRange) then
+        if (ASelMode = smFirstRange) and not (coPersistentSelectedDates in FOptions) then
           FSelDates.Clear;
         if FPrevDate < ADate then begin
           d1 := FPrevDate + ord(ASelMode = smNextRange);
@@ -1971,7 +1973,8 @@ begin
   oldMonth := MonthOf(FDate);
   FDate := AValue;
   FPrevDate := AValue;
-  FSelDates.Clear;
+  if not (coPersistentSelectedDates in FOptions) then
+    FSelDates.Clear;
   DateChange;
   if MonthOf(FDate) <> oldMonth then
     MonthChange;
