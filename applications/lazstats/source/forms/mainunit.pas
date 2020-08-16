@@ -7,18 +7,13 @@ unit MainUnit;
 
 {$mode objfpc}{$H+}
 
-{$DEFINE USE_EXTERNAL_HELP_VIEWER}
+//{$DEFINE USE_EXTERNAL_HELP_VIEWER}
 
 interface
 
 uses
   LCLType, Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
   Dialogs, Menus, ExtCtrls, StdCtrls, Grids,
- {$IFDEF USE_EXTERNAL_HELP_VIEWER}
-  {$IFDEF MSWINDOWS}
-  HtmlHelp,
-  {$ENDIF}
- {$ENDIF}
   Globals, DataProcs, DictionaryUnit;
 
 type
@@ -110,6 +105,7 @@ type
     MenuItem50: TMenuItem;
     MenuItem51: TMenuItem;
     MenuItem52: TMenuItem;
+    mnuShowTOC: TMenuItem;
     SimpChiSqr: TMenuItem;
     SRHItem: TMenuItem;
     OneCaseAnova: TMenuItem;
@@ -137,7 +133,6 @@ type
     pcontrochart: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
-    HelpContents: TMenuItem;
     InsNewCol: TMenuItem;
     CopyCol: TMenuItem;
     CutCol: TMenuItem;
@@ -282,8 +277,7 @@ type
     procedure CutColClick(Sender: TObject);
     procedure CutRowMenuClick(Sender: TObject);
     procedure DataGridClick(Sender: TObject);
-    procedure DataGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
-      );
+    procedure DataGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DataGridKeyPress(Sender: TObject; var Key: char);
     procedure DataGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
       aState: TGridDrawState);
@@ -303,7 +297,7 @@ type
     procedure GrdBkMnuClick(Sender: TObject);
     procedure GridUseClick(Sender: TObject);
     procedure GrpFreqClick(Sender: TObject);
-    procedure HelpContentsClick(Sender: TObject);
+    //procedure HelpContentsClick(Sender: TObject);
     procedure homotestClick(Sender: TObject);
     procedure HypergeoProbClick(Sender: TObject);
     procedure InsNewColClick(Sender: TObject);
@@ -379,6 +373,7 @@ type
     procedure MenuItem98Click(Sender: TObject);
     procedure MenuItem99Click(Sender: TObject);
     procedure MenuItem30Click(Sender: TObject);
+    procedure mnuShowTOCClick(Sender: TObject);
     procedure MultDistsClick(Sender: TObject);
     procedure MultXvsYClick(Sender: TObject);
     procedure NestedABCClick(Sender: TObject);
@@ -1339,6 +1334,9 @@ var
   ts: TTextStyle;
   justif: String;
 begin
+  if not (Sender = DataGrid) then
+    exit;
+
   ts := DataGrid.Canvas.TextStyle;
   justif := DictionaryFrm.DictGrid.Cells[7, aCol];
   if justif = '' then justif := 'L';
@@ -1589,27 +1587,17 @@ end;
 // Call HTML help (.chm file)
 function TOS3MainFrm.HelpHandler(Command: Word; Data: PtrInt;
   var CallHelp: Boolean): Boolean;
-var
-  topic: UnicodeString;
-  res: Integer;
-  fn: UnicodeString;
 begin
   if Command = HELP_CONTEXT then
-  begin
-    // see: http://www.helpware.net/download/delphi/hh_doc.txt
-    fn := UnicodeString(Application.HelpFile);
-    res := htmlhelp.HtmlHelpW(0, PWideChar(fn), HH_HELP_CONTEXT, Data);
-  end else
+    ShowHelpTopic(Data)
+  else
   if Command = HELP_COMMAND then
-  begin
-    topic := UnicodeString(Application.HelpFile + '::/' + {%H-}PChar(Data));
-    res := htmlhelp.HtmlHelpW(0, PWideChar(topic), HH_DISPLAY_TOPIC, 0);
-  end;
+    ShowHelpTopic({%H-}PChar(Data));
 
   // Don't call regular help
   CallHelp := False;
 
-  Result := res <> 0;
+  Result := true; //res <> 0;
 end;
 {$ENDIF}
 {$ENDIF}
@@ -1709,6 +1697,7 @@ begin
   GroupFreqForm.ShowModal;
 end;
 
+(*  replaced by ShowTOC
 // Menu "Help" > "General Help"
 procedure TOS3MainFrm.HelpContentsClick(Sender: TObject);
 begin
@@ -1716,7 +1705,7 @@ begin
     Application.CreateForm(THelpFrm, HelpFrm);
   HelpFrm.ShowModal;
 end;
-
+*)
 // Menu "Analyses" > "Brown-Forsythe test for homogeneity of variance"
 procedure TOS3MainFrm.homotestClick(Sender: TObject);
 Var
@@ -2029,8 +2018,14 @@ end;
 
 procedure TOS3MainFrm.MenuItem30Click(Sender: TObject);
 begin
-   RowColSwap;
+  RowColSwap;
 end;
+
+procedure TOS3MainFrm.mnuShowTOCClick(Sender: TObject);
+begin
+  ShowHelpTopic(mnuShowTOC.HelpContext);
+end;
+
 
 initialization
   {$I mainunit.lrs}

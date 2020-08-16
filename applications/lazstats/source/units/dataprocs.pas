@@ -1627,12 +1627,12 @@ end;
 procedure RowColSwap;
 VAR
      i, j, Rows, Cols : integer;
-     tempgrid : StrDyneMat;
+     tempgrid : StrDyneMat = nil;
 begin
    Assert(OS3MainFrm <> nil);
    Assert(DictionaryFrm <> nil);
 
-     SetLength(tempgrid,NoCases+1,NoVariables+1);
+     SetLength(tempgrid ,NoCases+1,NoVariables+1);
      Rows := NoCases;
      Cols := NoVariables;
 
@@ -1803,7 +1803,8 @@ var
   i, j, k, NoStrings: integer;
   TempString: string;
   dup: boolean;
-  StrGrps, OneString : StrDyneVec;
+  StrGrps: StrdyneVec = nil;
+  OneString : StrDyneVec = nil;
   res: TModalResult;
 begin
   Result := true;

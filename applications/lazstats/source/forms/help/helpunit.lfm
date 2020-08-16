@@ -59,14 +59,14 @@ object HelpFrm: THelpFrm
   object HTMLHelpDatabase1: THTMLHelpDatabase
     BaseURL = 'file://html/'
     AutoRegister = True
-    KeywordPrefix = 'HTML/'
-    left = 24
-    top = 24
+    KeywordPrefix = 'html/'
+    Left = 32
+    Top = 24
   end
   object HTMLBrowserHelpViewer1: THTMLBrowserHelpViewer
     BrowserParams = '%s'
     AutoRegister = True
-    left = 168
-    top = 24
+    Left = 168
+    Top = 24
   end
 end

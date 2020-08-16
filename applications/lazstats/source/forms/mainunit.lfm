@@ -3,6 +3,8 @@ object OS3MainFrm: TOS3MainFrm
   Height = 519
   Top = 194
   Width = 725
+  HelpType = htKeyword
+  HelpKeyword = 'TableofContents.htm'
   Caption = 'LazStats'
   ClientHeight = 499
   ClientWidth = 725
@@ -234,8 +236,8 @@ object OS3MainFrm: TOS3MainFrm
     OnPrepareCanvas = DataGridPrepareCanvas
   end
   object MainMenu1: TMainMenu
-    left = 192
-    top = 200
+    Left = 192
+    Top = 200
     object MenuItem1: TMenuItem
       Caption = 'File'
       object NewFileBtn: TMenuItem
@@ -1050,22 +1052,23 @@ object OS3MainFrm: TOS3MainFrm
       object MenuItem46: TMenuItem
         Caption = '-'
       end
+      object mnuShowTOC: TMenuItem
+        Caption = 'Table of Contents'
+        HelpContext = 152
+        OnClick = mnuShowTOCClick
+      end
       object GridUse: TMenuItem
         Caption = 'Using the Grid'
         OnClick = GridUseClick
       end
-      object HelpContents: TMenuItem
-        Caption = 'General Help'
-        OnClick = HelpContentsClick
-      end
     end
   end
   object OpenDialog1: TOpenDialog
-    left = 312
-    top = 200
+    Left = 312
+    Top = 200
   end
   object SaveDialog1: TSaveDialog
-    left = 432
-    top = 200
+    Left = 432
+    Top = 200
   end
 end
