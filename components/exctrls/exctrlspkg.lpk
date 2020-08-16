@@ -14,7 +14,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Extended standard controls: 
-- CurrencyEdit
+- CurrencyEdit, FloatSIEdit (supports SI units suffixes)
 - TRadioButton, TCheckbox, TRadioGroup and TCheckGroup: drawn by ThemeServices/Canvas, not by widgetset, button/text layout, wordwrap, user-provided check images"/>
     <License Value="LGPL with linking exception (like Lazarus LCL)."/>
     <Files Count="4">
@@ -24,7 +24,7 @@
       </Item1>
       <Item2>
         <Filename Value="source\exeditctrls.pas"/>
-        <UnitName Value="exeditctrls"/>
+        <UnitName Value="ExEditCtrls"/>
       </Item2>
       <Item3>
         <Filename Value="source\exctrlsreg.pas"/>
@@ -33,9 +33,10 @@
       </Item3>
       <Item4>
         <Filename Value="source\exbuttons.pas"/>
-        <UnitName Value="exbuttons"/>
+        <UnitName Value="ExButtons"/>
       </Item4>
     </Files>
+    <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="LazControls"/>

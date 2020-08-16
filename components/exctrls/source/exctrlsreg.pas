@@ -19,10 +19,8 @@ uses
 procedure Register;
 begin
   RegisterComponents('ExCtrls', [
-    TButtonEx, TCheckboxEx, TRadioButtonEx, TCheckGroupEx, TRadioGroupEx
-  ]);
-  RegisterComponents('LazControls', [
-    TCurrSpinEditEx
+    TButtonEx, TCheckboxEx, TRadioButtonEx, TCheckGroupEx, TRadioGroupEx,
+    TFloatSISpinEditEx, TCurrSpinEditEx
   ]);
 end;
 

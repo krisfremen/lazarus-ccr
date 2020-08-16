@@ -1,13 +1,14 @@
 unit ExEditCtrls;
 
 {$mode objfpc}{$H+}
+{$codepage utf8} //because of the µ-sign
 
 {.$define debug_editctrls}
 
 interface
 
 uses
-  Classes, SysUtils, Controls, SpinEx;
+  Classes, SysUtils, LCLVersion, Controls, SpinEx, Math;
 
 type
   { TCustomCurrEditEx }
@@ -167,10 +168,102 @@ type
     property Value;
   end;
 
+  { TCustomFloatSISpinEdit (Author: Bart Broersma) }
+
+  TSIPrefix = (Yotta,Zetta,Exa,Peta,Tera,Giga,Mega,Kilo,mili,micro,microalt,nano,pico,femto,atto,zepto,yocto);
+
+  TCustomFloatSISpinEditEx = class(TCustomFloatSpinEditEx)
+  private
+    function EndsWithSIPrefix(var S: String; out APrefix: TSIPrefix): Boolean;
+  protected
+    procedure EditKeyPress(var Key: char); override;
+    function TextIsNumber(const S: String; out ANumber: Double): Boolean; override;
+  public
+    function ValueToStr(const AValue: Double): String; override;
+  end;
+
+  TFloatSISpinEditEx = class(TCustomFloatSISpinEditEx)
+  published
+    //From TCustomEdit
+    property AutoSelect;
+    property AutoSizeHeightIsEditHeight;
+    property AutoSize default True;
+    property Action;
+    property Align;
+    property Alignment default taRightJustify;
+    property Anchors;
+    property BiDiMode;
+    property BorderSpacing;
+    property BorderStyle default bsNone;
+    property CharCase;
+    property Color;
+    property Constraints;
+    property Cursor;
+    property DirectInput;
+    property EchoMode;
+    property Enabled;
+    property FocusOnBuddyClick;
+    property Font;
+    property Hint;
+    property Layout;
+    property MaxLength;
+    property NumbersOnly;
+    property ParentBiDiMode;
+    property ParentColor;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property ReadOnly;
+    property ShowHint;
+    property TabOrder;
+    property TabStop;
+    property TextHint;
+    property Visible;
+
+    property OnChange;
+    property OnClick;
+    property OnDblClick;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnContextPopup;
+    property OnEditingDone;
+    property OnEndDrag;
+    property OnEnter;
+    property OnExit;
+    property OnKeyDown;
+    property OnKeyPress;
+    property OnKeyUp;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnStartDrag;
+    property OnUTF8KeyPress;
+
+    //From TCustomFloatSpinEditEx
+    property ArrowKeys;
+    property DecimalSeparator;
+    property DecimalPlaces;
+    property Increment;
+    property MaxValue;
+    property MinValue;
+    property MinRepeatValue;
+    property NullValue;
+    property NullValueBehaviour;
+    property Spacing;
+    property UpDownVisible;
+    property Value;
+  end;
+
+
 implementation
 
 uses
-  LCLProc;
+  LCLProc, LazUTF8;
 
 resourcestring
   RsDecSepMustNotMatchThSep = 'Decimal and thousand separators most not be equal.';
@@ -178,6 +271,24 @@ resourcestring
 const
   Digits = ['0'..'9'];
   AllowedControlChars = [#8, #9, ^C, ^X, ^V, ^Z];
+
+  SIPrefixes: array[TSIPrefix] of String = ('Y', 'Z','E','P','T','G','M','k','m','µ','mc','n','p','f','a','z','y');
+  SIFactors:  array[TSIPrefix] of Double = (1E+24, 1E+21, 1E+18, 1E+15, 1E+12, 1E+9, 1E+6, 1E+3,
+                                            1E-3,1E-6,1E-6,1E-9,1E-12,1E-15,1E-18,1E-21,1E-24);
+
+function UTF8EndsStr(const ASubStr, AStr: string): Boolean;
+var
+  TextLen, SubTextLen: PtrInt;
+begin
+  Result := False;
+  if (ASubStr <> '') then
+  begin
+    TextLen := Utf8Length(AStr);
+    SubTextLen := Utf8Length(ASubStr);
+    if (TextLen >= SubTextLen) then
+      Result := Utf8Copy(AStr,TextLen-SubTextLen+1,SubTextLen) = ASubStr;
+  end;
+end;
 
 { TCustomCurrSpinEditEx }
 
@@ -399,6 +510,73 @@ begin
   {$endif}
 end;
 
+
+{ TCustomFloatSISpinEditEx }
+
+function TCustomFloatSISpinEditEx.EndsWithSIPrefix(var S: String; out APrefix: TSIPrefix): Boolean;
+var
+  PrefixStr: String;
+begin
+  Result := False;
+  for APrefix in TSIPrefix do
+  begin
+    PrefixStr := SIPrefixes[APrefix];
+    if UTF8EndsStr(PrefixStr, S) then
+    begin
+      System.Delete(S, Length(S)-Length(PrefixStr)+1, Length(PrefixStr));
+      Exit(True);
+    end;
+  end;
+end;
+
+procedure TCustomFloatSISpinEditEx.EditKeyPress(var Key: char);
+begin
+  //allow anything for the moment
+end;
+
+function TCustomFloatSISpinEditEx.TextIsNumber(const S: String; out ANumber: Double): Boolean;
+var
+  ValueStr: String;
+  Factor: Double;
+  APrefix: TSIPrefix;
+begin
+  ValueStr := S;
+  Factor := 1.0;
+  if not EndsWithSIPrefix(ValueStr, APrefix) then
+    Exit(inherited TextIsNumber(S, ANumber));
+  Factor := SIFactors[APrefix];
+  Result := inherited TextIsNumber(ValueStr, ANumber);
+  if Result then
+    ANumber := Factor * ANumber;
+end;
+
+function TCustomFloatSISpinEditEx.ValueToStr(const AValue: Double): String;
+var
+  Prefix: TSIPrefix;
+  LValue, Factor: Double;
+  {$IF LCL_FullVersion >= 2010000}
+  fs: TFormatSettings;
+  {$IFEND}
+begin
+  LValue := GetLimitedValue(AValue);
+  for Prefix := Low(SIFactors) to High(SIFactors) do
+  begin
+    Factor := SIFactors[Prefix];
+    if (AValue >= Factor) then
+    begin
+      {$IF LCL_FullVersion >= 2010000}
+      fs := DefaultFormatSettings;
+      fs.DecimalSeparator := DecimalSeparator;
+      //fs.ThousandSeparator := ThousandSeparator;
+      {$ELSE}
+      fs := GetFormatSettings;
+      {$IFEND}
+      //since Ord(micro) < Ord(micoralt) this will alway render with a decent mu ('µ') and not with 'mc'
+      Result := FloatToStrF(LValue/Factor, ffFixed, 20, DecimalPlaces, fs) + SIPrefixes[Prefix];
+      Exit;
+    end;
+  end;
+end;
 
 end.
 
