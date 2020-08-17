@@ -1,12 +1,13 @@
 unit OptionsUnit;
 
 {$mode objfpc}{$H+}
+{$include ../../LazStats.inc}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Clipbrd,
+  StdCtrls, ExtCtrls, Clipbrd, EditBtn,
   Globals, ContextHelpUnit;
 
 type
@@ -15,17 +16,16 @@ type
 
   TOptionsFrm = class(TForm)
     Bevel1: TBevel;
-    BrowseBtn: TButton;
     CancelBtn: TButton;
+    FilePathEdit: TDirectoryEdit;
+    LHelpPathEdit: TFileNameEdit;
     HelpBtn: TButton;
+    Label2: TLabel;
     SaveBtn: TButton;
-    FilePathEdit: TEdit;
     Label1: TLabel;
     FractionTypeGrp: TRadioGroup;
     MissValsGrp: TRadioGroup;
     JustificationGrp: TRadioGroup;
-    SelDir: TSelectDirectoryDialog;
-    procedure BrowseBtnClick(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -97,6 +97,10 @@ begin
   else
     Options.Defaultpath := pathname;
 
+  // LHelp path
+  Readln(F, pathName);
+  Options.LHelpPath := pathname;
+
   Close(F);
 end;
 
@@ -119,9 +123,8 @@ begin
   WriteLn(F, ord(Options.DefaultMiss));
   WriteLn(F, ord(Options.DefaultJust));
   WriteLn(F, Options.DefaultPath);
+  WriteLn(F, Options.LHelpPath);
   CloseFile(F);
-
-  DefaultFormatSettings.DecimalSeparator := FractionTypeChars[Options.FractionType];
 end;
 
 
@@ -136,6 +139,10 @@ begin
     AOptions.DefaultPath := OpenStatPath
   else
     AOptions.DefaultPath := FilePathEdit.Text;
+  if LHElpPathEdit.FileName = Application.Location + 'lhelp' + GetExeExt then
+    AOptions.LHelpPath := '<default>'
+  else
+    AOptions.LHelpPath := LHelpPathEdit.FileName;
 end;
 
 procedure TOptionsFrm.OptionsToControls(const AOptions: TOptions);
@@ -147,6 +154,10 @@ begin
     FilePathEdit.Text := OpenStatPath
   else
     FilePathEdit.Text := AOptions.DefaultPath;
+  if AOptions.LHelpPath = '<default>' then
+    LHelpPathEdit.FileName := Application.Location + 'lhelp' + GetExeExt
+  else
+    LHelpPathEdit.FileName := AOptions.LHelpPath;
 end;
 
 procedure TOptionsFrm.FormActivate(Sender: TObject);
@@ -156,9 +167,13 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, BrowseBtn.Width, SaveBtn.Width, CancelBtn.Width]);
+  {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+  Label2.Visible := false;
+  LHelpPathEdit.Visible := false;
+  {$ENDIF}
+
+  w := MaxValue([HelpBtn.Width, SaveBtn.Width, CancelBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
-  BrowseBtn.Constraints.MinWidth := w;
   SaveBtn.Constraints.MinWidth := w;
   CancelBtn.Constraints.MinWidth := w;
 
@@ -186,16 +201,6 @@ procedure TOptionsFrm.SaveBtnClick(Sender: TObject);
 begin
   ControlsToOptions(Options);
   SaveOptions;
-end;
-
-procedure TOptionsFrm.BrowseBtnClick(Sender: TObject);
-begin
-  with SelDir do
-  begin
-    InitialDir := FilePathEdit.Text;
-    if Execute then
-      FilePathEdit.text := FileName;
-  end;
 end;
 
 procedure TOptionsFrm.CancelBtnClick(Sender: TObject);

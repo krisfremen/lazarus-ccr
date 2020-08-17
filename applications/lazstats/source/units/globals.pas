@@ -51,6 +51,7 @@ type
     FractionType: TFractionType;
     DefaultMiss: TMissingValueCode;
     DefaultJust: TJustification;
+    LHelpPath: String;
   end;
 
 var
@@ -70,7 +71,8 @@ var
     DefaultPath: '';
     FractionType: ftPoint;
     DefaultMiss: mvcNines;
-    DefaultJust: jLeft
+    DefaultJust: jLeft;
+    LHelpPath: '<default>';
   );
 
 

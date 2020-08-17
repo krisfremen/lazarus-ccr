@@ -43,7 +43,7 @@
         <PackageName Value="LCL"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="170">
+    <Units Count="171">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -1382,6 +1382,10 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Utils"/>
       </Unit169>
+      <Unit170>
+        <Filename Value="LazStats.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit170>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

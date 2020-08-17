@@ -7,9 +7,7 @@ unit MainUnit;
 
 {$mode objfpc}{$H+}
 
-{$IFDEF MSWINDOWS}
- {$DEFINE USE_EXTERNAL_HELP_VIEWER}
-{$ENDIF}
+{$include ../LazStats.inc}
 
 interface
 
@@ -1306,7 +1304,9 @@ begin
    {$IFDEF USE_EXTERNAL_HELP_VIEWER}
      Application.OnHelp := @HelpHandler;
    {$ELSE}
-    lhelpfn := Application.Location + 'LHelp.exe';
+    lhelpfn := Options.LHelpPath;
+    if lhelpfn = '<default>' then
+      lhelpfn := Application.Location + 'lhelp' + GetExeExt;
     if FileExists(lhelpfn) then
     begin
       Maindatamodule.LHelpConnector.LHelpPath := lhelpfn;

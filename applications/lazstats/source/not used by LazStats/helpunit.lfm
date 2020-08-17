@@ -1,0 +1,72 @@
+object HelpFrm: THelpFrm
+  Left = 239
+  Height = 117
+  Top = 107
+  Width = 303
+  AutoSize = True
+  Caption = 'HTML Help Viewer'
+  ClientHeight = 117
+  ClientWidth = 303
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 251
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'PRESS THE Button for the TABLE OF CONTENTS!'
+    ParentColor = False
+  end
+  object HelpBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 28
+    Top = 31
+    Width = 154
+    HelpType = htKeyword
+    HelpKeyword = 'HTML/LAZTOC.html'
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Table of Contents'
+    OnClick = HelpBtnClick
+    TabOrder = 0
+  end
+  object ReturnBtn: TButton
+    AnchorSideLeft.Control = HelpBtn
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = HelpBtn
+    Left = 178
+    Height = 27
+    Top = 31
+    Width = 85
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Return'
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object HTMLHelpDatabase1: THTMLHelpDatabase
+    BaseURL = 'file://html/'
+    AutoRegister = True
+    KeywordPrefix = 'html/'
+    Left = 32
+    Top = 24
+  end
+  object HTMLBrowserHelpViewer1: THTMLBrowserHelpViewer
+    BrowserParams = '%s'
+    AutoRegister = True
+    Left = 168
+    Top = 24
+  end
+end
