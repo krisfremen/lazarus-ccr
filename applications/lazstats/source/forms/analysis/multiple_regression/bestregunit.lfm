@@ -4,7 +4,7 @@ object BestRegFrm: TBestRegFrm
   Top = 266
   Width = 474
   HelpType = htKeyword
-  HelpKeyword = 'BestCombinationMultipleRegressio.htm'
+  HelpKeyword = 'html/BestCombinationMultipleRegressio.htm'
   AutoSize = True
   Caption = 'Best Combination Multiple Regression'
   ClientHeight = 433
@@ -389,11 +389,11 @@ object BestRegFrm: TBestRegFrm
     Shape = bsBottomLine
   end
   object OpenDialog1: TOpenDialog
-    left = 56
-    top = 40
+    Left = 56
+    Top = 40
   end
   object SaveDialog1: TSaveDialog
-    left = 56
-    top = 104
+    Left = 56
+    Top = 104
   end
 end

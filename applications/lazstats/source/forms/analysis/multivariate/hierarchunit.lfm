@@ -4,7 +4,7 @@ object HierarchFrm: THierarchFrm
   Top = 211
   Width = 442
   HelpType = htKeyword
-  HelpKeyword = 'HierarchicalAnalysis.htm'
+  HelpKeyword = 'html/HierarchicalAnalysis.htm'
   AutoSize = True
   Caption = 'Hierarchical Cluster Analysis'
   ClientHeight = 319

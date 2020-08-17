@@ -4,7 +4,7 @@ object BlkMregFrm: TBlkMregFrm
   Top = 292
   Width = 465
   HelpType = htKeyword
-  HelpKeyword = 'BlockEntryMultipleRegression.htm'
+  HelpKeyword = 'html/BlockEntryMultipleRegression.htm'
   AutoSize = True
   Caption = 'Block Entry Multiple Regression'
   ClientHeight = 451
@@ -441,7 +441,7 @@ object BlkMregFrm: TBlkMregFrm
     Shape = bsBottomLine
   end
   object SaveDialog1: TSaveDialog
-    left = 72
-    top = 112
+    Left = 72
+    Top = 112
   end
 end

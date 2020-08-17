@@ -4,7 +4,7 @@ object pChartFrm: TpChartFrm
   Top = 382
   Width = 511
   HelpType = htKeyword
-  HelpKeyword = 'PControlChart.htm'
+  HelpKeyword = 'html/PControlChart.htm'
   AutoSize = True
   Caption = 'p Control Chart'
   ClientHeight = 371

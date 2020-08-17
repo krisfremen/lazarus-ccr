@@ -4,7 +4,7 @@ object TwoSLSFrm: TTwoSLSFrm
   Top = 203
   Width = 415
   HelpType = htKeyword
-  HelpKeyword = 'TwoStageLeastSquaresRegression.htm'
+  HelpKeyword = 'html/TwoStageLeastSquaresRegression.htm'
   AutoSize = True
   Caption = 'Two Stage Least Squares Regression'
   ClientHeight = 416

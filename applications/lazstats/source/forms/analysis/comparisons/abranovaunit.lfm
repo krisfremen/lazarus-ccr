@@ -4,7 +4,7 @@ object ABRAnovaFrm: TABRAnovaFrm
   Top = 337
   Width = 481
   HelpType = htKeyword
-  HelpKeyword = 'AxBxRAnalysisofVariance.htm'
+  HelpKeyword = 'html/AxBxRAnalysisofVariance.htm'
   AutoSize = True
   Caption = 'AxBxR ANOVA (two between and repeated measures)'
   ClientHeight = 405

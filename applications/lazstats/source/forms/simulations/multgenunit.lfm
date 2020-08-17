@@ -4,7 +4,7 @@ object MultGenFrm: TMultGenFrm
   Top = 254
   Width = 581
   HelpType = htKeyword
-  HelpKeyword = 'MultivariateDistributions.htm'
+  HelpKeyword = 'html/MultivariateDistributions.htm'
   ActiveControl = NoVarsEdit
   AutoSize = True
   Caption = 'Multivariate Generator'

@@ -4,11 +4,10 @@ object MainDataModule: TMainDataModule
   HorizontalOffset = 817
   VerticalOffset = 349
   Width = 295
-  PPI = 96
   object ImageList: TImageList
     Scaled = True
-    left = 85
-    top = 42
+    Left = 48
+    Top = 40
     Bitmap = {
       4C7A0400000010000000100000000D0300000000000078DAE557CF4B5451143E
       CBFE82205A040A06AD02772DA2CCDE731CCD852D6A292442EB6AA799953AE368
@@ -150,5 +149,16 @@ object MainDataModule: TMainDataModule
       11B627EBAF8936ECC8EB11DFCF7111B667EBCF9AC56B6C2FB87185A5F5E77BEB
       00CB17F3FD0FCAFF17E77E0F33
     }
+  end
+  object CHMHelpDatabase: TCHMHelpDatabase
+    AutoRegister = True
+    KeywordPrefix = 'html'
+    Left = 192
+    Top = 16
+  end
+  object LHelpConnector: TLHelpConnector
+    AutoRegister = True
+    Left = 192
+    Top = 80
   end
 end

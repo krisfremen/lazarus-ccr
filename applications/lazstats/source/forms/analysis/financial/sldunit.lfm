@@ -5,7 +5,7 @@ object SLDepFrm: TSLDepFrm
   Top = 433
   Width = 315
   HelpType = htKeyword
-  HelpKeyword = 'StraightLineDepreciation.htm'
+  HelpKeyword = 'html/StraightLineDepreciation.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Straight Line Depreciation'

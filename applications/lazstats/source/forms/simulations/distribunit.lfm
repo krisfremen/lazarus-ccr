@@ -4,7 +4,7 @@ object DistribFrm: TDistribFrm
   Top = 215
   Width = 384
   HelpType = htKeyword
-  HelpKeyword = 'DistributionPlotsandCriticalValu.htm'
+  HelpKeyword = 'html/DistributionPlotsandCriticalValu.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Distributions'

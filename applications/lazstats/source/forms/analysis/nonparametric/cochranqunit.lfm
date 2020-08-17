@@ -4,7 +4,7 @@ object CochranQFrm: TCochranQFrm
   Top = 203
   Width = 414
   HelpType = htKeyword
-  HelpKeyword = 'CochranQTest.htm'
+  HelpKeyword = 'html/CochranQTest.htm'
   AutoSize = True
   Caption = 'Cochran Q Test'
   ClientHeight = 344

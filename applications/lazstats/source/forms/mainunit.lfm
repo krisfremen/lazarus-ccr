@@ -4,7 +4,7 @@ object OS3MainFrm: TOS3MainFrm
   Top = 194
   Width = 725
   HelpType = htKeyword
-  HelpKeyword = 'TableofContents.htm'
+  HelpKeyword = 'html/TableofContents.htm'
   Caption = 'LazStats'
   ClientHeight = 499
   ClientWidth = 725

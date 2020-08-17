@@ -4,7 +4,7 @@ object CompareDistFrm: TCompareDistFrm
   Top = 227
   Width = 516
   HelpType = htKeyword
-  HelpKeyword = 'ComparisonsWithTheoreticalDistri.htm'
+  HelpKeyword = 'html/ComparisonsWithTheoreticalDistri.htm'
   AutoSize = True
   Caption = 'Compare Cumulative Distributions'
   ClientHeight = 375

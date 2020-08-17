@@ -4,7 +4,7 @@ object StepFwdFrm: TStepFwdFrm
   Top = 243
   Width = 476
   HelpType = htKeyword
-  HelpKeyword = 'ForwardStepwise.htm'
+  HelpKeyword = 'html/ForwardStepwise.htm'
   AutoSize = True
   Caption = 'Forward Stepwise Multiple Regression'
   ClientHeight = 470
@@ -435,11 +435,11 @@ object StepFwdFrm: TStepFwdFrm
     Shape = bsSpacer
   end
   object OpenDialog1: TOpenDialog
-    left = 49
-    top = 48
+    Left = 49
+    Top = 48
   end
   object SaveDialog1: TSaveDialog
-    left = 48
-    top = 112
+    Left = 48
+    Top = 112
   end
 end

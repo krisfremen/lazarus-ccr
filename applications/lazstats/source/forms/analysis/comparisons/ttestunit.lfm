@@ -4,7 +4,7 @@ object TtestFrm: TTtestFrm
   Top = 216
   Width = 544
   HelpType = htKeyword
-  HelpKeyword = 'tTests.htm'
+  HelpKeyword = 'html/tTests.htm'
   AutoSize = True
   Caption = 'Comparison of Two Sample Means'
   ClientHeight = 505

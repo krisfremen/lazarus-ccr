@@ -4,7 +4,7 @@ object MannWhitUFrm: TMannWhitUFrm
   Top = 256
   Width = 373
   HelpType = htKeyword
-  HelpKeyword = 'Mann-WhitneyUTest.htm'
+  HelpKeyword = 'html/Mann-WhitneyUTest.htm'
   AutoSize = True
   Caption = 'Mann-Whitney U Test'
   ClientHeight = 321

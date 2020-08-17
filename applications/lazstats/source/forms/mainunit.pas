@@ -7,14 +7,16 @@ unit MainUnit;
 
 {$mode objfpc}{$H+}
 
-//{$DEFINE USE_EXTERNAL_HELP_VIEWER}
+{$IFDEF MSWINDOWS}
+ {$DEFINE USE_EXTERNAL_HELP_VIEWER}
+{$ENDIF}
 
 interface
 
 uses
   LCLType, Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
   Dialogs, Menus, ExtCtrls, StdCtrls, Grids,
-  Globals, DataProcs, DictionaryUnit;
+  Globals, DataProcs, DictionaryUnit, MainDM;
 
 type
 
@@ -429,9 +431,7 @@ type
   private
     { private declarations }
    {$IFDEF USE_EXTERNAL_HELP_VIEWER}
-    {$IFDEF MSWINDOWS}
     function HelpHandler(Command: Word; Data: PtrInt; var CallHelp: Boolean): Boolean;
-    {$ENDIF}
    {$ENDIF}
     procedure Init;
   public
@@ -446,6 +446,13 @@ var
 implementation
 
 uses
+ {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+  {$IFDEF MSWINDOWS}
+  HtmlHelp,
+  {$ENDIF}
+ {$ELSE}
+  LazHelpIntf,
+ {$ENDIF}
   Utils,
   OptionsUnit, OutputUnit, LicenseUnit, TransFrmUnit, DescriptiveUnit,
   FreqUnit, CrossTabUnit, BreakDownUnit, BoxPlotUnit, NormalityUnit, Rot3DUnit,
@@ -1279,6 +1286,9 @@ begin
 end;          }
 
 procedure TOS3MainFrm.FormCreate(Sender: TObject);
+var
+  helpfn: String;
+  lhelpfn: String;
 begin
   // Reduce ultra-wide width of Inputbox windows
   cInputQueryEditSizePercents := 0;
@@ -1289,15 +1299,28 @@ begin
   if OutputFrm = nil then
     Application.CreateForm(TOutputFrm, OutputFrm);
 
- {$IFDEF USE_EXTERNAL_HELP_VIEWER}
-  {$IFDEF MSWINDOWS}
-  Application.HelpFile := Application.Location + 'LazStats.chm';
-  if FileExists(Application.HelpFile) then
-    Application.OnHelp := @HelpHandler
+  helpfn := Application.Location + 'LazStats.chm';
+  if FileExists(helpfn) then
+  begin
+    Application.HelpFile := helpfn;
+   {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+     Application.OnHelp := @HelpHandler;
+   {$ELSE}
+    lhelpfn := Application.Location + 'LHelp.exe';
+    if FileExists(lhelpfn) then
+    begin
+      Maindatamodule.LHelpConnector.LHelpPath := lhelpfn;
+      MainDatamodule.CHMHelpDatabase.Filename := helpfn;
+      CreateLCLHelpSystem;
+    end else
+      MessageDlg('Help viewer LHelp.exe not found.' + LineEnding +
+        'Please copy this program to the LazStats directory to access the help system.',
+        mtError, [mbOK], 0
+      );
+   {$ENDIF}
+  end
   else
-    Application.HelpFile := '';
-  {$ENDIF}
- {$ENDIF}
+    MessageDlg('LazStats help file not found.', mtError, [mbOK], 0);
 end;
 
 procedure TOS3MainFrm.DataGridKeyPress(Sender: TObject; var Key: char);
@@ -1583,21 +1606,39 @@ begin
 end;
 
 {$IFDEF USE_EXTERNAL_HELP_VIEWER}
-{$IFDEF MSWINDOWS}
 // Call HTML help (.chm file)
 function TOS3MainFrm.HelpHandler(Command: Word; Data: PtrInt;
   var CallHelp: Boolean): Boolean;
+{$IFDEF MSWINDOWS}
+var
+  s: String;
+  ws: UnicodeString;
+  res: Integer;
 begin
   if Command = HELP_CONTEXT then
-    ShowHelpTopic(Data)
-  else
+  begin
+    // see: http://www.helpware.net/download/delphi/hh_doc.txt
+    ws := UnicodeString(Application.HelpFile);
+    res := htmlhelp.HtmlHelpW(0, PWideChar(ws), HH_HELP_CONTEXT, Data);  // Data is HelpContext here
+  end else
   if Command = HELP_COMMAND then
-    ShowHelpTopic({%H-}PChar(Data));
+  begin
+    s := PChar(Data);          // Data is pointer to HelpKeyword here, but
+    // the Windows help viewer does not want the KeywordPrefix required for LHelp.
+    if pos(MainDataModule.CHMHelpDatabase.KeywordPrefix + '/', s) = 1 then
+      Delete(s, 1, Length(MainDatamodule.CHMHelpDatabase.KeywordPrefix)+1);
+    ws := UnicodeString(Application.HelpFile + '::/' + s);
+    res := htmlhelp.HtmlHelpW(0, PWideChar(ws), HH_DISPLAY_TOPIC, 0);
+  end;
 
   // Don't call regular help
   CallHelp := False;
 
-  Result := true; //res <> 0;
+  Result := res <> 0;
+end;
+{$ELSE}
+begin
+  Result := false;
 end;
 {$ENDIF}
 {$ENDIF}
@@ -2023,7 +2064,8 @@ end;
 
 procedure TOS3MainFrm.mnuShowTOCClick(Sender: TObject);
 begin
-  ShowHelpTopic(mnuShowTOC.HelpContext);
+  Application.HelpKeyword('html/TableofContents.htm');
+//  Application.HelpContext(mnuShowTOC.HelpContext);
 end;
 
 

@@ -4,7 +4,7 @@ object SimultFrm: TSimultFrm
   Top = 291
   Width = 437
   HelpType = htKeyword
-  HelpKeyword = 'SimultaneousMultipleRegression.htm'
+  HelpKeyword = 'html/SimultaneousMultipleRegression.htm'
   AutoSize = True
   Caption = 'Simultaneous Multiple Regression'
   ClientHeight = 447
@@ -277,11 +277,11 @@ object SimultFrm: TSimultFrm
     Shape = bsBottomLine
   end
   object OpenDialog1: TOpenDialog
-    left = 88
-    top = 96
+    Left = 88
+    Top = 96
   end
   object SaveDialog1: TSaveDialog
-    left = 88
-    top = 160
+    Left = 88
+    Top = 160
   end
 end

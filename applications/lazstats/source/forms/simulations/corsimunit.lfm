@@ -4,7 +4,7 @@ object CorSimFrm: TCorSimFrm
   Top = 126
   Width = 857
   HelpType = htKeyword
-  HelpKeyword = 'BivariateScatterPlot.htm'
+  HelpKeyword = 'html/BivariateScatterPlot.htm'
   Caption = 'Correlation Simulation'
   ClientHeight = 447
   ClientWidth = 857

@@ -4,7 +4,7 @@ object KR21Frm: TKR21Frm
   Top = 411
   Width = 289
   HelpType = htKeyword
-  HelpKeyword = 'Kuder-Richardson21Reliability.htm'
+  HelpKeyword = 'html/Kuder-Richardson21Reliability.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Kuder-Richarson #21'

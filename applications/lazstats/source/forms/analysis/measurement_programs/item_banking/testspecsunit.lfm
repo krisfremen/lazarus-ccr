@@ -1,7 +1,7 @@
 object TestSpecsForm: TTestSpecsForm
-  Left = 755
+  Left = 599
   Height = 574
-  Top = 340
+  Top = 300
   Width = 943
   Caption = 'Test Specification'
   ClientHeight = 574
@@ -375,11 +375,11 @@ object TestSpecsForm: TTestSpecsForm
     TabOrder = 11
   end
   object OpenDialog1: TOpenDialog
-    left = 256
-    top = 160
+    Left = 256
+    Top = 160
   end
   object SaveDialog1: TSaveDialog
-    left = 256
-    top = 88
+    Left = 256
+    Top = 88
   end
 end

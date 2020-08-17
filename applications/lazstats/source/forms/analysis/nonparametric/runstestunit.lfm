@@ -4,7 +4,7 @@ object runstestform: Trunstestform
   Top = 209
   Width = 376
   HelpType = htKeyword
-  HelpKeyword = 'RunsTestforNormality.htm'
+  HelpKeyword = 'html/RunsTestforNormality.htm'
   AutoSize = True
   Caption = 'Test for Randomness'
   ClientHeight = 438

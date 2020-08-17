@@ -4,7 +4,7 @@ object AutoCorrFrm: TAutoCorrFrm
   Top = 145
   Width = 684
   HelpType = htKeyword
-  HelpKeyword = 'Autocorrelation.htm'
+  HelpKeyword = 'html/Autocorrelation.htm'
   AutoSize = True
   Caption = 'Autocorrelation'
   ClientHeight = 459

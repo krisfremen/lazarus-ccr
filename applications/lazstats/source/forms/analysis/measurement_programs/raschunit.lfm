@@ -4,7 +4,7 @@ object RaschFrm: TRaschFrm
   Top = 319
   Width = 406
   HelpType = htKeyword
-  HelpKeyword = 'RaschTestCalibration.htm'
+  HelpKeyword = 'html/RaschTestCalibration.htm'
   AutoSize = True
   Caption = 'Rasch One Parameter Item Scaling'
   ClientHeight = 419

@@ -4,7 +4,7 @@ object BlksAnovaFrm: TBlksAnovaFrm
   Top = 256
   Width = 742
   HelpType = htKeyword
-  HelpKeyword = 'OneTwoorThreeWayAnalysesofVarian.htm'
+  HelpKeyword = 'html/OneTwoorThreeWayAnalysesofVarian.htm'
   AutoSize = True
   Caption = 'One, Two or Three Way Analysis of Variance'
   ClientHeight = 454

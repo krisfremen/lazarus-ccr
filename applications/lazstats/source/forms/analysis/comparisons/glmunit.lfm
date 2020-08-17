@@ -4,7 +4,7 @@ object GLMFrm: TGLMFrm
   Top = 156
   Width = 862
   HelpType = htKeyword
-  HelpKeyword = 'GeneralLinearModel.htm'
+  HelpKeyword = 'html/GeneralLinearModel.htm'
   Caption = 'General Linear Model'
   ClientHeight = 566
   ClientWidth = 862

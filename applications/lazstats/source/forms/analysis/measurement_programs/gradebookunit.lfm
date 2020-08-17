@@ -4,7 +4,7 @@ object GradebookFrm: TGradebookFrm
   Top = 275
   Width = 956
   HelpType = htKeyword
-  HelpKeyword = 'GradeBook.htm'
+  HelpKeyword = 'html/GradeBook.htm'
   Caption = 'Gradebook'
   ClientHeight = 521
   ClientWidth = 956
@@ -199,8 +199,8 @@ object GradebookFrm: TGradebookFrm
     Width = 5
   end
   object MainMenu1: TMainMenu
-    left = 592
-    top = 80
+    Left = 592
+    Top = 80
     object FilesMenu: TMenuItem
       Caption = 'Files'
       object NewGBMnu: TMenuItem
@@ -255,11 +255,11 @@ object GradebookFrm: TGradebookFrm
     end
   end
   object SaveDialog1: TSaveDialog
-    left = 472
-    top = 144
+    Left = 472
+    Top = 144
   end
   object OpenDialog1: TOpenDialog
-    left = 472
-    top = 80
+    Left = 472
+    Top = 80
   end
 end

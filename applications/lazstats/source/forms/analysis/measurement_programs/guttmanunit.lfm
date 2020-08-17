@@ -4,7 +4,7 @@ object GuttmanFrm: TGuttmanFrm
   Top = 322
   Width = 382
   HelpType = htKeyword
-  HelpKeyword = 'GuttmanScalogramAnalysis.htm'
+  HelpKeyword = 'html/GuttmanScalogramAnalysis.htm'
   AutoSize = True
   Caption = 'Guttman Sclaogram Analysis'
   ClientHeight = 307

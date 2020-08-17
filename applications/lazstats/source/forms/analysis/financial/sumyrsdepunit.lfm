@@ -4,7 +4,7 @@ object SumYrsDepFrm: TSumYrsDepFrm
   Top = 241
   Width = 372
   HelpType = htKeyword
-  HelpKeyword = 'SumsofYearsDigitsDepreciation.htm'
+  HelpKeyword = 'html/SumsofYearsDigitsDepreciation.htm'
   AutoSize = True
   BorderStyle = bsSingle
   Caption = 'Sum of Years Depreciation'

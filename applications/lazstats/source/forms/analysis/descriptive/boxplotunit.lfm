@@ -4,7 +4,7 @@ object BoxPlotFrm: TBoxPlotFrm
   Top = 119
   Width = 361
   HelpType = htKeyword
-  HelpKeyword = 'BoxPlots.htm'
+  HelpKeyword = 'html/BoxPlots.htm'
   AutoSize = True
   Caption = 'Box Plot'
   ClientHeight = 365

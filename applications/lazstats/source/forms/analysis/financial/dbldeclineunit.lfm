@@ -4,7 +4,7 @@ object DblDeclineFrm: TDblDeclineFrm
   Top = 330
   Width = 401
   HelpType = htKeyword
-  HelpKeyword = 'DoubleDecliningValue.htm'
+  HelpKeyword = 'html/DoubleDecliningValue.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Double Declining Value'

@@ -4,7 +4,7 @@ object SensForm: TSensForm
   Top = 161
   Width = 478
   HelpType = htKeyword
-  HelpKeyword = 'SensSlopeAnalysis.htm'
+  HelpKeyword = 'html/SensSlopeAnalysis.htm'
   AutoSize = True
   Caption = 'Sens Trend Analysis'
   ClientHeight = 579

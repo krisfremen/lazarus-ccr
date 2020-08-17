@@ -4,7 +4,7 @@ object StemLeafFrm: TStemLeafFrm
   Top = 257
   Width = 407
   HelpType = htKeyword
-  HelpKeyword = 'StemandLeafPlot.htm'
+  HelpKeyword = 'html/StemandLeafPlot.htm'
   AutoSize = True
   Caption = 'Stem and Leaf Analysis'
   ClientHeight = 296

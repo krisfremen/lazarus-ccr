@@ -4,7 +4,7 @@ object LifeTableForm: TLifeTableForm
   Top = 122
   Width = 818
   HelpType = htKeyword
-  HelpKeyword = 'LifeTable.htm'
+  HelpKeyword = 'html/LifeTable.htm'
   AutoSize = True
   Caption = 'Life Table'
   ClientHeight = 590

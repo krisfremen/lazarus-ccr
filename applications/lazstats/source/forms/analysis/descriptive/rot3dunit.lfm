@@ -4,7 +4,7 @@ object Rot3DFrm: TRot3DFrm
   Top = 153
   Width = 710
   HelpType = htKeyword
-  HelpKeyword = 'ThreeDimensionalRotation.htm'
+  HelpKeyword = 'html/ThreeDimensionalRotation.htm'
   Caption = 'Three Dimension Rotation'
   ClientHeight = 527
   ClientWidth = 710
@@ -408,11 +408,11 @@ object Rot3DFrm: TRot3DFrm
     TabOrder = 12
   end
   object PrintDialog: TPrintDialog
-    left = 320
-    top = 304
+    Left = 320
+    Top = 304
   end
   object PrinterSetupDialog1: TPrinterSetupDialog
-    left = 184
-    top = 304
+    Left = 184
+    Top = 304
   end
 end

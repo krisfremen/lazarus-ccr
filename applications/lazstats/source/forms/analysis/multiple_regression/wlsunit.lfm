@@ -4,7 +4,7 @@ object WLSFrm: TWLSFrm
   Top = 171
   Width = 517
   HelpType = htKeyword
-  HelpKeyword = 'WeightedLeast-SquaresRegression.htm'
+  HelpKeyword = 'html/WeightedLeast-SquaresRegression.htm'
   AutoSize = True
   Caption = 'Weighted Least Squares Regression'
   ClientHeight = 508

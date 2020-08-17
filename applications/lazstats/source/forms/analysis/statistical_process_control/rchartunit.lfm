@@ -4,7 +4,7 @@ object RChartFrm: TRChartFrm
   Top = 126
   Width = 382
   HelpType = htKeyword
-  HelpKeyword = 'RangeChart.htm'
+  HelpKeyword = 'html/RangeChart.htm'
   AutoSize = True
   Caption = 'Range Charting'
   ChildSizing.ControlsPerLine = 1

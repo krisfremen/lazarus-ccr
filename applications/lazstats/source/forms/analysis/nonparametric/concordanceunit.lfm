@@ -5,7 +5,7 @@ object ConcordFrm: TConcordFrm
   Top = 327
   Width = 397
   HelpType = htKeyword
-  HelpKeyword = 'KendallsCoefficientofConcordance.htm'
+  HelpKeyword = 'html/KendallsCoefficientofConcordance.htm'
   Anchors = [akLeft]
   AutoSize = True
   Caption = 'Kendal''s Coefficient of Concordance'

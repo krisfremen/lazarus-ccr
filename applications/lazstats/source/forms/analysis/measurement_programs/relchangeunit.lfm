@@ -4,7 +4,7 @@ object RelChangeFrm: TRelChangeFrm
   Top = 410
   Width = 400
   HelpType = htKeyword
-  HelpKeyword = 'ReliabilityduetoTestVarianceChan.htm'
+  HelpKeyword = 'html/ReliabilityduetoTestVarianceChan.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Variance Change Effect on Reliability'

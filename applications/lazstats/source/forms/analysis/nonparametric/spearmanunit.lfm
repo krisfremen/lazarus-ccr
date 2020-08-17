@@ -4,7 +4,7 @@ object SpearmanFrm: TSpearmanFrm
   Top = 246
   Width = 347
   HelpType = htKeyword
-  HelpKeyword = 'SpearmanRankCorrelation.htm'
+  HelpKeyword = 'html/SpearmanRankCorrelation.htm'
   AutoSize = True
   Caption = 'Spearman Rank Correlation'
   ClientHeight = 317

@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms,
+  Forms, lhelpcontrolpkg,
   Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit, utils;
 
 {$R LazStats.res}

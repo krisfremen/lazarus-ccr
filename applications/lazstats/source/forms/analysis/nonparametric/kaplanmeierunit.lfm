@@ -4,7 +4,7 @@ object KaplanMeierFrm: TKaplanMeierFrm
   Top = 239
   Width = 505
   HelpType = htKeyword
-  HelpKeyword = 'Kaplan-MeierSurvivalTest.htm'
+  HelpKeyword = 'html/Kaplan-MeierSurvivalTest.htm'
   AutoSize = True
   Caption = 'Kaplan-Meier Survival Analysis'
   ClientHeight = 406

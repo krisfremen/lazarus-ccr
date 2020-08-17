@@ -4,7 +4,7 @@ object TwoPropFrm: TTwoPropFrm
   Top = 225
   Width = 455
   HelpType = htKeyword
-  HelpKeyword = 'DifferencebetweenProportions.htm'
+  HelpKeyword = 'html/DifferencebetweenProportions.htm'
   Caption = 'Test of Equality for two Proportions'
   ClientHeight = 427
   ClientWidth = 455

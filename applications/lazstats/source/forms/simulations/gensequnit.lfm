@@ -4,7 +4,7 @@ object GenSeqFrm: TGenSeqFrm
   Top = 114
   Width = 367
   HelpType = htKeyword
-  HelpKeyword = 'GenerateSequentialValues.htm'
+  HelpKeyword = 'html/GenerateSequentialValues.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Generation of Sequential Values'

@@ -4,7 +4,7 @@ object BackRegFrm: TBackRegFrm
   Top = 187
   Width = 463
   HelpType = htKeyword
-  HelpKeyword = 'BackwardStepwise.htm'
+  HelpKeyword = 'html/BackwardStepwise.htm'
   AutoSize = True
   Caption = 'Stepwise Backward Multiple Regression'
   ClientHeight = 436
@@ -354,11 +354,11 @@ object BackRegFrm: TBackRegFrm
     Shape = bsBottomLine
   end
   object OpenDialog1: TOpenDialog
-    left = 64
-    top = 72
+    Left = 64
+    Top = 72
   end
   object SaveDialog1: TSaveDialog
-    left = 56
-    top = 168
+    Left = 56
+    Top = 168
   end
 end

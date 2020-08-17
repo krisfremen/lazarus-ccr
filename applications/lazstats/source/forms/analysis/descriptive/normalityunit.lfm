@@ -4,7 +4,7 @@ object NormalityFrm: TNormalityFrm
   Top = 294
   Width = 402
   HelpType = htKeyword
-  HelpKeyword = 'NormalityTests.htm'
+  HelpKeyword = 'html/NormalityTests.htm'
   Caption = 'Normality Tests'
   ClientHeight = 396
   ClientWidth = 402

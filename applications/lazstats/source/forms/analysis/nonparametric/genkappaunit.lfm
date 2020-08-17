@@ -4,7 +4,7 @@ object GenKappaFrm: TGenKappaFrm
   Top = 378
   Width = 468
   HelpType = htKeyword
-  HelpKeyword = 'GeneralizedKappa.htm'
+  HelpKeyword = 'html/GeneralizedKappa.htm'
   AutoSize = True
   Caption = 'Generalized Kappa Coefficient'
   ClientHeight = 356

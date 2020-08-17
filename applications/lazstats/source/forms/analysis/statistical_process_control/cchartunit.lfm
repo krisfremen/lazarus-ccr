@@ -4,7 +4,7 @@ object cChartFrm: TcChartFrm
   Top = 312
   Width = 445
   HelpType = htKeyword
-  HelpKeyword = 'DefectnonconformitycChart.htm'
+  HelpKeyword = 'html/DefectnonconformitycChart.htm'
   AutoSize = True
   Caption = 'Defects C Chart'
   ClientHeight = 316

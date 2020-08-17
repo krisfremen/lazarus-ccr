@@ -4,7 +4,7 @@ object PathFrm: TPathFrm
   Top = 192
   Width = 591
   HelpType = htKeyword
-  HelpKeyword = 'PathAnalysis.htm'
+  HelpKeyword = 'html/PathAnalysis.htm'
   AutoSize = True
   Caption = 'Path Analysis'
   ClientHeight = 387
@@ -482,7 +482,7 @@ object PathFrm: TPathFrm
     end
   end
   object SaveDialog1: TSaveDialog
-    left = 72
-    top = 104
+    Left = 72
+    Top = 104
   end
 end

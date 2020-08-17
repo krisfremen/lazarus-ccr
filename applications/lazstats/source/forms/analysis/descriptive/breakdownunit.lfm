@@ -4,7 +4,7 @@ object BreakDownFrm: TBreakDownFrm
   Top = 248
   Width = 428
   HelpType = htKeyword
-  HelpKeyword = 'Breakdown.htm'
+  HelpKeyword = 'html/Breakdown.htm'
   AutoSize = True
   Caption = 'Breakdown'
   ClientHeight = 367

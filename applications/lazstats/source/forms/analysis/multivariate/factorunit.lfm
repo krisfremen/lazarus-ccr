@@ -4,7 +4,7 @@ object FactorFrm: TFactorFrm
   Top = 211
   Width = 627
   HelpType = htKeyword
-  HelpKeyword = 'FactorAnalysis.htm'
+  HelpKeyword = 'html/FactorAnalysis.htm'
   AutoSize = True
   Caption = 'Factor Analysis'
   ClientHeight = 522
@@ -505,11 +505,11 @@ object FactorFrm: TFactorFrm
     end
   end
   object OpenDialog1: TOpenDialog
-    left = 80
-    top = 192
+    Left = 80
+    Top = 192
   end
   object SaveDialog1: TSaveDialog
-    left = 80
-    top = 104
+    Left = 80
+    Top = 104
   end
 end

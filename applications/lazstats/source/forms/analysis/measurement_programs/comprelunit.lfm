@@ -4,7 +4,7 @@ object CompRelFrm: TCompRelFrm
   Top = 429
   Width = 583
   HelpType = htKeyword
-  HelpKeyword = 'WeightedCompositeReliability.htm'
+  HelpKeyword = 'html/WeightedCompositeReliability.htm'
   AutoSize = True
   Caption = 'Composite Test Reliability'
   ClientHeight = 361

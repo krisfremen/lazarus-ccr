@@ -4,7 +4,7 @@ object FriedmanFrm: TFriedmanFrm
   Top = 186
   Width = 418
   HelpType = htKeyword
-  HelpKeyword = 'FriedmanTwoWayANOVA.htm'
+  HelpKeyword = 'html/FriedmanTwoWayANOVA.htm'
   AutoSize = True
   Caption = 'The Friedman Two Way ANOVA on Ranks'
   ClientHeight = 330

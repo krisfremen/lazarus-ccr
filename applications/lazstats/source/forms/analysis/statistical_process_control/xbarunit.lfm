@@ -4,7 +4,7 @@ object XBarFrm: TXBarFrm
   Top = 279
   Width = 499
   HelpType = htKeyword
-  HelpKeyword = 'XBarChart.htm'
+  HelpKeyword = 'html/XBarChart.htm'
   AutoSize = True
   Caption = 'X Bar Charting Specifications'
   ClientHeight = 397

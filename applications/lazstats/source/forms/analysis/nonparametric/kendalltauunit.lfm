@@ -4,7 +4,7 @@ object KendallTauFrm: TKendallTauFrm
   Top = 350
   Width = 396
   HelpType = htKeyword
-  HelpKeyword = 'KendallsTauandPartialTau.htm'
+  HelpKeyword = 'html/KendallsTauandPartialTau.htm'
   AutoSize = True
   Caption = 'Kendall Rank Correlation Tau and Partial Tau'
   ClientHeight = 379

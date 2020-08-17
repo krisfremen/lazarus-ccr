@@ -4,7 +4,7 @@ object SpBrFrm: TSpBrFrm
   Top = 373
   Width = 473
   HelpType = htKeyword
-  HelpKeyword = 'Spearman-BrownProphecyReliabilit.htm'
+  HelpKeyword = 'html/Spearman-BrownProphecyReliabilit.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Spearman-Brown Prophecy Formula'

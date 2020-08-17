@@ -4,7 +4,7 @@ object LoanItFrm: TLoanItFrm
   Top = 131
   Width = 353
   HelpType = htKeyword
-  HelpKeyword = 'LoanAmortizationSchedule.htm'
+  HelpKeyword = 'html/LoanAmortizationSchedule.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Loan Calculation and Amortization'
@@ -425,7 +425,7 @@ object LoanItFrm: TLoanItFrm
     Date = 43890
     OKCaption = '&OK'
     CancelCaption = 'Cancel'
-    left = 40
-    top = 312
+    Left = 40
+    Top = 312
   end
 end

@@ -4,7 +4,7 @@ object GenRndValsFrm: TGenRndValsFrm
   Top = 203
   Width = 429
   HelpType = htKeyword
-  HelpKeyword = 'RandomTheoreticalValues.htm'
+  HelpKeyword = 'html/RandomTheoreticalValues.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Generate Random Values'

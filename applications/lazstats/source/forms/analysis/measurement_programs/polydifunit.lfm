@@ -4,7 +4,7 @@ object PolyDIFFrm: TPolyDIFFrm
   Top = 356
   Width = 657
   HelpType = htKeyword
-  HelpKeyword = 'PolytomousDIFAnalysis.htm'
+  HelpKeyword = 'html/PolytomousDIFAnalysis.htm'
   AutoSize = True
   Caption = 'Polytomous Item DIF'
   ClientHeight = 438

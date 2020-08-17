@@ -4,7 +4,7 @@ object TestScoreFrm: TTestScoreFrm
   Top = 204
   Width = 505
   HelpType = htKeyword
-  HelpKeyword = 'ClassicalTestAnalysis.htm'
+  HelpKeyword = 'html/ClassicalTestAnalysis.htm'
   AutoSize = True
   Caption = 'Test Scoring and Analysis'
   ClientHeight = 575

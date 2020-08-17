@@ -4,7 +4,7 @@ object WeightedKappaFrm: TWeightedKappaFrm
   Top = 184
   Width = 539
   HelpType = htKeyword
-  HelpKeyword = 'KappaandWeightedKappa.htm'
+  HelpKeyword = 'html/KappaandWeightedKappa.htm'
   AutoSize = True
   Caption = 'Kappa and Weighted Kappa'
   ClientHeight = 560

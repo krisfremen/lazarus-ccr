@@ -4,7 +4,7 @@ object TwoWayLogLinFrm: TTwoWayLogLinFrm
   Top = 237
   Width = 425
   HelpType = htKeyword
-  HelpKeyword = 'AxBLogLinear.htm'
+  HelpKeyword = 'html/AxBLogLinear.htm'
   AutoSize = True
   Caption = 'Log Linear Analysis of a 2x2 Table'
   ClientHeight = 352

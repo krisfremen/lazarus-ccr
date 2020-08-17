@@ -4,7 +4,7 @@ object WilcoxonFrm: TWilcoxonFrm
   Top = 336
   Width = 436
   HelpType = htKeyword
-  HelpKeyword = 'WilcoxonMatched-PairsSignedRanks.htm'
+  HelpKeyword = 'html/WilcoxonMatched-PairsSignedRanks.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Wilcoxon Matched Pairs Signed Ranks Test'

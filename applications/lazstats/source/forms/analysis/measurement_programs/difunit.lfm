@@ -4,7 +4,7 @@ object DIFFrm: TDIFFrm
   Top = 244
   Width = 748
   HelpType = htKeyword
-  HelpKeyword = 'DifferentialItemFunctioning.htm'
+  HelpKeyword = 'html/DifferentialItemFunctioning.htm'
   Caption = 'DIF Specifications'
   ClientHeight = 350
   ClientWidth = 748

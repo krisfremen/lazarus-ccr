@@ -4,7 +4,7 @@ object ErrorCurvesFrm: TErrorCurvesFrm
   Top = 160
   Width = 350
   HelpType = htKeyword
-  HelpKeyword = 'TypeIandTypeIIErrorCurves,htm'
+  HelpKeyword = 'html/TypeIandTypeIIErrorCurves,htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Alpha and Beta Curves for z tests'

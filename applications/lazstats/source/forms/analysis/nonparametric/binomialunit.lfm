@@ -4,7 +4,7 @@ object BinomialFrm: TBinomialFrm
   Top = 338
   Width = 340
   HelpType = htKeyword
-  HelpKeyword = 'ProbabilityofaBinomialEvent.htm'
+  HelpKeyword = 'html/ProbabilityofaBinomialEvent.htm'
   AutoSize = True
   BorderStyle = bsSingle
   Caption = 'Binomial Probability Calculator'

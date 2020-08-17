@@ -4,7 +4,7 @@ object XvsMultYForm: TXvsMultYForm
   Top = 117
   Width = 452
   HelpType = htKeyword
-  HelpKeyword = 'PlotXVersusMultipleYValues.htm'
+  HelpKeyword = 'html/PlotXVersusMultipleYValues.htm'
   Caption = 'X vs Multiple Y Plot'
   ClientHeight = 467
   ClientWidth = 452

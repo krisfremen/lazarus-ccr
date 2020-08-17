@@ -4,7 +4,7 @@ object TestGenFrm: TTestGenFrm
   Top = 166
   Width = 336
   HelpType = htKeyword
-  HelpKeyword = 'GenerateSampleTestData.htm'
+  HelpKeyword = 'html/GenerateSampleTestData.htm'
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Test Data Generation'

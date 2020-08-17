@@ -3,8 +3,6 @@ object MatManFrm: TMatManFrm
   Height = 575
   Top = 176
   Width = 943
-  HelpType = htKeyword
-  HelpKeyword = 'DistributionStatistics.htm'
   Caption = 'Matrix Manipulation'
   ClientHeight = 555
   ClientWidth = 943
@@ -490,8 +488,8 @@ object MatManFrm: TMatManFrm
     Anchors = [akTop, akLeft, akBottom]
   end
   object MainMenu1: TMainMenu
-    left = 528
-    top = 168
+    Left = 528
+    Top = 168
     object FilesMenu: TMenuItem
       Caption = 'Files'
       object keyBdmnu: TMenuItem
@@ -785,11 +783,11 @@ object MatManFrm: TMatManFrm
     end
   end
   object SaveDialog1: TSaveDialog
-    left = 256
-    top = 240
+    Left = 256
+    Top = 240
   end
   object OpenDialog1: TOpenDialog
-    left = 256
-    top = 176
+    Left = 256
+    Top = 176
   end
 end

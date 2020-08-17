@@ -4,7 +4,7 @@ object RIDITFrm: TRIDITFrm
   Top = 285
   Width = 665
   HelpType = htKeyword
-  HelpKeyword = 'RIDITAnalysis.htm'
+  HelpKeyword = 'html/RIDITAnalysis.htm'
   AutoSize = True
   Caption = 'Relative to an Identified Distribution Analysis'
   ClientHeight = 364

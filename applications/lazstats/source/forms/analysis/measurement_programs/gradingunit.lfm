@@ -4,7 +4,7 @@ object GradingFrm: TGradingFrm
   Top = 163
   Width = 622
   HelpType = htKeyword
-  HelpKeyword = 'GradeBook.htm'
+  HelpKeyword = 'html/GradeBook.htm'
   Caption = 'Specification for Grades'
   ClientHeight = 441
   ClientWidth = 622
@@ -504,11 +504,11 @@ object GradingFrm: TGradingFrm
     TabOrder = 9
   end
   object OpenDialog1: TOpenDialog
-    left = 496
-    top = 24
+    Left = 496
+    Top = 24
   end
   object SaveDialog1: TSaveDialog
-    left = 408
-    top = 24
+    Left = 408
+    Top = 24
   end
 end
