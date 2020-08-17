@@ -16,3 +16,6 @@ tcheckgroupex_200.png
 tcurrspineditex.png
 tcurrspineditex_150.png
 tcurrspineditex_200.png
+tfloatsispineditex.png
+tfloatsispineditex_150.png
+tfloatsispineditex_200.png
