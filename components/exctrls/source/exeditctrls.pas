@@ -560,17 +560,15 @@ function TCustomFloatSISpinEditEx.ValueToStr(const AValue: Double): String;
 var
   Prefix: TSIPrefix;
   LValue, Factor: Double;
-  {$IF LCL_FullVersion >= 2010000}
   fs: TFormatSettings;
-  {$IFEND}
 begin
   LValue := GetLimitedValue(AValue);
   for Prefix := Low(SIFactors) to High(SIFactors) do
   begin
     Factor := SIFactors[Prefix];
-    if (AValue >= Factor) then
+    if (abs(AValue) >= Factor) then
     begin
-      {$IF LCL_FullVersion >= 2010000}
+      {$IF LCL_FullVersion < 2010000}
       fs := DefaultFormatSettings;
       fs.DecimalSeparator := DecimalSeparator;
       //fs.ThousandSeparator := ThousandSeparator;
