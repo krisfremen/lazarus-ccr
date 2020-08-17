@@ -267,7 +267,7 @@ uses
   LCLProc, LazUTF8;
 
 resourcestring
-  RsDecSepMustNotMatchThSep = 'Decimal and thousand separators most not be equal.';
+  RsDecSepMustNotMatchThSep = 'Decimal and thousand separators must not be equal.';
 
 const
   Digits = ['0'..'9'];
