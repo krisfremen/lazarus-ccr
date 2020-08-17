@@ -170,7 +170,8 @@ type
 
   { TCustomFloatSISpinEdit (Author: Bart Broersma) }
 
-  TSIPrefix = (Yotta,Zetta,Exa,Peta,Tera,Giga,Mega,Kilo,mili,micro,microalt,nano,pico,femto,atto,zepto,yocto);
+  TSIPrefix = (Yotta,Zetta,Exa,Peta,Tera,Giga,Mega,kilo,kiloUC,One,
+    milli,micro,microU,microalt,nano,pico,femto,atto,zepto,yocto);
 
   TCustomFloatSISpinEditEx = class(TCustomFloatSpinEditEx)
   private
@@ -272,9 +273,14 @@ const
   Digits = ['0'..'9'];
   AllowedControlChars = [#8, #9, ^C, ^X, ^V, ^Z];
 
-  SIPrefixes: array[TSIPrefix] of String = ('Y', 'Z','E','P','T','G','M','k','m','µ','mc','n','p','f','a','z','y');
-  SIFactors:  array[TSIPrefix] of Double = (1E+24, 1E+21, 1E+18, 1E+15, 1E+12, 1E+9, 1E+6, 1E+3,
-                                            1E-3,1E-6,1E-6,1E-9,1E-12,1E-15,1E-18,1E-21,1E-24);
+  SIPrefixes: array[TSIPrefix] of String = (
+    'Y', 'Z', 'E', 'P', 'T', 'G', 'M', 'k', 'K', '',
+    'm', 'µ', 'mc', 'u', 'n', 'p', 'f', 'a', 'z', 'y'
+  );
+  SIFactors:  array[TSIPrefix] of Double = (
+    1E+24, 1E+21, 1E+18, 1E+15, 1E+12, 1E+9, 1E+6, 1E+3, 1E+3, 1.0,
+    1E-3, 1E-6, 1E-6, 1E-6, 1E-9, 1E-12, 1E-15, 1E-18, 1E-21, 1E-24
+  );
 
 function UTF8EndsStr(const ASubStr, AStr: string): Boolean;
 var
