@@ -23,6 +23,13 @@ interface
 uses
   LCLType, Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics,
   Dialogs, Menus, ExtCtrls, StdCtrls, Grids,
+ {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+  {$IFDEF MSWINDOWS}
+  HtmlHelp,
+  {$ENDIF}
+ {$ELSE}
+  LazHelpIntf, LazHelpCHM,
+ {$ENDIF}
   Globals, DataProcs, DictionaryUnit, MainDM;
 
 type
@@ -439,7 +446,10 @@ type
     { private declarations }
    {$IFDEF USE_EXTERNAL_HELP_VIEWER}
     function HelpHandler(Command: Word; Data: PtrInt; var CallHelp: Boolean): Boolean;
-   {$ENDIF}
+    {$ELSE}
+    CHMHelpDatabase: TCHMHelpDatabase;
+    LHelpConnector: TLHelpConnector;
+    {$ENDIF}
     procedure Init;
   public
     { public declarations }
@@ -453,15 +463,7 @@ var
 implementation
 
 uses
- {$IFDEF USE_EXTERNAL_HELP_VIEWER}
-  {$IFDEF MSWINDOWS}
-  HtmlHelp,
-  {$ENDIF}
- {$ELSE}
-  LazHelpIntf,
- {$ENDIF}
-  Utils,
-  OptionsUnit, OutputUnit, LicenseUnit, TransFrmUnit, DescriptiveUnit,
+  Utils, OptionsUnit, OutputUnit, LicenseUnit, TransFrmUnit, DescriptiveUnit,
   FreqUnit, CrossTabUnit, BreakDownUnit, BoxPlotUnit, NormalityUnit, Rot3DUnit,
   PlotXYUnit, BubblePlotUnit, StemLeafUnit, MultXvsYUnit, OneSampUnit,
   TwoCorrsUnit, TwoPropUnit, TtestUnit, BlkAnovaUnit, WithinANOVAUnit,
@@ -486,6 +488,9 @@ uses
   CorrespondenceUnit, EquationUnit, CalculatorUnit, JPEGUnit, ResistanceLineUnit,
   MedianPolishUnit, OneCaseAnovaUnit, SmoothDataUnit, SRHTestUnit, AboutUnit,
   ItemBankingUnit, ANOVATESTSUnit, SimpleChiSqrUnit, LifeTableUnit, LSMRunit;
+
+const
+  HELP_KEYWORD_PREFIX = 'html';
 
 { TOS3MainFrm }
 
@@ -1318,8 +1323,15 @@ begin
       lhelpfn := Application.Location + 'lhelp' + GetExeExt;
     if FileExists(lhelpfn) then
     begin
-      Maindatamodule.LHelpConnector.LHelpPath := lhelpfn;
-      MainDatamodule.CHMHelpDatabase.Filename := helpfn;
+      CHMHelpDatabase := TCHMHelpDatabase.Create(self);
+      CHMHelpDatabase.KeywordPrefix := HELP_KEYWORD_PREFIX;
+      CHMHelpDatabase.AutoRegister := true;
+      CHMHelpDatabase.Filename := helpfn;
+
+      LHelpConnector := TLHelpConnector.Create(self);
+      LHelpConnector.AutoRegister := true;
+      LHelpConnector.LHelpPath := lhelpfn;
+
       //CreateLCLHelpSystem;
     end else
       MessageDlg('Help viewer LHelp.exe not found.' + LineEnding +
@@ -1634,8 +1646,8 @@ begin
   begin
     s := PChar(Data);          // Data is pointer to HelpKeyword here, but
     // the Windows help viewer does not want the KeywordPrefix required for LHelp.
-    if pos(MainDataModule.CHMHelpDatabase.KeywordPrefix + '/', s) = 1 then
-      Delete(s, 1, Length(MainDatamodule.CHMHelpDatabase.KeywordPrefix)+1);
+    if pos(HELP_KEYWORD_PREFIX + '/', s) = 1 then
+      Delete(s, 1, Length(HELP_KEYWORD_PREFIX) + 1);
     ws := UnicodeString(Application.HelpFile + '::/' + s);
     res := htmlhelp.HtmlHelpW(0, PWideChar(ws), HH_DISPLAY_TOPIC, 0);
   end;
