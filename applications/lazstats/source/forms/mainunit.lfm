@@ -15,7 +15,9 @@ object OS3MainFrm: TOS3MainFrm
   Font.Pitch = fpFixed
   Font.Quality = fqDraft
   Menu = MainMenu1
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object Panel1: TPanel
@@ -240,204 +242,204 @@ object OS3MainFrm: TOS3MainFrm
     Top = 200
     object MenuItem1: TMenuItem
       Caption = 'File'
-      object NewFileBtn: TMenuItem
+      object mnuFileNew: TMenuItem
         Caption = 'New File'
-        OnClick = NewFileBtnClick
+        OnClick = mnuFileNewClick
       end
-      object OpenFileBtn: TMenuItem
+      object mnuFileOpen: TMenuItem
         Caption = 'Open File (*.laz)'
-        OnClick = OpenFileBtnClick
+        OnClick = mnuFileOpenClick
       end
-      object SaveFileBtn: TMenuItem
+      object mnuFileSave: TMenuItem
         Caption = 'Save File (*.laz)'
-        OnClick = SaveFileBtnClick
+        OnClick = mnuFileSaveClick
       end
-      object CloseFileBtn: TMenuItem
+      object mnuFileClose: TMenuItem
         Caption = 'Close File'
-        OnClick = CloseFileBtnClick
+        OnClick = mnuFileCloseClick
       end
       object MenuItem42: TMenuItem
         Caption = '-'
       end
-      object MenuItem13: TMenuItem
+      object mnuFileImport: TMenuItem
         Caption = 'Import File of Type'
-        object TabFileInBtn: TMenuItem
+        object mnuFileImportTAB: TMenuItem
           Caption = 'TAB Separated'
-          OnClick = TabFileInBtnClick
+          OnClick = mnuFileImportTABClick
         end
-        object CSVFileIn: TMenuItem
+        object mnuFileImportCSV: TMenuItem
           Caption = 'Comma Separated'
-          OnClick = CSVFileInClick
+          OnClick = mnuFileImportCSVClick
         end
-        object SSVFileIn: TMenuItem
+        object mnuFileImportSSV: TMenuItem
           Caption = 'Space Separated'
-          OnClick = SSVFileInClick
+          OnClick = mnuFileImportSSVClick
         end
       end
-      object TabFileOut: TMenuItem
+      object mnuFileExport: TMenuItem
         Caption = 'Export File of Type'
-        object MenuItem20: TMenuItem
+        object mnuFileExportTab: TMenuItem
           Caption = 'Tab Separated'
-          OnClick = MenuItem20Click
+          OnClick = mnuFileExportTabClick
         end
-        object CSVFileOut: TMenuItem
+        object mnuFileExportCSV: TMenuItem
           Caption = 'Comma Separated'
-          OnClick = CSVFileOutClick
+          OnClick = mnuFileExportCSVClick
         end
-        object SSVFileOut: TMenuItem
+        object mnuFileExportSSV: TMenuItem
           Caption = 'Space Separated'
-          OnClick = SSVFileOutClick
+          OnClick = mnuFileExportSSVClick
         end
       end
       object MenuItem12: TMenuItem
         Caption = '-'
       end
-      object MenuItem16: TMenuItem
+      object mnuFileExit: TMenuItem
         Caption = 'Exit'
-        OnClick = MenuItem16Click
+        OnClick = mnuFileExitClick
       end
     end
-    object MenuItem2: TMenuItem
+    object mnuVariables: TMenuItem
       Caption = 'Variables'
-      object DefineVar: TMenuItem
+      object mnuVariablesDefine: TMenuItem
         Caption = 'Define...'
-        OnClick = DefineVarClick
+        OnClick = mnuVariablesDefineClick
       end
-      object PrintDefs: TMenuItem
+      object mnuVariablesPrintDefs: TMenuItem
         Caption = 'Print Definitions'
-        OnClick = PrintDefsClick
+        OnClick = mnuVariablesPrintDefsClick
       end
-      object Transform: TMenuItem
+      object mnuVariablesTransform: TMenuItem
         Caption = 'Transform Variables'
-        OnClick = TransformClick
+        OnClick = mnuVariablesTransformClick
       end
-      object Recode: TMenuItem
+      object mnuVariablesRecode: TMenuItem
         Caption = 'Recode Variables'
-        OnClick = RecodeClick
+        OnClick = mnuVariablesRecodeClick
       end
-      object Equation: TMenuItem
+      object mnuVariablesEquationEditor: TMenuItem
         Caption = 'Equation Editor'
-        OnClick = EquationClick
+        OnClick = mnuVariablesEquationEditorClick
       end
     end
-    object MenuItem3: TMenuItem
+    object mnuTools: TMenuItem
       Caption = 'Tools'
-      object FormatGrid: TMenuItem
+      object mnuToolsFormatGrid: TMenuItem
         Caption = 'Format Grid Cells'
         HelpContext = 15
-        OnClick = FormatGridClick
+        OnClick = mnuToolsFormatGridClick
       end
-      object SortCases: TMenuItem
+      object mnuToolsSortCases: TMenuItem
         Caption = 'Sort Cases'
         HelpContext = 16
-        OnClick = SortCasesClick
+        OnClick = mnuToolsSortCasesClick
       end
-      object PrintGrid: TMenuItem
+      object mnuToolsPrintGrid: TMenuItem
         Caption = 'Print Grid File'
         HelpContext = 17
-        OnClick = PrintGridClick
+        OnClick = mnuToolsPrintGridClick
       end
-      object MenuItem28: TMenuItem
+      object mnuToolsOutputForm: TMenuItem
         Caption = 'Show Output Form'
-        OnClick = MenuItem28Click
+        OnClick = mnuToolsOutputFormClick
       end
-      object SelectCases: TMenuItem
+      object mnuToolsSelectCases: TMenuItem
         Caption = 'Select Cases'
         HelpContext = 18
-        OnClick = SelectCasesClick
+        OnClick = mnuToolsSelectCasesClick
       end
-      object LoadSubFile: TMenuItem
+      object mnuToolsLoadSubFile: TMenuItem
         Caption = 'Load a Sub File'
       end
-      object MenuItem30: TMenuItem
+      object mnuToolsSwapRowsCols: TMenuItem
         Caption = 'Swap Rows and Columns of Grid'
-        OnClick = MenuItem30Click
+        OnClick = mnuToolsSwapRowsColsClick
       end
-      object SwapDecType: TMenuItem
+      object mnuToolsSwapDecType: TMenuItem
         Caption = 'Change English to European or Vice Versa'
-        OnClick = SwapDecTypeClick
+        OnClick = mnuToolsSwapDecTypeClick
       end
-      object StrToIntegers: TMenuItem
+      object mnuToolsStrToInt: TMenuItem
         Caption = 'Convert strings to integer codes'
-        OnClick = StrToIntegersClick
+        OnClick = mnuToolsStrToIntClick
       end
-      object smooth: TMenuItem
+      object mnuToolsSmooth: TMenuItem
         Caption = 'Smooth Data in a Variable'
-        OnClick = smoothClick
+        OnClick = mnuToolsSmoothClick
       end
       object MenuItem15: TMenuItem
         Caption = '-'
       end
-      object Calculater: TMenuItem
+      object mnuToolsCalculator: TMenuItem
         Caption = 'Calculator'
-        OnClick = CalculaterClick
+        OnClick = mnuToolsCalculatorClick
       end
-      object JPEGView: TMenuItem
+      object mnuToolsJPEGViewer: TMenuItem
         Caption = 'JPEG Image Viewer'
-        OnClick = JPEGViewClick
+        OnClick = mnuToolsJPEGViewerClick
       end
     end
-    object MenuItem4: TMenuItem
+    object mnuEdit: TMenuItem
       Caption = 'Edit'
-      object blockcopy: TMenuItem
+      object mnuEditCopyCells: TMenuItem
         Caption = 'Copy a Block of Cells'
         HelpContext = 20
-        OnClick = blockcopyClick
+        OnClick = mnuEditCopyCellsClick
       end
-      object BlockPaste: TMenuItem
+      object mnuEditPasteCells: TMenuItem
         Caption = 'Paste a Block of Cells'
         HelpContext = 21
-        OnClick = BlockPasteClick
+        OnClick = mnuEditPasteCellsClick
       end
-      object BlockCut: TMenuItem
+      object mnuEditCutCells: TMenuItem
         Caption = 'Cut a Block of Cells'
         Visible = False
       end
-      object MenuItem49: TMenuItem
+      object mnuEditDIVIDER1: TMenuItem
         Caption = '-'
       end
-      object InsNewCol: TMenuItem
+      object mnuEditNewCol: TMenuItem
         Caption = 'Insert New Column'
         HelpContext = 22
-        OnClick = InsNewColClick
+        OnClick = mnuEditNewColClick
       end
-      object CopyCol: TMenuItem
+      object mnuEditCopyCol: TMenuItem
         Caption = 'Copy Column'
         HelpContext = 23
-        OnClick = CopyColClick
+        OnClick = mnuEditCopyColClick
       end
-      object CutCol: TMenuItem
+      object mnuEditCutCol: TMenuItem
         Caption = 'Cut Column'
         HelpContext = 24
-        OnClick = CutColClick
+        OnClick = mnuEditCutColClick
       end
-      object PasteCol: TMenuItem
+      object mnuEditPasteCol: TMenuItem
         Caption = 'Paste Column'
         HelpContext = 25
-        OnClick = PasteColClick
+        OnClick = mnuEditPasteColClick
       end
-      object MenuItem48: TMenuItem
+      object mnuEditDIVIDER2: TMenuItem
         Caption = '-'
       end
-      object NewRow: TMenuItem
+      object mnuEditNewRow: TMenuItem
         Caption = 'Insert New  Row'
         HelpContext = 26
-        OnClick = NewRowClick
+        OnClick = mnuEditNewRowClick
       end
-      object CopyRowMenu: TMenuItem
+      object mnuEditCopyRow: TMenuItem
         Caption = 'Copy Row'
         HelpContext = 27
-        OnClick = CopyRowMenuClick
+        OnClick = mnuEditCopyRowClick
       end
-      object CutRowMenu: TMenuItem
+      object mnuEditCutRow: TMenuItem
         Caption = 'Cut Row'
         HelpContext = 28
-        OnClick = CutRowMenuClick
+        OnClick = mnuEditCutRowClick
       end
-      object PasteRowMenu: TMenuItem
+      object mnuEditPasteRow: TMenuItem
         Caption = 'Paste Row'
         HelpContext = 29
-        OnClick = PasteRowMenuClick
+        OnClick = mnuEditPasteRowClick
       end
     end
     object MenuItem5: TMenuItem
@@ -950,116 +952,116 @@ object OS3MainFrm: TOS3MainFrm
         OnClick = MatManMnuClick
       end
     end
-    object Option: TMenuItem
+    object mnuIOptions: TMenuItem
       Caption = 'Options'
-      object ShowOpts: TMenuItem
+      object mnuShowOptions: TMenuItem
         Caption = 'Show Options'
-        OnClick = OptionClick
+        OnClick = mnuShowOptionsClick
       end
       object PicView: TMenuItem
         Caption = 'View Pictures'
         Visible = False
       end
     end
-    object MenuItem7: TMenuItem
+    object mnuSimulations: TMenuItem
       Caption = 'Simulations'
-      object ScatPlot: TMenuItem
+      object mnuSimBivarScatterPlot: TMenuItem
         Caption = 'Bivariate Scatter Plot'
-        OnClick = ScatPlotClick
+        OnClick = mnuSimBivarScatterPlotClick
       end
-      object MultDists: TMenuItem
+      object mnuSimMultiVarDists: TMenuItem
         Caption = 'Multivariate Distribution'
-        OnClick = MultDistsClick
+        OnClick = mnuSimMultiVarDistsClick
       end
-      object TypeErrors: TMenuItem
+      object mnuSimTypeErrorCurves: TMenuItem
         Caption = 'Type 1 and Type 2 Error Curves'
-        OnClick = TypeErrorsClick
+        OnClick = mnuSimTypeErrorCurvesClick
       end
-      object Power: TMenuItem
+      object mnuSimPowerCurves: TMenuItem
         Caption = 'Power Curves for a z test'
-        OnClick = PowerClick
+        OnClick = mnuSimPowerCurvesClick
       end
-      object DistPlots: TMenuItem
+      object mnuSimDistPlots: TMenuItem
         Caption = 'Distribution Plots and Critical Values'
-        OnClick = DistPlotsClick
+        OnClick = mnuSimDistPlotsClick
       end
       object MenuItem52: TMenuItem
         Caption = '-'
       end
-      object SeqValues: TMenuItem
+      object mnuSimGenerateSeqValues: TMenuItem
         Caption = 'Generate Sequential Values'
-        OnClick = SeqValuesClick
+        OnClick = mnuSimGenerateSeqValuesClick
       end
-      object RandomVals: TMenuItem
+      object mnuSimGenerateRandomValues: TMenuItem
         Caption = 'Random Theoretical Values'
-        OnClick = RandomValsClick
+        OnClick = mnuSimGenerateRandomValuesClick
       end
       object MenuItem51: TMenuItem
         Caption = '-'
       end
-      object Probabilities: TMenuItem
+      object mnuSimProbabilities: TMenuItem
         Caption = 'Probabilities'
-        object probgtz: TMenuItem
+        object mnuSimProbGreaterZ: TMenuItem
           Caption = 'Probability > z'
-          OnClick = probgtzClick
+          OnClick = mnuSimProbGreaterZClick
         end
-        object Probltz: TMenuItem
+        object mnuSimProbLessZ: TMenuItem
           Caption = 'Probability < z'
-          OnClick = ProbltzClick
+          OnClick = mnuSimProbLessZClick
         end
-        object probzbetween: TMenuItem
+        object mnuSimProbBetween: TMenuItem
           Caption = 'Probability between two z Values'
-          OnClick = probzbetweenClick
+          OnClick = mnuSimProbBetweenClick
         end
         object MenuItem45: TMenuItem
           Caption = '-'
         end
-        object inversez: TMenuItem
+        object mnuSimInverseZ: TMenuItem
           Caption = 'z for a given Cumulative Probability'
-          OnClick = inversezClick
+          OnClick = mnuSimInverseZClick
         end
-        object MenuItem44: TMenuItem
+        object mnuSimProbDIVIDER: TMenuItem
           Caption = '-'
         end
-        object Chiprob: TMenuItem
+        object mnuSimChiSqProb: TMenuItem
           Caption = 'Chi-Square Probability'
-          OnClick = ChiprobClick
+          OnClick = mnuSimChiSqProbClick
         end
-        object tprob: TMenuItem
+        object mnuSimStudentTProb: TMenuItem
           Caption = 'Student t Probability'
-          OnClick = tprobClick
+          OnClick = mnuSimStudentTProbClick
         end
-        object Fprob: TMenuItem
+        object mnuSimFProb: TMenuItem
           Caption = 'F Probability'
-          OnClick = FprobClick
+          OnClick = mnuSimFProbClick
         end
-        object HypergeoProb: TMenuItem
+        object mnuSimHyperGeomProb: TMenuItem
           Caption = 'Hypergeometric Probability'
-          OnClick = HypergeoProbClick
+          OnClick = mnuSimHyperGeomProbClick
         end
       end
     end
     object MenuItem8: TMenuItem
       Caption = 'Help'
-      object About: TMenuItem
+      object mnuHelpAbout: TMenuItem
         Caption = 'About...'
-        OnClick = AboutClick
+        OnClick = mnuHelpAboutClick
       end
-      object LicenseMenu: TMenuItem
+      object mnuHelpLicense: TMenuItem
         Caption = 'License...'
-        OnClick = LicenseMenuClick
+        OnClick = mnuHelpLicenseClick
       end
       object MenuItem46: TMenuItem
         Caption = '-'
       end
-      object mnuShowTOC: TMenuItem
+      object mnuHelpShowTOC: TMenuItem
         Caption = 'Table of Contents'
         HelpContext = 152
-        OnClick = mnuShowTOCClick
+        OnClick = mnuHelpShowTOCClick
       end
-      object GridUse: TMenuItem
+      object mnuHelpUsingGrid: TMenuItem
         Caption = 'Using the Grid'
-        OnClick = GridUseClick
+        OnClick = mnuHelpUsingGridClick
       end
     end
   end

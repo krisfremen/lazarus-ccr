@@ -27,13 +27,13 @@ procedure CopyRow;
 procedure PasteRow;
 procedure PrintDict(AReport: TStrings);
 procedure PrintData(AReport: TStrings);
-function ValidValue(row, col : integer) : boolean;
-function IsFiltered(GridRow : integer) : boolean;
+function ValidValue(row, col: integer): boolean;
+function IsFiltered(GridRow: integer): boolean;
 
 procedure MatRead(const a: DblDyneMat; out NoRows, NoCols: integer;
   const Means, StdDevs: DblDyneVec; out NCases: integer;
   const RowLabels, ColLabels: StrDyneVec; const AFilename: string);
-procedure MATSAVE(const a: DblDyneMat; NoRows, NoCols: Integer;
+procedure MatSave(const a: DblDyneMat; NoRows, NoCols: Integer;
   const Means, StdDevs: DblDyneVec; NCases: integer;
   const RowLabels, ColLabels: StrDyneVec; AFileName: String);
 
@@ -49,8 +49,8 @@ procedure SaveCommaFile;
 procedure SaveSpaceFile;
 
 procedure ClearGrid;
-procedure CopyIt;
-procedure PasteIt;
+procedure CopyCellBlock;
+procedure PasteCellBlock;
 procedure RowColSwap;
 procedure MatToGrid(const mat: DblDyneMat; nsize: integer);
 procedure GetTypes;
@@ -1473,7 +1473,7 @@ begin
   OS3MainFrm.DataGrid.Cells[0,0] := 'CASE/VAR.';
 end;
 
-procedure CopyIt;
+procedure CopyCellBlock;
 var
   rowstart, rowend,colstart, colend, i, j: integer;
   buf: string;
@@ -1502,7 +1502,7 @@ begin
   Clipboard.SetTextBuf(bf);
 end;
 
-procedure PasteIt;
+procedure PasteCellBlock;
 var
   astring, cellstr : string;
   col, howlong, startcol : integer;

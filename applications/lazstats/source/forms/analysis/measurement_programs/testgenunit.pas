@@ -92,7 +92,7 @@ begin
     begin
         res := MessageDlg('You must first close the current file. Close it now?', mtConfirmation, [mbYes, mbNo], 0);
         case res of
-          mrYes: OS3MainFrm.CloseFileBtnClick(nil);
+          mrYes: OS3MainFrm.mnuFileCloseClick(nil);
           mrNo:  exit;
         end;
     end;

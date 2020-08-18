@@ -474,7 +474,7 @@ begin
     // save frequency data file if elected
     if SaveFChk.Checked then
     begin
-         OS3MainFrm.CloseFileBtnClick(self);
+         OS3MainFrm.mnuFileCloseClick(self);
          OS3MainFrm.FileNameEdit.Text := '';
          for i := 1 to DictionaryFrm.DictGrid.RowCount - 1 do
               for j := 0 to 7 do DictionaryFrm.DictGrid.Cells[j,i] := '';

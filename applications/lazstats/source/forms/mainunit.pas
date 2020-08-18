@@ -65,8 +65,8 @@ type
     MenuItem119: TMenuItem;
     MenuItem12: TMenuItem;
     MenuItem120: TMenuItem;
-    About: TMenuItem;
-    CloseFileBtn: TMenuItem;
+    mnuHelpAbout: TMenuItem;
+    mnuFileClose: TMenuItem;
     MenuItem14: TMenuItem;
     MenuItem15: TMenuItem;
     MenuItem17: TMenuItem;
@@ -79,11 +79,11 @@ type
     MenuItem25: TMenuItem;
     MenuItem26: TMenuItem;
     MenuItem27: TMenuItem;
-    blockcopy: TMenuItem;
-    BlockPaste: TMenuItem;
-    BlockCut: TMenuItem;
-    GridUse: TMenuItem;
-    MenuItem28: TMenuItem;
+    mnuEditCopyCells: TMenuItem;
+    mnuEditPasteCells: TMenuItem;
+    mnuEditCutCells: TMenuItem;
+    mnuHelpUsingGrid: TMenuItem;
+    mnuToolsOutputForm: TMenuItem;
     MenuItem29: TMenuItem;
     MenuItem31: TMenuItem;
     MenuItem33: TMenuItem;
@@ -91,18 +91,18 @@ type
     CompareDists: TMenuItem;
     MatManMnu: TMenuItem;
     GrdBkMnu: TMenuItem;
-    inversez: TMenuItem;
-    Chiprob: TMenuItem;
-    Fprob: TMenuItem;
-    HypergeoProb: TMenuItem;
+    mnuSimInverseZ: TMenuItem;
+    mnuSimChiSqProb: TMenuItem;
+    mnuSimFProb: TMenuItem;
+    mnuSimHyperGeomProb: TMenuItem;
     BinA: TMenuItem;
     BartlettTest: TMenuItem;
     GrpFreq: TMenuItem;
     Correspondence: TMenuItem;
     KSTest: TMenuItem;
-    Equation: TMenuItem;
-    Calculater: TMenuItem;
-    JPEGView: TMenuItem;
+    mnuVariablesEquationEditor: TMenuItem;
+    mnuToolsCalculator: TMenuItem;
+    mnuToolsJPEGViewer: TMenuItem;
     MedianPolish: TMenuItem;
     DataSmooth: TMenuItem;
     ItemBankMenuItem: TMenuItem;
@@ -111,17 +111,17 @@ type
     LSMRitem: TMenuItem;
     MenuItem42: TMenuItem;
     MenuItem43: TMenuItem;
-    MenuItem44: TMenuItem;
+    mnuSimProbDIVIDER: TMenuItem;
     MenuItem45: TMenuItem;
     MenuItem46: TMenuItem;
-    LicenseMenu: TMenuItem;
+    mnuHelpLicense: TMenuItem;
     MenuItem47: TMenuItem;
-    MenuItem48: TMenuItem;
-    MenuItem49: TMenuItem;
+    mnuEditDIVIDER2: TMenuItem;
+    mnuEditDIVIDER1: TMenuItem;
     MenuItem50: TMenuItem;
     MenuItem51: TMenuItem;
     MenuItem52: TMenuItem;
-    mnuShowTOC: TMenuItem;
+    mnuHelpShowTOC: TMenuItem;
     SimpChiSqr: TMenuItem;
     SRHItem: TMenuItem;
     OneCaseAnova: TMenuItem;
@@ -129,17 +129,17 @@ type
     Sens: TMenuItem;
     XvsMultY: TMenuItem;
     RunsTest: TMenuItem;
-    smooth: TMenuItem;
+    mnuToolsSmooth: TMenuItem;
     NestedABC: TMenuItem;
-    tprob: TMenuItem;
-    probzbetween: TMenuItem;
-    Probltz: TMenuItem;
-    probgtz: TMenuItem;
-    Probabilities: TMenuItem;
-    StrToIntegers: TMenuItem;
-    SwapDecType: TMenuItem;
+    mnuSimStudentTProb: TMenuItem;
+    mnuSimProbBetween: TMenuItem;
+    mnuSimProbLessZ: TMenuItem;
+    mnuSimProbGreaterZ: TMenuItem;
+    mnuSimProbabilities: TMenuItem;
+    mnuToolsStrToInt: TMenuItem;
+    mnuToolsSwapDecType: TMenuItem;
     PicView: TMenuItem;
-    ShowOpts: TMenuItem;
+    mnuShowOptions: TMenuItem;
     WghtedKappa: TMenuItem;
     WLSReg: TMenuItem;
     TwoSLSReg: TMenuItem;
@@ -149,14 +149,14 @@ type
     pcontrochart: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
-    InsNewCol: TMenuItem;
-    CopyCol: TMenuItem;
-    CutCol: TMenuItem;
-    PasteCol: TMenuItem;
-    NewRow: TMenuItem;
-    CopyRowMenu: TMenuItem;
-    CutRowMenu: TMenuItem;
-    PasteRowMenu: TMenuItem;
+    mnuEditNewCol: TMenuItem;
+    mnuEditCopyCol: TMenuItem;
+    mnuEditCutCol: TMenuItem;
+    mnuEditPasteCol: TMenuItem;
+    mnuEditNewRow: TMenuItem;
+    mnuEditCopyRow: TMenuItem;
+    mnuEditCutRow: TMenuItem;
+    mnuEditPasteRow: TMenuItem;
     MenuItem71: TMenuItem;
     MenuItem72: TMenuItem;
     MenuItem73: TMenuItem;
@@ -196,28 +196,28 @@ type
     Label1: TLabel;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
-    OpenFileBtn: TMenuItem;
-    NewFileBtn: TMenuItem;
-    MenuItem13: TMenuItem;
-    TabFileOut: TMenuItem;
-    MenuItem16: TMenuItem;
-    TabFileInBtn: TMenuItem;
-    CSVFileIn: TMenuItem;
-    SSVFileIn: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem20: TMenuItem;
-    CSVFileOut: TMenuItem;
-    SSVFileOut: TMenuItem;
-    DefineVar: TMenuItem;
-    PrintDefs: TMenuItem;
-    Transform: TMenuItem;
-    Recode: TMenuItem;
-    FormatGrid: TMenuItem;
-    SortCases: TMenuItem;
-    PrintGrid: TMenuItem;
-    MenuItem3: TMenuItem;
-    SelectCases: TMenuItem;
-    LoadSubFile: TMenuItem;
+    mnuFileOpen: TMenuItem;
+    mnuFileNew: TMenuItem;
+    mnuFileImport: TMenuItem;
+    mnuFileExport: TMenuItem;
+    mnuFileExit: TMenuItem;
+    mnuFileImportTAB: TMenuItem;
+    mnuFileImportCSV: TMenuItem;
+    mnuFileImportSSV: TMenuItem;
+    mnuVariables: TMenuItem;
+    mnuFileExportTab: TMenuItem;
+    mnuFileExportCSV: TMenuItem;
+    mnuFileExportSSV: TMenuItem;
+    mnuVariablesDefine: TMenuItem;
+    mnuVariablesPrintDefs: TMenuItem;
+    mnuVariablesTransform: TMenuItem;
+    mnuVariablesRecode: TMenuItem;
+    mnuToolsFormatGrid: TMenuItem;
+    mnuToolsSortCases: TMenuItem;
+    mnuToolsPrintGrid: TMenuItem;
+    mnuTools: TMenuItem;
+    mnuToolsSelectCases: TMenuItem;
+    mnuToolsLoadSubFile: TMenuItem;
     MenuItem32: TMenuItem;
     OneSampTests: TMenuItem;
     MenuItem34: TMenuItem;
@@ -226,7 +226,7 @@ type
     MenuItem37: TMenuItem;
     MenuItem38: TMenuItem;
     MenuItem39: TMenuItem;
-    MenuItem4: TMenuItem;
+    mnuEdit: TMenuItem;
     MenuItem40: TMenuItem;
     MenuItem41: TMenuItem;
     Distributions: TMenuItem;
@@ -248,25 +248,104 @@ type
     WithinAnova: TMenuItem;
     AxSAnova: TMenuItem;
     ABSAnova: TMenuItem;
-    Option: TMenuItem;
+    mnuIOptions: TMenuItem;
     Ancova: TMenuItem;
     GLM: TMenuItem;
     LatinSquares: TMenuItem;
-    ScatPlot: TMenuItem;
-    MultDists: TMenuItem;
-    TypeErrors: TMenuItem;
-    Power: TMenuItem;
-    DistPlots: TMenuItem;
-    SeqValues: TMenuItem;
-    MenuItem7: TMenuItem;
-    RandomVals: TMenuItem;
+    mnuSimBivarScatterPlot: TMenuItem;
+    mnuSimMultiVarDists: TMenuItem;
+    mnuSimTypeErrorCurves: TMenuItem;
+    mnuSimPowerCurves: TMenuItem;
+    mnuSimDistPlots: TMenuItem;
+    mnuSimGenerateSeqValues: TMenuItem;
+    mnuSimulations: TMenuItem;
+    mnuSimGenerateRandomValues: TMenuItem;
     MenuItem8: TMenuItem;
-    MenuItem30: TMenuItem;
-    SaveFileBtn: TMenuItem;
+    mnuToolsSwapRowsCols: TMenuItem;
+    mnuFileSave: TMenuItem;
     Panel1: TPanel;
     Panel2: TPanel;
     DataGrid: TStringGrid;
-    procedure AboutClick(Sender: TObject);
+
+    // Form event handlers
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+
+    // Menu "Edit"
+    procedure mnuEditCopyCellsClick(Sender: TObject);
+    procedure mnuEditCopyColClick(Sender: TObject);
+    procedure mnuEditCopyRowClick(Sender: TObject);
+    procedure mnuEditCutColClick(Sender: TObject);
+    procedure mnuEditCutRowClick(Sender: TObject);
+    procedure mnuEditNewColClick(Sender: TObject);
+    procedure mnuEditNewRowClick(Sender: TObject);
+    procedure mnuEditPasteCellsClick(Sender: TObject);
+    procedure mnuEditPasteColClick(Sender: TObject);
+    procedure mnuEditPasteRowClick(Sender: TObject);
+
+    // Menu "File"
+    procedure mnuFileCloseClick(Sender: TObject);
+    procedure mnuFileExitClick(Sender: TObject);
+    procedure mnuFileExportCSVClick(Sender: TObject);
+    procedure mnuFileExportSSVClick(Sender: TObject);
+    procedure mnuFileExportTabClick(Sender: TObject);
+    procedure mnuFileImportCSVClick(Sender: TObject);
+    procedure mnuFileImportSSVClick(Sender: TObject);
+    procedure mnuFileImportTABClick(Sender: TObject);
+    procedure mnuFileNewClick(Sender: TObject);
+    procedure mnuFileOpenClick(Sender: TObject);
+    procedure mnuFileSaveClick(Sender: TObject);
+
+    // Menu "Help"
+    procedure mnuHelpAboutClick(Sender: TObject);
+    procedure mnuHelpLicenseClick(Sender: TObject);
+    procedure mnuHelpShowTOCClick(Sender: TObject);
+    procedure mnuHelpUsingGridClick(Sender: TObject);
+
+    // Menu "Options"
+    procedure mnuShowOptionsClick(Sender: TObject);
+
+    // Menu "Simulations"
+    procedure mnuSimBivarScatterPlotClick(Sender: TObject);
+    procedure mnuSimChiSqProbClick(Sender: TObject);
+    procedure mnuSimDistPlotsClick(Sender: TObject);
+    procedure mnuSimFProbClick(Sender: TObject);
+    procedure mnuSimGenerateRandomValuesClick(Sender: TObject);
+    procedure mnuSimGenerateSeqValuesClick(Sender: TObject);
+    procedure mnuSimHyperGeomProbClick(Sender: TObject);
+    procedure mnuSimInverseZClick(Sender: TObject);
+    procedure mnuSimMultiVarDistsClick(Sender: TObject);
+    procedure mnuSimPowerCurvesClick(Sender: TObject);
+    procedure mnuSimProbBetweenClick(Sender: TObject);
+    procedure mnuSimProbGreaterZClick(Sender: TObject);
+    procedure mnuSimProbLessZClick(Sender: TObject);
+    procedure mnuSimStudentTProbClick(Sender: TObject);
+    procedure mnuSimTypeErrorCurvesClick(Sender: TObject);
+
+    // Menu "Tools"
+    procedure mnuToolsCalculatorClick(Sender: TObject);
+    procedure mnuToolsFormatGridClick(Sender: TObject);
+    procedure mnuToolsJPEGViewerClick(Sender: TObject);
+    procedure mnuToolsOutputFormClick(Sender: TObject);
+    procedure mnuToolsPrintGridClick(Sender: TObject);
+    procedure mnuToolsSelectCasesClick(Sender: TObject);
+    procedure mnuToolsSmoothClick(Sender: TObject);
+    procedure mnuToolsSortCasesClick(Sender: TObject);
+    procedure mnuToolsStrToIntClick(Sender: TObject);
+    procedure mnuToolsSwapDecTypeClick(Sender: TObject);
+    procedure mnuToolsSwapRowsColsClick(Sender: TObject);
+
+
+    // Menu "Variables"
+    procedure mnuVariablesDefineClick(Sender: TObject);
+    procedure mnuVariablesEquationEditorClick(Sender: TObject);
+    procedure mnuVariablesPrintDefsClick(Sender: TObject);
+    procedure mnuVariablesRecodeClick(Sender: TObject);
+    procedure mnuVariablesTransformClick(Sender: TObject);
+
+
     procedure ABSAnovaClick(Sender: TObject);
     procedure AncovaClick(Sender: TObject);
     procedure AnovaClick(Sender: TObject);
@@ -274,55 +353,29 @@ type
     procedure AxSAnovaClick(Sender: TObject);
     procedure BartlettTestClick(Sender: TObject);
     procedure BinAClick(Sender: TObject);
-    procedure blockcopyClick(Sender: TObject);
-    procedure BlockPasteClick(Sender: TObject);
     procedure BoxPlotClick(Sender: TObject);
     procedure BreakdownClick(Sender: TObject);
     procedure BubblePlotClick(Sender: TObject);
-    procedure CalculaterClick(Sender: TObject);
-    procedure ChiprobClick(Sender: TObject);
-    procedure CloseFileBtnClick(Sender: TObject);
     procedure CompareDistsClick(Sender: TObject);
-    procedure CopyColClick(Sender: TObject);
-    procedure CopyRowMenuClick(Sender: TObject);
     procedure CorrDiffClick(Sender: TObject);
     procedure CorrespondenceClick(Sender: TObject);
     procedure CrossTabsClick(Sender: TObject);
-    procedure CSVFileInClick(Sender: TObject);
-    procedure CSVFileOutClick(Sender: TObject);
-    procedure CutColClick(Sender: TObject);
-    procedure CutRowMenuClick(Sender: TObject);
     procedure DataGridClick(Sender: TObject);
     procedure DataGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DataGridKeyPress(Sender: TObject; var Key: char);
-    procedure DataGridPrepareCanvas(sender: TObject; aCol, aRow: Integer;
-      aState: TGridDrawState);
+    procedure DataGridPrepareCanvas(sender: TObject; aCol, aRow: Integer; aState: TGridDrawState);
     procedure DataSmoothClick(Sender: TObject);
-    procedure DefineVarClick(Sender: TObject);
-    procedure DistPlotsClick(Sender: TObject);
     procedure DistributionsClick(Sender: TObject);
-    procedure EquationClick(Sender: TObject);
-    procedure FormatGridClick(Sender: TObject);
-//    procedure FormClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure FprobClick(Sender: TObject);
     procedure FreqAnalClick(Sender: TObject);
     procedure GenKappaClick(Sender: TObject);
     procedure GLMClick(Sender: TObject);
     procedure GrdBkMnuClick(Sender: TObject);
-    procedure GridUseClick(Sender: TObject);
     procedure GrpFreqClick(Sender: TObject);
     //procedure HelpContentsClick(Sender: TObject);
     procedure homotestClick(Sender: TObject);
-    procedure HypergeoProbClick(Sender: TObject);
-    procedure InsNewColClick(Sender: TObject);
-    procedure inversezClick(Sender: TObject);
     procedure ItemBankMenuItemClick(Sender: TObject);
-    procedure JPEGViewClick(Sender: TObject);
     procedure KSTestClick(Sender: TObject);
     procedure LatinSquaresClick(Sender: TObject);
-    procedure LicenseMenuClick(Sender: TObject);
     procedure lifetableClick(Sender: TObject);
     procedure LSMRitemClick(Sender: TObject);
     procedure MatManMnuClick(Sender: TObject);
@@ -351,10 +404,7 @@ type
     procedure MenuItem11Click(Sender: TObject);
     procedure MenuItem120Click(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
-    procedure MenuItem16Click(Sender: TObject);
-    procedure MenuItem20Click(Sender: TObject);
     procedure MenuItem27Click(Sender: TObject);
-    procedure MenuItem28Click(Sender: TObject);
     procedure MenuItem29Click(Sender: TObject);
     procedure MenuItem31Click(Sender: TObject);
     procedure MenuItem33Click(Sender: TObject);
@@ -388,56 +438,25 @@ type
     procedure MenuItem97Click(Sender: TObject);
     procedure MenuItem98Click(Sender: TObject);
     procedure MenuItem99Click(Sender: TObject);
-    procedure MenuItem30Click(Sender: TObject);
-    procedure mnuShowTOCClick(Sender: TObject);
-    procedure MultDistsClick(Sender: TObject);
     procedure MultXvsYClick(Sender: TObject);
     procedure NestedABCClick(Sender: TObject);
-    procedure NewFileBtnClick(Sender: TObject);
-    procedure NewRowClick(Sender: TObject);
     procedure NormalityTestsClick(Sender: TObject);
     procedure OneCaseAnovaClick(Sender: TObject);
     procedure OneSampTestsClick(Sender: TObject);
-    procedure OpenFileBtnClick(Sender: TObject);
-    procedure OptionClick(Sender: TObject);
-    procedure PasteColClick(Sender: TObject);
-    procedure PasteRowMenuClick(Sender: TObject);
     procedure pcontrochartClick(Sender: TObject);
 //    procedure PicViewClick(Sender: TObject);
     procedure PlotXvsYClick(Sender: TObject);
-    procedure PowerClick(Sender: TObject);
-    procedure PrintDefsClick(Sender: TObject);
-    procedure PrintGridClick(Sender: TObject);
-    procedure probgtzClick(Sender: TObject);
-    procedure ProbltzClick(Sender: TObject);
-    procedure probzbetweenClick(Sender: TObject);
     procedure PropDiffClick(Sender: TObject);
-    procedure RandomValsClick(Sender: TObject);
-    procedure RecodeClick(Sender: TObject);
     procedure ResistanceLineClick(Sender: TObject);
     procedure RiditAnalysisClick(Sender: TObject);
     procedure RunsTestClick(Sender: TObject);
-    procedure SaveFileBtnClick(Sender: TObject);
-    procedure ScatPlotClick(Sender: TObject);
-    procedure SelectCasesClick(Sender: TObject);
     procedure SensClick(Sender: TObject);
-    procedure SeqValuesClick(Sender: TObject);
     procedure SimpChiSqrClick(Sender: TObject);
-    procedure smoothClick(Sender: TObject);
-    procedure SortCasesClick(Sender: TObject);
     procedure SRHItemClick(Sender: TObject);
-    procedure SSVFileInClick(Sender: TObject);
-    procedure SSVFileOutClick(Sender: TObject);
     procedure StemLeafClick(Sender: TObject);
-    procedure StrToIntegersClick(Sender: TObject);
-    procedure SwapDecTypeClick(Sender: TObject);
-    procedure TabFileInBtnClick(Sender: TObject);
     procedure ThreeDRotateClick(Sender: TObject);
-    procedure tprobClick(Sender: TObject);
-    procedure TransformClick(Sender: TObject);
     procedure TTestsClick(Sender: TObject);
     procedure TwoSLSRegClick(Sender: TObject);
-    procedure TypeErrorsClick(Sender: TObject);
     procedure WghtedKappaClick(Sender: TObject);
     procedure WithinAnovaClick(Sender: TObject);
     procedure WLSRegClick(Sender: TObject);
@@ -494,18 +513,76 @@ const
 
 { TOS3MainFrm }
 
-// Menu "Options" > "Exit"
-procedure TOS3MainFrm.MenuItem16Click(Sender: TObject);
+procedure TOS3MainFrm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var
+  res: TModalResult;
+begin
+  res := MessageDlg('Do you really want to close LazStats?', mtConfirmation, [mbYes, mbNo], 0);
+  CanClose := (res = mrYes);
+end;
+
+procedure TOS3MainFrm.FormCreate(Sender: TObject);
+var
+  helpfn: String;
+  lhelpfn: String;
+begin
+  // Reduce ultra-wide width of Inputbox windows
+  cInputQueryEditSizePercents := 0;
+
+  if DictionaryFrm = nil then
+    Application.CreateForm(TDictionaryFrm, DictionaryFrm);
+
+  if OutputFrm = nil then
+    Application.CreateForm(TOutputFrm, OutputFrm);
+
+  helpfn := Application.Location + 'LazStats.chm';
+  if FileExists(helpfn) then
+  begin
+    Application.HelpFile := helpfn;
+   {$IFDEF USE_EXTERNAL_HELP_VIEWER}
+     Application.OnHelp := @HelpHandler;
+   {$ELSE}
+    lhelpfn := Options.LHelpPath;
+    if lhelpfn = '<default>' then
+      lhelpfn := Application.Location + 'lhelp' + GetExeExt;
+    if FileExists(lhelpfn) then
+    begin
+      CHMHelpDatabase := TCHMHelpDatabase.Create(self);
+      CHMHelpDatabase.KeywordPrefix := HELP_KEYWORD_PREFIX;
+      CHMHelpDatabase.AutoRegister := true;
+      CHMHelpDatabase.Filename := helpfn;
+
+      LHelpConnector := TLHelpConnector.Create(self);
+      LHelpConnector.AutoRegister := true;
+      LHelpConnector.LHelpPath := lhelpfn;
+
+      //CreateLCLHelpSystem;
+    end else
+      MessageDlg('Help viewer LHelp.exe not found.' + LineEnding +
+        'Please copy this program to the LazStats directory to access the help system.',
+        mtError, [mbOK], 0
+      );
+   {$ENDIF}
+  end
+  else
+    MessageDlg('LazStats help file not found.', mtError, [mbOK], 0);
+end;
+
+procedure TOS3MainFrm.FormDestroy(Sender: TObject);
 begin
   SaveOptions;
   TempStream.Free;
   TempVarItm.Free;
-  Close;
 end;
 
-procedure TOS3MainFrm.MenuItem20Click(Sender: TObject);
+procedure TOS3MainFrm.FormShow(Sender: TObject);
 begin
-  SaveTabFile;
+  Init;
+  if ParamCount > 0 then begin
+    OpenOS2File(ParamStr(1), false);
+    NoVarsEdit.Text := IntToStr(DataGrid.ColCount-1);
+    NoCasesEdit.Text := IntToStr(DataGrid.RowCount-1);
+  end;
 end;
 
 // Menu "Analysis" > "Financial" > "Double Declining Value"
@@ -514,14 +591,6 @@ begin
   if DblDeclineFrm = nil then
     Application.CreateForm(TDblDeclineFrm, DblDeclineFrm);
   DblDeclineFrm.ShowModal;
-end;
-
-// Menu "Tools" > "Show Output Form"
-procedure TOS3MainFrm.MenuItem28Click(Sender: TObject);
-begin
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
-  OutputFrm.ShowModal;
 end;
 
 // Menu" "Analysis" > "Multivariate" >  "Average Link Clustering"
@@ -784,14 +853,6 @@ begin
   SpBrFrm.ShowModal;
 end;
 
-// Menu "Simulations" > "Multivariate Distribution"
-procedure TOS3MainFrm.MultDistsClick(Sender: TObject);
-begin
-  if MultGenFrm = nil then
-    Application.CreateForm(TMultGenFrm, MultGenFrm);
-  MultGenFrm.ShowModal;
-end;
-
 //Menu "Analysis" > "Descriptive" > "Multiple Group X vs Y Plot"
 procedure TOS3MainFrm.MultXvsYClick(Sender: TObject);
 begin
@@ -806,16 +867,6 @@ begin
   if ABCNestedForm = nil then
     Application.CreateForm(TABCNestedForm, ABCNestedForm);
   ABCNestedForm.ShowModal;
-end;
-
-procedure TOS3MainFrm.NewFileBtnClick(Sender: TObject);
-begin
-  ClearGrid;
-end;
-
-procedure TOS3MainFrm.NewRowClick(Sender: TObject);
-begin
-  InsertRow;
 end;
 
 // Menu "Analysis" > "Descriptive" > "Normality Tests"
@@ -842,55 +893,6 @@ begin
   OneSampFrm.ShowModal;
 end;
 
-procedure TOS3MainFrm.OpenFileBtnClick(Sender: TObject);
-{
-var
-  i : integer;
-  filename : string;
-  }
-begin
-  OpenOS2File;
-  SaveOptions;
-  (*
-  filename := FileNameEdit.Text;
-     // move all down 1 and add new one at the top
-{     for i := 8 downto 1 do
-     begin
-          MainMenu1.Items[0].Items[11].Items[i].Caption :=
-                    MainMenu1.Items[0].Items[11].Items[i-1].Caption;
-          MainMenu1.Items[0].Items[11].Items[i-1].Caption := ' ';
-     end;
-     MainMenu1.Items[0].Items[11].Items[0].Caption := filename;}
-  if OptionsFrm = nil then
-    Application.CreateForm(TOptionsFrm, OptionsFrm);
-  OptionsFrm.SaveBtnClick(Self);
-  *)
-end;
-
-procedure TOS3MainFrm.OptionClick(Sender: TObject);
-begin
-  with TOptionsFrm.Create(nil) do
-    try
-      ShowModal;
-    finally
-      Free;
-    end;
-  {
-  if OptionsFrm = nil then
-    Application.CreateForm(TOptionsFrm, OptionsFrm);
-  OptionsFrm.ShowModal;
-  }
-end;
-
-procedure TOS3MainFrm.PasteColClick(Sender: TObject);
-begin
-  PasteColumn;
-end;
-
-procedure TOS3MainFrm.PasteRowMenuClick(Sender: TObject);
-begin
-  PasteRow;
-end;
 
 // Menu "Analysis" > "Statistical Process Control" > "p Control Chart"
 procedure TOS3MainFrm.pcontrochartClick(Sender: TObject);
@@ -908,62 +910,6 @@ begin
   PlotXYFrm.ShowModal;
 end;
 
-// Menu "Simulations" > "Power Curves for a z test"
-procedure TOS3MainFrm.PowerClick(Sender: TObject);
-begin
-  if PCurvesFrm = nil then
-    Application.CreateForm(TPCurvesFrm, PCurvesFrm);
-  PCurvesFrm.ShowModal;
-end;
-
-procedure TOS3MainFrm.PrintDefsClick(Sender: TObject);
-var
-  lReport: TStrings;
-begin
-  lReport := TStringList.Create;
-  try
-    PrintDict(lReport);
-    DisplayReport(lReport);
-  finally
-    lReport.Free;
-  end;
-end;
-
-procedure TOS3MainFrm.PrintGridClick(Sender: TObject);
-var
-  lReport: TStrings;
-begin
-  lReport := TStringList.Create;
-  try
-    PrintData(lReport);
-  finally
-    lReport.Free;
-  end;
-end;
-
-// Menu "Simulations" > "Probability > z"
-procedure TOS3MainFrm.probgtzClick(Sender: TObject);
-begin
-  if ProbzForm = nil then
-    Application.CreateForm(TProbZForm, ProbZForm);
-  ProbzForm.ShowModal;
-end;
-
-// Menu "Simulations" > "Probability < z"
-procedure TOS3MainFrm.ProbltzClick(Sender: TObject);
-begin
-  if ProbSmallerZForm = nil then
-    Application.CreateForm(TProbSmallerZForm, ProbSmallerZForm);
-  ProbSmallerzForm.ShowModal;
-end;
-
-// Menu "Simulations" > "Prob between 2 z values"
-procedure TOS3MainFrm.probzbetweenClick(Sender: TObject);
-begin
-  if TwoZProbForm = nil then
-    Application.CreateForm(TTwoZProbForm, TwoZProbForm);
-  TwozProbForm.ShowModal;
-end;
 
 // Menu "Analysis" > "Comparisons" > "Difference beween Proportions"
 procedure TOS3MainFrm.PropDiffClick(Sender: TObject);
@@ -971,22 +917,6 @@ begin
   if TwoPropFrm = nil then
     Application.CreateForm(TTwoPropFrm, TwoPropFrm);
   TwoPropFrm.ShowModal;
-end;
-
-// Menu "Simulations" > "Random Theoretical Values"
-procedure TOS3MainFrm.RandomValsClick(Sender: TObject);
-begin
-  if GenRndValsFrm = nil then
-    Application.CreateForm(TGenRndValsFrm, GenRndValsFrm);
-  GenRndValsFrm.ShowModal;
-end;
-
-// Menu "Variables" > "Recode Variables"
-procedure TOS3MainFrm.RecodeClick(Sender: TObject);
-begin
-  if RecodeFrm = nil then
-    Application.CreateForm(TRecodeFrm, RecodeFrm);
-  RecodeFrm.ShowModal;
 end;
 
 procedure TOS3MainFrm.ResistanceLineClick(Sender: TObject);
@@ -1012,46 +942,6 @@ begin
   RunsTestForm.ShowModal;
 end;
 
-procedure TOS3MainFrm.SaveFileBtnClick(Sender: TObject);
-(*
-var
-  i : integer;
-  filename : string;
-    *)
-begin
-  SaveOS2File;
-  SaveOptions;
-  (*
-  filename := FileNameEdit.Text;
-     // move all down 1 and add new one at the top
-{     for i := 8 downto 1 do
-     begin
-          MainMenu1.Items[0].Items[11].Items[i].Caption :=
-                    MainMenu1.Items[0].Items[11].Items[i-1].Caption;
-          MainMenu1.Items[0].Items[11].Items[i-1].Caption := ' ';
-     end;
-     MainMenu1.Items[0].Items[11].Items[0].Caption := filename;}
-  if OptionsFrm = nil then
-    Application.CreateForm(TOptionsFrm, OptionsFrm);
-  OptionsFrm.SaveBtnClick(Self);
-  *)
-end;
-
-// Menu "Simulations" > "Bivariate Scatter Plot"
-procedure TOS3MainFrm.ScatPlotClick(Sender: TObject);
-begin
-  if CorSimFrm = nil then
-    Application.CreateForm(TCorSimFrm, CorSimFrm);
-  CorSimFrm.ShowModal;
-end;
-
-// Menu "Tools" > "Select cases"
-procedure TOS3MainFrm.SelectCasesClick(Sender: TObject);
-begin
-  if SelectFrm = nil then
-    Application.CreateForm(TSelectFrm, SelectFrm);
-  SelectFrm.ShowModal;
-end;
 
 // Menu "Analysis" > "Nonparametric" > "Sens's Slope Analysis"
 procedure TOS3MainFrm.SensClick(Sender: TObject);
@@ -1059,14 +949,6 @@ begin
   if SensForm = nil then
     Application.CreateForm(TSensForm, SensForm);
   SensForm.ShowModal;
-end;
-
-// Menu "Simulations" > "Generate Sequential Values"
-procedure TOS3MainFrm.SeqValuesClick(Sender: TObject);
-begin
-  if GenSeqFrm = nil then
-    Application.CreateForm(TGenSeqFrm, GenSeqFrm);
-  GenSeqFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Nonparametric" > "Simple Chi Square for Categories"
@@ -1077,38 +959,12 @@ begin
   SimpleChiSqrForm.ShowModal;
 end;
 
-// Menu "Tools" > "Smooth Data in a Variable"
-procedure TOS3MainFrm.smoothClick(Sender: TObject);
-begin
-  if SmoothDataForm = nil then
-    Application.CreateForm(TSmoothDataForm, SmoothDataForm);
-  SmoothDataForm.ShowModal;
-end;
-
-// Menu "Tools" > "Sort Cases"
-procedure TOS3MainFrm.SortCasesClick(Sender: TObject);
-begin
-  if SortCasesFrm = nil then
-    Application.CreateForm(TSortCasesFrm, SortCasesFrm);
-  SortCasesFrm.ShowModal;
-end;
-
 // Menu "Analysis" > "Nonparametric" > "Schreier-Ray-Heart Two-Way ANOVA"
 procedure TOS3MainFrm.SRHItemClick(Sender: TObject);
 begin
   if SRHTest = nil then
     Application.CreateForm(TSRHTest, SRHTest);
   SRHTest.ShowModal;
-end;
-
-procedure TOS3MainFrm.SSVFileInClick(Sender: TObject);
-begin
-  OpenSpaceFile;
-end;
-
-procedure TOS3MainFrm.SSVFileOutClick(Sender: TObject);
-begin
-  SaveSpaceFile;
 end;
 
 // Menu "Analysis" > "Descriptive" > "Stem and Leaf Plot"
@@ -1119,45 +975,6 @@ begin
   StemLeafFrm.ShowModal;
 end;
 
-procedure TOS3MainFrm.StrToIntegersClick(Sender: TObject);
-var
-  results, prompt: boolean;
-  col: integer;
-begin
-  col := DataGrid.Col;
-  DataGrid.Row := 1;
-  prompt := true;
-  results := DataProcs.StringsToInt(col,col, prompt);
-  DataGrid.Col := col;
-  if not results then DeleteCol;
-end;
-
-procedure TOS3MainFrm.SwapDecTypeClick(Sender: TObject);
-var
-   i, j, k: integer;
-   newDecSep: Char;
-   cellStr: String;
-begin
-  case Options.FractionType of
-    ftPoint: newDecSep := ',';  // Current type is English - switch to European
-    ftComma: newDecSep := '.';  // Current type is European - switch to English
-  end;
-
-  for i := 1 to DataGrid.RowCount-1 do
-    for j := 1 to DataGrid.ColCount - 1 do
-    begin
-      cellstr := DataGrid.Cells[j,i];
-      for k := 1 to Length(cellStr) do
-        if cellstr[k] = DefaultFormatSettings.DecimalSeparator then
-          cellstr[k] := newDecSep;
-      DataGrid.Cells[j,i] := cellstr;
-    end;
-end;
-
-procedure TOS3MainFrm.TabFileInBtnClick(Sender: TObject);
-begin
-  OpenTabFile;
-end;
 
 // Menu "Analysis" > "Descriptive" > "3-D Variable Rotation"
 procedure TOS3MainFrm.ThreeDRotateClick(Sender: TObject);
@@ -1167,28 +984,6 @@ begin
   Rot3DFrm.ShowModal;
 end;
 
-// Menu "Simulations" > "Student t probability"
-procedure TOS3MainFrm.tprobClick(Sender: TObject);
-begin
-  if TProbForm = nil then
-    Application.CreateForm(TTProbForm, TProbForm);
-  TprobForm.ShowModal;
-end;
-
-// Menu "Variables" > "Transform Variables"
-procedure TOS3MainFrm.TransformClick(Sender: TObject);
-var
-  err: string;
-begin
-  try
-    if TransFrm = nil then
-      Application.CreateForm(TTransFrm, TransFrm);
-    TransFrm.ShowModal;
-  except
-    err := 'Error in showing transformations';
-    ErrorMsg(err);
-  end;
-end;
 
 // Menu "Analysis" > "Comparisons" > "t-tests"
 procedure TOS3MainFrm.TTestsClick(Sender: TObject);
@@ -1204,14 +999,6 @@ begin
   if TwoSLSFrm = nil then
     Application.CreateForm(TTwoSLSFrm, TwoSLSFrm);
   TwoSLSFrm.ShowModal;
-end;
-
-// Menu "Simulations" > "Type 1 and Type 2 Error Curves"
-procedure TOS3MainFrm.TypeErrorsClick(Sender: TObject);
-begin
-  if ErrorCurvesFrm = nil then
-    Application.CreateForm(TErrorCurvesFrm, ErrorCurvesFrm);
-  ErrorCurvesFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Nonparametric" > "Kappa and Weighted Kappa"
@@ -1246,21 +1033,6 @@ begin
   XvsMultYForm.ShowModal;
 end;
 
-procedure TOS3MainFrm.DefineVarClick(Sender: TObject);
-begin
-  if DictionaryFrm = nil then
-    Application.CreateForm(TDictionaryFrm, DictionaryFrm);
-  DictionaryFrm.ShowModal;
-end;
-
-// Menu "Simulations" > "Distribution Plots and Critical Values"
-procedure TOS3MainFrm.DistPlotsClick(Sender: TObject);
-begin
-  if DistribFrm = nil then
-    Application.CreateForm(TDistribFrm, DistribFrm);
-  DistribFrm.ShowModal;
-end;
-
 // Menu "Analysis" > "Descriptive" > "Distribution Statistics"
 procedure TOS3MainFrm.DistributionsClick(Sender: TObject);
 begin
@@ -1269,18 +1041,7 @@ begin
   DescriptiveFrm.ShowModal;
 end;
 
-// Menu "Variables" > "Equation Editor"
-procedure TOS3MainFrm.EquationClick(Sender: TObject);
-begin
-  if EquationForm = nil then
-    Application.CreateForm(TEquationForm, EquationForm);
-  EquationForm.ShowModal;
-end;
 
-procedure TOS3MainFrm.FormatGridClick(Sender: TObject);
-begin
-  DataProcs.FormatGrid;
-end;
              {
 procedure TOS3MainFrm.FormClick(Sender: TObject);
 begin
@@ -1296,53 +1057,6 @@ begin
   OptionsFrm.ShowModal;
   *)
 end;          }
-
-procedure TOS3MainFrm.FormCreate(Sender: TObject);
-var
-  helpfn: String;
-  lhelpfn: String;
-begin
-  // Reduce ultra-wide width of Inputbox windows
-  cInputQueryEditSizePercents := 0;
-
-  if DictionaryFrm = nil then
-    Application.CreateForm(TDictionaryFrm, DictionaryFrm);
-
-  if OutputFrm = nil then
-    Application.CreateForm(TOutputFrm, OutputFrm);
-
-  helpfn := Application.Location + 'LazStats.chm';
-  if FileExists(helpfn) then
-  begin
-    Application.HelpFile := helpfn;
-   {$IFDEF USE_EXTERNAL_HELP_VIEWER}
-     Application.OnHelp := @HelpHandler;
-   {$ELSE}
-    lhelpfn := Options.LHelpPath;
-    if lhelpfn = '<default>' then
-      lhelpfn := Application.Location + 'lhelp' + GetExeExt;
-    if FileExists(lhelpfn) then
-    begin
-      CHMHelpDatabase := TCHMHelpDatabase.Create(self);
-      CHMHelpDatabase.KeywordPrefix := HELP_KEYWORD_PREFIX;
-      CHMHelpDatabase.AutoRegister := true;
-      CHMHelpDatabase.Filename := helpfn;
-
-      LHelpConnector := TLHelpConnector.Create(self);
-      LHelpConnector.AutoRegister := true;
-      LHelpConnector.LHelpPath := lhelpfn;
-
-      //CreateLCLHelpSystem;
-    end else
-      MessageDlg('Help viewer LHelp.exe not found.' + LineEnding +
-        'Please copy this program to the LazStats directory to access the help system.',
-        mtError, [mbOK], 0
-      );
-   {$ENDIF}
-  end
-  else
-    MessageDlg('LazStats help file not found.', mtError, [mbOK], 0);
-end;
 
 procedure TOS3MainFrm.DataGridKeyPress(Sender: TObject; var Key: char);
 var
@@ -1435,19 +1149,6 @@ begin
           if DataGrid.Cells[PrevCol,PrevRow] <> '' then FormatCell(PrevCol,PrevRow);
 end;
 
-procedure TOS3MainFrm.CSVFileInClick(Sender: TObject);
-begin
-     OpenCommaFile;
-end;
-
-procedure TOS3MainFrm.CloseFileBtnClick(Sender: TObject);
-begin
-  NoCases := 0;
-  NoVariables := 0;
-  Init;
-  DataGrid.Cells[1, 0] := '';
-end;
-
 // Menu "Analysis" > "Descriptive" > "Compare Distributions"
 procedure TOS3MainFrm.CompareDistsClick(Sender: TObject);
 begin
@@ -1472,22 +1173,6 @@ begin
   BubbleForm.ShowModal;
 end;
 
-// Menu "Tools" > "Calculator"
-procedure TOS3MainFrm.CalculaterClick(Sender: TObject);
-begin
-  if CalculatorForm = nil then
-    Application.CreateForm(TCalculatorForm, CalculatorForm);
-  CalculatorForm.ShowModal;
-end;
-
-// Menu "Simulations" > "Chisquare Probability"
-procedure TOS3MainFrm.ChiprobClick(Sender: TObject);
-begin
-  if ChiSqrProbForm = nil then
-    Application.CreateForm(TChiSqrProbForm, ChiSqrProbForm);
-  ChiSqrProbForm.ShowModal;
-end;
-
 // Menu "Analysis" > "Descriptive" > "Box Plot"
 procedure TOS3MainFrm.BoxPlotClick(Sender: TObject);
 begin
@@ -1510,13 +1195,6 @@ begin
   if ABRAnovaFrm = nil then
     Application.CreateForm(TABRAnovaFrm, ABRAnovaFrm);
   ABRAnovaFrm.ShowModal;
-end;
-
-// Menu "Help" > "About"
-procedure TOS3MainFrm.AboutClick(Sender: TObject);
-begin
-  ShowAboutBox;
-//  ShowMessage('Copyright November 1, 2011 by Bill Miller');
 end;
 
 // Menu "Analysis" > "Comparisons" > "ANCOVA by Regression"
@@ -1551,26 +1229,6 @@ begin
   BNestedAForm.ShowModal;
 end;
 
-procedure TOS3MainFrm.blockcopyClick(Sender: TObject);
-begin
-  CopyIt;
-end;
-
-procedure TOS3MainFrm.BlockPasteClick(Sender: TObject);
-begin
-  PasteIt;
-end;
-
-procedure TOS3MainFrm.CopyColClick(Sender: TObject);
-begin
-  CopyColumn;
-end;
-
-procedure TOS3MainFrm.CopyRowMenuClick(Sender: TObject);
-begin
-  CopyRow;
-end;
-
 // Menu "Analysis" > "Comparisons" > "Difference Between Correlations"
 procedure TOS3MainFrm.CorrDiffClick(Sender: TObject);
 begin
@@ -1595,36 +1253,12 @@ begin
   CrossTabFrm.ShowModal;
 end;
 
-procedure TOS3MainFrm.CSVFileOutClick(Sender: TObject);
-begin
-  SaveCommaFile;
-end;
-
-procedure TOS3MainFrm.CutColClick(Sender: TObject);
-begin
-  DeleteCol;
-end;
-
-procedure TOS3MainFrm.CutRowMenuClick(Sender: TObject);
-begin
-  CutRow;
-end;
-
 procedure TOS3MainFrm.DataGridClick(Sender: TObject);
 begin
   RowEdit.Text := IntToStr(DataGrid.Row);
   ColEdit.Text := IntToStr(DataGrid.Col);
 end;
 
-procedure TOS3MainFrm.FormShow(Sender: TObject);
-begin
-  Init;
-  if ParamCount > 0 then begin
-    OpenOS2File(ParamStr(1), false);
-    NoVarsEdit.Text := IntToStr(DataGrid.ColCount-1);
-    NoCasesEdit.Text := IntToStr(DataGrid.RowCount-1);
-  end;
-end;
 
 {$IFDEF USE_EXTERNAL_HELP_VIEWER}
 // Call HTML help (.chm file)
@@ -1704,13 +1338,503 @@ begin
   NoCasesEdit.Text := IntToStr(DataGrid.RowCount-1);
 end;
 
+// Menu "Edit" > "Copy Block of Cells"
+procedure TOS3MainFrm.mnuEditCopyCellsClick(Sender: TObject);
+begin
+  CopyCellBlock;
+end;
+
+// Menu "Edit" > "Copy Column"
+procedure TOS3MainFrm.mnuEditCopyColClick(Sender: TObject);
+begin
+  CopyColumn;
+end;
+
+// Menu "Edit" > "Copy Row"
+procedure TOS3MainFrm.mnuEditCopyRowClick(Sender: TObject);
+begin
+  CopyRow;
+end;
+
+// Menu "Edit" > "Cut column"
+procedure TOS3MainFrm.mnuEditCutColClick(Sender: TObject);
+begin
+  DeleteCol;
+end;
+
+// Menu "Edit" > "Cut row"
+procedure TOS3MainFrm.mnuEditCutRowClick(Sender: TObject);
+begin
+  CutRow;
+end;
+
+// Menu "Edit" > "Insert new column"
+procedure TOS3MainFrm.mnuEditNewColClick(Sender: TObject);
+begin
+  InsertCol;
+end;
+
+// Menu "Edit" > "Insert new row"
+procedure TOS3MainFrm.mnuEditNewRowClick(Sender: TObject);
+begin
+  InsertRow;
+end;
+
+// Menu "Edit" > "Paste cell block"
+procedure TOS3MainFrm.mnuEditPasteCellsClick(Sender: TObject);
+begin
+  PasteCellBlock;
+end;
+
+// Menu "Edit" > "Paste column"
+procedure TOS3MainFrm.mnuEditPasteColClick(Sender: TObject);
+begin
+  PasteColumn;
+end;
+
+// Menu "Edit" > "Paste row"
+procedure TOS3MainFrm.mnuEditPasteRowClick(Sender: TObject);
+begin
+  PasteRow;
+end;
+
+// Menu "File" > "Close"
+procedure TOS3MainFrm.mnuFileCloseClick(Sender: TObject);
+begin
+  NoCases := 0;
+  NoVariables := 0;
+  Init;
+  DataGrid.Cells[1, 0] := '';
+end;
+
+// Menu "File" > "Exit"
+procedure TOS3MainFrm.mnuFileExitClick(Sender: TObject);
+begin
+  Close;
+end;
+
+// Menu "File" > "Export" > "COMMA File"
+procedure TOS3MainFrm.mnuFileExportCSVClick(Sender: TObject);
+begin
+  SaveCommaFile;
+end;
+
+// Menu "File" > "Export" > "SPACE File"
+procedure TOS3MainFrm.mnuFileExportSSVClick(Sender: TObject);
+begin
+  SaveSpaceFile;
+end;
+
+// Menu "File" > "Export" > "TAB format"
+procedure TOS3MainFrm.mnuFileExportTabClick(Sender: TObject);
+begin
+  SaveTabFile;
+end;
+
+// Menu "File" > "Import" > "COMMA File"
+procedure TOS3MainFrm.mnuFileImportCSVClick(Sender: TObject);
+begin
+  OpenCommaFile;
+end;
+
+// Menu "File" > "Import" > "SPACE File"
+procedure TOS3MainFrm.mnuFileImportSSVClick(Sender: TObject);
+begin
+  OpenSpaceFile;
+end;
+
+// Menu "File" > "Import" > "TAB File"
+procedure TOS3MainFrm.mnuFileImportTABClick(Sender: TObject);
+begin
+  OpenTabFile;
+end;
+
+// Menu "File" > "New"
+procedure TOS3MainFrm.mnuFileNewClick(Sender: TObject);
+begin
+  ClearGrid;
+end;
+
+// Menu "File" > "Open"
+procedure TOS3MainFrm.mnuFileOpenClick(Sender: TObject);
+{
+var
+  i : integer;
+  filename : string;
+  }
+begin
+  OpenOS2File;
+  SaveOptions;
+  (*
+  filename := FileNameEdit.Text;
+     // move all down 1 and add new one at the top
+{     for i := 8 downto 1 do
+     begin
+          MainMenu1.Items[0].Items[11].Items[i].Caption :=
+                    MainMenu1.Items[0].Items[11].Items[i-1].Caption;
+          MainMenu1.Items[0].Items[11].Items[i-1].Caption := ' ';
+     end;
+     MainMenu1.Items[0].Items[11].Items[0].Caption := filename;}
+  if OptionsFrm = nil then
+    Application.CreateForm(TOptionsFrm, OptionsFrm);
+  OptionsFrm.SaveBtnClick(Self);
+  *)
+end;
+
+// Menu "File" > "Save"
+procedure TOS3MainFrm.mnuFileSaveClick(Sender: TObject);
+(*
+var
+  i : integer;
+  filename : string;
+    *)
+begin
+  SaveOS2File;
+  SaveOptions;
+  (*
+  filename := FileNameEdit.Text;
+     // move all down 1 and add new one at the top
+{     for i := 8 downto 1 do
+     begin
+          MainMenu1.Items[0].Items[11].Items[i].Caption :=
+                    MainMenu1.Items[0].Items[11].Items[i-1].Caption;
+          MainMenu1.Items[0].Items[11].Items[i-1].Caption := ' ';
+     end;
+     MainMenu1.Items[0].Items[11].Items[0].Caption := filename;}
+  if OptionsFrm = nil then
+    Application.CreateForm(TOptionsFrm, OptionsFrm);
+  OptionsFrm.SaveBtnClick(Self);
+  *)
+end;
+
+// Menu "Help" > "About"
+procedure TOS3MainFrm.mnuHelpAboutClick(Sender: TObject);
+begin
+  ShowAboutBox;
+end;
+
+// Menu "Help" > "License"
+procedure TOS3MainFrm.mnuHelpLicenseClick(Sender: TObject);
+begin
+  ShowLicense(false);
+end;
+
+// Menu "Help" > "Table of contents"
+procedure TOS3MainFrm.mnuHelpShowTOCClick(Sender: TObject);
+begin
+  Application.HelpKeyword('html/TableofContents.htm');
+//  Application.HelpContext(mnuHelpShowTOC.HelpContext);
+end;
+
+// Menu "Help" > "Using the Grid"
+procedure TOS3MainFrm.mnuHelpUsingGridClick(Sender: TObject);
+begin
+  if GridHelpfrm = nil then
+    Application.CreateForm(TGridHelpFrm, GridHelpFrm);
+  GridHelpFrm.ShowModal;
+end;
+
+// Menu "Options" > "Show options"
+procedure TOS3MainFrm.mnuShowOptionsClick(Sender: TObject);
+begin
+  with TOptionsFrm.Create(nil) do
+    try
+      ShowModal;
+    finally
+      Free;
+    end;
+  {
+  if OptionsFrm = nil then
+    Application.CreateForm(TOptionsFrm, OptionsFrm);
+  OptionsFrm.ShowModal;
+  }
+end;
+
+
+// Menu "Simulations" > "Bivariate Scatter Plot"
+procedure TOS3MainFrm.mnuSimBivarScatterPlotClick(Sender: TObject);
+begin
+  if CorSimFrm = nil then
+    Application.CreateForm(TCorSimFrm, CorSimFrm);
+  CorSimFrm.ShowModal;
+end;
+
+// Menu "Simulations" > "Chisquare Probability"
+procedure TOS3MainFrm.mnuSimChiSqProbClick(Sender: TObject);
+begin
+  if ChiSqrProbForm = nil then
+    Application.CreateForm(TChiSqrProbForm, ChiSqrProbForm);
+  ChiSqrProbForm.ShowModal;
+end;
+
+// Menu "Simulations" > "Distribution Plots and Critical Values"
+procedure TOS3MainFrm.mnuSimDistPlotsClick(Sender: TObject);
+begin
+  if DistribFrm = nil then
+    Application.CreateForm(TDistribFrm, DistribFrm);
+  DistribFrm.ShowModal;
+end;
+
 // Menu "Simulations" > "F probability"
-procedure TOS3MainFrm.FprobClick(Sender: TObject);
+procedure TOS3MainFrm.mnuSimFProbClick(Sender: TObject);
 begin
   if FForm = nil then
     Application.CreateForm(TFForm, FForm);
   FForm.ShowModal;
 end;
+
+// Menu "Simulations" > "Random Theoretical Values"
+procedure TOS3MainFrm.mnuSimGenerateRandomValuesClick(Sender: TObject);
+begin
+  if GenRndValsFrm = nil then
+    Application.CreateForm(TGenRndValsFrm, GenRndValsFrm);
+  GenRndValsFrm.ShowModal;
+end;
+
+// Menu "Simulations" > "Generate Sequential Values"
+procedure TOS3MainFrm.mnuSimGenerateSeqValuesClick(Sender: TObject);
+begin
+  if GenSeqFrm = nil then
+    Application.CreateForm(TGenSeqFrm, GenSeqFrm);
+  GenSeqFrm.ShowModal;
+end;
+
+// Menu "Simulations" > "Hypergeometric probability"
+procedure TOS3MainFrm.mnuSimHyperGeomProbClick(Sender: TObject);
+begin
+  if HyperGeoForm = nil then
+    Application.CreateForm(THyperGeoForm, HyperGeoForm);
+  HyperGeoForm.ShowModal;
+end;
+
+// Menu "Simulations" > "z for a given cum. Probability"
+procedure TOS3MainFrm.mnuSimInverseZClick(Sender: TObject);
+begin
+  if InverseZForm = nil then
+    Application.CreateForm(TInverseZForm, InverseZForm);
+  InverseZForm.ShowModal;
+end;
+
+// Menu "Simulations" > "Multivariate Distribution"
+procedure TOS3MainFrm.mnuSimMultiVarDistsClick(Sender: TObject);
+begin
+  if MultGenFrm = nil then
+    Application.CreateForm(TMultGenFrm, MultGenFrm);
+  MultGenFrm.ShowModal;
+end;
+
+// Menu "Simulations" > "mnuSimPowerCurves Curves for a z test"
+procedure TOS3MainFrm.mnuSimPowerCurvesClick(Sender: TObject);
+begin
+  if PCurvesFrm = nil then
+    Application.CreateForm(TPCurvesFrm, PCurvesFrm);
+  PCurvesFrm.ShowModal;
+end;
+
+// Menu "Simulations" > "Prob between 2 z values"
+procedure TOS3MainFrm.mnuSimProbBetweenClick(Sender: TObject);
+begin
+  if TwoZProbForm = nil then
+    Application.CreateForm(TTwoZProbForm, TwoZProbForm);
+  TwozProbForm.ShowModal;
+end;
+
+// Menu "Simulations" > "Probability > z"
+procedure TOS3MainFrm.mnuSimProbGreaterZClick(Sender: TObject);
+begin
+  if ProbzForm = nil then
+    Application.CreateForm(TProbZForm, ProbZForm);
+  ProbzForm.ShowModal;
+end;
+
+// Menu "Simulations" > "Probability < z"
+procedure TOS3MainFrm.mnuSimProbLessZClick(Sender: TObject);
+begin
+  if ProbSmallerZForm = nil then
+    Application.CreateForm(TProbSmallerZForm, ProbSmallerZForm);
+  ProbSmallerzForm.ShowModal;
+end;
+
+// Menu "Simulations" > "Student t probability"
+procedure TOS3MainFrm.mnuSimStudentTProbClick(Sender: TObject);
+begin
+  if TProbForm = nil then
+    Application.CreateForm(TTProbForm, TProbForm);
+  TprobForm.ShowModal;
+end;
+
+// Menu "Simulations" > "Type 1 and Type 2 Error Curves"
+procedure TOS3MainFrm.mnuSimTypeErrorCurvesClick(Sender: TObject);
+begin
+  if ErrorCurvesFrm = nil then
+    Application.CreateForm(TErrorCurvesFrm, ErrorCurvesFrm);
+  ErrorCurvesFrm.ShowModal;
+end;
+
+// Menu "Tools" > "Calculator"
+procedure TOS3MainFrm.mnuToolsCalculatorClick(Sender: TObject);
+begin
+  if CalculatorForm = nil then
+    Application.CreateForm(TCalculatorForm, CalculatorForm);
+  CalculatorForm.ShowModal;
+end;
+
+// Menu "Tools" > "Format grid"
+procedure TOS3MainFrm.mnuToolsFormatGridClick(Sender: TObject);
+begin
+  DataProcs.FormatGrid;
+end;
+
+// Menu "Tools" > "JPEG Image Viewer"
+procedure TOS3MainFrm.mnuToolsJPEGViewerClick(Sender: TObject);
+begin
+  if JPEGForm = nil then
+    Application.CreateForm(TJPEGForm, JPEGForm);
+  JPEGForm.ShowModal;
+end;
+
+// Menu "Tools" > "Show Output Form"
+procedure TOS3MainFrm.mnuToolsOutputFormClick(Sender: TObject);
+begin
+  if OutputFrm = nil then
+    Application.CreateForm(TOutputFrm, OutputFrm);
+  OutputFrm.ShowModal;
+end;
+
+// Menu "Tools" > "Print grid"
+procedure TOS3MainFrm.mnuToolsPrintGridClick(Sender: TObject);
+var
+  lReport: TStrings;
+begin
+  lReport := TStringList.Create;
+  try
+    PrintData(lReport);
+  finally
+    lReport.Free;
+  end;
+end;
+
+// Menu "Tools" > "Select cases"
+procedure TOS3MainFrm.mnuToolsSelectCasesClick(Sender: TObject);
+begin
+  if SelectFrm = nil then
+    Application.CreateForm(TSelectFrm, SelectFrm);
+  SelectFrm.ShowModal;
+end;
+
+// Menu "Tools" > "Smooth Data in a Variable"
+procedure TOS3MainFrm.mnuToolsSmoothClick(Sender: TObject);
+begin
+  if SmoothDataForm = nil then
+    Application.CreateForm(TSmoothDataForm, SmoothDataForm);
+  SmoothDataForm.ShowModal;
+end;
+
+// Menu "Tools" > "Sort Cases"
+procedure TOS3MainFrm.mnuToolsSortCasesClick(Sender: TObject);
+begin
+  if SortCasesFrm = nil then
+    Application.CreateForm(TSortCasesFrm, SortCasesFrm);
+  SortCasesFrm.ShowModal;
+end;
+
+// Menu "Tools" > "Convert strings to integer codes"
+procedure TOS3MainFrm.mnuToolsStrToIntClick(Sender: TObject);
+var
+  results, prompt: boolean;
+  col: integer;
+begin
+  col := DataGrid.Col;
+  DataGrid.Row := 1;
+  prompt := true;
+  results := DataProcs.StringsToInt(col,col, prompt);
+  DataGrid.Col := col;
+  if not results then DeleteCol;
+end;
+
+// Menu "Tools" > "Change English to European or vice versa"
+procedure TOS3MainFrm.mnuToolsSwapDecTypeClick(Sender: TObject);
+var
+   i, j, k: integer;
+   newDecSep: Char;
+   cellStr: String;
+begin
+  case Options.FractionType of
+    ftPoint: newDecSep := ',';  // Current type is English - switch to European
+    ftComma: newDecSep := '.';  // Current type is European - switch to English
+  end;
+
+  for i := 1 to DataGrid.RowCount-1 do
+    for j := 1 to DataGrid.ColCount - 1 do
+    begin
+      cellstr := DataGrid.Cells[j,i];
+      for k := 1 to Length(cellStr) do
+        if cellstr[k] = DefaultFormatSettings.DecimalSeparator then
+          cellstr[k] := newDecSep;
+      DataGrid.Cells[j,i] := cellstr;
+    end;
+end;
+
+// Menu "Tools" > "Swap Rows and Columns of Grid"
+procedure TOS3MainFrm.mnuToolsSwapRowsColsClick(Sender: TObject);
+begin
+  RowColSwap;
+end;
+
+// Menu "Variables" > "Define ..."
+procedure TOS3MainFrm.mnuVariablesDefineClick(Sender: TObject);
+begin
+  if DictionaryFrm = nil then
+    Application.CreateForm(TDictionaryFrm, DictionaryFrm);
+  DictionaryFrm.ShowModal;
+end;
+
+// Menu "Variables" > "Equation Editor"
+procedure TOS3MainFrm.mnuVariablesEquationEditorClick(Sender: TObject);
+begin
+  if EquationForm = nil then
+    Application.CreateForm(TEquationForm, EquationForm);
+  EquationForm.ShowModal;
+end;
+
+// Menu "Variables" > "Print Definitions"
+procedure TOS3MainFrm.mnuVariablesPrintDefsClick(Sender: TObject);
+var
+  lReport: TStrings;
+begin
+  lReport := TStringList.Create;
+  try
+    PrintDict(lReport);
+    DisplayReport(lReport);
+  finally
+    lReport.Free;
+  end;
+end;
+
+// Menu "Variables" > "Recode Variables"
+procedure TOS3MainFrm.mnuVariablesRecodeClick(Sender: TObject);
+begin
+  if RecodeFrm = nil then
+    Application.CreateForm(TRecodeFrm, RecodeFrm);
+  RecodeFrm.ShowModal;
+end;
+
+// Menu "Variables" > "Transform Variables"
+procedure TOS3MainFrm.mnuVariablesTransformClick(Sender: TObject);
+var
+  err: string;
+begin
+  try
+    if TransFrm = nil then
+      Application.CreateForm(TTransFrm, TransFrm);
+    TransFrm.ShowModal;
+  except
+    err := 'Error in showing transformations';
+    ErrorMsg(err);
+  end;
+end;
+
+
 
 // Menu "Analysis" > "Descriptive" > "Frequency Analysis"
 procedure TOS3MainFrm.FreqAnalClick(Sender: TObject);
@@ -1742,13 +1866,6 @@ begin
   if GradeBookFrm = nil then
     Application.CreateForm(TGradeBookFrm, GradeBookFrm);
   GradebookFrm.ShowModal;
-end;
-
-procedure TOS3MainFrm.GridUseClick(Sender: TObject);
-begin
-  if GridHelpfrm = nil then
-    Application.CreateForm(TGridHelpFrm, GridHelpFrm);
-  GridHelpFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Descriptive" > "Plot Group Frequencies"
@@ -1798,41 +1915,12 @@ begin
   HomogeneityTest(GroupCol, VarCol, NoCases);
 end;
 
-// Menu "Simulations" > "Hypergeometric probability"
-procedure TOS3MainFrm.HypergeoProbClick(Sender: TObject);
-begin
-  if HyperGeoForm = nil then
-    Application.CreateForm(THyperGeoForm, HyperGeoForm);
-  HyperGeoForm.ShowModal;
-end;
-
-procedure TOS3MainFrm.InsNewColClick(Sender: TObject);
-begin
-  InsertCol;
-end;
-
-// Menu "Simulations" > "z for a given cum. Probability"
-procedure TOS3MainFrm.InverseZClick(Sender: TObject);
-begin
-  if InverseZForm = nil then
-    Application.CreateForm(TInverseZForm, InverseZForm);
-  InverseZForm.ShowModal;
-end;
-
 // Menu "Analysis" > "Measurement Programs" > "Item Banking"
 procedure TOS3MainFrm.ItemBankMenuItemClick(Sender: TObject);
 begin
   if ItemBankFrm = nil then
     Application.CreateForm(TItemBankFrm, ItembankFrm);
   ItemBankFrm.ShowModal;
-end;
-
-// Menu "Tools" > "JPEG Image Viewer"
-procedure TOS3MainFrm.JPEGViewClick(Sender: TObject);
-begin
-  if JPEGForm = nil then
-    Application.CreateForm(TJPEGForm, JPEGForm);
-  JPEGForm.ShowModal;
 end;
 
 procedure TOS3MainFrm.KSTestClick(Sender: TObject);
@@ -1848,11 +1936,6 @@ begin
   if LatinSqrsFrm = nil then
     Application.CreateForm(TLatinSqrsFrm, LatinSqrsFrm);
   LatinSqrsFrm.ShowModal;
-end;
-
-procedure TOS3MainFrm.LicenseMenuClick(Sender: TObject);
-begin
-  ShowLicense(false);
 end;
 
 // Menu "Analysis" > "Nonparametric" > "Life table"
@@ -2078,16 +2161,7 @@ begin
   SLDepFrm.ShowModal;
 end;
 
-procedure TOS3MainFrm.MenuItem30Click(Sender: TObject);
-begin
-  RowColSwap;
-end;
 
-procedure TOS3MainFrm.mnuShowTOCClick(Sender: TObject);
-begin
-  Application.HelpKeyword('html/TableofContents.htm');
-//  Application.HelpContext(mnuShowTOC.HelpContext);
-end;
 
 
 initialization
