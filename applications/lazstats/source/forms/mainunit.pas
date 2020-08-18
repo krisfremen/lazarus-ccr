@@ -3,6 +3,15 @@
 //   Chip  --> Factor 1
 //   Probe --> Factor 2 (Factor 3 empty)
 
+{ ToDo:
+  - Help system:
+     - LHelp reports "no response" a while after LHelp was opened. LazStats is
+       not reacting during this time.
+     - LHelp window does not close when lazStats is closed.
+
+  - Diagram windows are incomplete in Linux --> Replace by TAChart?
+}
+
 unit MainUnit;
 
 {$mode objfpc}{$H+}
@@ -468,7 +477,7 @@ uses
   SigmaChartUnit, CUMSUMUNIT, CCHARTUNIT, PChartUnit, UChartUnit, CorSimUnit,
   ErrorCurvesUnit, PCurvesUnit, DistribUnit, GenSeqUnit, GenRndValsUnit,
   MultGenUnit, LoanItUnit, SumYrsDepUnit, SLDUnit, DblDeclineUnit,
-  RIDITUnit, TwoSLSUnit, WLSUnit, HelpUnit, SortCasesUnit,
+  RIDITUnit, TwoSLSUnit, WLSUnit, SortCasesUnit,
   SelectCasesUnit, GridHelpUnit, RecodeUnit, KappaUnit, AvgLinkUnit, kmeansunit,
   SingleLinkUnit, GenKappaUnit, CompareDistUnit, matmanunit, gradebookunit,
   ProbzUnit, ProbSmallerzUnit, TwozProbUnit, InversezUnit, ProbChiSqrUnit,
@@ -1311,7 +1320,7 @@ begin
     begin
       Maindatamodule.LHelpConnector.LHelpPath := lhelpfn;
       MainDatamodule.CHMHelpDatabase.Filename := helpfn;
-      CreateLCLHelpSystem;
+      //CreateLCLHelpSystem;
     end else
       MessageDlg('Help viewer LHelp.exe not found.' + LineEnding +
         'Please copy this program to the LazStats directory to access the help system.',
