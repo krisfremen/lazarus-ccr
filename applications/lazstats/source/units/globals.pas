@@ -47,7 +47,7 @@ type
   TJustification = (jLeft, jCenter, jRight);
 
   TOptions = record
-    DefaultPath: string;
+    DefaultDataPath: string;
     FractionType: TFractionType;
     DefaultMiss: TMissingValueCode;
     DefaultJust: TJustification;
@@ -68,7 +68,7 @@ var
   LoggedOn : boolean = false;
 
   Options: TOptions = (
-    DefaultPath: '';
+    DefaultDataPath: '';
     FractionType: ftPoint;
     DefaultMiss: mvcNines;
     DefaultJust: jLeft;

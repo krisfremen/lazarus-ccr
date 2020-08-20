@@ -313,7 +313,7 @@ begin
   cvecext := '.CVE';
   rvecext := '.RVE';
   scaext := '.SCA';
-  scripteditorfrm.FileListBox1.Directory := Options.DefaultPath;
+  scripteditorfrm.FileListBox1.Directory := Options.DefaultDataPath;
   scripteditorfrm.FileListBox1.Update;
   count := scripteditorfrm.FileListBox1.Items.Count;
   for index := 0 to count-1 do

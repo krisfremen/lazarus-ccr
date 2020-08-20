@@ -724,7 +724,7 @@ procedure TItemBankFrm.FormCreate(Sender: TObject);
 begin
   Assert(ItemBankFrm <> nil);
 
-  DirectoryEdit1.Text := Options.DefaultPath;
+  DirectoryEdit1.Text := Options.DefaultDataPath;
   FileListBox1.Directory := DirectoryEdit1.Text;
 end;
 
@@ -799,7 +799,7 @@ end;
 
 procedure TItemBankFrm.Button1Click(Sender: TObject);
 begin
-  DirectoryEdit1.Text := Options.DefaultPath;
+  DirectoryEdit1.Text := Options.DefaultDataPath;
   FileListBox1.Directory := DirectoryEdit1.Text;
 end;
 

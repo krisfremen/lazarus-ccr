@@ -17,7 +17,7 @@ type
   TOptionsFrm = class(TForm)
     Bevel1: TBevel;
     CancelBtn: TButton;
-    FilePathEdit: TDirectoryEdit;
+    DataFilePathEdit: TDirectoryEdit;
     LHelpPathEdit: TFileNameEdit;
     HelpBtn: TButton;
     Label2: TLabel;
@@ -97,9 +97,9 @@ begin
   // Default path
   ReadLn(F, pathName);
   if (pathname = '') or (not DirectoryExists(pathname)) then
-    Options.DefaultPath := GetCurrentDir
+    Options.DefaultDataPath := GetCurrentDir
   else
-    Options.Defaultpath := pathname;
+    Options.DefaultDataPath := pathname;
 
   // LHelp path
   Readln(F, pathName);
@@ -120,7 +120,7 @@ begin
   WriteLn(F, ord(Options.FractionType));
   WriteLn(F, ord(Options.DefaultMiss));
   WriteLn(F, ord(Options.DefaultJust));
-  WriteLn(F, Options.DefaultPath);
+  WriteLn(F, Options.DefaultDataPath);
   WriteLn(F, Options.LHelpPath);
   CloseFile(F);
 end;
@@ -133,10 +133,7 @@ begin
   AOptions.FractionType := TFractionType(FractionTypeGrp.ItemIndex);
   AOptions.DefaultMiss := TMissingValueCode(MissValsGrp.ItemIndex);
   AOptions.DefaultJust := TJustification(JustificationGrp.ItemIndex);
-  if FilePathEdit.Text = '' then
-    AOptions.DefaultPath := GetCurrentDir
-  else
-    AOptions.DefaultPath := FilePathEdit.Text;
+  AOptions.DefaultDataPath := DataFilePathEdit.Text;
   if LHelpPathEdit.FileName = Application.Location + 'lhelp' + GetExeExt then
     AOptions.LHelpPath := '<default>'
   else
@@ -148,10 +145,7 @@ begin
   FractionTypeGrp.ItemIndex := ord(AOptions.FractionType);
   MissValsGrp.ItemIndex := Ord(AOptions.DefaultMiss);
   JustificationGrp.ItemIndex := Ord(AOptions.DefaultJust);
-  if AOptions.DefaultPath = '' then
-    FilePathEdit.Text := GetCurrentDir
-  else
-    FilePathEdit.Text := AOptions.DefaultPath;
+  DataFilePathEdit.Text := AOptions.DefaultDataPath;
   if AOptions.LHelpPath = '<default>' then
     LHelpPathEdit.FileName := Application.Location + 'lhelp' + GetExeExt
   else

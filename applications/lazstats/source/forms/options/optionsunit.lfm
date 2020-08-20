@@ -18,10 +18,10 @@ object OptionsFrm: TOptionsFrm
     Left = 8
     Height = 15
     Top = 218
-    Width = 108
+    Width = 135
     BorderSpacing.Left = 8
     BorderSpacing.Top = 12
-    Caption = 'Default File Location'
+    Caption = 'Default Data File Location'
     ParentColor = False
   end
   object FractionTypeGrp: TRadioGroup
@@ -202,7 +202,7 @@ object OptionsFrm: TOptionsFrm
   end
   object Label2: TLabel
     AnchorSideLeft.Control = LHelpPathEdit
-    AnchorSideTop.Control = FilePathEdit
+    AnchorSideTop.Control = DataFilePathEdit
     AnchorSideTop.Side = asrBottom
     Left = 8
     Height = 15
@@ -233,7 +233,7 @@ object OptionsFrm: TOptionsFrm
     MaxLength = 0
     TabOrder = 6
   end
-  object FilePathEdit: TDirectoryEdit
+  object DataFilePathEdit: TDirectoryEdit
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
