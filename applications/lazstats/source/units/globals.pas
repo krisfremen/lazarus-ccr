@@ -63,7 +63,7 @@ var
   DictLoaded : boolean;
   FilterOn : boolean;
   FilterCol : integer;
-  OpenStatPath : string;
+  //OpenStatPath : string;
   AItems : array[0..8] of string;
   LoggedOn : boolean = false;
 

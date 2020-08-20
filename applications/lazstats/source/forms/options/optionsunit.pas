@@ -6,7 +6,7 @@ unit OptionsUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Clipbrd, EditBtn,
   Globals, ContextHelpUnit;
 
@@ -52,10 +52,15 @@ procedure SaveOptions;
 implementation
 
 uses
-  Math, LazFileUtils;
+  Math, FileUtil, LazFileUtils;
 
 const
   OPTIONS_FILE = 'options.txt';
+
+function GetOptionsPath: String;
+begin
+  Result := GetAppConfigDirUTF8(false, true) + OPTIONS_FILE;
+end;
 
 procedure LoadOptions;
 var
@@ -65,8 +70,7 @@ var
   i: integer;
   approved: integer;
 begin
-  filename := AppendPathDelim(OpenStatPath) + OPTIONS_FILE;
-
+  filename := GetOptionsPath;
   if not FileExists(fileName) then
     exit;
 
@@ -108,17 +112,11 @@ procedure SaveOptions;
 var
   filename: string;
   F: TextFile;
-  approved: integer;
 begin
-  if LoggedOn then
-    approved := 1
-  else
-    approved := 0;
-
-  filename := AppendPathDelim(OpenStatPath) + OPTIONS_FILE;
+  filename := GetOptionsPath;
   AssignFile(F, fileName);
   Rewrite(F);
-  WriteLn(F, approved);
+  WriteLn(F, ord(LoggedOn));
   WriteLn(F, ord(Options.FractionType));
   WriteLn(F, ord(Options.DefaultMiss));
   WriteLn(F, ord(Options.DefaultJust));
@@ -136,10 +134,10 @@ begin
   AOptions.DefaultMiss := TMissingValueCode(MissValsGrp.ItemIndex);
   AOptions.DefaultJust := TJustification(JustificationGrp.ItemIndex);
   if FilePathEdit.Text = '' then
-    AOptions.DefaultPath := OpenStatPath
+    AOptions.DefaultPath := GetCurrentDir
   else
     AOptions.DefaultPath := FilePathEdit.Text;
-  if LHElpPathEdit.FileName = Application.Location + 'lhelp' + GetExeExt then
+  if LHelpPathEdit.FileName = Application.Location + 'lhelp' + GetExeExt then
     AOptions.LHelpPath := '<default>'
   else
     AOptions.LHelpPath := LHelpPathEdit.FileName;
@@ -151,7 +149,7 @@ begin
   MissValsGrp.ItemIndex := Ord(AOptions.DefaultMiss);
   JustificationGrp.ItemIndex := Ord(AOptions.DefaultJust);
   if AOptions.DefaultPath = '' then
-    FilePathEdit.Text := OpenStatPath
+    FilePathEdit.Text := GetCurrentDir
   else
     FilePathEdit.Text := AOptions.DefaultPath;
   if AOptions.LHelpPath = '<default>' then

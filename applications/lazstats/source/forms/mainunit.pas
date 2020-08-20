@@ -1302,8 +1302,6 @@ procedure TOS3MainFrm.Init;
 var
   i: integer;
 begin
-  OpenStatPath := GetCurrentDir;
-//  OptionsFrm.InitOptions(Self);
   NoVariables := 0;  // global variable for no. of variables (columns)
   NoCases := 0;      // global variable for no. of cases (rows)
   TempStream := TMemoryStream.Create; // global variable (simulate clipboard)
