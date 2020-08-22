@@ -278,11 +278,18 @@ end;
 
 procedure OpenOS2File;
 begin
-  OS3MainFrm.OpenDialog1.DefaultExt := '.laz';
-  OS3MainFrm.OpenDialog1.Filter := 'LazStats files (*.laz)|*.laz;*.LAZ|All files (*.*)|*.*';
-  OS3MainFrm.OpenDialog1.FilterIndex := 1;
-  if OS3MainFrm.OpenDialog1.Execute then
-    OpenOS2File(OS3MainFrm.OpenDialog1.FileName, true);
+  with OS3MainFrm.OpenDialog1 do
+  begin
+    DefaultExt := '.laz';
+    Filter := 'LazStats files (*.laz)|*.laz;*.LAZ|All files (*.*)|*.*';
+    if InitialDir = '' then
+      InitialDir := Globals.Options.DefaultDataPath;
+    FilterIndex := 1;
+    if Execute then begin
+      OpenOS2File(FileName, true);
+      InitialDir := ExtractFilePath(FileName);
+    end;
+  end;
 end;
 
 procedure OpenOS2File(const AFileName: String; ShowDictionaryForm: Boolean);

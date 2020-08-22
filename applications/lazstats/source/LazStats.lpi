@@ -1396,6 +1396,7 @@
         <Filename Value="forms\misc\chartunit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ChartForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ChartUnit"/>
       </Unit171>

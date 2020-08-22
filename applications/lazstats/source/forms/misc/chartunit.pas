@@ -21,10 +21,12 @@ type
     Chart: TChart;
     CloseBtn: TButton;
     ButtonPanel: TPanel;
+    Panel1: TPanel;
     PrintBtn: TButton;
     PrintDialog: TPrintDialog;
     SaveBtn: TButton;
     SavePictureDialog: TSavePictureDialog;
+    procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure PrintBtnClick(Sender: TObject);
     procedure SaveBtnClick(Sender: TObject);
@@ -58,7 +60,7 @@ implementation
 {$R *.lfm}
 
 uses
-  Math, Printers, //OSPrinters,
+  Math, Printers, OSPrinters,
   TAChartUtils, TATypes, TADrawerSVG, TAPrint;
 
 { TChartForm }
@@ -70,6 +72,16 @@ begin
   Chart.Foot.Text.Clear;
   Chart.BottomAxis.Title.Caption := '';
   Chart.LeftAxis.Title.Caption := '';
+end;
+
+procedure TChartForm.FormActivate(Sender: TObject);
+var
+  w: Integer;
+begin
+  w := MaxValue([SaveBtn.Width, PrintBtn.Width, CloseBtn.Width]);
+  SaveBtn.Constraints.MinWidth := w;
+  PrintBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 end;
 
 procedure TChartForm.FormCreate(Sender: TObject);

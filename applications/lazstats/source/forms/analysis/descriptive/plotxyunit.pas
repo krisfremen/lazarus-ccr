@@ -357,10 +357,8 @@ begin
   ChartForm.Clear;
 
   // Titles
-  ChartForm.SetTitle(Format('X vs. Y plot using file "%s"', [
-    OS3MainFrm.FileNameEdit.Text
-  ]));
-  ChartForm.SetFooter(Format('R(X,Y) = %.3f, Slope = %.2f, Intercept = %.2f', [
+  ChartForm.SetTitle('X vs. Y plot using file ' + OS3MainFrm.FileNameEdit.Text);
+  ChartForm.SetFooter(Format('R(X,Y) = %.3f, Slope = %.3f, Intercept = %.3f', [
     R, Slope, Intercept
   ]));
   ChartForm.SetXTitle(XEdit.Text);

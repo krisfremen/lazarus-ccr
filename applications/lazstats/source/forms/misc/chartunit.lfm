@@ -1,40 +1,41 @@
 object ChartForm: TChartForm
-  Left = 299
-  Height = 518
-  Top = 133
-  Width = 860
+  Left = 475
+  Height = 500
+  Top = 183
+  Width = 700
   ActiveControl = CloseBtn
   Caption = 'Plot window'
-  ClientHeight = 518
-  ClientWidth = 860
+  ClientHeight = 500
+  ClientWidth = 700
+  OnActivate = FormActivate
   OnCreate = FormCreate
   LCLVersion = '2.1.0.0'
   object ButtonBevel: TBevel
     Left = 0
-    Height = 8
-    Top = 468
-    Width = 860
+    Height = 2
+    Top = 456
+    Width = 700
     Align = alBottom
     Shape = bsBottomLine
   end
   object ButtonPanel: TPanel
     Left = 8
     Height = 26
-    Top = 484
-    Width = 844
+    Top = 466
+    Width = 684
     Align = alBottom
     AutoSize = True
     BorderSpacing.Around = 8
     BevelOuter = bvNone
     ClientHeight = 26
-    ClientWidth = 844
-    TabOrder = 1
+    ClientWidth = 684
+    TabOrder = 0
     object PrintBtn: TButton
       AnchorSideLeft.Control = ButtonPanel
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = ButtonPanel
       AnchorSideTop.Side = asrCenter
-      Left = 397
+      Left = 317
       Height = 25
       Top = 1
       Width = 51
@@ -49,7 +50,7 @@ object ChartForm: TChartForm
       AnchorSideTop.Control = ButtonPanel
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = PrintBtn
-      Left = 299
+      Left = 219
       Height = 25
       Top = 1
       Width = 86
@@ -65,7 +66,7 @@ object ChartForm: TChartForm
       AnchorSideTop.Control = ButtonPanel
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Side = asrBottom
-      Left = 460
+      Left = 380
       Height = 25
       Top = 1
       Width = 55
@@ -77,47 +78,66 @@ object ChartForm: TChartForm
       TabOrder = 2
     end
   end
-  object Chart: TChart
+  object Panel1: TPanel
     Left = 6
-    Height = 456
+    Height = 444
     Top = 6
-    Width = 848
-    AxisList = <    
-      item
-        Grid.Color = clSilver
-        Grid.Style = psSolid
-        Grid.Visible = False
-        Marks.LabelBrush.Style = bsClear
-        Minors = <>
-        Title.LabelFont.Orientation = 900
-        Title.LabelFont.Style = [fsBold]
-        Title.LabelBrush.Style = bsClear
-      end    
-      item
-        Grid.Color = clSilver
-        Grid.Style = psSolid
-        Grid.Visible = False
-        Alignment = calBottom
-        Marks.LabelBrush.Style = bsClear
-        Minors = <>
-        Title.LabelFont.Style = [fsBold]
-        Title.LabelBrush.Style = bsClear
-      end>
-    BackColor = clWhite
-    Foot.Brush.Color = clBtnFace
-    Foot.Font.Color = clBlue
-    Margins.Left = 8
-    Margins.Top = 8
-    Margins.Right = 8
-    Margins.Bottom = 8
-    Title.Brush.Color = clBtnFace
-    Title.Font.Color = clBlue
-    Title.Font.Style = [fsBold]
-    Title.Text.Strings = (
-      'TAChart'
-    )
+    Width = 688
     Align = alClient
     BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    BorderStyle = bsSingle
+    Caption = 'Panel1'
+    ClientHeight = 440
+    ClientWidth = 684
+    Color = clWhite
+    ParentColor = False
+    TabOrder = 1
+    object Chart: TChart
+      Left = 6
+      Height = 428
+      Top = 6
+      Width = 672
+      AxisList = <      
+        item
+          Grid.Color = clSilver
+          Grid.Style = psSolid
+          Grid.Visible = False
+          Marks.LabelBrush.Style = bsClear
+          Minors = <>
+          Title.LabelFont.Orientation = 900
+          Title.LabelFont.Style = [fsBold]
+          Title.LabelBrush.Style = bsClear
+        end      
+        item
+          Grid.Color = clSilver
+          Grid.Style = psSolid
+          Grid.Visible = False
+          Alignment = calBottom
+          Marks.LabelBrush.Style = bsClear
+          Minors = <>
+          Title.LabelFont.Style = [fsBold]
+          Title.LabelBrush.Style = bsClear
+        end>
+      BackColor = clWhite
+      Foot.Brush.Color = clBtnFace
+      Foot.Brush.Style = bsClear
+      Foot.Font.Color = clBlue
+      Margins.Left = 8
+      Margins.Top = 8
+      Margins.Right = 8
+      Margins.Bottom = 8
+      Title.Brush.Color = clBtnFace
+      Title.Brush.Style = bsClear
+      Title.Font.Color = clBlue
+      Title.Font.Style = [fsBold]
+      Title.Text.Strings = (
+        'TAChart'
+      )
+      Align = alClient
+      BorderSpacing.Around = 6
+      Color = clWhite
+    end
   end
   object SavePictureDialog: TSavePictureDialog
     Filter = 'Graphic (*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg)|*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg|Portable Network Graphic (*.png)|*.png|Bitmaps (*.bmp)|*.bmp|Joint Picture Expert Group (*.jpeg;*.jpg;*.jpe;*.jfif)|*.jpeg;*.jpg;*.jpe;*.jfif|Scaleable Vector Graphic (*.svg)|*.svg|All Files (*.*)|*.*'
