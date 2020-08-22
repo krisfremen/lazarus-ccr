@@ -3,13 +3,17 @@
 unit PlotXYUnit;
 
 {$mode objfpc}{$H+}
+{$I ../../../LazStats.inc}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Buttons,
-  MainUnit, Globals, OutputUnit, FunctionsLib, DataProcs, BlankFrmUnit;
+  {$IFNDEF USE_TACHART}
+  BlankFrmUnit,
+  {$ENDIF}
+  MainUnit, Globals, OutputUnit, FunctionsLib, DataProcs;
 
 type
 
@@ -50,29 +54,15 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
-    procedure PlotXY(VAR Xpoints : DblDyneVec;
-                     VAR Ypoints : DblDyneVec;
-                     VAR UpConf : DblDyneVec;
-                     VAR LowConf : DblDyneVec;
-                     ConfBand : double;
-                     Xmean, Ymean , R : double;
-                     Slope, Intercept : double;
-                     Xmax, Xmin, Ymax, Ymin : double;
-                     N : integer);
-
-    {
-    procedure pplotxy(VAR Xpoints : DblDyneVec;
-                      VAR Ypoints : DblDyneVec;
-                      VAR UpConf : DblDyneVec;
-                      VAR LowConf : DblDyneVec;
-                      ConfBand : double;
-                      Xmean, Ymean , R : double;
-                      Slope, Intercept : double;
-                      Xmax, Xmin, Ymax, Ymin : double;
-                      N : integer);
-    }
+    {$IFDEF USE_TACHART}
+    function PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
+      XMean, YMean, R, Slope, Intercept: Double): Boolean;
+    {$ELSE}
+    function PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
+      XMean, YMean, R, Slope, Intercept, XMax, XMin, YMax, YMin: Double;
+      N: Integer): Boolean;
+    {$ENDIF}
     procedure UpdateBtnStates;
-
     function Validate(out AMsg: String; out AControl: TWinControl;
       Xcol,Ycol: Integer): Boolean;
   public
@@ -85,7 +75,12 @@ var
 implementation
 
 uses
-  Math;
+  {$IFDEF USE_TACHART}
+  TAChartUtils,
+  ChartUnit,
+  {$ENDIF}
+  Math, Utils;
+
 
 { TPlotXYFrm }
 
@@ -100,7 +95,6 @@ begin
   LineChk.Checked := false;
   MeansChk.Checked := false;
   ConfChk.Checked := false;
-  //PrintChk.Checked := false;
   VarList.Items.Clear;
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
@@ -160,179 +154,166 @@ end;
 
 procedure TPlotXYFrm.ComputeBtnClick(Sender: TObject);
 var
-   Xmin, Xmax, Ymin, Ymax, SSx, t, DF : double;
-   Xmean, Ymean, Xvariance, Yvariance, Xstddev, Ystddev, ConfBand : double;
-   X, Y, R, temp, SEPred, Slope, Intercept, predicted, sedata : double;
-   i, j : integer;
-   Xcol, Ycol, N, NoSelected : integer;
-   Xpoints : DblDyneVec;
-   Ypoints : DblDyneVec;
-   UpConf  : DblDyneVec;
-   lowConf : DblDyneVec;
-   cellstring : string;
-   ColNoSelected : IntDyneVec;
-   C: TWinControl;
-   msg: String;
-   lReport: TStrings;
+  Xmin, Xmax, Ymin, Ymax, SSx, SSY, t, DF: double;
+  Xmean, Ymean, Xvariance, Yvariance, Xstddev, Ystddev, ConfBand: double;
+  X, Y, R, temp, SEPred, Slope, Intercept, predicted, sedata: double;
+  i, j: integer;
+  Xcol, Ycol, N, NoSelected: integer;
+  Xpoints: DblDyneVec = nil;
+  Ypoints: DblDyneVec = nil;
+  UpConf: DblDyneVec = nil;
+  lowConf: DblDyneVec = nil;
+  cellstring: string;
+  ColNoSelected: IntDyneVec= nil;
+  C: TWinControl;
+  msg: String;
+  lReport: TStrings;
 begin
-     SetLength(Xpoints,NoCases + 1);
-     SetLength(Ypoints,NoCases + 1);
-     SetLength(UpConf,NoCases + 1);
-     SetLength(lowConf,NoCases + 1);
-     SetLength(ColNoSelected,NoVariables);
+  SetLength(Xpoints, NoCases);
+  SetLength(Ypoints, NoCases);
+  SetLength(UpConf, NoCases);
+  SetLength(lowConf, NoCases);
+  SetLength(ColNoSelected, NoVariables);
 
-     Xcol := 0;
-     Ycol := 0;
+  Xcol := 0;
+  Ycol := 0;
 
-     for i := 1 to Novariables do
-     begin
-          cellstring := OS3MainFrm.DataGrid.Cells[i,0];
-          if cellstring = XEdit.Text then Xcol := i;
-          if cellstring = YEdit.Text then Ycol := i;
-     end;
+  for i := 1 to NoVariables do
+  begin
+    cellstring := OS3MainFrm.DataGrid.Cells[i,0];
+    if cellstring = XEdit.Text then Xcol := i;
+    if cellstring = YEdit.Text then Ycol := i;
+  end;
 
-     // Validation
-     if not Validate(msg, C, Xcol, Ycol) then
-     begin
-       C.SetFocus;
-       MessageDlg(msg, mtError, [mbOK], 0);
-       ModalResult := mrNone;
-       exit;
-     end;
+  // Validation
+  if not Validate(msg, C, Xcol, Ycol) then
+  begin
+    C.SetFocus;
+    ErrorMsg(msg);
+    ModalResult := mrNone;
+    exit;
+  end;
 
-     NoSelected := 2;
-     ColNoSelected[0] := Xcol;
-     ColNoSelected[1] := Ycol;
-     N := 0;
-     Xmax := -1.0e20;
-     Xmin := 1.0e20;
-     Ymax := -1.0e20;
-     Ymin := 1.0e20;
-     Xmean := 0.0;
-     Ymean := 0.0;
-     Xvariance := 0.0;
-     Yvariance := 0.0;
-     R := 0.0;
+  NoSelected := 2;
+  ColNoSelected[0] := Xcol;
+  ColNoSelected[1] := Ycol;
+  Xmax := -Infinity;
+  Xmin := Infinity;
+  Ymax := -Infinity;
+  Ymin := Infinity;
+  Xmean := 0.0;
+  Ymean := 0.0;
+  XVariance := 0.0;
+  YVariance := 0.0;
+  R := 0.0;
 
-     for i := 1 to NoCases do
-     begin
-          if Not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-          N := N + 1;
-          X := StrToFloat(OS3MainFrm.DataGrid.Cells[Xcol,i]);
-          Y := StrToFloat(OS3MainFrm.DataGrid.Cells[Ycol,i]);
-          Xpoints[N] := X;
-          Ypoints[N] := Y;
-          if X > Xmax then Xmax := X;
-          if X < Xmin then Xmin := X;
-          if Y > Ymax then Ymax := Y;
-          if Y < Ymin then Ymin := Y;
-          Xmean := Xmean + X;
-          Ymean := Ymean + Y;
-          Xvariance := Xvariance + (X * X);
-          Yvariance := Yvariance + (Y * Y);
-          R := R + (X * Y);
-     end;
+  N := 0;
+  for i := 1 to NoCases do
+  begin
+    if not GoodRecord(i, NoSelected, ColNoSelected) then continue;
+    inc(N);
+    X := StrToFloat(OS3MainFrm.DataGrid.Cells[Xcol,i]);
+    Y := StrToFloat(OS3MainFrm.DataGrid.Cells[Ycol,i]);
+    XPoints[N-1] := X;
+    YPoints[N-1] := Y;
+    XMax := Max(X, XMax);
+    XMin := Min(X, XMin);
+    YMax := Max(Y, YMax);
+    YMin := Min(Y, YMin);
+    XMean := XMean + X;
+    YMean := YMean + Y;
+    SSX := SSX + sqr(X);
+    SSY := SSY + sqr(Y);
+    R := R + X * Y;
+  end;
 
-     // sort on X
-     for i := 1 to N - 1 do
-     begin
-          for j := i + 1 to N do
-          begin
-               if Xpoints[i] > Xpoints[j] then //swap
-               begin
-                    temp := Xpoints[i];
-                    Xpoints[i] := Xpoints[j];
-                    Xpoints[j] := temp;
-                    temp := Ypoints[i];
-                    Ypoints[i] := Ypoints[j];
-                    Ypoints[j] := temp;
-               end;
-          end;
-     end;
+  if N < 1 then
+  begin
+    ErrorMsg('No data values.');
+    exit;
+  end;
 
-     // calculate statistics
-     Xvariance := Xvariance - (Xmean * Xmean / N);
-     SSx := Xvariance;
-     Xvariance := Xvariance / (N - 1);
-     Xstddev := sqrt(Xvariance);
+  // sort on X
+  SortOnX(XPoints, YPoints);
 
-     Yvariance := Yvariance - (Ymean * Ymean / N);
-     Yvariance := Yvariance / (N - 1);
-     Ystddev := sqrt(Yvariance);
+  // calculate statistics
+  XVariance := SSX - sqr(XMean) / N;
+  XVariance := XVariance / (N - 1);
+  XStdDev := sqrt(XVariance);
 
-     R := R - (Xmean * Ymean / N);
-     R := R / (N - 1);
-     R := R / (Xstddev * Ystddev);
-     SEPred := sqrt(1.0 - (R * R)) * Ystddev;
-     SEPred := SEPred * sqrt((N - 1) / (N - 2));
-     Xmean := Xmean / N;
-     Ymean := Ymean / N;
-     Slope := R * Ystddev / Xstddev;
-     Intercept := Ymean - Slope * Xmean;
+  YVariance := SSY - sqr(YMean) / N;
+  YVariance := YVariance / (N - 1);
+  YStdDev := sqrt(YVariance);
 
-     // Now, print the descriptive statistics to the output form if requested
-     if DescChk.Checked then
-     begin
-       lReport := TStringList.Create;
-       try
-         lReport.Add('X vs. Y PLOT');
-         lReport.Add('');
-         lReport.Add('X = %s, Y = %s from file: %s',[Xedit.Text, YEdit.Text,OS3MainFrm.FileNameEdit.Text]);
-         lReport.Add('');
-         lReport.Add('Variable     Mean   Variance  Std.Dev.');
-         lReport.Add('%-10s%8.2f  %8.2f  %8.2f', [XEdit.Text,Xmean,Xvariance,Xstddev]);
-         lReport.Add('%-10s%8.2f  %8.2f  %8.2f', [YEdit.Text,Ymean,Yvariance,Ystddev]);
-         lReport.Add('');
-         lReport.Add('Correlation:                %8.3f', [R]);
-         lReport.Add('Slope:                      %8.3f', [Slope]);
-         lReport.Add('Intercept:                  %8.3f', [Intercept]);
-         lReport.Add('Standard Error of Estimate: %8.3f', [SEPred]);
-         lReport.Add('Number of good cases:       %8d', [N]);
+  R := R - Xmean * Ymean / N;
+  R := R / (N - 1);
+  R := R / (XStdDev * YStdDev);
+  SEPred := sqrt(1.0 - sqr(R)) * YStdDev;
+  SEPred := SEPred * sqrt((N - 1) / (N - 2));
+  XMean := XMean / N;
+  YMean := YMean / N;
+  Slope := R * YStdDev / XStdDev;
+  Intercept := YMean - Slope * XMean;
 
-         DisplayReport(lReport);
-       finally
-         lReport.Free;
-       end;
-     end;
+  // Now, print the descriptive statistics to the output form if requested
+  if DescChk.Checked then
+  begin
+    lReport := TStringList.Create;
+    try
+      lReport.Add('X vs. Y PLOT');
+      lReport.Add('');
+      lReport.Add('X = %s, Y = %s from file: %s', [XEdit.Text, YEdit.Text, OS3MainFrm.FileNameEdit.Text]);
+      lReport.Add('');
+      lReport.Add('Variable     Mean   Variance  Std.Dev.');
+      lReport.Add('%-10s%8.2f  %8.2f  %8.2f', [XEdit.Text, XMean, XVariance, XStdDev]);
+      lReport.Add('%-10s%8.2f  %8.2f  %8.2f', [YEdit.Text, YMean, YVariance, YStdDev]);
+      lReport.Add('');
+      lReport.Add('Correlation:                %8.3f', [R]);
+      lReport.Add('Slope:                      %8.3f', [Slope]);
+      lReport.Add('Intercept:                  %8.3f', [Intercept]);
+      lReport.Add('Standard Error of Estimate: %8.3f', [SEPred]);
+      lReport.Add('Number of good cases:       %8d',   [N]);
 
-     // get upper and lower confidence points for each X value
-     if ConfChk.Checked then
-     begin
-          ConfBand := StrToFloat(ConfEdit.Text) / 100.0;
-          DF := N - 2;
-          t := inverset(ConfBand,DF);
-          for i := 1 to N do
-          begin
-               X := Xpoints[i];
-               predicted := slope * X + intercept;
-               sedata := SEPred * sqrt(1.0 + (1.0 / N) + (sqr(X - Xmean) / SSx));
-               UpConf[i] := predicted + (t * sedata);
-               lowConf[i] := predicted - (t * sedata);
-               if UpConf[i] > Ymax then Ymax := UpConf[i];
-               if lowConf[i] < Ymin then Ymin := lowConf[i];
-          end;
-     end
-     else ConfBand := 0.0;
+      DisplayReport(lReport);
+    finally
+      lReport.Free;
+    end;
+  end;
 
-     // plot the values (and optional line and confidence band if elected)
-     plotxy(Xpoints, Ypoints, UpConf, LowConf, ConfBand, Xmean, Ymean, R,
-            Slope, Intercept, Xmax, Xmin, Ymax, Ymin, N);
-     Application.ProcessMessages;
+  // Get upper and lower confidence points for each X value
+  if ConfChk.Checked then
+  begin
+    ConfBand := StrToFloat(ConfEdit.Text) / 100.0;
+    DF := N - 2;
+    t := InverseT(ConfBand, DF);
+    for i := 0 to N-1 do
+    begin
+      X := XPoints[i];
+      predicted := slope * X + intercept;
+      sedata := SEPred * sqrt(1.0 + (1.0 / N) + (sqr(X - XMean) / SSx));
+      UpConf[i] := predicted + (t * sedata);
+      lowConf[i] := predicted - (t * sedata);
+      YMax := Max(YMax, UpConf[i]);
+      YMin := Min(YMin, LowConf[i]);
+    end;
+  end
+  else
+    ConfBand := 0.0;
 
-     {
-     // print the same if elected
-     if PrintChk.Checked then
-        pplotxy(Xpoints, Ypoints, UpConf, LowConf, ConfBand, Xmean, Ymean,
-                R, Slope, Intercept, Xmax, Xmin, Ymax, Ymin, N);
-     }
+  // Plot the values (and optional line and confidence band if elected)
+  PlotXY(
+    Xpoints, Ypoints, UpConf, LowConf, XMean, YMean, R, Slope, Intercept
+    {$IFNDEF USE_TACHART},Xmax, Xmin, Ymax, Ymin, N{$ENDIF}
+  );
 
-     // cleanup
-     ColNoSelected := nil;
-     lowConf := nil;
-     UpConf := nil;
-     Ypoints := nil;
-     Xpoints := nil;
+  // cleanup
+  ColNoSelected := nil;
+  lowConf := nil;
+  UpConf := nil;
+  Ypoints := nil;
+  Xpoints := nil;
 end;
+
 
 procedure TPlotXYFrm.FormActivate(Sender: TObject);
 var
@@ -355,21 +336,74 @@ begin
   FAutoSized := True;
 end;
 
+
 procedure TPlotXYFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if BlankFrm = nil then Application.CreateForm(TBlankFrm, BlankFrm);
 end;
 
-procedure TPlotXYFrm.plotxy(VAR Xpoints : DblDyneVec;
-                            VAR Ypoints : DblDyneVec;
-                            VAR UpConf : DblDyneVec;
-                            VAR LowConf : DblDyneVec;
-                            ConfBand : double;
-                            Xmean, Ymean , R : double;
-                            Slope, Intercept : double;
-                            Xmax, Xmin, Ymax, Ymin : double;
-                            N : integer);
+
+{$IFDEF USE_TACHART}
+function TPlotXYFrm.PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
+  XMean, YMean, R, Slope, Intercept: Double): boolean;
+var
+  tmpX, tmpY: DblDyneVec;
+  ext: TDoubleRect;
+  xmin, xmax, ymin, ymax: Double;
+begin
+  if ChartForm = nil then
+    ChartForm := TChartForm.Create(Application);
+
+  ChartForm.Clear;
+
+  // Titles
+  ChartForm.SetTitle(Format('X vs. Y plot using file "%s"', [
+    OS3MainFrm.FileNameEdit.Text
+  ]));
+  ChartForm.SetFooter(Format('R(X,Y) = %.3f, Slope = %.2f, Intercept = %.2f', [
+    R, Slope, Intercept
+  ]));
+  ChartForm.SetXTitle(XEdit.Text);
+  chartForm.SetYTitle(YEdit.Text);
+
+  // Draw upper confidence band
+  if ConfChk.Checked then
+    ChartForm.PlotXY(ptLines, XPoints, UpConf, 'Upper confidence band', clRed);
+
+  // Plot data points
+  ChartForm.PlotXY(ptSymbols, XPoints, YPoints, 'Data values', clNavy);
+
+  // Draw lower confidence band
+  if ConfChk.Checked then
+    ChartForm.PlotXY(ptLines, XPoints, LowConf, 'Lower confidence band', clRed);
+
+  ChartForm.GetXRange(xmin, xmax, false);
+  ChartForm.GetYRange(ymin, ymax, false);
+
+  // Draw means
+  if MeansChk.Checked then
+  begin
+    ChartForm.HorLine(YMean, clGreen, psDash, 'Mean ' + YEdit.Text);
+    ChartForm.VertLine(XMean, clGreen, psDashDot, 'Mean ' + XEdit.Text);
+  end;
+
+  // Draw regression line
+  if LineChk.Checked then
+  begin
+    SetLength(tmpX, 2);
+    SetLengtH(tmpY, 2);
+    tmpX[0] := xmin;    tmpY[0] := tmpX[0] * slope + intercept;
+    tmpX[1] := xmax;    tmpY[1] := tmpX[1] * slope + intercept;
+    ChartForm.PlotXY(ptLines, tmpX, tmpY, 'Predicted', clBlack);
+  end;
+
+  // Show chart
+  Result := ChartForm.ShowModal <> mrClose;
+end;
+{$ELSE}
+function TPlotXYFrm.PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
+  {ConfBand, }XMean, YMean, R, Slope, Intercept, XMax, XMin, YMax, YMin: Double;
+  N: Integer): Boolean;
 var
    i, xpos, ypos, hleft, hright, vtop, vbottom, imagewide : integer;
    vhi, hwide, offset, strhi, imagehi : integer;
@@ -377,368 +411,193 @@ var
    Title : string;
 
 begin
-     BlankFrm.Image1.Canvas.Clear;
-     BlankFrm.Show;
-     Title := 'X versus Y PLOT Using File: ' + OS3MainFrm.FileNameEdit.Text;
-     BlankFrm.Caption := Title;
-     imagewide := BlankFrm.Image1.Width;
-     imagehi := BlankFrm.Image1.Height;
-     vtop := 20;
-     vbottom := round(imagehi) - 80;
-     vhi := vbottom - vtop;
-     hleft := 100;
-     hright := imagewide - 80;
-     hwide := hright - hleft;
-     BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-     BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+  if BlankFrm = nil then Application.CreateForm(TBlankFrm, BlankFrm);
 
-     // Draw chart border
-     BlankFrm.Image1.Canvas.Rectangle(0,0,imagewide,imagehi);
+  BlankFrm.Image1.Canvas.Clear;
+  BlankFrm.Show;
 
-     // draw Means
-     if MeansChk.Checked then
-     begin
-          ypos := round(vhi * ( (Ymax - Ymean) / (Ymax - Ymin)));
-          ypos := ypos + vtop;
-          xpos := hleft;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          xpos := hright;
-          BlankFrm.Image1.Canvas.Pen.Color := clGreen;
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          Title := 'MEAN ';
-          Title := Title + YEdit.Text;
-          strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-          ypos := ypos - strhi div 2;
-          BlankFrm.Image1.Canvas.Brush.Color := clWhite;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-
-          xpos := round(hwide * ( (Xmean - Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          ypos := vtop;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          ypos := vbottom;
-          BlankFrm.Image1.Canvas.Pen.Color := clGreen;
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          Title := 'MEAN ';
-          Title := Title + XEdit.Text;
-          strhi := BlankFrm.Image1.Canvas.TextWidth(Title);
-          xpos := xpos - strhi div 2;
-          ypos := vtop - BlankFrm.Image1.Canvas.TextHeight(Title);
-          BlankFrm.Image1.Canvas.Brush.Color := clWhite;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-     end;
-
-     // draw slope line
-     if LineChk.Checked then
-     begin
-          BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-          Yvalue := (Xpoints[1] * slope) + intercept; // predicted score
-          ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
-          ypos := ypos + vtop;
-          xpos := round(hwide * ( (Xpoints[1]- Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          Yvalue := (Xpoints[N] * slope) + intercept; // predicted score
-          ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
-          ypos := ypos + vtop;
-          xpos := round(hwide * ( (Xpoints[N] - Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     end;
-
-     // draw horizontal axis
-     BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-     BlankFrm.Image1.Canvas.MoveTo(hleft,vbottom);
-     BlankFrm.Image1.Canvas.LineTo(hright,vbottom);
-     valincr := (Xmax - Xmin) / 10.0;
-     for i := 1 to 11 do
-     begin
-          ypos := vbottom;
-          Xvalue := Xmin + valincr * (i - 1);
-          xpos := round(hwide * ((Xvalue - Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          ypos := ypos + 10;
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          Title := format('%.2f',[Xvalue]);
-          offset := BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
-          xpos := xpos - offset;
-          BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-     end;
-     xpos := hleft + (hwide div 2) - (BlankFrm.Image1.Canvas.TextWidth(XEdit.Text) div 2);
-     ypos := vbottom + 20;
-     BlankFrm.Image1.Canvas.TextOut(xpos,ypos,XEdit.Text);
-     Title := format('R(X,Y) = %5.3f, Slope = %6.2f, Intercept = %6.2f',
-              [R,Slope,Intercept]);
-     xpos := hleft + (hwide div 2) - (BlankFrm.Image1.Canvas.TextWidth(Title) div 2);
-     ypos := ypos + 15;
-     BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-
-     // Draw vertical axis
-     Title := YEdit.Text;
-     xpos := hleft - BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
-     ypos := vtop - BlankFrm.Image1.Canvas.TextHeight(Title);
-     BlankFrm.Image1.Canvas.TextOut(xpos,ypos,YEdit.Text);
-     xpos := hleft;
-     ypos := vtop;
-     BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-     ypos := vbottom;
-     BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     valincr := (Ymax - Ymin) / 10.0;
-     for i := 1 to 11 do
-     begin
-          Title := format('%8.2f',[Ymax - ((i-1)*valincr)]);
-          strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-          xpos := 10;
-          Yvalue := Ymax - (valincr * (i-1));
-          ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
-          ypos := ypos + vtop - strhi div 2;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-          xpos := hleft;
-          ypos := ypos + strhi div 2;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          xpos := hleft - 10;
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     end;
-
-     // draw points for x and y pairs
-     for i := 1 to N do
-     begin
-          ypos := round(vhi * ( (Ymax - Ypoints[i]) / (Ymax - Ymin)));
-          ypos := ypos + vtop;
-          xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          BlankFrm.Image1.Canvas.Brush.Color := clNavy;
-          BlankFrm.Image1.Canvas.Brush.Style := bsSolid;
-          BlankFrm.Image1.Canvas.Pen.Color := clNavy;
-          BlankFrm.Image1.Canvas.Ellipse(xpos,ypos,xpos+5,ypos+5);
-     end;
-
-     // draw confidence bands if requested
-     if ConfBand <> 0.0 then
-     begin
-          BlankFrm.Image1.Canvas.Pen.Color := clRed;
-          ypos := round(vhi * ((Ymax - UpConf[1]) / (Ymax - Ymin)));
-          ypos := ypos + vtop;
-          xpos := round(hwide * ( (Xpoints[1] - Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          for i := 2 to N do
-          begin
-               ypos := round(vhi * ((Ymax - UpConf[i]) / (Ymax - Ymin)));
-               ypos := ypos + vtop;
-               xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
-               xpos := xpos + hleft;
-               BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          end;
-          ypos := round(vhi * ((Ymax - lowConf[1]) / (Ymax - Ymin)));
-          ypos := ypos + vtop;
-          xpos := round(hwide * ( (Xpoints[1] - Xmin) / (Xmax - Xmin)));
-          xpos := xpos + hleft;
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          for i := 2 to N do
-          begin
-               ypos := round(vhi * ((Ymax - lowConf[i]) / (Ymax - Ymin)));
-               ypos := ypos + vtop;
-               xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
-               xpos := xpos + hleft;
-               BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          end;
-     end;
-end;
-//-------------------------------------------------------------------
-(*
-procedure TPlotXYFrm.pplotxy(VAR Xpoints : DblDyneVec;
-                             VAR Ypoints : DblDyneVec;
-                             VAR UpConf : DblDyneVec;
-                             VAR LowConf : DblDyneVec;
-                             ConfBand : double;
-                             Xmean, Ymean , R : double;
-                             Slope, Intercept : double;
-                             Xmax, Xmin, Ymax, Ymin : double;
-                             N : integer);
-var
-   i, xpos, ypos, hleft, hright, vtop, vbottom, imagewide : integer;
-   vhi, hwide, offset, strhi : integer;
-   imagehi, maxval, minval, valincr, Yvalue, Xvalue : double;
-   Title : string;
-
-begin
-  if not PrintDialog.Execute then
-    exit;
-
-  Printer.Orientation := poLandscape;
-  Printer.BeginDoc;
   Title := 'X versus Y PLOT Using File: ' + OS3MainFrm.FileNameEdit.Text;
-  strhi := Printer.Canvas.TextWidth(Title) div 2;
-  Printer.Canvas.TextOut(strhi,5,Title);
-  imagewide := Printer.PageWidth - 100;
-  imagehi := Printer.PageHeight - 100;
-  vtop := 120;
-  vbottom := round(imagehi) - 100;
+  BlankFrm.Caption := Title;
+
+  imagewide := BlankFrm.Image1.Width;
+  imagehi := BlankFrm.Image1.Height;
+  vtop := 20;
+  vbottom := round(imagehi) - 80;
   vhi := vbottom - vtop;
-  hleft := 300;
-  hright := imagewide - 200;
+  hleft := 100;
+  hright := imagewide - 80;
   hwide := hright - hleft;
-  Printer.Canvas.Pen.Color := clBlack;
-  Printer.Canvas.Brush.Color := clWhite;
+  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+  BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+
+  // Draw chart border
+  BlankFrm.Image1.Canvas.Rectangle(0,0,imagewide,imagehi);
 
   // draw Means
   if MeansChk.Checked then
   begin
-      ypos := round(vhi * ( (Ymax - Ymean) / (Ymax - Ymin)));
-      ypos := ypos + vtop;
-      xpos := hleft;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      xpos := hright;
-      Printer.Canvas.Pen.Color := clGreen;
-      Printer.Canvas.LineTo(xpos,ypos);
-      Title := 'MEAN ';
-      Title := Title + YEdit.Text;
-      strhi := Printer.Canvas.TextHeight(Title);
-      ypos := ypos - strhi div 2;
-      Printer.Canvas.Brush.Color := clWhite;
-      Printer.Canvas.TextOut(xpos,ypos,Title);
+    ypos := round(vhi * ( (Ymax - Ymean) / (Ymax - Ymin)));
+    ypos := ypos + vtop;
+    xpos := hleft;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    xpos := hright;
+    BlankFrm.Image1.Canvas.Pen.Color := clGreen;
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+    Title := 'MEAN ' + YEdit.Text;
+    strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+    ypos := ypos - strhi div 2;
+    BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
 
-      xpos := round(hwide * ( (Xmean - Xmin) / (Xmax - Xmin)));
-      xpos := xpos + hleft;
-      ypos := vtop;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      ypos := vbottom;
-      Printer.Canvas.Pen.Color := clGreen;
-      Printer.Canvas.LineTo(xpos,ypos);
-      Title := 'MEAN ';
-      Title := Title + XEdit.Text;
-      strhi := Printer.Canvas.TextWidth(Title);
-      xpos := xpos - strhi div 2;
-      ypos := vtop - Printer.Canvas.TextHeight(Title);
-      Printer.Canvas.Brush.Color := clWhite;
-      Printer.Canvas.TextOut(xpos,ypos,Title);
+    xpos := round(hwide * ( (Xmean - Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    ypos := vtop;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    ypos := vbottom;
+    BlankFrm.Image1.Canvas.Pen.Color := clGreen;
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+    Title := 'MEAN ' + XEdit.Text;
+    strhi := BlankFrm.Image1.Canvas.TextWidth(Title);
+    xpos := xpos - strhi div 2;
+    ypos := vtop - BlankFrm.Image1.Canvas.TextHeight(Title);
+    BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
   end;
 
   // draw slope line
   if LineChk.Checked then
   begin
-      Printer.Canvas.Pen.Color := clBlack;
-      Yvalue := (Xpoints[1] * slope) + intercept; // predicted score
-      ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
-      ypos := ypos + vtop;
-      xpos := round(hwide * ( (Xpoints[1]- Xmin) / (Xmax - Xmin)));
-      xpos := xpos + hleft;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      Yvalue := (Xpoints[N] * slope) + intercept; // predicted score
-      ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
-      ypos := ypos + vtop;
-      xpos := round(hwide * ( (Xpoints[N] - Xmin) / (Xmax - Xmin)));
-      xpos := xpos + hleft;
-      Printer.Canvas.LineTo(xpos,ypos);
+    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+    Yvalue := (Xpoints[0] * slope) + intercept; // predicted score
+    ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
+    ypos := ypos + vtop;
+    xpos := round(hwide * ( (Xpoints[0]- Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+
+    Yvalue := (Xpoints[N-1] * slope) + intercept; // predicted score
+    ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
+    ypos := ypos + vtop;
+    xpos := round(hwide * ( (Xpoints[N-1] - Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
   end;
 
   // draw horizontal axis
-  Printer.Canvas.Pen.Color := clBlack;
-  Printer.Canvas.MoveTo(hleft,vbottom);
-  Printer.Canvas.LineTo(hright,vbottom);
+  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+  BlankFrm.Image1.Canvas.MoveTo(hleft,vbottom);
+  BlankFrm.Image1.Canvas.LineTo(hright,vbottom);
   valincr := (Xmax - Xmin) / 10.0;
   for i := 1 to 11 do
   begin
-      ypos := vbottom;
-      Xvalue := Xmin + valincr * (i - 1);
-      xpos := round(hwide * ((Xvalue - Xmin) / (Xmax - Xmin)));
-      xpos := xpos + hleft;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      ypos := ypos + 10;
-      Printer.Canvas.LineTo(xpos,ypos);
-      Title := format('%6.2f',[Xvalue]);
-      offset := Printer.Canvas.TextWidth(Title) div 2;
-      xpos := xpos - offset;
-      Printer.Canvas.Pen.Color := clBlack;
-      Printer.Canvas.TextOut(xpos,ypos,Title);
+    ypos := vbottom;
+    Xvalue := Xmin + valincr * (i - 1);
+    xpos := round(hwide * ((Xvalue - Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    ypos := ypos + 10;
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+    Title := format('%.2f',[Xvalue]);
+    offset := BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
+    xpos := xpos - offset;
+    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
   end;
-  xpos := hleft + (hwide div 2) - (Printer.Canvas.TextWidth(XEdit.Text) div 2);
-  ypos := vbottom + 40;
-  Printer.Canvas.TextOut(xpos,ypos,XEdit.Text);
-  Title := format('R(X,Y) = %5.3f, Slope = %6.2f, Intercept = %6.2f',
-          [R,Slope,Intercept]);
-  xpos := hleft + (hwide div 2) - (Printer.Canvas.TextWidth(Title) div 2);
-  ypos := ypos + 40;
-  Printer.Canvas.TextOut(xpos,ypos,Title);
+  xpos := hleft + (hwide div 2) - (BlankFrm.Image1.Canvas.TextWidth(XEdit.Text) div 2);
+  ypos := vbottom + 20;
+  BlankFrm.Image1.Canvas.TextOut(xpos,ypos,XEdit.Text);
+  Title := format('R(X,Y) = %5.3f, Slope = %6.2f, Intercept = %6.2f', [
+    R, Slope, Intercept
+  ]);
+  xpos := hleft + (hwide div 2) - (BlankFrm.Image1.Canvas.TextWidth(Title) div 2);
+  ypos := ypos + 15;
+  BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
 
   // Draw vertical axis
   Title := YEdit.Text;
-  xpos := hleft - Printer.Canvas.TextWidth(Title) div 2;
-  ypos := vtop - Printer.Canvas.TextHeight(Title);
-  Printer.Canvas.TextOut(xpos,ypos,YEdit.Text);
+  xpos := hleft - BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
+  ypos := vtop - BlankFrm.Image1.Canvas.TextHeight(Title);
+  BlankFrm.Image1.Canvas.TextOut(xpos,ypos,YEdit.Text);
   xpos := hleft;
   ypos := vtop;
-  Printer.Canvas.MoveTo(xpos,ypos);
+  BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
   ypos := vbottom;
-  Printer.Canvas.LineTo(xpos,ypos);
+  BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
   valincr := (Ymax - Ymin) / 10.0;
   for i := 1 to 11 do
   begin
-      Title := format('%8.2f',[Ymax - ((i-1)*valincr)]);
-      strhi := Printer.Canvas.TextHeight(Title);
-      xpos := 10;
-      Yvalue := Ymax - (valincr * (i-1));
-      ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
-      ypos := ypos + vtop - strhi div 2;
-      Printer.Canvas.TextOut(xpos,ypos,Title);
-      xpos := hleft;
-      ypos := ypos + strhi div 2;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      xpos := hleft - 10;
-      Printer.Canvas.LineTo(xpos,ypos);
+    Title := format('%8.2f',[Ymax - ((i-1)*valincr)]);
+    strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+    xpos := 10;
+    Yvalue := Ymax - (valincr * (i-1));
+    ypos := round(vhi * ( (Ymax - Yvalue) / (Ymax - Ymin)));
+    ypos := ypos + vtop - strhi div 2;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+    xpos := hleft;
+    ypos := ypos + strhi div 2;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    xpos := hleft - 10;
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
   end;
 
   // draw points for x and y pairs
-  for i := 1 to N do
+  for i := 0 to N-1 do
   begin
-      ypos := round(vhi * ( (Ymax - Ypoints[i]) / (Ymax - Ymin)));
-      ypos := ypos + vtop;
-      xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
-      xpos := xpos + hleft;
-      Printer.Canvas.Pen.Color := clBlack;
-      Printer.Canvas.Ellipse(xpos,ypos,xpos+15,ypos+15);
+    ypos := round(vhi * ( (Ymax - Ypoints[i]) / (Ymax - Ymin)));
+    ypos := ypos + vtop;
+    xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    BlankFrm.Image1.Canvas.Brush.Color := clNavy;
+    BlankFrm.Image1.Canvas.Brush.Style := bsSolid;
+    BlankFrm.Image1.Canvas.Pen.Color := clNavy;
+    BlankFrm.Image1.Canvas.Ellipse(xpos,ypos,xpos+5,ypos+5);
   end;
 
   // draw confidence bands if requested
-  if ConfBand <> 0.0 then
+//     if ConfBand <> 0.0 then
+  if ConfChk.Checked  then
   begin
-      Printer.Canvas.Pen.Color := clRed;
-      ypos := round(vhi * ((Ymax - UpConf[1]) / (Ymax - Ymin)));
+    BlankFrm.Image1.Canvas.Pen.Color := clRed;
+    ypos := round(vhi * ((Ymax - UpConf[0]) / (Ymax - Ymin)));
+    ypos := ypos + vtop;
+    xpos := round(hwide * ( (Xpoints[0] - Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    for i := 1 to N-1 do
+    begin
+      ypos := round(vhi * ((Ymax - UpConf[i]) / (Ymax - Ymin)));
       ypos := ypos + vtop;
-      xpos := round(hwide * ( (Xpoints[1] - Xmin) / (Xmax - Xmin)));
+      xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
       xpos := xpos + hleft;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      for i := 2 to N do
-      begin
-           ypos := round(vhi * ((Ymax - UpConf[i]) / (Ymax - Ymin)));
-           ypos := ypos + vtop;
-           xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
-           xpos := xpos + hleft;
-           Printer.Canvas.LineTo(xpos,ypos);
-      end;
-      ypos := round(vhi * ((Ymax - lowConf[1]) / (Ymax - Ymin)));
+      BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+    end;
+    ypos := round(vhi * ((Ymax - lowConf[0]) / (Ymax - Ymin)));
+    ypos := ypos + vtop;
+    xpos := round(hwide * ( (Xpoints[0] - Xmin) / (Xmax - Xmin)));
+    xpos := xpos + hleft;
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    for i := 1 to N-1 do
+    begin
+      ypos := round(vhi * ((Ymax - lowConf[i]) / (Ymax - Ymin)));
       ypos := ypos + vtop;
-      xpos := round(hwide * ( (Xpoints[1] - Xmin) / (Xmax - Xmin)));
+      xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
       xpos := xpos + hleft;
-      Printer.Canvas.MoveTo(xpos,ypos);
-      for i := 2 to N do
-      begin
-           ypos := round(vhi * ((Ymax - lowConf[i]) / (Ymax - Ymin)));
-           ypos := ypos + vtop;
-           xpos := round(hwide * ( (Xpoints[i] - Xmin) / (Xmax - Xmin)));
-           xpos := xpos + hleft;
-           Printer.Canvas.LineTo(xpos,ypos);
-      end;
+      BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+    end;
   end;
-
-  Printer.EndDoc;
-  Printer.Orientation := poPortrait;
 end;
-//-------------------------------------------------------------------
-*)
+{$ENDIF}
+
+
+procedure TPlotXYFrm.UpdateBtnStates;
+begin
+  XinBtn.Enabled := (VarList.ItemIndex > -1) and (XEdit.Text = '');
+  XoutBtn.Enabled := (XEdit.Text <> '');
+  YinBtn.Enabled := (VarList.ItemIndex > -1) and (YEdit.Text = '');
+  YoutBtn.Enabled := (YEdit.Text <> '');
+end;
+
+
 function TPlotXYFrm.Validate(out AMsg: String; out AControl: TWinControl;
   Xcol, Ycol: Integer): Boolean;
 begin
@@ -760,18 +619,12 @@ begin
   Result := true;
 end;
 
+
 procedure TPlotXYFrm.VarListSelectionChange(Sender: TObject; User: boolean);
 begin
   UpdateBtnStates;
 end;
 
-procedure TPlotXYFrm.UpdateBtnStates;
-begin
-  XinBtn.Enabled := (VarList.ItemIndex > -1) and (XEdit.Text = '');
-  XoutBtn.Enabled := (XEdit.Text <> '');
-  YinBtn.Enabled := (VarList.ItemIndex > -1) and (YEdit.Text = '');
-  YoutBtn.Enabled := (YEdit.Text <> '');
-end;
 
 initialization
   {$I plotxyunit.lrs}
