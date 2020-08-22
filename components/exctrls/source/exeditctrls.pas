@@ -537,7 +537,7 @@ end;
 
 procedure TCustomFloatSISpinEditEx.EditKeyPress(var Key: char);
 begin
-  //allow anything for the moment
+  if Assigned(OnKeyPress) then OnKeyPress(Self, Key);
 end;
 
 function TCustomFloatSISpinEditEx.TextIsNumber(const S: String; out ANumber: Double): Boolean;
