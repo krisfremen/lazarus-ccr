@@ -113,6 +113,8 @@ object ChartForm: TChartForm
           Grid.Color = clSilver
           Grid.Style = psSolid
           Grid.Visible = False
+          Intervals.MaxLength = 80
+          Intervals.MinLength = 30
           Alignment = calBottom
           Marks.LabelBrush.Style = bsClear
           Minors = <>

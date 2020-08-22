@@ -18,6 +18,7 @@ procedure Exchange(var a, b: Integer); overload;
 procedure Exchange(var a, b: String); overload;
 
 procedure SortOnX(X, Y: DblDyneVec);
+procedure SortOnX(X: DblDyneVec; Y: DblDyneMat);
 
 implementation
 
@@ -89,6 +90,28 @@ begin
         Exchange(Y[i], Y[j]);
       end;
     end;
+  end;
+end;
+
+// NOTE: The matrix Y is transposed relative to the typical usage in LazStats
+procedure SortOnX(X: DblDyneVec; Y: DblDyneMat);
+var
+  i, j, k, N, Ny: Integer;
+begin
+  N := Length(X);
+  if N <> Length(Y[0]) then
+    raise Exception.Create('[SortOnX] Arrays X and Y (2nd index) must have the same length');
+  Ny := Length(Y);
+
+  for i := 0 to N-2 do
+  begin
+    for j := i+1 to N-1 do
+      if X[i] > X[j] then
+      begin
+        Exchange(X[i], X[j]);
+        for k := 0 to Ny-1 do
+          Exchange(Y[k, i], Y[k, j]);
+      end;
   end;
 end;
 

@@ -2,14 +2,15 @@
 
 unit XvsMultYUnit;
 
-{$mode objfpc}{$H+}
+{$MODE objfpc}{$H+}
+{$I ../../../LazStats.inc}
 
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Buttons, ExtCtrls, Printers,
-  MainUnit, Globals, OutputUnit, DataProcs, BlankFrmUnit, MatrixLib;
+  MainUnit, Globals, OutputUnit, DataProcs, MatrixLib;
 
 type
 
@@ -51,8 +52,12 @@ type
     { private declarations }
     FAutoSized: Boolean;
     selected: IntDyneVec;
-    procedure PlotXY(XValues : DblDyneVec; YValues : DblDyneMat; MaxX, MinX,
-       MaxY, MinY : double; N, NoY : integer);
+    {$IFDEF USE_TACHART}
+    procedure PlotXY(XValues: DblDyneVec; YValues: DblDyneMat);
+    {$ELSE}
+    procedure PlotXY(XValues: DblDyneVec; YValues: DblDyneMat;
+      MaxX, MinX, MaxY, MinY: double; N, NoY: integer);
+    {$ENDIF}
     procedure UpdateBtnStates;
   public
     { public declarations }
@@ -63,7 +68,15 @@ var
 
 implementation
 
+{$R *.lfm}
+
 uses
+  {$IFDEF USE_TACHART}
+  TAChartUtils,
+  ChartUnit,
+  {$ELSE}
+  BlankFrmUnit,
+  {$ENDIF}
   Math, Utils;
 
 { TXvsMultYForm }
@@ -91,37 +104,41 @@ end;
 procedure TXvsMultYForm.ComputeBtnClick(Sender: TObject);
 var
   i, j, k, N, NoY, XCol, NoSelected: integer;
-  YValues, RMatrix: DblDyneMat;
-  XValues, Means, Variances, StdDevs: DblDyneVec;
-  MinX, MaxX, MinY, MaxY, temp: double;
+  MinX, MaxX, MinY, MaxY: double;
   Title: string;
-  RowLabels, ColLabels: StrDyneVec;
-  lReport: TStrings;
+  RMatrix: DblDyneMat = nil;
+  XValues: DblDyneVec = nil;
+  YValues: DblDyneMat = nil;
+  Means: DblDyneVec = nil;
+  Variances: DblDyneVec = nil;
+  StdDevs: DblDyneVec = nil;
+  RowLabels: StrDyneVec = nil;
+  ColLabels: StrDyneVec = nil;
   errorcode: boolean = false;
   Ncases: integer = 0;
+  lReport: TStrings;
 begin
   if XEdit.Text = '' then
   begin
-    MessageDlg('No X variable selected.', mtError, [mbOK], 0);
+    ErrorMsg('No X variable selected.');
     exit;
   end;
 
   if YBox.Items.Count = 0 then
   begin
-    MessageDlg('No Y variables selected.', mtError, [mbOK], 0);
+    ErrorMsg('No Y variables selected.');
     exit;
   end;
 
+  MaxX := -Infinity;
+  MinX := Infinity;
+  MaxY := -Infinity;
+  MinY := Infinity;
   NoY := YBox.Items.Count;
-  MaxX := -10000;
-  MinX := 10000;
-  MaxY := -1000;
-  MinY := 1000;
-  N := 0;
 
   SetLength(selected, NoY + 1);
-  SetLength(RowLabels,NoVariables);
-  SetLength(ColLabels,NoVariables);
+  SetLength(RowLabels, NoVariables);
+  SetLength(ColLabels, NoVariables);
 
   XCol := 0;
   for i := 1 to NoVariables do
@@ -135,7 +152,7 @@ begin
   begin
     selected[j] := 0;
     for i := 1 to NoVariables do
-      if Trim(YBox.Items.Strings[j]) = Trim(OS3MainFrm.DataGrid.Cells[i,0]) then
+      if Trim(YBox.Items[j]) = Trim(OS3MainFrm.DataGrid.Cells[i,0]) then
       begin
         selected[j] := i;
         Break;
@@ -154,11 +171,8 @@ begin
 
   lReport := TStringList.Create;
   try
-    lReport.Add('X VERSUS MULTIPLE Y VALUES PLOT');
-    lReport.Add('');
-
-    SetLength(YValues, NoCases+1, NoY+1);
-    SetLength(XValues, NoCases+1);
+    SetLength(YValues, NoY, NoCases);
+    SetLength(XValues, NoCases);
     SetLength(Means, NoSelected+1);
     SetLength(Variances, NoSelected+1);
     SetLength(StdDevs, NoSelected+1);
@@ -172,25 +186,30 @@ begin
       for j := 0 to NoSelected-1 do RMatrix[i,j] := 0.0;
     end;
 
+    N := 0;
     for i := 1 to NoCases do
     begin
-      if not GoodRecord(i,NoSelected,selected) then continue;
-      XValues[i] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[XCol,i]));
-      if XValues[i] > MaxX then MaxX := XValues[i];
-      if XValues[i] < MinX then MinX := XValues[i];
+      if not GoodRecord(i, NoSelected, selected) then continue;
+      inc(N);
+      XValues[i-1] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[XCol,i]));
+      MaxX := Max(MaxX, XValues[i-1]);
+      MinX := Min(MinX, XValues[i-1]);
       for j := 0 to NoY - 1 do
       begin
-        YValues[i-1,j] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[selected[j],i]));
-        if YValues[i-1,j] > MaxY then MaxY := YValues[i-1,j];
-        if YValues[i-1,j] < MinY then MinY := YValues[i-1,j];
+        YValues[j, i-1] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[selected[j], i]));
+        MaxY := Max(MaxY, YValues[j, i-1]);
+        MinY := Min(MinY, YValues[j, i-1]);
       end;
     end;
 
     // get descriptive data
     if DescChk.Checked then
     begin
+      lReport.Add('X VERSUS MULTIPLE Y VALUES PLOT');
+      lReport.Add('');
+
       Correlations(NoSelected,selected,RMatrix,Means,Variances,StdDevs,errorcode,Ncases);
-      N := Ncases;
+      //N := Ncases;
       Title := 'CORRELATIONS';
       MatPrint(RMatrix, NoSelected, NoSelected, Title, RowLabels, ColLabels, N, lReport);
       Title := 'Means';
@@ -199,30 +218,15 @@ begin
       DynVectorPrint(Variances, NoSelected, Title, RowLabels, N, lReport);
       Title := 'Standard Deviations';
       DynVectorPrint(StdDevs, NoSelected, Title, RowLabels, N, lReport);
+
+      DisplayReport(lReport);
     end;
 
-    DisplayReport(lReport);
+    // Sort on X
+    SortOnX(XValues, YValues);
 
-    // sort on X
-    for i := 0 to N-2 do
-    begin
-      for j := i+1 to N-1 do
-      begin
-        if XValues[i] > XValues[j] then // swap
-        begin
-          temp := XValues[i];
-          XValues[i] := XValues[j];
-          XValues[j] := temp;
-          for k := 0 to NoY-1 do
-          begin
-            temp := YValues[i,k];
-            YValues[i,k] := YValues[j,k];
-            YValues[j,k] := temp;
-          end;
-        end;
-      end;
-    end;
-    PlotXY(XValues, YValues, MaxX, MinX, MaxY, MinY, N, NoY);
+    // Plot x vs multiple y
+    PlotXY(XValues, YValues{$IFNDEF USE_TACHART}, MaxX, MinX, MaxY, MinY, N, NoY{$ENDIF});
 
   finally
     lReport.Free;
@@ -237,6 +241,7 @@ begin
     RowLabels := nil;
   end;
 end;
+
 
 procedure TXvsMultYForm.FormActivate(Sender: TObject);
 var
@@ -256,13 +261,12 @@ begin
   FAutoSized := true;
 end;
 
+
 procedure TXvsMultYForm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-
-  if BlankFrm = nil then
-    Application.CreateForm(TBlankFrm, BlankFrm);
 end;
+
 
 procedure TXvsMultYForm.XInBtnClick(Sender: TObject);
 var
@@ -277,6 +281,7 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TXvsMultYForm.XOutBtnClick(Sender: TObject);
 begin
   if (XEdit.Text <> '') then
@@ -286,6 +291,7 @@ begin
   end;
   UpdateBtnStates;
 end;
+
 
 procedure TXvsMultYForm.YInBtnClick(Sender: TObject);
 var
@@ -305,6 +311,7 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TXvsMultYForm.YOutBtnClick(Sender: TObject);
 var
   i: integer;
@@ -323,7 +330,40 @@ begin
   UpdateBtnStates;
 end;
 
-// routine to plot X versus multiple Y values
+
+// Routine to plot X versus multiple Y values
+{$IFDEF USE_TACHART}
+procedure TXvsMultYForm.PlotXY(XValues: DblDyneVec; YValues: DblDyneMat);
+var
+  N, Ny, Nc: Integer;
+  j: Integer;
+  pt: TPlotType;
+begin
+  // Preparations
+  if LinesBox.Checked then pt := ptLinesAndSymbols else pt := ptSymbols;
+
+  N := Length(XValues);
+  Ny := Length(YValues);
+  Nc := Length(DATA_COLORS);
+
+  if ChartForm = nil then
+    ChartForm := TChartForm.Create(Application)
+  else
+    ChartForm.Clear;
+
+  // Titles
+  ChartForm.SetTitle(PlotTitleEdit.Text);
+  ChartForm.SetXTitle(XEdit.Text);
+  ChartForm.SetYTitle('Y Values');
+
+  // Plot a series for each y value
+  for j := 0 to Ny - 1 do
+    ChartForm.PlotXY(pt, XValues, YValues[j], Trim(YBox.Items[j]), DATA_COLORS[j mod Nc]);
+
+  // Show chart
+  ChartForm.ShowModal;
+end;
+{$ELSE}
 procedure TXvsMultYForm.PlotXY(XValues: DblDyneVec; YValues: DblDyneMat;
    MaxX, MinX, MaxY, MinY: double; N, NoY: integer);
 var
@@ -332,8 +372,10 @@ var
   valincr, Yvalue, Xvalue: double;
   Title: string;
 begin
-  Title := PlotTitleEdit.Text;
-  BlankFrm.Caption := Title;
+  if BlankFrm = nil then
+    Application.CreateForm(TBlankFrm, BlankFrm);
+
+  BlankFrm.Caption := PlotTitleEdit.Text;
   BlankFrm.Show;
 
   imagewide := BlankFrm.Image1.Width;
@@ -417,12 +459,12 @@ begin
     BlankFrm.Image1.Canvas.Pen.Color := DATA_COLORS[j mod Length(DATA_COLORS)];
     BlankFrm.Image1.Canvas.Font.Color := DATA_COLORS[j mod Length(DATA_COLORS)];
     Title := Trim(OS3MainFrm.DataGrid.Cells[selected[j],0]);
-    for i := 1 to N do
+    for i := 0 to N-1 do
     begin
-      ypos := vtop + round(vhi * ( (maxY - YValues[i-1,j]) / (maxY - minY)));
-      xpos := hleft + round(hwide * ( (XValues[i-1]-minX) / (maxX - minX)));
+      ypos := vtop + round(vhi * ( (maxY - YValues[j, i]) / (maxY - minY)));
+      xpos := hleft + round(hwide * ( (XValues[i] - minX) / (maxX - minX)));
       if xpos < hleft then xpos := hleft;
-      if i = 1 then
+      if i = 0 then
         BlankFrm.Image1.Canvas.MoveTo(xpos, ypos);
       if LinesBox.Checked then
         BlankFrm.Image1.Canvas.LineTo(xpos, ypos);
@@ -437,6 +479,8 @@ begin
 
   BlankFrm.Image1.Canvas.Font.Color := clBlack;
 end;
+{$ENDIF}
+
 
 procedure TXvsMultYForm.UpdateBtnStates;
 var
@@ -449,8 +493,6 @@ begin
   YOutBtn.Enabled := AnySelected(YBox);
 end;
 
-initialization
-  {$I xvsmultyunit.lrs}
 
 end.
 

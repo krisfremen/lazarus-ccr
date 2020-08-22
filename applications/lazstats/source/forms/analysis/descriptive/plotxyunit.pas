@@ -8,11 +8,8 @@ unit PlotXYUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Buttons,
-  {$IFNDEF USE_TACHART}
-  BlankFrmUnit,
-  {$ENDIF}
   MainUnit, Globals, OutputUnit, FunctionsLib, DataProcs;
 
 type
@@ -74,10 +71,14 @@ var
 
 implementation
 
+{$R *.lfm}
+
 uses
   {$IFDEF USE_TACHART}
   TAChartUtils,
   ChartUnit,
+  {$ELSE}
+  BlankFrmUnit,
   {$ENDIF}
   Math, Utils;
 
@@ -623,9 +624,6 @@ begin
   UpdateBtnStates;
 end;
 
-
-initialization
-  {$I plotxyunit.lrs}
 
 end.
 
