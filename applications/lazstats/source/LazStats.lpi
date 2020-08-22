@@ -24,26 +24,32 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
-    <RequiredPackages Count="5">
+    <RequiredPackages Count="7">
       <Item1>
-        <PackageName Value="lhelpcontrolpkg"/>
+        <PackageName Value="TAChartPrint"/>
       </Item1>
       <Item2>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
-        <MinVersion Major="1" Valid="True"/>
+        <PackageName Value="lhelpcontrolpkg"/>
       </Item3>
       <Item4>
-        <PackageName Value="Printer4Lazarus"/>
-        <MinVersion Minor="5" Valid="True"/>
+        <PackageName Value="LazControls"/>
       </Item4>
       <Item5>
-        <PackageName Value="LCL"/>
+        <PackageName Value="FCL"/>
+        <MinVersion Major="1" Valid="True"/>
       </Item5>
+      <Item6>
+        <PackageName Value="Printer4Lazarus"/>
+        <MinVersion Minor="5" Valid="True"/>
+      </Item6>
+      <Item7>
+        <PackageName Value="LCL"/>
+      </Item7>
     </RequiredPackages>
-    <Units Count="171">
+    <Units Count="172">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -1386,6 +1392,13 @@
         <Filename Value="LazStats.inc"/>
         <IsPartOfProject Value="True"/>
       </Unit170>
+      <Unit171>
+        <Filename Value="forms\misc\chartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ChartForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="ChartUnit"/>
+      </Unit171>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -1418,7 +1431,7 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="7">
+    <Exceptions Count="8">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -1443,6 +1456,9 @@
         <Name Value="Exception"/>
         <Enabled Value="False"/>
       </Item7>
+      <Item8>
+        <Name Value="EFreeType"/>
+      </Item8>
     </Exceptions>
   </Debugging>
 </CONFIG>

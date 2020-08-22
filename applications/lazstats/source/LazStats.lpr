@@ -7,8 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, lhelpcontrolpkg,
-  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit, utils;
+  Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg,
+  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit, utils, chartunit;
 
 {$R LazStats.res}
 
@@ -26,9 +26,8 @@ begin
     else
       Application.Terminate;
   end;
-
-  Application.CreateForm(TMainDataModule, MainDataModule);
-  Application.CreateForm(TOS3MainFrm, OS3MainFrm);
+Application.CreateForm(TMainDataModule, MainDataModule);
+Application.CreateForm(TOS3MainFrm, OS3MainFrm);
   Application.Run;
 end.
 
