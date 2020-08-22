@@ -173,14 +173,21 @@ type
   TSIPrefix = (Yotta,Zetta,Exa,Peta,Tera,Giga,Mega,kilo,kiloUC,One,
     milli,micro,microU,microalt,nano,pico,femto,atto,zepto,yocto);
 
+  { TCustomFloatSISpinEditEx }
+
   TCustomFloatSISpinEditEx = class(TCustomFloatSpinEditEx)
   private
     function EndsWithSIPrefix(var S: String; out APrefix: TSIPrefix): Boolean;
   protected
+    {$IF LCL_FullVersion < 2010000}
     procedure EditKeyPress(var Key: char); override;
+    {$endif}
     function TextIsNumber(const S: String; out ANumber: Double): Boolean; override;
   public
     function ValueToStr(const AValue: Double): String; override;
+    {$IF LCL_FullVersion >= 2010000}
+    function KeyAllowed(Key: Char): Boolean; override;
+    {$endif}
   end;
 
   TFloatSISpinEditEx = class(TCustomFloatSISpinEditEx)
@@ -534,11 +541,12 @@ begin
     end;
   end;
 end;
-
+{$IF LCL_FullVersion < 2010000}
 procedure TCustomFloatSISpinEditEx.EditKeyPress(var Key: char);
 begin
   if Assigned(OnKeyPress) then OnKeyPress(Self, Key);
 end;
+{$endif}
 
 function TCustomFloatSISpinEditEx.TextIsNumber(const S: String; out ANumber: Double): Boolean;
 var
@@ -582,6 +590,13 @@ begin
     end;
   end;
 end;
+
+{$IF LCL_FullVersion >= 2010000}
+function TCustomFloatSISpinEditEx.KeyAllowed(Key: Char): Boolean;
+begin
+  Result := True;
+end;
+{$endif}
 
 end.
 
