@@ -3,11 +3,12 @@
 unit MultXvsYUnit;
 
 {$mode objfpc}{$H+}
+{$i ../../../LazStats.inc}
 
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Buttons, Clipbrd,
   MainUnit, Globals, OutputUnit, DataProcs, DictionaryUnit, ContextHelpUnit;
 
@@ -52,7 +53,7 @@ type
     procedure GroupOutBtnClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure VarListSelectionChange(Sender: TObject; User: boolean);
+    procedure VarListSelectionChange(Sender: TObject; {%H-}User: boolean);
     procedure XInBtnClick(Sender: TObject);
     procedure XOutBtnClick(Sender: TObject);
     procedure YInBtnClick(Sender: TObject);
@@ -60,8 +61,12 @@ type
   private
     { private declarations }
     FAutoSized: Boolean;
-    procedure PlotXY(var XValues: DblDyneMat; YValues: DblDyneMat;
+    {$IFDEF USE_TACHART}
+    procedure PlotXY(const XValues, YValues: DblDyneMat; MinGrp: Integer);
+    {$ELSE}
+    procedure PlotXY(const XValues, YValues: DblDyneMat;
       MaxX, MinX, MaxY, MinY: double; N, NoY, MinGrp: integer);
+    {$ENDIF}
     procedure UpdateBtnStates;
 
   public
@@ -73,35 +78,41 @@ var
 
 implementation
 
+{$R *.lfm}
+
 uses
-  Math,
-  BlankFrmUnit;
+  {$IFDEF USE_TACHART}
+  TATypes,
+  ChartUnit,
+  {$ELSE}
+  BlankFrmUnit,
+  {$ENDIF}
+  Math, Utils;
+
 
 { TMultXvsYFrm }
 
 procedure TMultXvsYFrm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i : integer;
 begin
-        VarList.Clear;
-        for i := 1 to NoVariables do
-          VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
-        XEdit.Text := '';
-        YEdit.Text := '';
-        GroupEdit.Text := '';
-        DescChk.Checked := false;
-        LinesChk.Checked := false;
-        XInBtn.Enabled := true;
-        YInBtn.Enabled := true;
-        GroupInBtn.Enabled := true;
-        XOutBtn.Enabled := false;
-        YOutBtn.Enabled := false;
-        GroupOutBtn.Enabled := false;
+  VarList.Clear;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  XEdit.Text := '';
+  YEdit.Text := '';
+  GroupEdit.Text := '';
+  DescChk.Checked := false;
+  LinesChk.Checked := false;
+  UpdateBtnStates;
 end;
+
 
 procedure TMultXvsYFrm.VarListSelectionChange(Sender: TObject; User: boolean);
 begin
   UpdateBtnStates;
 end;
+
 
 procedure TMultXvsYFrm.GroupInBtnClick(Sender: TObject);
 var
@@ -116,31 +127,32 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TMultXvsYFrm.ComputeBtnClick(Sender: TObject);
 var
-  i, j, k, N, NoGrps, XCol, YCol, GrpCol, Grp, MinGrp, MaxGrp: integer;
-  NoSelected, MaxGrpSize: integer;
-  selected, NoInGrp: IntDyneVec;
-  YValues, XValues: DblDyneMat;
-  Means, StdDevs: DblDyneVec;
-  MinX, MaxX, MinY, MaxY, X, Y, temp: double;
-  cellstring: string;
   lReport: TStrings;
+  i, N, NoGrps, XCol, YCol, GrpCol, Grp, MinGrp, MaxGrp: integer;
+  MinX, MaxX, MinY, MaxY, X, Y: double;
+  cellstring: string;
+  MaxGrpSize: integer;
+  NoInGrp: IntDyneVec = nil;
+  XValues: DblDyneMat = nil;
+  YValues: DblDyneMat = nil;
+  Means: array[0..1] of Double = (0.0, 0.0);
+  StdDevs: array[0..1] of Double = (0.0, 0.0);
+  selected: array[0..2] of Integer = (0, 0, 0);
+  NoSelected: Integer = 3;
 begin
   MaxGrpSize := 0;
-  SetLength(selected, 3);
-  MaxX := -1.0e308;
-  MinX := 1.0e308;
-  MaxY := -1.0e308;
-  MinY := 1.0e308;
-  MinGrp := MaxInt;
-  MaxGrp := -MaxInt;
+  MaxX := -Infinity;
+  MinX := Infinity;
+  MaxY := -Infinity;
+  MinY := Infinity;
+
+  // Get selected variables
   XCol := 0;
   YCol := 0;
   GrpCol := 0;
-  N := 0;
-
-  // Get selected variables
   for i := 1 to NoVariables do
   begin
     cellstring  :=  OS3MainFrm.DataGrid.Cells[i,0];
@@ -148,86 +160,90 @@ begin
     if (cellstring = YEdit.Text) then selected[1] := i;
     if (cellstring = GroupEdit.Text) then selected[2] := i;
   end;
-
   XCol := selected[0];
   YCol := selected[1];
   GrpCol := selected[2];
-  NoSelected := 3;
 
   if (XCol = 0) or (YCol = 0) or (GrpCol = 0) then
   begin
-    MessageDlg('No variable selected.', mtError, [mbOK], 0);
+    ErrorMsg('No variable selected.');
     exit;
   end;
 
   // Get number of groups
+  MinGrp := MaxInt;
+  MaxGrp := -MaxInt;
   for i := 1 to NoCases do
   begin
-    Grp := StrToInt(OS3MainFrm.DataGrid.Cells[GrpCol,i]);
-    if (Grp > MaxGrp) then MaxGrp := Grp;
-    if (Grp < MinGrp) then MinGrp := Grp;
+    Grp := StrToInt(OS3MainFrm.DataGrid.Cells[GrpCol, i]);
+    MaxGrp := Max(MaxGrp, Grp);
+    MinGrp := Min(MinGrp, Grp);
   end;
   NoGrps := (MaxGrp - MinGrp) + 1;
 
-  lReport := TStringList.Create;
-  try
-    lReport.Add('X VERSUS Y FOR GROUPS PLOT');
-    lReport.Add('');
+  SetLength(XValues, NoGrps, NoCases);  // NoCases is over-dimensioned and will be trimmed later.
+  SetLength(YValues, NoGrps, NoCases);  // dto.
+  SetLength(NoInGrp, NoGrps);
+  for i := 0 to NoGrps - 1 do NoInGrp[i] := 0;
 
-    SetLength(YValues, NoCases+1, NoGrps+1);
-    SetLength(XValues, NoCases+1, NoGrps+1);
-    SetLength(Means, 2);
-    SetLength(StdDevs, 2);
-    SetLength(NoInGrp, NoGrps);
+  N := 0;
+  for i := 1 to NoCases do
+  begin
+    if (not GoodRecord(i, NoSelected, selected))then continue;
+    inc(N);
+
+    X := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol, i]);
+    MaxX := Max(MaxX, X);
+    MinX := Min(MinX, X);
+
+    Y := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol, i]);
+    MaxY := Max(MaxY, Y);
+    MinY := Min(MinY, Y);
+
+    Grp := StrToInt(OS3MainFrm.DataGrid.Cells[GrpCol, i]) - MinGrp;
+    XValues[Grp, NoInGrp[Grp]] := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol, i]);
+    YValues[Grp, NoInGrp[Grp]] := Y;
+    inc(NoInGrp[Grp]);
+    MaxGrpSize := Max(MaxGrpsize, NoInGrp[Grp]);
+  end;
+
+  // Trim XValues and YValues to correct dimension.
+  SetLength(XValues, NoGrps);
+  SetLength(YValues, NoGrps);
+  for grp := 0 to NoGrps-1 do
+  begin
+    SetLength(XValues[grp], NoInGrp[grp]);
+    SetLength(YValues[grp], NoInGrp[grp]);
+  end;
+
+  // get descriptive data
+  if DescChk.Checked then
+  begin
+    for i := 1 to NoCases do
+    begin
+      if (not GoodRecord(i,NoSelected,selected)) then continue;
+      Y := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol,i]);
+      X := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol,i]);
+      Means[0] := Means[0] + X;
+      StdDevs[0] := StdDevs[0] + sqr(X);
+      Means[1] :=  Means[1] + Y;
+      StdDevs[1] := StdDevs[1] + sqr(Y);
+    end;
 
     for i := 0 to 1 do
     begin
-      Means[i] := 0.0;
-      StdDevs[i] := 0.0;
-    end;
-    for i := 0 to NoGrps - 1 do
-      NoInGrp[i] := 0;
-
-    for i := 1 to NoCases do
-    begin
-      if (not GoodRecord(i,NoSelected,selected))then continue;
-      inc(N);
-      X := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol,i]);
-      if (X > MaxX) then MaxX := X;
-      if (X < MinX) then MinX := X;
-
-      Y := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol,i]);
-      if (Y > MaxY) then MaxY := Y;
-      if (Y < MinY) then MinY := Y;
-
-      Grp := StrToInt(OS3MainFrm.DataGrid.Cells[GrpCol,i]);
-      Grp := Grp - MinGrp;
-      NoInGrp[Grp] := NoInGrp[Grp] + 1;
-      if (NoInGrp[Grp] > MaxGrpSize) then MaxGrpSize := NoInGrp[Grp];
-      YValues[NoInGrp[Grp]-1,Grp] := Y;
-      XValues[NoInGrp[Grp]-1,Grp] := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol,i]);
+      StdDevs[i] := StdDevs[i] - sqr(Means[i]) / N;
+      StdDevs[i] := sqrt(StdDevs[i] / (N - 1));
+      Means[i] := Means[i] / N;
     end;
 
-    // get descriptive data
-    if (DescChk.Checked) then
-    begin
-      for i := 1 to NoCases do
-      begin
-        if (not GoodRecord(i,NoSelected,selected)) then continue;
-        Y := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol,i]);
-        X := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol,i]);
-        Means[0] := Means[0] + X;
-        StdDevs[0] := StdDevs[0] + X * X;
-        Means[1] :=  Means[1] + Y;
-        StdDevs[1] := StdDevs[1] + Y * Y;
-      end;
-
-      for i := 0 to 1 do
-      begin
-        StdDevs[i] := StdDevs[i] - (Means[i] * Means[i]) / N;
-        StdDevs[i] := sqrt(StdDevs[i] / (N - 1));
-        Means[i] := Means[i] / N;
-      end;
+    lReport := TStringList.Create;
+    try
+      lReport.Add('X VERSUS Y FOR GROUPS PLOT');
+      lReport.Add('');
+      lReport.Add('X variable: ' + XEdit.Text);
+      lReport.Add('Y variable: ' + YEdit.Text);
+      lReport.Add('');
 
       lReport.Add('VARIABLE    MEAN   STANDARD DEVIATION');
       lReport.Add('   X   %9.3f %14.3f', [Means[0], StdDevs[0]]);
@@ -235,41 +251,23 @@ begin
       lReport.Add('');
 
       DisplayReport(lReport);
+    finally
+      lReport.Free;
     end;
-
-    // sort on X
-    for i := 0 to NoGrps - 1 do
-    begin
-      for j := 0 to MaxGrpSize-2 do
-      begin
-        for k := j+1 to MaxGrpSize - 1 do
-        begin
-          if (XValues[j,i] > XValues[k,i]) then // swap
-          begin
-            temp := XValues[j,i];
-            XValues[j,i] := XValues[k,i];
-            XValues[k,i] := temp;
-            temp := YValues[j,i];
-            YValues[j,i] := YValues[k,i];
-            YValues[k,i] := temp;
-          end;
-        end;
-      end;
-    end;
-
-    BlankFrm.Image1.Canvas.Clear;
-    BlankFrm.Show;
-    PlotXY(XValues, YValues, MaxX, MinX, MaxY, MinY, MaxGrpSize, NoGrps, MinGrp);
-
-  finally
-    lReport.Free;
-    NoInGrp := nil;
-    StdDevs := nil;
-    Means := nil;
-    XValues := nil;
-    YValues := nil;
   end;
+
+  // sort on X
+  for i := 0 to NoGrps - 1 do
+    SortOnX(XValues[i], YValues[i]);
+
+  // Plot data
+  PlotXY(XValues, YValues{$IFNDEF USE_TACHART}, MaxX, MinX, MaxY, MinY, MaxGrpSize, NoGrps{$ENDIF}, MinGrp);
+
+  NoInGrp := nil;
+  XValues := nil;
+  YValues := nil;
 end;
+
 
 procedure TMultXvsYFrm.FormActivate(Sender: TObject);
 var
@@ -290,17 +288,19 @@ begin
   FAutoSized := true;
 end;
 
+
 procedure TMultXvsYFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if DictionaryFrm = nil then Application.CreateForm(TDictionaryFrm, DictionaryFrm);
-  if BlankFrm = nil then Application.CreateForm(TBlankFrm, BlankFrm);
 end;
+
 
 procedure TMultXvsYFrm.FormShow(Sender: TObject);
 begin
   ResetBtnClick(self);
 end;
+
 
 procedure TMultXvsYFrm.GroupOutBtnClick(Sender: TObject);
 begin
@@ -312,12 +312,14 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TMultXvsYFrm.HelpBtnClick(Sender: TObject);
 begin
   if ContextHelpForm = nil then
     Application.CreateForm(TContextHelpForm, ContextHelpForm);
   ContextHelpForm.HelpMessage((Sender as TButton).Tag);
 end;
+
 
 procedure TMultXvsYFrm.XInBtnClick(Sender: TObject);
 var
@@ -332,6 +334,7 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TMultXvsYFrm.XOutBtnClick(Sender: TObject);
 begin
   if XEdit.Text <> '' then
@@ -341,6 +344,7 @@ begin
   end;
   UpdateBtnStates;
 end;
+
 
 procedure TMultXvsYFrm.YInBtnClick(Sender: TObject);
 var
@@ -355,6 +359,7 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TMultXvsYFrm.YOutBtnClick(Sender: TObject);
 begin
   if YEdit.Text <> '' then
@@ -365,8 +370,48 @@ begin
   UpdateBtnStates;
 end;
 
-// routine to plot X versus multiple Y values
-procedure TMultXvsYFrm.plotxy(var XValues: DblDyneMat; YValues: DblDyneMat;
+
+// Routine to plot X versus multiple Y values for several groups
+// 1st index: group index, 2nd index: point index within group
+{$IFDEF USE_TACHART}
+procedure TMultXvsYFrm.PlotXY(const XValues, YValues: DblDyneMat; MinGrp: Integer);
+var
+  pt: TPlotType;
+  grp: Integer;
+  clr: TColor;
+  grpName: String;
+  sym: TSeriesPointerStyle;
+begin
+  if Length(XValues) <> Length(YValues) then
+  begin
+    ErrorMsg('Incorrect dimension of XValues and YValues');
+    exit;
+  end;
+
+  if ChartForm = nil then
+    ChartForm := TChartForm.Create(Application)
+  else
+    ChartForm.Clear;
+
+  // Titles
+  ChartForm.SetTitle(LabelEdit.Text);
+  ChartForm.SetXTitle(XEdit.Text);
+  chartForm.SetYTitle(YEdit.Text);
+
+  if LinesChk.Checked then pt := ptLinesAndSymbols else pt := ptSymbols;
+
+  for grp := 0 to Length(XValues)-1 do
+  begin
+    clr := DATA_COLORS[grp mod Length(DATA_COLORS)];
+    sym := DATA_SYMBOLS[grp mod Length(DATA_SYMBOLS)];
+    grpName := Format('%s = %d', [GroupEdit.Text, grp + MinGrp]);
+    ChartForm.PlotXY(pt, XValues[grp], YValues[grp], grpName, clr, sym);
+  end;
+
+  ChartForm.Show;
+end;
+{$ELSE}
+procedure TMultXvsYFrm.PlotXY(const XValues, YValues: DblDyneMat;
   MaxX, MinX, MaxY, MinY: double;  N, NoY, MinGrp: integer);
 var
   xpos, ypos, hleft, hright, vtop, vbottom, imagewide : integer;
@@ -374,6 +419,12 @@ var
   valincr, Yvalue, Xvalue, value : double;
   Title: string;
 begin
+  if BlankFrm = nil then
+    Application.CreateForm(TBlankFrm, BlankFrm)
+  else
+    BlankFrm.Image1.Canvas.Clear;
+  BlankFrm.Show;
+
   Title := LabelEdit.Text;
   BlankFrm.Caption := Title;
   BlankFrm.Show;
@@ -460,6 +511,17 @@ begin
     BlankFrm.Image1.Canvas.Font.Color := DATA_COLORS[j mod Length(DATA_COLORS)];
     Grp := MinGrp + j;
     Title := 'GROUP ' + IntToStr(Grp);
+    for i := 0 to N - 1 do
+    begin
+      xpos := hleft + ceil(hwide * ( (XValues[j, i] - MinX) / (MaxX - MinX)));
+      ypos := vtop + ceil(vhi * ( (MaxY - YValues[j, i]) / (MaxY - MinY)));
+      if (i = 0) then
+        BlankFrm.Image1.Canvas.MoveTo(xpos, ypos);
+      if LinesChk.Checked then
+        BlankFrm.Image1.Canvas.LineTo(xpos, ypos);
+      BlankFrm.Image1.Canvas.Ellipse(xpos, ypos, xpos+5, ypos+5);
+    end;
+    (*
     for i := 1 to N do
     begin
       ypos := vtop + ceil(vhi * ( (MaxY - YValues[i-1,j]) / (MaxY - MinY)));
@@ -470,6 +532,7 @@ begin
         BlankFrm.Image1.Canvas.LineTo(xpos, ypos);
       BlankFrm.Image1.Canvas.Ellipse(xpos, ypos, xpos+5, ypos+5);
     end;
+    *)
     strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
     BlankFrm.Image1.Canvas.Brush.Color := clWhite;
     BlankFrm.Image1.Canvas.Pen.Color := clBlack;
@@ -480,6 +543,8 @@ begin
 
   BlankFrm.Image1.Canvas.Font.Color := clBlack;
 end;
+{$ENDIF}
+
 
 procedure TMultXvsYFrm.UpdateBtnStates;
 var
@@ -502,8 +567,6 @@ begin
   GroupOutBtn.Enabled := (GroupEdit.Text <> '');
 end;
 
-initialization
-  {$I multxvsyunit.lrs}
 
 end.
 

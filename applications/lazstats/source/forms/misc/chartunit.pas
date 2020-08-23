@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ExtDlgs, TAGraph, TACustomSeries, TASeries, PrintersDlgs,
+  StdCtrls, ExtDlgs, PrintersDlgs,
+  TAGraph, TACustomSeries, TASeries, TATypes,
   Globals;
 
 type
@@ -26,6 +27,7 @@ type
     PrintDialog: TPrintDialog;
     SaveBtn: TButton;
     SavePictureDialog: TSavePictureDialog;
+    procedure CloseBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure PrintBtnClick(Sender: TObject);
@@ -42,7 +44,7 @@ type
 
     procedure HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String);
     function PlotXY(AType: TPlotType; x, y: DblDyneVec; LegendTitle: string;
-      AColor: TColor; xTitles: StrDynevec = nil): TChartSeries;
+      AColor: TColor; ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
     procedure Vertline(x: Double; AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String);
 
     procedure SetFooter(const ATitle: String);
@@ -61,7 +63,7 @@ implementation
 
 uses
   Math, Printers, OSPrinters,
-  TAChartUtils, TATypes, TADrawerSVG, TAPrint;
+  TAChartUtils, TADrawerSVG, TAPrint;
 
 { TChartForm }
 
@@ -82,6 +84,11 @@ begin
   SaveBtn.Constraints.MinWidth := w;
   PrintBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
+end;
+
+procedure TChartForm.CloseBtnClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TChartForm.FormCreate(Sender: TObject);
@@ -169,10 +176,9 @@ begin
 end;
 
 function TChartForm.PlotXY(AType: TPlotType; x, y: DblDyneVec;
-  LegendTitle: string; AColor: TColor; xTitles: StrDynevec = nil): TChartSeries;
+  LegendTitle: string; AColor: TColor; ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
 var
   i, n: Integer;
-  s: String;
 begin
   case AType of
     ptLines, ptSymbols, ptLinesAndSymbols:
@@ -184,7 +190,7 @@ begin
         if AType in [ptSymbols, ptLinesAndSymbols] then
         begin
           TLineSeries(Result).Pointer.Brush.Color := AColor;
-          TLineSeries(Result).Pointer.Style := psCircle;
+          TLineSeries(Result).Pointer.Style := ASymbol;
         end;
       end;
     ptHorBars, ptVertBars:
@@ -197,18 +203,11 @@ begin
 
   n := Min(Length(x), Length(y));
   for i := 0 to n-1 do
-  begin
-    if (xTitles <> nil) and (i <= Length(xTitles)) then
-      s := xTitles[i]
-    else
-      s := '';
-    Result.AddXY(x[i], y[i], s);
-  end;
+    Result.AddXY(x[i], y[i]);
 
   Result.Title := LegendTitle;
   Chart.AddSeries(Result);
   Chart.Legend.Visible := Chart.SeriesCount > 0;
-  Chart.Prepare;
 end;
 
 procedure TChartForm.SaveBtnClick(Sender: TObject);

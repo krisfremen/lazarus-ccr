@@ -75,6 +75,7 @@ object ChartForm: TChartForm
       Caption = 'Close'
       Default = True
       ModalResult = 11
+      OnClick = CloseBtnClick
       TabOrder = 2
     end
   end

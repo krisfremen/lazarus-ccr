@@ -5,43 +5,30 @@ unit Globals;
 interface
 
 uses
-  Classes, SysUtils, Graphics;
-
-const TOL = 0.0005;
-
-Type IntDyneVec = array of integer;
-
-Type DblDyneVec = array of double;
-
-Type BoolDyneVec = array of boolean;
-
-Type DblDyneMat  = array of array of double;
-
-Type IntDyneMat = array of array of integer;
-
-Type DblDyneCube = array of array of array of double;
-
-Type IntDyneCube = array of array of array of integer;
-
-Type DblDyneQuad = array of array of array of array of double;
-
-Type IntDyneQuad = array of array of array of array of integer;
-
-Type StrDyneVec  = array of string;
-
-Type StrDyneMat = array of array of string;
-
-Type CharDyneVec = array of char;
-
-type POINT3D = record
-  x, y, z : double;
-end;
-
-Type POINTint = record
-  x, y : integer;
-end;
+  Classes, SysUtils, Graphics, TATypes;
 
 type
+  IntDyneVec = array of integer;
+  DblDyneVec = array of double;
+  BoolDyneVec = array of boolean;
+  DblDyneMat  = array of array of double;
+  IntDyneMat = array of array of integer;
+  DblDyneCube = array of array of array of double;
+  IntDyneCube = array of array of array of integer;
+  DblDyneQuad = array of array of array of array of double;
+  IntDyneQuad = array of array of array of array of integer;
+  StrDyneVec  = array of string;
+  StrDyneMat = array of array of string;
+  CharDyneVec = array of char;
+
+  Point3D = record
+    x, y, z: double;
+  end;
+
+  PointInt = record
+    x, y: Integer;
+  end;
+
   TFractionType = (ftPoint, ftComma);
   TMissingValueCode = (mvcSpace, mvcPeriod, mvcZero, mvcNines);
   TJustification = (jLeft, jCenter, jRight);
@@ -75,11 +62,12 @@ var
     LHelpPath: '<default>';
   );
 
-
 const
   FractionTypeChars: array[TFractionType] of char = ('.', ',');
   MissingValueCodes: array[TMissingValueCode] of string = (' ', '.', '0', '99999');
   JustificationCodes: array[TJustification] of string[1] = ('L', 'C', 'R');
+
+  TOL = 0.0005;
 
   DEFAULT_CONFIDENCE_LEVEL_PERCENT = 95.0;
   DEFAULT_ALPHA_LEVEL = 0.05;
@@ -89,6 +77,9 @@ const
     clMaroon, clRed, clBlue, clGreen, clNavy, clTeal,
     clAqua, clLime, clFuchsia, clGray, clSilver, clOlive
   );
+  DATA_SYMBOLS: array[0..5] of TSeriesPointerStyle = (psRectangle, psCircle, psDiamond,
+     psDownTriangle, psHexagon, psFullStar);
+
 
   DIVIDER = '===========================================================================';
   DIVIDER_SMALL = '---------------------------------------------------------------------------';
