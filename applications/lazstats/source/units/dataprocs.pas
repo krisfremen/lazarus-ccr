@@ -67,10 +67,10 @@ var
   i, j: integer;
 begin
   Result := true;
-  for i := 1 to NoVars do
+  for i := 0 to NoVars-1 do
   begin
-    j := GridPos[i-1];
-    if not ValidValue(Row,j) then
+    j := GridPos[i];
+    if not ValidValue(Row, j) then
       Result := false;
   end;
 end;
@@ -959,11 +959,11 @@ begin
   end;
 
   xvalue := Trim(OS3MainFrm.DataGrid.Cells[col,row]);
-  if (xvalue = '') and (DictionaryFrm.DictGrid.Cells[4,col] <> 'S') then
+  if (xvalue = '') and (DictionaryFrm.DictGrid.Cells[4, col] <> 'S') then
     valid := false;
   if valid then  // check for user-defined missing value
   begin
-    if Trim(DictionaryFrm.DictGrid.Cells[6,col]) = xvalue then
+    if Trim(DictionaryFrm.DictGrid.Cells[6, col]) = xvalue then
       valid := false;
   end;
   Result := valid;

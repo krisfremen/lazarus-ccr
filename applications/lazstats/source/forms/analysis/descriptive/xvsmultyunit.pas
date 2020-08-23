@@ -82,18 +82,19 @@ uses
 { TXvsMultYForm }
 
 procedure TXvsMultYForm.ResetBtnClick(Sender: TObject);
-VAR i : integer;
+var
+  i: integer;
 begin
-     VarList.Clear;
-     YBox.Clear;
-     XEdit.Clear;
-     XInBtn.Enabled := true;
-     XOutBtn.Enabled := false;
-     YInBtn.Enabled := true;
-     YOutBtn.Enabled := false;
-     PlotTitleEdit.Text := '';
-     for i := 1 to NoVariables do
-         VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  VarList.Clear;
+  YBox.Clear;
+  XEdit.Clear;
+  XInBtn.Enabled := true;
+  XOutBtn.Enabled := false;
+  YInBtn.Enabled := true;
+  YOutBtn.Enabled := false;
+  PlotTitleEdit.Text := '';
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
 end;
 
 procedure TXvsMultYForm.VarListSelectionChange(Sender: TObject; User: boolean);
@@ -173,11 +174,11 @@ begin
   try
     SetLength(YValues, NoY, NoCases);
     SetLength(XValues, NoCases);
-    SetLength(Means, NoSelected+1);
-    SetLength(Variances, NoSelected+1);
-    SetLength(StdDevs, NoSelected+1);
+    SetLength(Means, NoSelected);
+    SetLength(Variances, NoSelected);
+    SetLength(StdDevs, NoSelected);
     SetLength(RMatrix, NoSelected+1, NoSelected+1);
-    SetLength(selected, NoVariables);
+    SetLength(selected, NoVariables+1);
 
     for i := 0 to NoSelected - 1 do
     begin
@@ -187,18 +188,21 @@ begin
     end;
 
     N := 0;
-    for i := 1 to NoCases do
+    // index rule: array index: i, grid-related index: i+1
+    for i := 0 to NoCases-1 do
     begin
-      if not GoodRecord(i, NoSelected, selected) then continue;
+      if not GoodRecord(i+1, NoSelected, selected) then continue;
       inc(N);
-      XValues[i-1] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[XCol,i]));
-      MaxX := Max(MaxX, XValues[i-1]);
-      MinX := Min(MinX, XValues[i-1]);
+      XValues[i] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[XCol, i+1]));
+      MaxX := Max(MaxX, XValues[i]);
+      MinX := Min(MinX, XValues[i]);
       for j := 0 to NoY - 1 do
       begin
-        YValues[j, i-1] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[selected[j], i]));
-        MaxY := Max(MaxY, YValues[j, i-1]);
-        MinY := Min(MinY, YValues[j, i-1]);
+        // Unlike other usages of 2-D arrays in LazStats the 1st index is the
+        // curve index while the 2nd index is the point index here.
+        YValues[j, i] := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[selected[j], i+1]));
+        MaxY := Max(MaxY, YValues[j, i]);
+        MinY := Min(MinY, YValues[j, i]);
       end;
     end;
 
@@ -332,6 +336,8 @@ end;
 
 
 // Routine to plot X versus multiple Y values
+// Unlike many other routines in LazStats the curve index in YValues is the
+// first one, the point index is the second one.
 {$IFDEF USE_TACHART}
 procedure TXvsMultYForm.PlotXY(XValues: DblDyneVec; YValues: DblDyneMat);
 var
