@@ -524,7 +524,9 @@ end;
 procedure TOS3MainFrm.FormCreate(Sender: TObject);
 var
   helpfn: String;
+  {$IFNDEF USE_EXTERNAL_HELP_VIEWER}
   lhelpfn: String;
+  {$ENDIF}
 begin
   // Reduce ultra-wide width of Inputbox windows
   cInputQueryEditSizePercents := 0;

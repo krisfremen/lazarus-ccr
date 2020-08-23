@@ -216,7 +216,7 @@ begin
   SetLength(Freq,Nrows+1,Ncols+1);
   SetLength(Prop,Nrows+1,Ncols+1);
   SetLength(Expected,Nrows,Ncols);
-  SetLength(CellChi,Nrows,Ncols);
+  SetLength(CellChi, Nrows, Ncols);
   for i := 1 to Nrows + 1 do
     for j := 1 to Ncols + 1 do Freq[i-1,j-1] := 0;
   RowLabels[Nrows] := 'Total';

@@ -50,7 +50,7 @@ type
     procedure InBtnClick(Sender: TObject);
     procedure OutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure VarListSelectionChange(Sender: TObject; User: boolean);
+    procedure VarListSelectionChange(Sender: TObject; {%H-}User: boolean);
   private
     { private declarations }
     FAutoSized: Boolean;

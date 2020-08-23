@@ -353,9 +353,9 @@ var
   xmin, xmax, ymin, ymax: Double;
 begin
   if ChartForm = nil then
-    ChartForm := TChartForm.Create(Application);
-
-  ChartForm.Clear;
+    ChartForm := TChartForm.Create(Application)
+  else
+    ChartForm.Clear;
 
   // Titles
   ChartForm.SetTitle('X vs. Y plot using file ' + OS3MainFrm.FileNameEdit.Text);
@@ -376,6 +376,7 @@ begin
   if ConfChk.Checked then
     ChartForm.PlotXY(ptLines, XPoints, LowConf, 'Lower confidence band', clRed);
 
+  ChartForm.Chart.Prepare;
   ChartForm.GetXRange(xmin, xmax, false);
   ChartForm.GetYRange(ymin, ymax, false);
 

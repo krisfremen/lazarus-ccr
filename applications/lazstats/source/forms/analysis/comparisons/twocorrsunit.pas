@@ -198,6 +198,7 @@ end;
 
 procedure TTwoCorrsFrm.ComputeBtnClick(Sender: TObject);
 var
+  lReport: TStrings;
   Corxy, Corxz, Coryz, Cor1, Cor2, alpha, tvalue, df1, df2: double;
   CorDif, zOne, zTwo, zDif, StdErr, zValue, zprobability: double;
   UCL, LCL, ztest, ConfLevel, tprobability, ttest: double;
@@ -208,10 +209,9 @@ var
   SSize1, SSize2, SSize, v1, v2, v3, grp, ncases, NoSelected: integer;
   min, max, grpval, ncases1, ncases2, i: integer;
   cellstring: string;
-  ColNoSelected: IntDyneVec;
   msg: String;
   C: TWinControl;
-  lReport: TStrings;
+  ColNoSelected: IntDyneVec = nil;
 begin
   if not Validate(msg, C) then
   begin
@@ -221,7 +221,7 @@ begin
     exit;
   end;
 
-  SetLength(ColNoSelected,NoVariables);
+  SetLength(ColNoSelected, NoVariables);
   Corxy := 0.0;
   Corxz := 0.0;
   Coryz := 0.0;
