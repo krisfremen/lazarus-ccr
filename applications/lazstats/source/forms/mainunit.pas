@@ -361,9 +361,9 @@ type
     procedure CorrespondenceClick(Sender: TObject);
     procedure CrossTabsClick(Sender: TObject);
     procedure DataGridClick(Sender: TObject);
-    procedure DataGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DataGridKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     procedure DataGridKeyPress(Sender: TObject; var Key: char);
-    procedure DataGridPrepareCanvas(sender: TObject; aCol, aRow: Integer; aState: TGridDrawState);
+    procedure DataGridPrepareCanvas(sender: TObject; aCol, {%H-}aRow: Integer; {%H-}aState: TGridDrawState);
     procedure DataSmoothClick(Sender: TObject);
     procedure DistributionsClick(Sender: TObject);
     procedure FreqAnalClick(Sender: TObject);
@@ -1280,8 +1280,9 @@ begin
   end else
   if Command = HELP_COMMAND then
   begin
-    s := PChar(Data);          // Data is pointer to HelpKeyword here, but
-    // the Windows help viewer does not want the KeywordPrefix required for LHelp.
+    s := {%H-}PChar(Data);
+    // Data is pointer to HelpKeyword here, but the Windows help viewer does
+    // not want the KeywordPrefix required for LHelp.
     if pos(HELP_KEYWORD_PREFIX + '/', s) = 1 then
       Delete(s, 1, Length(HELP_KEYWORD_PREFIX) + 1);
     ws := UnicodeString(Application.HelpFile + '::/' + s);
