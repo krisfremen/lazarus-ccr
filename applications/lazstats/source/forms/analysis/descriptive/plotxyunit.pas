@@ -363,7 +363,7 @@ begin
     R, Slope, Intercept
   ]));
   ChartForm.SetXTitle(XEdit.Text);
-  chartForm.SetYTitle(YEdit.Text);
+  ChartForm.SetYTitle(YEdit.Text);
 
   // Draw upper confidence band
   if ConfChk.Checked then
