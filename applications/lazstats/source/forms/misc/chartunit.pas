@@ -69,6 +69,7 @@ uses
 
 procedure TChartForm.Clear;
 begin
+  Caption := 'Plot Window';
   Chart.ClearSeries;
   Chart.Title.Text.Clear;
   Chart.Foot.Text.Clear;

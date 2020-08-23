@@ -3,13 +3,14 @@
 unit BubblePlotUnit;
 
 {$mode objfpc}{$H+}
+{$I ../../../LazStats.inc}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Clipbrd, Buttons, ExtCtrls, Math,
-  MainUnit, Globals, OutputUnit, DataProcs, DictionaryUnit, ContextHelpUnit;
+  MainUnit, Globals, DataProcs, DictionaryUnit, ContextHelpUnit;
 
 
 type
@@ -58,14 +59,18 @@ type
     procedure ResetBtnClick(Sender: TObject);
     procedure SizeInBtnClick(Sender: TObject);
     procedure SizeOutBtnClick(Sender: TObject);
-    procedure VarListSelectionChange(Sender: TObject; User: boolean);
+    procedure VarListSelectionChange(Sender: TObject; {%H-}User: boolean);
     procedure XInBtnClick(Sender: TObject);
     procedure XOutBtnClick(Sender: TObject);
     procedure YInBtnClick(Sender: TObject);
     procedure YOutBtnClick(Sender: TObject);
   private
     { private declarations }
+    BubbleCol, XCol, YCol, SizeCol: Integer;
     FAutoSized: boolean;
+    procedure PlotBubbles(
+      {$IFNDEF USE_TACHART}NoReplications: Integer; XMax, XMin: Integer;{$ENDIF}
+      YMax, YMin, BubMax, BubMin: Double);
     procedure UpdateBtnStates;
   public
     { public declarations }
@@ -76,58 +81,36 @@ var
 
 implementation
 
+{$R *.lfm}
+
 uses
-  BlankFrmUnit;
+  {$IFDEF USE_TACHART}
+  TAMultiSeries,
+  ChartUnit,
+  {$ELSE}
+  BlankFrmUnit,
+  {$ENDIF}
+  OutputUnit;
 
 { TBubbleForm }
 
-procedure TBubbleForm.IDInBtnClick(Sender: TObject);
-var
-  i: integer;
-begin
-  i := 0;
-  while (BubbleEdit.Text = '') and (i < VarList.Items.Count) do
-  begin
-    if (VarList.Selected[i]) then
-    begin
-      BubbleEdit.Text := VarList.Items[i];
-      VarList.Items.Delete(i);
-      i := 0;
-    end else
-      inc(i);
-  end;
-  UpdateBtnStates;
-end;
-
-procedure TBubbleForm.HelpBtnClick(Sender: TObject);
-begin
-  if ContextHelpForm = nil then
-    Application.CreateForm(TContextHelpForm, ContextHelpForm);
-  ContextHelpForm.HelpMessage((Sender as TButton).Tag);
-end;
-
 procedure TBubbleForm.ComputeBtnClick(Sender: TObject);
 var
-  BubbleCol, XCol, YCol, SizeCol, i, j, LabelWide, TextHi, Xpos: integer;
-  ImageWide, ImageHi, Xstart, Xend, Ystart, Yend, Yincr, cell: integer;
-  Xmin, Xmax, Xrange, Xstep, intcell, noreplications, minrep, maxrep: integer;
-  nobubbles, yprop: integer;
-  varname, Xlabel, Ylabel, astring, Title: string;
-  Ymin, Ymax, Yrange, Ystep, cellvalue, xvalue: double;
-  BubMin, BubMax, BubRange, ratio, value: double;
-  valstr: string;
-  BubColor, place: integer;
-  X1, Y1, X2, Y2: integer;
-  dx, dy: Integer;
-  Data: DblDyneMat;
-  ncases, ncols, BubbleID, newcol : integer;
-  GrandYMean, GrandSizeMean, sizevalue, yvalue: double;
-  Ymeans: DblDyneVec;
-  CaseYMeans: DblDyneVec;
-  SizeMeans: DblDyneVec;
-  CaseSizeMeans: DblDyneVec;
+  i, j, cell: integer;
+  Xmin, Xmax, intcell, noreplications, minrep, maxrep: integer;
+  nobubbles: integer;
+  varname: string;
+  Ymin, Ymax, xvalue, yvalue, sizeValue, cellValue: double;
+  BubMin, BubMax: double;
+  ncases, ncols, BubbleID, newcol: integer;
+  GrandYMean, GrandSizeMean: double;
+  Data: DblDyneMat = nil;
+  Ymeans: DblDyneVec = nil;
+  CaseYMeans: DblDyneVec = nil;
+  SizeMeans: DblDyneVec = nil;
+  CaseSizeMeans: DblDyneVec = nil;
   outline: string;
-  labels: StrDyneVec;
+  labels: StrDyneVec = nil;
   lReport: TStrings;
 begin
   BubbleCol := 0;
@@ -176,8 +159,6 @@ begin
     if (cellvalue > Ymax) then Ymax := cellvalue;
     if (cellvalue < Ymin) then Ymin := cellvalue;
   end;
-  Yrange := Ymax - Ymin;
-  Ystep := Yrange / 10;
 
   // get min, max and range of X
   Xmin := 10000;
@@ -188,51 +169,48 @@ begin
     if (intcell > Xmax) then Xmax := intcell;
     if (intcell < Xmin) then Xmin := intcell;
   end;
-  Xrange := Xmax - Xmin;
-  Xstep := Xrange div (noreplications-1);
 
   // get min, max, range, and increment of bubble sizes
-  BubMin := 1.0e308;
-  BubMax := -1.0e308;
+  BubMin := Infinity;
+  BubMax := -Infinity;
   for i := 1 to NoCases do
   begin
     cellvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[SizeCol,i]);
     if (cellvalue > BubMax) then BubMax := cellvalue;
     if (cellvalue < BubMin) then BubMin := cellvalue;
   end;
-  BubRange := BubMax - BubMin;
 
   // Display basic statistics
-  ncases := NoCases div noreplications;
+  nCases := NoCases div NoReplications;
   GrandYMean := 0.0;
   GrandSizeMean := 0.0;
-  SetLength(CaseYMeans,ncases);
-  SetLength(CaseSizeMeans,ncases);
-  SetLength(Ymeans,noreplications);
-  SetLength(SizeMeans,noreplications);
-  for i := 0 to ncases - 1 do
+  SetLength(CaseYMeans, nCases);
+  SetLength(CaseSizeMeans, nCases);
+  SetLength(YMeans, NoReplications);
+  SetLength(SizeMeans, NoReplications);
+  for i := 0 to nCases - 1 do
   begin
     CaseYMeans[i] := 0.0;
     CaseSizeMeans[i] := 0.0;
   end;
-  for i := 0 to noreplications - 1 do
+  for i := 0 to NoReplications - 1 do
   begin
-    Ymeans[i] := 0.0;
+    YMeans[i] := 0.0;
     SizeMeans[i] := 0.0;
   end;
 
   i := 1;
   while (i <= NoCases) do
   begin
-    for j := 1 to noreplications do
+    for j := 0 to NoReplications - 1 do
     begin
       bubbleID := StrToInt(OS3MainFrm.DataGrid.Cells[BubbleCol,i]);
       yvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol,i]);
       sizevalue := StrToFloat(OS3MainFrm.DataGrid.Cells[SizeCol,i]);
       GrandYMean := GrandYMean + yvalue;
       GrandSizeMean := GrandSizeMean + sizevalue;
-      Ymeans[j-1] := Ymeans[j-1] + yvalue;
-      SizeMeans[j-1] := SizeMeans[j-1] + sizevalue;
+      Ymeans[j] := Ymeans[j] + yvalue;
+      SizeMeans[j] := SizeMeans[j] + sizevalue;
       CaseYMeans[bubbleID-1] := CaseYMeans[bubbleID-1] + yvalue;
       CaseSizeMeans[bubbleID-1] := CaseSizeMeans[bubbleID-1] + sizevalue;
       inc(i);
@@ -241,7 +219,7 @@ begin
 
   GrandYMean := GrandYMean / (ncases * noreplications);
   GrandSizeMean := GrandSizeMean  / (ncases * noreplications);
-  for j := 0 to noreplications - 1 do
+  for j := 0 to NoReplications - 1 do
   begin
     Ymeans[j] := Ymeans[j] / ncases;
     SizeMeans[j] := SizeMeans[j] / ncases;
@@ -256,26 +234,32 @@ begin
   try
     lReport.Add('MEANS FOR Y AND SIZE VARIABLES');
     lReport.Add('');
-    lReport.Add('Grand Mean for Y := %8.3f', [GrandYMean]);
-    lReport.Add('Grand Mean for Size := %8.3f', [GrandSizeMean]);
+    lReport.Add('Grand Mean for Y:         %8.3f', [GrandYMean]);
+    lReport.Add('Grand Mean for Size:      %8.3f', [GrandSizeMean]);
     lReport.Add('');
     lReport.Add('REPLICATION MEAN Y VALUES (ACROSS OBJECTS)');
-    for j := 0 to noreplications - 1 do
-      lReport.Add('Replication %5d Mean := %8.3f', [j+1, Ymeans[j]]);
+    for j := 0 to NoReplications - 1 do
+      lReport.Add('Replication %5d   Mean: %8.3f', [j+1, Ymeans[j]]);
     lReport.Add('');
     lReport.Add('REPLICATION MEAN SIZE VALUES (ACROSS OBJECTS)');
-    for j := 0 to noreplications - 1 do
-      lReport.Add('Replication %5d Mean := %8.3f', [j+1, SizeMeans[j]]);
+    for j := 0 to NoReplications - 1 do
+      lReport.Add('Replication %5d   Mean: %8.3f', [j+1, SizeMeans[j]]);
     lReport.Add('');
     lReport.Add('MEAN Y VALUES FOR EACH BUBBLE (OBJECT)');
-    for i := 0 to ncases - 1 do
-      lReport.Add('Object %5d Mean := %8.3f', [i+1, CaseYMeans[i]]);
+    for i := 0 to NCases - 1 do
+      lReport.Add('     Object %5d   Mean: %8.3f', [i+1, CaseYMeans[i]]);
     lReport.Add('');
     lReport.Add('MEAN SIZE VALUES FOR EACH BUBBLE (OBJECT)');
-    for i := 0 to ncases - 1 do
-       lReport.Add('Object %5d Mean := %8.3f', [i+1, CaseSizeMeans[i]]);
+    for i := 0 to NCases - 1 do
+      lReport.Add('     Object %5d   Mean: %8.3f', [i+1, CaseSizeMeans[i]]);
 
-    DisplayReport(lReport);
+    // Show the report
+    if DisplayReport(lReport) then
+      // Plot the bubbles
+      PlotBubbles(
+        {$IFNDEF USE_TACHART}NoReplications, XMax, XMin, {$ENDIF}
+        YMax, YMin, BubMax, BubMin
+      );
 
   finally
     lReport.Free;
@@ -285,97 +269,15 @@ begin
     CaseYMeans := nil;
   end;
 
-//--------------------------------------------------------------------------
-// Plotting Section
-//---------------------------------------------------------------------------
-  //BlankFrm.Image1.Canvas.Clear;
-  BlankFrm.Show;
-  BlankFrm.Caption := 'BUBBLE PLOT of ' + OS3MainFrm.FileNameEdit.Text;
-  Xlabel := XlabelEdit.Text;
-  Ylabel := YlabelEdit.Text;
-  Title := TitleEdit.Text;
-  ImageHi := BlankFrm.Image1.Height;
-  ImageWide := BlankFrm.Image1.Width;
-  Xstart := ImageWide div 10;
-  Xend := (ImageWide * 9) div 10;
-  Ystart := ImageHi div 10;
-  Yend := (ImageHi * 8) div 10;
-  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-  BlankFrm.Image1.Canvas.Brush.Color := clWhite;
-  BlankFrm.Image1.Canvas.Rectangle(0,0,ImageWide,ImageHi);
-  BlankFrm.Image1.Canvas.FloodFill(0,0,clWhite,fsBorder);
-  BlankFrm.Image1.Canvas.TextOut(Xstart-10,Ystart-30,Ylabel);
-  LabelWide := BlankFrm.Image1.Canvas.TextWidth(Xlabel);
-  BlankFrm.Image1.Canvas.TextOut((Xend-Xstart) div 2 - LabelWide,Yend + 40,Xlabel);
-  LabelWide := BlankFrm.Image1.Canvas.TextWidth(Title);
-  BlankFrm.Image1.Canvas.TextOut((Xend-Xstart) div 2 - LabelWide div 2, Ystart - 40,Title);
-
-  // draw axis lines
-  BlankFrm.Image1.Canvas.MoveTo(Xstart,Yend);
-  BlankFrm.Image1.Canvas.LineTo(Xend,Yend);
-  BlankFrm.Image1.Canvas.MoveTo(Xstart,Yend);
-  BlankFrm.Image1.Canvas.LineTo(Xstart,Ystart);
-
-  // create y axis values
-  Yincr := (Yend - Ystart) div 10;
-  for i := 0 to 10 do  // print Y axis values
-  begin
-    place := Yend - (i * Yincr);
-    value := Ymin + (Ystep * i);
-    valstr := format('%.2f',[value]);
-    astring := valstr;
-    TextHi := BlankFrm.Image1.Canvas.TextHeight(astring);
-    BlankFrm.Image1.Canvas.TextOut(Xstart-30,place-TextHi,astring);
-  end;
-
-  // create x axis values
-  for i := 1 to noreplications do  // print x axis
-  begin
-    value := Xmin + ((i-1) * Xstep);
-    ratio := i / noreplications;
-    Xpos := round(ratio * (Xend - Xstart));
-    valstr := format('%.0f',[value]);
-    astring := valstr;
-    BlankFrm.Image1.Canvas.TextOut(Xpos,Yend + 20,astring);
-  end;
-
-  // Plot the bubbles
-  for i := 1 to NoCases do
-  begin
-    intcell := StrToInt(OS3MainFrm.DataGrid.Cells[BubbleCol,i]);
-    xvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol,i]);
-    cellvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol,i]);
-    yprop := Yend - round(((cellvalue-Ymin) / Yrange) * (Yend - Ystart));
-    cellvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[SizeCol,i]);
-    astring := Trim(OS3MainFrm.DataGrid.Cells[BubbleCol,i]);
-    cellvalue := ((cellvalue - BubMin) / BubRange) * 20;
-    cellvalue := cellvalue + 10;
-    ratio := ((xvalue - Xmin) / Xstep) + 1;
-    ratio := (ratio / noreplications) * (Xend - Xstart);
-    Xpos := ceil(ratio);
-    BubColor := intcell - 1;
-    while (Bubcolor > 11) do Bubcolor := 12 - Bubcolor;
-    BlankFrm.Image1.Canvas.Brush.Color := DATA_COLORS[Bubcolor];
-    X1 := Xpos - ceil(cellvalue);
-    Y1 := yprop - ceil(cellvalue);
-    X2 := Xpos + ceil(cellvalue);
-    Y2 := yprop + ceil(cellvalue);
-    BlankFrm.Image1.Canvas.Ellipse(X1,Y1,X2,Y2);
-    BlankFrm.Image1.Canvas.Brush.Color := clWhite;
-    dx := BlankFrm.Image1.Canvas.TextWidth(astring) div 2;
-    dy := BlankFrm.Image1.Canvas.TextHeight(astring) div 2;
-    BlankFrm.Image1.Canvas.TextOut(Xpos-dx, yprop-dy, astring);
-  end;
-
   // Transform data matrix if elected
-  if (TransformChk.Checked = true) then
+  if TransformChk.Checked then
   begin
     ncases := nobubbles;
     ncols := noreplications * 3 + 1;
 
     // Note - columns: 1:=object ID, 2 to noreplications := X,
     // next noreplications := Y, next noreplications := size
-    SetLength(Data,ncases,ncols);
+    SetLength(Data, ncases, ncols);
     i := 1;
     while (i <= NoCases) do
     begin
@@ -393,7 +295,7 @@ begin
       end;
     end;
 
-    SetLength(labels,NoVariables+1);
+    SetLength(labels, NoVariables+1);
     for i := 1 to NoVariables do labels[i] := OS3MainFrm.DataGrid.Cells[i,0];
     ClearGrid;
     OS3MainFrm.DataGrid.RowCount := ncases + 1;
@@ -462,6 +364,7 @@ begin
   end;
 end;
 
+
 procedure TBubbleForm.FormActivate(Sender: TObject);
 var
   w: Integer;
@@ -484,17 +387,38 @@ begin
   FAutoSized := True;
 end;
 
+
 procedure TBubbleForm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if DictionaryFrm = nil then Application.CreateForm(TDictionaryFrm, DictionaryFrm);
-  if BlankFrm = nil then Application.CreateForm(TBlankFrm, BlankFrm);
 end;
+
 
 procedure TBubbleForm.FormShow(Sender: TObject);
 begin
   ResetBtnClick(self);
 end;
+
+
+procedure TBubbleForm.IDInBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  i := 0;
+  while (BubbleEdit.Text = '') and (i < VarList.Items.Count) do
+  begin
+    if (VarList.Selected[i]) then
+    begin
+      BubbleEdit.Text := VarList.Items[i];
+      VarList.Items.Delete(i);
+      i := 0;
+    end else
+      inc(i);
+  end;
+  UpdateBtnStates;
+end;
+
 
 procedure TBubbleForm.IDOutBtnClick(Sender: TObject);
 begin
@@ -502,6 +426,198 @@ begin
     VarList.Items.Add(BubbleEdit.Text);
   UpdateBtnStates;
 end;
+
+
+procedure TBubbleForm.HelpBtnClick(Sender: TObject);
+begin
+  if ContextHelpForm = nil then
+    Application.CreateForm(TContextHelpForm, ContextHelpForm);
+  ContextHelpForm.HelpMessage((Sender as TButton).Tag);
+end;
+
+
+{$IFDEF USE_TACHART}
+procedure TBubbleForm.PlotBubbles(YMax, YMin, BubMax, BubMin: Double);
+var
+  ser: TBubbleSeries;
+  bubbleIDs: TStringList;
+  i, j: Integer;
+  id: Integer;
+  xValue, yValue, sizeValue: Double;
+  s: String;
+  yRange, bubRange: Double;
+begin
+  yRange := YMax - YMin;
+  BubRange := BubMax - BubMin;
+
+  if ChartForm = nil then
+    ChartForm := TChartForm.Create(Application)
+  else
+    ChartForm.Clear;
+
+  // Titles
+  ChartForm.Caption := 'Bubble Plot of ' + OS3MainFrm.FileNameEdit.Text + LineEnding + TitleEdit.Text;
+  ChartForm.SetTitle(TitleEdit.Text);
+  if XLabelEdit.Text <> '' then
+    ChartForm.SetXTitle(XLabelEdit.Text)
+  else
+    ChartForm.SetXTitle(XEdit.Text);
+  if YLabelEdit.Text <> '' then
+    ChartForm.SetYTitle(YLabelEdit.Text)
+  else
+    ChartForm.SetYTitle(YEdit.Text);
+
+  // Collect bubble IDs and create a bubble series for each unique ID.
+  bubbleIDs := TStringList.Create;
+  try
+    for i := 1 to NoCases do
+    begin
+      s := OS3MainFrm.DataGrid.Cells[BubbleCol, i];
+      if bubbleIDs.IndexOf(s) = -1 then   // Add each ID only once!
+        bubbleIDs.Add(s);
+    end;
+    for i := 0 to bubbleIDs.Count-1 do
+    begin
+      ser := TBubbleSeries.Create(ChartForm);
+      ser.BubbleBrush.Color := DATA_COLORS[i mod Length(DATA_COLORS)];
+      ser.BubbleRadiusUnits := bruY;
+      ser.Title := bubbleIDs[i];
+      ser.Tag := StrToInt(bubbleIDs[i]);
+      ChartForm.Chart.AddSeries(ser);
+    end;
+  finally
+    bubbleIDs.Free;
+  end;
+
+  for i := 1 to NoCases do begin
+    id := StrToInt(OS3MainFrm.DataGrid.Cells[BubbleCol, i]);
+    // Find the series having this ID
+    for j := 0 to ChartForm.Chart.SeriesCount-1 do
+      if (ChartForm.Chart.Series[j] is TBubbleSeries) and
+         (TBubbleSeries(ChartForm.Chart.Series[j]).Tag = id) then
+      begin
+        ser := TBubbleSeries(ChartForm.Chart.Series[j]);
+        break;
+      end;
+
+    xValue := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol, i]);
+    yValue := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol, i]);
+    sizeValue := StrToFloat(OS3MainFrm.DataGrid.Cells[SizeCol, i]);
+    sizeValue := ((sizeValue - BubMin) / BubRange * 0.91 + 0.09) * YRange * 0.1;
+    // This scaling makes the larges bubble equal to 10% of the y range;
+    // the ratio of largest to smallest bubble is about 10:1.
+
+    ser.AddXY(xValue, yValue, sizeValue);
+  end;
+
+  ChartForm.Chart.Legend.Visible := true;
+  ChartForm.Show;
+end;
+{$ELSE}
+procedure TBubbleForm.PlotBubbles(NoReplications: Integer;
+  XMax, XMin: Integer; YMax, YMin, BubMax, BubMin: Double);
+var
+  i, j: Integer;
+  XLabel, YLabel, Title, valStr, aString: String;
+  ImageWide, ImageHi, Xstart, Xend, Ystart, Yend, Yincr: integer;
+  LabelWide, TextHi, Xpos: Integer;
+  BubColor, place: integer;
+  X1, Y1, X2, Y2: integer;
+  dx, dy: Integer;
+  XRange, XStep: Integer;
+  YRange, YStep, BubRange: Double;
+  ratio, value: Double;
+  intCell: Integer;
+  xValue, cellvalue: Double;
+  yProp: Integer;
+begin
+  if BlankFrm = nil then
+    BlankFrm := TBlankFrm.Create(Application);
+
+  XRange := Xmax - Xmin;
+  XStep := XRange div (NoReplications - 1);
+  YRange := Ymax - Ymin;
+  YStep := Yrange / 10;
+  BubRange := BubMax - BubMin;
+
+  BlankFrm.Show;
+  BlankFrm.Caption := 'BUBBLE PLOT of ' + OS3MainFrm.FileNameEdit.Text;
+  Xlabel := XlabelEdit.Text;
+  Ylabel := YlabelEdit.Text;
+  Title := TitleEdit.Text;
+  ImageHi := BlankFrm.Image1.Height;
+  ImageWide := BlankFrm.Image1.Width;
+  Xstart := ImageWide div 10;
+  Xend := (ImageWide * 9) div 10;
+  Ystart := ImageHi div 10;
+  Yend := (ImageHi * 8) div 10;
+  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+  BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+  BlankFrm.Image1.Canvas.Rectangle(0,0,ImageWide,ImageHi);
+  BlankFrm.Image1.Canvas.FloodFill(0,0,clWhite,fsBorder);
+  BlankFrm.Image1.Canvas.TextOut(Xstart-10,Ystart-30,Ylabel);
+  LabelWide := BlankFrm.Image1.Canvas.TextWidth(Xlabel);
+  BlankFrm.Image1.Canvas.TextOut((Xend-Xstart) div 2 - LabelWide,Yend + 40,Xlabel);
+  LabelWide := BlankFrm.Image1.Canvas.TextWidth(Title);
+  BlankFrm.Image1.Canvas.TextOut((Xend-Xstart) div 2 - LabelWide div 2, Ystart - 40,Title);
+
+  // draw axis lines
+  BlankFrm.Image1.Canvas.MoveTo(Xstart,Yend);
+  BlankFrm.Image1.Canvas.LineTo(Xend,Yend);
+  BlankFrm.Image1.Canvas.MoveTo(Xstart,Yend);
+  BlankFrm.Image1.Canvas.LineTo(Xstart,Ystart);
+
+  // create y axis values
+  Yincr := (Yend - Ystart) div 10;
+  for i := 0 to 10 do  // print Y axis values
+  begin
+    place := Yend - Yincr * i;
+    value := Ymin + Ystep * i;
+    valStr := Format('%.2f', [value]);
+    TextHi := BlankFrm.Image1.Canvas.TextHeight(valStr);
+    BlankFrm.Image1.Canvas.TextOut(Xstart-30,place-TextHi, valStr);
+  end;
+
+  // create x axis values
+  for i := 1 to NoReplications do  // print x axis
+  begin
+    value := Xmin + ((i-1) * Xstep);
+    ratio := i / NoReplications;
+    Xpos := round(ratio * (Xend - Xstart));
+    valStr := Format('%.0f',[value]);
+    BlankFrm.Image1.Canvas.TextOut(Xpos,Yend + 20, valStr);
+  end;
+
+  // Plot the bubbles
+  for i := 1 to NoCases do
+  begin
+    intcell := StrToInt(OS3MainFrm.DataGrid.Cells[BubbleCol,i]);
+    xvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[XCol,i]);
+    cellvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[YCol,i]);
+    yprop := Yend - round(((cellvalue-Ymin) / Yrange) * (Yend - Ystart));
+    cellvalue := StrToFloat(OS3MainFrm.DataGrid.Cells[SizeCol,i]);
+    astring := Trim(OS3MainFrm.DataGrid.Cells[BubbleCol,i]);
+    cellvalue := ((cellvalue - BubMin) / BubRange) * 20;
+    cellvalue := cellvalue + 10;
+    ratio := ((xvalue - Xmin) / Xstep) + 1;
+    ratio := (ratio / noreplications) * (Xend - Xstart);
+    Xpos := ceil(ratio);
+    BubColor := intcell - 1;
+    while (Bubcolor > 11) do Bubcolor := 12 - Bubcolor;
+    BlankFrm.Image1.Canvas.Brush.Color := DATA_COLORS[Bubcolor];
+    X1 := Xpos - ceil(cellvalue);
+    Y1 := yprop - ceil(cellvalue);
+    X2 := Xpos + ceil(cellvalue);
+    Y2 := yprop + ceil(cellvalue);
+    BlankFrm.Image1.Canvas.Ellipse(X1,Y1,X2,Y2);
+    BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+    dx := BlankFrm.Image1.Canvas.TextWidth(astring) div 2;
+    dy := BlankFrm.Image1.Canvas.TextHeight(astring) div 2;
+    BlankFrm.Image1.Canvas.TextOut(Xpos-dx, yprop-dy, astring);
+  end;
+end;
+{$ENDIF}
+
 
 procedure TBubbleForm.ResetBtnClick(Sender: TObject);
 var
@@ -516,6 +632,7 @@ begin
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   UpdateBtnStates;
 end;
+
 
 procedure TBubbleForm.SizeInBtnClick(Sender: TObject);
 var
@@ -535,6 +652,7 @@ begin
   UpdateBtnStates;
 end;
 
+
 procedure TBubbleForm.SizeOutBtnClick(Sender: TObject);
 begin
   if SizeEdit.Text <> '' then
@@ -542,60 +660,6 @@ begin
   UpdateBtnStates;
 end;
 
-procedure TBubbleForm.VarListSelectionChange(Sender: TObject; User: boolean);
-begin
-  UpdateBtnStates;
-end;
-
-procedure TBubbleForm.XInBtnClick(Sender: TObject);
-var
-  i: integer;
-begin
-  i := 0;
-  while (XEdit.Text = '') and (i < VarList.Items.Count) do
-  begin
-    if VarList.Selected[i] then
-    begin
-      XEdit.Text := VarList.Items[i];
-      VarList.Items.Delete(i);
-      i := 0;
-    end else
-      inc(i);
-  end;
-  UpdateBtnStates;
-end;
-
-procedure TBubbleForm.XOutBtnClick(Sender: TObject);
-begin
-  if XEdit.Text <> '' then
-    VarList.Items.Add(XEdit.Text);
-  UpdateBtnStates;
-end;
-
-procedure TBubbleForm.YInBtnClick(Sender: TObject);
-var
-  i: integer;
-begin
-  i := 0;
-  while (YEdit.Text = '') and (i < VarList.Items.Count) do
-  begin
-    if VarList.Selected[i] then
-    begin
-      YEdit.Text := VarList.Items[i];
-      VarList.Items.Delete(i);
-      i := 0;
-    end else
-      inc(i);
-  end;
-  UpdateBtnStates;
-end;
-
-procedure TBubbleForm.YOutBtnClick(Sender: TObject);
-begin
-  if YEdit.Text <> '' then
-    VarList.Items.Add(YEdit.Text);
-  UpdateBtnStates;
-end;
 
 procedure TBubbleForm.UpdateBtnStates;
 var
@@ -621,8 +685,65 @@ begin
 end;
 
 
-initialization
-  {$I bubbleplotunit.lrs}
+procedure TBubbleForm.VarListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
+end;
+
+
+procedure TBubbleForm.XInBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  i := 0;
+  while (XEdit.Text = '') and (i < VarList.Items.Count) do
+  begin
+    if VarList.Selected[i] then
+    begin
+      XEdit.Text := VarList.Items[i];
+      VarList.Items.Delete(i);
+      i := 0;
+    end else
+      inc(i);
+  end;
+  UpdateBtnStates;
+end;
+
+
+procedure TBubbleForm.XOutBtnClick(Sender: TObject);
+begin
+  if XEdit.Text <> '' then
+    VarList.Items.Add(XEdit.Text);
+  UpdateBtnStates;
+end;
+
+
+procedure TBubbleForm.YInBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  i := 0;
+  while (YEdit.Text = '') and (i < VarList.Items.Count) do
+  begin
+    if VarList.Selected[i] then
+    begin
+      YEdit.Text := VarList.Items[i];
+      VarList.Items.Delete(i);
+      i := 0;
+    end else
+      inc(i);
+  end;
+  UpdateBtnStates;
+end;
+
+
+procedure TBubbleForm.YOutBtnClick(Sender: TObject);
+begin
+  if YEdit.Text <> '' then
+    VarList.Items.Add(YEdit.Text);
+  UpdateBtnStates;
+end;
+
 
 end.
 
