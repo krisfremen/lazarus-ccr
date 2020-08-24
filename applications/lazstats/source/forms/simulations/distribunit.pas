@@ -31,7 +31,7 @@ type
     SavePictureDialog: TSavePictureDialog;
     VertLineSeries: TLineSeries;
     FuncSeries: TFuncSeries;
-    Panel2: TPanel;
+    ParameterPanel: TPanel;
     SaveBtn: TButton;
     PrintBtn: TButton;
     Chart: TChart;
@@ -41,7 +41,7 @@ type
     FChk: TRadioButton;
     MeanEdit: TEdit;
     NDChk: TRadioButton;
-    Panel1: TPanel;
+    ChartPanel: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
     CloseBtn: TButton;
@@ -315,9 +315,10 @@ end;
 procedure TDistribFrm.NDPlot;
 var
   alpha: Double;
-  zCrit, pCrit: Double;
+  zMax, zCrit, pCrit: Double;
 begin
   alpha := StrToFloat(AlphaEdit.Text);
+  zMax := InverseZ(0.9999);
   zCrit := inversez(1.0 - alpha);
   CalcND(zCrit, pCrit);
 
@@ -327,8 +328,8 @@ begin
   Chart.Title.Text.Add(Format('Critical value = %.3f', [zCrit]));
   Chart.Title.Visible := true;
   Chart.BottomAxis.Title.Caption := 'z';
-  FuncSeries.Extent.XMin := -4;
-  FuncSeries.Extent.XMax := +4;
+  FuncSeries.Extent.XMin := -zMax;
+  FuncSeries.Extent.XMax := +zMax;
   FuncSeries.Extent.UseXMin := true;
   FuncSeries.Extent.UseXMax := true;
   FuncSeries.OnCalculate := @CalcND;
@@ -342,21 +343,22 @@ end;
 procedure TDistribFrm.ChiPlot;
 var
   alpha: Double;
-  Chi2Crit, pCrit: Double;
+  Chi2Max, Chi2Crit, pCrit: Double;
 begin
   alpha := StrToFloat(AlphaEdit.Text);
   DF1 := StrToInt(DF1Edit.Text);
+  Chi2Max := InverseChi(0.9999, DF1);
   Chi2Crit := InverseChi(1.0 - alpha, DF1);
   CalcChiSq(Chi2Crit, pCrit);
 
   Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>Chi-Squared Distribution.</b>');
+  Chart.Title.Text.Add('<b>Chi-Squared Distribution</b>');
   Chart.Title.Text.Add(Format('&alpha; = %.3g / Degrees of freedom = %d', [alpha, DF1]));
   Chart.Title.Text.Add(Format('Critical value = %.3f', [Chi2Crit]));
   Chart.Title.Visible := true;
   Chart.BottomAxis.Title.Caption := '&chi;<sup>2</sup>';
   FuncSeries.Extent.XMin := 0;
-  FuncSeries.Extent.XMax := 125;
+  FuncSeries.Extent.XMax := Chi2Max;
   FuncSeries.Extent.UseXMin := true;
   FuncSeries.Extent.UseXMax := true;
   FuncSeries.OnCalculate := @CalcChiSq;
@@ -370,22 +372,23 @@ end;
 procedure TDistribFrm.FPlot;
 var
   alpha: Double;
-  FCrit, pCrit: Double;
+  FMax, FCrit, pCrit: Double;
 begin
   alpha := StrToFloat(AlphaEdit.Text);
   DF1 := StrToInt(DF1Edit.Text);
   DF2 := StrToInt(DF2Edit.Text);
+  FMax := FPercentPoint(0.999, DF1, DF2);
   FCrit := FPercentPoint(1.0 - alpha, DF1, DF2);
   CalcF(FCrit, pCrit);
 
   Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>F Distribution.</b>');
+  Chart.Title.Text.Add('<b>F Distribution</b>');
   Chart.Title.Text.Add(Format('&alpha; = %.3g / DF1 = %d, DF2 = %d', [alpha, DF1, DF2]));
   Chart.Title.Text.Add(Format('Critical value = %.3f', [FCrit]));
   Chart.Title.Visible := true;
   Chart.BottomAxis.Title.Caption := 'F';
   FuncSeries.Extent.XMin := 0;
-  FuncSeries.Extent.XMax := 15;
+  FuncSeries.Extent.XMax := FMax;
   FuncSeries.Extent.UseXMin := true;
   FuncSeries.Extent.UseXMax := true;
   FuncSeries.OnCalculate := @CalcF;
@@ -399,21 +402,22 @@ end;
 procedure TDistribFrm.tPlot;
 var
   alpha: Double;
-  tCrit, pCrit: Double;
+  tMax, tCrit, pCrit: Double;
 begin
   alpha := StrToFloat(AlphaEdit.Text);
   DF1 := StrToInt(DF1Edit.Text);
+  tMax := Inverset(0.9999, DF1);
   tCrit := Inverset(1.0 - alpha, DF1);
   Calct(tCrit, pCrit);
 
   Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>Student t Distribution.</b>');
+  Chart.Title.Text.Add('<b>Student t Distribution</b>');
   Chart.Title.Text.Add(Format('&alpha; = %.3g / Degrees of freedom = %d', [alpha, DF1]));
   Chart.Title.Text.Add(Format('Critical value = %.3f', [tCrit]));
   Chart.Title.Visible := true;
   Chart.BottomAxis.Title.Caption := 't';
-  FuncSeries.Extent.XMin := -4;
-  FuncSeries.Extent.XMax := 4;
+  FuncSeries.Extent.XMin := -tMax;
+  FuncSeries.Extent.XMax := tMax;
   FuncSeries.Extent.UseXMin := true;
   FuncSeries.Extent.UseXMax := true;
   FuncSeries.OnCalculate := @Calct;
@@ -429,8 +433,8 @@ var
   w: Integer;
 begin
   w := MaxValue([SaveBtn.Width, PrintBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
-  SaveBtn.Width := w;
-  PrintBtn.Width := w;
+  SaveBtn.Constraints.MinWidth := w;
+  PrintBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;

@@ -5,7 +5,6 @@ object DistribFrm: TDistribFrm
   Width = 687
   HelpType = htKeyword
   HelpKeyword = 'html/DistributionPlotsandCriticalValu.htm'
-  BorderStyle = bsDialog
   Caption = 'Distributions'
   ClientHeight = 432
   ClientWidth = 687
@@ -77,10 +76,10 @@ object DistribFrm: TDistribFrm
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
-  object Panel1: TPanel
+  object ChartPanel: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Panel2
+    AnchorSideRight.Control = ParameterPanel
     AnchorSideBottom.Control = Bevel1
     Left = 8
     Height = 377
@@ -131,6 +130,7 @@ object DistribFrm: TDistribFrm
       Foot.Brush.Color = clBtnFace
       Foot.Font.Color = clBlue
       Margins.Bottom = 0
+      Title.Brush.Color = clBtnFace
       Title.Brush.Style = bsClear
       Title.Font.Color = clBlue
       Title.Text.Strings = (
@@ -176,7 +176,7 @@ object DistribFrm: TDistribFrm
     OnClick = PrintBtnClick
     TabOrder = 5
   end
-  object Panel2: TPanel
+  object ParameterPanel: TPanel
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
@@ -190,13 +190,12 @@ object DistribFrm: TDistribFrm
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BevelOuter = bvNone
-    Caption = 'Panel2'
     ClientHeight = 377
     ClientWidth = 180
     TabOrder = 6
     object GroupBox1: TGroupBox
-      AnchorSideLeft.Control = Panel2
-      AnchorSideTop.Control = Panel2
+      AnchorSideLeft.Control = ParameterPanel
+      AnchorSideTop.Control = ParameterPanel
       AnchorSideRight.Side = asrBottom
       Left = 0
       Height = 136
