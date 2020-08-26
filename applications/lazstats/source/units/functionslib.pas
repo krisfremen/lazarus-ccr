@@ -10,7 +10,6 @@ uses
   MainUnit, dataprocs;
 
 function chisquaredprob(X : double; k : integer) : double;
-function gammln(xx : double) : double;
 PROCEDURE matinv(VAR a, vtimesw, v, w: DblDyneMat; n: integer);
 FUNCTION sign(a,b: double): double;
 FUNCTION isign(a,b : integer): integer;
@@ -66,6 +65,9 @@ procedure poisson_pdf ( x : integer; VAR a : double; VAR pdf : double );
 
 implementation
 
+uses
+  MathUnit;
+
 function chisquaredprob(X : double; k : integer) : double;
 var
    factor : double;   // factor which multiplies sum of series
@@ -86,7 +88,7 @@ begin
      begin
     	x1 := 0.5 * X;
     	k1 := 0.5 * k;
-    	g := gammln(k1 + 1);
+    	g := GammaLn(k1 + 1);
     	factor := exp(k1 * ln(x1) - g - x1);
     	sum := 0.0;
     	if factor > 0 then
@@ -104,34 +106,7 @@ begin
      end; //end if .. else
      Result := chi2prob;
 end;
-//---------------------------------------------------------------------
 
-function gammln(xx : double) : double;
-var
-   X, tmp, ser : double;
-   cof : array[0..5] of double;
-   j : integer;
-
-begin
-    cof[0] := 76.18009173;
-    cof[1] := -86.50532033;
-    cof[2] := 24.01409822;
-    cof[3] := -1.231739516;
-    cof[4] := 0.00120858003;
-    cof[5] := -0.00000536382;
-
-    X := xx - 1.0;
-    tmp := X + 5.5;
-    tmp := tmp - ((X + 0.5) * ln(tmp));
-    ser := 1.0;
-    for j := 0 to 5 do
-    begin
-        X := X + 1.0;
-        ser := ser + cof[j] / X;
-    end;
-    Result := ( -tmp + ln(2.50662827465 * ser) );
-end;
-//-------------------------------------------------------------------
 
 PROCEDURE matinv(VAR a, vtimesw, v, w: DblDyneMat; n: integer);
 (* adapted from the singular value decomposition of a matrix *)
@@ -567,74 +542,6 @@ BEGIN
    gammln := tmp +ln(stp * ser)
 END;
 //-----------------------------------------------------------------
-
-function betacf(a,b,x: double): extended;
-CONST
-   itmax=100;
-   eps=3.0e-7;
-VAR
-   tem,qap,qam,qab,em,d: extended;
-   bz,bpp,bp,bm,az,app: extended;
-   am,aold,ap: extended;
-   m: integer;
-BEGIN
-   am := 1.0;
-   bm := 1.0;
-   az := 1.0;
-   qab := a+b;
-   qap := a+1.0;
-   qam := a-1.0;
-   bz := 1.0 - qab * x / qap;
-   FOR m := 1 to itmax DO BEGIN
-      em := m;
-      tem := em+em;
-      d := em * (b - m) * x / ((qam + tem) * (a + tem));
-      ap := az + d * am;
-      bp := bz + d * bm;
-      term1 := -(a + em);
-      term2 := qab + em;
-      term3 := term1 * term2 * x;
-      term4 := a + tem;
-      term5 := qap + tem;
-      term6 := term4 * term5;
-      d := term3 / term6;
-      app := ap + d * az;
-      bpp := bp + d * bz;
-      aold := az;
-      am := ap/bpp;
-      bm := bp/bpp;
-      az := app/bpp;
-      bz := 1.0;
-      IF ((abs(az-aold)) < (eps*abs(az))) THEN
-        Break;
-   END;
-  { ShowMessage('WARNING! a or b too big, or itmax too small in betacf');}
-   Result := az
-END;
-
-FUNCTION betai(a,b,x: extended): extended;
-VAR
-   bt: extended;
-BEGIN
-   IF ((x <= 0.0) OR (x >= 1.0)) THEN BEGIN
-     { ShowMessage('ERROR! Problem in routine BETAI');}
-      betai := 0.5;
-      exit;
-   END;
-   IF ((x <= 0.0) OR (x >= 1.0)) THEN bt := 0.0
-   ELSE
-       begin
-            term1 := gammln(a + b) -
-                     gammln(a) - gammln(b);
-            term2 := a * ln(x);
-            term3 := b * ln(1.0 - x);
-            term4 := term1 + term2 + term3;
-            bt    := exp(term4);
-            term5 := (a + 1.0) / (a + b + 2.0);
-       end;
-   IF x < term5 then betai := bt * betacf(a,b,x) / a
-   ELSE betai := 1.0 - bt * betacf(b,a,1.0-x) / b
-END;
 
 begin { fprob function }
      if f <= 0.0 then probf := 1.0 else

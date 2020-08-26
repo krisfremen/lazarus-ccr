@@ -122,7 +122,7 @@ object DistribFrm: TDistribFrm
           Minors = <>
           Title.LabelFont.Style = [fsBold]
           Title.Visible = True
-          Title.Caption = 'Scale'
+          Title.Caption = 'Value'
           Title.LabelBrush.Style = bsClear
           Title.TextFormat = tfHTML
         end>
@@ -218,7 +218,7 @@ object DistribFrm: TDistribFrm
         Top = 8
         Width = 144
         Caption = 'Normal Distribution'
-        OnClick = NDChkClick
+        OnClick = DistributionClick
         TabOrder = 0
       end
       object tChk: TRadioButton
@@ -227,9 +227,8 @@ object DistribFrm: TDistribFrm
         Top = 35
         Width = 144
         Caption = 'Student t Distribution'
-        OnClick = tChkClick
+        OnClick = DistributionClick
         TabOrder = 3
-        Visible = False
       end
       object FChk: TRadioButton
         Left = 16
@@ -237,7 +236,7 @@ object DistribFrm: TDistribFrm
         Top = 62
         Width = 144
         Caption = 'Central F Distribution'
-        OnClick = FChkClick
+        OnClick = DistributionClick
         TabOrder = 2
       end
       object ChiChk: TRadioButton
@@ -246,7 +245,7 @@ object DistribFrm: TDistribFrm
         Top = 89
         Width = 144
         Caption = 'Chi-Square Distribution'
-        OnClick = ChiChkClick
+        OnClick = DistributionClick
         TabOrder = 1
       end
     end

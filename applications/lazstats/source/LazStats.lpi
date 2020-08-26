@@ -49,7 +49,7 @@
         <PackageName Value="LCL"/>
       </Item7>
     </RequiredPackages>
-    <Units Count="172">
+    <Units Count="173">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -1400,6 +1400,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ChartUnit"/>
       </Unit171>
+      <Unit172>
+        <Filename Value="units\mathunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MathUnit"/>
+      </Unit172>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

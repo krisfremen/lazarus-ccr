@@ -7,8 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg,
-  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit; //, utils, chartunit;
+  Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg, Globals, LicenseUnit,
+  OptionsUnit, MainDM, MainUnit, MathUnit; //, utils, chartunit;
 
 {$R LazStats.res}
 

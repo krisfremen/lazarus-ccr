@@ -51,25 +51,22 @@ type
     DF2Label: TLabel;
     MeanLabel: TLabel;
     GroupBox1: TGroupBox;
-    procedure ChiChkClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
-    procedure FChkClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CalcChiSq(const AX: Double; out AY: Double);
     procedure CalcF(const AX: Double; out AY: Double);
     procedure CalcND(const AX: Double; out AY: Double);
     procedure Calct(const AX: Double; out AY: Double);
-    procedure NDChkClick(Sender: TObject);
+    procedure DistributionClick(Sender: TObject);
     procedure PrintBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure SaveBtnClick(Sender: TObject);
-    procedure tChkClick(Sender: TObject);
   private
     { private declarations }
     DF1: Integer;
     DF2: Integer;
-    procedure NDPlot;
+    procedure NormalDistPlot;
     procedure ChiPlot;
     procedure FPlot;
     procedure tPlot;
@@ -85,9 +82,8 @@ var
 implementation
 
 uses
-  //spe,  // a numlib unit (tDist)
-  OSPrinters,
-  TAChartUtils, TADrawerSVG, TAPrint;
+  TAChartUtils, TADrawerSVG, TAPrint,
+  MathUnit;
 
 
 { TDistribFrm }
@@ -131,28 +127,8 @@ begin
 end;
 
 procedure TDistribFrm.CalcF(const AX: Double; out AY: Double);
-var
-  ratio1, ratio2, ratio3, ratio4: double;
-  part1, part2, part3, part4, part5, part6, part7, part8, part9: double;
 begin
-  // Returns the height of the density curve for the F statistic
-  ratio1 := (DF1 + DF2) / 2.0;
-  ratio2 := (DF1 - 2.0) / 2.0;
-  ratio3 := DF1 / 2.0;
-  ratio4 := DF2 / 2.0;
-  part1 := exp(lngamma(ratio1));
-  part2 := power(DF1, ratio3);
-  part3 := power(DF2, ratio4);
-  part4 := exp(lngamma(ratio3));
-  part5 := exp(lngamma(ratio4));
-  part6 := power(AX, ratio2);
-  part7 := power((AX*DF1 + DF2), ratio1);
-  part8 := (part1 * part2 * part3) / (part4 * part5);
-  if (part7 = 0.0) then
-    part9 := 0.0
-  else
-    part9 := part6 / part7;
-  AY := part8 * part9;
+  AY := FDensity(AX, DF1, DF2);
 end;
 
 procedure TDistribFrm.CalcND(const AX: Double; out AY: Double);
@@ -162,17 +138,35 @@ end;
 
 procedure TDistribFrm.CalcChiSq(const AX: Double; out AY: Double);
 begin
-  AY := 1.0 / (power(2.0, DF1*0.5) * exp(lngamma(DF1*0.5))) * power(AX, (DF1-2.0)*0.5) * (1.0 / exp(AX*0.5));
+  AY := Chi2Density(AX, DF1);
 end;
 
 procedure TDistribFrm.Calct(const AX: Double; out AY: Double);
 begin
-  AY := Student(AX, DF1, 1.0);
-  //AY := tDist(AX, DF1, 1);
+  AY := tDensity(AX, DF1);
 end;
 
-procedure TDistribFrm.NDChkClick(Sender: TObject);
+procedure TDistribFrm.DistributionClick(Sender: TObject);
+var
+  rb: TRadiobutton;
 begin
+  rb := Sender as TRadioButton;
+
+  GroupBox2.Enabled := rb.Checked;
+
+  AlphaLabel.Enabled := rb.Checked;
+  AlphaEdit.Enabled := rb.Checked;
+
+  DF1Edit.Enabled := (rb <> NDChk) and rb.Checked;
+  DF1Label.Enabled := DF1Edit.Enabled;
+
+  DF2Edit.Enabled := (rb = FChk) and rb.Checked;
+  DF2Label.Enabled := DF2Edit.Enabled;
+
+  MeanEdit.Enabled := false;
+  MeanLabel.Enabled := false;
+  {
+
    if NDChk.Checked then
    begin
      GroupBox2.Enabled := true;
@@ -187,6 +181,7 @@ begin
    end
    else
      GroupBox2.Enabled := false;
+     }
 end;
 
 procedure TDistribFrm.PrintBtnClick(Sender: TObject);
@@ -233,7 +228,7 @@ begin
   ok := false;
   if NDChk.Checked then
   begin
-    NDPlot();
+    NormalDistPlot();
     ok := true;
   end;
 
@@ -259,60 +254,7 @@ begin
     MessageDlg('Please select a distribution.', mtError, [mbOK], 0);
 end;
 
-procedure TDistribFrm.FChkClick(Sender: TObject);
-begin
-  if FChk.Checked then
-  begin
-    GroupBox2.Enabled := true;
-    DF2Label.Enabled := true;
-    AlphaLabel.Enabled := true;
-    AlphaEdit.Enabled := true;
-    DF1Edit.Enabled := true;
-    DF2Edit.Enabled := true;
-    DF1Label.Enabled := true;
-    MeanLabel.Enabled := false;
-    MeanEdit.Enabled := false;
-  end
-  else
-    GroupBox2.Enabled := false;
-end;
-
-procedure TDistribFrm.ChiChkClick(Sender: TObject);
-begin
-  if ChiChk.Checked then
-  begin
-    GroupBox2.Enabled := true;
-    DF1Label.Enabled := true;
-    DF1Edit.Enabled := true;
-    DF2Label.Enabled := false;
-    MeanLabel.Enabled := false;
-    AlphaLabel.Enabled := true;
-    AlphaEdit.Enabled := true;
-    DF2Edit.Enabled := false;
-    MeanEdit.Enabled := false;
-  end else
-    GroupBox2.Enabled := false;
-end;
-
-procedure TDistribFrm.tChkClick(Sender: TObject);
-begin
-  if tChk.Checked then
-  begin
-    GroupBox2.Enabled := true;
-    DF1Label.Enabled := true;
-    DF1Edit.Enabled := true;
-    DF2Label.Enabled := false;
-    MeanLabel.Enabled := false;
-    AlphaLabel.Enabled := true;
-    AlphaEdit.Enabled := true;
-    DF2Edit.Enabled := false;
-    MeanEdit.Enabled := false;
-  end else
-    GroupBox2.Enabled := false;
-end;
-
-
-procedure TDistribFrm.NDPlot;
+procedure TDistribFrm.NormalDistPlot;
 var
   alpha: Double;
   zMax, zCrit, pCrit: Double;
@@ -416,7 +358,7 @@ begin
   Chart.Title.Text.Add(Format('Critical value = %.3f', [tCrit]));
   Chart.Title.Visible := true;
   Chart.BottomAxis.Title.Caption := 't';
-  FuncSeries.Extent.XMin := -tMax;
+  FuncSeries.Extent.XMin := -tmax;
   FuncSeries.Extent.XMax := tMax;
   FuncSeries.Extent.UseXMin := true;
   FuncSeries.Extent.UseXMax := true;

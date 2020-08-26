@@ -51,7 +51,8 @@ var
 implementation
 
 uses
-  Math;
+  Math,
+  MathUnit;
 
 { TSigmaChartFrm }
 
@@ -252,9 +253,9 @@ begin
   D3Value := D3[grpsize-1];
   D4Value := D4[grpsize-1];
   C4 := sqrt(2.0 / (grpsize - 1));
-  gamma := exp(gammln(grpsize / 2.0));
+  gamma := exp(GammaLn(grpsize / 2.0));
   C4 := C4 * gamma;
-  gamma := exp(gammln((grpsize-1) / 2.0));
+  gamma := exp(GammaLn((grpsize-1) / 2.0));
   C4 := C4 / gamma;
   B := GrandSigma * sqrt(1.0 - (C4 * C4)) / C4;
   UCL := GrandSigma + 3.0 * B;
