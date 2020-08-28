@@ -9,6 +9,10 @@ interface
 uses
   Classes, SysUtils;
 
+function erf(x: Double): Double;
+function erfc(x: Double) : Double;
+function NormalDist(x: Double): Double;
+
 function Beta(a, b: Double): Extended;
 function BetaI(a,b,x: Double): Extended;
 
@@ -25,6 +29,104 @@ implementation
 
 uses
   Math;
+
+// Calculates the error function
+//                              /x
+//       erf(x) = 2/sqrt(pi) * | exp(-t²) dt
+//                            /0
+// borrowed from NumLib
+function erf(x: Double): Double;
+const
+  xup = 6.25;
+  SQRT_PI = 1.7724538509055160;
+  c: array[1..18] of Double = (
+       1.9449071068178803e0,  4.20186582324414e-2, -1.86866103976769e-2,
+       5.1281061839107e-3,   -1.0683107461726e-3,   1.744737872522e-4,
+      -2.15642065714e-5,      1.7282657974e-6,     -2.00479241e-8,
+      -1.64782105e-8,         2.0008475e-9,         2.57716e-11,
+      -3.06343e-11,           1.9158e-12,           3.703e-13,
+      -5.43e-14,             -4.0e-15,              1.2e-15
+  );
+  d: array[1..17] of Double = (
+       1.4831105640848036e0, -3.010710733865950e-1, 6.89948306898316e-2,
+      -1.39162712647222e-2,   2.4207995224335e-3,  -3.658639685849e-4,
+       4.86209844323e-5,     -5.7492565580e-6,      6.113243578e-7,
+      -5.89910153e-8,         5.2070091e-9,        -4.232976e-10,
+       3.18811e-11,          -2.2361e-12,           1.467e-13,
+      -9.0e-15,               5.0e-16
+  );
+var
+  t, s, s1, s2, x2: Double;
+  bovc, bovd, j: Integer;
+  sgn: Integer;
+begin
+  bovc := SizeOf(c) div SizeOf(Double);
+  bovd := SizeOf(d) div SizeOf(Double);
+  t := abs(x);
+  if t <= 2 then
+  begin
+    x2 := sqr(x) - 2;
+    s1 := d[bovd];
+    s2 := 0;
+    j := bovd - 1;
+    s := x2*s1 - s2 + d[j];
+    while j > 1 do
+    begin
+      s2 := s1;
+      s1 := s;
+      j := j-1;
+      s := x2*s1 - s2 + d[j];
+    end;
+    Result := (s - s2) * x / 2;
+  end else
+  if t < xup then
+  begin
+    x2 := 2 - 20 / (t+3);
+    s1 := c[bovc];
+    s2 := 0;
+    j := bovc - 1;
+    s := x2*s1 - s2 + c[j];
+    while j > 1 do
+    begin
+      s2 := s1;
+      s1 := s;
+      j := j-1;
+      s := x2*s1 - s2 + c[j];
+    end;
+    x2 := ((s-s2) / (2*t)) * exp(-sqr(x)) / SQRT_PI;
+    if x < 0 then sgn := -1 else sgn := +1;
+    Result := (1 - x2) * sgn
+  end
+  else
+  if x < 0 then
+    Result := -1.0
+  else
+    Result := +1.0;
+end;
+
+
+{ calculates the complementary error function erfc(x) = 1 - erf(x) }
+function erfc(x: Double) : Double;
+begin
+  Result := 1.0 - erf(x);
+end;
+
+
+// Cumulative normal distribution
+// x = -INF ... INF --> 0 ... 1
+function NormalDist(x: Double): Double;
+const
+  SQRT2 = sqrt(2.0);
+begin
+  if x > 0 then
+    Result := (erf(x / SQRT2) + 1) * 0.5
+  else
+  if x < 0 then
+    Result := (1.0 - erf(-x / SQRT2)) * 0.5
+  else
+    Result := 0;
+end;
+
 
 function Beta(a, b: Double): Extended;
 begin

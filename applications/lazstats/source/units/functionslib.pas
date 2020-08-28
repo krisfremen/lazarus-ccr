@@ -980,16 +980,15 @@ begin
 end;
 //-------------------------------------------------------------------
 
-function probt(t,df1 : double) : double;
+// Returns the probability corresponding to a two-tailed t test.
+function ProbT(t, df1: double): double;
 var
-   F, prob : double;
+  F, prob: double;
 begin
-    // Returns the probability corresponding to a two-tailed t test.
-    F := t * t;
-    prob := probf(F,1.0,df1);
-    Result := prob;
+  F := t * t;
+  prob := ProbF(F, 1.0, df1);
+  Result := prob;
 end;
-//------------------------------------------------------------------------
 
 function inverset(Probt, DF : double) : double;
 var

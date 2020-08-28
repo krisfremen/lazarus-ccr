@@ -2,12 +2,12 @@ object DistribFrm: TDistribFrm
   Left = 420
   Height = 432
   Top = 215
-  Width = 687
+  Width = 701
   HelpType = htKeyword
   HelpKeyword = 'html/DistributionPlotsandCriticalValu.htm'
   Caption = 'Distributions'
   ClientHeight = 432
-  ClientWidth = 687
+  ClientWidth = 701
   OnActivate = FormActivate
   OnShow = FormShow
   Position = poMainFormCenter
@@ -19,7 +19,7 @@ object DistribFrm: TDistribFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 624
+    Left = 638
     Height = 25
     Top = 401
     Width = 55
@@ -35,7 +35,7 @@ object DistribFrm: TDistribFrm
   object ComputeBtn: TButton
     AnchorSideTop.Control = CloseBtn
     AnchorSideRight.Control = CloseBtn
-    Left = 540
+    Left = 554
     Height = 25
     Top = 401
     Width = 76
@@ -50,7 +50,7 @@ object DistribFrm: TDistribFrm
   object ResetBtn: TButton
     AnchorSideTop.Control = CloseBtn
     AnchorSideRight.Control = ComputeBtn
-    Left = 478
+    Left = 492
     Height = 25
     Top = 401
     Width = 54
@@ -72,7 +72,7 @@ object DistribFrm: TDistribFrm
     Left = 0
     Height = 8
     Top = 385
-    Width = 687
+    Width = 701
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
@@ -84,7 +84,7 @@ object DistribFrm: TDistribFrm
     Left = 8
     Height = 377
     Top = 8
-    Width = 479
+    Width = 454
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
@@ -92,7 +92,7 @@ object DistribFrm: TDistribFrm
     BevelOuter = bvNone
     BorderStyle = bsSingle
     ClientHeight = 373
-    ClientWidth = 475
+    ClientWidth = 450
     Color = clWhite
     ParentColor = False
     TabOrder = 3
@@ -100,7 +100,7 @@ object DistribFrm: TDistribFrm
       Left = 6
       Height = 361
       Top = 6
-      Width = 463
+      Width = 438
       AxisList = <      
         item
           Grid.Color = clSilver
@@ -146,6 +146,12 @@ object DistribFrm: TDistribFrm
       end
       object VertLineSeries: TLineSeries
         Active = False
+        LinePen.Color = clRed
+        LinePen.Style = psDot
+      end
+      object HorLineSeries: TLineSeries
+        LinePen.Color = clRed
+        LinePen.Style = psDot
       end
     end
   end
@@ -181,42 +187,42 @@ object DistribFrm: TDistribFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
-    Left = 499
+    Left = 474
     Height = 377
     Top = 8
-    Width = 180
+    Width = 219
     Anchors = [akTop, akRight, akBottom]
     AutoSize = True
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BevelOuter = bvNone
     ClientHeight = 377
-    ClientWidth = 180
+    ClientWidth = 219
     TabOrder = 6
     object GroupBox1: TGroupBox
       AnchorSideLeft.Control = ParameterPanel
       AnchorSideTop.Control = ParameterPanel
       AnchorSideRight.Side = asrBottom
       Left = 0
-      Height = 136
+      Height = 175
       Top = 0
-      Width = 180
+      Width = 219
       AutoSize = True
-      Caption = 'Plot Distribution:'
+      Caption = 'Plot Distribution'
       ChildSizing.LeftRightSpacing = 16
       ChildSizing.TopBottomSpacing = 8
       ChildSizing.VerticalSpacing = 8
-      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.EnlargeVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 116
-      ClientWidth = 176
+      ClientHeight = 155
+      ClientWidth = 215
       TabOrder = 0
       object NDChk: TRadioButton
         Left = 16
         Height = 19
         Top = 8
-        Width = 144
+        Width = 183
         Caption = 'Normal Distribution'
         OnClick = DistributionClick
         TabOrder = 0
@@ -225,8 +231,8 @@ object DistribFrm: TDistribFrm
         Left = 16
         Height = 19
         Top = 35
-        Width = 144
-        Caption = 'Student t Distribution'
+        Width = 183
+        Caption = 'Student t Distribution (1-sided)'
         OnClick = DistributionClick
         TabOrder = 3
       end
@@ -234,7 +240,7 @@ object DistribFrm: TDistribFrm
         Left = 16
         Height = 19
         Top = 62
-        Width = 144
+        Width = 183
         Caption = 'Central F Distribution'
         OnClick = DistributionClick
         TabOrder = 2
@@ -243,10 +249,27 @@ object DistribFrm: TDistribFrm
         Left = 16
         Height = 19
         Top = 89
-        Width = 144
+        Width = 183
         Caption = 'Chi-Square Distribution'
         OnClick = DistributionClick
         TabOrder = 1
+      end
+      object Bevel2: TBevel
+        Left = 16
+        Height = 4
+        Top = 116
+        Width = 183
+        Constraints.MaxHeight = 4
+        Shape = bsBottomLine
+      end
+      object CumulativeChk: TCheckBox
+        Left = 16
+        Height = 19
+        Top = 128
+        Width = 183
+        Caption = 'Cumulative'
+        OnChange = CumulativeChkChange
+        TabOrder = 4
       end
     end
     object GroupBox2: TGroupBox
@@ -256,21 +279,22 @@ object DistribFrm: TDistribFrm
       AnchorSideRight.Control = GroupBox1
       AnchorSideRight.Side = asrBottom
       Left = 0
-      Height = 140
-      Top = 152
-      Width = 180
+      Height = 107
+      Top = 191
+      Width = 219
       Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
       BorderSpacing.Top = 16
       BorderSpacing.Bottom = 12
       Caption = 'Parameters'
-      ClientHeight = 120
-      ClientWidth = 176
+      ClientHeight = 87
+      ClientWidth = 215
       TabOrder = 1
       object AlphaLabel: TLabel
         AnchorSideTop.Control = AlphaEdit
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = AlphaEdit
-        Left = 29
+        Left = 68
         Height = 15
         Top = 6
         Width = 84
@@ -283,7 +307,7 @@ object DistribFrm: TDistribFrm
         AnchorSideTop.Control = DF1Edit
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = DF1Edit
-        Left = 22
+        Left = 61
         Height = 15
         Top = 33
         Width = 91
@@ -297,7 +321,7 @@ object DistribFrm: TDistribFrm
         AnchorSideTop.Control = DF2Edit
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = DF2Edit
-        Left = 22
+        Left = 61
         Height = 15
         Top = 60
         Width = 91
@@ -307,25 +331,11 @@ object DistribFrm: TDistribFrm
         Caption = 'Deg. Freedom (2)'
         ParentColor = False
       end
-      object MeanLabel: TLabel
-        AnchorSideTop.Control = MeanEdit
-        AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = MeanEdit
-        Left = 83
-        Height = 15
-        Top = 93
-        Width = 30
-        Anchors = [akTop, akRight]
-        BorderSpacing.Right = 8
-        Caption = 'Mean'
-        ParentColor = False
-        Visible = False
-      end
       object AlphaEdit: TEdit
         AnchorSideTop.Control = GroupBox2
         AnchorSideRight.Control = GroupBox2
         AnchorSideRight.Side = asrBottom
-        Left = 121
+        Left = 160
         Height = 23
         Top = 2
         Width = 43
@@ -341,7 +351,7 @@ object DistribFrm: TDistribFrm
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = AlphaEdit
         AnchorSideRight.Side = asrBottom
-        Left = 121
+        Left = 160
         Height = 23
         Top = 29
         Width = 43
@@ -351,39 +361,35 @@ object DistribFrm: TDistribFrm
         TabOrder = 1
         Text = 'DF1Edit'
       end
-      object MeanEdit: TEdit
-        AnchorSideTop.Control = DF2Edit
-        AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = AlphaEdit
-        AnchorSideRight.Side = asrBottom
-        Left = 121
-        Height = 23
-        Top = 89
-        Width = 43
-        Alignment = taRightJustify
-        Anchors = [akTop, akRight]
-        BorderSpacing.Top = 4
-        BorderSpacing.Bottom = 8
-        TabOrder = 3
-        Text = 'MeanEdit'
-        Visible = False
-      end
       object DF2Edit: TEdit
         AnchorSideTop.Control = DF1Edit
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = AlphaEdit
         AnchorSideRight.Side = asrBottom
-        Left = 121
+        Left = 160
         Height = 23
         Top = 56
         Width = 43
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
         BorderSpacing.Top = 4
-        BorderSpacing.Bottom = 10
+        BorderSpacing.Bottom = 8
         TabOrder = 2
         Text = 'DF2Edit'
       end
+    end
+    object ShowCriticalValuesChk: TCheckBox
+      AnchorSideLeft.Control = ParameterPanel
+      AnchorSideTop.Control = GroupBox2
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 19
+      Top = 310
+      Width = 123
+      Caption = 'Show critical values'
+      Checked = True
+      State = cbChecked
+      TabOrder = 2
     end
   end
   object SavePictureDialog: TSavePictureDialog
