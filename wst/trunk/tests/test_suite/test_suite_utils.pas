@@ -34,8 +34,11 @@ type
   protected
     procedure CheckEquals(expected, actual: TByteDynArray; msg: string = ''; const AStrict : Boolean = True); overload;
 {$IFDEF FPC}
+
+  {$IF (FPC_FULLVERSION < 30200) }      
     procedure CheckEquals(expected, actual: Int64; msg: string = ''; const AStrict : Boolean = True); overload;
     procedure CheckEquals(expected, actual: QWord; msg: string = ''; const AStrict : Boolean = True); overload;
+  {$IFEND}
     procedure CheckEquals(expected, actual: Currency; msg: string = ''); overload;
 {$ENDIF FPC}
 {$IFDEF WST_DELPHI}
@@ -149,7 +152,8 @@ end;
 
 { TWstBaseTest }
 
-{$IFDEF FPC}
+{$IFDEF FPC}       
+{$IF (FPC_FULLVERSION < 30200) }
 procedure TWstBaseTest.CheckEquals(expected, actual: Int64; msg: string;
   const AStrict: Boolean);
 begin
@@ -157,12 +161,14 @@ begin
     FailNotEquals(IntToStr(expected), IntToStr(actual), msg{$IFDEF WST_DELPHI}, CallerAddr{$ENDIF WST_DELPHI});
 end;
 
+
 procedure TWstBaseTest.CheckEquals(expected, actual: QWord; msg: string;
   const AStrict: Boolean);
 begin
   if (expected <> actual) then
     FailNotEquals(IntToStr(expected), IntToStr(actual), msg{$IFDEF WST_DELPHI}, CallerAddr{$ENDIF WST_DELPHI});
 end;
+{$IFEND}
 
 procedure TWstBaseTest.CheckEquals(expected, actual : Currency; msg : string);
 begin
