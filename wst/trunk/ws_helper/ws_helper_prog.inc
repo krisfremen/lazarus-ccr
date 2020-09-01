@@ -11,7 +11,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 }
 resourcestring
-  sUSAGE = 'ws_helper [-uMODE] [-gOPTION] [-p] [-b] [-i] [-w] [-x] [-y] [-d] -[fSPECIFACTIONS] [-oPATH] [-aPATH] inputFilename' + sNEW_LINE +
+  sUSAGE = 'ws_helper [-uMODE] [-gOPTION] [-cOPTION] [-p] [-b] [-i] [-w] [-x] [-y] [-d] [-j] -[fSPECIFACTIONS] [-oPATH] [-aPATH] inputFilename' + sNEW_LINE +
            '  -u MODE Generate the pascal translation of the WSDL input file ' + sNEW_LINE +
            '        MODE value may be U for used types or A for all types' + sNEW_LINE +
            '  -g  Code generation option, with the following options : ' + sNEW_LINE +
