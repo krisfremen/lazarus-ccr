@@ -41,6 +41,7 @@ object ChartFrame: TChartFrame
     Title.Text.Strings = (
       'TAChart'
     )
+    Toolset = ChartToolset
     Align = alClient
     Color = clWhite
   end
@@ -52,5 +53,18 @@ object ChartFrame: TChartFrame
     Filter = 'Graphic (*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg)|*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg|Portable Network Graphic (*.png)|*.png|Bitmaps (*.bmp)|*.bmp|Joint Picture Expert Group (*.jpeg;*.jpg;*.jpe;*.jfif)|*.jpeg;*.jpg;*.jpe;*.jfif|Scaleable Vector Graphic (*.svg)|*.svg|All Files (*.*)|*.*'
     Left = 279
     Top = 184
+  end
+  object ChartToolset: TChartToolset
+    Left = 279
+    Top = 272
+    object ZoomDragTool: TZoomDragTool
+      Shift = [ssLeft]
+      LimitToExtent = [zdDown]
+      Brush.Style = bsClear
+    end
+    object PanDragTool: TPanDragTool
+      Shift = [ssRight]
+      LimitToExtent = [pdDown]
+    end
   end
 end

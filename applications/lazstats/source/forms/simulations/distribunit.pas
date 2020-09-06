@@ -12,9 +12,12 @@ unit DistribUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, TAGraph, TAFuncSeries, TASeries, TATools,
-  PrintersDlgs, LResources, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Printers, ExtCtrls, ExtDlgs, Math, FunctionsLib, Globals;
+  Classes, SysUtils, FileUtil, TAFuncSeries, //TAGraph, TAFuncSeries, TASeries,
+  //PrintersDlgs, LResources,
+  Forms, Controls, Graphics, Dialogs, StdCtrls,
+  //Printers,
+  ExtCtrls, ExtDlgs, ComCtrls, Math,
+  Globals, FunctionsLib, ChartFrameUnit;
 
 type
 
@@ -22,23 +25,15 @@ type
 
   TDistribFrm = class(TForm)
     AlphaEdit: TEdit;
-    Bevel1: TBevel;
     Bevel2: TBevel;
     ShowCriticalValuesChk: TCheckBox;
-    HorLineSeries: TLineSeries;
-    ChartToolset: TChartToolset;
     CumulativeChk: TCheckBox;
-    PanDragTool: TPanDragTool;
     tChk: TRadioButton;
-    ZoomDragTool: TZoomDragTool;
-    PrintDialog: TPrintDialog;
-    SavePictureDialog: TSavePictureDialog;
-    VertLineSeries: TLineSeries;
-    FuncSeries: TFuncSeries;
+    ToolBar1: TToolBar;
+    tbSave: TToolButton;
+    tbPrint: TToolButton;
+    tbErase: TToolButton;
     ParameterPanel: TPanel;
-    SaveBtn: TButton;
-    PrintBtn: TButton;
-    Chart: TChart;
     ChiChk: TRadioButton;
     DF1Edit: TEdit;
     DF2Edit: TEdit;
@@ -54,8 +49,8 @@ type
     DF2Label: TLabel;
     GroupBox1: TGroupBox;
     procedure ComputeBtnClick(Sender: TObject);
-    procedure CumulativeChkChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CalcChi2(const AX: Double; out AY: Double);
     procedure CalcChi2_Cumulative(const AX: Double; out AY: Double);
@@ -68,11 +63,18 @@ type
     procedure DistributionClick(Sender: TObject);
     procedure PrintBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure SaveBtnClick(Sender: TObject);
+    procedure ShowCriticalValuesChkChange(Sender: TObject);
+    procedure tbEraseClick(Sender: TObject);
+    procedure tbPrintClick(Sender: TObject);
+    procedure tbSaveClick(Sender: TObject);
   private
     { private declarations }
+    ChartFrame: TChartFrame;
+    Alpha: Double;
     DF1: Integer;
     DF2: Integer;
+    procedure AddSeries(ATitle: string; XMin, XMax: Double;
+      xCrit, yCrit: Double; Cumulative: Boolean; ACalcFunc: TFuncCalculateEvent);
     procedure NormalDistPlot;
     procedure Chi2Plot;
     procedure FPlot;
@@ -88,12 +90,96 @@ var
 
 implementation
 
+{$R *.lfm}
+
 uses
-  TAChartUtils, TADrawerSVG, TAPrint,
+  TAChartUtils, TALegend, TASeries,
   MathUnit;
 
+const
+  P_LIMIT = 0.9999;
 
 { TDistribFrm }
+
+procedure TDistribFrm.AddSeries(ATitle: string; XMin, XMax: Double;
+  xCrit, yCrit: Double; Cumulative: Boolean; ACalcFunc: TFuncCalculateEvent);
+var
+  funcSer: TFuncSeries;
+  vertSer, horSer: TLineSeries;
+  i: Integer;
+  ext: TDoubleRect;
+  allCumulative: Boolean;
+  allDensity: Boolean;
+begin
+  funcSer := TFuncSeries.Create(ChartFrame);
+  funcSer.OnCalculate := ACalcFunc;
+  funcSer.ExtentAutoY := true;
+  funcSer.Extent.XMin := XMin;
+  funcSer.Extent.XMax := XMax;
+  funcSer.Extent.UseXMin := true;
+  funcSer.Extent.UseXMax := true;
+  funcSer.Pen.Color := DATA_COLORS[(ChartFrame.Chart.SeriesCount div 3) mod Length(DATA_COLORS)];
+  funcSer.Title := ATitle;
+  if Cumulative then funcSer.Tag := 1;
+  if XMin = 0 then
+    funcSer.DomainExclusions.AddRange(-Infinity, 0, [ioOpenEnd]);
+  ChartFrame.Chart.AddSeries(funcSer);
+
+  if Cumulative then
+    yCrit := 1.0 - Alpha;
+
+  // vertical indicator
+  vertSer := TLineSeries.Create(ChartFrame);
+  vertSer.LinePen.Color := funcSer.Pen.Color;
+  vertSer.LinePen.Style := psDot;
+  vertser.Legend.Visible := false;
+  vertSer.AddXY(xCrit, yCrit);
+  vertSer.AddXY(xCrit, 0);
+  if Cumulative then vertSer.Tag := 1;
+  vertSer.Active := ShowCriticalValuesChk.Checked;
+  ChartFrame.Chart.AddSeries(vertSer);
+
+  // horizontal indicator
+  horSer := TLineSeries.Create(ChartFrame);
+  horSer.LinePen.Color := funcSer.Pen.Color;
+  horSer.LinePen.Style := psDot;
+  horSer.Legend.Visible := false;
+  horSer.AddXY(0, yCrit);
+  horSer.AddXY(xCrit, yCrit);
+  if Cumulative then horSer.Tag := 1;
+  horSer.Active := ShowCriticalValuesChk.Checked and Cumulative;
+  ChartFrame.Chart.AddSeries(horSer);
+
+  ext := ChartFrame.Chart.GetFullExtent();
+  i := 2;
+  while i < ChartFrame.Chart.SeriesCount do
+  begin
+    (ChartFrame.Chart.Series[i] as TLineSeries).XValue[0] := ext.a.x;
+    inc(i, 3);
+  end;
+
+  allCumulative := true;
+  allDensity := true;
+  i := 0;
+  while i < ChartFrame.Chart.SeriesCount-1 do
+  begin
+    case ChartFrame.Chart.Series[i].Tag of
+      0: allCumulative := false;
+      1: allDensity := false;
+    end;
+    inc(i);
+  end;
+  if allCumulative then
+    ChartFrame.SetYTitle('Cumulative Probability')
+  else
+  if allDensity then
+    ChartFrame.SetYTitle('Probability Density')
+  else
+    ChartFrame.SetYTitle('Probability Density, Cumulative Probability');
+  ChartFrame.SetXTitle('x Value');
+  ChartFrame.Chart.Legend.Visible := true;
+end;
+
 
 procedure TDistribFrm.ResetBtnClick(Sender: TObject);
 begin
@@ -105,26 +191,20 @@ begin
   DF1Edit.Text := '';
   DF2Edit.Text := '';
   GroupBox2.Enabled := false;
-  FuncSeries.OnCalculate := nil;
-  VertLineSeries.Active := false;
-  Chart.Title.Visible := false;
-  Chart.BottomAxis.Title.Caption := 'Scale';
+  ChartFrame.Clear;
 end;
 
 
-procedure TDistribFrm.SaveBtnClick(Sender: TObject);
+procedure TDistribFrm.ShowCriticalValuesChkChange(Sender: TObject);
 var
-  ext: String;
+  i: Integer;
 begin
-  if SavePictureDialog.Execute then
+  i := 1;
+  while i < ChartFrame.Chart.SeriesCount do
   begin
-    ext := Lowercase(ExtractFileExt(SavePictureDialog.FileName));
-    case ext of
-      '.bmp': Chart.SaveToFile(TBitmap, SavePictureDialog.Filename);
-      '.png': Chart.SaveToFile(TPortableNetworkGraphic, SavePictureDialog.FileName);
-      '.jpg', '.jpeg', '.jpe', '.jfif': Chart.SaveToFile(TJpegImage, SavePictureDialog.FileName);
-      '.svg': Chart.SaveToSVGFile(SavePictureDialog.FileName);
-    end;
+    ChartFrame.Chart.Series[i].Active := ShowCriticalValuesChk.Checked;
+    ChartFrame.Chart.Series[i+1].Active := ShowCriticalValuesChk.Checked;
+    inc(i, 3);
   end;
 end;
 
@@ -209,31 +289,8 @@ end;
 
 
 procedure TDistribFrm.PrintBtnClick(Sender: TObject);
-const
-  MARGIN = 10;
-var
-  R: TRect;
-  d: Integer;
 begin
-  if not PrintDialog.Execute then
-    exit;
-
-  Printer.BeginDoc;
-  try
-    R := Rect(0, 0, Printer.PageWidth, Printer.PageHeight div 2);
-
-    d := R.Right - R.Left;
-    R.Left += d div MARGIN;
-    R.Right -= d div MARGIN;
-
-    d := R.Bottom - R.Top;
-    R.Top += d div MARGIN;
-    R.Bottom -= d div MARGIN;
-
-    Chart.Draw(TPrinterDrawer.Create(Printer, true), R);
-  finally
-    Printer.EndDoc;
-  end;
+  ChartFrame.Print;
 end;
 
 
@@ -279,193 +336,82 @@ begin
     MessageDlg('Please select a distribution.', mtError, [mbOK], 0);
 end;
 
-procedure TDistribFrm.CumulativeChkChange(Sender: TObject);
-begin
-  if CumulativeChk.Checked then
-    Chart.LeftAxis.Title.Caption := 'Cumulative probability'
-  else
-    Chart.LeftAxis.Title.Caption := 'Probability density';
-end;
-
 
 procedure TDistribFrm.NormalDistPlot;
 var
-  alpha: Double;
   zMax, zMin, zCrit, pCrit: Double;
+  title: String;
+  func: TFuncCalculateEvent;
 begin
-  alpha := StrToFloat(AlphaEdit.Text);
-  zMax := InverseZ(0.9999);
+  zMax := inverseZ(P_LIMIT);
   zMin := -zMax;
-  zCrit := inversez(1.0 - alpha);
+  zCrit := inversez(1.0 - Alpha);
   CalcND(zCrit, pCrit);
 
-  Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>Normal Distribution</b>');
-  Chart.Title.Text.Add(Format('&alpha; = %.3g', [alpha]));
-  Chart.Title.Text.Add(Format('Critical value = %.3f', [zCrit]));
-  Chart.Title.Visible := true;
-  Chart.BottomAxis.Title.Caption := 'z';
-  FuncSeries.Extent.XMin := zMin;
-  FuncSeries.Extent.XMax := zMax;
-  FuncSeries.Extent.UseXMin := true;
-  FuncSeries.Extent.UseXMax := true;
+  title := Format('Normal (&alpha;=%s, x<sub>crit</sub>=%.3f)', [AlphaEdit.Text, zCrit]);
   if CumulativeChk.Checked then
-    FuncSeries.OnCalculate := @CalcND_Cumulative
+    func := @CalcND_Cumulative
   else
-    FuncSeries.OnCalculate := @CalcND;
-  FuncSeries.DomainExclusions.Clear;
-
-  VertlineSeries.Clear;
-  if CumulativeChk.Checked then
-  begin
-    HorLineSeries.Clear;
-    HorLineSeries.AddXY(zMin, 1.0 - alpha);
-    HorLineSeries.AddXY(zCrit, 1.0 - alpha);
-    VertlineSeries.AddXY(zCrit, 1.0 - alpha);
-    VertLineSeries.AddXY(zCrit, 0);
-  end else
-  begin
-    VertLineSeries.AddXY(zCrit, 0);
-    VertLineSeries.AddXY(zCrit, pCrit);
-  end;
-  HorLineSeries.Active := ShowCriticalValuesChk.Checked and CumulativeChk.Checked;
-  VertLineSeries.Active := ShowCriticalValuesChk.Checked;
+    func := @CalcND;
+  AddSeries(title, zMin, zMax, zCrit, pCrit, CumulativeChk.Checked, func);
 end;
 
 
 procedure TDistribFrm.Chi2Plot;
 var
-  alpha: Double;
   chi2Max, chi2Crit, pCrit: Double;
+  title: String;
+  func: TFuncCalculateEvent;
 begin
-  alpha := StrToFloat(AlphaEdit.Text);
-  DF1 := StrToInt(DF1Edit.Text);
-  chi2Max := InverseChi(0.9999, DF1);
-  chi2Crit := InverseChi(1.0 - alpha, DF1);
+  chi2Max := InverseChi(P_LIMIT, DF1);
+  chi2Crit := InverseChi(1.0 - Alpha, DF1);
   CalcChi2(chi2Crit, pCrit);
 
-  Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>Chi-Squared Distribution</b>');
-  Chart.Title.Text.Add(Format('&alpha; = %.3g / Degrees of freedom = %d', [alpha, DF1]));
-  Chart.Title.Text.Add(Format('Critical value = %.3f', [Chi2Crit]));
-  Chart.Title.Visible := true;
-  Chart.BottomAxis.Title.Caption := '&chi;<sup>2</sup>';
-  FuncSeries.Extent.XMin := 0;
-  FuncSeries.Extent.XMax := chi2Max;
-  FuncSeries.Extent.UseXMin := true;
-  FuncSeries.Extent.UseXMax := true;
+  title := Format('Chi-sq (&alpha=%s; DF=%d; x<sub>crit</sub>=%.3f)', [AlphaEdit.Text, DF1, Chi2Crit]);
   if CumulativeChk.Checked then
-    FuncSeries.OnCalculate := @CalcChi2_Cumulative
+    func := @CalcChi2_Cumulative
   else
-    FuncSeries.OnCalculate := @CalcChi2;
-  FuncSeries.DomainExclusions.AddRange(-Infinity, 0, [ioOpenEnd]);
-
-  VertLineSeries.Clear;
-  if CumulativeChk.Checked then begin
-    HorLineSeries.Clear;
-    HorLineSeries.AddXY(0, 1.0 - alpha);
-    HorLineSeries.AddXY(chi2Crit, 1.0 - alpha);
-    VertlineSeries.AddXY(chi2Crit, 1.0 - alpha);
-    VertLineSeries.AddXY(chi2Crit, 0);
-  end else
-  begin
-    VertLineSeries.AddXY(chi2Crit, 0);
-    VertLineSeries.AddXY(chi2Crit, pCrit);
-  end;
-  HorLineSeries.Active := ShowCriticalValuesChk.Checked and CumulativeChk.Checked;
-  VertLineSeries.Active := ShowCriticalValuesChk.Checked;
+    func := @CalcChi2;
+  AddSeries(title, 0.0, chi2Max, chi2Crit, pCrit, CumulativeChk.Checked, func);
 end;
 
 
 procedure TDistribFrm.FPlot;
 var
-  alpha: Double;
   FMax, FCrit, pCrit: Double;
+  title: String;
+  func: TFuncCalculateEvent;
 begin
-  alpha := StrToFloat(AlphaEdit.Text);
-  DF1 := StrToInt(DF1Edit.Text);
-  DF2 := StrToInt(DF2Edit.Text);
-  FMax := FPercentPoint(0.999, DF1, DF2);
-  FCrit := FPercentPoint(1.0 - alpha, DF1, DF2);
+  FMax := FPercentPoint(P_LIMIT, DF1, DF2);
+  FCrit := FPercentPoint(1.0 - Alpha, DF1, DF2);
   CalcF(FCrit, pCrit);
 
-  Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>F Distribution</b>');
-  Chart.Title.Text.Add(Format('&alpha; = %.3g / DF1 = %d, DF2 = %d', [alpha, DF1, DF2]));
-  Chart.Title.Text.Add(Format('Critical value = %.3f', [FCrit]));
-  Chart.Title.Visible := true;
-  Chart.BottomAxis.Title.Caption := 'F';
-  FuncSeries.Extent.XMin := 0;
-  FuncSeries.Extent.XMax := FMax;
-  FuncSeries.Extent.UseXMin := true;
-  FuncSeries.Extent.UseXMax := true;
+  title := Format('F (&alpha;=%s; DF1=%d, DF2=%d, x<sub>crit</sub>=%.3f)', [AlphaEdit.Text, DF1, DF2, FCrit]);
   if CumulativeChk.Checked then
-    FuncSeries.OnCalculate := @CalcF_Cumulative
+    func := @CalcF_Cumulative
   else
-    FuncSeries.OnCalculate := @CalcF;
-  FuncSeries.DomainExclusions.AddRange(-Infinity, 0, [ioOpenEnd]);
-
-  VertLineSeries.Clear;
-  if CumulativeChk.Checked then
-  begin
-    HorLineSeries.Clear;
-    HorLineSeries.AddXY(0, 1.0 - alpha);
-    HorLineSeries.AddXY(FCrit, 1.0 - alpha);
-    VertLineSeries.AddXY(FCrit, 1.0 - alpha);
-    VertLineSeries.AddXY(FCrit, 0);
-  end else
-  begin
-    VertLineSeries.AddXY(FCrit, 0);
-    VertLineSeries.AddXY(FCrit, pCrit);
-  end;
-  HorLineSeries.Active := ShowCriticalValuesChk.Checked and CumulativeChk.Checked;
-  VertLineSeries.Active := ShowCriticalValuesChk.Checked;
+    func := @CalcF;
+  AddSeries(title, 0.0, FMax, FCrit, pCrit, CumulativeChk.Checked, func);
 end;
 
 
 procedure TDistribFrm.tPlot;
 var
-  alpha: Double;
   tMin, tMax, tCrit, pCrit: Double;
+  title: String;
+  func: TFuncCalculateEvent;
 begin
-  alpha := StrToFloat(AlphaEdit.Text);
-  DF1 := StrToInt(DF1Edit.Text);
-  tMax := Inverset(0.9999, DF1);
+  tMax := Inverset(P_LIMIT, DF1);
   tMin := -tMax;
-  tCrit := Inverset(1.0 - alpha, DF1);
+  tCrit := Inverset(1.0 - Alpha, DF1);
   Calct(tCrit, pCrit);
 
-  Chart.Title.Text.Clear;
-  Chart.Title.Text.Add('<b>Student t Distribution</b>');
-  Chart.Title.Text.Add(Format('&alpha; = %.3g / Degrees of freedom = %d', [alpha, DF1]));
-  Chart.Title.Text.Add(Format('Critical value = %.3f', [tCrit]));
-  Chart.Title.Visible := true;
-  Chart.BottomAxis.Title.Caption := 't';
-  FuncSeries.Extent.XMin := tMin;
-  FuncSeries.Extent.XMax := tMax;
-  FuncSeries.Extent.UseXMin := true;
-  FuncSeries.Extent.UseXMax := true;
+  title := Format('t (&alpha;=%s; DF=%d; x<sub>crit</sub>=%.3f)', [AlphaEdit.Text, DF1, tCrit]);
   if CumulativeChk.Checked then
-    FuncSeries.OnCalculate := @CalcT_Cumulative
+    func := @CalcT_Cumulative
   else
-    FuncSeries.OnCalculate := @CalcT;
-  FuncSeries.DomainExclusions.Clear;
-
-  VertLineSeries.Clear;
-  if CumulativeChk.Checked then
-  begin
-    HorLineSeries.Clear;
-    HorLineSeries.AddXY(tMin, 1.0 - alpha);
-    HorLineSeries.AddXY(tCrit, 1.0 - alpha);
-    VertLineSeries.AddXY(tCrit, 1.0 - alpha);
-    VertLineSeries.AddXY(tCrit, 0);
-  end else
-  begin
-    VertLineSeries.AddXY(tCrit, 0);
-    VertLineSeries.AddXY(tCrit, pCrit);
-  end;
-  HorLineSeries.Active := ShowCriticalValuesChk.Checked and CumulativeChk.Checked;
-  VertLineSeries.Active := ShowCriticalValuesChk.Checked;
+    func := @CalcT;
+  AddSeries(title, tMin, tMax, tCrit, pCrit, CumulativeChk.Checked, func);
 end;
 
 
@@ -473,46 +419,80 @@ procedure TDistribFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  w := MaxValue([SaveBtn.Width, PrintBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
-  SaveBtn.Constraints.MinWidth := w;
-  PrintBtn.Constraints.MinWidth := w;
+  w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
+
+  Constraints.MinHeight :=
+    ShowCriticalValuesChk.Top + ShowCriticalValuesChk.Height + 16 +
+    CloseBtn.Height + CloseBtn.BorderSpacing.Bottom;
+  Constraints.MinWidth := ParameterPanel.Width * 2;
+end;
+
+procedure TDistribFrm.FormCreate(Sender: TObject);
+begin
+  ChartFrame := TChartFrame.Create(self);
+  ChartFrame.Parent := ChartPanel;
+  ChartFrame.Align := alClient;
+  ChartFrame.Chart.Legend.Alignment := laBottomCenter;
+  ChartFrame.Chart.Legend.ColumnCount := 3;
+  ChartFrame.Chart.Legend.TextFormat := tfHTML;
+  ChartFrame.Chart.BottomAxis.Intervals.MaxLength := 80;
+  ChartFrame.Chart.BottomAxis.Intervals.MinLength := 30;
+end;
+
+
+procedure TDistribFrm.tbEraseClick(Sender: TObject);
+begin
+  ChartFrame.Clear;
+end;
+
+
+procedure TDistribFrm.tbPrintClick(Sender: TObject);
+begin
+  ChartFrame.Print;
+end;
+
+
+procedure TDistribFrm.tbSaveClick(Sender: TObject);
+begin
+  ChartFrame.Save;
 end;
 
 
 function TDistribFrm.Validate(out AMsg: String; out AControl: TWinControl): boolean;
-var
-  x: Double;
-  n: Integer;
 begin
   Result := false;
   if AlphaEdit.Text = '' then
   begin
     AMsg := 'Input required.';
     AControl := AlphaEdit;
+    Alpha := NaN;
     exit;
   end;
-  if not TryStrToFloat(AlphaEdit.Text, x) or (x <= 0) or (x >= 1.0) then
+  if not TryStrToFloat(AlphaEdit.Text, Alpha) or (Alpha <= 0) or (Alpha >= 1.0) then
   begin
     AMsg := 'Numerical value between 0 and 1 required.';
     AControl := AlphaEdit;
+    Alpha := NaN;
     exit;
   end;
 
-  if ChiChk.Checked or FChk.Checked then
+  if tChk.Checked or ChiChk.Checked or FChk.Checked then
   begin
     if DF1Edit.Text = '' then
     begin
       AMsg := 'Input required.';
       AControl := DF1Edit;
+      DF1 := -1;
       exit;
     end;
-    if not TryStrToInt(DF1Edit.Text, n) or (n <= 0) then
+    if not TryStrToInt(DF1Edit.Text, DF1) or (DF1 <= 0) then
     begin
       AMsg := 'Positive numerical value required.';
       AControl := DF1Edit;
+      DF1 := -1;
       exit;
     end;
   end;
@@ -523,36 +503,23 @@ begin
     begin
       AMsg := 'Input required.';
       AControl := DF2Edit;
+      DF2 := -1;
       exit;
     end;
-    if not TryStrToInt(DF2Edit.Text, n) or (n <= 0) then
+    if not TryStrToInt(DF2Edit.Text, DF2) or (DF2 <= 0) then
     begin
       AMsg := 'Positive numerical value required.';
       AControl := DF2Edit;
+      DF2 := -1;
       exit;
     end;
   end;
-
-  (*
-  if MeanEdit.Text = '' then
-  begin
-    AMsg := 'Input required.';
-    AControl := MeanEdit;
-    exit;
-  end;
-  if not TryStrToFloat(MeanEdit.Text, x) then
-  begin
-    AMsg := 'Numerical value required.';
-    AControl := MeanEdit;
-    exit;
-  end;
-  *)
 
   Result := true;
 end;
 
-initialization
-  {$I distribunit.lrs}
+//initialization
+//  {$I distribunit.lrs}
 
 end.
 

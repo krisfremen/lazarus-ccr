@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, ExtDlgs, PrintersDlgs,
-  TAGraph, TATypes, TACustomSeries, TASeries,
+  TAGraph, TATypes, TACustomSeries, TASeries, TATools,
   Globals;
 
 type
@@ -17,8 +17,11 @@ type
 
   TChartFrame = class(TFrame)
     Chart: TChart;
+    ChartToolset: TChartToolset;
+    PanDragTool: TPanDragTool;
     PrintDialog: TPrintDialog;
     SavePictureDialog: TSavePictureDialog;
+    ZoomDragTool: TZoomDragTool;
 
   protected
     procedure Constline(xy: Double; ADirection: TLineStyle; AColor: TColor;
@@ -57,6 +60,7 @@ begin
   Chart.Foot.Text.Clear;
   Chart.BottomAxis.Title.Caption := '';
   Chart.LeftAxis.Title.Caption := '';
+  Chart.Legend.Visible := false;
 end;
 
 
