@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, ExtDlgs, PrintersDlgs,
-  TAGraph, TATypes, TACustomSeries, TASeries, TATools,
+  TAGraph, TATypes, TACustomSource, TACustomSeries, TASeries, TATools,
   Globals;
 
 type
@@ -33,12 +33,13 @@ type
     procedure GetYRange(out YMin, YMax: Double; Logical: Boolean = true);
     procedure HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle;
       ALegendTitle: String);
-    function PlotXY(AType: TPlotType; x, y: DblDyneVec; LegendTitle: string;
-      AColor: TColor; ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
+    function PlotXY(AType: TPlotType; x, y: DblDyneVec; xLabels: StrDyneVec;
+      yErrorBars: DblDyneVec; LegendTitle: string; AColor: TColor;
+      ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
     procedure Print;
     procedure Save;
     procedure SetFooter(const ATitle: String);
-    procedure SetTitle(const ATitle: String);
+    procedure SetTitle(const ATitle: String; Alignment: TAlignment = taCenter);
     procedure SetXTitle(const ATitle: String);
     procedure SetYTitle(const ATitle: String);
     procedure VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
@@ -120,10 +121,13 @@ begin
 end;
 
 
-function TChartFrame.PlotXY(AType: TPlotType; x, y: DblDyneVec;
-  LegendTitle: string; AColor: TColor; ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
+function TChartFrame.PlotXY(AType: TPlotType; x, y: DblDyneVec; xLabels: StrDyneVec;
+  yErrorBars: DblDyneVec; LegendTitle: string; AColor: TColor;
+  ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
 var
-  i, n: Integer;
+  i, n, ns, ne: Integer;
+  s: String;
+  xval: Double;
 begin
   case AType of
     ptLines, ptSymbols, ptLinesAndSymbols:
@@ -137,6 +141,14 @@ begin
           TLineSeries(Result).Pointer.Brush.Color := AColor;
           TLineSeries(Result).Pointer.Style := ASymbol;
         end;
+        if yErrorBars <> nil then
+        begin
+          TLineSeries(Result).YErrorBars.Visible := true;
+          TLineSeries(Result).ListSource.YCount := 2;
+          TLineSeries(Result).ListSource.YErrorBarData.Kind := ebkChartSource;
+          TLineSeries(Result).ListSource.YErrorBarData.IndexPlus := 1;
+          TLineSeries(Result).ListSource.YErrorBarData.IndexMinus := -1;
+        end;
       end;
     ptHorBars, ptVertBars:
       Result := TBarSeries.Create(self);
@@ -146,9 +158,20 @@ begin
       raise Exception.Create('Unknown plot type.');
   end;
 
-  n := Min(Length(x), Length(y));
-  for i := 0 to n-1 do
-    Result.AddXY(x[i], y[i]);
+  ns := Length(xLabels);
+  ne := Length(yErrorBars);
+  if x = nil then
+    n := Length(y)
+  else
+    n := Min(Length(x), Length(y));
+  for i := 0 to n-1 do begin
+    if x = nil then xval := i+1 else xval := x[i];
+    if i < ns then s := xLabels[i] else s := '';
+    if i < ne then
+      Result.AddXY(xval, y[i], [yErrorBars[i]], s)
+    else
+      Result.AddXY(xval, y[i], s);
+  end;
 
   Result.Title := LegendTitle;
   Chart.AddSeries(Result);
@@ -209,10 +232,11 @@ begin
 end;
 
 
-procedure TChartFrame.SetTitle(const ATitle: String);
+procedure TChartFrame.SetTitle(const ATitle: String; Alignment: TAlignment = taCenter);
 begin
   Chart.Title.Text.Text := ATitle;
   Chart.Title.Visible := ATitle <> '';
+  Chart.Title.Alignment := Alignment;
 end;
 
 

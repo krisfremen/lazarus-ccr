@@ -38,8 +38,9 @@ type
     procedure GetYRange(out YMin, YMax: Double; Logical: Boolean = true);
 
     procedure HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String);
-    function PlotXY(AType: TPlotType; x, y: DblDyneVec; LegendTitle: string;
-      AColor: TColor; ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
+    function PlotXY(AType: TPlotType; x, y: DblDyneVec; xLabels: StrDyneVec;
+      yErrorBars: DblDyneVec; LegendTitle: string; AColor: TColor;
+      ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
     procedure Vertline(x: Double; AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String);
 
     procedure SetFooter(const ATitle: String);
@@ -134,10 +135,11 @@ begin
 end;
 
 
-function TChartForm.PlotXY(AType: TPlotType; x, y: DblDyneVec;
-  LegendTitle: string; AColor: TColor; ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
+function TChartForm.PlotXY(AType: TPlotType; x, y: DblDyneVec; xLabels: StrDyneVec;
+  yErrorBars: DblDyneVec; LegendTitle: string; AColor: TColor;
+  ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
 begin
-  Result := ChartFrame.PlotXY(AType, x, y, LegendTitle, AColor, ASymbol);
+  Result := ChartFrame.PlotXY(AType, x, y, xLabels, yErrorBars, LegendTitle, AColor, ASymbol);
 end;
 
 

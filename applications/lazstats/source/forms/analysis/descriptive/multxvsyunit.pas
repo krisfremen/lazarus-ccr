@@ -405,7 +405,7 @@ begin
     clr := DATA_COLORS[grp mod Length(DATA_COLORS)];
     sym := DATA_SYMBOLS[grp mod Length(DATA_SYMBOLS)];
     grpName := Format('%s = %d', [GroupEdit.Text, grp + MinGrp]);
-    ChartForm.PlotXY(pt, XValues[grp], YValues[grp], grpName, clr, sym);
+    ChartForm.PlotXY(pt, XValues[grp], YValues[grp], nil, nil, grpName, clr, sym);
   end;
 
   ChartForm.Show;

@@ -1,355 +1,415 @@
 object XBarFrm: TXBarFrm
   Left = 591
-  Height = 397
+  Height = 426
   Top = 279
-  Width = 499
+  Width = 1000
   HelpType = htKeyword
   HelpKeyword = 'html/XBarChart.htm'
-  AutoSize = True
-  Caption = 'X Bar Charting Specifications'
-  ClientHeight = 397
-  ClientWidth = 499
+  Caption = 'X Bar Chart'
+  ClientHeight = 426
+  ClientWidth = 1000
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
-  object Label1: TLabel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
-    Left = 8
-    Height = 15
-    Top = 8
-    Width = 97
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    Caption = 'Selection Variables'
-    ParentColor = False
-  end
-  object VarList: TListBox
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Label1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = SigmaOpts
-    AnchorSideBottom.Control = Bevel1
-    Left = 8
-    Height = 323
-    Top = 25
-    Width = 227
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 2
-    BorderSpacing.Right = 8
-    ItemHeight = 0
-    OnClick = VarListClick
+  object SpecsPanel: TPanel
+    Left = 0
+    Height = 426
+    Top = 0
+    Width = 433
+    Align = alLeft
+    BorderSpacing.Right = 2
+    BevelOuter = bvNone
+    ClientHeight = 426
+    ClientWidth = 433
     TabOrder = 0
-  end
-  object SigmaOpts: TRadioGroup
-    AnchorSideLeft.Control = GroupBox1
-    AnchorSideTop.Control = Panel1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 243
-    Height = 128
-    Top = 108
-    Width = 248
-    Anchors = [akTop, akLeft, akRight]
-    AutoFill = True
-    BorderSpacing.Top = 12
-    BorderSpacing.Right = 8
-    Caption = 'No. of Sigma Units for UCL and LCL:'
-    ChildSizing.LeftRightSpacing = 12
-    ChildSizing.TopBottomSpacing = 6
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
-    ChildSizing.ShrinkHorizontal = crsScaleChilds
-    ChildSizing.ShrinkVertical = crsScaleChilds
-    ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 1
-    ClientHeight = 108
-    ClientWidth = 244
-    ItemIndex = 0
-    Items.Strings = (
-      '3 Sigma (default)'
-      '2 Sigma'
-      '1 Sigma'
-      'X Sigmas where X =  '
-    )
-    TabOrder = 2
-    object XSigmaEdit: TEdit
-      AnchorSideRight.Control = SigmaOpts
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = GroupBox1
-      AnchorSideBottom.Side = asrBottom
-      Left = 152
-      Height = 23
-      Top = 80
-      Width = 80
-      Alignment = taRightJustify
-      Anchors = [akRight, akBottom]
-      TabOrder = 2
-      Text = 'XSigmaEdit'
+    object VarListLabel: TLabel
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideTop.Control = SpecsPanel
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 97
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      Caption = 'Selection Variables'
+      ParentColor = False
     end
-  end
-  object GroupBox1: TGroupBox
-    AnchorSideTop.Control = SigmaOpts
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 243
-    Height = 101
-    Top = 248
-    Width = 248
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    BorderSpacing.Top = 12
-    BorderSpacing.Right = 8
-    Caption = 'Options'
-    ClientHeight = 81
-    ClientWidth = 244
-    TabOrder = 3
-    object UpSpecChk: TCheckBox
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = UpSpecEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 19
-      Top = 2
-      Width = 148
-      BorderSpacing.Left = 12
-      Caption = 'Show Upper Spec. Level:'
+    object VarList: TListBox
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideTop.Control = VarListLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = SigmaOpts
+      AnchorSideBottom.Control = Bevel1
+      Left = 8
+      Height = 352
+      Top = 25
+      Width = 198
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      ItemHeight = 0
+      OnClick = VarListClick
       TabOrder = 0
     end
-    object LowSpecChk: TCheckBox
+    object SigmaOpts: TRadioGroup
       AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = LowSpecEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 19
-      Top = 29
-      Width = 145
-      BorderSpacing.Left = 12
-      Caption = 'Show Lower Spec. Level'
-      TabOrder = 2
-    end
-    object TargetChk: TCheckBox
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = TargetSpecEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 19
-      Top = 56
-      Width = 146
-      BorderSpacing.Left = 12
-      BorderSpacing.Bottom = 6
-      Caption = 'Use Target Specification'
-      TabOrder = 4
-    end
-    object UpSpecEdit: TEdit
-      AnchorSideLeft.Control = UpSpecChk
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = GroupBox1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = GroupBox1
       AnchorSideRight.Side = asrBottom
-      Left = 172
-      Height = 23
-      Top = 0
-      Width = 64
-      Alignment = taRightJustify
-      BorderSpacing.Left = 12
-      BorderSpacing.Right = 8
-      TabOrder = 1
-      Text = 'UpSpecEdit'
-    end
-    object LowSpecEdit: TEdit
-      AnchorSideLeft.Control = UpSpecEdit
-      AnchorSideTop.Control = UpSpecEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = UpSpecEdit
-      AnchorSideRight.Side = asrBottom
-      Left = 172
-      Height = 23
-      Top = 27
-      Width = 64
-      Alignment = taRightJustify
+      Left = 214
+      Height = 128
+      Top = 108
+      Width = 219
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 4
+      AutoFill = True
+      BorderSpacing.Top = 12
+      Caption = 'No. of Sigma Units for UCL and LCL:'
+      ChildSizing.LeftRightSpacing = 12
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 108
+      ClientWidth = 215
+      ItemIndex = 0
+      Items.Strings = (
+        '3 Sigma (default)'
+        '2 Sigma'
+        '1 Sigma'
+        'x Sigmas with x =  '
+      )
+      TabOrder = 1
+      object XSigmaEdit: TEdit
+        AnchorSideRight.Control = SigmaOpts
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 80
+        Width = 59
+        Alignment = taRightJustify
+        Anchors = [akLeft, akRight, akBottom]
+        TabOrder = 0
+        Text = 'XSigmaEdit'
+      end
+    end
+    object GroupBox1: TGroupBox
+      AnchorSideTop.Control = SigmaOpts
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = SpecsPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 214
+      Height = 126
+      Top = 248
+      Width = 219
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 12
+      Caption = 'Show...'
+      ClientHeight = 106
+      ClientWidth = 215
+      TabOrder = 2
+      object UpSpecChk: TCheckBox
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = UpSpecEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 2
+        Width = 116
+        BorderSpacing.Left = 12
+        Caption = 'Upper Spec. Level:'
+        TabOrder = 0
+      end
+      object LowSpecChk: TCheckBox
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = LowSpecEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 29
+        Width = 113
+        BorderSpacing.Left = 12
+        Caption = 'Lower Spec. Level'
+        TabOrder = 2
+      end
+      object TargetChk: TCheckBox
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = TargetSpecEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 56
+        Width = 124
+        BorderSpacing.Left = 12
+        BorderSpacing.Bottom = 6
+        Caption = 'Target Specification'
+        TabOrder = 4
+      end
+      object UpSpecEdit: TEdit
+        AnchorSideLeft.Control = TargetSpecEdit
+        AnchorSideTop.Control = GroupBox1
+        AnchorSideRight.Control = TargetSpecEdit
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 0
+        Width = 63
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        TabOrder = 1
+        Text = 'UpSpecEdit'
+      end
+      object LowSpecEdit: TEdit
+        AnchorSideLeft.Control = TargetSpecEdit
+        AnchorSideTop.Control = UpSpecEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TargetSpecEdit
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 27
+        Width = 63
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 3
+        Text = 'Edit1'
+      end
+      object TargetSpecEdit: TEdit
+        AnchorSideLeft.Control = TargetChk
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = LowSpecEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = GroupBox1
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 54
+        Width = 63
+        Alignment = taRightJustify
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 8
+        TabOrder = 5
+        Text = 'Edit1'
+      end
+      object ErrorBarsChk: TCheckBox
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = TargetSpecEdit
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 19
+        Top = 81
+        Width = 70
+        BorderSpacing.Left = 12
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 6
+        Caption = 'Error Bars'
+        TabOrder = 6
+      end
+    end
+    object Panel1: TPanel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideRight.Control = GroupBox1
+      AnchorSideRight.Side = asrBottom
+      Left = 214
+      Height = 88
+      Top = 8
+      Width = 219
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BevelOuter = bvNone
+      ClientHeight = 88
+      ClientWidth = 219
       TabOrder = 3
-      Text = 'Edit1'
+      object Label2: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Panel1
+        Left = 0
+        Height = 15
+        Top = 0
+        Width = 105
+        BorderSpacing.Bottom = 2
+        Caption = 'Group (Lot) Variable'
+        ParentColor = False
+      end
+      object Label3: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = GroupEdit
+        AnchorSideTop.Side = asrBottom
+        Left = 0
+        Height = 15
+        Top = 48
+        Width = 117
+        BorderSpacing.Bottom = 2
+        Caption = 'Measurement Variable'
+        ParentColor = False
+      end
+      object GroupEdit: TEdit
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Label2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 23
+        Top = 17
+        Width = 219
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        BorderSpacing.Bottom = 8
+        ReadOnly = True
+        TabOrder = 0
+        Text = 'GroupEdit'
+      end
+      object MeasEdit: TEdit
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Label3
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 23
+        Top = 65
+        Width = 219
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        ReadOnly = True
+        TabOrder = 1
+        Text = 'MeasEdit'
+      end
     end
-    object TargetSpecEdit: TEdit
-      AnchorSideLeft.Control = UpSpecEdit
-      AnchorSideTop.Control = LowSpecEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = UpSpecEdit
+    object Bevel1: TBevel
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 172
-      Height = 23
-      Top = 54
-      Width = 64
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 4
-      TabOrder = 5
-      Text = 'Edit1'
-    end
-  end
-  object ResetBtn: TButton
-    AnchorSideRight.Control = ComputeBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 290
-    Height = 25
-    Top = 364
-    Width = 54
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Caption = 'Reset'
-    OnClick = ResetBtnClick
-    TabOrder = 5
-  end
-  object ComputeBtn: TButton
-    AnchorSideRight.Control = CloseBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 352
-    Height = 25
-    Top = 364
-    Width = 76
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Caption = 'Compute'
-    OnClick = ComputeBtnClick
-    TabOrder = 6
-  end
-  object CloseBtn: TButton
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 436
-    Height = 25
-    Top = 364
-    Width = 55
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Caption = 'Close'
-    ModalResult = 11
-    TabOrder = 7
-  end
-  object HelpBtn: TButton
-    Tag = 159
-    AnchorSideRight.Control = ResetBtn
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 231
-    Height = 25
-    Top = 364
-    Width = 51
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Caption = 'Help'
-    OnClick = HelpBtnClick
-    TabOrder = 4
-  end
-  object Bevel1: TBevel
-    AnchorSideLeft.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = CloseBtn
-    Left = 0
-    Height = 8
-    Top = 348
-    Width = 499
-    Anchors = [akLeft, akRight, akBottom]
-    Shape = bsBottomLine
-  end
-  object Panel1: TPanel
-    AnchorSideLeft.Control = GroupBox1
-    AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = GroupBox1
-    AnchorSideRight.Side = asrBottom
-    Left = 243
-    Height = 88
-    Top = 8
-    Width = 248
-    Anchors = [akTop, akLeft, akRight]
-    AutoSize = True
-    BorderSpacing.Top = 8
-    BevelOuter = bvNone
-    ClientHeight = 88
-    ClientWidth = 248
-    TabOrder = 1
-    object Label2: TLabel
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
+      AnchorSideBottom.Control = CloseBtn
       Left = 0
-      Height = 15
-      Top = 0
-      Width = 105
-      BorderSpacing.Bottom = 2
-      Caption = 'Group (Lot) Variable'
-      ParentColor = False
+      Height = 8
+      Top = 377
+      Width = 433
+      Anchors = [akLeft, akRight, akBottom]
+      Shape = bsBottomLine
     end
-    object Label3: TLabel
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = GroupEdit
-      AnchorSideTop.Side = asrBottom
-      Left = 0
-      Height = 15
-      Top = 48
-      Width = 117
-      BorderSpacing.Bottom = 2
-      Caption = 'Measurement Variable'
-      ParentColor = False
-    end
-    object GroupEdit: TEdit
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Label2
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 0
-      Height = 23
-      Top = 17
-      Width = 248
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
+    object ResetBtn: TButton
+      AnchorSideTop.Control = CloseBtn
+      AnchorSideRight.Control = ComputeBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 232
+      Height = 25
+      Top = 393
+      Width = 54
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
       BorderSpacing.Bottom = 8
-      ReadOnly = True
-      TabOrder = 0
-      Text = 'GroupEdit'
+      Caption = 'Reset'
+      OnClick = ResetBtnClick
+      TabOrder = 4
     end
-    object MeasEdit: TEdit
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Label3
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel1
+    object ComputeBtn: TButton
+      AnchorSideTop.Control = CloseBtn
+      AnchorSideRight.Control = CloseBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 294
+      Height = 25
+      Top = 393
+      Width = 76
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Compute'
+      OnClick = ComputeBtnClick
+      TabOrder = 5
+    end
+    object CloseBtn: TButton
+      AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 0
-      Height = 23
-      Top = 65
-      Width = 248
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
-      ReadOnly = True
-      TabOrder = 1
-      Text = 'MeasEdit'
+      AnchorSideBottom.Side = asrBottom
+      Left = 378
+      Height = 25
+      Top = 393
+      Width = 55
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Close'
+      ModalResult = 11
+      TabOrder = 6
+    end
+    object HelpBtn: TButton
+      Tag = 159
+      AnchorSideTop.Control = CloseBtn
+      AnchorSideRight.Control = ResetBtn
+      AnchorSideBottom.Side = asrBottom
+      Left = 173
+      Height = 25
+      Top = 393
+      Width = 51
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'Help'
+      OnClick = HelpBtnClick
+      TabOrder = 7
+    end
+  end
+  object Splitter1: TSplitter
+    Left = 435
+    Height = 426
+    Top = 0
+    Width = 5
+    ResizeStyle = rsPattern
+  end
+  object PageControl: TPageControl
+    Left = 442
+    Height = 414
+    Top = 6
+    Width = 552
+    ActivePage = ChartPage
+    Align = alClient
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    TabIndex = 1
+    TabOrder = 2
+    object ReportPage: TTabSheet
+      Caption = 'Report'
+      ClientHeight = 386
+      ClientWidth = 544
+      object ReportMemo: TMemo
+        Left = 6
+        Height = 374
+        Top = 6
+        Width = 532
+        Align = alClient
+        BorderSpacing.Around = 6
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Pitch = fpFixed
+        Font.Quality = fqDraft
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object ChartPage: TTabSheet
+      Caption = 'Chart'
     end
   end
 end

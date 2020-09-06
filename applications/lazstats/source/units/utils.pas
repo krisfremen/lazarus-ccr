@@ -20,6 +20,9 @@ procedure Exchange(var a, b: String); overload;
 procedure SortOnX(X, Y: DblDyneVec);
 procedure SortOnX(X: DblDyneVec; Y: DblDyneMat);
 
+function IndexOfString(L: StrDyneVec; s: String): Integer;
+
+
 implementation
 
 function AnySelected(AListBox: TListBox): Boolean;
@@ -113,6 +116,19 @@ begin
           Exchange(Y[k, i], Y[k, j]);
       end;
   end;
+end;
+
+function IndexOfString(L: StrDyneVec; s: String): Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  for i := 0 to High(L) do
+    if L[i] = s then
+    begin
+      Result := i;
+      exit;
+    end;
 end;
 
 end.

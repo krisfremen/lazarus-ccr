@@ -367,14 +367,14 @@ begin
 
   // Draw upper confidence band
   if ConfChk.Checked then
-    ChartForm.PlotXY(ptLines, XPoints, UpConf, 'Upper confidence band', clRed);
+    ChartForm.PlotXY(ptLines, XPoints, UpConf, nil, nil, 'Upper confidence band', clRed);
 
   // Plot data points
-  ChartForm.PlotXY(ptSymbols, XPoints, YPoints, 'Data values', clNavy);
+  ChartForm.PlotXY(ptSymbols, XPoints, YPoints, nil, nil, 'Data values', clNavy);
 
   // Draw lower confidence band
   if ConfChk.Checked then
-    ChartForm.PlotXY(ptLines, XPoints, LowConf, 'Lower confidence band', clRed);
+    ChartForm.PlotXY(ptLines, XPoints, LowConf, nil, nil, 'Lower confidence band', clRed);
 
   ChartForm.Chart.Prepare;
   ChartForm.GetXRange(xmin, xmax, false);
@@ -394,7 +394,7 @@ begin
     SetLengtH(tmpY, 2);
     tmpX[0] := xmin;    tmpY[0] := tmpX[0] * slope + intercept;
     tmpX[1] := xmax;    tmpY[1] := tmpX[1] * slope + intercept;
-    ChartForm.PlotXY(ptLines, tmpX, tmpY, 'Predicted', clBlack);
+    ChartForm.PlotXY(ptLines, tmpX, tmpY, nil, nil, 'Predicted', clBlack);
   end;
 
   // Show chart

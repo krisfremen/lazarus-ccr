@@ -8,13 +8,19 @@
 unit XBarUnit;
 
 {$mode objfpc}{$H+}
+{$include ../../../LazStats.inc}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Buttons,
-  MainUnit, Globals, ContextHelpUnit, DataProcs, OutputUnit, GraphLib, BlankFrmUnit;
+  StdCtrls, ExtCtrls, Buttons, ComCtrls,
+  MainUnit, Globals, ContextHelpUnit, DataProcs, GraphLib,
+  {$IFDEF USE_TACHART}
+  TAChartUtils, TACustomSeries, ChartFrameUnit;
+  {$ELSE}
+  OutputUnit, BlankFrmUnit;
+  {$ENDIF}
 
 type
 
@@ -22,11 +28,18 @@ type
 
   TXBarFrm = class(TForm)
     Bevel1: TBevel;
+    ErrorBarsChk: TCheckBox;
     HelpBtn: TButton;
+    ReportMemo: TMemo;
+    PageControl: TPageControl;
     Panel1: TPanel;
+    SpecsPanel: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
     CloseBtn: TButton;
+    Splitter1: TSplitter;
+    ReportPage: TTabSheet;
+    ChartPage: TTabSheet;
     UpSpecEdit: TEdit;
     LowSpecEdit: TEdit;
     TargetSpecEdit: TEdit;
@@ -37,7 +50,7 @@ type
     XSigmaEdit: TEdit;
     GroupEdit: TEdit;
     MeasEdit: TEdit;
-    Label1: TLabel;
+    VarListLabel: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     SigmaOpts: TRadioGroup;
@@ -51,8 +64,11 @@ type
     procedure VarListClick(Sender: TObject);
   private
     { private declarations }
-    FAutoSized: Boolean;
-    procedure PlotMeans(var Means: DblDyneVec; NoGrps: integer;
+    {$IFDEF USE_TACHART}
+    FChartFrame: TChartFrame;
+    {$ENDIF}
+//    FAutoSized: Boolean;
+    procedure PlotMeans(const Groups: StrDyneVec; const Means, StdDevs: DblDyneVec;
       UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
   public
@@ -65,7 +81,8 @@ var
 implementation
 
 uses
-  Math;
+  Math,
+  Utils;
 
 { TXBarFrm }
 
@@ -79,6 +96,7 @@ begin
   UpSpecEdit.Text := '';
   LowSpecEdit.Text := '';
   TargetSpecEdit.Text := '';
+  XSigmaEdit.Text := '';
   UpSpecChk.Checked := false;
   LowSpecChk.Checked := false;
   TargetChk.Checked := false;
@@ -110,13 +128,17 @@ end;
 
 procedure TXBarFrm.ComputeBtnClick(Sender: TObject);
 var
-  i, GrpVar, MeasVar, mingrp, maxgrp, G, range: integer;
+  i, GrpVar, MeasVar, grpIndex: integer;
   X, UCL, LCL, Sigma, UpperSpec, LowerSpec, TargetSpec: double;
   GrandMean, GrandSD, semean: double;
-  means, stddev: DblDyneVec;
-  count: IntDyneVec;
+  grp: String;
+  numGrps: Integer;
+  groups: StrDyneVec = nil;
+  means: DblDyneVec = nil;
+  stddev: DblDyneVec = nil;
+  count: IntDyneVec = nil;
   cellstring: string;
-  ColNoSelected: IntDyneVec;
+  ColNoSelected: IntDyneVec = nil;
   NoSelected: integer;
   msg: String;
   C: TWinControl;
@@ -157,54 +179,58 @@ begin
     3: Sigma := StrToFloat(XSigmaEdit.Text);
   end;
 
-  mingrp := 10000;
-  maxgrp := -10000;
+  numGrps := 0;
+  SetLength(groups, NoCases);
   for i := 1 to NoCases do
   begin
-    if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-    G := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[GrpVar,i])));
-    if G < mingrp then mingrp := G;
-    if G > maxgrp then maxgrp := G;
+    if not GoodRecord(i, NoSelected, ColNoSelected) then continue;
+    grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
+    if IndexOfString(groups, grp) = -1 then
+    begin
+      groups[numGrps] := grp;
+      inc(numGrps);
+    end;
   end;
-  range := maxgrp - mingrp + 1;
 
-  SetLength(means, range);
-  SetLength(count, range);
-  SetLength(stddev, range);
-  for i := 0 to range-1 do
-  begin
-    count[i] := 0;
-    means[i] := 0.0;
-    stddev[i] := 0.0;
-  end;
+  SetLength(groups, numGrps);
+  SetLength(means, numGrps);
+  SetLength(count, numGrps);
+  SetLength(stddev, numGrps);
   semean := 0.0;
   GrandMean := 0.0;
 
   // calculate group means, grand mean, group sd's, semeans
   for i := 1 to NoCases do
   begin
-    if not GoodRecord(i,NoSelected,ColNoSelected) then continue;
-    G := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[GrpVar,i])));
-    G := G - mingrp + 1;
-    X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar,i]));
-    means[G-1] := means[G-1] + X;
-    count[G-1] := count[G-1] + 1;
-    stddev[G-1] := stddev[G-1] + (X * X);
-    semean := semean + (X * X);
+    if not GoodRecord(i, NoSelected, ColNoSelected) then continue;
+    grp := Trim(OS3MainFrm.DataGrid.cells[GrpVar, i]);
+    grpIndex := IndexOfString(groups, grp);
+    X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
+    means[grpIndex] := means[grpIndex] + X;
+    count[grpIndex] := count[grpIndex] + 1;
+    stddev[grpIndex] := stddev[grpIndex] + sqr(X);
+    semean := semean + sqr(X);
     GrandMean := GrandMean + X;
   end;
 
-  for i := 0 to range-1 do
+  for i := 0 to numGrps-1 do
   begin
-    stddev[i] := stddev[i] - sqr(means[i]) / count[i];
-    if count[i] > 1 then
+    if count[i] = 0 then
     begin
-      stddev[i] := stddev[i] / (count[i] - 1);
-      stddev[i] := sqrt(stddev[i]);
-    end
-    else
-      stddev[i] := 0.0;
-    means[i] := means[i] / count[i];
+      means[i] := NaN;
+      stddev[i] := NaN;
+    end else
+    begin
+      if count[i] = 1 then
+        stddev[i] := NaN
+      else
+      begin
+        stddev[i] := stddev[i] - sqr(means[i]) / count[i];
+        stddev[i] := stddev[i] / (count[i] - 1);
+        stddev[i] := sqrt(stddev[i]);
+      end;
+      means[i] := means[i] / count[i];
+    end;
   end;
   semean := semean - sqr(GrandMean) / NoCases;
   semean := sqrt(semean / (NoCases - 1));
@@ -219,10 +245,10 @@ begin
   try
     lReport.Add('X BAR CHART RESULTS');
     lReport.Add('');
-    lReport.Add('Group Size Mean      Std.Dev.');
+    lReport.Add('Group Size   Mean     Std.Dev.');
     lReport.Add('----- ---- --------- ----------');
-    for i := 0 to range-1 do
-      lReport.Add(' %3d %3d %8.2f  %8.2f', [i+1, count[i], means[i], stddev[i]]);
+    for i := 0 to numGrps-1 do
+      lReport.Add('%5s %4d %9.2f %9.2f', [groups[i], count[i], means[i], stddev[i]]);
     lReport.Add('');
     lReport.Add('Grand Mean:             %8.3f', [GrandMean]);
     lReport.Add('Standard Deviation:     %8.3f', [GrandSD]);
@@ -231,20 +257,28 @@ begin
     lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
     lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
 
+   {$IFDEF USE_TACHART}
+    ReportMemo.Lines.Assign(lReport);
+   {$ELSE}
     DisplayReport(lReport);
+   {$ENDIF}
   finally
     lReport.Free;
   end;
 
   // show graph
+ {$IFNDEF USE_TACHART}
   BlankFrm.Image1.Canvas.Clear;
   BlankFrm.Show;
-  PlotMeans(means, range, UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec);
+ {$ENDIF}
+  if not ErrorBarsChk.Checked then stddev := nil;
+  PlotMeans(groups, means, stddev, UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec);
 
   // Clean up
   stddev := nil;
   count := nil;
   means := nil;
+  groups := nil;
   ColNoSelected := nil;
 end;
 
@@ -252,31 +286,42 @@ procedure TXBarFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
+  {
   if FAutoSized then
     exit;
-
+  }
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
 
-  VarList.Constraints.MinWidth := GroupBox1.Width;
-  VarList.Constraints.MinHeight := GroupBox1.Top + GroupBox1.Height - VarList.Top;
+  VarList.Constraints.MinWidth := VarListLabel.Width;
+  SpecsPanel.Constraints.MinWidth := VarListLabel.Left + VarListLabel.Width + VarList.BorderSpacing.Right + GroupBox1.Width;
+//  VarList.Constraints.MinHeight := GroupBox1.Top + GroupBox1.Height - VarList.Top;
+//  SpecsPanel.Constraints.MinWidth := SpecsPanel.Width;
+//  PageControl.Constraints.MinWidth := SpecsPanel.Width ;
 
-  AutoSize := false;
-//  ClientHeight := GroupBox1.Top + GroupBox1.Height + Panel1.BorderSpacing.Top + Panel1.Height + Bevel1.Height + CloseBtn.Height + CloseBtn.BorderSpacing.Top*2;
-  Constraints.MinHeight := Height;
-  Constraints.MinWidth := Width;
+  //AutoSize := false;
+  Constraints.MinHeight := GroupBox1.Top + GroupBox1.Height + Bevel1.Height + CloseBtn.Height + CloseBtn.BorderSpacing.Top * 2; //  Height;
+  //Constraints.MinWidth := Width;
 
-  FAutoSized := true;
+ // FAutoSized := true;
 end;
 
 procedure TXBarFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
+ {$IFDEF USE_TACHART}
+  FChartFrame := TChartFrame.Create(self);
+  FChartFrame.Parent := ChartPage;
+  FChartFrame.Align := alClient;
+  FChartFrame.BorderSpacing.Around := Scale96ToFont(8);
+  FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
+ {$ELSE}
   if BlankFrm = nil then
     Application.CreateForm(TBlankFrm, BlankFrm);
+ {$ENDIF}
 end;
 
 procedure TXBarFrm.FormShow(Sender: TObject);
@@ -284,16 +329,72 @@ begin
   ResetBtnClick(self);
 end;
 
-procedure TXBarFrm.PlotMeans(var means: DblDyneVec; NoGrps: integer;
+procedure TXBarFrm.PlotMeans(const Groups: StrDyneVec; const Means, StdDevs: DblDyneVec;
   UCL, LCL, GrandMean: double; TargetSpec, LowerSpec, UpperSpec: double);
+const
+  TARGET_COLOR = clBlue;
+  CL_COLOR = clRed;
+  SPEC_COLOR = clGreen;
+  CL_STYLE = psDash;
+  SPEC_STYLE = psSolid;
 var
-  i, xpos, ypos, hleft, hright, vtop, vbottom, imagewide: integer;
-  vhi, hwide, offset, strhi: integer;
-  imagehi, maxval, minval, valincr, Yvalue: double;
+ {$IFDEF USE_TACHART}
+  ser: TChartSeries;
+ {$ELSE}
+  i: Integer;
+  xpos, ypos, hleft, hright, vtop, vbottom, imagewide: integer;
+  maxVal, minVal: Double;
+  NoGrps, vhi, hwide, offset, strhi: integer;
+  imagehi, valincr, Yvalue: double;
   title: String;
+ {$ENDIF}
 begin
-  maxval := -10000.0;
-  minval := 10000.0;
+ {$IFDEF USE_TACHART}
+  FChartFrame.Clear;
+  FChartFrame.SetTitle('XBAR chart for ' + OS3MainFrm.FileNameEdit.Text, taLeftJustify);
+  FChartFrame.SetXTitle(GroupEdit.Text);
+  FChartFrame.SetYTitle(MeasEdit.Text);
+
+  ser := FChartFrame.PlotXY(ptSymbols, nil, Means, Groups, StdDevs, 'Group means', clBlack);
+  FChartFrame.Chart.BottomAxis.Marks.Source := ser.Source;
+  FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
+
+  FChartFrame.HorLine(GrandMean, clRed, psSolid, 'Grand mean');
+
+  if UpSpecChk.Checked then
+  begin
+    if UCL > UpperSpec then
+    begin
+      FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL');
+      FChartFrame.HorLine(UpperSpec, SPEC_COLOR, SPEC_STYLE, 'Upper Spec');
+    end else
+    begin
+      FChartFrame.HorLine(UpperSpec, SPEC_COLOR, SPEC_STYLE, 'Upper Spec');
+      FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL');
+    end;
+  end else
+    FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL');
+
+  if TargetChk.Checked then
+    FChartFrame.HorLine(TargetSpec, TARGET_COLOR, psSolid, 'Target');
+
+  if LowSpecChk.Checked then
+  begin
+    if LowerSpec > LCL then
+    begin
+      FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, 'Lower Spec');
+      FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, 'LCL');
+    end else
+    begin
+      FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, 'LCL');
+      FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, 'Lower Spec');
+    end;
+  end else
+    FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, 'LCL');
+ {$ELSE}
+  NoGrps := Length(groups);
+  maxval := -Infinity;
+  minval := Infinity;
   for i := 0 to NoGrps-1 do
   begin
     if means[i] > maxval then maxval := means[i];
@@ -388,8 +489,8 @@ begin
   xpos := hright + 10;
   ypos := round(vhi * (maxval - UCL) / (maxval - minval));
   ypos := ypos + vtop;
-  BlankFrm.Image1.Canvas.Pen.Style := psDash;
-  BlankFrm.Image1.Canvas.Pen.Color := clRed;
+  BlankFrm.Image1.Canvas.Pen.Style := CL_STYLE;
+  BlankFrm.Image1.Canvas.Pen.Color := CL_COLOR;
   BlankFrm.Image1.Canvas.Line(hleft, ypos, hright, ypos);
   title := 'UCL';
   strhi := BlankFrm.Image1.Canvas.TextHeight(title);
@@ -398,7 +499,7 @@ begin
 
   ypos := round(vhi * ( (maxval - LCL) / (maxval - minval)));
   ypos := ypos + vtop;
-  BlankFrm.Image1.Canvas.Pen.Color := clRed;
+  BlankFrm.Image1.Canvas.Pen.Color := CL_COLOR;
   BlankFrm.Image1.Canvas.Line(hleft, ypos, hright, ypos);
   title := 'LCL';
   strhi := BlankFrm.Image1.Canvas.TextHeight(title);
@@ -406,12 +507,12 @@ begin
   BlankFrm.Image1.Canvas.TextOut(xpos, ypos, title);
 
   // Draw lines for specified values
-  BlankFrm.Image1.Canvas.Pen.Color := clGreen;
   if UpSpecChk.Checked then
   begin
     ypos := round(vhi * (maxval - UpperSpec) / (maxval - minval));
     ypos := ypos + vtop;
-    BlankFrm.Image1.Canvas.Pen.Style := psSolid;
+    BlankFrm.Image1.Canvas.Pen.Color := SPEC_COLOR;
+    BlankFrm.Image1.Canvas.Pen.Style := SPEC_STYLE;
     BlankFrm.Image1.Canvas.Line(hleft, ypos, hright, ypos);
     title := 'UPPER SPEC';
     strhi := BlankFrm.Image1.Canvas.TextHeight(title);
@@ -422,7 +523,7 @@ begin
   begin
     ypos := round(vhi * (maxval - LowerSpec) / (maxval - minval));
     ypos := ypos + vtop;
-    BlankFrm.Image1.Canvas.Pen.Color := clGreen;
+    BlankFrm.Image1.Canvas.Pen.Color := SPEC_COLOR;
     BlankFrm.Image1.Canvas.Line(hleft, ypos, hright, ypos);
     title := 'LOWER SPEC';
     strhi := BlankFrm.Image1.Canvas.TextHeight(title);
@@ -433,13 +534,14 @@ begin
   begin
     ypos := round(vhi * (maxval - TargetSpec) / (maxval - minval));
     ypos := ypos + vtop;
-    BlankFrm.Image1.Canvas.Pen.Color := clBlue;
+    BlankFrm.Image1.Canvas.Pen.Color := TARGET_COLOR;
     BlankFrm.Image1.Canvas.Line(hleft, ypos, hright, ypos);
     title := 'TARGET';
     strhi := BlankFrm.Image1.Canvas.TextHeight(title);
     ypos := ypos - strhi div 2;
     BlankFrm.Image1.Canvas.TextOut(xpos, ypos, title);
   end;
+ {$ENDIF}
 end;
 
 function TXBarFrm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;

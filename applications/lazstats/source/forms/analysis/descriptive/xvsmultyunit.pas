@@ -364,7 +364,7 @@ begin
 
   // Plot a series for each y value
   for j := 0 to Ny - 1 do
-    ChartForm.PlotXY(pt, XValues, YValues[j], Trim(YBox.Items[j]), DATA_COLORS[j mod Nc]);
+    ChartForm.PlotXY(pt, XValues, YValues[j], nil, nil, Trim(YBox.Items[j]), DATA_COLORS[j mod Nc]);
 
   // Show chart
   ChartForm.ShowModal;
