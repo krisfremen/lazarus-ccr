@@ -83,7 +83,7 @@ implementation
 uses
   {$IFDEF USE_TACHART}
   TATypes,
-  ChartUnit,
+  ChartFrameUnit, ChartUnit,
   {$ELSE}
   BlankFrmUnit,
   {$ENDIF}

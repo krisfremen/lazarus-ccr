@@ -79,7 +79,7 @@ object ChartForm: TChartForm
       TabOrder = 2
     end
   end
-  object Panel1: TPanel
+  object ChartPanel: TPanel
     Left = 6
     Height = 444
     Top = 6
@@ -88,67 +88,9 @@ object ChartForm: TChartForm
     BorderSpacing.Around = 6
     BevelOuter = bvNone
     BorderStyle = bsSingle
-    Caption = 'Panel1'
-    ClientHeight = 440
-    ClientWidth = 684
+    Caption = 'ChartPanel'
     Color = clWhite
     ParentColor = False
     TabOrder = 1
-    object Chart: TChart
-      Left = 6
-      Height = 428
-      Top = 6
-      Width = 672
-      AxisList = <      
-        item
-          Grid.Color = clSilver
-          Grid.Style = psSolid
-          Grid.Visible = False
-          Marks.LabelBrush.Style = bsClear
-          Minors = <>
-          Title.LabelFont.Orientation = 900
-          Title.LabelFont.Style = [fsBold]
-          Title.LabelBrush.Style = bsClear
-        end      
-        item
-          Grid.Color = clSilver
-          Grid.Style = psSolid
-          Grid.Visible = False
-          Intervals.MaxLength = 80
-          Intervals.MinLength = 30
-          Alignment = calBottom
-          Marks.LabelBrush.Style = bsClear
-          Minors = <>
-          Title.LabelFont.Style = [fsBold]
-          Title.LabelBrush.Style = bsClear
-        end>
-      BackColor = clWhite
-      Foot.Brush.Color = clBtnFace
-      Foot.Brush.Style = bsClear
-      Foot.Font.Color = clBlue
-      Margins.Left = 8
-      Margins.Top = 8
-      Margins.Right = 8
-      Margins.Bottom = 8
-      Title.Brush.Color = clBtnFace
-      Title.Brush.Style = bsClear
-      Title.Font.Color = clBlue
-      Title.Font.Style = [fsBold]
-      Title.Text.Strings = (
-        'TAChart'
-      )
-      Align = alClient
-      BorderSpacing.Around = 6
-      Color = clWhite
-    end
-  end
-  object SavePictureDialog: TSavePictureDialog
-    Filter = 'Graphic (*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg)|*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg|Portable Network Graphic (*.png)|*.png|Bitmaps (*.bmp)|*.bmp|Joint Picture Expert Group (*.jpeg;*.jpg;*.jpe;*.jfif)|*.jpeg;*.jpg;*.jpe;*.jfif|Scaleable Vector Graphic (*.svg)|*.svg|All Files (*.*)|*.*'
-    Left = 408
-    Top = 136
-  end
-  object PrintDialog: TPrintDialog
-    Left = 408
-    Top = 194
   end
 end

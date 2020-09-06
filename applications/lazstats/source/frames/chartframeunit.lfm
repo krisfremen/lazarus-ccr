@@ -1,0 +1,56 @@
+object ChartFrame: TChartFrame
+  Left = 0
+  Height = 403
+  Top = 0
+  Width = 620
+  ClientHeight = 403
+  ClientWidth = 620
+  TabOrder = 0
+  DesignLeft = 353
+  DesignTop = 156
+  object Chart: TChart
+    Left = 0
+    Height = 403
+    Top = 0
+    Width = 620
+    AxisList = <    
+      item
+        Grid.Color = clSilver
+        Marks.LabelBrush.Style = bsClear
+        Minors = <>
+        Title.LabelFont.Orientation = 900
+        Title.LabelFont.Style = [fsBold]
+        Title.LabelBrush.Style = bsClear
+      end    
+      item
+        Grid.Color = clSilver
+        Alignment = calBottom
+        Marks.LabelBrush.Style = bsClear
+        Minors = <>
+        Title.LabelFont.Style = [fsBold]
+        Title.LabelBrush.Style = bsClear
+      end>
+    BackColor = clWhite
+    Foot.Brush.Color = clBtnFace
+    Foot.Brush.Style = bsClear
+    Foot.Font.Color = clBlue
+    Title.Brush.Color = clBtnFace
+    Title.Brush.Style = bsClear
+    Title.Font.Color = clBlue
+    Title.Font.Style = [fsBold]
+    Title.Text.Strings = (
+      'TAChart'
+    )
+    Align = alClient
+    Color = clWhite
+  end
+  object PrintDialog: TPrintDialog
+    Left = 279
+    Top = 102
+  end
+  object SavePictureDialog: TSavePictureDialog
+    Filter = 'Graphic (*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg)|*.png;*.bmp;*.jpeg;*.jpg;*.jpe;*.jfif;*.svg|Portable Network Graphic (*.png)|*.png|Bitmaps (*.bmp)|*.bmp|Joint Picture Expert Group (*.jpeg;*.jpg;*.jpe;*.jfif)|*.jpeg;*.jpg;*.jpe;*.jfif|Scaleable Vector Graphic (*.svg)|*.svg|All Files (*.*)|*.*'
+    Left = 279
+    Top = 184
+  end
+end

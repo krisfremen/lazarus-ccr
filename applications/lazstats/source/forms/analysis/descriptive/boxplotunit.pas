@@ -445,9 +445,9 @@ begin
     clr := BOX_COLORS[i mod Length(BOX_COLORS)];
     ser.AddXY(i+1, TenPcnt[i], LowQrtl[i], Medians[i], HiQrtl[i], NinetyPcnt[i], '', clr);
   end;
-  ChartForm.Chart.BottomAxis.Marks.Source := ser.ListSource;
-  ChartForm.Chart.BottomAxis.Marks.Style := smsXValue;
-  ChartForm.Chart.AddSeries(ser);
+  ChartForm.ChartFrame.Chart.BottomAxis.Marks.Source := ser.ListSource;
+  ChartForm.ChartFrame.Chart.BottomAxis.Marks.Style := smsXValue;
+  ChartForm.ChartFrame.Chart.AddSeries(ser);
 
   ChartForm.Show;
 end;

@@ -49,7 +49,7 @@
         <PackageName Value="LCL"/>
       </Item7>
     </RequiredPackages>
-    <Units Count="173">
+    <Units Count="174">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -1405,6 +1405,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="MathUnit"/>
       </Unit172>
+      <Unit173>
+        <Filename Value="frames\chartframeunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ChartFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ChartFrameUnit"/>
+      </Unit173>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -1415,7 +1423,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="forms;forms\analysis;forms\analysis\cross-classification;forms\analysis\financial;forms\analysis\descriptive;forms\analysis\one_sample_tests;forms\analysis\comparisons;forms\analysis\correlation;forms\analysis\matrix_manipulation;forms\analysis\measurement_programs;forms\analysis\measurement_programs\item_banking;forms\analysis\multiple_regression;forms\analysis\multivariate;forms\analysis\nonparametric;forms\analysis\statistical_process_control;forms\help;forms\options;forms\misc;forms\simulations;forms\tools;forms\variables;units"/>
+      <OtherUnitFiles Value="forms;forms\analysis;forms\analysis\cross-classification;forms\analysis\financial;forms\analysis\descriptive;forms\analysis\one_sample_tests;forms\analysis\comparisons;forms\analysis\correlation;forms\analysis\matrix_manipulation;forms\analysis\measurement_programs;forms\analysis\measurement_programs\item_banking;forms\analysis\multiple_regression;forms\analysis\multivariate;forms\analysis\nonparametric;forms\analysis\statistical_process_control;forms\help;forms\options;forms\misc;forms\simulations;forms\tools;forms\variables;units;frames"/>
       <UnitOutputDirectory Value="..\ppu\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>

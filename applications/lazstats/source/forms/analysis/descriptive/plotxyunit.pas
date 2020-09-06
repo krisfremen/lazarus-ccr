@@ -76,7 +76,7 @@ implementation
 uses
   {$IFDEF USE_TACHART}
   TAChartUtils,
-  ChartUnit,
+  ChartFrameUnit, ChartUnit,
   {$ELSE}
   BlankFrmUnit,
   {$ENDIF}
