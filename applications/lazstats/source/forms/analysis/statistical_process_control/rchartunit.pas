@@ -5,13 +5,20 @@
 unit RChartUnit;
 
 {$mode objfpc}{$H+}
+{$include ../../../LazStats.inc}
 
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Printers, ExtCtrls, Buttons,
-  MainUnit, Globals, OutputUnit, GraphLib, BlankFrmUnit, ContextHelpUnit;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, Printers, ExtCtrls, Buttons, ComCtrls,
+  MainUnit, Globals, GraphLib, ContextHelpUnit,
+ {$IFDEF USE_TACHART}
+  TAChartUtils, TASources, TACustomSeries, TASeries, TALegend, TAChartAxisUtils,
+  ChartFrameUnit;
+ {$ELSE}
+  OutputUnit, BlankFrmUnit;
+ {$ENDIF}
 
 
 type
@@ -19,19 +26,24 @@ type
   { TRChartFrm }
 
   TRChartFrm = class(TForm)
-    Bevel1: TBevel;
-    Bevel2: TBevel;
+    CenterBevel: TBevel;
+    ButtonBevel: TBevel;
     HelpBtn: TButton;
-    Panel1: TPanel;
-    Panel4: TPanel;
+    ReportMemo: TMemo;
+    PageControl1: TPageControl;
+    ButtonPanel: TPanel;
+    SpecsPanel: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
     CloseBtn: TButton;
     MeasEdit: TEdit;
     GroupEdit: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
+    VarListLabel: TLabel;
+    GroupLabel: TLabel;
+    MeasLabel: TLabel;
+    Splitter1: TSplitter;
+    ReportPage: TTabSheet;
+    ChartPage: TTabSheet;
     VarList: TListBox;
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -42,10 +54,11 @@ type
     procedure VarListClick(Sender: TObject);
   private
     { private declarations }
-    FAutoSized: Boolean;
-    procedure PlotMeans(VAR means : DblDyneVec;
-                        NoGrps : integer;
-                        UCL, LCL, GrandMean : double);
+   {$IFDEF USE_TACHART}
+    FChartFrame: TChartFrame;
+   {$ENDIF}
+    procedure PlotMeans(const Groups: StrDyneVec; const Means: DblDyneVec;
+      UCL, LCL, GrandMean: double);
   public
     { public declarations }
   end; 
@@ -55,8 +68,10 @@ var
 
 implementation
 
+{$R *.lfm}
+
 uses
-  Math;
+  Math, Utils;
 
 { TRChartFrm }
 
@@ -69,6 +84,9 @@ begin
   MeasEdit.Text := '';
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+ {$IFDEF USE_TACHART}
+  FChartFrame.Clear;
+ {$ENDIF}
 end;
 
 procedure TRChartFrm.VarListClick(Sender: TObject);
@@ -90,26 +108,41 @@ procedure TRChartFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  if FAutoSized then
-    exit;
-
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
 
-  Constraints.MinWidth := Width;
-  Constraints.MinHeight := Height;
+  SpecsPanel.Constraints.MinWidth := Max(
+    VarListLabel.Width + MeasLabel.Width,
+    CloseBtn.Left + CloseBtn.Width - HelpBtn.Left + HelpBtn.BorderSpacing.Left
+  );
 
-  FAutoSized := true;
+  Constraints.MinHeight := MeasEdit.Top + MeasEdit.Height + ButtonBevel.Height + ButtonPanel.Height + 2*ButtonPanel.BorderSpacing.Bottom;
 end;
 
 procedure TRChartFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-  if BlankFrm = nil then
-    Application.CreateForm(TBlankfrm, BlankFrm);
+  {$IFDEF USE_TACHART}
+   FChartFrame := TChartFrame.Create(self);
+   FChartFrame.Parent := ChartPage;
+   FChartFrame.Align := alClient;
+   FChartFrame.BorderSpacing.Around := Scale96ToFont(8);
+   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
+   FChartFrame.Chart.Legend.Alignment := laBottomCenter;
+   FChartFrame.Chart.Legend.ColumnCount := 3;
+   with FChartFrame.Chart.AxisList.Add do
+   begin
+     Alignment := calRight;
+     Marks.Source := TListChartSource.Create(self);
+     Marks.Style := smsLabel;
+   end;
+  {$ELSE}
+   if BlankFrm = nil then
+     Application.CreateForm(TBlankFrm, BlankFrm);
+  {$ENDIF}
 end;
 
 procedure TRChartFrm.FormShow(Sender: TObject);
@@ -126,16 +159,21 @@ end;
 
 procedure TRChartFrm.ComputeBtnClick(Sender: TObject);
 var
-   i, j, GrpVar, MeasVar, mingrp, maxgrp, G, range, grpsize : integer;
-   oldgrpsize : integer;
-   X, UCL, LCL: double;
-   xmin, xmax, GrandMean, GrandSD, semean, D3Value, D4Value : double;
-   GrandRange : double;
-   means, stddev, ranges : DblDyneVec;
-   count : IntDyneVec;
-   cellstring: string;
-   sizeError : boolean;
-   lReport: TStrings;
+  i, j, GrpVar, MeasVar, grpsize : integer;
+  oldgrpsize : integer;
+  X, UCL, LCL: double;
+  xmin, xmax, GrandMean, GrandSD, semean, D3Value, D4Value : double;
+  GrandRange : double;
+  grp: String;
+  grpIndex, numGrps: Integer;
+  groups: StrDyneVec = nil;
+  means: DblDyneVec = nil;
+  stddev: DblDyneVec = nil;
+  ranges: DblDyneVec = nil;
+  count: IntDyneVec;
+  cellstring: string;
+  sizeError: boolean;
+  lReport: TStrings;
 const
   D3: array[1..24] of double = (
     0,0,0,0,0,0.076,0.136,0.184,0.223,0.256,0.283,0.307,0.328,
@@ -172,60 +210,56 @@ begin
     if cellstring = MeasEdit.Text then MeasVar := i;
   end;
 
-  mingrp := MaxInt;
-  maxgrp := -MaxInt;
+  numGrps := 0;
+  SetLength(groups, NoCases);
   for i := 1 to NoCases do
   begin
-    G := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[GrpVar,i])));
-    if G < mingrp then mingrp := G;
-    if G > maxgrp then maxgrp := G;
+    grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
+    if IndexOfString(groups, grp) = -1 then
+    begin
+      groups[numGrps] := grp;
+      inc(numGrps);
+    end;
   end;
-  range := maxgrp - mingrp + 1;
 
-  SetLength(means,range);
-  SetLength(count,range);
-  SetLength(stddev,range);
-  SetLength(ranges,range);
-
-  for i := 0 to range-1 do
-  begin
-    count[i] := 0;
-    means[i] := 0.0;
-    stddev[i] := 0.0;
-    ranges[i] := 0.0;
-  end;
+  SetLength(groups, numGrps);
+  SetLength(means, numGrps);
+  SetLength(count, numGrps);
+  SetLength(stddev, numGrps);
+  SetLength(ranges, numGrps);
   semean := 0.0;
   GrandMean := 0.0;
   GrandRange := 0.0;
   sizeError := false;
 
   // calculate group ranges, grand mean, group sd's, semeans
-  for j := 1 to range do // groups
+  for j := 0 to numGrps-1 do
   begin
     xmin := 1E308;
     xmax := -1E308;
     for i := 1 to NoCases do
     begin
-      G := round(StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[GrpVar,i])));
-      G := G - mingrp + 1;
-      if G = j then
+      grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
+      grpIndex := IndexOfString(groups, grp);
+
+      if grpIndex = j then
       begin
-        X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar,i]));
+        X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
         if X > xmax then xmax := X;
         if X < xmin then xmin := X;
-        means[G-1] := means[G-1] + X;
-        count[G-1] := count[G-1] + 1;
-        stddev[G-1] := stddev[G-1] + X * X;
-        semean := semean + X * X;
+        means[grpIndex] := means[grpIndex] + X;
+        count[grpIndex] := count[grpIndex] + 1;
+        stddev[grpIndex] := stddev[grpIndex] + X*X;
+        seMean := seMean + X*X;
         GrandMean := GrandMean + X;
       end;
     end; // next case
 
-    ranges[j-1] := xmax - xmin;
-    GrandRange := GrandRange + ranges[j-1];
-    grpsize := count[j-1];
-    if j = 1 then oldgrpsize := grpsize;
-    if oldgrpsize <> grpsize then sizeError := true;
+    ranges[j] := xMax - xMin;
+    GrandRange := GrandRange + ranges[j];
+    grpSize := count[j];
+    if j = 0 then oldGrpSize := grpSize;
+    if oldGrpSize <> grpSize then sizeError := true;
   end;
 
   if (grpsize < 2) or (grpsize > 25) or sizeError then
@@ -234,7 +268,7 @@ begin
     exit;
   end;
 
-  for i := 0 to range-1 do
+  for i := 0 to numGrps-1 do
   begin
     stddev[i] := stddev[i] - sqr(means[i]) / count[i];
     stddev[i] := stddev[i] / (count[i] - 1);
@@ -247,7 +281,7 @@ begin
   GrandSD := semean;
   semean := semean / sqrt(NoCases);
   GrandMean := GrandMean / NoCases;
-  GrandRange := GrandRange / range;
+  GrandRange := GrandRange / numGrps;
   D3Value := D3[grpsize-1];
   D4Value := D4[grpsize-1];
 {
@@ -260,15 +294,15 @@ begin
   UCL := D4Value * GrandRange;
   LCL := D3Value * GrandRange;
 
-  // printed results
+  // print results
   lReport := TStringList.Create;
   try
-    lReport.Add('X Bar Chart Results');
+    lReport.Add('Range Chart Results');
     lReport.Add('');
-    lReport.Add('Group Size Mean      Range   Std.Dev.');
-    lReport.Add('----- ---- --------- ------- --------');
-    for i := 0 to range-1 do
-      lReport.Add(' %3d %3d %8.2f  %8.2f  %8.2f', [i+1, count[i], means[i], ranges[i], stddev[i]]);
+    lReport.Add('Group Size   Mean    Ranges  Std.Dev.');
+    lReport.Add('----- ---- -------- -------- --------');
+    for i := 0 to numGrps-1 do
+      lReport.Add('%5d %4d %8.2f %8.2f %8.2f', [i+1, count[i], means[i], ranges[i], stddev[i]]);
     lReport.Add('');
     lReport.Add('Grand Mean:             %8.3f', [GrandMean]);
     lReport.Add('Standard Deviation:     %8.3f', [GrandSD]);
@@ -277,148 +311,182 @@ begin
     lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
     lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
 
+   {$IFDEF USE_TACHART}
+    ReportMemo.Lines.Assign(lReport);
+   {$ELSE}
     DisplayReport(lReport);
+   {$ENDIF}
   finally
     lReport.Free;
   end;
 
   // show graph
-  PlotMeans(ranges, range, UCL, LCL, GrandRange);
+  PlotMeans(groups, ranges, UCL, LCL, GrandRange);
 
   // Clean up
+  groups := nil;
   ranges := nil;
   stddev := nil;
   count := nil;
   means := nil;
 end;
 
-procedure TRChartFrm.PlotMeans(var means: DblDyneVec; NoGrps: integer; UCL,
-  LCL, GrandMean: double);
+procedure TRChartFrm.PlotMeans(const Groups: StrDyneVec; const Means: DblDyneVec;
+  UCL, LCL, GrandMean: double);
+const
+  CL_COLOR = clRed;
+  CL_STYLE = psDash;
 var
-   i, xpos, ypos, hleft, hright, vtop, vbottom, imagewide : integer;
-   vhi, hwide, offset, strhi : integer;
-   imagehi, maxval, minval, valincr, Yvalue : double;
-   Title : string;
+  fn: String;
+ {$IFDEF USE_TACHART}
+  rightLabels: TListChartSource;
+  ser: TChartSeries;
+ {$ELSE}
+  i, xpos, ypos, hleft, hright, vtop, vbottom, imagewide, NoGrps: integer;
+  vhi, hwide, offset, strhi: integer;
+  imagehi, maxval, minval, valincr, Yvalue: double;
+  Title: string;
+ {$ENDIF}
 begin
-     maxval := -10000.0;
-     minval := 10000.0;
-     for i := 0 to NoGrps-1 do
-     begin
-          if means[i] > maxval then maxval := means[i];
-          if means[i] < minval then minval := means[i];
-     end;
-     if UCL > maxval then maxval := UCL;
-     if LCL < minval then minval := LCL;
+  fn := ExtractFileName(OS3MainFrm.FileNameEdit.Text);
+ {$IFDEF USE_TACHART}
+  rightLabels := FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource;
 
-     BlankFrm.Show;
-     Title := 'RANGE CHART FOR : ' + OS3MainFrm.FileNameEdit.Text;
-     BlankFrm.Caption := Title;
-     imagewide := BlankFrm.Image1.Width;
-     imagehi := BlankFrm.Image1.Height;
-     vtop := 20;
-     vbottom := round(imagehi) - 80;
-     vhi := vbottom - vtop;
-     hleft := 100;
-     hright := imagewide - 80;
-     hwide := hright - hleft;
-     BlankFrm.Image1.Canvas.Brush.Color := clLtGray;
-     BlankFrm.Image1.Canvas.FillRect(0, 0, BlankFrm.Image1.Width, BlankFrm.Image1.Height);
+  FChartFrame.Clear;
+  FChartFrame.SetTitle(Format('Range chart for "%s"', [fn]));
+  FChartFrame.SetXTitle(GroupEdit.Text);
+  FChartFrame.SetYTitle('Ranges of ' + MeasEdit.Text);
 
-     // Draw chart border
-     BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-     BlankFrm.Image1.Canvas.Brush.Color := clWhite;
-     BlankFrm.Image1.Canvas.Rectangle(hleft,vtop-10,hleft+hwide,vtop+vhi+10);
+  ser := FChartFrame.PlotXY(ptSymbols, nil, Means, Groups, nil, 'Group ranges', clBlack);
+  FChartFrame.Chart.BottomAxis.Marks.Source := ser.Source;
+  FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
 
-     // draw Grand Mean
-     ypos := round(vhi * ( (maxval - GrandMean) / (maxval - minval)));
-     ypos := ypos + vtop;
-     xpos := hleft;
-     BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-     xpos := hright;
-     BlankFrm.Image1.Canvas.Pen.Color := clRed;
-     BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     Title := 'MEAN';
-     strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-     ypos := ypos - strhi div 2;
-     BlankFrm.Image1.Canvas.Brush.Style := bsClear;
-     BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+  FChartFrame.HorLine(GrandMean, clRed, psSolid, 'Mean range');
+  rightLabels.Add(GrandMean, GrandMean, 'Mean range');
 
-     // draw horizontal axis
-     BlankFrm.Image1.Canvas.MoveTo(hleft,vbottom + 20);
-     BlankFrm.Image1.Canvas.LineTo(hright,vbottom + 20);
-     for i := 1 to NoGrps do
-     begin
-          ypos := vbottom + 10;
-          xpos := round((hwide / NoGrps)* i + hleft);
-          BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-          ypos := ypos + 10;
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-          Title := format('%d',[i]);
-          offset := BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
-          strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-          xpos := xpos - offset;
-          ypos := ypos + strhi;
-          BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-          xpos := 10;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,'GROUPS:');
-     end;
+  FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL/LCL');
+  rightLabels.Add(UCL, UCL, 'UCL');
 
-     // Draw vertical axis
-     valincr := (maxval - minval) / 10.0;
-     for i := 1 to 11 do
-     begin
-          Title := format('%8.2f',[maxval - ((i-1)*valincr)]);
-          strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-          xpos := 10;
-          Yvalue := maxval - (valincr * (i-1));
-          ypos := round(vhi * ( (maxval - Yvalue) / (maxval - minval)));
-          ypos := ypos + vtop - strhi div 2;
-          BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-     end;
+  FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, '');
+  rightLabels.Add(UCL, LCL, 'LCL');
+ {$ELSE}
+  NoGrps := Length(Groups);
+  maxval := -10000.0;
+  minval := 10000.0;
+  for i := 0 to NoGrps-1 do
+  begin
+    if means[i] > maxval then maxval := means[i];
+    if means[i] < minval then minval := means[i];
+  end;
+  if UCL > maxval then maxval := UCL;
+  if LCL < minval then minval := LCL;
 
-     // draw lines for means of the groups
-     ypos := round(vhi * ( (maxval - means[0]) / (maxval - minval)));
-     ypos := ypos + vtop;
-     xpos := round((hwide / NoGrps) + hleft);
-     BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-     BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-     for i := 2 to NoGrps do
-     begin
-          ypos := round(vhi * ( (maxval - means[i-1]) / (maxval - minval)));
-          ypos := ypos + vtop;
-          xpos := round((hwide / NoGrps)* i + hleft);
-          BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     end;
+  BlankFrm.Show;
+  BlankFrm.Caption := 'RANGE CHART FOR ' + fn;
+  imagewide := BlankFrm.Image1.Width;
+  imagehi := BlankFrm.Image1.Height;
+  vtop := 20;
+  vbottom := round(imagehi) - 80;
+  vhi := vbottom - vtop;
+  hleft := 100;
+  hright := imagewide - 80;
+  hwide := hright - hleft;
+  BlankFrm.Image1.Canvas.Brush.Color := clLtGray;
+  BlankFrm.Image1.Canvas.FillRect(0, 0, BlankFrm.Image1.Width, BlankFrm.Image1.Height);
 
-     // Draw upper and lower confidence intervals
-     ypos := round(vhi * ( (maxval - UCL) / (maxval - minval)));
-     ypos := ypos + vtop;
-     xpos := hleft;
-     BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-     xpos := hright;
-     BlankFrm.Image1.Canvas.Pen.Color := clRed;
-     BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     Title := 'UCL';
-     strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-     ypos := ypos - strhi div 2;
-     BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+  // Draw chart border
+  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+  BlankFrm.Image1.Canvas.Brush.Color := clWhite;
+  BlankFrm.Image1.Canvas.Rectangle(hleft,vtop-10,hleft+hwide,vtop+vhi+10);
 
-     ypos := round(vhi * ( (maxval - LCL) / (maxval - minval)));
-     ypos := ypos + vtop;
-     xpos := hleft;
-     BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-     xpos := hright;
-     BlankFrm.Image1.Canvas.Pen.Color := clRed;
-     BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-     Title := 'LCL';
-     strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-     ypos := ypos - strhi div 2;
-     BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+  // draw Grand Mean
+  ypos := round(vhi * ( (maxval - GrandMean) / (maxval - minval)));
+  ypos := ypos + vtop;
+  xpos := hleft;
+  BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+  xpos := hright;
+  BlankFrm.Image1.Canvas.Pen.Color := clRed;
+  BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+  Title := 'MEAN';
+  strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+  ypos := ypos - strhi div 2;
+  BlankFrm.Image1.Canvas.Brush.Style := bsClear;
+  BlankFrm.Image1.Canvas.TextOut(xpos,ypos, Title);
+
+  // draw horizontal axis
+  BlankFrm.Image1.Canvas.MoveTo(hleft,vbottom + 20);
+  BlankFrm.Image1.Canvas.LineTo(hright,vbottom + 20);
+  for i := 1 to NoGrps do
+  begin
+    ypos := vbottom + 10;
+    xpos := round((hwide / NoGrps)* i + hleft);
+    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+    ypos := ypos + 10;
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+    Title := format('%d',[i]);
+    offset := BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
+    strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+    xpos := xpos - offset;
+    ypos := ypos + strhi;
+    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+    xpos := 10;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,'GROUPS:');
+  end;
+
+  // Draw vertical axis
+  valincr := (maxval - minval) / 10.0;
+  for i := 1 to 11 do
+  begin
+    Title := format('%8.2f',[maxval - ((i-1)*valincr)]);
+    strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+    xpos := 10;
+    Yvalue := maxval - (valincr * (i-1));
+    ypos := round(vhi * ( (maxval - Yvalue) / (maxval - minval)));
+    ypos := ypos + vtop - strhi div 2;
+    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+  end;
+
+  // draw lines for means of the groups
+  ypos := round(vhi * ( (maxval - means[0]) / (maxval - minval)));
+  ypos := ypos + vtop;
+  xpos := round((hwide / NoGrps) + hleft);
+  BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
+  for i := 2 to NoGrps do
+  begin
+    ypos := round(vhi * ( (maxval - means[i-1]) / (maxval - minval)));
+    ypos := ypos + vtop;
+    xpos := round((hwide / NoGrps)* i + hleft);
+    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+  end;
+
+  // Draw upper and lower confidence intervals
+  ypos := round(vhi * ( (maxval - UCL) / (maxval - minval)));
+  ypos := ypos + vtop;
+  xpos := hleft;
+  BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+  xpos := hright;
+  BlankFrm.Image1.Canvas.Pen.Color := clRed;
+  BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+  Title := 'UCL';
+  strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+  ypos := ypos - strhi div 2;
+  BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+
+  ypos := round(vhi * ( (maxval - LCL) / (maxval - minval)));
+  ypos := ypos + vtop;
+  xpos := hleft;
+  BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
+  xpos := hright;
+  BlankFrm.Image1.Canvas.Pen.Color := clRed;
+  BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
+  Title := 'LCL';
+  strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
+  ypos := ypos - strhi div 2;
+  BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+ {$ENDIF}
 end;
-
-initialization
-  {$I rchartunit.lrs}
 
 end.
 

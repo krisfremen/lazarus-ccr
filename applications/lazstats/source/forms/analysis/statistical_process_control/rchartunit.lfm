@@ -1,180 +1,89 @@
 object RChartFrm: TRChartFrm
   Left = 688
-  Height = 297
+  Height = 476
   Top = 126
-  Width = 382
+  Width = 875
   HelpType = htKeyword
   HelpKeyword = 'html/RangeChart.htm'
-  AutoSize = True
-  Caption = 'Range Charting'
+  Caption = 'Range Chart'
   ChildSizing.ControlsPerLine = 1
-  ClientHeight = 297
-  ClientWidth = 382
+  ClientHeight = 476
+  ClientWidth = 875
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
-  object Panel1: TPanel
-    Left = 8
-    Height = 25
-    Top = 264
-    Width = 366
-    Align = alBottom
-    AutoSize = True
-    BorderSpacing.Around = 8
-    BevelOuter = bvNone
-    ClientHeight = 25
-    ClientWidth = 366
-    TabOrder = 1
-    object ResetBtn: TButton
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = ComputeBtn
-      Left = 165
-      Height = 25
-      Top = 0
-      Width = 54
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Right = 8
-      Caption = 'Reset'
-      OnClick = ResetBtnClick
-      TabOrder = 1
-    end
-    object ComputeBtn: TButton
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = CloseBtn
-      Left = 227
-      Height = 25
-      Top = 0
-      Width = 76
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Right = 8
-      Caption = 'Compute'
-      OnClick = ComputeBtnClick
-      TabOrder = 2
-    end
-    object HelpBtn: TButton
-      Tag = 141
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = ResetBtn
-      AnchorSideRight.Control = ResetBtn
-      Left = 106
-      Height = 25
-      Top = 0
-      Width = 51
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Right = 8
-      Caption = 'Help'
-      OnClick = HelpBtnClick
-      TabOrder = 0
-    end
-    object CloseBtn: TButton
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 311
-      Height = 25
-      Top = 0
-      Width = 55
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      Caption = 'Close'
-      ModalResult = 11
-      TabOrder = 3
-    end
-  end
-  object Panel4: TPanel
+  object SpecsPanel: TPanel
     Left = 0
-    Height = 256
+    Height = 476
     Top = 0
-    Width = 382
-    Align = alClient
-    Anchors = [akTop, akLeft, akRight]
+    Width = 378
+    Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 256
-    ClientWidth = 382
+    ClientHeight = 476
+    ClientWidth = 378
     TabOrder = 0
-    object Bevel1: TBevel
-      AnchorSideLeft.Control = Panel4
-      AnchorSideLeft.Side = asrCenter
-      Left = 156
-      Height = 16
-      Top = 0
-      Width = 71
-      Shape = bsSpacer
-    end
-    object Label2: TLabel
-      AnchorSideLeft.Control = Bevel1
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Panel4
-      Left = 235
+    object GroupLabel: TLabel
+      AnchorSideLeft.Control = GroupEdit
+      AnchorSideTop.Control = SpecsPanel
+      Left = 222
       Height = 15
       Top = 8
       Width = 77
-      BorderSpacing.Left = 8
       BorderSpacing.Top = 8
       Caption = 'Group Variable'
       ParentColor = False
     end
-    object Label3: TLabel
-      AnchorSideLeft.Control = Bevel1
-      AnchorSideLeft.Side = asrBottom
+    object MeasLabel: TLabel
+      AnchorSideLeft.Control = MeasEdit
       AnchorSideTop.Control = GroupEdit
       AnchorSideTop.Side = asrBottom
-      Left = 235
+      Left = 222
       Height = 15
       Top = 64
       Width = 117
-      BorderSpacing.Left = 8
       BorderSpacing.Top = 16
       Caption = 'Measurement Variable'
       ParentColor = False
     end
     object GroupEdit: TEdit
-      AnchorSideLeft.Control = Bevel1
+      AnchorSideLeft.Control = CenterBevel
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Label2
+      AnchorSideTop.Control = GroupLabel
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel4
+      AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 235
+      Left = 222
       Height = 23
       Top = 25
-      Width = 139
+      Width = 156
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
-      BorderSpacing.Right = 8
       TabOrder = 1
       Text = 'GroupEdit'
     end
     object MeasEdit: TEdit
-      AnchorSideLeft.Control = Bevel1
+      AnchorSideLeft.Control = CenterBevel
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Label3
+      AnchorSideTop.Control = MeasLabel
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel4
+      AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 235
+      Left = 222
       Height = 23
       Top = 81
-      Width = 139
+      Width = 156
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
-      BorderSpacing.Right = 8
       TabOrder = 2
       Text = 'MeasEdit'
     end
-    object Label1: TLabel
-      AnchorSideLeft.Control = Panel4
-      AnchorSideTop.Control = Panel4
+    object VarListLabel: TLabel
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideTop.Control = SpecsPanel
       Left = 8
       Height = 15
       Top = 8
@@ -185,38 +94,166 @@ object RChartFrm: TRChartFrm
       ParentColor = False
     end
     object VarList: TListBox
-      AnchorSideLeft.Control = Panel4
-      AnchorSideTop.Control = Label1
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideTop.Control = VarListLabel
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Bevel1
+      AnchorSideRight.Control = CenterBevel
       AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = Panel4
-      AnchorSideBottom.Side = asrBottom
+      AnchorSideBottom.Control = ButtonBevel
       Left = 8
-      Height = 223
+      Height = 402
       Top = 25
-      Width = 219
+      Width = 206
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
-      BorderSpacing.Bottom = 8
-      Constraints.MinHeight = 220
       ItemHeight = 0
       OnClick = VarListClick
       TabOrder = 0
     end
+    object ButtonPanel: TPanel
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideRight.Control = SpecsPanel
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = SpecsPanel
+      Left = 0
+      Height = 25
+      Top = 443
+      Width = 378
+      Align = alBottom
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 8
+      BevelOuter = bvNone
+      ClientHeight = 25
+      ClientWidth = 378
+      TabOrder = 3
+      object ResetBtn: TButton
+        AnchorSideLeft.Control = ButtonPanel
+        AnchorSideTop.Control = ButtonPanel
+        AnchorSideRight.Control = ComputeBtn
+        Left = 177
+        Height = 25
+        Top = 0
+        Width = 54
+        Anchors = [akTop, akRight]
+        AutoSize = True
+        BorderSpacing.Right = 8
+        Caption = 'Reset'
+        OnClick = ResetBtnClick
+        TabOrder = 1
+      end
+      object ComputeBtn: TButton
+        AnchorSideLeft.Control = ButtonPanel
+        AnchorSideTop.Control = ButtonPanel
+        AnchorSideRight.Control = CloseBtn
+        Left = 239
+        Height = 25
+        Top = 0
+        Width = 76
+        Anchors = [akTop, akRight]
+        AutoSize = True
+        BorderSpacing.Right = 8
+        Caption = 'Compute'
+        OnClick = ComputeBtnClick
+        TabOrder = 2
+      end
+      object HelpBtn: TButton
+        Tag = 141
+        AnchorSideLeft.Control = ButtonPanel
+        AnchorSideTop.Control = ResetBtn
+        AnchorSideRight.Control = ResetBtn
+        Left = 118
+        Height = 25
+        Top = 0
+        Width = 51
+        Anchors = [akTop, akRight]
+        AutoSize = True
+        BorderSpacing.Left = 8
+        BorderSpacing.Right = 8
+        Caption = 'Help'
+        OnClick = HelpBtnClick
+        TabOrder = 0
+      end
+      object CloseBtn: TButton
+        AnchorSideLeft.Control = ButtonPanel
+        AnchorSideTop.Control = ButtonPanel
+        AnchorSideRight.Control = ButtonPanel
+        AnchorSideRight.Side = asrBottom
+        Left = 323
+        Height = 25
+        Top = 0
+        Width = 55
+        Anchors = [akTop, akRight]
+        AutoSize = True
+        Caption = 'Close'
+        ModalResult = 11
+        TabOrder = 3
+      end
+    end
+    object ButtonBevel: TBevel
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideTop.Control = ButtonPanel
+      AnchorSideRight.Control = SpecsPanel
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = ButtonPanel
+      Left = 0
+      Height = 8
+      Top = 427
+      Width = 378
+      Anchors = [akLeft, akRight, akBottom]
+      Shape = bsBottomLine
+    end
+    object CenterBevel: TBevel
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = SpecsPanel
+      Left = 165
+      Height = 10
+      Top = 0
+      Width = 49
+      Shape = bsSpacer
+    end
   end
-  object Bevel2: TBevel
-    AnchorSideLeft.Control = Panel4
-    AnchorSideTop.Control = Panel1
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Panel1
-    Left = 0
-    Height = 8
-    Top = 248
-    Width = 382
-    Anchors = [akLeft, akRight, akBottom]
-    Shape = bsBottomLine
+  object Splitter1: TSplitter
+    Left = 378
+    Height = 476
+    Top = 0
+    Width = 5
+    ResizeStyle = rsPattern
+  end
+  object PageControl1: TPageControl
+    Left = 385
+    Height = 460
+    Top = 8
+    Width = 482
+    ActivePage = ReportPage
+    Align = alClient
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    TabIndex = 0
+    TabOrder = 2
+    object ReportPage: TTabSheet
+      Caption = 'Report'
+      ClientHeight = 432
+      ClientWidth = 474
+      object ReportMemo: TMemo
+        Left = 6
+        Height = 420
+        Top = 6
+        Width = 462
+        Align = alClient
+        BorderSpacing.Around = 6
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object ChartPage: TTabSheet
+      Caption = 'Chart'
+    end
   end
 end

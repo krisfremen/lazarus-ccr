@@ -103,6 +103,9 @@ begin
   TargetChk.Checked := false;
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+ {$IFDEF USE_TACHART}
+  FChartFrame.Clear;
+ {$ENDIF}
 end;
 
 procedure TXBarFrm.VarListClick(Sender: TObject);
@@ -321,6 +324,7 @@ begin
   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
   FChartFrame.Chart.Legend.Alignment := laBottomCenter;
   FChartFrame.Chart.Legend.ColumnCount := 3;
+  FChartFrame.Chart.Title.TextFormat := tfHtml;
   with FChartFrame.Chart.AxisList.Add do
   begin
     Alignment := calRight;
@@ -347,6 +351,7 @@ const
   CL_STYLE = psDash;
   SPEC_STYLE = psSolid;
 var
+  fn: String;
  {$IFDEF USE_TACHART}
   ser: TChartSeries;
   rightLabels: TListChartSource;
@@ -361,11 +366,12 @@ var
   title: String;
  {$ENDIF}
 begin
+  fn := ExtractFileName(OS3MainFrm.FileNameEdit.Text);
  {$IFDEF USE_TACHART}
   rightLabels := FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource;
 
   FChartFrame.Clear;
-  FChartFrame.SetTitle('XBAR chart for ' + OS3MainFrm.FileNameEdit.Text, taLeftJustify);
+  FChartFrame.SetTitle(Format('x&#772; chart for "%s"', [fn]));
   FChartFrame.SetXTitle(GroupEdit.Text);
   FChartFrame.SetYTitle(MeasEdit.Text);
 
@@ -426,7 +432,7 @@ begin
     if TargetSpec < minval then minval := TargetSpec;
   end;
 
-  BlankFrm.Caption := 'XBAR CHART FOR ' + OS3MainFrm.FileNameEdit.Text;
+  BlankFrm.Caption := 'XBAR CHART FOR ' + fn;
   imagewide := BlankFrm.Image1.Width;
   imagehi := BlankFrm.Image1.Height;
   vtop := 20;
