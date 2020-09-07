@@ -510,7 +510,7 @@ uses
   BinomialUnit, KendallTauUnit, KaplanMeierUnit,
 
   // Statistical process control
-  XBarChartUnit, RChartUnit, SChartUnit, CUMSUMUNIT, CCHARTUNIT,
+  XBarChartUnit, RChartUnit, SChartUnit, CUMSUMUNIT, CChartUnit,
   PChartUnit, UChartUnit,
 
   CorSimUnit,
@@ -2160,9 +2160,9 @@ end;
 // Menu "Analysis" > "Statistical Process Control" > "Defect (nonconformity) c Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_CChartClick(Sender: TObject);
 begin
-  if CChartFrm = nil then
-    Application.CreateForm(TCChartFrm, CChartFrm);
-  CChartFrm.ShowModal;
+  if CChartForm = nil then
+    Application.CreateForm(TCChartForm, CChartForm);
+  CChartForm.ShowModal;
 end;
 
 // Menu "Analysis" > "Financial" > "Sum of years digits depreciation"

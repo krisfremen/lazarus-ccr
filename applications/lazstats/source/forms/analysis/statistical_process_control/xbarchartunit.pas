@@ -182,7 +182,7 @@ begin
     lReport.Free;
   end;
 
-  // show graph
+  // Show graph
   PlotMeans(
     Format('x&#772; chart for "%s"', [GetFileName]),
     GroupEdit.Text, MeasEdit.Text, 'Group means', 'Grand mean',

@@ -16,6 +16,7 @@ object BasicSPCForm: TBasicSPCForm
     Top = 0
     Width = 357
     Align = alLeft
+    BorderSpacing.Right = 3
     BevelOuter = bvNone
     ClientHeight = 438
     ClientWidth = 357
@@ -211,19 +212,20 @@ object BasicSPCForm: TBasicSPCForm
     end
   end
   object SpecsSplitter: TSplitter
-    Left = 361
+    Left = 360
     Height = 438
     Top = 0
     Width = 5
     ResizeStyle = rsPattern
   end
   object PageControl1: TPageControl
-    Left = 370
+    Left = 368
     Height = 426
     Top = 6
-    Width = 551
+    Width = 553
     ActivePage = ReportPage
     Align = alClient
+    BorderSpacing.Left = 3
     BorderSpacing.Top = 6
     BorderSpacing.Right = 6
     BorderSpacing.Bottom = 6
@@ -232,30 +234,31 @@ object BasicSPCForm: TBasicSPCForm
     object ReportPage: TTabSheet
       Caption = 'Report'
       ClientHeight = 398
-      ClientWidth = 543
+      ClientWidth = 545
       object Panel1: TPanel
         Left = 6
         Height = 386
         Top = 6
-        Width = 531
+        Width = 533
         Align = alClient
         BorderSpacing.Around = 6
         BevelOuter = bvNone
         BorderStyle = bsSingle
         ClientHeight = 382
-        ClientWidth = 527
+        ClientWidth = 529
         TabOrder = 0
         object ReportMemo: TMemo
           Left = 4
           Height = 374
           Top = 4
-          Width = 519
+          Width = 521
           Align = alClient
           BorderSpacing.Around = 4
           BorderStyle = bsNone
           Font.Height = -11
           Font.Name = 'Courier New'
           ParentFont = False
+          ScrollBars = ssAutoBoth
           TabOrder = 0
         end
       end

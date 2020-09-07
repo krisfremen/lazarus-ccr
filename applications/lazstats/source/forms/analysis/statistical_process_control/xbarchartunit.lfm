@@ -7,7 +7,6 @@ inherited XBarChartForm: TXBarChartForm
   OnActivate = FormActivate
   inherited SpecsPanel: TPanel
     Width = 475
-    BorderSpacing.Right = 3
     ClientWidth = 475
     inherited ButtonPanel: TPanel
       Width = 475
@@ -207,7 +206,6 @@ inherited XBarChartForm: TXBarChartForm
   inherited PageControl1: TPageControl
     Left = 486
     Width = 435
-    BorderSpacing.Left = 3
     inherited ReportPage: TTabSheet
       ClientWidth = 427
       inherited Panel1: TPanel

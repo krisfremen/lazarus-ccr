@@ -6,8 +6,8 @@ object ChartFrame: TChartFrame
   ClientHeight = 403
   ClientWidth = 620
   TabOrder = 0
-  DesignLeft = 353
-  DesignTop = 156
+  DesignLeft = 518
+  DesignTop = 150
   object Chart: TChart
     Left = 0
     Height = 403

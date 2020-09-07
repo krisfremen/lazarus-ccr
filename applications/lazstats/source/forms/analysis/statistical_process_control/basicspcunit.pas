@@ -223,14 +223,13 @@ const
   CL_STYLE = psDot;
   SPEC_STYLE = psSolid;
 var
-  fn: String;
   ser: TChartSeries;
-  rightLabels: TListChartSource;
   constLine: TConstantLine;
+  rightLabels: TListChartSource;
   s: String;
 begin
-  fn := ExtractFileName(OS3MainFrm.FileNameEdit.Text);
   rightLabels := FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource;
+  rightLabels.Clear;
 
   FChartFrame.Clear;
   FChartFrame.SetTitle(ATitle);
@@ -238,8 +237,11 @@ begin
   FChartFrame.SetYTitle(AYTitle);
 
   ser := FChartFrame.PlotXY(ptSymbols, nil, Means, Groups, nil, ADataTitle, clBlack);
-  FChartFrame.Chart.BottomAxis.Marks.Source := ser.Source;
-  FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
+  if Length(Groups) > 0 then
+  begin
+    FChartFrame.Chart.BottomAxis.Marks.Source := ser.Source;
+    FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
+  end;
 
   FChartFrame.HorLine(GrandMean, clRed, psSolid, AGrandMeanTitle);
   rightLabels.Add(GrandMean, GrandMean, AGrandMeanTitle);
@@ -287,6 +289,7 @@ begin
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   FChartFrame.Clear;
+  (FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource).Clear;
 end;
 
 
