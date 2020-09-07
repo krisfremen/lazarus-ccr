@@ -510,8 +510,8 @@ uses
   BinomialUnit, KendallTauUnit, KaplanMeierUnit,
 
   // Statistical process control
-  XBarUnit, RChartUnit, SChartUnit, CUMSUMUNIT, CCHARTUNIT,
-  PChartUnit, UChartUnit, //SigmaChartUnit,
+  XBarChartUnit, RChartUnit, SChartUnit, CUMSUMUNIT, CCHARTUNIT,
+  PChartUnit, UChartUnit,
 
   CorSimUnit,
   ErrorCurvesUnit, PCurvesUnit, DistribUnit, GenSeqUnit, GenRndValsUnit,
@@ -2136,17 +2136,17 @@ end;
 // Menu "Analysis" > "Statistical Process Control" > "XBAR Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_XBarClick(Sender: TObject);
 begin
-  if XBarFrm = nil then
-    Application.CreateForm(TXBarFrm, XBarFrm);
-  XBarFrm.ShowModal;
+  if XBarChartForm = nil then
+    Application.CreateForm(TXBarChartForm, XBarChartForm);
+  XBarChartForm.ShowModal;
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "Range Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_RangeClick(Sender: TObject);
 begin
-  if RChartFrm = nil then
-    Application.CreateForm(TRChartFrm, RChartFrm);
-  RChartFrm.ShowModal;
+  if RChartForm = nil then
+    Application.CreateForm(TRChartForm, RChartForm);
+  RChartForm.ShowModal;
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "S Control Chart"
@@ -2155,11 +2155,6 @@ begin
   if SChartForm = nil then
     Application.CreateForm(TSChartForm, SChartForm);
   SChartForm.ShowModal;
-  {
-  if SigmaChartFrm = nil then
-    Application.CreateForm(TSigmaChartFrm, SigmaChartFrm);
-  SigmaChartFrm.ShowModal;
-  }
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "Defect (nonconformity) c Chart"

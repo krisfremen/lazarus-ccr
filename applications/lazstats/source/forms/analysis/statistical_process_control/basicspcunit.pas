@@ -55,7 +55,7 @@ type
     function GetGroups: StrDyneVec;
     function GetFileName: String;
     procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
-      const Groups: StrDyneVec; const Means, StdDevs: DblDyneVec;
+      const Groups: StrDyneVec; const Means: DblDyneVec;
       UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
     procedure Reset; virtual;
     procedure Compute; virtual;
@@ -214,7 +214,7 @@ end;
 
 
 procedure TBasicSPCForm.PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
-  const Groups: StrDyneVec; const Means, StdDevs: DblDyneVec;
+  const Groups: StrDyneVec; const Means: DblDyneVec;
   UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
 const
   TARGET_COLOR = clBlue;
@@ -237,7 +237,7 @@ begin
   FChartFrame.SetXTitle(AXTitle);
   FChartFrame.SetYTitle(AYTitle);
 
-  ser := FChartFrame.PlotXY(ptSymbols, nil, Means, Groups, StdDevs, ADataTitle, clBlack);
+  ser := FChartFrame.PlotXY(ptSymbols, nil, Means, Groups, nil, ADataTitle, clBlack);
   FChartFrame.Chart.BottomAxis.Marks.Source := ser.Source;
   FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
 
@@ -272,7 +272,7 @@ begin
     else
       s := 'Upper/Lower Spec';
     constLine := FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, s);
-    constLine.Legend.Visible := not IsNaN(UpperSpec); //UpSpecChk.Checked;
+    constLine.Legend.Visible := IsNaN(UpperSpec);
     rightLabels.Add(LowerSpec, LowerSpec, 'Lower Spec');
   end;
 end;

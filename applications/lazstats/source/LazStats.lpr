@@ -9,7 +9,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg, Globals, LicenseUnit,
   OptionsUnit, MainDM, MainUnit, MathUnit, BasicSPCUnit,
-SChartUnit; //, utils, chartunit;
+SChartUnit, rchartunit, XBarChartUnit; //, utils, chartunit;
 
 {$R LazStats.res}
 
@@ -29,6 +29,8 @@ begin
   end;
   Application.CreateForm(TMainDataModule, MainDataModule);
   Application.CreateForm(TOS3MainFrm, OS3MainFrm);
+  Application.CreateForm(TRChartForm, RChartForm);
+  Application.CreateForm(TXBarChartForm, XBarChartForm);
   Application.Run;
 end.
 

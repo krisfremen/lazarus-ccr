@@ -1,0 +1,222 @@
+inherited XBarChartForm: TXBarChartForm
+  Left = 572
+  Top = 215
+  HelpType = htKeyword
+  HelpKeyword = 'html/XBarChart.htm'
+  Caption = 'X-Bar Chart'
+  OnActivate = FormActivate
+  inherited SpecsPanel: TPanel
+    Width = 475
+    BorderSpacing.Right = 3
+    ClientWidth = 475
+    inherited ButtonPanel: TPanel
+      Width = 475
+      ClientWidth = 475
+      inherited CloseBtn: TButton
+        Left = 420
+      end
+      inherited ComputeBtn: TButton
+        Left = 336
+      end
+      inherited ResetBtn: TButton
+        Left = 274
+      end
+      inherited HelpBtn: TButton
+        Left = 223
+      end
+      inherited Bevel1: TBevel
+        Width = 467
+      end
+    end
+    inherited VarList: TListBox
+      Width = 233
+    end
+    inherited GroupLabel: TLabel
+      Left = 249
+    end
+    inherited GroupEdit: TEdit
+      Left = 249
+      Width = 226
+    end
+    inherited MeasLabel: TLabel
+      Left = 249
+    end
+    inherited MeasEdit: TEdit
+      AnchorSideRight.Control = LevelOptns
+      Left = 249
+      Width = 226
+    end
+    inherited Bevel2: TBevel
+      Left = 226
+    end
+    object SigmaOpts: TRadioGroup[8]
+      AnchorSideLeft.Control = MeasEdit
+      AnchorSideTop.Control = MeasEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = LevelOptns
+      AnchorSideRight.Side = asrBottom
+      Left = 249
+      Height = 128
+      Top = 108
+      Width = 226
+      Anchors = [akTop, akLeft, akRight]
+      AutoFill = True
+      BorderSpacing.Top = 12
+      Caption = 'No. of Sigma Units for UCL and LCL'
+      ChildSizing.LeftRightSpacing = 12
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 108
+      ClientWidth = 222
+      ItemIndex = 0
+      Items.Strings = (
+        '3 Sigma (default)'
+        '2 Sigma'
+        '1 Sigma'
+        'x Sigmas with x =  '
+      )
+      TabOrder = 4
+      object XSigmaEdit: TEdit
+        AnchorSideRight.Control = SigmaOpts
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 128
+        Height = 23
+        Top = 80
+        Width = 82
+        Alignment = taRightJustify
+        Anchors = [akLeft, akRight, akBottom]
+        TabOrder = 0
+        Text = 'XSigmaEdit'
+      end
+    end
+    object LevelOptns: TGroupBox[9]
+      AnchorSideLeft.Control = MeasEdit
+      AnchorSideTop.Control = SigmaOpts
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = MeasEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 249
+      Height = 103
+      Top = 248
+      Width = 226
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 12
+      BorderSpacing.Bottom = 8
+      Caption = 'Show...'
+      ClientHeight = 83
+      ClientWidth = 222
+      TabOrder = 5
+      object UpperSpecChk: TCheckBox
+        AnchorSideLeft.Control = LevelOptns
+        AnchorSideTop.Control = UpperSpecEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 2
+        Width = 116
+        BorderSpacing.Left = 12
+        Caption = 'Upper Spec. Level:'
+        TabOrder = 0
+      end
+      object LowerSpecChk: TCheckBox
+        AnchorSideLeft.Control = LevelOptns
+        AnchorSideTop.Control = LowerSpecEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 29
+        Width = 113
+        BorderSpacing.Left = 12
+        Caption = 'Lower Spec. Level'
+        TabOrder = 2
+      end
+      object TargetChk: TCheckBox
+        AnchorSideLeft.Control = LevelOptns
+        AnchorSideTop.Control = TargetSpecEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 56
+        Width = 124
+        BorderSpacing.Left = 12
+        BorderSpacing.Bottom = 8
+        Caption = 'Target Specification'
+        TabOrder = 4
+      end
+      object UpperSpecEdit: TEdit
+        AnchorSideLeft.Control = TargetSpecEdit
+        AnchorSideTop.Control = LevelOptns
+        AnchorSideRight.Control = TargetSpecEdit
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 0
+        Width = 63
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        TabOrder = 1
+        Text = 'UpperSpecEdit'
+      end
+      object LowerSpecEdit: TEdit
+        AnchorSideLeft.Control = TargetSpecEdit
+        AnchorSideTop.Control = UpperSpecEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TargetSpecEdit
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 27
+        Width = 63
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        TabOrder = 3
+        Text = 'LowerSpecEdit'
+      end
+      object TargetSpecEdit: TEdit
+        AnchorSideLeft.Control = TargetChk
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = LowerSpecEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = LevelOptns
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 54
+        Width = 63
+        Alignment = taRightJustify
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 8
+        BorderSpacing.Bottom = 4
+        TabOrder = 5
+        Text = 'TargetSpecEdit'
+      end
+    end
+  end
+  inherited SpecsSplitter: TSplitter
+    Left = 478
+  end
+  inherited PageControl1: TPageControl
+    Left = 486
+    Width = 435
+    BorderSpacing.Left = 3
+    inherited ReportPage: TTabSheet
+      ClientWidth = 427
+      inherited Panel1: TPanel
+        Width = 415
+        ClientWidth = 411
+        inherited ReportMemo: TMemo
+          Width = 403
+        end
+      end
+    end
+  end
+end

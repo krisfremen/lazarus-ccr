@@ -13,13 +13,8 @@ type
   { TSChartForm }
 
   TSChartForm = class(TBasicSPCForm)
-  private
-
   protected
     procedure Compute; override;
-
-  public
-
   end;
 
 var
@@ -67,8 +62,8 @@ begin
   ColNoSelected[0] := GrpVar;
   ColNoSelected[1] := MeasVar;
 
-  grpsize := 0;
-  oldgrpsize := 0;
+  grpSize := 0;
+  oldGrpSize := 0;
   groups := GetGroups;
   numGrps := Length(groups);
 
@@ -166,7 +161,7 @@ begin
     Format('Sigma Chart for "%s"', [GetFileName]),
     GroupEdit.Text, Format('StdDev(%s)', [MeasEdit.Text]),
     'Group Sigma', 'Mean',
-    groups, stdDev, nil,
+    groups, stdDev,
     UCL, LCL, grandSigma,
     NaN, NaN, NaN
   );
