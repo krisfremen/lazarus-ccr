@@ -59,14 +59,95 @@ type
     MenuItem113: TMenuItem;
     MenuItem114: TMenuItem;
     MenuItem115: TMenuItem;
-    MenuItem116: TMenuItem;
-    MenuItem117: TMenuItem;
-    MenuItem118: TMenuItem;
-    MenuItem119: TMenuItem;
-    MenuItem12: TMenuItem;
-    MenuItem120: TMenuItem;
-    mnuHelpAbout: TMenuItem;
+
+    mnuAnalysis: TMenuItem;
+    mnuAnalysisSPC: TMenuItem;
+    mnuAnalysisSPC_CChart: TMenuItem;
+    mnuAnalysisSPC_CUMSUM: TMenuItem;
+    mnuAnalysisSPC_PChart: TMenuItem;
+    mnuAnalysisSPC_Range: TMenuItem;
+    mnuAnalysisSPC_SChart: TMenuItem;
+    mnuAnalysisSPC_UChart: TMenuItem;
+    mnuAnalysisSPC_XBar: TMenuItem;
+
+    mnuEdit: TMenuItem;
+    mnuEditCopyCells: TMenuItem;
+    mnuEditCopyCol: TMenuItem;
+    mnuEditCopyRow: TMenuItem;
+    mnuEditCutCells: TMenuItem;
+    mnuEditCutCol: TMenuItem;
+    mnuEditCutRow: TMenuItem;
+    mnuEditDIVIDER1: TMenuItem;
+    mnuEditDIVIDER2: TMenuItem;
+    mnuEditNewCol: TMenuItem;
+    mnuEditNewRow: TMenuItem;
+    mnuEditPasteCells: TMenuItem;
+    mnuEditPasteCol: TMenuItem;
+    mnuEditPasteRow: TMenuItem;
+
     mnuFileClose: TMenuItem;
+    mnuFileExport: TMenuItem;
+    mnuFileExportCSV: TMenuItem;
+    mnuFileExportSSV: TMenuItem;
+    mnuFileExportTab: TMenuItem;
+    mnuFileExit: TMenuItem;
+    mnuFileImport: TMenuItem;
+    mnuFileImportCSV: TMenuItem;
+    mnuFileImportSSV: TMenuItem;
+    mnuFileImportTAB: TMenuItem;
+    mnuFileNew: TMenuItem;
+    mnuFileOpen: TMenuItem;
+    mnuFileSave: TMenuItem;
+
+    mnuHelpAbout: TMenuItem;
+    mnuHelpLicense: TMenuItem;
+    mnuHelpShowTOC: TMenuItem;
+    mnuHelpUsingGrid: TMenuItem;
+
+    mnuIOptions: TMenuItem;
+
+    mnuSimulations: TMenuItem;
+    mnuSimBivarScatterPlot: TMenuItem;
+    mnuSimChiSqProb: TMenuItem;
+    mnuSimDistPlots: TMenuItem;
+    mnuSimFProb: TMenuItem;
+    mnuSimGenerateRandomValues: TMenuItem;
+    mnuSimGenerateSeqValues: TMenuItem;
+    mnuSimHyperGeomProb: TMenuItem;
+    mnuSimInverseZ: TMenuItem;
+    mnuSimMultiVarDists: TMenuItem;
+    mnuSimPowerCurves: TMenuItem;
+    mnuSimProbabilities: TMenuItem;
+    mnuSimProbBetween: TMenuItem;
+    mnuSimProbDIVIDER: TMenuItem;
+    mnuSimProbGreaterZ: TMenuItem;
+    mnuSimProbLessZ: TMenuItem;
+    mnuSimStudentTProb: TMenuItem;
+    mnuSimTypeErrorCurves: TMenuItem;
+
+    mnuTools: TMenuItem;
+    mnuToolsCalculator: TMenuItem;
+    mnuToolsFormatGrid: TMenuItem;
+    mnuToolsJPEGViewer: TMenuItem;
+    mnuToolsLoadSubFile: TMenuItem;
+    mnuToolsOutputForm: TMenuItem;
+    mnuToolsPrintGrid: TMenuItem;
+    mnuToolsSelectCases: TMenuItem;
+    mnuToolsSmooth: TMenuItem;
+    mnuToolsSortCases: TMenuItem;
+    mnuToolsStrToInt: TMenuItem;
+    mnuToolsSwapDecType: TMenuItem;
+    mnuToolsSwapRowsCols: TMenuItem;
+
+    mnuVariables: TMenuItem;
+    mnuVariablesDefine: TMenuItem;
+    mnuVariablesEquationEditor: TMenuItem;
+    mnuVariablesPrintDefs: TMenuItem;
+    mnuVariablesRecode: TMenuItem;
+    mnuVariablesTransform: TMenuItem;
+
+    MenuItem12: TMenuItem;
+    MenuItem2: TMenuItem;
     MenuItem14: TMenuItem;
     MenuItem15: TMenuItem;
     MenuItem17: TMenuItem;
@@ -79,11 +160,6 @@ type
     MenuItem25: TMenuItem;
     MenuItem26: TMenuItem;
     MenuItem27: TMenuItem;
-    mnuEditCopyCells: TMenuItem;
-    mnuEditPasteCells: TMenuItem;
-    mnuEditCutCells: TMenuItem;
-    mnuHelpUsingGrid: TMenuItem;
-    mnuToolsOutputForm: TMenuItem;
     MenuItem29: TMenuItem;
     MenuItem31: TMenuItem;
     MenuItem33: TMenuItem;
@@ -91,18 +167,11 @@ type
     CompareDists: TMenuItem;
     MatManMnu: TMenuItem;
     GrdBkMnu: TMenuItem;
-    mnuSimInverseZ: TMenuItem;
-    mnuSimChiSqProb: TMenuItem;
-    mnuSimFProb: TMenuItem;
-    mnuSimHyperGeomProb: TMenuItem;
     BinA: TMenuItem;
     BartlettTest: TMenuItem;
     GrpFreq: TMenuItem;
     Correspondence: TMenuItem;
     KSTest: TMenuItem;
-    mnuVariablesEquationEditor: TMenuItem;
-    mnuToolsCalculator: TMenuItem;
-    mnuToolsJPEGViewer: TMenuItem;
     MedianPolish: TMenuItem;
     DataSmooth: TMenuItem;
     ItemBankMenuItem: TMenuItem;
@@ -111,17 +180,12 @@ type
     LSMRitem: TMenuItem;
     MenuItem42: TMenuItem;
     MenuItem43: TMenuItem;
-    mnuSimProbDIVIDER: TMenuItem;
     MenuItem45: TMenuItem;
     MenuItem46: TMenuItem;
-    mnuHelpLicense: TMenuItem;
     MenuItem47: TMenuItem;
-    mnuEditDIVIDER2: TMenuItem;
-    mnuEditDIVIDER1: TMenuItem;
     MenuItem50: TMenuItem;
     MenuItem51: TMenuItem;
     MenuItem52: TMenuItem;
-    mnuHelpShowTOC: TMenuItem;
     SimpChiSqr: TMenuItem;
     SRHItem: TMenuItem;
     OneCaseAnova: TMenuItem;
@@ -129,34 +193,16 @@ type
     Sens: TMenuItem;
     XvsMultY: TMenuItem;
     RunsTest: TMenuItem;
-    mnuToolsSmooth: TMenuItem;
     NestedABC: TMenuItem;
-    mnuSimStudentTProb: TMenuItem;
-    mnuSimProbBetween: TMenuItem;
-    mnuSimProbLessZ: TMenuItem;
-    mnuSimProbGreaterZ: TMenuItem;
-    mnuSimProbabilities: TMenuItem;
-    mnuToolsStrToInt: TMenuItem;
-    mnuToolsSwapDecType: TMenuItem;
     PicView: TMenuItem;
     mnuShowOptions: TMenuItem;
     WghtedKappa: TMenuItem;
     WLSReg: TMenuItem;
     TwoSLSReg: TMenuItem;
     RiditAnalysis: TMenuItem;
-    MenuItem6: TMenuItem;
     MenuItem9: TMenuItem;
-    pcontrochart: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
-    mnuEditNewCol: TMenuItem;
-    mnuEditCopyCol: TMenuItem;
-    mnuEditCutCol: TMenuItem;
-    mnuEditPasteCol: TMenuItem;
-    mnuEditNewRow: TMenuItem;
-    mnuEditCopyRow: TMenuItem;
-    mnuEditCutRow: TMenuItem;
-    mnuEditPasteRow: TMenuItem;
     MenuItem71: TMenuItem;
     MenuItem72: TMenuItem;
     MenuItem73: TMenuItem;
@@ -196,28 +242,6 @@ type
     Label1: TLabel;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
-    mnuFileOpen: TMenuItem;
-    mnuFileNew: TMenuItem;
-    mnuFileImport: TMenuItem;
-    mnuFileExport: TMenuItem;
-    mnuFileExit: TMenuItem;
-    mnuFileImportTAB: TMenuItem;
-    mnuFileImportCSV: TMenuItem;
-    mnuFileImportSSV: TMenuItem;
-    mnuVariables: TMenuItem;
-    mnuFileExportTab: TMenuItem;
-    mnuFileExportCSV: TMenuItem;
-    mnuFileExportSSV: TMenuItem;
-    mnuVariablesDefine: TMenuItem;
-    mnuVariablesPrintDefs: TMenuItem;
-    mnuVariablesTransform: TMenuItem;
-    mnuVariablesRecode: TMenuItem;
-    mnuToolsFormatGrid: TMenuItem;
-    mnuToolsSortCases: TMenuItem;
-    mnuToolsPrintGrid: TMenuItem;
-    mnuTools: TMenuItem;
-    mnuToolsSelectCases: TMenuItem;
-    mnuToolsLoadSubFile: TMenuItem;
     MenuItem32: TMenuItem;
     OneSampTests: TMenuItem;
     MenuItem34: TMenuItem;
@@ -226,9 +250,7 @@ type
     MenuItem37: TMenuItem;
     MenuItem38: TMenuItem;
     MenuItem39: TMenuItem;
-    mnuEdit: TMenuItem;
     MenuItem40: TMenuItem;
-    MenuItem41: TMenuItem;
     Distributions: TMenuItem;
     FreqAnal: TMenuItem;
     CrossTabs: TMenuItem;
@@ -237,7 +259,6 @@ type
     NormalityTests: TMenuItem;
     ThreeDRotate: TMenuItem;
     PlotXvsY: TMenuItem;
-    MenuItem5: TMenuItem;
     BubblePlot: TMenuItem;
     StemLeaf: TMenuItem;
     MultXvsY: TMenuItem;
@@ -248,21 +269,10 @@ type
     WithinAnova: TMenuItem;
     AxSAnova: TMenuItem;
     ABSAnova: TMenuItem;
-    mnuIOptions: TMenuItem;
     Ancova: TMenuItem;
     GLM: TMenuItem;
     LatinSquares: TMenuItem;
-    mnuSimBivarScatterPlot: TMenuItem;
-    mnuSimMultiVarDists: TMenuItem;
-    mnuSimTypeErrorCurves: TMenuItem;
-    mnuSimPowerCurves: TMenuItem;
-    mnuSimDistPlots: TMenuItem;
-    mnuSimGenerateSeqValues: TMenuItem;
-    mnuSimulations: TMenuItem;
-    mnuSimGenerateRandomValues: TMenuItem;
     MenuItem8: TMenuItem;
-    mnuToolsSwapRowsCols: TMenuItem;
-    mnuFileSave: TMenuItem;
     Panel1: TPanel;
     Panel2: TPanel;
     DataGrid: TStringGrid;
@@ -272,6 +282,16 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+
+    // Menu 'Analysis" / "Statistical Process Control"
+    procedure mnuAnalysisSPC_CChartClick(Sender: TObject);
+    procedure mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
+    procedure mnuAnalysisSPC_PChartClick(Sender: TObject);
+    procedure mnuAnalysisSPC_RangeClick(Sender: TObject);
+    procedure mnuAnalysisSPC_SChartClick(Sender: TObject);
+    procedure mnuAnalysisSPC_UChartClick(Sender: TObject);
+    procedure mnuAnalysisSPC_XBarClick(Sender: TObject);
 
     // Menu "Edit"
     procedure mnuEditCopyCellsClick(Sender: TObject);
@@ -397,18 +417,12 @@ type
     procedure MenuItem113Click(Sender: TObject);
     procedure MenuItem114Click(Sender: TObject);
     procedure MenuItem115Click(Sender: TObject);
-    procedure MenuItem116Click(Sender: TObject);
-    procedure MenuItem117Click(Sender: TObject);
-    procedure MenuItem118Click(Sender: TObject);
-    procedure MenuItem119Click(Sender: TObject);
     procedure MenuItem11Click(Sender: TObject);
-    procedure MenuItem120Click(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
     procedure MenuItem27Click(Sender: TObject);
     procedure MenuItem29Click(Sender: TObject);
     procedure MenuItem31Click(Sender: TObject);
     procedure MenuItem33Click(Sender: TObject);
-    procedure MenuItem6Click(Sender: TObject);
     procedure MenuItem71Click(Sender: TObject);
     procedure MenuItem72Click(Sender: TObject);
     procedure MenuItem73Click(Sender: TObject);
@@ -443,7 +457,6 @@ type
     procedure NormalityTestsClick(Sender: TObject);
     procedure OneCaseAnovaClick(Sender: TObject);
     procedure OneSampTestsClick(Sender: TObject);
-    procedure pcontrochartClick(Sender: TObject);
 //    procedure PicViewClick(Sender: TObject);
     procedure PlotXvsYClick(Sender: TObject);
     procedure PropDiffClick(Sender: TObject);
@@ -494,8 +507,13 @@ uses
   CompRelUnit, KR21Unit, SpBrUnit, RelChangeUnit, DIFUnit, PolyDIFUnit,
   ChiSqrUnit, SpearmanUnit, MannWhitUUnit, ExactUnit, ConcordanceUnit,
   KWAnovaUnit, WilcoxonUnit, CochranQUnit, SignTestUnit, FriedmanUnit,
-  BinomialUnit, KendallTauUnit, KaplanMeierUnit, XBarUnit, RChartUnit,
-  SigmaChartUnit, CUMSUMUNIT, CCHARTUNIT, PChartUnit, UChartUnit, CorSimUnit,
+  BinomialUnit, KendallTauUnit, KaplanMeierUnit,
+
+  // Statistical process control
+  XBarUnit, RChartUnit, SChartUnit, CUMSUMUNIT, CCHARTUNIT,
+  PChartUnit, UChartUnit, //SigmaChartUnit,
+
+  CorSimUnit,
   ErrorCurvesUnit, PCurvesUnit, DistribUnit, GenSeqUnit, GenRndValsUnit,
   MultGenUnit, LoanItUnit, SumYrsDepUnit, SLDUnit, DblDeclineUnit,
   RIDITUnit, TwoSLSUnit, WLSUnit, SortCasesUnit,
@@ -587,6 +605,15 @@ begin
   end;
 end;
 
+procedure TOS3MainFrm.MenuItem2Click(Sender: TObject);
+begin
+  {
+  if SChartForm = nil then
+    Application.CreateForm(TSChartForm, SChartForm);
+  SChartForm.ShowModal;
+  }
+end;
+
 // Menu "Analysis" > "Financial" > "Double Declining Value"
 procedure TOS3MainFrm.MenuItem27Click(Sender: TObject);
 begin
@@ -620,7 +647,7 @@ begin
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "CUMSUM Chart"
-procedure TOS3MainFrm.MenuItem6Click(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
 begin
   if CUMSUMFrm = nil then
     Application.CreateForm(TCUMSUMFrm, CUMSUMFrm);
@@ -897,7 +924,7 @@ end;
 
 
 // Menu "Analysis" > "Statistical Process Control" > "p Control Chart"
-procedure TOS3MainFrm.pcontrochartClick(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_PChartClick(Sender: TObject);
 begin
   if pChartFrm = nil then
     Application.CreateForm(TpChartFrm, pChartFrm);
@@ -2107,7 +2134,7 @@ begin
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "XBAR Chart"
-procedure TOS3MainFrm.MenuItem116Click(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_XBarClick(Sender: TObject);
 begin
   if XBarFrm = nil then
     Application.CreateForm(TXBarFrm, XBarFrm);
@@ -2115,7 +2142,7 @@ begin
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "Range Chart"
-procedure TOS3MainFrm.MenuItem117Click(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_RangeClick(Sender: TObject);
 begin
   if RChartFrm = nil then
     Application.CreateForm(TRChartFrm, RChartFrm);
@@ -2123,15 +2150,20 @@ begin
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "S Control Chart"
-procedure TOS3MainFrm.MenuItem118Click(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_SChartClick(Sender: TObject);
 begin
+  if SChartForm = nil then
+    Application.CreateForm(TSChartForm, SChartForm);
+  SChartForm.ShowModal;
+  {
   if SigmaChartFrm = nil then
     Application.CreateForm(TSigmaChartFrm, SigmaChartFrm);
   SigmaChartFrm.ShowModal;
+  }
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "Defect (nonconformity) c Chart"
-procedure TOS3MainFrm.MenuItem119Click(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_CChartClick(Sender: TObject);
 begin
   if CChartFrm = nil then
     Application.CreateForm(TCChartFrm, CChartFrm);
@@ -2147,7 +2179,7 @@ begin
 end;
 
 // Menu "Analysis" > "Statistical Process Control" > "Defects per Unit u Chart"
-procedure TOS3MainFrm.MenuItem120Click(Sender: TObject);
+procedure TOS3MainFrm.mnuAnalysisSPC_UChartClick(Sender: TObject);
 begin
   if UChartFrm = nil then
     Application.CreateForm(TUChartFrm, UChartFrm);

@@ -442,7 +442,7 @@ object OS3MainFrm: TOS3MainFrm
         OnClick = mnuEditPasteRowClick
       end
     end
-    object MenuItem5: TMenuItem
+    object mnuAnalysis: TMenuItem
       Caption = 'Analyses'
       object MenuItem32: TMenuItem
         Caption = 'Descriptive'
@@ -861,35 +861,35 @@ object OS3MainFrm: TOS3MainFrm
           OnClick = lifetableClick
         end
       end
-      object MenuItem41: TMenuItem
+      object mnuAnalysisSPC: TMenuItem
         Caption = 'Statistical Process Control'
-        object MenuItem116: TMenuItem
+        object mnuAnalysisSPC_XBar: TMenuItem
           Caption = 'XBAR Chart'
-          OnClick = MenuItem116Click
+          OnClick = mnuAnalysisSPC_XBarClick
         end
-        object MenuItem117: TMenuItem
+        object mnuAnalysisSPC_Range: TMenuItem
           Caption = 'Range Chart'
-          OnClick = MenuItem117Click
+          OnClick = mnuAnalysisSPC_RangeClick
         end
-        object MenuItem118: TMenuItem
+        object mnuAnalysisSPC_SChart: TMenuItem
           Caption = 'S Control Chart'
-          OnClick = MenuItem118Click
+          OnClick = mnuAnalysisSPC_SChartClick
         end
-        object MenuItem6: TMenuItem
+        object mnuAnalysisSPC_CUMSUM: TMenuItem
           Caption = 'CUMSUM Chart'
-          OnClick = MenuItem6Click
+          OnClick = mnuAnalysisSPC_CUMSUMClick
         end
-        object MenuItem119: TMenuItem
+        object mnuAnalysisSPC_CChart: TMenuItem
           Caption = 'Defect (nonconformity) c Chart'
-          OnClick = MenuItem119Click
+          OnClick = mnuAnalysisSPC_CChartClick
         end
-        object pcontrochart: TMenuItem
+        object mnuAnalysisSPC_PChart: TMenuItem
           Caption = 'p Control Chart'
-          OnClick = pcontrochartClick
+          OnClick = mnuAnalysisSPC_PChartClick
         end
-        object MenuItem120: TMenuItem
+        object mnuAnalysisSPC_UChart: TMenuItem
           Caption = 'Defects per Unit u Chart'
-          OnClick = MenuItem120Click
+          OnClick = mnuAnalysisSPC_UChartClick
         end
       end
       object MenuItem9: TMenuItem
@@ -1063,6 +1063,10 @@ object OS3MainFrm: TOS3MainFrm
         Caption = 'Using the Grid'
         OnClick = mnuHelpUsingGridClick
       end
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'MenuItem2'
+      OnClick = MenuItem2Click
     end
   end
   object OpenDialog1: TOpenDialog

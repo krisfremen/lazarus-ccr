@@ -1,0 +1,16 @@
+inherited SChartForm: TSChartForm
+  Caption = 'Sigma Chart'
+  inherited PageControl1: TPageControl
+    inherited ReportPage: TTabSheet
+      inherited Panel1: TPanel
+        inherited ReportMemo: TMemo
+          Left = 4
+          Height = 374
+          Top = 4
+          Width = 521
+          BorderSpacing.Around = 4
+        end
+      end
+    end
+  end
+end

@@ -8,7 +8,8 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg, Globals, LicenseUnit,
-  OptionsUnit, MainDM, MainUnit, MathUnit; //, utils, chartunit;
+  OptionsUnit, MainDM, MainUnit, MathUnit, BasicSPCUnit,
+SChartUnit; //, utils, chartunit;
 
 {$R LazStats.res}
 
@@ -26,7 +27,6 @@ begin
     else
       Application.Terminate;
   end;
-
   Application.CreateForm(TMainDataModule, MainDataModule);
   Application.CreateForm(TOS3MainFrm, OS3MainFrm);
   Application.Run;
