@@ -17,7 +17,8 @@ uses
   StdCtrls, ExtCtrls, Buttons, ComCtrls,
   MainUnit, Globals, ContextHelpUnit, DataProcs, GraphLib,
   {$IFDEF USE_TACHART}
-  TAChartUtils, TACustomSeries, ChartFrameUnit;
+  TAChartUtils, TASources, TACustomSeries, TASeries, TALegend, TAChartAxisUtils,
+  ChartFrameUnit;
   {$ELSE}
   OutputUnit, BlankFrmUnit;
   {$ENDIF}
@@ -318,6 +319,14 @@ begin
   FChartFrame.Align := alClient;
   FChartFrame.BorderSpacing.Around := Scale96ToFont(8);
   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
+  FChartFrame.Chart.Legend.Alignment := laBottomCenter;
+  FChartFrame.Chart.Legend.ColumnCount := 3;
+  with FChartFrame.Chart.AxisList.Add do
+  begin
+    Alignment := calRight;
+    Marks.Source := TListChartSource.Create(self);
+    Marks.Style := smsLabel;
+  end;
  {$ELSE}
   if BlankFrm = nil then
     Application.CreateForm(TBlankFrm, BlankFrm);
@@ -340,6 +349,9 @@ const
 var
  {$IFDEF USE_TACHART}
   ser: TChartSeries;
+  rightLabels: TListChartSource;
+  constLine: TConstantLine;
+  s: String;
  {$ELSE}
   i: Integer;
   xpos, ypos, hleft, hright, vtop, vbottom, imagewide: integer;
@@ -350,6 +362,8 @@ var
  {$ENDIF}
 begin
  {$IFDEF USE_TACHART}
+  rightLabels := FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource;
+
   FChartFrame.Clear;
   FChartFrame.SetTitle('XBAR chart for ' + OS3MainFrm.FileNameEdit.Text, taLeftJustify);
   FChartFrame.SetXTitle(GroupEdit.Text);
@@ -360,37 +374,39 @@ begin
   FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
 
   FChartFrame.HorLine(GrandMean, clRed, psSolid, 'Grand mean');
+  rightLabels.Add(GrandMean, GrandMean, 'Grand mean');
+
+  FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL/LCL');
+  rightLabels.Add(UCL, UCL, 'UCL');
+
+  FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, '');
+  rightLabels.Add(UCL, LCL, 'LCL');
 
   if UpSpecChk.Checked then
   begin
-    if UCL > UpperSpec then
-    begin
-      FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL');
-      FChartFrame.HorLine(UpperSpec, SPEC_COLOR, SPEC_STYLE, 'Upper Spec');
-    end else
-    begin
-      FChartFrame.HorLine(UpperSpec, SPEC_COLOR, SPEC_STYLE, 'Upper Spec');
-      FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL');
-    end;
-  end else
-    FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL');
+    if LowSpecChk.Checked then
+      s := 'Upper/Lower Spec'
+    else
+      s := 'Upper Spec';
+    FChartFrame.HorLine(UpperSpec, SPEC_COLOR, SPEC_STYLE, s);
+    rightLabels.Add(UpperSpec, UpperSpec, 'Upper Spec');
+  end;
 
-  if TargetChk.Checked then
+  if TargetChk.Checked then begin
     FChartFrame.HorLine(TargetSpec, TARGET_COLOR, psSolid, 'Target');
+    rightLabels.Add(TargetSpec, TargetSpec, 'Target');
+  end;
 
   if LowSpecChk.Checked then
   begin
-    if LowerSpec > LCL then
-    begin
-      FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, 'Lower Spec');
-      FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, 'LCL');
-    end else
-    begin
-      FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, 'LCL');
-      FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, 'Lower Spec');
-    end;
-  end else
-    FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, 'LCL');
+    if UpSpecChk.Checked then
+      s := 'Upper/Lower Spec'
+    else
+      s := 'Lower Spec';
+    constLine := FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, s);
+    constLine.Legend.Visible := not UpSpecChk.Checked;
+    rightLabels.Add(LowerSpec, LowerSpec, 'Lower Spec');
+  end;
  {$ELSE}
   NoGrps := Length(groups);
   maxval := -Infinity;

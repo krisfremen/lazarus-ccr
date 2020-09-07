@@ -24,15 +24,15 @@ type
     ZoomDragTool: TZoomDragTool;
 
   protected
-    procedure Constline(xy: Double; ADirection: TLineStyle; AColor: TColor;
-      ALineStyle: TPenStyle; ALegendTitle: String);
+    function Constline(xy: Double; ADirection: TLineStyle; AColor: TColor;
+      ALineStyle: TPenStyle; ALegendTitle: String): TConstantLine;
 
   public
     procedure Clear;
     procedure GetXRange(out XMin, XMax: Double; Logical: Boolean = true);
     procedure GetYRange(out YMin, YMax: Double; Logical: Boolean = true);
-    procedure HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle;
-      ALegendTitle: String);
+    function HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle;
+      ALegendTitle: String): TConstantLine;
     function PlotXY(AType: TPlotType; x, y: DblDyneVec; xLabels: StrDyneVec;
       yErrorBars: DblDyneVec; LegendTitle: string; AColor: TColor;
       ASymbol: TSeriesPointerStyle = psCircle): TChartSeries;
@@ -42,8 +42,8 @@ type
     procedure SetTitle(const ATitle: String; Alignment: TAlignment = taCenter);
     procedure SetXTitle(const ATitle: String);
     procedure SetYTitle(const ATitle: String);
-    procedure VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
-      ALegendTitle: String);
+    function VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
+      ALegendTitle: String): TConstantLine;
   end;
 
 implementation
@@ -65,19 +65,17 @@ begin
 end;
 
 
-procedure TChartFrame.Constline(xy: Double; ADirection: TLineStyle;
-  AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String);
-var
-  ser: TConstantLine;
+function TChartFrame.Constline(xy: Double; ADirection: TLineStyle;
+  AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String): TConstantLine;
 begin
-  ser := TConstantLine.Create(self);
-  ser.Position := xy;
-  ser.LineStyle := ADirection;
-  ser.Pen.Color := AColor;
-  ser.Pen.Style := ALineStyle;
-  ser.Title := ALegendTitle;
-  ser.Legend.Visible := ALegendTitle <> '';
-  Chart.AddSeries(ser);
+  Result := TConstantLine.Create(self);
+  Result.Position := xy;
+  Result.LineStyle := ADirection;
+  Result.Pen.Color := AColor;
+  Result.Pen.Style := ALineStyle;
+  Result.Title := ALegendTitle;
+  Result.Legend.Visible := ALegendTitle <> '';
+  Chart.AddSeries(Result);
 end;
 
 
@@ -107,17 +105,17 @@ begin
 end;
 
 
-procedure TChartFrame.HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle;
-  ALegendTitle: String);
+function TChartFrame.HorLine(y: Double; AColor: TColor; ALineStyle: TPenStyle;
+  ALegendTitle: String): TConstantLine;
 begin
-  ConstLine(y, lsHorizontal, AColor, ALineStyle, ALegendTitle);
+  Result := ConstLine(y, lsHorizontal, AColor, ALineStyle, ALegendTitle);
 end;
 
 
-procedure TChartFrame.VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
-  ALegendTitle: String);
+function TChartFrame.VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
+  ALegendTitle: String): TConstantLine;
 begin
-  ConstLine(x, lsVertical, AColor, ALineStyle, ALegendTitle);
+  Result := ConstLine(x, lsVertical, AColor, ALineStyle, ALegendTitle);
 end;
 
 
