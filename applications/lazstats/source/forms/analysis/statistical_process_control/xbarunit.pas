@@ -41,6 +41,9 @@ type
     Splitter1: TSplitter;
     ReportPage: TTabSheet;
     ChartPage: TTabSheet;
+    tbPrint: TToolButton;
+    tbSave: TToolButton;
+    ToolBar1: TToolBar;
     UpSpecEdit: TEdit;
     LowSpecEdit: TEdit;
     TargetSpecEdit: TEdit;
@@ -62,6 +65,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure tbPrintClick(Sender: TObject);
+    procedure tbSaveClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
     { private declarations }
@@ -106,6 +111,16 @@ begin
  {$IFDEF USE_TACHART}
   FChartFrame.Clear;
  {$ENDIF}
+end;
+
+procedure TXBarFrm.tbPrintClick(Sender: TObject);
+begin
+  FChartFrame.Print;
+end;
+
+procedure TXBarFrm.tbSaveClick(Sender: TObject);
+begin
+  FChartFrame.Save;
 end;
 
 procedure TXBarFrm.VarListClick(Sender: TObject);
@@ -343,7 +358,7 @@ begin
 end;
 
 procedure TXBarFrm.PlotMeans(const Groups: StrDyneVec; const Means, StdDevs: DblDyneVec;
-  UCL, LCL, GrandMean: double; TargetSpec, LowerSpec, UpperSpec: double);
+  UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
 const
   TARGET_COLOR = clBlue;
   CL_COLOR = clRed;

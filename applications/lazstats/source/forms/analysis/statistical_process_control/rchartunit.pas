@@ -38,6 +38,9 @@ type
     CloseBtn: TButton;
     MeasEdit: TEdit;
     GroupEdit: TEdit;
+    tbPrint: TToolButton;
+    tbSave: TToolButton;
+    ToolBar1: TToolBar;
     VarListLabel: TLabel;
     GroupLabel: TLabel;
     MeasLabel: TLabel;
@@ -51,6 +54,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure tbPrintClick(Sender: TObject);
+    procedure tbSaveClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
     { private declarations }
@@ -73,89 +78,8 @@ implementation
 uses
   Math, Utils;
 
+
 { TRChartFrm }
-
-procedure TRChartFrm.ResetBtnClick(Sender: TObject);
-var
-  i: integer;
-begin
-  VarList.Clear;
-  GroupEdit.Text := '';
-  MeasEdit.Text := '';
-  for i := 1 to NoVariables do
-    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
- {$IFDEF USE_TACHART}
-  FChartFrame.Clear;
- {$ENDIF}
-end;
-
-procedure TRChartFrm.VarListClick(Sender: TObject);
-var
-  index: integer;
-begin
-  index := VarList.ItemIndex;
-  if index > -1 then
-  begin
-    if GroupEdit.Text = '' then
-      GroupEdit.Text := VarList.Items[index]
-    else
-      MeasEdit.Text := VarList.Items[index];
-    VarList.Items.Delete(index);
-  end;
-end;
-
-procedure TRChartFrm.FormActivate(Sender: TObject);
-var
-  w: Integer;
-begin
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
-  HelpBtn.Constraints.MinWidth := w;
-  ResetBtn.Constraints.MinWidth := w;
-  ComputeBtn.Constraints.MinWidth := w;
-  CloseBtn.Constraints.MinWidth := w;
-
-  SpecsPanel.Constraints.MinWidth := Max(
-    VarListLabel.Width + MeasLabel.Width,
-    CloseBtn.Left + CloseBtn.Width - HelpBtn.Left + HelpBtn.BorderSpacing.Left
-  );
-
-  Constraints.MinHeight := MeasEdit.Top + MeasEdit.Height + ButtonBevel.Height + ButtonPanel.Height + 2*ButtonPanel.BorderSpacing.Bottom;
-end;
-
-procedure TRChartFrm.FormCreate(Sender: TObject);
-begin
-  Assert(OS3MainFrm <> nil);
-  {$IFDEF USE_TACHART}
-   FChartFrame := TChartFrame.Create(self);
-   FChartFrame.Parent := ChartPage;
-   FChartFrame.Align := alClient;
-   FChartFrame.BorderSpacing.Around := Scale96ToFont(8);
-   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
-   FChartFrame.Chart.Legend.Alignment := laBottomCenter;
-   FChartFrame.Chart.Legend.ColumnCount := 3;
-   with FChartFrame.Chart.AxisList.Add do
-   begin
-     Alignment := calRight;
-     Marks.Source := TListChartSource.Create(self);
-     Marks.Style := smsLabel;
-   end;
-  {$ELSE}
-   if BlankFrm = nil then
-     Application.CreateForm(TBlankFrm, BlankFrm);
-  {$ENDIF}
-end;
-
-procedure TRChartFrm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
-end;
-
-procedure TRChartFrm.HelpBtnClick(Sender: TObject);
-begin
-  if ContextHelpForm = nil then
-    Application.CreateForm(TContextHelpForm, ContextHelpForm);
-  ContextHelpForm.HelpMessage((Sender as TButton).tag);
-end;
 
 procedure TRChartFrm.ComputeBtnClick(Sender: TObject);
 var
@@ -331,6 +255,64 @@ begin
   means := nil;
 end;
 
+
+procedure TRChartFrm.FormActivate(Sender: TObject);
+var
+  w: Integer;
+begin
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
+  HelpBtn.Constraints.MinWidth := w;
+  ResetBtn.Constraints.MinWidth := w;
+  ComputeBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
+
+  SpecsPanel.Constraints.MinWidth := Max(
+    VarListLabel.Width + MeasLabel.Width,
+    CloseBtn.Left + CloseBtn.Width - HelpBtn.Left + HelpBtn.BorderSpacing.Left
+  );
+
+  Constraints.MinHeight := MeasEdit.Top + MeasEdit.Height + ButtonBevel.Height + ButtonPanel.Height + 2*ButtonPanel.BorderSpacing.Bottom;
+end;
+
+
+procedure TRChartFrm.FormCreate(Sender: TObject);
+begin
+  Assert(OS3MainFrm <> nil);
+  {$IFDEF USE_TACHART}
+   FChartFrame := TChartFrame.Create(self);
+   FChartFrame.Parent := ChartPage;
+   FChartFrame.Align := alClient;
+   FChartFrame.BorderSpacing.Around := Scale96ToFont(8);
+   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
+   FChartFrame.Chart.Legend.Alignment := laBottomCenter;
+   FChartFrame.Chart.Legend.ColumnCount := 3;
+   with FChartFrame.Chart.AxisList.Add do
+   begin
+     Alignment := calRight;
+     Marks.Source := TListChartSource.Create(self);
+     Marks.Style := smsLabel;
+   end;
+  {$ELSE}
+   if BlankFrm = nil then
+     Application.CreateForm(TBlankFrm, BlankFrm);
+  {$ENDIF}
+end;
+
+
+procedure TRChartFrm.FormShow(Sender: TObject);
+begin
+  ResetBtnClick(self);
+end;
+
+
+procedure TRChartFrm.HelpBtnClick(Sender: TObject);
+begin
+  if ContextHelpForm = nil then
+    Application.CreateForm(TContextHelpForm, ContextHelpForm);
+  ContextHelpForm.HelpMessage((Sender as TButton).tag);
+end;
+
+
 procedure TRChartFrm.PlotMeans(const Groups: StrDyneVec; const Means: DblDyneVec;
   UCL, LCL, GrandMean: double);
 const
@@ -486,6 +468,53 @@ begin
   ypos := ypos - strhi div 2;
   BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
  {$ENDIF}
+end;
+
+
+procedure TRChartFrm.ResetBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  VarList.Clear;
+  GroupEdit.Text := '';
+  MeasEdit.Text := '';
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+ {$IFDEF USE_TACHART}
+  FChartFrame.Clear;
+ {$ENDIF}
+end;
+
+
+procedure TRChartFrm.tbPrintClick(Sender: TObject);
+begin
+ {$IFDEF USE_TACHART}
+  FChartFrame.Print;
+ {$ENDIF}
+end;
+
+
+procedure TRChartFrm.tbSaveClick(Sender: TObject);
+begin
+ {$IFDEF USE_TACHART}
+  FChartFrame.Save;
+ {$ENDIF}
+end;
+
+
+procedure TRChartFrm.VarListClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    if GroupEdit.Text = '' then
+      GroupEdit.Text := VarList.Items[index]
+    else
+      MeasEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+  end;
 end;
 
 end.

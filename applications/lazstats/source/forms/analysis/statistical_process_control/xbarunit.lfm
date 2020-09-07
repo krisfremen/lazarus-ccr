@@ -410,6 +410,40 @@ object XBarFrm: TXBarFrm
     end
     object ChartPage: TTabSheet
       Caption = 'Chart'
+      ClientHeight = 386
+      ClientWidth = 544
+      object ToolBar1: TToolBar
+        Left = 514
+        Height = 374
+        Top = 6
+        Width = 24
+        Align = alRight
+        AutoSize = True
+        BorderSpacing.Top = 6
+        BorderSpacing.Right = 6
+        BorderSpacing.Bottom = 6
+        Caption = 'ToolBar1'
+        EdgeBorders = []
+        Images = MainDataModule.ImageList
+        TabOrder = 0
+        Transparent = True
+        object tbSave: TToolButton
+          Left = 1
+          Hint = 'Save chart to file'
+          Top = 0
+          Caption = 'tbSave'
+          ImageIndex = 4
+          OnClick = tbSaveClick
+        end
+        object tbPrint: TToolButton
+          Left = 1
+          Hint = 'Print chart'
+          Top = 22
+          Caption = 'tbPrint'
+          ImageIndex = 5
+          OnClick = tbPrintClick
+        end
+      end
     end
   end
 end

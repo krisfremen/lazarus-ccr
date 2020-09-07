@@ -308,12 +308,14 @@ object DistribFrm: TDistribFrm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 918
-    Height = 66
+    Height = 420
     Top = 8
     Width = 24
     Align = alNone
-    Anchors = [akTop, akRight]
+    Anchors = [akTop, akRight, akBottom]
     AutoSize = True
     BorderSpacing.Top = 8
     BorderSpacing.Right = 6
