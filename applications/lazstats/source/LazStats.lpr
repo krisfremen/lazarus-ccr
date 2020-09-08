@@ -7,10 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg, Globals, LicenseUnit,
-  OptionsUnit, MainDM, MainUnit, MathUnit, BasicSPCUnit,
-SChartUnit, rchartunit, XBarChartUnit, cchartunit,
-pchartunit; //, utils, chartunit;
+  Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg,
+  Globals, LicenseUnit, OptionsUnit, DictionaryUnit, MainDM, MainUnit;
 
 {$R LazStats.res}
 
@@ -30,10 +28,6 @@ begin
   end;
   Application.CreateForm(TMainDataModule, MainDataModule);
   Application.CreateForm(TOS3MainFrm, OS3MainFrm);
-  Application.CreateForm(TRChartForm, RChartForm);
-  Application.CreateForm(TXBarChartForm, XBarChartForm);
-  Application.CreateForm(TCChartForm, CChartForm);
-  Application.CreateForm(TPChartForm, PChartForm);
   Application.Run;
 end.
 

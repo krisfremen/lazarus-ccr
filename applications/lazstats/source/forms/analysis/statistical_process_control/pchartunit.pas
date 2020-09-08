@@ -113,7 +113,7 @@ begin
   // Show graph
   PlotMeans(
     Format('P Control Chart for "%s"', [GetFileName]),
-    'Sample', MeasEdit.Text, 'Proportion', 'Mean',
+    'Sample', MeasEdit.Text + ' proportion', 'Values', 'Mean',
     nil, obsP,
     UCL, LCL, AVG,
     NaN, NaN, NaN
@@ -146,6 +146,7 @@ begin
     EnableAutoSizing;
   end;
 end;
+
 
 procedure TPChartForm.Reset;
 begin

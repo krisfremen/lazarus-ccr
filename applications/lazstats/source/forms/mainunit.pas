@@ -646,14 +646,6 @@ begin
   SingleLinkFrm.ShowModal;
 end;
 
-// Menu "Analysis" > "Statistical Process Control" > "CUMSUM Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
-begin
-  if CUMSUMFrm = nil then
-    Application.CreateForm(TCUMSUMFrm, CUMSUMFrm);
-  CUMSUMFrm.ShowModal;
-end;
-
 // Menu "Correlation" > "Product-Moment"
 procedure TOS3MainFrm.MenuItem71Click(Sender: TObject);
 begin
@@ -922,14 +914,6 @@ begin
   OneSampFrm.ShowModal;
 end;
 
-
-// Menu "Analysis" > "Statistical Process Control" > "p Control Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_PChartClick(Sender: TObject);
-begin
-  if PChartForm = nil then
-    Application.CreateForm(TPChartForm, PChartForm);
-  PChartForm.ShowModal;
-end;
 
 // Menu "Analysis" > "Descriptive" > "Plot X vs Y"
 procedure TOS3MainFrm.PlotXvsYClick(Sender: TObject);
@@ -2133,29 +2117,6 @@ begin
   KaplanMeierFrm.ShowModal;
 end;
 
-// Menu "Analysis" > "Statistical Process Control" > "XBAR Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_XBarClick(Sender: TObject);
-begin
-  if XBarChartForm = nil then
-    Application.CreateForm(TXBarChartForm, XBarChartForm);
-  XBarChartForm.ShowModal;
-end;
-
-// Menu "Analysis" > "Statistical Process Control" > "Range Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_RangeClick(Sender: TObject);
-begin
-  if RChartForm = nil then
-    Application.CreateForm(TRChartForm, RChartForm);
-  RChartForm.ShowModal;
-end;
-
-// Menu "Analysis" > "Statistical Process Control" > "S Control Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_SChartClick(Sender: TObject);
-begin
-  if SChartForm = nil then
-    Application.CreateForm(TSChartForm, SChartForm);
-  SChartForm.ShowModal;
-end;
 
 // Menu "Analysis" > "Statistical Process Control" > "Defect (nonconformity) c Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_CChartClick(Sender: TObject);
@@ -2165,20 +2126,67 @@ begin
   CChartForm.ShowModal;
 end;
 
+
+// Menu "Analysis" > "Statistical Process Control" > "CUMSUM Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
+begin
+  if CUMSUMFrm = nil then
+    Application.CreateForm(TCUMSUMFrm, CUMSUMFrm);
+  CUMSUMFrm.ShowModal;
+end;
+
+
+// Menu "Analysis" > "Statistical Process Control" > "p Control Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_PChartClick(Sender: TObject);
+begin
+  if PChartForm = nil then
+    Application.CreateForm(TPChartForm, PChartForm);
+  PChartForm.ShowModal;
+end;
+
+
+// Menu "Analysis" > "Statistical Process Control" > "Range Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_RangeClick(Sender: TObject);
+begin
+  if RChartForm = nil then
+    Application.CreateForm(TRChartForm, RChartForm);
+  RChartForm.ShowModal;
+end;
+
+
+// Menu "Analysis" > "Statistical Process Control" > "S Control Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_SChartClick(Sender: TObject);
+begin
+  if SChartForm = nil then
+    Application.CreateForm(TSChartForm, SChartForm);
+  SChartForm.ShowModal;
+end;
+
+
+// Menu "Analysis" > "Statistical Process Control" > "Defects per Unit u Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_UChartClick(Sender: TObject);
+begin
+  if UChartForm = nil then
+    Application.CreateForm(TUChartForm, UChartForm);
+  UChartForm.ShowModal;
+end;
+
+
+// Menu "Analysis" > "Statistical Process Control" > "XBAR Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_XBarClick(Sender: TObject);
+begin
+  if XBarChartForm = nil then
+    Application.CreateForm(TXBarChartForm, XBarChartForm);
+  XBarChartForm.ShowModal;
+end;
+
+
 // Menu "Analysis" > "Financial" > "Sum of years digits depreciation"
 procedure TOS3MainFrm.MenuItem11Click(Sender: TObject);
 begin
   if SumYrsDepFrm = nil then
     Application.CreateForm(TSumYrsDepFrm, SumYrsDepFrm);
   SumYrsDepFrm.ShowModal;
-end;
-
-// Menu "Analysis" > "Statistical Process Control" > "Defects per Unit u Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_UChartClick(Sender: TObject);
-begin
-  if UChartFrm = nil then
-    Application.CreateForm(TUChartFrm, UChartFrm);
-  UChartFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Financial" > "Straight line depreciation"
