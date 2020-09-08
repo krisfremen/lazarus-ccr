@@ -63,7 +63,7 @@ type
     mnuAnalysis: TMenuItem;
     mnuAnalysisSPC: TMenuItem;
     mnuAnalysisSPC_CChart: TMenuItem;
-    mnuAnalysisSPC_CUMSUM: TMenuItem;
+    mnuAnalysisSPC_CUSUM: TMenuItem;
     mnuAnalysisSPC_PChart: TMenuItem;
     mnuAnalysisSPC_Range: TMenuItem;
     mnuAnalysisSPC_SChart: TMenuItem;
@@ -286,7 +286,7 @@ type
 
     // Menu 'Analysis" / "Statistical Process Control"
     procedure mnuAnalysisSPC_CChartClick(Sender: TObject);
-    procedure mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
+    procedure mnuAnalysisSPC_CUSUMClick(Sender: TObject);
     procedure mnuAnalysisSPC_PChartClick(Sender: TObject);
     procedure mnuAnalysisSPC_RangeClick(Sender: TObject);
     procedure mnuAnalysisSPC_SChartClick(Sender: TObject);
@@ -510,7 +510,7 @@ uses
   BinomialUnit, KendallTauUnit, KaplanMeierUnit,
 
   // Statistical process control
-  XBarChartUnit, RChartUnit, SChartUnit, CUMSUMUnit, CChartUnit,
+  XBarChartUnit, RChartUnit, SChartUnit, CUSUMUnit, CChartUnit,
   PChartUnit, UChartUnit,
 
   CorSimUnit,
@@ -2127,12 +2127,12 @@ begin
 end;
 
 
-// Menu "Analysis" > "Statistical Process Control" > "CUMSUM Chart"
-procedure TOS3MainFrm.mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
+// Menu "Analysis" > "Statistical Process Control" > "CUSUM Chart"
+procedure TOS3MainFrm.mnuAnalysisSPC_CUSUMClick(Sender: TObject);
 begin
-  if CUMSUMChartForm = nil then
-    Application.CreateForm(TCUMSUMChartForm, CUMSUMChartForm);
-  CUMSUMChartForm.ShowModal;
+  if CUSUMChartForm = nil then
+    Application.CreateForm(TCUSUMChartForm, CUSUMChartForm);
+  CUSUMChartForm.ShowModal;
 end;
 
 

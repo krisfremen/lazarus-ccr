@@ -1,4 +1,4 @@
-unit CUMSUMUnit;
+unit CUSUMUnit;
 
 {$mode objfpc}{$H+}
 
@@ -58,7 +58,7 @@ var
   groups: StrDyneVec = nil;
   means: DblDyneVec = nil;
   stdDev: DblDyneVec = nil;
-  cumSums: DblDyneVec = nil;
+  cuSums: DblDyneVec = nil;
   count: IntDyneVec = nil;
   ColNoSelected: IntDyneVec = nil;
   lReport: TStrings;
@@ -76,7 +76,7 @@ begin
   SetLength(means, numGrps);
   SetLength(count, numGrps);
   SetLength(stdDev, numGrps);
-  SetLength(cumSums, numGrps);
+  SetLength(cuSums, numGrps);
   SEMean := 0.0;
   grandMean := 0.0;
   grandSum := 0.0;
@@ -136,11 +136,11 @@ begin
     target := StrToFloat(TargetEdit.Text)
   else
     target := means[numGrps-1];
-  cumsums[0] := means[0] - target;
+  cusums[0] := means[0] - target;
   grandSum := grandSum + (means[0] - target);
   for j := 1 to numGrps-1 do
   begin
-    cumsums[j] := cumsums[j-1] + (means[j] - target);
+    cusums[j] := cusums[j-1] + (means[j] - target);
     grandSum := grandSum + (means[j] - target);
   end;
 
@@ -158,13 +158,13 @@ begin
   lReport := TStringList.Create;
   try
     lReport.Clear;
-    lReport.Add('CUMSUM Chart Results');
+    lReport.Add('CUSUM Chart Results');
     lReport.Add('');
     lReport.Add(' Group   Size    Mean    Std.Dev.    Cum.Dev. of'   );
     lReport.Add('                                   Mean from Target');
     lReport.Add('-------  ----  --------  --------  ----------------');
     for i := 0 to numGrps - 1 do
-      lReport.Add('%7d  %4d  %8.2f  %8.2f  %16.2f', [i+1, count[i], means[i], stddev[i], cumsums[i]]);
+      lReport.Add('%7d  %4d  %8.2f  %8.2f  %10.2f', [i+1, count[i], means[i], stddev[i], cusums[i]]);
     lReport.Add('');
     lReport.Add('Mean of group deviations:  %8.3f', [grandSum]);
     lReport.Add('Mean of all observations:  %8.3f', [grandMean]);
@@ -183,10 +183,10 @@ begin
   PlotMeans(
     Format('Cumulative Sum Chart for "%s"', [GetFileName]),  // chart title
     GroupEdit.Text,                                          // x title
-    'CUSUM of ' + MeasEdit.Text,                             // y title
+    'CUSUM of ' + MeasEdit.Text + ' differences',            // y title
     'Data',                                                  // series title
-    'Mean deviation',                                        // mean label at right
-    groups, cumSums,
+    'Mean',                                                  // mean label at right
+    groups, cuSums,
     NaN, NaN, grandSum,
     NaN, NaN, NaN
   );

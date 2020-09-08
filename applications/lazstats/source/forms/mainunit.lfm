@@ -875,9 +875,9 @@ object OS3MainFrm: TOS3MainFrm
           Caption = 'S Control Chart'
           OnClick = mnuAnalysisSPC_SChartClick
         end
-        object mnuAnalysisSPC_CUMSUM: TMenuItem
-          Caption = 'CUMSUM Chart'
-          OnClick = mnuAnalysisSPC_CUMSUMClick
+        object mnuAnalysisSPC_CUSUM: TMenuItem
+          Caption = 'CUSUM Chart'
+          OnClick = mnuAnalysisSPC_CUSUMClick
         end
         object mnuAnalysisSPC_CChart: TMenuItem
           Caption = 'Defect (nonconformity) c Chart'
