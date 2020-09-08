@@ -926,9 +926,9 @@ end;
 // Menu "Analysis" > "Statistical Process Control" > "p Control Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_PChartClick(Sender: TObject);
 begin
-  if pChartFrm = nil then
-    Application.CreateForm(TpChartFrm, pChartFrm);
-  pChartFrm.ShowModal;
+  if PChartForm = nil then
+    Application.CreateForm(TPChartForm, PChartForm);
+  PChartForm.ShowModal;
 end;
 
 // Menu "Analysis" > "Descriptive" > "Plot X vs Y"

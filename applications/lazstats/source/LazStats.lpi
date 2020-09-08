@@ -49,7 +49,7 @@
         <PackageName Value="LCL"/>
       </Item7>
     </RequiredPackages>
-    <Units Count="175">
+    <Units Count="176">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -752,12 +752,11 @@
         <UnitName Value="CUMSUMUnit"/>
       </Unit89>
       <Unit90>
-        <Filename Value="forms\analysis\statistical_process_control\pchartunit.pas"/>
+        <Filename Value="forms\analysis\statistical_process_control\pchartunit1.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="pChartFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="PChartUnit"/>
       </Unit90>
       <Unit91>
         <Filename Value="forms\analysis\statistical_process_control\uchartunit.pas"/>
@@ -1421,6 +1420,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="CChartUnit"/>
       </Unit174>
+      <Unit175>
+        <Filename Value="forms\analysis\statistical_process_control\pchartunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PChartForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="PChartUnit"/>
+      </Unit175>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

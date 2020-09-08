@@ -47,7 +47,7 @@ var
   numData: Integer;
   lReport: TStrings;
 begin
-  SetLength(ColNoSelected,1);
+  SetLength(ColNoSelected, 1);
   ColNoSelected[0] := MeasVar;
 
   case SigmaOptns.ItemIndex of
@@ -105,8 +105,6 @@ begin
     UCL, LCL, meanc,
     NaN, NaN, NaN
   );
-
-  //PlotMeans(means, NoCases, UCL, LCL, meanc);
 end;
 
 procedure TCChartForm.FormActivate(Sender: TObject);
