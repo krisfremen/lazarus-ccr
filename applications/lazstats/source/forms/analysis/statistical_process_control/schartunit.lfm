@@ -1,5 +1,5 @@
 inherited SChartForm: TSChartForm
   HelpType = htKeyword
   HelpKeyword = 'html/SControlChart.htm'
-  Caption = 'Sigma Chart'
+  Caption = 'Sigma Control Chart'
 end

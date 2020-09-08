@@ -1,7 +1,7 @@
 inherited UChartForm: TUChartForm
   HelpType = htKeyword
   HelpKeyword = 'html/DefectsperUnituChart.htm'
-  Caption = 'Defects per unit U Chart'
+  Caption = 'Defects per unit U Control Chart'
   OnActivate = FormActivate
   inherited SpecsPanel: TPanel
     Width = 432

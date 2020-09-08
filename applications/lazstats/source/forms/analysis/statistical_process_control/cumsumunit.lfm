@@ -1,354 +1,234 @@
-object CUMSUMFrm: TCUMSUMFrm
-  Left = 717
-  Height = 346
-  Top = 262
-  Width = 476
+inherited CUSUMChartForm: TCUSUMChartForm
   HelpType = htKeyword
   HelpKeyword = 'html/CUMSUMChart.htm'
-  AutoSize = True
-  Caption = 'CUMSUM Chart'
-  ClientHeight = 346
-  ClientWidth = 476
+  Caption = 'Cumulative Sum Control Chart'
   OnActivate = FormActivate
-  OnCreate = FormCreate
-  OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.1.0.0'
-  object Label1: TLabel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
-    Left = 8
-    Height = 15
-    Top = 8
-    Width = 97
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
-    Caption = 'Selection Variables'
-    ParentColor = False
-  end
-  object Label2: TLabel
-    AnchorSideLeft.Control = GroupEdit
-    AnchorSideTop.Control = Owner
-    Left = 242
-    Height = 15
-    Top = 8
-    Width = 77
-    BorderSpacing.Top = 8
-    Caption = 'Group Variable'
-    ParentColor = False
-  end
-  object Label3: TLabel
-    AnchorSideLeft.Control = MeasEdit
-    AnchorSideTop.Control = GroupEdit
-    AnchorSideTop.Side = asrBottom
-    Left = 242
-    Height = 15
-    Top = 64
-    Width = 117
-    BorderSpacing.Top = 16
-    Caption = 'Measurement Variable'
-    ParentColor = False
-  end
-  object VarList: TListBox
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Label1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = GroupBox2
-    AnchorSideBottom.Control = Bevel2
-    Left = 8
-    Height = 272
-    Top = 25
-    Width = 226
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 2
-    BorderSpacing.Right = 8
-    ItemHeight = 0
-    OnClick = VarListClick
-    TabOrder = 0
-  end
-  object GroupEdit: TEdit
-    AnchorSideLeft.Control = GroupBox2
-    AnchorSideTop.Control = Label2
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 242
-    Height = 23
-    Top = 25
-    Width = 226
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 2
-    BorderSpacing.Right = 8
-    ReadOnly = True
-    TabOrder = 1
-    Text = 'GroupEdit'
-  end
-  object MeasEdit: TEdit
-    AnchorSideLeft.Control = GroupBox2
-    AnchorSideTop.Control = Label3
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 242
-    Height = 23
-    Top = 81
-    Width = 226
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 2
-    BorderSpacing.Right = 8
-    ReadOnly = True
-    TabOrder = 2
-    Text = 'MeasEdit'
-  end
-  object GroupBox1: TGroupBox
-    AnchorSideLeft.Control = GroupBox2
-    AnchorSideTop.Control = MeasEdit
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 242
-    Height = 107
-    Top = 120
-    Width = 226
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 16
-    BorderSpacing.Right = 8
-    Caption = 'CUMSUM V-Mask Specifications'
-    ClientHeight = 87
-    ClientWidth = 222
-    TabOrder = 3
-    object Label4: TLabel
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = DeltaEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 15
-      Top = 6
-      Width = 94
-      BorderSpacing.Left = 12
-      Caption = 'Delta (Effect Size):'
-      ParentColor = False
+  inherited SpecsPanel: TPanel
+    Width = 432
+    ClientWidth = 432
+    inherited ButtonPanel: TPanel
+      Width = 432
+      ClientWidth = 432
+      TabOrder = 5
+      inherited CloseBtn: TButton
+        Left = 377
+        TabOrder = 3
+      end
+      inherited ComputeBtn: TButton
+        Left = 293
+        TabOrder = 2
+      end
+      inherited ResetBtn: TButton
+        Left = 231
+        TabOrder = 1
+      end
+      inherited HelpBtn: TButton
+        Left = 180
+        TabOrder = 0
+      end
+      inherited Bevel1: TBevel
+        Width = 424
+      end
     end
-    object Label5: TLabel
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = AlphaEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 15
-      Top = 33
-      Width = 94
-      BorderSpacing.Left = 12
-      Caption = 'Alpha Probability:'
-      ParentColor = False
-    end
-    object Label6: TLabel
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = BetaEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 15
-      Top = 60
-      Width = 86
-      BorderSpacing.Left = 12
-      Caption = 'Beta Probability:'
-      ParentColor = False
-    end
-    object DeltaEdit: TEdit
-      AnchorSideLeft.Control = AlphaEdit
-      AnchorSideTop.Control = GroupBox1
-      AnchorSideRight.Control = GroupBox1
-      AnchorSideRight.Side = asrBottom
-      Left = 114
-      Height = 23
-      Top = 2
-      Width = 100
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
-      BorderSpacing.Right = 8
-      TabOrder = 0
-      Text = 'DeltaEdit'
-    end
-    object AlphaEdit: TEdit
-      AnchorSideLeft.Control = Label5
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = DeltaEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = GroupBox1
-      AnchorSideRight.Side = asrBottom
-      Left = 114
-      Height = 23
-      Top = 29
-      Width = 100
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Left = 8
-      BorderSpacing.Top = 4
-      BorderSpacing.Right = 8
-      TabOrder = 1
-      Text = 'AlphaEdit'
-    end
-    object BetaEdit: TEdit
-      AnchorSideLeft.Control = AlphaEdit
-      AnchorSideTop.Control = AlphaEdit
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = GroupBox1
-      AnchorSideRight.Side = asrBottom
-      Left = 114
-      Height = 23
-      Top = 56
-      Width = 100
-      Alignment = taRightJustify
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 4
-      BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
-      TabOrder = 2
-      Text = 'BetaEdit'
-    end
-  end
-  object GroupBox2: TGroupBox
-    AnchorSideTop.Control = GroupBox1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 242
-    Height = 51
-    Top = 243
-    Width = 226
-    Anchors = [akTop, akRight]
-    AutoSize = True
-    BorderSpacing.Top = 16
-    BorderSpacing.Right = 8
-    Caption = 'Option:'
-    ClientHeight = 31
-    ClientWidth = 222
-    TabOrder = 4
-    object TargetChk: TCheckBox
-      AnchorSideLeft.Control = GroupBox2
-      AnchorSideTop.Control = TargetEdit
-      AnchorSideTop.Side = asrCenter
-      Left = 12
-      Height = 19
-      Top = 2
-      Width = 141
-      AutoSize = False
-      BorderSpacing.Left = 12
-      BorderSpacing.Right = 12
-      Caption = 'Use Target Specification:'
+    inherited VarList: TListBox
+      Width = 212
       TabOrder = 0
     end
-    object TargetEdit: TEdit
-      AnchorSideLeft.Control = TargetChk
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = GroupBox2
-      AnchorSideRight.Side = asrBottom
-      Left = 165
-      Height = 23
-      Top = 0
-      Width = 49
-      Alignment = taRightJustify
-      BorderSpacing.Left = 12
-      BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
-      TabOrder = 1
-      Text = 'TargetEdit'
+    inherited GroupLabel: TLabel
+      Left = 228
     end
-  end
-  object Bevel2: TBevel
-    AnchorSideTop.Control = Panel1
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Panel1
-    Left = 0
-    Height = 8
-    Top = 297
-    Width = 476
-    Anchors = [akLeft, akRight, akBottom]
-    Shape = bsBottomLine
-  end
-  object Panel1: TPanel
-    Left = 0
-    Height = 41
-    Top = 305
-    Width = 476
-    Align = alBottom
-    AutoSize = True
-    BevelOuter = bvNone
-    ClientHeight = 41
-    ClientWidth = 476
-    TabOrder = 5
-    object ResetBtn: TButton
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = ComputeBtn
-      Left = 267
-      Height = 25
-      Top = 8
-      Width = 54
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Top = 8
-      BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
-      Caption = 'Reset'
-      OnClick = ResetBtnClick
+    inherited GroupEdit: TEdit
+      Left = 228
+      Width = 204
       TabOrder = 1
     end
-    object ComputeBtn: TButton
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = CloseBtn
-      Left = 329
-      Height = 25
-      Top = 8
-      Width = 76
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Top = 8
-      BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
-      Caption = 'Compute'
-      OnClick = ComputeBtnClick
+    inherited MeasLabel: TLabel
+      Left = 228
+    end
+    inherited MeasEdit: TEdit
+      Left = 228
+      Width = 204
       TabOrder = 2
     end
-    object HelpBtn: TButton
-      Tag = 141
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = ResetBtn
-      Left = 208
-      Height = 25
-      Top = 8
-      Width = 51
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Left = 8
-      BorderSpacing.Top = 8
-      BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
-      Caption = 'Help'
-      OnClick = HelpBtnClick
-      TabOrder = 0
+    inherited Bevel2: TBevel
+      Left = 205
     end
-    object CloseBtn: TButton
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = Panel1
+    object GroupBox1: TGroupBox[8]
+      AnchorSideLeft.Control = MeasEdit
+      AnchorSideTop.Control = MeasEdit
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
-      Left = 413
-      Height = 25
-      Top = 8
-      Width = 55
-      Anchors = [akTop, akRight]
-      AutoSize = True
-      BorderSpacing.Top = 8
-      BorderSpacing.Right = 8
-      BorderSpacing.Bottom = 8
-      Caption = 'Close'
-      ModalResult = 11
+      Left = 228
+      Height = 107
+      Top = 120
+      Width = 204
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 24
+      Caption = 'CUMSUM V-Mask Specifications'
+      ClientHeight = 87
+      ClientWidth = 200
       TabOrder = 3
+      object Label4: TLabel
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = DeltaEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 15
+        Top = 6
+        Width = 94
+        BorderSpacing.Left = 12
+        Caption = 'Delta (Effect Size):'
+        ParentColor = False
+      end
+      object Label5: TLabel
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = AlphaEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 15
+        Top = 33
+        Width = 94
+        BorderSpacing.Left = 12
+        Caption = 'Alpha Probability:'
+        ParentColor = False
+      end
+      object Label6: TLabel
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideTop.Control = BetaEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 15
+        Top = 60
+        Width = 86
+        BorderSpacing.Left = 12
+        Caption = 'Beta Probability:'
+        ParentColor = False
+      end
+      object DeltaEdit: TEdit
+        AnchorSideLeft.Control = AlphaEdit
+        AnchorSideTop.Control = GroupBox1
+        AnchorSideRight.Control = GroupBox1
+        AnchorSideRight.Side = asrBottom
+        Left = 114
+        Height = 23
+        Top = 2
+        Width = 78
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        BorderSpacing.Right = 8
+        Constraints.MinWidth = 64
+        TabOrder = 0
+        Text = 'DeltaEdit'
+      end
+      object AlphaEdit: TEdit
+        AnchorSideLeft.Control = Label5
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = DeltaEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = GroupBox1
+        AnchorSideRight.Side = asrBottom
+        Left = 114
+        Height = 23
+        Top = 29
+        Width = 78
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 8
+        Constraints.MinWidth = 64
+        TabOrder = 1
+        Text = 'AlphaEdit'
+      end
+      object BetaEdit: TEdit
+        AnchorSideLeft.Control = AlphaEdit
+        AnchorSideTop.Control = AlphaEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = GroupBox1
+        AnchorSideRight.Side = asrBottom
+        Left = 114
+        Height = 23
+        Top = 56
+        Width = 78
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 8
+        BorderSpacing.Bottom = 8
+        Constraints.MinWidth = 64
+        TabOrder = 2
+        Text = 'BetaEdit'
+      end
+    end
+    object GroupBox2: TGroupBox[9]
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = GroupBox1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = MeasEdit
+      AnchorSideRight.Side = asrBottom
+      Left = 228
+      Height = 51
+      Top = 243
+      Width = 204
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 16
+      BorderSpacing.Bottom = 8
+      Caption = 'Option:'
+      ClientHeight = 31
+      ClientWidth = 200
+      TabOrder = 4
+      object TargetChk: TCheckBox
+        AnchorSideLeft.Control = GroupBox2
+        AnchorSideTop.Control = TargetEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 2
+        Width = 108
+        BorderSpacing.Left = 12
+        BorderSpacing.Right = 8
+        Caption = 'Use Target Specs'
+        TabOrder = 0
+      end
+      object TargetEdit: TEdit
+        AnchorSideLeft.Control = TargetChk
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = GroupBox2
+        AnchorSideRight.Control = GroupBox2
+        AnchorSideRight.Side = asrBottom
+        Left = 128
+        Height = 23
+        Top = 0
+        Width = 64
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Right = 8
+        BorderSpacing.Bottom = 8
+        Constraints.MinWidth = 64
+        TabOrder = 1
+        Text = 'TargetEdit'
+      end
+    end
+  end
+  inherited SpecsSplitter: TSplitter
+    Left = 435
+  end
+  inherited PageControl1: TPageControl
+    Left = 443
+    Width = 478
+    inherited ReportPage: TTabSheet
+      ClientWidth = 470
+      inherited Panel1: TPanel
+        Width = 458
+        ClientWidth = 454
+        inherited ReportMemo: TMemo
+          Width = 446
+        end
+      end
     end
   end
 end

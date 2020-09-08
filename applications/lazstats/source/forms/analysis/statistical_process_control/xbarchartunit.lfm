@@ -3,7 +3,7 @@ inherited XBarChartForm: TXBarChartForm
   Top = 215
   HelpType = htKeyword
   HelpKeyword = 'html/XBarChart.htm'
-  Caption = 'X-Bar Chart'
+  Caption = 'X-Bar Control Chart'
   OnActivate = FormActivate
   inherited SpecsPanel: TPanel
     Width = 475

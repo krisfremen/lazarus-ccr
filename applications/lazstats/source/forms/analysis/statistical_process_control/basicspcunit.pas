@@ -56,7 +56,7 @@ type
     function GetFileName: String;
     procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
       const Groups: StrDyneVec; const Means: DblDyneVec;
-      UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
+      UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double); virtual;
     procedure Reset; virtual;
     procedure Compute; virtual;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean; virtual;
@@ -243,14 +243,23 @@ begin
     FChartFrame.Chart.BottomAxis.Marks.style := smsLabel;
   end;
 
-  FChartFrame.HorLine(GrandMean, clRed, psSolid, AGrandMeanTitle);
-  rightLabels.Add(GrandMean, GrandMean, AGrandMeanTitle);
+  if not IsNaN(GrandMean) then
+  begin
+    FChartFrame.HorLine(GrandMean, clRed, psSolid, AGrandMeanTitle);
+    rightLabels.Add(GrandMean, GrandMean, AGrandMeanTitle);
+  end;
 
-  FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL/LCL');
-  rightLabels.Add(UCL, UCL, 'UCL');
+  if not IsNaN(UCL) then
+  begin
+    FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL/LCL');
+    rightLabels.Add(UCL, UCL, 'UCL');
+  end;
 
-  FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, '');
-  rightLabels.Add(UCL, LCL, 'LCL');
+  if not IsNaN(LCL) then
+  begin
+    FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, '');
+    rightLabels.Add(UCL, LCL, 'LCL');
+  end;
 
   if not IsNan(UpperSpec) then
   begin

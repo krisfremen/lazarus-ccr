@@ -49,7 +49,7 @@
         <PackageName Value="LCL"/>
       </Item7>
     </RequiredPackages>
-    <Units Count="175">
+    <Units Count="176">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -744,12 +744,11 @@
         <UnitName Value="KaplanMeierUnit"/>
       </Unit88>
       <Unit89>
-        <Filename Value="forms\analysis\statistical_process_control\cumsumunit.pas"/>
+        <Filename Value="forms\analysis\statistical_process_control\cumsumunit1.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="CUMSUMFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="CUMSUMUnit"/>
       </Unit89>
       <Unit90>
         <Filename Value="forms\simulations\corsimunit.pas"/>
@@ -1421,6 +1420,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="UChartUnit"/>
       </Unit174>
+      <Unit175>
+        <Filename Value="forms\analysis\statistical_process_control\cumsumunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CUSUMChartForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="CUMSUMUnit"/>
+      </Unit175>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

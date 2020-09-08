@@ -510,7 +510,7 @@ uses
   BinomialUnit, KendallTauUnit, KaplanMeierUnit,
 
   // Statistical process control
-  XBarChartUnit, RChartUnit, SChartUnit, CUMSUMUNIT, CChartUnit,
+  XBarChartUnit, RChartUnit, SChartUnit, CUMSUMUnit, CChartUnit,
   PChartUnit, UChartUnit,
 
   CorSimUnit,
@@ -2130,9 +2130,9 @@ end;
 // Menu "Analysis" > "Statistical Process Control" > "CUMSUM Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_CUMSUMClick(Sender: TObject);
 begin
-  if CUMSUMFrm = nil then
-    Application.CreateForm(TCUMSUMFrm, CUMSUMFrm);
-  CUMSUMFrm.ShowModal;
+  if CUMSUMChartForm = nil then
+    Application.CreateForm(TCUMSUMChartForm, CUMSUMChartForm);
+  CUMSUMChartForm.ShowModal;
 end;
 
 

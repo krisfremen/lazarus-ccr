@@ -1,7 +1,7 @@
 inherited RChartForm: TRChartForm
   HelpType = htKeyword
   HelpKeyword = 'html/RangeChart.htm'
-  Caption = 'Range Chart'
+  Caption = 'Range Control Chart'
   inherited SpecsPanel: TPanel
     HelpType = htKeyword
     HelpKeyword = 'html/RangeChart.htm'
