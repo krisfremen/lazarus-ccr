@@ -139,6 +139,15 @@ inherited UChartForm: TUChartForm
           Width = 446
         end
       end
+      inherited ToolBar2: TToolBar
+        Width = 466
+      end
+    end
+    inherited ChartPage: TTabSheet
+      ClientWidth = 470
+      inherited ToolBar1: TToolBar
+        Width = 466
+      end
     end
   end
 end

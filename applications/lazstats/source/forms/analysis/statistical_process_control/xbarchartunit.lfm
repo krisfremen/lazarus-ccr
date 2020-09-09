@@ -215,6 +215,15 @@ inherited XBarChartForm: TXBarChartForm
           Width = 403
         end
       end
+      inherited ToolBar2: TToolBar
+        Width = 423
+      end
+    end
+    inherited ChartPage: TTabSheet
+      ClientWidth = 427
+      inherited ToolBar1: TToolBar
+        Width = 423
+      end
     end
   end
 end

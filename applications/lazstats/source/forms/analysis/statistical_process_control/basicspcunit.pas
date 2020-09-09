@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls,
+  StdCtrls, ComCtrls, PrintersDlgs,
   Globals, MainUnit, ContextHelpUnit, ChartFrameUnit;
 
 type
@@ -21,20 +21,27 @@ type
     GroupLabel: TLabel;
     MeasLabel: TLabel;
     MeasEdit: TEdit;
+    PrintDialog: TPrintDialog;
     ReportMemo: TMemo;
     PageControl1: TPageControl;
     Panel1: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
     CloseBtn: TButton;
+    SaveDialog: TSaveDialog;
     SpecsPanel: TPanel;
     ButtonPanel: TPanel;
     SpecsSplitter: TSplitter;
     ReportPage: TTabSheet;
     ChartPage: TTabSheet;
-    tbPrint: TToolButton;
-    tbSave: TToolButton;
+    tbPrintChart: TToolButton;
+    tbPrintReport: TToolButton;
+    tbSaveChart: TToolButton;
+    tbSaveReport: TToolButton;
     ToolBar1: TToolBar;
+    ToolBar2: TToolBar;
+    tbCopyReport: TToolButton;
+    tbCopyChart: TToolButton;
     VarList: TListBox;
     VarListLabel: TLabel;
     procedure CloseBtnClick(Sender: TObject);
@@ -44,12 +51,17 @@ type
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure tbPrintClick(Sender: TObject);
-    procedure tbSaveClick(Sender: TObject);
+    procedure tbCopyChartClick(Sender: TObject);
+    procedure tbCopyReportClick(Sender: TObject);
+    procedure tbPrintChartClick(Sender: TObject);
+    procedure tbPrintReportClick(Sender: TObject);
+    procedure tbSaveChartClick(Sender: TObject);
+    procedure tbSaveReportClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
 
   protected
+    FPrintY: Integer;
     GrpVar: Integer;
     MeasVar: Integer;
     function GetGroups: StrDyneVec;
@@ -57,6 +69,7 @@ type
     procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
       const Groups: StrDyneVec; const Means: DblDyneVec;
       UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double); virtual;
+    procedure PrintText; virtual;
     procedure Reset; virtual;
     procedure Compute; virtual;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean; virtual;
@@ -75,8 +88,15 @@ implementation
 
 uses
   Math,
+  Printers, OSPrinters,
   TAChartUtils, TALegend, TAChartAxisUtils, TASources, TACustomSeries, TASeries,
   Utils, DataProcs;
+
+const
+  LEFT_MARGIN = 200;
+  RIGHT_MARGIN = 200;
+  TOP_MARGIN = 150;
+  BOTTOM_MARGIN = 200;
 
 
 { TBasicSPCForm }
@@ -288,6 +308,55 @@ begin
   end;
 end;
 
+
+procedure TBasicSPCForm.PrintText;
+var
+  i: Integer;
+  x: Integer;
+  xmax, ymax: Integer;
+  pageNo: Integer;
+  oldFontSize: Integer;
+  h: Integer;
+begin
+  with Printer do
+  begin
+    x := LEFT_MARGIN;
+    FPrintY := TOP_MARGIN;
+    xMax := PaperSize.Width - RIGHT_MARGIN;
+    yMax := PaperSize.Height - BOTTOM_MARGIN;
+    pageNo := 1;
+    try
+      Canvas.Brush.Style := bsClear;  // no text background color
+      Canvas.Font.Assign(ReportMemo.Font);
+      if Canvas.Font.Size < 10 then
+        Canvas.Font.Size := 10;
+      oldFontSize := Canvas.Font.Size;
+      for i:=0 to ReportMemo.Lines.Count-1 do begin
+        // Print page number
+        if FPrintY = TOP_MARGIN then begin
+          Canvas.Font.Size := 10;
+          h := Canvas.TextHeight('Page 9') + 4;
+          Canvas.TextOut(x+1, FPrintY, 'Page ' + IntToStr(PageNo));
+          Canvas.Pen.Width := 3;
+          Canvas.Line(LEFT_MARGIN, FPrintY+h, xmax, FPrintY+h);
+          inc(FPrintY, 2*h);
+          Canvas.Font.Size := oldFontSize;
+        end;
+        Canvas.TextOut(x, FPrintY, ReportMemo.Lines[i]);
+        inc(FPrintY, Canvas.TextHeight('Tg'));
+        if FPrintY > yMax then begin
+          NewPage;
+          FPrintY := TOP_MARGIN;
+          inc(PageNo);
+        end;
+      end;
+    except
+      on E: EPrinter do ShowMessage('Printer Error: ' +  E.Message);
+      on E: Exception do showMessage('Unexpected error when printing.');
+    end;
+  end;
+end;
+
 procedure TBasicSPCForm.Reset;
 var
   i : integer;
@@ -307,16 +376,56 @@ begin
   Reset;
 end;
 
+procedure TBasicSPCForm.tbCopyChartClick(Sender: TObject);
+begin
+  FChartFrame.Chart.CopyToClipboardBitmap;
+end;
 
-procedure TBasicSPCForm.tbPrintClick(Sender: TObject);
+
+procedure TBasicSPCForm.tbCopyReportClick(Sender: TObject);
+begin
+  with ReportMemo do
+  begin
+    SelectAll;
+    CopyToClipboard;
+    SelLength := 0;
+  end;
+end;
+
+
+procedure TBasicSPCForm.tbPrintChartClick(Sender: TObject);
 begin
   FChartFrame.Print;
 end;
 
 
-procedure TBasicSPCForm.tbSaveClick(Sender: TObject);
+procedure TBasicSPCForm.tbPrintReportClick(Sender: TObject);
+begin
+  if PrintDialog.Execute then
+  begin
+    Printer.BeginDoc;
+    try
+      PrintText;
+    finally
+      Printer.EndDoc;
+    end;
+  end;
+end;
+
+
+procedure TBasicSPCForm.tbSaveChartClick(Sender: TObject);
 begin
   FChartFrame.Save;
+end;
+
+
+procedure TBasicSPCForm.tbSaveReportClick(Sender: TObject);
+begin
+  SaveDialog.Filter := 'LazStats text files (*.txt)|*.txt;*.TXT|All files (*.*)|*.*';
+  SaveDialog.FilterIndex := 1; {text file}
+  SaveDialog.Title := 'Save to File';
+  if SaveDialog.Execute then
+    ReportMemo.Lines.SaveToFile(SaveDialog.FileName);
 end;
 
 
