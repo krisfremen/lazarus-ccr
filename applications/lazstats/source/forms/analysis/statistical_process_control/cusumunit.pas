@@ -15,6 +15,9 @@ type
   TCUSUMChartForm = class(TBasicSPCForm)
     AlphaEdit: TEdit;
     BetaEdit: TEdit;
+    Label1: TLabel;
+    VMaskScrollbar: TScrollBar;
+    ShowMeanDevChk: TCheckBox;
     DeltaEdit: TEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
@@ -26,6 +29,7 @@ type
     procedure FormActivate(Sender: TObject);
   private
     SEMean: Double;
+    k, h: Double;
   protected
     procedure Compute; override;
     procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
@@ -52,7 +56,8 @@ uses
 procedure TCUSUMChartForm.Compute;
 var
   i, j, grpIndex, numGrps, grpSize, oldGrpSize, numValues: Integer;
-  X, Xsq, Xmin, Xmax, target, grandMean, grandSum, grandSD, UCL, LCL: Double;
+  X, Xsq, Xmin, Xmax, target, diff, grandMean, grandSum, grandSD: Double;
+  deltaSD, alpha, beta: double;
   sizeError: Boolean;
   grp: String;
   groups: StrDyneVec = nil;
@@ -140,8 +145,9 @@ begin
   grandSum := grandSum + (means[0] - target);
   for j := 1 to numGrps-1 do
   begin
-    cusums[j] := cusums[j-1] + (means[j] - target);
-    grandSum := grandSum + (means[j] - target);
+    diff := means[j] - target;
+    cusums[j] := cusums[j-1] + diff;
+    grandSum := grandSum + diff;
   end;
 
   SEMean := SEMean - sqr(grandMean)/numValues;
@@ -150,9 +156,18 @@ begin
   SEMean := SEMean/sqrt(numValues);
   grandMean := grandMean/numValues; // mean of all observations
   grandSum := grandSum/numGrps;     // mean of the group means
-  UCL := grandMean + 3.0*SEMean;
-  LCL := grandMean - 3.0*SEMean;
-  if (LCL < 0.0) then LCL := 0.0;
+
+  if DeltaEdit.Text <> '' then
+  begin
+    deltaSD := StrToFloat(DeltaEdit.Text) / SEMean;
+      // This is in multiples of std deviations
+
+    // see : https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm
+    alpha := StrToFloat(AlphaEdit.Text);
+    beta := StrToFloat(BetaEdit.Text);
+    k := deltaSD * SEMean / 2.0;
+    h := SEMean / deltaSD * ln((1 - beta) / alpha);
+  end;
 
   // Print results
   lReport := TStringList.Create;
@@ -160,19 +175,35 @@ begin
     lReport.Clear;
     lReport.Add('CUSUM Chart Results');
     lReport.Add('');
-    lReport.Add(' Group   Size    Mean    Std.Dev.    Cum.Dev. of'   );
-    lReport.Add('                                   Mean from Target');
-    lReport.Add('-------  ----  --------  --------  ----------------');
-    for i := 0 to numGrps - 1 do
-      lReport.Add('%7d  %4d  %8.2f  %8.2f  %10.2f', [i+1, count[i], means[i], stddev[i], cusums[i]]);
-    lReport.Add('');
     lReport.Add('Mean of group deviations:  %8.3f', [grandSum]);
     lReport.Add('Mean of all observations:  %8.3f', [grandMean]);
     lReport.Add('Std. Dev. of Observations: %8.3f', [grandSD]);
     lReport.Add('Standard Error of Mean:    %8.3f', [SEMean]);
     lReport.Add('Target Specification:      %8.3f', [target]);
-    lReport.Add('Lower Control Limit:       %8.3f', [LCL]);
-    lReport.Add('Upper Control Limit:       %8.3f', [UCL]);
+
+    lReport.Add('');
+    lReport.Add('Differences in data units');
+    lReport.Add('');
+
+    lReport.Add('Group  Size    Mean    Std.Dev.  Mean-Dev  Cum.Dev. of'   );
+    lReport.Add('                                           Mean from Target');
+    lReport.Add('-----  ----  --------  --------  --------  ----------------');
+    for i := 0 to numGrps - 1 do
+    begin
+      lReport.Add('%5s  %4d  %8.3f  %8.3f  %8.3f  %10.3f', [
+        groups[i], count[i], means[i], stddev[i], means[i]-target, cusums[i]
+      ]);
+    end;
+
+    if DeltaEdit.Text <> '' then
+    begin
+      lReport.Add('');
+      lReport.Add('V-Mask parameters:');
+      lReport.Add('  Alpha (Type I error)     %8.3f', [alpha]);
+      lReport.Add('  Beta (Type II error)     %8.3f', [beta]);
+      lReport.Add('  k:                       %8.3f (%.2f sigma)', [k, k/SEMean]);
+      lReport.Add('  h:                       %8.3f (%.2f sigma)', [h, h/SEMean]);
+    end;
 
     ReportMemo.Lines.Assign(lReport);
   finally
@@ -180,6 +211,9 @@ begin
   end;
 
   // Show graph
+  VMaskScrollbar.Max := numGrps;
+  if not ShowMeanDevChk.Checked then
+    grandSum := NaN;
   PlotMeans(
     Format('Cumulative Sum Chart for "%s"', [GetFileName]),  // chart title
     GroupEdit.Text,                                          // x title
@@ -218,61 +252,58 @@ begin
   end;
 end;
 
-
 { Overridden to draw the V-Mark }
 procedure TCUSUMChartForm.PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
   const Groups: StrDyneVec; const Means: DblDyneVec;
   UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
 var
-  alpha, beta, delta, deltaSD, gamma, d, h, k: Double;
   ser: TLineSeries;
-  ext: TDoubleRect;
-  x0, y0, x1, y1, x2, y2, x3, y3: Double;
+  xVM, yVM, x1, y1, x2, y2, x3, y3, x4, y4: Double;
 begin
   inherited;
   if DeltaEdit.Text = '' then
     exit;
-
-  alpha := StrToFloat(AlphaEdit.Text);
-  beta := StrToFloat(BetaEdit.Text);
-  delta := StrToFloat(DeltaEdit.Text);  // This is in data units
-  deltaSD := delta / SEMean;     // This is in multiples of std deviations
-
-  // see : https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc323.htm
-  d := 2.0 / sqr(deltaSD) * ln((1.0 - beta)/alpha);
-  k := deltaSD * SEMean / 2.0;
-  h := d * k;
 
   ser := TLineSeries.Create(FChartFrame.Chart);
   FChartFrame.Chart.AddSeries(ser);
   ser.SeriesColor := clBlue;
   ser.Title := 'V-Mask';
 
-  ext := FChartFrame.Chart.GetFullExtent;
-  x1 := Length(Means);         // 1-based!
-  y1 := Means[High(Means)] + h;
-  x0 := 1;
-  y0 := y1 - k*(x0 - x1);
+  // Position of V mask point
+  xVM := VMaskScrollbar.Position;
+  yVM := Means[VMaskScrollbar.Position-1];
 
-  x2 := x1;
-  y2 := Means[High(Means)] - h;
-  x3 := x0;
-  y3 := y2 + k*(x3 - x2);
+  // Upper part of V mask
+  x2 := xVM;
+  y2 := yVM + h;
+  x1 := 1;              // x values begin with 1
+  y1 := y2 - k*(x1 - x2);
 
-  ser.AddXY(x0, y0);
+  // Lower part of V mask
+  x3 := xVM;
+  y3 := yVM - h;
+  x4 := 1;
+  y4 := y3 + k*(x4 - x3);
+
   ser.AddXY(x1, y1);
   ser.AddXY(x2, y2);
+  ser.AddXY(x2, NaN);  // Do not draw the vertical line
   ser.AddXY(x3, y3);
+  ser.AddXY(x4, y4);
 end;
 
 
 procedure TCUSUMChartForm.Reset;
 begin
   inherited;
-  DeltaEdit.Clear;
-  AlphaEdit.Text := FormatFloat('0.00', DEFAULT_ALPHA_LEVEL);
-  BetaEdit.Text := FormatFloat('0.00', DEFAULT_BETA_LEVEL);
+  ShowMeanDevChk.Checked := false;
   TargetEdit.Clear;
+  DeltaEdit.Clear;
+  AlphaEdit.Text := FormatFloat('0.00000', 0.0027); //DEFAULT_ALPHA_LEVEL);
+  BetaEdit.Text := FormatFloat('0.00000', 0.01); //DEFAULT_BETA_LEVEL);
+  VMaskScrollbar.Min := 2;
+  VMaskScrollbar.Max := 1000;
+  VMaskScrollbar.Position := VMaskScrollbar.Max;
 end;
 
 

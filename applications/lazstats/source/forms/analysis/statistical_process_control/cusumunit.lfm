@@ -3,6 +3,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
   HelpKeyword = 'html/CUMSUMChart.htm'
   Caption = 'Cumulative Sum Control Chart'
   OnActivate = FormActivate
+  ShowHint = True
   inherited SpecsPanel: TPanel
     Width = 432
     ClientWidth = 432
@@ -55,20 +56,21 @@ inherited CUSUMChartForm: TCUSUMChartForm
     end
     object GroupBox1: TGroupBox[8]
       AnchorSideLeft.Control = MeasEdit
-      AnchorSideTop.Control = MeasEdit
+      AnchorSideTop.Control = GroupBox2
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
       Left = 228
-      Height = 107
-      Top = 120
+      Height = 153
+      Top = 202
       Width = 204
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 24
-      Caption = 'CUMSUM V-Mask Specifications'
-      ClientHeight = 87
+      AutoSize = True
+      BorderSpacing.Top = 16
+      Caption = 'V-Mask Specifications'
+      ClientHeight = 133
       ClientWidth = 200
-      TabOrder = 3
+      TabOrder = 4
       object Label4: TLabel
         AnchorSideLeft.Control = GroupBox1
         AnchorSideTop.Control = DeltaEdit
@@ -112,6 +114,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         AnchorSideRight.Side = asrBottom
         Left = 114
         Height = 23
+        Hint = 'Detection level for a shift in the process mean, '#13#10'expressed in data units (default), or'#13#10'as a multiple of the standard deviation of the '#13#10'data points (when "Normalized CUSUM" is checked).'
         Top = 2
         Width = 78
         Alignment = taRightJustify
@@ -131,6 +134,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         AnchorSideRight.Side = asrBottom
         Left = 114
         Height = 23
+        Hint = 'Probability of concluding that a shift in the process has occurred, when in fact it did not. '
         Top = 29
         Width = 78
         Alignment = taRightJustify
@@ -150,6 +154,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         AnchorSideRight.Side = asrBottom
         Left = 114
         Height = 23
+        Hint = 'Probability of not detecting that a shift in the process mean has, in fact, occurred'
         Top = 56
         Width = 78
         Alignment = taRightJustify
@@ -161,25 +166,52 @@ inherited CUSUMChartForm: TCUSUMChartForm
         TabOrder = 2
         Text = 'BetaEdit'
       end
+      object VMaskScrollbar: TScrollBar
+        AnchorSideLeft.Control = Label1
+        AnchorSideTop.Control = Label1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = BetaEdit
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 17
+        Top = 104
+        Width = 180
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 2
+        BorderSpacing.Bottom = 12
+        PageSize = 0
+        TabOrder = 3
+      end
+      object Label1: TLabel
+        AnchorSideLeft.Control = Label4
+        AnchorSideTop.Control = BetaEdit
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 15
+        Top = 87
+        Width = 100
+        Caption = 'Position of V-Mask'
+        ParentColor = False
+      end
     end
     object GroupBox2: TGroupBox[9]
       AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = GroupBox1
+      AnchorSideTop.Control = MeasEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
       Left = 228
-      Height = 51
-      Top = 243
+      Height = 74
+      Top = 112
       Width = 204
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
       BorderSpacing.Top = 16
       BorderSpacing.Bottom = 8
       Caption = 'Option:'
-      ClientHeight = 31
+      ClientHeight = 54
       ClientWidth = 200
-      TabOrder = 4
+      TabOrder = 3
       object TargetChk: TCheckBox
         AnchorSideLeft.Control = GroupBox2
         AnchorSideTop.Control = TargetEdit
@@ -207,10 +239,23 @@ inherited CUSUMChartForm: TCUSUMChartForm
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 8
         BorderSpacing.Right = 8
-        BorderSpacing.Bottom = 8
+        BorderSpacing.Bottom = 4
         Constraints.MinWidth = 64
         TabOrder = 1
         Text = 'TargetEdit'
+      end
+      object ShowMeanDevChk: TCheckBox
+        AnchorSideLeft.Control = TargetChk
+        AnchorSideTop.Control = TargetEdit
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 19
+        Top = 27
+        Width = 169
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 8
+        Caption = 'Show mean group deviation'
+        TabOrder = 2
       end
     end
   end

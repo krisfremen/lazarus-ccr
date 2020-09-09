@@ -2123,7 +2123,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_CChartClick(Sender: TObject);
 begin
   if CChartForm = nil then
     Application.CreateForm(TCChartForm, CChartForm);
-  CChartForm.ShowModal;
+  CChartForm.Show;
 end;
 
 
@@ -2132,7 +2132,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_CUSUMClick(Sender: TObject);
 begin
   if CUSUMChartForm = nil then
     Application.CreateForm(TCUSUMChartForm, CUSUMChartForm);
-  CUSUMChartForm.ShowModal;
+  CUSUMChartForm.Show;
 end;
 
 
@@ -2141,7 +2141,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_PChartClick(Sender: TObject);
 begin
   if PChartForm = nil then
     Application.CreateForm(TPChartForm, PChartForm);
-  PChartForm.ShowModal;
+  PChartForm.Show;
 end;
 
 
@@ -2150,7 +2150,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_RangeClick(Sender: TObject);
 begin
   if RChartForm = nil then
     Application.CreateForm(TRChartForm, RChartForm);
-  RChartForm.ShowModal;
+  RChartForm.Show;
 end;
 
 
@@ -2159,7 +2159,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_SChartClick(Sender: TObject);
 begin
   if SChartForm = nil then
     Application.CreateForm(TSChartForm, SChartForm);
-  SChartForm.ShowModal;
+  SChartForm.Show;
 end;
 
 
@@ -2168,7 +2168,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_UChartClick(Sender: TObject);
 begin
   if UChartForm = nil then
     Application.CreateForm(TUChartForm, UChartForm);
-  UChartForm.ShowModal;
+  UChartForm.Show;
 end;
 
 
@@ -2177,7 +2177,7 @@ procedure TOS3MainFrm.mnuAnalysisSPC_XBarClick(Sender: TObject);
 begin
   if XBarChartForm = nil then
     Application.CreateForm(TXBarChartForm, XBarChartForm);
-  XBarChartForm.ShowModal;
+  XBarChartForm.Show;
 end;
 
 
