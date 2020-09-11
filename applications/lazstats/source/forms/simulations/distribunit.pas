@@ -12,7 +12,7 @@ unit DistribUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, TAFuncSeries, //TAGraph, TAFuncSeries, TASeries,
+  Classes, SysUtils, FileUtil, LCLVersion, TAFuncSeries, //TAGraph, TAFuncSeries, TASeries,
   //PrintersDlgs, LResources,
   Forms, Controls, Graphics, Dialogs, StdCtrls,
   //Printers,
@@ -122,7 +122,10 @@ begin
   funcSer.Title := ATitle;
   if Cumulative then funcSer.Tag := 1;
   if XMin = 0 then
-    funcSer.DomainExclusions.AddRange(-Infinity, 0, [ioOpenEnd]);
+    funcSer.DomainExclusions.AddRange(
+      -Infinity, 0
+      {$IF LCL_FullVersion >= 2010000}, [ioOpenEnd] {$IFEND}
+    );
   ChartFrame.Chart.AddSeries(funcSer);
 
   if Cumulative then

@@ -59,12 +59,10 @@ object ChartFrame: TChartFrame
     Top = 272
     object ZoomDragTool: TZoomDragTool
       Shift = [ssLeft]
-      LimitToExtent = [zdDown]
       Brush.Style = bsClear
     end
     object PanDragTool: TPanDragTool
       Shift = [ssRight]
-      LimitToExtent = [pdDown]
     end
   end
 end

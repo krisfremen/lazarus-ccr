@@ -5,7 +5,7 @@ unit ChartFrameUnit;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, ExtDlgs, PrintersDlgs,
+  Classes, SysUtils, LCLVersion, Forms, Controls, Graphics, ExtDlgs, PrintersDlgs,
   TAGraph, TATypes, TACustomSource, TACustomSeries, TASeries, TATools,
   Globals;
 
@@ -28,6 +28,7 @@ type
       ALineStyle: TPenStyle; ALegendTitle: String): TConstantLine;
 
   public
+    constructor Create(AOwner: TComponent); override;
     procedure Clear;
     procedure GetXRange(out XMin, XMax: Double; Logical: Boolean = true);
     procedure GetYRange(out YMin, YMax: Double; Logical: Boolean = true);
@@ -53,6 +54,17 @@ implementation
 uses
   Math, Printers, OSPrinters,
   TAChartUtils, TADrawerSVG, TAPrint;
+
+
+constructor TChartFrame.Create(AOwner: TComponent);
+begin
+  inherited;
+  {$IF LCL_FullVersion >= 2010000}
+  ZoomDragTool.LimitToExtent := [zdDown];
+  PanDragTool.LimitToExtent := [pdDown];
+  {$IFEND}
+end;
+
 
 procedure TChartFrame.Clear;
 begin
