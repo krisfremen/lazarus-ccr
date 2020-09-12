@@ -95,7 +95,7 @@ var
 
 // Constants for correction of standard deviation, needed by some charts.
 const
-  C4: array[1..24] of double = (
+  C4: array[2..25] of double = (
     0.7979, 0.8862, 0.9213, 0.9400, 0.9515, 0.9594, 0.9650, 0.9693,
     0.9727, 0.9754, 0.9776, 0.9794, 0.9810, 0.9823, 0.9835, 0.9845, 0.9854, 0.9862,
     0.9869, 0.9876, 0.9882, 0.9887, 0.9892, 0.9896);
@@ -193,7 +193,7 @@ begin
   CloseBtn.Constraints.MinWidth := w;
 
   SpecsPanel.Constraints.MinWidth := Max(
-    VarListLabel.Left + VarListLabel.Width + MeasLabel.Width,
+    VarListLabel.Left + VarListLabel.Width + Varlist.BorderSpacing.Right * 2 + MeasInBtn.Width + MeasLabel.Width,
     CloseBtn.Left + CloseBtn.Width - HelpBtn.Left + HelpBtn.BorderSpacing.Around
   );
   Constraints.MinHeight := MeasEdit.Top + MeasEdit.Height + MeasEdit.BorderSpacing.Bottom + ButtonPanel.Height;

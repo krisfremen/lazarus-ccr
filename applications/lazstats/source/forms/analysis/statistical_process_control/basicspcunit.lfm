@@ -11,11 +11,12 @@ object BasicSPCForm: TBasicSPCForm
   OnShow = FormShow
   LCLVersion = '2.1.0.0'
   object SpecsPanel: TPanel
-    Left = 0
+    Left = 8
     Height = 438
     Top = 0
     Width = 357
     Align = alLeft
+    BorderSpacing.Left = 8
     BorderSpacing.Right = 3
     BevelOuter = bvNone
     ClientHeight = 438
@@ -111,11 +112,10 @@ object BasicSPCForm: TBasicSPCForm
     object VarListLabel: TLabel
       AnchorSideLeft.Control = SpecsPanel
       AnchorSideTop.Control = SpecsPanel
-      Left = 8
+      Left = 0
       Height = 15
       Top = 8
       Width = 97
-      BorderSpacing.Left = 8
       BorderSpacing.Top = 8
       Caption = 'Selection Variables'
       ParentColor = False
@@ -126,12 +126,11 @@ object BasicSPCForm: TBasicSPCForm
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasInBtn
       AnchorSideBottom.Control = ButtonPanel
-      Left = 8
+      Left = 0
       Height = 363
       Top = 25
-      Width = 150
+      Width = 158
       Anchors = [akTop, akLeft, akRight, akBottom]
-      BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 8
@@ -266,17 +265,17 @@ object BasicSPCForm: TBasicSPCForm
     end
   end
   object SpecsSplitter: TSplitter
-    Left = 360
+    Left = 368
     Height = 438
     Top = 0
     Width = 5
     ResizeStyle = rsPattern
   end
   object PageControl: TPageControl
-    Left = 368
+    Left = 376
     Height = 426
     Top = 6
-    Width = 553
+    Width = 545
     ActivePage = ReportPage
     Align = alClient
     BorderSpacing.Left = 3
@@ -288,24 +287,24 @@ object BasicSPCForm: TBasicSPCForm
     object ReportPage: TTabSheet
       Caption = 'Report'
       ClientHeight = 398
-      ClientWidth = 545
+      ClientWidth = 537
       object Panel1: TPanel
         Left = 6
         Height = 358
         Top = 34
-        Width = 533
+        Width = 525
         Align = alClient
         BorderSpacing.Around = 6
         BevelOuter = bvNone
         BorderStyle = bsSingle
         ClientHeight = 354
-        ClientWidth = 529
+        ClientWidth = 521
         TabOrder = 0
         object ReportMemo: TMemo
           Left = 4
           Height = 346
           Top = 4
-          Width = 521
+          Width = 513
           Align = alClient
           BorderSpacing.Around = 4
           BorderStyle = bsNone
@@ -320,7 +319,7 @@ object BasicSPCForm: TBasicSPCForm
         Left = 0
         Height = 22
         Top = 6
-        Width = 541
+        Width = 533
         AutoSize = True
         BorderSpacing.Top = 6
         BorderSpacing.Right = 4
@@ -359,12 +358,12 @@ object BasicSPCForm: TBasicSPCForm
     object ChartPage: TTabSheet
       Caption = 'Chart'
       ClientHeight = 398
-      ClientWidth = 545
+      ClientWidth = 537
       object ChartToolBar: TToolBar
         Left = 0
         Height = 22
         Top = 6
-        Width = 541
+        Width = 533
         AutoSize = True
         BorderSpacing.Top = 6
         BorderSpacing.Right = 4

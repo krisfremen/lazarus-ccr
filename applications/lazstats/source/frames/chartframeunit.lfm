@@ -24,6 +24,8 @@ object ChartFrame: TChartFrame
       end    
       item
         Grid.Color = clSilver
+        Intervals.MaxLength = 80
+        Intervals.MinLength = 30
         Alignment = calBottom
         Marks.LabelBrush.Style = bsClear
         Minors = <>
