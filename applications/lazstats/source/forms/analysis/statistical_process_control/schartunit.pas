@@ -28,17 +28,6 @@ uses
   Math, Globals, MathUnit, Utils, MainUnit, DataProcs;
 
 procedure TSChartForm.Compute;
-const
-  D3: array[1..24] of double = (
-    0,0,0,0,0,0.076,0.136,0.184,0.223,0.256,0.283,0.307,0.328,
-    0.347,0.363,0.378,0.391,0.403,0.415,0.425,0.434,0.443,
-    0.451,0.459
-  );
-  D4 : array[1..24] of double = (
-    3.267,2.574,2.282,2.114,2.004,1.924,1.864,1.816,1.777,
-    1.744,1.717,1.693,1.672,1.653,1.637,1.622,1.608,1.597,
-    1.585,1.575,1.566,1.557,1.548,1.541
-  );
 var
   UCL, LCL: Double;
   grpSize, oldGrpSize: Integer;
@@ -48,6 +37,7 @@ var
   stddev: DblDyneVec = nil;
   count: IntDyneVec = nil;
   numGrps: Integer = 0;
+  numValues: Integer = 0;
   grp: String;
   grpIndex: Integer;
   X, Xsq: Double;
@@ -75,6 +65,11 @@ begin
   grandSigma := 0.0;
   sizeError := false;
 
+  // Count "good" data points
+  numValues := 0;
+  for i := 1 to NoCases do
+    if GoodRecord(i, Length(ColNoSelected), ColNoSelected) then inc(numValues);
+
   // calculate group ranges, grand mean, group sd's, semeans
   for j := 0 to numGrps-1 do // groups
   begin
@@ -83,7 +78,7 @@ begin
     for i := 1 to NoCases do
     begin
       if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
-      grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar,i]);
+      grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
       grpIndex := IndexOfString(groups, grp);
       if grpIndex = j then
       begin
@@ -115,12 +110,12 @@ begin
     exit;
   end;
 
-  seMean := seMean - sqr(grandMean)/NoCases;
-  seMean := seMean / (NoCases - 1);
+  seMean := seMean - sqr(grandMean)/numValues;
+  seMean := seMean / (numValues - 1);
   seMean := sqrt(seMean);
   grandSD := seMean;
-  seMean := seMean / sqrt(NoCases);
-  grandMean := grandMean / NoCases;
+  seMean := seMean / sqrt(numValues);
+  grandMean := grandMean / numValues;
   grandSigma := grandSigma / numGrps;
   D3Value := D3[grpSize-1];
   D4Value := D4[grpSize-1];
@@ -139,17 +134,19 @@ begin
   try
     lReport.Add('Sigma Chart Results');
     lReport.Add('');
+    lReport.Add('Number of values:       %8d',   [numValues]);
+    lReport.Add('Grand Mean:             %8.3f', [grandMean]);
+    lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
+    lReport.Add('Standard Error of Mean: %8.3f', [seMean]);
+    lReport.Add('');
+    lReport.Add('Mean Sigma:             %8.3f', [grandSigma]);
+    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
+    lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
+    lReport.Add('');
     lReport.Add(' Group  Size   Mean   Std.Dev.');
     lReport.Add('------- ---- -------- --------');
     for i := 0 to numGrps - 1 do
       lReport.Add('%7d %4d %8.2f %8.2f', [i+1, count[i], means[i], stddev[i]]);
-    lReport.Add('');
-    lReport.Add('Grand Mean:             %8.3f', [grandMean]);
-    lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
-    lReport.Add('Standard Error of Mean: %8.3f', [seMean]);
-    lReport.Add('Mean Sigma:             %8.3f', [grandSigma]);
-    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
-    lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
 
     ReportMemo.Lines.Assign(lReport);
   finally

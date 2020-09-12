@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, PrintersDlgs,
+  StdCtrls, ComCtrls, Buttons, PrintersDlgs,
   Globals, MainUnit, ContextHelpUnit, ChartFrameUnit;
 
 type
@@ -23,7 +23,7 @@ type
     MeasEdit: TEdit;
     PrintDialog: TPrintDialog;
     ReportMemo: TMemo;
-    PageControl1: TPageControl;
+    PageControl: TPageControl;
     Panel1: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
@@ -34,12 +34,16 @@ type
     SpecsSplitter: TSplitter;
     ReportPage: TTabSheet;
     ChartPage: TTabSheet;
+    MeasInBtn: TSpeedButton;
+    MeasOutBtn: TSpeedButton;
+    GroupInBtn: TSpeedButton;
+    GroupOutBtn: TSpeedButton;
     tbPrintChart: TToolButton;
     tbPrintReport: TToolButton;
     tbSaveChart: TToolButton;
     tbSaveReport: TToolButton;
-    ToolBar1: TToolBar;
-    ToolBar2: TToolBar;
+    ChartToolBar: TToolBar;
+    ReportToolBar: TToolBar;
     tbCopyReport: TToolButton;
     tbCopyChart: TToolButton;
     VarList: TListBox;
@@ -49,7 +53,11 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure GroupInBtnClick(Sender: TObject);
+    procedure GroupOutBtnClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
+    procedure MeasInBtnClick(Sender: TObject);
+    procedure MeasOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure tbCopyChartClick(Sender: TObject);
     procedure tbCopyReportClick(Sender: TObject);
@@ -59,11 +67,13 @@ type
     procedure tbSaveReportClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
+    FNoGroupsAllowed: Boolean;
 
   protected
     FPrintY: Integer;
     GrpVar: Integer;
     MeasVar: Integer;
+    procedure Compute; virtual;
     function GetGroups: StrDyneVec;
     function GetFileName: String;
     procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
@@ -71,16 +81,36 @@ type
       UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double); virtual;
     procedure PrintText; virtual;
     procedure Reset; virtual;
-    procedure Compute; virtual;
+    procedure UpdateBtnStates; virtual;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean; virtual;
 
   public
     FChartFrame: TChartFrame;
+    property NoGroupsAllowed: Boolean read FNoGroupsAllowed write FNoGroupsAllowed;
 
   end;
 
 var
   BasicSPCForm: TBasicSPCForm;
+
+// Constants for correction of standard deviation, needed by some charts.
+const
+  C4: array[1..24] of double = (
+    0.7979, 0.8862, 0.9213, 0.9400, 0.9515, 0.9594, 0.9650, 0.9693,
+    0.9727, 0.9754, 0.9776, 0.9794, 0.9810, 0.9823, 0.9835, 0.9845, 0.9854, 0.9862,
+    0.9869, 0.9876, 0.9882, 0.9887, 0.9892, 0.9896);
+
+  D3: array[1..24] of double = (
+    0, 0, 0, 0, 0, 0.076, 0.136, 0.184, 0.223, 0.256, 0.283, 0.307, 0.328,
+    0.347, 0.363, 0.378, 0.391, 0.403, 0.415, 0.425, 0.434, 0.443,
+    0.451, 0.459
+  );
+  D4: array[1..24] of double = (
+    3.267, 2.574, 2.282, 2.114, 2.004, 1.924, 1.864, 1.816, 1.777,
+    1.744, 1.717, 1.693, 1.672, 1.653, 1.637, 1.622, 1.608, 1.597,
+    1.585, 1.575, 1.566, 1.557, 1.548, 1.541
+  );
+
 
 implementation
 
@@ -109,6 +139,7 @@ end;
 
 procedure TBasicSPCForm.Compute;
 begin
+  //
 end;
 
 
@@ -133,7 +164,7 @@ begin
     if GroupEdit.Visible and (cellstring = GroupEdit.Text) then GrpVar := i;
     if MeasEdit.Visible and (cellstring = MeasEdit.Text) then MeasVar := i;
   end;
-  if GroupEdit.Visible and (GrpVar = -1) then
+  if not NoGroupsAllowed and GroupEdit.Visible and (GrpVar = -1) then
   begin
     GroupEdit.SetFocus;
     ErrorMsg('Group variable not found.');
@@ -147,6 +178,8 @@ begin
   end;
 
   Compute;
+
+  UpdateBtnStates;
 end;
 
 procedure TBasicSPCForm.FormActivate(Sender: TObject);
@@ -225,11 +258,61 @@ begin
 end;
 
 
+procedure TBasicSPCForm.GroupInBtnClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (GroupEdit.Text = '') then
+  begin
+    GroupEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+
+procedure TBasicSPCForm.GroupOutBtnClick(Sender: TObject);
+begin
+  if GroupEdit.Text <> '' then
+  begin
+    VarList.Items.Add(GroupEdit.Text);
+    GroupEdit.Text := '';
+    UpdateBtnStates;
+  end;
+end;
+
+
 procedure TBasicSPCForm.HelpBtnClick(Sender: TObject);
 begin
   if ContextHelpForm = nil then
     Application.CreateForm(TContextHelpForm, ContextHelpForm);
   ContextHelpForm.HelpMessage((Sender as TButton).Tag);
+end;
+
+
+procedure TBasicSPCForm.MeasInBtnClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (MeasEdit.Text = '') then
+  begin
+    MeasEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+
+procedure TBasicSPCForm.MeasOutBtnClick(Sender: TObject);
+begin
+  if MeasEdit.Text <> '' then
+  begin
+    VarList.Items.Add(MeasEdit.Text);
+    MeasEdit.Text := '';
+    UpdateBtnStates;
+  end;
 end;
 
 
@@ -368,6 +451,7 @@ begin
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   FChartFrame.Clear;
   (FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource).Clear;
+  UpdateBtnStates;
 end;
 
 
@@ -375,6 +459,7 @@ procedure TBasicSPCForm.ResetBtnClick(Sender: TObject);
 begin
   Reset;
 end;
+
 
 procedure TBasicSPCForm.tbCopyChartClick(Sender: TObject);
 begin
@@ -429,6 +514,23 @@ begin
 end;
 
 
+procedure TBasicSPCForm.UpdateBtnStates;
+begin
+  MeasInBtn.Enabled := (VarList.ItemIndex <> -1) and (MeasEdit.Text = '');
+  MeasOutBtn.Enabled := (MeasEdit.Text <> '');
+  GroupInBtn.Enabled := (VarList.ItemIndex <> -1) and (GroupEdit.Text = '');
+  GroupOutBtn.Enabled := (GroupEdit.Text <> '');
+
+  tbSaveReport.Enabled := ReportMemo.Lines.Count > 0;
+  tbPrintReport.Enabled := ReportMemo.Lines.Count > 0;
+  tbCopyReport.Enabled := ReportMemo.Lines.Count > 0;
+
+  tbSaveChart.Enabled :=  FChartFrame.Chart.SeriesCount > 0;
+  tbPrintChart.Enabled :=  FChartFrame.Chart.SeriesCount > 0;
+  tbCopyChart.Enabled :=  FChartFrame.Chart.SeriesCount > 0;
+end;
+
+
 function TBasicSPCForm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;
 var
    x: Double;
@@ -450,9 +552,11 @@ end;
 
 
 procedure TBasicSPCForm.VarListClick(Sender: TObject);
-var
-  index: integer;
+//var
+//  index: integer;
 begin
+  UpdateBtnStates;
+  {
   index := VarList.ItemIndex;
   if index > -1 then
   begin
@@ -462,6 +566,7 @@ begin
       MeasEdit.Text := VarList.Items[index];
     VarList.Items.Delete(index);
   end;
+  }
 end;
 
 end.

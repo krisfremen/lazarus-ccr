@@ -84,17 +84,17 @@ begin
   try
     lReport.Add('DEFECTS c CONTROL CHART RESULTS');
     lReport.Add('');
-    lReport.Add('Sample  No Defects  Defects Per Unit');
-    lReport.Add('------  ----------  ----------------');
-    for i := 0 to numSamples-1 do
-      lReport.Add('%6d  %10.2f  %16.2f', [i, means[i], defPerUnit[i]]);
-    lReport.Add('');
-    lReport.Add('Total Nonconformities: %8.2f', [grandMean]);
     lReport.Add('No. of Samples:        %8d',   [numSamples]);
+    lReport.Add('Total Nonconformities: %8.2f', [grandMean]);
     lReport.Add('Def. / unit Mean:      %8.3f', [meanC]);
     lReport.Add('   and StdDev:         %8.3f', [stdDevC]);
     lReport.Add('Lower Control Limit:   %8.3f', [LCL]);
     lReport.Add('Upper Control Limit:   %8.3f', [UCL]);
+    lReport.Add('');
+    lReport.Add('Sample  No Defects  Defects Per Unit');
+    lReport.Add('------  ----------  ----------------');
+    for i := 0 to numSamples-1 do
+      lReport.Add('%6d  %10.2f  %16.2f', [i, means[i], defPerUnit[i]]);
 
     ReportMemo.Lines.Assign(lReport);
   finally

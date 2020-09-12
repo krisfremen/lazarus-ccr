@@ -1,75 +1,90 @@
 inherited CUSUMChartForm: TCUSUMChartForm
+  Height = 424
   HelpType = htKeyword
   HelpKeyword = 'html/CUMSUMChart.htm'
   Caption = 'Cumulative Sum Control Chart'
+  ClientHeight = 424
   OnActivate = FormActivate
   ShowHint = True
   inherited SpecsPanel: TPanel
+    Height = 424
     Width = 432
+    ClientHeight = 424
     ClientWidth = 432
     inherited ButtonPanel: TPanel
+      Top = 382
       Width = 432
       ClientWidth = 432
       TabOrder = 5
       inherited CloseBtn: TButton
         Left = 377
-        TabOrder = 3
       end
       inherited ComputeBtn: TButton
         Left = 293
-        TabOrder = 2
       end
       inherited ResetBtn: TButton
         Left = 231
-        TabOrder = 1
       end
       inherited HelpBtn: TButton
         Left = 180
-        TabOrder = 0
       end
       inherited Bevel1: TBevel
         Width = 424
       end
     end
     inherited VarList: TListBox
-      Width = 212
-      TabOrder = 0
+      Height = 349
+      Width = 188
     end
     inherited GroupLabel: TLabel
-      Left = 228
+      Left = 236
     end
     inherited GroupEdit: TEdit
-      Left = 228
-      Width = 204
-      TabOrder = 1
+      Left = 236
+      Width = 196
     end
     inherited MeasLabel: TLabel
-      Left = 228
+      Left = 236
     end
     inherited MeasEdit: TEdit
-      Left = 228
-      Width = 204
-      TabOrder = 2
+      Left = 236
+      Width = 196
     end
     inherited Bevel2: TBevel
       Left = 205
     end
-    object GroupBox1: TGroupBox[8]
+    inherited MeasInBtn: TSpeedButton
+      Left = 204
+    end
+    inherited MeasOutBtn: TSpeedButton
+      Left = 205
+    end
+    inherited GroupInBtn: TSpeedButton
+      AnchorSideLeft.Control = MeasInBtn
+      AnchorSideLeft.Side = asrTop
+      Left = 204
+    end
+    inherited GroupOutBtn: TSpeedButton
+      AnchorSideLeft.Control = GroupInBtn
+      Left = 205
+    end
+    object GroupBox1: TGroupBox[12]
       AnchorSideLeft.Control = MeasEdit
       AnchorSideTop.Control = GroupBox2
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
-      Left = 228
+      Left = 236
       Height = 153
-      Top = 202
-      Width = 204
+      Top = 239
+      Width = 196
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
       BorderSpacing.Top = 16
+      BorderSpacing.Bottom = 8
       Caption = 'V-Mask Specifications'
       ClientHeight = 133
-      ClientWidth = 200
+      ClientWidth = 192
       TabOrder = 4
       object Label4: TLabel
         AnchorSideLeft.Control = GroupBox1
@@ -116,7 +131,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         Height = 23
         Hint = 'Detection level for a shift in the process mean, '#13#10'expressed in data units (default), or'#13#10'as a multiple of the standard deviation of the '#13#10'data points (when "Normalized CUSUM" is checked).'
         Top = 2
-        Width = 78
+        Width = 70
         Alignment = taRightJustify
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 2
@@ -136,7 +151,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         Height = 23
         Hint = 'Probability of concluding that a shift in the process has occurred, when in fact it did not. '
         Top = 29
-        Width = 78
+        Width = 70
         Alignment = taRightJustify
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 8
@@ -156,7 +171,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         Height = 23
         Hint = 'Probability of not detecting that a shift in the process mean has, in fact, occurred'
         Top = 56
-        Width = 78
+        Width = 70
         Alignment = taRightJustify
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 4
@@ -175,7 +190,7 @@ inherited CUSUMChartForm: TCUSUMChartForm
         Left = 12
         Height = 17
         Top = 104
-        Width = 180
+        Width = 172
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 2
         BorderSpacing.Bottom = 12
@@ -194,23 +209,23 @@ inherited CUSUMChartForm: TCUSUMChartForm
         ParentColor = False
       end
     end
-    object GroupBox2: TGroupBox[9]
+    object GroupBox2: TGroupBox[13]
       AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = MeasEdit
+      AnchorSideTop.Control = GroupEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
-      Left = 228
+      Left = 236
       Height = 74
-      Top = 112
-      Width = 204
+      Top = 149
+      Width = 196
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
       BorderSpacing.Top = 16
       BorderSpacing.Bottom = 8
       Caption = 'Option:'
       ClientHeight = 54
-      ClientWidth = 200
+      ClientWidth = 192
       TabOrder = 3
       object TargetChk: TCheckBox
         AnchorSideLeft.Control = GroupBox2
@@ -261,18 +276,27 @@ inherited CUSUMChartForm: TCUSUMChartForm
   end
   inherited SpecsSplitter: TSplitter
     Left = 435
+    Height = 424
   end
-  inherited PageControl1: TPageControl
+  inherited PageControl: TPageControl
     Left = 443
+    Height = 412
     Width = 478
     inherited ReportPage: TTabSheet
+      ClientHeight = 384
       ClientWidth = 470
       inherited Panel1: TPanel
+        Height = 344
         Width = 458
+        ClientHeight = 340
         ClientWidth = 454
         inherited ReportMemo: TMemo
+          Height = 332
           Width = 446
         end
+      end
+      inherited ReportToolBar: TToolBar
+        Width = 466
       end
     end
   end

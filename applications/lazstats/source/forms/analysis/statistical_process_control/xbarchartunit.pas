@@ -45,6 +45,8 @@ procedure TXBarChartForm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
+  NoGroupsAllowed := true;
+
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
@@ -72,7 +74,10 @@ end;
 procedure TXBarChartForm.Compute;
 var
   i, j: Integer;
-  upperSpec, lowerSpec, targetSpec, sigma: Double;
+  sigma: Double;
+  upperSpec: Double = NaN;
+  lowerSpec: Double = NaN;
+  targetSpec: Double = NaN;
   ColNoSelected: IntDyneVec = nil;
   groups: StrDyneVec = nil;
   means: DblDyneVec = nil;
@@ -81,101 +86,135 @@ var
   numGrps: Integer;
   grp: String;
   grpIndex: Integer;
+  totalNumCases: Integer;
   X, Xsq: Double;
-  UCL, LCL, grandMean, grandSD, seMean: Double;
+  UCL, LCL, grandMean, grandSD, stdErrMean, C4Value: Double;
   lReport: TStrings;
 begin
-  SetLength(ColNoSelected, 2);
-  ColNoSelected[0] := GrpVar;
-  ColNoSelected[1] := MeasVar;
+  if GroupEdit.Text <> '' then
+  begin
+    SetLength(ColNoSelected, 2);
+    ColNoSelected[0] := GrpVar;
+    ColNoSelected[1] := MeasVar;
+  end else
+  begin
+    SetLength(ColNoSelected, 1);
+    ColNoSelected[0] := MeasVar;
+  end;
 
   if UpperSpecChk.Checked and (UpperSpecEdit.Text <> '') then
-    upperSpec := StrToFloat(UpperSpecEdit.Text)
-  else
-    upperSpec := NaN;
+    upperSpec := StrToFloat(UpperSpecEdit.Text);
   if LowerSpecChk.Checked and (LowerSpecEdit.Text <> '') then
-    lowerSpec := StrToFloat(LowerSpecEdit.Text)
-  else
-    lowerSpec := NaN;
+    lowerSpec := StrToFloat(LowerSpecEdit.Text);
   if TargetChk.Checked and (TargetSpecEdit.Text <> '') then
-    targetSpec := StrToFloat(TargetSpecEdit.Text)
-  else
-    targetSpec := Nan;
+    targetSpec := StrToFloat(TargetSpecEdit.Text);
 
   case SigmaOpts.ItemIndex of
     0: sigma := 3.0;
     1: sigma := 2.0;
     2: sigma := 1.0;
     3: sigma := StrToFloat(XSigmaEdit.Text);
+    else raise Exception.Create('Sigma case not handled.');
   end;
 
-  groups := GetGroups;
+  if GroupEdit.Text = '' then
+    SetLength(groups, NoCases)
+  else
+    groups := GetGroups;
   numGrps := Length(groups);
 
   SetLength(means, numGrps);
   SetLength(count, numGrps);
   SetLength(stddev, numGrps);
-  seMean := 0.0;
+  stdErrMean := 0.0;
   grandMean := 0.0;
+  totalNumCases := 0;
 
   // calculate group means, grand mean, group sd's, semeans
   for i := 1 to NoCases do
   begin
     if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
-    grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
-    grpIndex := IndexOfString(groups, grp);
+    if GroupEdit.Text = '' then
+    begin
+      // individuals x-bar chart
+      grpIndex := totalNumCases;
+      groups[grpIndex] := IntToStr(i);
+    end else
+    begin
+      // grouped x-bar chart
+      grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
+      grpIndex := IndexOfString(groups, grp);
+    end;
     X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
     Xsq := X*X;
     inc(count[grpIndex]);
     means[grpIndex] := means[grpIndex] + X;
     stddev[grpIndex] := stddev[grpIndex] + Xsq;
-    seMean := seMean + Xsq;
     grandMean := grandMean + X;
+    stdErrMean := stdErrMean + Xsq;
+    inc(totalNumCases);
   end;
 
-  for i := 0 to numGrps-1 do
+  stdErrMean := stdErrMean - sqr(grandMean) / totalNumCases;
+  stdErrMean := sqrt(stderrMean / (totalNumCases - 1));
+  grandSD := stdErrMean;
+  stdErrMean := stdErrMean / sqrt(totalNumCases);
+  grandMean := grandMean / totalNumCases;
+
+  if (GroupEdit.Text = '') then
   begin
-    if count[i] = 0 then
+    // Individuals chart
+    SetLength(means, totalNumCases);
+    SetLength(stddev, totalNumCases);
+    Setlength(count, totalNumCases);
+    for i := 0 to totalNumCases-1 do
+      stddev[i] := stdErrMean;
+    C4Value := 1.0 / C4[totalNumCases-1];
+    UCL := grandMean + sigma * stdErrMean * C4Value;
+    LCL := grandMean - sigma * stdErrMean * C4Value;
+  end else
+  begin
+    // Grouped chart
+    for i := 0 to numGrps-1 do
     begin
-      means[i] := NaN;
-      stddev[i] := NaN;
-    end else
-    begin
-      if count[i] = 1 then
-        stddev[i] := NaN
-      else
+      if count[i] = 0 then
       begin
-        stddev[i] := stddev[i] - sqr(means[i]) / count[i];
-        stddev[i] := stddev[i] / (count[i] - 1);
-        stddev[i] := sqrt(stddev[i]);
+        means[i] := NaN;
+        stddev[i] := NaN;
+      end else
+      begin
+        if count[i] = 1 then
+          stddev[i] := NaN
+        else
+        begin
+          stddev[i] := stddev[i] - sqr(means[i]) / count[i];
+          stddev[i] := stddev[i] / (count[i] - 1);
+          stddev[i] := sqrt(stddev[i]);
+        end;
+        means[i] := means[i] / count[i];
       end;
-      means[i] := means[i] / count[i];
     end;
+    UCL := grandMean + sigma * stdErrMean;
+    LCL := grandMean - sigma * stdErrMean;
   end;
-  seMean := seMean - sqr(grandMean) / NoCases;
-  seMean := sqrt(seMean / (NoCases - 1));
-  grandSD := seMean;
-  seMean := seMean / sqrt(NoCases);
-  grandMean := grandMean / NoCases;
-  UCL := grandMean + sigma * seMean;
-  LCL := grandMean - sigma * seMean;
 
-  // printed results
+  // Print results
   lReport := TStringList.Create;
   try
     lReport.Add('X BAR CHART RESULTS');
+    lReport.Add('');
+    lReport.Add('Number of samples:      %8d',   [totalNumCases]);
+    lReport.Add('Grand Mean:             %8.3f', [grandMean]);
+    lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
+    lReport.Add('Standard Error of Mean: %8.3f', [stdErrMean]);
+    lReport.Add('');
+    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
+    lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
     lReport.Add('');
     lReport.Add(' Group  Size   Mean   Std.Dev.');
     lReport.Add('------- ---- -------- --------');
     for i := 0 to numGrps-1 do
       lReport.Add('%7s %4d %8.2f %8.2f', [groups[i], count[i], means[i], stddev[i]]);
-    lReport.Add('');
-    lReport.Add('Grand Mean:             %8.3f', [grandMean]);
-    lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
-    lReport.Add('Standard Error of Mean: %8.3f', [seMean]);
-    lReport.Add('');
-    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
-    lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
 
     ReportMemo.Lines.Assign(lReport);
   finally
@@ -209,8 +248,14 @@ var
   x: Double;
 begin
   Result := inherited;
-  if not Result then
-    exit;
+  if (not Result) then
+  begin
+    // This particular chart will handle individual data if GroupEdit is empty.
+    if  GroupEdit.Visible and (GroupEdit.Text = '') then
+      Result := true
+    else
+      exit;
+  end;
 
   Result := false;
 

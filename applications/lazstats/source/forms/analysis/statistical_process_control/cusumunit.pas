@@ -175,6 +175,7 @@ begin
     lReport.Clear;
     lReport.Add('CUSUM Chart Results');
     lReport.Add('');
+    lReport.Add('Number of Values:          %8d',   [numValues]);
     lReport.Add('Mean of group deviations:  %8.3f', [grandSum]);
     lReport.Add('Mean of all observations:  %8.3f', [grandMean]);
     lReport.Add('Std. Dev. of Observations: %8.3f', [grandSD]);
@@ -239,14 +240,15 @@ begin
 
   DisableAutoSizing;
   try
-    GroupBox2.Anchors := GroupBox2.Anchors - [akRight];
+    GroupBox1.Anchors := GroupBox1.Anchors - [akRight];
     VarList.Constraints.MinWidth := VarListLabel.Width;
     SpecsPanel.Constraints.MinWidth := Max(
       CloseBtn.Left + CloseBtn.Width - HelpBtn.Left + HelpBtn.BorderSpacing.Around,
       GroupBox2.Width * 2 + VarList.BorderSpacing.Right + VarList.BorderSpacing.Left
     );
-    Constraints.MinHeight := GroupBox2.Top + GroupBox2.Height + GroupBox2.BorderSpacing.Bottom + ButtonPanel.Height;
-    GroupBox2.Anchors := GroupBox2.Anchors + [akRight];
+    Constraints.MinHeight := GroupBox1.Top + GroupBox1.Height + GroupBox1.BorderSpacing.Bottom + ButtonPanel.Height;
+    Height := 1;  // enforce autosizing of height
+    GroupBox1.Anchors := GroupBox1.Anchors + [akRight];
   finally
     EnableAutoSizing;
   end;

@@ -80,17 +80,17 @@ begin
   try
     lReport.Add('DEFECTS c CONTROL CHART RESULTS');
     lReport.Add('');
+    lReport.Add('No. of samples:            %8d',   [numData]); //NoCases]);
+    lReport.Add('Total Nonconformities:     %8.3f', [GrandMean]);
+    lReport.Add('Poisson mean and variance: %8.3f', [meanc]);
+    lReport.Add('Lower Control Limit:       %8.3f', [LCL]);
+    lReport.Add('Upper Control Limit:       %8.3f', [UCL]);
+    lReport.Add('');
     lReport.Add('Sample  Number of ');
     lReport.Add('        Nonconformities');
     lReport.Add('------  ---------------');
     for i := 1 to NoCases do
       lReport.Add('%6d %15.2f', [i, means[i]]);
-    lReport.Add('');
-    lReport.Add('Total Nonconformities:     %8.3f', [GrandMean]);
-    lReport.Add('No. of samples:            %8d',   [numData]); //NoCases]);
-    lReport.Add('Poisson mean and variance: %8.3f', [meanc]);
-    lReport.Add('Lower Control Limit:       %8.3f', [LCL]);
-    lReport.Add('Upper Control Limit:       %8.3f', [UCL]);
 
     ReportMemo.Lines.Assign(lReport);
   finally

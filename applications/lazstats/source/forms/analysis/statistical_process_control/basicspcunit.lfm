@@ -31,7 +31,7 @@ object BasicSPCForm: TBasicSPCForm
       BevelOuter = bvNone
       ClientHeight = 42
       ClientWidth = 357
-      TabOrder = 0
+      TabOrder = 3
       object CloseBtn: TButton
         AnchorSideTop.Control = ButtonPanel
         AnchorSideTop.Side = asrCenter
@@ -48,7 +48,7 @@ object BasicSPCForm: TBasicSPCForm
         Caption = 'Close'
         ModalResult = 11
         OnClick = CloseBtnClick
-        TabOrder = 0
+        TabOrder = 3
       end
       object ComputeBtn: TButton
         AnchorSideTop.Control = ButtonPanel
@@ -63,7 +63,7 @@ object BasicSPCForm: TBasicSPCForm
         BorderSpacing.Around = 8
         Caption = 'Compute'
         OnClick = ComputeBtnClick
-        TabOrder = 1
+        TabOrder = 2
       end
       object ResetBtn: TButton
         AnchorSideTop.Control = ButtonPanel
@@ -78,7 +78,7 @@ object BasicSPCForm: TBasicSPCForm
         BorderSpacing.Around = 8
         Caption = 'Reset'
         OnClick = ResetBtnClick
-        TabOrder = 2
+        TabOrder = 1
       end
       object HelpBtn: TButton
         AnchorSideTop.Control = ButtonPanel
@@ -92,7 +92,7 @@ object BasicSPCForm: TBasicSPCForm
         BorderSpacing.Around = 8
         Caption = 'Help'
         OnClick = HelpBtnClick
-        TabOrder = 3
+        TabOrder = 0
       end
       object Bevel1: TBevel
         AnchorSideLeft.Control = ButtonPanel
@@ -124,13 +124,12 @@ object BasicSPCForm: TBasicSPCForm
       AnchorSideLeft.Control = SpecsPanel
       AnchorSideTop.Control = VarListLabel
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Bevel2
-      AnchorSideRight.Side = asrBottom
+      AnchorSideRight.Control = MeasInBtn
       AnchorSideBottom.Control = ButtonPanel
       Left = 8
       Height = 363
       Top = 25
-      Width = 174
+      Width = 150
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
@@ -138,32 +137,33 @@ object BasicSPCForm: TBasicSPCForm
       BorderSpacing.Bottom = 8
       ItemHeight = 0
       OnClick = VarListClick
-      TabOrder = 1
+      TabOrder = 0
     end
     object GroupLabel: TLabel
-      AnchorSideLeft.Control = VarList
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = VarListLabel
-      Left = 190
+      AnchorSideLeft.Control = GroupEdit
+      AnchorSideTop.Control = GroupInBtn
+      Left = 198
       Height = 15
-      Top = 8
+      Top = 93
       Width = 105
+      BorderSpacing.Top = 2
       BorderSpacing.Bottom = 2
       Caption = 'Group (Lot) Variable'
       ParentColor = False
     end
     object GroupEdit: TEdit
-      AnchorSideLeft.Control = VarList
+      AnchorSideLeft.Control = GroupInBtn
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = GroupLabel
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 190
+      Left = 198
       Height = 23
-      Top = 25
-      Width = 167
+      Top = 110
+      Width = 159
       Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       BorderSpacing.Bottom = 8
       ReadOnly = True
@@ -171,34 +171,34 @@ object BasicSPCForm: TBasicSPCForm
       Text = 'GroupEdit'
     end
     object MeasLabel: TLabel
-      AnchorSideLeft.Control = VarList
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = GroupEdit
-      AnchorSideTop.Side = asrBottom
-      Left = 190
+      AnchorSideLeft.Control = MeasEdit
+      AnchorSideTop.Control = MeasInBtn
+      Left = 198
       Height = 15
-      Top = 56
+      Top = 27
       Width = 117
+      BorderSpacing.Top = 2
       BorderSpacing.Bottom = 2
       Caption = 'Measurement Variable'
       ParentColor = False
     end
     object MeasEdit: TEdit
-      AnchorSideLeft.Control = VarList
+      AnchorSideLeft.Control = MeasInBtn
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = MeasLabel
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 190
+      Left = 198
       Height = 23
-      Top = 73
-      Width = 167
+      Top = 44
+      Width = 159
       Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       BorderSpacing.Bottom = 8
       ReadOnly = True
-      TabOrder = 3
+      TabOrder = 1
       Text = 'MeasEdit'
     end
     object Bevel2: TBevel
@@ -210,6 +210,60 @@ object BasicSPCForm: TBasicSPCForm
       Width = 23
       Shape = bsSpacer
     end
+    object MeasInBtn: TSpeedButton
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = VarList
+      Left = 166
+      Height = 24
+      Top = 25
+      Width = 24
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = MeasInBtnClick
+    end
+    object MeasOutBtn: TSpeedButton
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = MeasInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 22
+      Top = 53
+      Width = 23
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = MeasOutBtnClick
+    end
+    object GroupInBtn: TSpeedButton
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = MeasOutBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 166
+      Height = 24
+      Top = 91
+      Width = 24
+      BorderSpacing.Top = 16
+      Images = MainDataModule.ImageList
+      ImageIndex = 1
+      OnClick = GroupInBtnClick
+    end
+    object GroupOutBtn: TSpeedButton
+      AnchorSideLeft.Control = SpecsPanel
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = GroupInBtn
+      AnchorSideTop.Side = asrBottom
+      Left = 167
+      Height = 22
+      Top = 119
+      Width = 23
+      BorderSpacing.Top = 4
+      Images = MainDataModule.ImageList
+      ImageIndex = 0
+      OnClick = GroupOutBtnClick
+    end
   end
   object SpecsSplitter: TSplitter
     Left = 360
@@ -218,7 +272,7 @@ object BasicSPCForm: TBasicSPCForm
     Width = 5
     ResizeStyle = rsPattern
   end
-  object PageControl1: TPageControl
+  object PageControl: TPageControl
     Left = 368
     Height = 426
     Top = 6
@@ -262,7 +316,7 @@ object BasicSPCForm: TBasicSPCForm
           TabOrder = 0
         end
       end
-      object ToolBar2: TToolBar
+      object ReportToolBar: TToolBar
         Left = 0
         Height = 22
         Top = 6
@@ -271,7 +325,7 @@ object BasicSPCForm: TBasicSPCForm
         BorderSpacing.Top = 6
         BorderSpacing.Right = 4
         BorderSpacing.Bottom = 6
-        Caption = 'ToolBar2'
+        Caption = 'ReportToolBar'
         EdgeBorders = []
         Images = MainDataModule.ImageList
         TabOrder = 1
@@ -306,7 +360,7 @@ object BasicSPCForm: TBasicSPCForm
       Caption = 'Chart'
       ClientHeight = 398
       ClientWidth = 545
-      object ToolBar1: TToolBar
+      object ChartToolBar: TToolBar
         Left = 0
         Height = 22
         Top = 6
@@ -315,7 +369,7 @@ object BasicSPCForm: TBasicSPCForm
         BorderSpacing.Top = 6
         BorderSpacing.Right = 4
         BorderSpacing.Bottom = 6
-        Caption = 'ToolBar1'
+        Caption = 'ChartToolBar'
         EdgeBorders = []
         Images = MainDataModule.ImageList
         TabOrder = 0

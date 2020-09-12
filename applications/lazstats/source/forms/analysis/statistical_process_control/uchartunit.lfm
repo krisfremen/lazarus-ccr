@@ -9,6 +9,7 @@ inherited UChartForm: TUChartForm
     inherited ButtonPanel: TPanel
       Width = 432
       ClientWidth = 432
+      TabOrder = 5
       inherited CloseBtn: TButton
         Left = 377
       end
@@ -26,34 +27,54 @@ inherited UChartForm: TUChartForm
       end
     end
     inherited VarList: TListBox
-      Width = 212
+      Width = 188
     end
     inherited GroupLabel: TLabel
-      Left = 228
+      Left = 236
+      Top = 302
       Visible = False
     end
     inherited GroupEdit: TEdit
-      Left = 228
-      Width = 204
+      Left = 236
+      Top = 319
+      Width = 196
+      TabOrder = 4
       Visible = False
     end
     inherited MeasLabel: TLabel
-      Left = 228
+      Left = 236
     end
     inherited MeasEdit: TEdit
-      Left = 228
-      Width = 204
+      Left = 236
+      Width = 196
     end
     inherited Bevel2: TBevel
       Left = 205
     end
-    object Label3: TLabel[8]
+    inherited MeasInBtn: TSpeedButton
+      Left = 204
+    end
+    inherited MeasOutBtn: TSpeedButton
+      Left = 205
+    end
+    inherited GroupInBtn: TSpeedButton
+      Left = 204
+      Top = 300
+      Anchors = [akLeft]
+      Visible = False
+    end
+    inherited GroupOutBtn: TSpeedButton
+      Left = 205
+      Top = 328
+      Visible = False
+    end
+    object Label3: TLabel[12]
       AnchorSideTop.Control = NoInspEdit
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = NoInspEdit
       Left = 288
       Height = 30
-      Top = 112
+      Top = 83
       Width = 73
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
@@ -61,36 +82,36 @@ inherited UChartForm: TUChartForm
       Caption = 'No. inspected'#13#10'per group:'
       ParentColor = False
     end
-    object NoInspEdit: TEdit[9]
+    object NoInspEdit: TEdit[13]
       AnchorSideTop.Control = MeasEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
       Left = 369
       Height = 23
-      Top = 116
+      Top = 87
       Width = 63
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 20
-      TabOrder = 4
+      TabOrder = 2
       Text = 'NoInspEdit'
     end
-    object SigmaOpts: TRadioGroup[10]
+    object SigmaOpts: TRadioGroup[14]
       AnchorSideLeft.Control = MeasEdit
       AnchorSideTop.Control = NoInspEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 228
+      Left = 236
       Height = 128
-      Top = 163
-      Width = 204
+      Top = 134
+      Width = 196
       Anchors = [akTop, akLeft, akRight]
       AutoFill = True
       BorderSpacing.Top = 24
       BorderSpacing.Bottom = 8
-      Caption = 'No. of Sigma Units for UCL and LCL'
+      Caption = 'Sigma Units for UCL and LCL'
       ChildSizing.LeftRightSpacing = 12
       ChildSizing.TopBottomSpacing = 6
       ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -100,15 +121,15 @@ inherited UChartForm: TUChartForm
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
       ClientHeight = 108
-      ClientWidth = 200
+      ClientWidth = 192
       ItemIndex = 0
       Items.Strings = (
-        '3 Sigma (default)'
+        '3 Sigma'
         '2 Sigma'
         '1 Sigma'
         'x Sigmas with x =  '
       )
-      TabOrder = 5
+      TabOrder = 3
       object XSigmaEdit: TEdit
         AnchorSideRight.Control = SigmaOpts
         AnchorSideRight.Side = asrBottom
@@ -116,7 +137,7 @@ inherited UChartForm: TUChartForm
         Left = 128
         Height = 23
         Top = 80
-        Width = 60
+        Width = 52
         Alignment = taRightJustify
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 0
@@ -127,7 +148,7 @@ inherited UChartForm: TUChartForm
   inherited SpecsSplitter: TSplitter
     Left = 435
   end
-  inherited PageControl1: TPageControl
+  inherited PageControl: TPageControl
     Left = 443
     Width = 478
     inherited ReportPage: TTabSheet
@@ -139,15 +160,21 @@ inherited UChartForm: TUChartForm
           Width = 446
         end
       end
-      inherited ToolBar2: TToolBar
+      inherited ReportToolBar: TToolBar
         Width = 466
       end
     end
     inherited ChartPage: TTabSheet
       ClientWidth = 470
-      inherited ToolBar1: TToolBar
+      inherited ChartToolBar: TToolBar
         Width = 466
       end
     end
+  end
+  inherited SaveDialog: TSaveDialog
+    Left = 544
+  end
+  inherited PrintDialog: TPrintDialog
+    Left = 544
   end
 end

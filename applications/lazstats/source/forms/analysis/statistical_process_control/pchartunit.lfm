@@ -11,6 +11,7 @@ inherited PChartForm: TPChartForm
     inherited ButtonPanel: TPanel
       Width = 456
       ClientWidth = 456
+      TabOrder = 6
       inherited CloseBtn: TButton
         Left = 401
       end
@@ -28,62 +29,82 @@ inherited PChartForm: TPChartForm
       end
     end
     inherited VarList: TListBox
-      Width = 224
+      Width = 200
     end
     inherited GroupLabel: TLabel
-      Left = 240
+      Left = 248
+      Top = 328
       Visible = False
     end
     inherited GroupEdit: TEdit
-      Left = 240
-      Width = 216
+      Left = 248
+      Top = 345
+      Width = 208
+      TabOrder = 5
       Visible = False
     end
     inherited MeasLabel: TLabel
-      Left = 240
+      Left = 248
     end
     inherited MeasEdit: TEdit
-      Left = 240
-      Width = 216
+      Left = 248
+      Width = 208
     end
     inherited Bevel2: TBevel
       Left = 217
     end
-    object Label3: TLabel[8]
+    inherited MeasInBtn: TSpeedButton
+      Left = 216
+    end
+    inherited MeasOutBtn: TSpeedButton
+      Left = 217
+    end
+    inherited GroupInBtn: TSpeedButton
+      Left = 216
+      Top = 326
+      Anchors = [akLeft]
+      Visible = False
+    end
+    inherited GroupOutBtn: TSpeedButton
+      Left = 217
+      Top = 354
+      Visible = False
+    end
+    object Label3: TLabel[12]
       AnchorSideLeft.Control = Label4
       AnchorSideTop.Control = NEdit
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = NEdit
       Left = 270
       Height = 15
-      Top = 124
+      Top = 95
       Width = 114
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 8
       Caption = 'No. of Parts Sampled:'
       ParentColor = False
     end
-    object NEdit: TEdit[9]
+    object NEdit: TEdit[13]
       AnchorSideTop.Control = MeasEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
       Left = 392
       Height = 23
-      Top = 120
+      Top = 91
       Width = 64
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 24
-      TabOrder = 4
+      TabOrder = 2
       Text = 'NEdit'
     end
-    object Label4: TLabel[10]
+    object Label4: TLabel[14]
       AnchorSideTop.Control = PEdit
       AnchorSideTop.Side = asrCenter
       Left = 272
       Height = 30
-      Top = 147
+      Top = 118
       Width = 108
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
@@ -91,36 +112,36 @@ inherited PChartForm: TPChartForm
       Caption = 'Expected Proportion'#13#10'of Defects:'
       ParentColor = False
     end
-    object PEdit: TEdit[11]
+    object PEdit: TEdit[15]
       AnchorSideTop.Control = NEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
       Left = 392
       Height = 23
-      Top = 151
+      Top = 122
       Width = 64
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 8
-      TabOrder = 5
+      TabOrder = 3
       Text = 'PEdit'
     end
-    object SigmaOpts: TRadioGroup[12]
+    object SigmaOpts: TRadioGroup[16]
       AnchorSideLeft.Control = MeasEdit
       AnchorSideTop.Control = PEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = SpecsPanel
       AnchorSideRight.Side = asrBottom
-      Left = 240
+      Left = 248
       Height = 128
-      Top = 198
-      Width = 216
+      Top = 169
+      Width = 208
       Anchors = [akTop, akLeft, akRight]
       AutoFill = True
       BorderSpacing.Top = 24
       BorderSpacing.Bottom = 8
-      Caption = 'No. of Sigma Units for UCL and LCL'
+      Caption = 'Sigma Units for UCL and LCL'
       ChildSizing.LeftRightSpacing = 12
       ChildSizing.TopBottomSpacing = 6
       ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -130,15 +151,15 @@ inherited PChartForm: TPChartForm
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
       ClientHeight = 108
-      ClientWidth = 212
+      ClientWidth = 204
       ItemIndex = 0
       Items.Strings = (
-        '3 Sigma (default)'
+        '3 Sigma'
         '2 Sigma'
         '1 Sigma'
         'x Sigmas with x =  '
       )
-      TabOrder = 6
+      TabOrder = 4
       object XSigmaEdit: TEdit
         AnchorSideRight.Control = SigmaOpts
         AnchorSideRight.Side = asrBottom
@@ -146,7 +167,7 @@ inherited PChartForm: TPChartForm
         Left = 128
         Height = 23
         Top = 80
-        Width = 72
+        Width = 64
         Alignment = taRightJustify
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 0
@@ -157,7 +178,7 @@ inherited PChartForm: TPChartForm
   inherited SpecsSplitter: TSplitter
     Left = 459
   end
-  inherited PageControl1: TPageControl
+  inherited PageControl: TPageControl
     Left = 467
     Width = 454
     inherited ReportPage: TTabSheet
@@ -169,6 +190,15 @@ inherited PChartForm: TPChartForm
           Width = 422
         end
       end
+      inherited ReportToolBar: TToolBar
+        Width = 442
+      end
     end
+  end
+  inherited SaveDialog: TSaveDialog
+    Left = 544
+  end
+  inherited PrintDialog: TPrintDialog
+    Left = 544
   end
 end

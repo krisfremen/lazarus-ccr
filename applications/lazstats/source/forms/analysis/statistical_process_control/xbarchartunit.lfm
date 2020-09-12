@@ -1,16 +1,22 @@
 inherited XBarChartForm: TXBarChartForm
   Left = 572
+  Height = 443
   Top = 215
   HelpType = htKeyword
   HelpKeyword = 'html/XBarChart.htm'
   Caption = 'X-Bar Control Chart'
+  ClientHeight = 443
   OnActivate = FormActivate
   inherited SpecsPanel: TPanel
+    Height = 443
     Width = 475
+    ClientHeight = 443
     ClientWidth = 475
     inherited ButtonPanel: TPanel
+      Top = 401
       Width = 475
       ClientWidth = 475
+      TabOrder = 5
       inherited CloseBtn: TButton
         Left = 420
       end
@@ -28,40 +34,53 @@ inherited XBarChartForm: TXBarChartForm
       end
     end
     inherited VarList: TListBox
-      Width = 233
+      Height = 368
+      Width = 209
     end
     inherited GroupLabel: TLabel
-      Left = 249
+      Left = 257
     end
     inherited GroupEdit: TEdit
-      Left = 249
-      Width = 226
+      Left = 257
+      Width = 218
     end
     inherited MeasLabel: TLabel
-      Left = 249
+      Left = 257
     end
     inherited MeasEdit: TEdit
       AnchorSideRight.Control = LevelOptns
-      Left = 249
-      Width = 226
+      Left = 257
+      Width = 218
     end
     inherited Bevel2: TBevel
       Left = 226
     end
-    object SigmaOpts: TRadioGroup[8]
+    inherited MeasInBtn: TSpeedButton
+      Left = 225
+    end
+    inherited MeasOutBtn: TSpeedButton
+      Left = 226
+    end
+    inherited GroupInBtn: TSpeedButton
+      Left = 225
+    end
+    inherited GroupOutBtn: TSpeedButton
+      Left = 226
+    end
+    object SigmaOpts: TRadioGroup[12]
       AnchorSideLeft.Control = MeasEdit
-      AnchorSideTop.Control = MeasEdit
+      AnchorSideTop.Control = GroupEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = LevelOptns
       AnchorSideRight.Side = asrBottom
-      Left = 249
+      Left = 257
       Height = 128
-      Top = 108
-      Width = 226
+      Top = 145
+      Width = 218
       Anchors = [akTop, akLeft, akRight]
       AutoFill = True
       BorderSpacing.Top = 12
-      Caption = 'No. of Sigma Units for UCL and LCL'
+      Caption = 'Sigma Units for UCL and LCL'
       ChildSizing.LeftRightSpacing = 12
       ChildSizing.TopBottomSpacing = 6
       ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
@@ -71,15 +90,15 @@ inherited XBarChartForm: TXBarChartForm
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
       ClientHeight = 108
-      ClientWidth = 222
+      ClientWidth = 214
       ItemIndex = 0
       Items.Strings = (
-        '3 Sigma (default)'
+        '3 Sigma'
         '2 Sigma'
         '1 Sigma'
         'x Sigmas with x =  '
       )
-      TabOrder = 4
+      TabOrder = 3
       object XSigmaEdit: TEdit
         AnchorSideRight.Control = SigmaOpts
         AnchorSideRight.Side = asrBottom
@@ -87,31 +106,32 @@ inherited XBarChartForm: TXBarChartForm
         Left = 128
         Height = 23
         Top = 80
-        Width = 82
+        Width = 74
         Alignment = taRightJustify
         Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Right = 8
         TabOrder = 0
         Text = 'XSigmaEdit'
       end
     end
-    object LevelOptns: TGroupBox[9]
+    object LevelOptns: TGroupBox[13]
       AnchorSideLeft.Control = MeasEdit
       AnchorSideTop.Control = SigmaOpts
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
-      Left = 249
+      Left = 257
       Height = 103
-      Top = 248
-      Width = 226
+      Top = 285
+      Width = 218
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
       BorderSpacing.Top = 12
       BorderSpacing.Bottom = 8
       Caption = 'Show...'
       ClientHeight = 83
-      ClientWidth = 222
-      TabOrder = 5
+      ClientWidth = 214
+      TabOrder = 4
       object UpperSpecChk: TCheckBox
         AnchorSideLeft.Control = LevelOptns
         AnchorSideTop.Control = UpperSpecEdit
@@ -202,26 +222,33 @@ inherited XBarChartForm: TXBarChartForm
   end
   inherited SpecsSplitter: TSplitter
     Left = 478
+    Height = 443
   end
-  inherited PageControl1: TPageControl
+  inherited PageControl: TPageControl
     Left = 486
+    Height = 431
     Width = 435
     inherited ReportPage: TTabSheet
+      ClientHeight = 403
       ClientWidth = 427
       inherited Panel1: TPanel
+        Height = 363
         Width = 415
+        ClientHeight = 359
         ClientWidth = 411
         inherited ReportMemo: TMemo
+          Height = 351
           Width = 403
         end
       end
-      inherited ToolBar2: TToolBar
+      inherited ReportToolBar: TToolBar
         Width = 423
       end
     end
     inherited ChartPage: TTabSheet
+      ClientHeight = 403
       ClientWidth = 427
-      inherited ToolBar1: TToolBar
+      inherited ChartToolBar: TToolBar
         Width = 423
       end
     end
