@@ -1,19 +1,19 @@
 inherited XBarChartForm: TXBarChartForm
   Left = 572
-  Height = 431
+  Height = 476
   Top = 215
   HelpType = htKeyword
   HelpKeyword = 'html/XBarChart.htm'
   Caption = 'X-Bar Control Chart'
-  ClientHeight = 431
+  ClientHeight = 476
   OnActivate = FormActivate
   inherited SpecsPanel: TPanel
-    Height = 431
+    Height = 476
     Width = 379
-    ClientHeight = 431
+    ClientHeight = 476
     ClientWidth = 379
     inherited ButtonPanel: TPanel
-      Top = 389
+      Top = 434
       Width = 379
       ClientWidth = 379
       TabOrder = 5
@@ -34,7 +34,7 @@ inherited XBarChartForm: TXBarChartForm
       end
     end
     inherited VarList: TListBox
-      Height = 356
+      Height = 401
       Width = 169
     end
     inherited GroupLabel: TLabel
@@ -121,7 +121,7 @@ inherited XBarChartForm: TXBarChartForm
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
       Left = 177
-      Height = 103
+      Height = 128
       Top = 293
       Width = 202
       Anchors = [akTop, akLeft, akRight]
@@ -129,7 +129,7 @@ inherited XBarChartForm: TXBarChartForm
       BorderSpacing.Top = 12
       BorderSpacing.Bottom = 8
       Caption = 'Show...'
-      ClientHeight = 83
+      ClientHeight = 108
       ClientWidth = 198
       TabOrder = 4
       object UpperSpecChk: TCheckBox
@@ -218,26 +218,38 @@ inherited XBarChartForm: TXBarChartForm
         TabOrder = 5
         Text = 'TargetSpecEdit'
       end
+      object ZonesChk: TCheckBox
+        AnchorSideLeft.Control = TargetChk
+        AnchorSideTop.Control = TargetSpecEdit
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 19
+        Top = 81
+        Width = 52
+        BorderSpacing.Bottom = 8
+        Caption = 'Zones'
+        TabOrder = 6
+      end
     end
   end
   inherited SpecsSplitter: TSplitter
     Left = 390
-    Height = 431
+    Height = 476
   end
   inherited PageControl: TPageControl
     Left = 398
-    Height = 419
+    Height = 464
     Width = 523
     inherited ReportPage: TTabSheet
-      ClientHeight = 391
+      ClientHeight = 436
       ClientWidth = 515
       inherited Panel1: TPanel
-        Height = 351
+        Height = 396
         Width = 503
-        ClientHeight = 347
+        ClientHeight = 392
         ClientWidth = 499
         inherited ReportMemo: TMemo
-          Height = 339
+          Height = 384
           Width = 491
         end
       end

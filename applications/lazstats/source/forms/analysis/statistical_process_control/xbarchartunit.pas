@@ -1,3 +1,20 @@
+{ This unit was checked against the commercial statistical package JMP and
+  creates correct results.
+
+  Data file for testing: "boltsize.laz"
+  Group variable:         LotNo
+  Selected variable:      BoltLngth
+
+  The original LazStats help files suggest
+    Upper Spec Level      20.05
+    Lower Spec Level      19.95
+    Target Spec           20.00
+  but this would indicate a very poor process. Better values:
+    Upper Spec Level      21.00
+    Lower Spec Level      19.00
+    Target Spec           20.00
+}
+
 unit XBarChartUnit;
 
 {$mode objfpc}{$H+}
@@ -6,13 +23,15 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  ExtCtrls, StdCtrls, BasicSPCUnit;
+  ExtCtrls, StdCtrls, Buttons, PrintersDlgs,
+  Globals, BasicSPCUnit;
 
 type
 
   { TXBarChartForm }
 
   TXBarChartForm = class(TBasicSPCForm)
+    ZonesChk: TCheckBox;
     LevelOptns: TGroupBox;
     LowerSpecChk: TCheckBox;
     LowerSpecEdit: TEdit;
@@ -23,8 +42,13 @@ type
     UpperSpecEdit: TEdit;
     XSigmaEdit: TEdit;
     procedure FormActivate(Sender: TObject);
+  private
+    FAveStdDev: Double;
   protected
     procedure Compute; override;
+    procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
+      const Groups: StrDyneVec; const Means: DblDyneVec;
+      UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double); override;
     procedure Reset; override;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean; override;
   end;
@@ -37,7 +61,7 @@ implementation
 
 uses
   Math,
-  Globals, Utils, MainUnit, DataProcs;
+  Utils, MainUnit, DataProcs;
 
 {$R *.lfm}
 
@@ -80,15 +104,19 @@ var
   upperSpec: Double = NaN;
   lowerSpec: Double = NaN;
   targetSpec: Double = NaN;
+  Cp: Double = NaN;
+  Cpk: Double = NaN;
+  Cpm: Double = NaN;
   ColNoSelected: IntDyneVec = nil;
   groups: StrDyneVec = nil;
   means: DblDyneVec = nil;
   stdDev: DblDyneVec = nil;
   count: IntDyneVec = nil;
-  numGrps, grpIndex, totalNumCases, grpSize: Integer;
+  numValues, numGrps, grpIndex, grpSize: Integer;
   grp: String;
-  X, Xsq: Double;
-  sigma, aveStdDev, UCL, LCL, grandMean, grandSD, SEMean, C4Value: Double;
+  X, Xsq, prevX: Double;
+  sigma, UCL, LCL, grandMean, grandSD, SEMean: Double;
+  individualsChart: Boolean;
   lReport: TStrings;
 begin
   if GroupEdit.Text <> '' then
@@ -96,10 +124,12 @@ begin
     SetLength(ColNoSelected, 2);
     ColNoSelected[0] := GrpVar;
     ColNoSelected[1] := MeasVar;
+    individualsChart := false;
   end else
   begin
     SetLength(ColNoSelected, 1);
     ColNoSelected[0] := MeasVar;
+    individualsChart := true;
   end;
 
   if UpperSpecChk.Checked and (UpperSpecEdit.Text <> '') then
@@ -117,71 +147,83 @@ begin
     else raise Exception.Create('Sigma case not handled.');
   end;
 
-  if GroupEdit.Text = '' then
+  if individualsChart then
     SetLength(groups, NoCases)
   else
     groups := GetGroups;
   numGrps := Length(groups);
 
   SetLength(means, numGrps);
-  SetLength(count, numGrps);
   SetLength(stddev, numGrps);
-  SEMean := 0.0;
   grandMean := 0.0;
-  totalNumCases := 0;
+  grandSD := 0.0;
+  numValues := 0;
 
-  // calculate group means, grand mean, group sd's, seMean
-  for i := 1 to NoCases do
+  // calculate group means, grand mean, group std devs, seMean
+  if IndividualsChart then
   begin
-    if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
-    if GroupEdit.Text = '' then
+    // x-bar chart of individual measurements, no groups
+    SetLength(count, 0);    // not needed, count is always 1
+    prevX := NaN;
+    for i := 1 to NoCases do
     begin
-      // individuals x-bar chart
-      grpIndex := totalNumCases;
+      if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
+      grpIndex := numValues;  // is counted up in this loop
+      X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
+      Xsq := X*X;
       groups[grpIndex] := IntToStr(i);
-    end else
+      means[grpIndex] := means[grpIndex] + X;
+      if not IsNaN(prevX) then
+        stddev[grpIndex-1] := abs(X - prevX);  // assume std dev to be moving range;
+        // -1 --> skip empty 1st value
+      grandMean := grandMean + X;
+      grandSD := grandSD + Xsq;
+      inc(numValues);
+      prevX := X;
+    end;
+  end else
+  begin
+    // grouped x-bar chart
+    SetLength(count, numGrps);
+    for i := 1 to NoCases do
     begin
-      // grouped x-bar chart
+      if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
       grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
       grpIndex := IndexOfString(groups, grp);
+      X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
+      Xsq := X*X;
+      inc(count[grpIndex]);
+      means[grpIndex] := means[grpIndex] + X;
+      stddev[grpIndex] := stddev[grpIndex] + Xsq;
+      grandMean := grandMean + X;
+      grandSD := grandSD + Xsq;
+      inc(numValues);
     end;
-    X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
-    Xsq := X*X;
-    inc(count[grpIndex]);
-    means[grpIndex] := means[grpIndex] + X;
-    stddev[grpIndex] := stddev[grpIndex] + Xsq;
-    grandMean := grandMean + X;
-    SEMean := SEMean + Xsq;
-    inc(totalNumCases);
   end;
 
-  SEMean := SEMean - sqr(grandMean) / totalNumCases;
-  SEMean := sqrt(SEMean / (totalNumCases - 1));
-  grandSD := SEMean;
-  SEMean := SEMean / sqrt(totalNumCases);
-  grandMean := grandMean / totalNumCases;
+  grandSD := grandSD - sqr(grandMean) / numValues;
+  grandSD := sqrt(grandSD / (numValues - 1));
+  SEMean := grandSD / sqrt(numValues);
+  grandMean := grandMean / numValues;
 
-  if (GroupEdit.Text = '') then
+  if individualsChart then
   begin
     // Individuals chart
     grpSize := 1;
-    SetLength(means, totalNumCases);
-    SetLength(stddev, totalNumCases);
-    Setlength(count, totalNumCases);
-    for i := 0 to totalNumCases-1 do
-      stddev[i] := SEMean;
-    aveStdDev := NaN;
-    if totalNumCases <= 25 then
-      C4Value := C4[totalNumCases]
-    else
-      C4Value := 1.0;
-    UCL := grandMean + sigma * grandSD / C4Value;
-    LCL := grandMean - sigma * grandSD / C4Value;
+    SetLength(means, numValues);
+    Setlength(count, numValues);
+    SetLength(stddev, numValues-1);  // -1 for the missing 1st value
+    FAveStdDev := 0;
+    for i := 0 to High(stddev) do
+      FAveStdDev := FAveStdDev + stdDev[i];
+    FAveStdDev := FAveStdDev / Length(stddev) / 1.128;    // 1.128 is the value of d2 fo n = 2.
+    UCL := grandMean + sigma * FAveStdDev;
+    LCL := grandMean - sigma * FAveStdDev;
   end else
   begin
     // Grouped chart
 
-    // Check group size - it is assumed that all groups are equally sized
+    // Check group size first; it is assumed that all groups are equally sized
     grpSize := count[0];
     for i := 1 to numGrps-1 do
       if count[i] <> grpSize then
@@ -190,9 +232,10 @@ begin
         exit;
       end;
 
-    aveStdDev := aveStdDev + stdDev[i];
-
-    aveStdDev := 0;
+    SetLength(means, numGrps);
+    Setlength(count, numGrps);
+    SetLength(stddev, numGrps);
+    FAveStdDev := 0;
     for i := 0 to numGrps-1 do
     begin
       if count[i] = 0 then
@@ -206,40 +249,71 @@ begin
         else
         begin
           stddev[i] := stddev[i] - sqr(means[i]) / count[i];
-          stddev[i] := stddev[i] / (count[i] - 1);  // Variance of group i
-          aveStdDev := aveStdDev + stdDev[i];       // Sum of variances
-          stddev[i] := sqrt(stddev[i]);             // StdDev of group i
+          stddev[i] := stddev[i] / (count[i] - 1);   // Variance of group i
+          FAveStdDev := FAveStdDev + stdDev[i];      // Sum of variances
+          stddev[i] := sqrt(stddev[i]);              // StdDev of group i
         end;
         means[i] := means[i] / count[i];
       end;
     end;
-    aveStdDev := sqrt(aveStdDev / (numGrps * grpSize));
-    UCL := grandMean + sigma * aveStdDev;
-    LCL := grandMean - sigma * aveStdDev;
+    FAveStdDev := sqrt(FAveStdDev / (numGrps * grpSize));
+    UCL := grandMean + sigma * FAveStdDev;
+    LCL := grandMean - sigma * FAveStdDev;
+
+    //UCL := grandMean + sigma * grandSD / sqrt(grpSize);  // this works, too, a bit more off of JMP than the above...
+    //LCL := grandMean - sigma * grandSD / sqrt(grpSize);
+
 //    UCL := grandMean + sigma * SEMean;    // old LazStats calculation -- does not agree with JMP software.
 //    LCL := grandMean - sigma * SEMean;
   end;
 
-  // Print results
+  if not IsNaN(upperSpec) and not IsNaN(lowerSpec) then
+  begin
+    Cp := (upperSpec - lowerSpec) / (6* FAveStdDev);
+    Cpk := Min(UpperSpec - grandMean, grandMean - LowerSpec) / (3 * FAveStdDev);
+    if not IsNaN(targetSpec) then
+      Cpm := (upperSpec - lowerSpec) / (6 * sqrt(sqr(FAveStdDev) + sqr(grandMean - targetSpec)));
+  end;
+
+    // Print results
   lReport := TStringList.Create;
   try
     lReport.Add('X BAR CHART RESULTS');
     lReport.Add('');
-    lReport.Add('Number of values:       %8d',   [totalNumCases]);
+    lReport.Add('Number of values:       %8d',   [numValues]);
     lReport.Add('Number of groups:       %8d',   [numGrps]);
     lReport.Add('Group size:             %8d',   [grpSize]);
     lReport.Add('');
     lReport.Add('Grand Mean:             %8.3f', [grandMean]);
     lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
     lReport.Add('Standard Error of Mean: %8.3f', [SEMean]);
-    lReport.Add('Average Std Deviation:  %8.3f', [aveStdDev]);
-    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
+    lReport.Add('Average Std Deviation:  %8.3f', [FAveStdDev]);
     lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
+    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
     lReport.Add('');
-    lReport.Add(' Group  Size   Mean   Std.Dev.');
-    lReport.Add('------- ---- -------- --------');
-    for i := 0 to numGrps-1 do
-      lReport.Add('%7s %4d %8.2f %8.2f', [groups[i], count[i], means[i], stddev[i]]);
+    if not IsNaN(targetSpec) then
+      lReport.Add('Target:                 %8.3f', [targetSpec]);
+    if not IsNaN(upperSpec) then
+      lReport.Add('Upper Spec Limit:       %8.3f', [upperSpec]);
+    if not IsNaN(lowerSpec) then
+      lReport.Add('Lower Spec Limit:       %8.3f', [lowerSpec]);
+    if not IsNaN(Cp) then
+      lReport.Add('Cp:                     %8.3f', [cp]);
+    if not IsNaN(Cpk) then
+      lReport.Add('Cpk:                    %8.3f', [Cpk]);
+    if not IsNaN(Cpm) then
+      lReport.Add('Cpm:                    %8.3f', [Cpm]);
+    lReport.Add('');
+    lReport.Add(' Group   Size    Mean    Std.Dev.');
+    lReport.Add('-------  ----  --------  --------');
+    if individualsChart then
+    begin
+      lReport.Add  ('%7s  %4d  %8.2f', [groups[i], count[i], means[i]]);
+      for i := 1 to numGrps-1 do
+        lReport.Add('%7s  %4d  %8.2f  %8.2f', [groups[i], count[i], means[i], stddev[i-1]]);
+    end else
+      for i := 0 to numGrps-1 do
+        lReport.Add('%7s  %4d  %8.2f  %8.2f', [groups[i], count[i], means[i], stddev[i]]);
 
     ReportMemo.Lines.Assign(lReport);
   finally
@@ -249,12 +323,41 @@ begin
   // Show graph
   PlotMeans(
     Format('x&#772; chart for "%s"', [GetFileName]),
-    GroupEdit.Text, MeasEdit.Text, 'Group means', 'Grand mean',
+    GroupEdit.Text, MeasEdit.Text, '', 'Avg',
     groups, means,
     UCL, LCL, grandmean,
     targetSpec, lowerSpec, upperSpec
   );
 end;
+
+procedure TXBarChartForm.PlotMeans(
+  ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
+  const Groups: StrDyneVec; const Means: DblDyneVec;
+  UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double);
+const
+  EPS = 1E-6;
+var
+  y: Double;
+begin
+  inherited;
+  if not ZonesChk.Checked then
+    exit;
+
+  y := GrandMean + FAveStdDev;
+  while y < UCL - EPS do
+  begin
+    FChartFrame.HorLine(y, clRed, psDot, '');
+    y := y + FAveStdDev;
+  end;
+
+  y := GrandMean - FAveStdDev;
+  while y > LCL + EPS do
+  begin
+    FChartFrame.HorLine(y, clRed, psDot, '');
+    y := y - FAveStdDev;
+  end;
+end;
+
 
 procedure TXBarChartForm.Reset;
 begin
@@ -266,6 +369,7 @@ begin
   UpperSpecChk.Checked := false;
   LowerSpecChk.Checked := false;
   TargetChk.Checked := false;
+  ZonesChk.Checked := false;
 end;
 
 function TXBarChartForm.Validate(out AMsg: String; out AControl: TWinControl): Boolean;

@@ -128,6 +128,8 @@ const
   TOP_MARGIN = 150;
   BOTTOM_MARGIN = 200;
 
+  FORMAT_MASK = '0.000';
+
 
 { TBasicSPCForm }
 
@@ -323,7 +325,7 @@ const
   TARGET_COLOR = clBlue;
   CL_COLOR = clRed;
   SPEC_COLOR = clGreen;
-  CL_STYLE = psDot;
+  CL_STYLE = psDash;
   SPEC_STYLE = psSolid;
 var
   ser: TChartSeries;
@@ -349,19 +351,19 @@ begin
   if not IsNaN(GrandMean) then
   begin
     FChartFrame.HorLine(GrandMean, clRed, psSolid, AGrandMeanTitle);
-    rightLabels.Add(GrandMean, GrandMean, AGrandMeanTitle);
+    rightLabels.Add(GrandMean, GrandMean, AGrandMeanTitle + '=' + FormatFloat(FORMAT_MASK, GrandMean));
   end;
 
   if not IsNaN(UCL) then
   begin
     FChartFrame.HorLine(UCL, CL_COLOR, CL_STYLE, 'UCL/LCL');
-    rightLabels.Add(UCL, UCL, 'UCL');
+    rightLabels.Add(UCL, UCL, 'UCL=' + FormatFloat(FORMAT_MASK, UCL));
   end;
 
   if not IsNaN(LCL) then
   begin
     FChartFrame.HorLine(LCL, CL_COLOR, CL_STYLE, '');
-    rightLabels.Add(UCL, LCL, 'LCL');
+    rightLabels.Add(UCL, LCL, 'LCL=' + FormatFloat(FORMAT_MASK, LCL));
   end;
 
   if not IsNan(UpperSpec) then
@@ -371,12 +373,12 @@ begin
     else
       s := 'Upper/Lower Spec';
     FChartFrame.HorLine(UpperSpec, SPEC_COLOR, SPEC_STYLE, s);
-    rightLabels.Add(UpperSpec, UpperSpec, 'Upper Spec');
+    rightLabels.Add(UpperSpec, UpperSpec, 'USL=' + FormatFloat(FORMAT_MASK, UpperSpec));
   end;
 
   if not IsNaN(TargetSpec) then begin
     FChartFrame.HorLine(TargetSpec, TARGET_COLOR, psSolid, 'Target');
-    rightLabels.Add(TargetSpec, TargetSpec, 'Target');
+    rightLabels.Add(TargetSpec, TargetSpec, 'Target=' + FormatFloat(FORMAT_MASK, TargetSpec));
   end;
 
   if not IsNaN(LowerSpec) then
@@ -387,8 +389,10 @@ begin
       s := 'Upper/Lower Spec';
     constLine := FChartFrame.HorLine(LowerSpec, SPEC_COLOR, SPEC_STYLE, s);
     constLine.Legend.Visible := IsNaN(UpperSpec);
-    rightLabels.Add(LowerSpec, LowerSpec, 'Lower Spec');
+    rightLabels.Add(LowerSpec, LowerSpec, 'LSL=' + FormatFloat(FORMAT_MASK, LowerSpec));
   end;
+
+  FChartFrame.Chart.Legend.Visible := false;
 end;
 
 
