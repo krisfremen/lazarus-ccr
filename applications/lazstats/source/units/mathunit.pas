@@ -25,6 +25,8 @@ function FDensity(x: Double; DF1, DF2: Integer): Double;
 
 function Chi2Density(x: Double; N: Integer): Double;
 
+function CalcC4(n: Integer): Double;
+
 implementation
 
 uses
@@ -284,6 +286,25 @@ var
 begin
   factor := Power(2.0, N * 0.5) * exp(gammaLN(N * 0.5));
   Result := power(x, (N-2.0) * 0.5) / (factor * exp(x * 0.5));
+end;
+
+
+// Returns the value of the C4 factor needed for correction of standard deviations
+//   C4 = sqrt(2 / (n-1)) (n/2-1)! / ((n-1)/2-1)!
+function CalcC4(n: Integer): Double;
+var
+  gamma1, gamma2: Double;
+begin
+  gamma1 := GammaLn(n/2);
+  gamma2 := GammaLn((n-1)/2);
+  Result := sqrt(2.0 / (n-1)) * exp(gamma1 - gamma2);
+  {
+  C4 := sqrt(2.0 / (grpSize - 1));
+  gamma := exp(GammaLn(grpSize / 2.0));
+  C4 := C4 * gamma;
+  gamma := exp(GammaLn((grpSize-1) / 2.0));
+  C4 := C4 / gamma;
+  }
 end;
 
 end.

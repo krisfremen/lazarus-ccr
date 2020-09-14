@@ -25,6 +25,19 @@ uses
   Math,
   Globals, Utils, MainUnit, DataProcs;
 
+// Constants for correction of standard deviation
+const
+  D3: array[2..25] of double = (
+    0, 0, 0, 0, 0, 0.076, 0.136, 0.184, 0.223, 0.256, 0.283, 0.307, 0.328,
+    0.347, 0.363, 0.378, 0.391, 0.403, 0.415, 0.425, 0.434, 0.443,
+    0.451, 0.459
+  );
+  D4: array[2..25] of double = (
+    3.267, 2.574, 2.282, 2.114, 2.004, 1.924, 1.864, 1.816, 1.777,
+    1.744, 1.717, 1.693, 1.672, 1.653, 1.637, 1.622, 1.608, 1.597,
+    1.585, 1.575, 1.566, 1.557, 1.548, 1.541
+  );
+
 procedure TRChartForm.Compute;
 var
   i, j: Integer;
@@ -116,8 +129,8 @@ begin
   seMean := seMean / sqrt(numValues);
   grandMean := grandMean / numValues;
   grandRange := grandRange / numGrps;
-  D3Value := D3[grpSize-1];
-  D4Value := D4[grpSize-1];
+  D3Value := D3[grpSize];
+  D4Value := D4[grpSize];
   UCL := D4Value * grandRange;
   LCL := D3Value * grandRange;
 

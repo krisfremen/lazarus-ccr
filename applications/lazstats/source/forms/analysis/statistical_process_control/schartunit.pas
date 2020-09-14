@@ -1,3 +1,11 @@
+{ This unit was checked against a commercial statistical software  and
+  creates correct results.
+
+  Data file for testing: "boltsize.laz"
+  Group variable:         LotNo
+  Selected variable:      BoltLngth
+}
+
 unit SChartUnit;
 
 {$mode objfpc}{$H+}
@@ -40,11 +48,9 @@ var
   numValues: Integer = 0;
   grp: String;
   grpIndex: Integer;
-  X, Xsq: Double;
+  X, Xsq, Xmin, Xmax: Double;
   seMean, grandMean, grandSigma, grandSD: Double;
-  B, C4, gamma, D3Value, D4Value: Double;
-  xmin, xmax: Double;
-  sizeError: Boolean;
+  B, C4: Double;
   i, j: Integer;
   lReport: TStrings;
 begin
@@ -63,7 +69,6 @@ begin
   seMean := 0.0;
   grandMean := 0.0;
   grandSigma := 0.0;
-  sizeError := false;
 
   // Count "good" data points
   numValues := 0;
@@ -101,12 +106,15 @@ begin
     grpSize := count[j];
     if j = 0 then oldGrpSize := grpSize;
     if oldGrpSize <> grpSize then
-      sizeError := true;
+    begin
+      ErrorMsg('All groups must have the same size.');
+      exit;
+    end;
   end;
 
-  if (grpSize < 2) or (grpSize > 25) or sizeError then
+  if (grpSize < 2) then
   begin
-    ErrorMsg('Group size error.');
+    ErrorMsg('Groups with at least two values required.');
     exit;
   end;
 
@@ -117,14 +125,9 @@ begin
   seMean := seMean / sqrt(numValues);
   grandMean := grandMean / numValues;
   grandSigma := grandSigma / numGrps;
-  D3Value := D3[grpSize-1];
-  D4Value := D4[grpSize-1];
-  C4 := sqrt(2.0 / (grpSize - 1));
-  gamma := exp(GammaLn(grpSize / 2.0));
-  C4 := C4 * gamma;
-  gamma := exp(GammaLn((grpSize-1) / 2.0));
-  C4 := C4 / gamma;
-  B := grandSigma * sqrt(1.0 - (C4 * C4)) / C4;
+
+  C4 := CalcC4(grpSize);
+  B := grandSigma * sqrt(1.0 - sqr(C4)) / C4;
   UCL := grandSigma + 3.0 * B;
   LCL := grandSigma - 3.0 * B;
   if (LCL < 0.0) then LCL := 0.0;
@@ -135,6 +138,9 @@ begin
     lReport.Add('Sigma Chart Results');
     lReport.Add('');
     lReport.Add('Number of values:       %8d',   [numValues]);
+    lReport.Add('Number of groups:       %8d',   [numGrps]);
+    lReport.Add('Group size:             %8d',   [grpSize]);
+    lReport.Add('');
     lReport.Add('Grand Mean:             %8.3f', [grandMean]);
     lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
     lReport.Add('Standard Error of Mean: %8.3f', [seMean]);
@@ -157,7 +163,7 @@ begin
   PlotMeans(
     Format('Sigma Chart for "%s"', [GetFileName]),
     GroupEdit.Text, Format('StdDev(%s)', [MeasEdit.Text]),
-    'Group Sigma', 'Mean',
+    'Group Sigma', 'Avg',
     groups, stdDev,
     UCL, LCL, grandSigma,
     NaN, NaN, NaN
