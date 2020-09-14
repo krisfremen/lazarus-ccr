@@ -28,14 +28,14 @@ uses
 // Constants for correction of standard deviation
 const
   D3: array[2..25] of double = (
-    0, 0, 0, 0, 0, 0.076, 0.136, 0.184, 0.223, 0.256, 0.283, 0.307, 0.328,
-    0.347, 0.363, 0.378, 0.391, 0.403, 0.415, 0.425, 0.434, 0.443,
-    0.451, 0.459
+    0, 0, 0, 0, 0, 0.076, 0.136, 0.184, 0.223,  // 2..10
+    0.256, 0.283, 0.307, 0.328, 0.347, 0.363, 0.378, 0.391, 0.403, 0.415, // 11..20
+    0.425, 0.434, 0.443, 0.451, 0.459    // 21..25
   );
   D4: array[2..25] of double = (
-    3.267, 2.574, 2.282, 2.114, 2.004, 1.924, 1.864, 1.816, 1.777,
-    1.744, 1.717, 1.693, 1.672, 1.653, 1.637, 1.622, 1.608, 1.597,
-    1.585, 1.575, 1.566, 1.557, 1.548, 1.541
+    3.267, 2.574, 2.282, 2.114, 2.004, 1.924, 1.864, 1.816, 1.777,   // 2..10
+    1.744, 1.717, 1.693, 1.672, 1.653, 1.637, 1.622, 1.608, 1.597, 1.585, // 11..20
+    1.575, 1.566, 1.557, 1.548, 1.541    // 21..25
   );
 
 procedure TRChartForm.Compute;
@@ -50,9 +50,8 @@ var
   count: IntDyneVec = nil;
   ColNoSelected: IntDyneVec = nil;
   X, Xsq, xmin, xmax: Double;
-  seMean, grandMean, grandRange, grandSD, UCL, LCL: Double;
+  grandMean, grandRange, grandSD, SEMean, UCL, LCL: Double;
   D3Value, D4Value: Double;
-  sizeError: boolean;
   lReport: TStrings;
 begin
   SetLength(ColNoSelected, 2);
@@ -68,10 +67,9 @@ begin
   SetLength(count, numGrps);
   SetLength(stddev, numGrps);
   SetLength(ranges, numGrps);
-  seMean := 0.0;
   grandMean := 0.0;
   grandRange := 0.0;
-  sizeError := false;
+  grandSD := 0.0;
 
   // Count "good" data points
   numValues := 0;
@@ -87,7 +85,6 @@ begin
     begin
       grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
       grpIndex := IndexOfString(groups, grp);
-
       if grpIndex = j then
       begin
         X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
@@ -97,8 +94,8 @@ begin
         means[grpIndex] := means[grpIndex] + X;
         count[grpIndex] := count[grpIndex] + 1;
         stddev[grpIndex] := stddev[grpIndex] + Xsq;
-        seMean := seMean + Xsq;
         grandMean := grandMean + X;
+        grandSD := grandSD + Xsq;
       end;
     end; // next case
 
@@ -106,12 +103,21 @@ begin
     grandRange := grandRange + ranges[j];
     grpSize := count[j];
     if j = 0 then oldGrpSize := grpSize;
-    if oldGrpSize <> grpSize then sizeError := true;
+    if oldGrpSize <> grpSize then
+    begin
+      ErrorMsg('All groups must have the same size.');
+      exit;
+    end;
   end;
 
-  if (grpsize < 2) or (grpsize > 25) or sizeError then
+  if (grpsize < 2) then
   begin
-    ErrorMsg('Group size error.');
+    ErrorMsg('Groups with at least two values required.');
+    exit;
+  end;
+  if (grpsize > 25) then
+  begin
+    ErrorMsg('Groups are too large (max 25).');
     exit;
   end;
 
@@ -122,11 +128,10 @@ begin
     stddev[i] := sqrt(stddev[i]);
     means[i] := means[i] / count[i];
   end;
-  seMean := seMean - grandMean * grandMean / numValues;
-  seMean := seMean / (numValues - 1);
-  seMean := sqrt(seMean);
-  GrandSD := seMean;
-  seMean := seMean / sqrt(numValues);
+
+  grandSD := grandSD - sqr(grandMean) / numValues;
+  grandSD := sqrt(grandSD / (numValues - 1));
+  SEMean := grandSD / sqrt(numValues);
   grandMean := grandMean / numValues;
   grandRange := grandRange / numGrps;
   D3Value := D3[grpSize];
@@ -139,31 +144,30 @@ begin
   try
     lReport.Add('Range Chart Results');
     lReport.Add('');
-    lReport.Add('Number of values:       %8d',   [numValues]);
-    lReport.Add('Grand Mean:             %8.3f', [GrandMean]);
-    lReport.Add('Standard Deviation:     %8.3f', [GrandSD]);
-    lReport.Add('Standard Error of Mean: %8.3f', [semean]);
+    lReport.Add('Number of values:        %8d',   [numValues]);
+    lReport.Add('Grand Mean:              %8.3f', [GrandMean]);
+    lReport.Add('Standard Deviation:      %8.3f', [GrandSD]);
+    lReport.Add('Standard Error of Mean:  %8.3f', [SEMean]);
     lReport.Add('');
-    lReport.Add('Mean Range:             %8.3f', [GrandRange]);
-    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
-    lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
+    lReport.Add('Mean Range:              %8.3f', [GrandRange]);
+    lReport.Add('Lower Control Limit:     %8.3f', [LCL]);
+    lReport.Add('Upper Control Limit:     %8.3f', [UCL]);
     lReport.Add('');
-    lReport.Add(' Group  Size   Mean   Std.Dev.  Ranges ');
-    lReport.Add('------- ---- -------- -------- --------');
+    lReport.Add(' Group   Size    Mean    Std.Dev.   Ranges ');
+    lReport.Add('-------  ----  --------  --------  --------');
     for i := 0 to numGrps-1 do
-      lReport.Add('%7d %4d %8.2f %8.2f %8.2f', [i+1, count[i], means[i], stddev[i], ranges[i]]);
+      lReport.Add('%7d  %4d  %8.2f  %8.2f  %8.2f', [i+1, count[i], means[i], stddev[i], ranges[i]]);
 
     ReportMemo.Lines.Assign(lReport);
   finally
     lReport.Free;
   end;
 
-  // show graph
-  // show graph
+  // Show graph
   PlotMeans(
     Format('Range Chart for "%s"', [GetFileName]),
     GroupEdit.Text, Format('Range(%s)', [MeasEdit.Text]),
-    'Group ranges', 'Mean range',
+    'Group ranges', 'Avg',
     groups, ranges,
     UCL, LCL, grandRange,
     NaN, NaN, NaN

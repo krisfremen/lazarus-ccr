@@ -107,6 +107,8 @@ var
   Cp: Double = NaN;
   Cpk: Double = NaN;
   Cpm: Double = NaN;
+  Cpu: Double = NaN;
+  Cpl: Double = NaN;
   ColNoSelected: IntDyneVec = nil;
   groups: StrDyneVec = nil;
   means: DblDyneVec = nil;
@@ -269,8 +271,10 @@ begin
 
   if not IsNaN(upperSpec) and not IsNaN(lowerSpec) then
   begin
-    Cp := (upperSpec - lowerSpec) / (6* FAveStdDev);
-    Cpk := Min(UpperSpec - grandMean, grandMean - LowerSpec) / (3 * FAveStdDev);
+    Cp  := (upperSpec - lowerSpec) / (6 * FAveStdDev);
+    Cpu := (UpperSpec - grandMean) / (3 * FAveStdDev);
+    Cpl := (grandMean - LowerSpec) / (3 * FAveStdDev);
+    Cpk := Min(Cpu, Cpl);
     if not IsNaN(targetSpec) then
       Cpm := (upperSpec - lowerSpec) / (6 * sqrt(sqr(FAveStdDev) + sqr(grandMean - targetSpec)));
   end;
@@ -280,29 +284,33 @@ begin
   try
     lReport.Add('X BAR CHART RESULTS');
     lReport.Add('');
-    lReport.Add('Number of values:       %8d',   [numValues]);
-    lReport.Add('Number of groups:       %8d',   [numGrps]);
-    lReport.Add('Group size:             %8d',   [grpSize]);
+    lReport.Add('Number of values:        %8d',   [numValues]);
+    lReport.Add('Number of groups:        %8d',   [numGrps]);
+    lReport.Add('Group size:              %8d',   [grpSize]);
     lReport.Add('');
-    lReport.Add('Grand Mean:             %8.3f', [grandMean]);
-    lReport.Add('Standard Deviation:     %8.3f', [grandSD]);
-    lReport.Add('Standard Error of Mean: %8.3f', [SEMean]);
-    lReport.Add('Average Std Deviation:  %8.3f', [FAveStdDev]);
-    lReport.Add('Upper Control Limit:    %8.3f', [UCL]);
-    lReport.Add('Lower Control Limit:    %8.3f', [LCL]);
+    lReport.Add('Grand Mean:              %8.3f', [grandMean]);
+    lReport.Add('Standard Deviation:      %8.3f', [grandSD]);
+    lReport.Add('Standard Error of Mean:  %8.3f', [SEMean]);
+    lReport.Add('Average Std Deviation:   %8.3f', [FAveStdDev]);
+    lReport.Add('Upper Control Limit:     %8.3f', [UCL]);
+    lReport.Add('Lower Control Limit:     %8.3f', [LCL]);
     lReport.Add('');
     if not IsNaN(targetSpec) then
-      lReport.Add('Target:                 %8.3f', [targetSpec]);
+      lReport.Add('Target:                  %8.3f', [targetSpec]);
     if not IsNaN(upperSpec) then
-      lReport.Add('Upper Spec Limit:       %8.3f', [upperSpec]);
+      lReport.Add('Upper Spec Limit:        %8.3f', [upperSpec]);
     if not IsNaN(lowerSpec) then
-      lReport.Add('Lower Spec Limit:       %8.3f', [lowerSpec]);
+      lReport.Add('Lower Spec Limit:        %8.3f', [lowerSpec]);
     if not IsNaN(Cp) then
-      lReport.Add('Cp:                     %8.3f', [cp]);
+      lReport.Add('Cp:                      %8.3f', [Cp]);
     if not IsNaN(Cpk) then
-      lReport.Add('Cpk:                    %8.3f', [Cpk]);
+      lReport.Add('Cpk:                     %8.3f', [Cpk]);
+    if not IsNaN(Cpu) then
+      lReport.Add('Cpu:                     %8.3f', [Cpu]);
+    if not IsNaN(Cpl) then
+      lReport.Add('Cpl:                     %8.3f', [Cpl]);
     if not IsNaN(Cpm) then
-      lReport.Add('Cpm:                    %8.3f', [Cpm]);
+      lReport.Add('Cpm:                     %8.3f', [Cpm]);
     lReport.Add('');
     lReport.Add(' Group   Size    Mean    Std.Dev.');
     lReport.Add('-------  ----  --------  --------');
