@@ -61,7 +61,7 @@ implementation
 
 uses
   Math,
-  Utils, MainUnit, DataProcs;
+  Utils, MathUnit, MainUnit, DataProcs;
 
 {$R *.lfm}
 
@@ -118,6 +118,7 @@ var
   grp: String;
   X, Xsq, prevX: Double;
   sigma, UCL, LCL, grandMean, grandSD, SEMean: Double;
+  //C4Value: Double;
   individualsChart: Boolean;
   lReport: TStrings;
 begin
@@ -258,7 +259,8 @@ begin
         means[i] := means[i] / count[i];
       end;
     end;
-    FAveStdDev := sqrt(FAveStdDev / (numGrps * grpSize));
+//    C4Value := CalcC4(grpSize);
+    FAveStdDev := sqrt(FAveStdDev / (numGrps * grpSize)); // / C4Value;
     UCL := grandMean + sigma * FAveStdDev;
     LCL := grandMean - sigma * FAveStdDev;
 
@@ -289,9 +291,9 @@ begin
     lReport.Add('Group size:              %8d',   [grpSize]);
     lReport.Add('');
     lReport.Add('Grand Mean:              %8.3f', [grandMean]);
-    lReport.Add('Standard Deviation:      %8.3f', [grandSD]);
     lReport.Add('Standard Error of Mean:  %8.3f', [SEMean]);
-    lReport.Add('Average Std Deviation:   %8.3f', [FAveStdDev]);
+    lReport.Add('Grand Std Deviation:     %8.3f', [grandSD]);
+    lReport.Add('Average Group Std Dev:   %8.3f', [FAveStdDev]);
     lReport.Add('Upper Control Limit:     %8.3f', [UCL]);
     lReport.Add('Lower Control Limit:     %8.3f', [LCL]);
     lReport.Add('');

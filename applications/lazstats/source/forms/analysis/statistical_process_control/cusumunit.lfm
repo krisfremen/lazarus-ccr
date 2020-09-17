@@ -1,18 +1,20 @@
 inherited CUSUMChartForm: TCUSUMChartForm
-  Height = 424
+  Height = 503
+  Width = 1000
   HelpType = htKeyword
   HelpKeyword = 'html/CUMSUMChart.htm'
   Caption = 'Cumulative Sum Control Chart'
-  ClientHeight = 424
+  ClientHeight = 503
+  ClientWidth = 1000
   OnActivate = FormActivate
   ShowHint = True
   inherited SpecsPanel: TPanel
-    Height = 424
+    Height = 503
     Width = 432
-    ClientHeight = 424
+    ClientHeight = 503
     ClientWidth = 432
     inherited ButtonPanel: TPanel
-      Top = 382
+      Top = 461
       Width = 432
       ClientWidth = 432
       TabOrder = 5
@@ -33,8 +35,8 @@ inherited CUSUMChartForm: TCUSUMChartForm
       end
     end
     inherited VarList: TListBox
-      Height = 349
-      Width = 188
+      Height = 428
+      Width = 196
     end
     inherited GroupLabel: TLabel
       Left = 236
@@ -68,164 +70,23 @@ inherited CUSUMChartForm: TCUSUMChartForm
       AnchorSideLeft.Control = GroupInBtn
       Left = 205
     end
-    object GroupBox1: TGroupBox[12]
-      AnchorSideLeft.Control = MeasEdit
-      AnchorSideTop.Control = GroupBox2
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = MeasEdit
-      AnchorSideRight.Side = asrBottom
-      Left = 236
-      Height = 153
-      Top = 239
-      Width = 196
-      Anchors = [akTop, akLeft, akRight]
-      AutoSize = True
-      BorderSpacing.Top = 16
-      BorderSpacing.Bottom = 8
-      Caption = 'V-Mask Specifications'
-      ClientHeight = 133
-      ClientWidth = 192
-      TabOrder = 4
-      object Label4: TLabel
-        AnchorSideLeft.Control = GroupBox1
-        AnchorSideTop.Control = DeltaEdit
-        AnchorSideTop.Side = asrCenter
-        Left = 12
-        Height = 15
-        Top = 6
-        Width = 94
-        BorderSpacing.Left = 12
-        Caption = 'Delta (Effect Size):'
-        ParentColor = False
-      end
-      object Label5: TLabel
-        AnchorSideLeft.Control = GroupBox1
-        AnchorSideTop.Control = AlphaEdit
-        AnchorSideTop.Side = asrCenter
-        Left = 12
-        Height = 15
-        Top = 33
-        Width = 94
-        BorderSpacing.Left = 12
-        Caption = 'Alpha Probability:'
-        ParentColor = False
-      end
-      object Label6: TLabel
-        AnchorSideLeft.Control = GroupBox1
-        AnchorSideTop.Control = BetaEdit
-        AnchorSideTop.Side = asrCenter
-        Left = 12
-        Height = 15
-        Top = 60
-        Width = 86
-        BorderSpacing.Left = 12
-        Caption = 'Beta Probability:'
-        ParentColor = False
-      end
-      object DeltaEdit: TEdit
-        AnchorSideLeft.Control = AlphaEdit
-        AnchorSideTop.Control = GroupBox1
-        AnchorSideRight.Control = GroupBox1
-        AnchorSideRight.Side = asrBottom
-        Left = 114
-        Height = 23
-        Hint = 'Detection level for a shift in the process mean, '#13#10'expressed in data units (default), or'#13#10'as a multiple of the standard deviation of the '#13#10'data points (when "Normalized CUSUM" is checked).'
-        Top = 2
-        Width = 70
-        Alignment = taRightJustify
-        Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 2
-        BorderSpacing.Right = 8
-        Constraints.MinWidth = 64
-        TabOrder = 0
-        Text = 'DeltaEdit'
-      end
-      object AlphaEdit: TEdit
-        AnchorSideLeft.Control = Label5
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = DeltaEdit
-        AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = GroupBox1
-        AnchorSideRight.Side = asrBottom
-        Left = 114
-        Height = 23
-        Hint = 'Probability of concluding that a shift in the process has occurred, when in fact it did not. '
-        Top = 29
-        Width = 70
-        Alignment = taRightJustify
-        Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Left = 8
-        BorderSpacing.Top = 4
-        BorderSpacing.Right = 8
-        Constraints.MinWidth = 64
-        TabOrder = 1
-        Text = 'AlphaEdit'
-      end
-      object BetaEdit: TEdit
-        AnchorSideLeft.Control = AlphaEdit
-        AnchorSideTop.Control = AlphaEdit
-        AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = GroupBox1
-        AnchorSideRight.Side = asrBottom
-        Left = 114
-        Height = 23
-        Hint = 'Probability of not detecting that a shift in the process mean has, in fact, occurred'
-        Top = 56
-        Width = 70
-        Alignment = taRightJustify
-        Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 4
-        BorderSpacing.Right = 8
-        BorderSpacing.Bottom = 8
-        Constraints.MinWidth = 64
-        TabOrder = 2
-        Text = 'BetaEdit'
-      end
-      object VMaskScrollbar: TScrollBar
-        AnchorSideLeft.Control = Label1
-        AnchorSideTop.Control = Label1
-        AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = BetaEdit
-        AnchorSideRight.Side = asrBottom
-        Left = 12
-        Height = 17
-        Top = 104
-        Width = 172
-        Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 2
-        BorderSpacing.Bottom = 12
-        PageSize = 0
-        TabOrder = 3
-      end
-      object Label1: TLabel
-        AnchorSideLeft.Control = Label4
-        AnchorSideTop.Control = BetaEdit
-        AnchorSideTop.Side = asrBottom
-        Left = 12
-        Height = 15
-        Top = 87
-        Width = 100
-        Caption = 'Position of V-Mask'
-        ParentColor = False
-      end
-    end
-    object GroupBox2: TGroupBox[13]
-      AnchorSideLeft.Control = GroupBox1
+    object GroupBox2: TGroupBox[12]
+      AnchorSideLeft.Control = MeasInBtn
       AnchorSideTop.Control = GroupEdit
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = MeasEdit
       AnchorSideRight.Side = asrBottom
-      Left = 236
-      Height = 74
-      Top = 149
-      Width = 196
+      Left = 204
+      Height = 134
+      Top = 153
+      Width = 228
       Anchors = [akTop, akLeft, akRight]
       AutoSize = True
-      BorderSpacing.Top = 16
+      BorderSpacing.Top = 20
       BorderSpacing.Bottom = 8
-      Caption = 'Option:'
-      ClientHeight = 54
-      ClientWidth = 192
+      Caption = 'Options:'
+      ClientHeight = 114
+      ClientWidth = 224
       TabOrder = 3
       object TargetChk: TCheckBox
         AnchorSideLeft.Control = GroupBox2
@@ -241,63 +102,369 @@ inherited CUSUMChartForm: TCUSUMChartForm
         TabOrder = 0
       end
       object TargetEdit: TEdit
-        AnchorSideLeft.Control = TargetChk
-        AnchorSideLeft.Side = asrBottom
+        AnchorSideLeft.Control = StdDevEdit
         AnchorSideTop.Control = GroupBox2
         AnchorSideRight.Control = GroupBox2
         AnchorSideRight.Side = asrBottom
-        Left = 128
+        Left = 132
         Height = 23
         Top = 0
-        Width = 64
+        Width = 84
         Alignment = taRightJustify
         Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Left = 8
         BorderSpacing.Right = 8
         BorderSpacing.Bottom = 4
         Constraints.MinWidth = 64
         TabOrder = 1
         Text = 'TargetEdit'
       end
-      object ShowMeanDevChk: TCheckBox
+      object rbTabular: TRadioButton
         AnchorSideLeft.Control = TargetChk
-        AnchorSideTop.Control = TargetEdit
+        AnchorSideTop.Control = Bevel3
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 19
-        Top = 27
-        Width = 169
+        Top = 66
+        Width = 103
         BorderSpacing.Top = 4
-        BorderSpacing.Bottom = 8
-        Caption = 'Show mean group deviation'
+        Caption = 'Tabular CUSUM'
+        Checked = True
+        OnChange = rbTabularChange
+        TabOrder = 4
+        TabStop = True
+      end
+      object Bevel3: TBevel
+        AnchorSideLeft.Control = GroupBox2
+        AnchorSideTop.Control = StdDevEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = GroupBox2
+        AnchorSideRight.Side = asrBottom
+        Left = 8
+        Height = 4
+        Top = 58
+        Width = 208
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 8
+        BorderSpacing.Right = 8
+        Shape = bsTopLine
+      end
+      object rbVMask: TRadioButton
+        AnchorSideLeft.Control = rbTabular
+        AnchorSideTop.Control = rbTabular
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 19
+        Top = 89
+        Width = 60
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 6
+        Caption = 'V-Mask'
+        OnChange = rbTabularChange
+        TabOrder = 5
+      end
+      object StdDevChk: TCheckBox
+        AnchorSideLeft.Control = GroupBox2
+        AnchorSideTop.Control = StdDevEdit
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 19
+        Top = 29
+        Width = 112
+        BorderSpacing.Left = 12
+        BorderSpacing.Right = 8
+        Caption = 'Use StdDev Specs'
         TabOrder = 2
+      end
+      object StdDevEdit: TEdit
+        AnchorSideLeft.Control = StdDevChk
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TargetEdit
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = GroupBox2
+        AnchorSideRight.Side = asrBottom
+        Left = 132
+        Height = 23
+        Top = 27
+        Width = 84
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 8
+        BorderSpacing.Right = 8
+        BorderSpacing.Bottom = 4
+        Constraints.MinWidth = 64
+        TabOrder = 3
+        Text = 'StdDevEdit'
+      end
+    end
+    object Notebook: TNotebook[13]
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = GroupBox2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 204
+      Height = 153
+      Top = 295
+      Width = 228
+      PageIndex = 0
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Bottom = 8
+      TabOrder = 4
+      object TabularPage: TPage
+        object TabularGroup: TGroupBox
+          AnchorSideLeft.Control = TabularPage
+          AnchorSideTop.Control = TabularPage
+          AnchorSideRight.Control = TabularPage
+          AnchorSideRight.Side = asrBottom
+          Left = 0
+          Height = 80
+          Top = 0
+          Width = 228
+          Anchors = [akTop, akLeft, akRight]
+          AutoSize = True
+          Caption = 'Tabulated CUSUM Parameters'
+          ClientHeight = 60
+          ClientWidth = 224
+          TabOrder = 0
+          object Label7: TLabel
+            AnchorSideTop.Control = kEdit
+            AnchorSideTop.Side = asrCenter
+            Left = 12
+            Height = 15
+            Top = 6
+            Width = 96
+            BorderSpacing.Left = 12
+            Caption = 'k (in StdDev units)'
+            ParentColor = False
+          end
+          object kEdit: TEdit
+            AnchorSideLeft.Control = hEdit
+            AnchorSideTop.Control = TabularGroup
+            AnchorSideRight.Control = TabularGroup
+            AnchorSideRight.Side = asrBottom
+            Left = 117
+            Height = 23
+            Hint = 'Detection level for a shift in the process mean, '#13#10'expressed in data units (default), or'#13#10'as a multiple of the standard deviation of the '#13#10'data points (when "Normalized CUSUM" is checked).'
+            Top = 2
+            Width = 99
+            Alignment = taRightJustify
+            Anchors = [akTop, akLeft, akRight]
+            BorderSpacing.Top = 2
+            BorderSpacing.Right = 8
+            Constraints.MinWidth = 64
+            TabOrder = 0
+            Text = 'kEdit'
+          end
+          object hEdit: TEdit
+            AnchorSideLeft.Control = Label8
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = kEdit
+            AnchorSideTop.Side = asrBottom
+            AnchorSideRight.Control = TabularGroup
+            AnchorSideRight.Side = asrBottom
+            Left = 117
+            Height = 23
+            Hint = 'Probability of concluding that a shift in the process has occurred, when in fact it did not. '
+            Top = 29
+            Width = 99
+            Alignment = taRightJustify
+            Anchors = [akTop, akLeft, akRight]
+            BorderSpacing.Left = 8
+            BorderSpacing.Top = 4
+            BorderSpacing.Right = 8
+            BorderSpacing.Bottom = 8
+            Constraints.MinWidth = 64
+            TabOrder = 1
+            Text = 'hEdit'
+          end
+          object Label8: TLabel
+            AnchorSideTop.Control = hEdit
+            AnchorSideTop.Side = asrCenter
+            Left = 12
+            Height = 15
+            Top = 33
+            Width = 97
+            BorderSpacing.Left = 12
+            Caption = 'h (in StdDev units)'
+            ParentColor = False
+          end
+        end
+      end
+      object VMaskPage: TPage
+        object VMaskGroup: TGroupBox
+          AnchorSideLeft.Control = VMaskPage
+          AnchorSideTop.Control = VMaskPage
+          AnchorSideRight.Control = VMaskPage
+          AnchorSideRight.Side = asrBottom
+          Left = 0
+          Height = 153
+          Top = 0
+          Width = 228
+          Anchors = [akTop, akLeft, akRight]
+          AutoSize = True
+          Caption = 'V-Mask Specifications'
+          ClientHeight = 133
+          ClientWidth = 224
+          TabOrder = 0
+          object Label4: TLabel
+            AnchorSideLeft.Control = VMaskGroup
+            AnchorSideTop.Control = DeltaEdit
+            AnchorSideTop.Side = asrCenter
+            Left = 12
+            Height = 15
+            Top = 6
+            Width = 94
+            BorderSpacing.Left = 12
+            Caption = 'Delta (Effect Size):'
+            ParentColor = False
+          end
+          object Label5: TLabel
+            AnchorSideLeft.Control = VMaskGroup
+            AnchorSideTop.Control = AlphaEdit
+            AnchorSideTop.Side = asrCenter
+            Left = 12
+            Height = 15
+            Top = 33
+            Width = 94
+            BorderSpacing.Left = 12
+            Caption = 'Alpha Probability:'
+            ParentColor = False
+          end
+          object Label6: TLabel
+            AnchorSideLeft.Control = VMaskGroup
+            AnchorSideTop.Control = BetaEdit
+            AnchorSideTop.Side = asrCenter
+            Left = 12
+            Height = 15
+            Top = 60
+            Width = 86
+            BorderSpacing.Left = 12
+            Caption = 'Beta Probability:'
+            ParentColor = False
+          end
+          object DeltaEdit: TEdit
+            AnchorSideLeft.Control = AlphaEdit
+            AnchorSideTop.Control = VMaskGroup
+            AnchorSideRight.Control = VMaskGroup
+            AnchorSideRight.Side = asrBottom
+            Left = 114
+            Height = 23
+            Hint = 'Detection level for a shift in the process mean, '#13#10'expressed in data units (default), or'#13#10'as a multiple of the standard deviation of the '#13#10'data points (when "Normalized CUSUM" is checked).'
+            Top = 2
+            Width = 102
+            Alignment = taRightJustify
+            Anchors = [akTop, akLeft, akRight]
+            BorderSpacing.Top = 2
+            BorderSpacing.Right = 8
+            Constraints.MinWidth = 64
+            TabOrder = 0
+            Text = 'DeltaEdit'
+          end
+          object AlphaEdit: TEdit
+            AnchorSideLeft.Control = Label5
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = DeltaEdit
+            AnchorSideTop.Side = asrBottom
+            AnchorSideRight.Control = VMaskGroup
+            AnchorSideRight.Side = asrBottom
+            Left = 114
+            Height = 23
+            Hint = 'Probability of concluding that a shift in the process has occurred, when in fact it did not. '
+            Top = 29
+            Width = 102
+            Alignment = taRightJustify
+            Anchors = [akTop, akLeft, akRight]
+            BorderSpacing.Left = 8
+            BorderSpacing.Top = 4
+            BorderSpacing.Right = 8
+            Constraints.MinWidth = 64
+            TabOrder = 1
+            Text = 'AlphaEdit'
+          end
+          object BetaEdit: TEdit
+            AnchorSideLeft.Control = AlphaEdit
+            AnchorSideTop.Control = AlphaEdit
+            AnchorSideTop.Side = asrBottom
+            AnchorSideRight.Control = VMaskGroup
+            AnchorSideRight.Side = asrBottom
+            Left = 114
+            Height = 23
+            Hint = 'Probability of not detecting that a shift in the process mean has, in fact, occurred'
+            Top = 56
+            Width = 102
+            Alignment = taRightJustify
+            Anchors = [akTop, akLeft, akRight]
+            BorderSpacing.Top = 4
+            BorderSpacing.Right = 8
+            BorderSpacing.Bottom = 8
+            Constraints.MinWidth = 64
+            TabOrder = 2
+            Text = 'BetaEdit'
+          end
+          object VMaskScrollbar: TScrollBar
+            AnchorSideLeft.Control = Label1
+            AnchorSideTop.Control = Label1
+            AnchorSideTop.Side = asrBottom
+            AnchorSideRight.Control = BetaEdit
+            AnchorSideRight.Side = asrBottom
+            Left = 12
+            Height = 17
+            Top = 104
+            Width = 204
+            Anchors = [akTop, akLeft, akRight]
+            BorderSpacing.Top = 2
+            BorderSpacing.Bottom = 12
+            PageSize = 0
+            TabOrder = 3
+          end
+          object Label1: TLabel
+            AnchorSideLeft.Control = Label4
+            AnchorSideTop.Control = BetaEdit
+            AnchorSideTop.Side = asrBottom
+            Left = 12
+            Height = 15
+            Top = 87
+            Width = 100
+            Caption = 'Position of V-Mask'
+            ParentColor = False
+          end
+        end
       end
     end
   end
   inherited SpecsSplitter: TSplitter
-    Left = 435
-    Height = 424
+    Left = 443
+    Height = 503
   end
   inherited PageControl: TPageControl
-    Left = 443
-    Height = 412
-    Width = 478
+    Left = 451
+    Height = 491
+    Width = 543
     inherited ReportPage: TTabSheet
-      ClientHeight = 384
-      ClientWidth = 470
+      ClientHeight = 463
+      ClientWidth = 535
       inherited Panel1: TPanel
-        Height = 344
-        Width = 458
-        ClientHeight = 340
-        ClientWidth = 454
+        Height = 423
+        Width = 523
+        ClientHeight = 419
+        ClientWidth = 519
         inherited ReportMemo: TMemo
-          Height = 332
-          Width = 446
+          Height = 411
+          Width = 511
         end
       end
       inherited ReportToolBar: TToolBar
-        Width = 466
+        Width = 531
       end
     end
+  end
+  inherited SaveDialog: TSaveDialog
+    Left = 600
+    Top = 112
+  end
+  inherited PrintDialog: TPrintDialog
+    Left = 600
+    Top = 200
   end
 end

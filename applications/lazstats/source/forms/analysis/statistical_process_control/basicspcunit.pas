@@ -324,7 +324,7 @@ begin
   FChartFrame.SetXTitle(AXTitle);
   FChartFrame.SetYTitle(AYTitle);
 
-  ser := FChartFrame.PlotXY(ptSymbols, nil, Means, Groups, nil, ADataTitle, clBlack);
+  ser := FChartFrame.PlotXY(ptLinesAndSymbols, nil, Means, Groups, nil, ADataTitle, clBlack);
   if Length(Groups) > 0 then
   begin
     FChartFrame.Chart.BottomAxis.Marks.Source := ser.Source;
