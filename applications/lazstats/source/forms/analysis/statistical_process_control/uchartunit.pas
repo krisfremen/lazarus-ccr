@@ -96,7 +96,7 @@ begin
     for i := 0 to numSamples-1 do
       lReport.Add('%6d  %10.2f  %16.2f', [i, means[i], defPerUnit[i]]);
 
-    ReportMemo.Lines.Assign(lReport);
+    FReportFrame.DisplayReport(lReport);
   finally
     lReport.Free;
   end;

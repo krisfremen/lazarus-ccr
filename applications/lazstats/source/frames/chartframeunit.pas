@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, LCLVersion, Forms, Controls, Graphics, ExtDlgs, ComCtrls,
   PrintersDlgs, TAGraph, TATypes, TACustomSource, TACustomSeries, TASeries,
-  TATools, Globals;
+  TATools,
+  Globals, MainDM;
 
 type
   TPlotType = (ptLines, ptSymbols, ptLinesAndSymbols, ptHorBars, ptVertBars,
@@ -50,7 +51,7 @@ type
     procedure SetTitle(const ATitle: String; Alignment: TAlignment = taCenter);
     procedure SetXTitle(const ATitle: String);
     procedure SetYTitle(const ATitle: String);
-    procedure UpdateButtons; virtual;
+    procedure UpdateBtnStates; virtual;
     function VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
       ALegendTitle: String): TConstantLine;
   end;
@@ -71,7 +72,7 @@ begin
   ZoomDragTool.LimitToExtent := [zdDown];
   PanDragTool.LimitToExtent := [pdDown];
   {$IFEND}
-  UpdateButtons;
+  UpdateBtnStates;
 end;
 
 
@@ -83,6 +84,7 @@ begin
   Chart.BottomAxis.Title.Caption := '';
   Chart.LeftAxis.Title.Caption := '';
   Chart.Legend.Visible := false;
+  UpdateBtnStates;
 end;
 
 function TChartFrame.Constline(xy: Double; ADirection: TLineStyle;
@@ -96,7 +98,7 @@ begin
   Result.Title := ALegendTitle;
   Result.Legend.Visible := ALegendTitle <> '';
   Chart.AddSeries(Result);
-  UpdateButtons;
+  UpdateBtnStates;
 end;
 
 
@@ -195,7 +197,7 @@ begin
   Result.Title := LegendTitle;
   Chart.AddSeries(Result);
   Chart.Legend.Visible := Chart.SeriesCount > 0;
-  UpdateButtons;
+  UpdateBtnStates;
 end;
 
 
@@ -274,7 +276,7 @@ begin
 end;
 
 
-procedure TChartFrame.UpdateButtons;
+procedure TChartFrame.UpdateBtnStates;
 begin
   tbSaveChart.Enabled :=  Chart.SeriesCount > 0;
   tbPrintChart.Enabled :=  Chart.SeriesCount > 0;

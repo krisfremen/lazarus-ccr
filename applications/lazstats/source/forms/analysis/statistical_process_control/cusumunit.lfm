@@ -433,38 +433,4 @@ inherited CUSUMChartForm: TCUSUMChartForm
       end
     end
   end
-  inherited SpecsSplitter: TSplitter
-    Left = 443
-    Height = 503
-  end
-  inherited PageControl: TPageControl
-    Left = 451
-    Height = 491
-    Width = 543
-    inherited ReportPage: TTabSheet
-      ClientHeight = 463
-      ClientWidth = 535
-      inherited Panel1: TPanel
-        Height = 423
-        Width = 523
-        ClientHeight = 419
-        ClientWidth = 519
-        inherited ReportMemo: TMemo
-          Height = 411
-          Width = 511
-        end
-      end
-      inherited ReportToolBar: TToolBar
-        Width = 531
-      end
-    end
-  end
-  inherited SaveDialog: TSaveDialog
-    Left = 600
-    Top = 112
-  end
-  inherited PrintDialog: TPrintDialog
-    Left = 600
-    Top = 200
-  end
 end

@@ -105,7 +105,7 @@ begin
     lReport.Add('Sample size for each observation: %8d', [N]);
     lReport.Add('Average proportion observed       %8.4f', [AVG]);
 
-    ReportMemo.Lines.Assign(lReport);
+    FReportFrame.DisplayReport(lReport);
   finally
     lReport.Free;
   end;

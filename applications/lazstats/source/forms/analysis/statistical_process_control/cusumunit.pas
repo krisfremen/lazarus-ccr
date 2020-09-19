@@ -306,7 +306,7 @@ begin
       end;
     end;
 
-    ReportMemo.Lines.Assign(lReport);
+    FReportFrame.DisplayReport(lReport);
   finally
     lReport.Free;
   end;

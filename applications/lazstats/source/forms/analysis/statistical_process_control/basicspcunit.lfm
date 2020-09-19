@@ -276,94 +276,19 @@ object BasicSPCForm: TBasicSPCForm
     Height = 426
     Top = 6
     Width = 545
-    ActivePage = ReportPage
+    ActivePage = ChartPage
     Align = alClient
     BorderSpacing.Left = 3
     BorderSpacing.Top = 6
     BorderSpacing.Right = 6
     BorderSpacing.Bottom = 6
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 2
     object ReportPage: TTabSheet
       Caption = 'Report'
-      ClientHeight = 398
-      ClientWidth = 537
-      object Panel1: TPanel
-        Left = 6
-        Height = 358
-        Top = 34
-        Width = 525
-        Align = alClient
-        BorderSpacing.Around = 6
-        BevelOuter = bvNone
-        BorderStyle = bsSingle
-        ClientHeight = 354
-        ClientWidth = 521
-        TabOrder = 0
-        object ReportMemo: TMemo
-          Left = 4
-          Height = 346
-          Top = 4
-          Width = 513
-          Align = alClient
-          BorderSpacing.Around = 4
-          BorderStyle = bsNone
-          Font.Height = -11
-          Font.Name = 'Courier New'
-          ParentFont = False
-          ScrollBars = ssAutoBoth
-          TabOrder = 0
-        end
-      end
-      object ReportToolBar: TToolBar
-        Left = 0
-        Height = 22
-        Top = 6
-        Width = 537
-        AutoSize = True
-        BorderSpacing.Top = 6
-        BorderSpacing.Bottom = 6
-        Caption = 'ReportToolBar'
-        EdgeBorders = []
-        Images = MainDataModule.ImageList
-        TabOrder = 1
-        Transparent = True
-        object tbSaveReport: TToolButton
-          Left = 1
-          Hint = 'Save report to file'
-          Top = 0
-          Caption = 'Save'
-          ImageIndex = 4
-          OnClick = tbSaveReportClick
-        end
-        object tbPrintReport: TToolButton
-          Left = 24
-          Hint = 'Print report'
-          Top = 0
-          Caption = 'Print'
-          ImageIndex = 5
-          OnClick = tbPrintReportClick
-        end
-        object tbCopyReport: TToolButton
-          Left = 47
-          Hint = 'Copy report to clipboard'
-          Top = 0
-          Caption = 'Copy'
-          ImageIndex = 7
-          OnClick = tbCopyReportClick
-        end
-      end
     end
     object ChartPage: TTabSheet
       Caption = 'Chart'
     end
-  end
-  object SaveDialog: TSaveDialog
-    Left = 399
-    Top = 88
-  end
-  object PrintDialog: TPrintDialog
-    Left = 399
-    Top = 146
   end
 end

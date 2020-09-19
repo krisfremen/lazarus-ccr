@@ -49,7 +49,7 @@
         <PackageName Value="LCL"/>
       </Item7>
     </RequiredPackages>
-    <Units Count="175">
+    <Units Count="176">
       <Unit0>
         <Filename Value="LazStats.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -1421,6 +1421,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="CUSUMUnit"/>
       </Unit174>
+      <Unit175>
+        <Filename Value="frames\reportframeunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ReportFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ReportFrameUnit"/>
+      </Unit175>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

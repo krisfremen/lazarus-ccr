@@ -325,7 +325,7 @@ begin
       for i := 0 to numGrps-1 do
         lReport.Add('%7s  %4d  %8.2f  %8.2f', [groups[i], count[i], means[i], stddev[i]]);
 
-    ReportMemo.Lines.Assign(lReport);
+    FReportFrame.DisplayReport(lReport);
   finally
     lReport.Free;
   end;

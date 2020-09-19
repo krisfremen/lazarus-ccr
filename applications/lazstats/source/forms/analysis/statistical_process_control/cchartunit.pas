@@ -92,7 +92,7 @@ begin
     for i := 1 to NoCases do
       lReport.Add('%6d %15.2f', [i, means[i]]);
 
-    ReportMemo.Lines.Assign(lReport);
+    FReportFrame.DisplayReport(lReport);
   finally
     lReport.Free;
   end;

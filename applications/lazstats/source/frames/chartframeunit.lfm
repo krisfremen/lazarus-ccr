@@ -54,9 +54,8 @@ object ChartFrame: TChartFrame
     Left = 0
     Height = 24
     Top = 0
-    Width = 616
+    Width = 620
     AutoSize = True
-    BorderSpacing.Right = 4
     BorderSpacing.Bottom = 6
     ButtonHeight = 22
     ButtonWidth = 25

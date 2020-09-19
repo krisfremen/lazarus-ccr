@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, tachartlazaruspkg, tachartprint, lhelpcontrolpkg,
-  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit;
+  Globals, LicenseUnit, OptionsUnit, MainDM, MainUnit, ReportFrameUnit;
 
 {$R LazStats.res}
 

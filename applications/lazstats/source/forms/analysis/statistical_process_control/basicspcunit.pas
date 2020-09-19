@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, Buttons, PrintersDlgs,
-  Globals, MainUnit, ContextHelpUnit, ChartFrameUnit;
+  Globals, MainUnit, ContextHelpUnit, ReportFrameUnit, ChartFrameUnit;
 
 type
 
@@ -21,14 +21,10 @@ type
     GroupLabel: TLabel;
     MeasLabel: TLabel;
     MeasEdit: TEdit;
-    PrintDialog: TPrintDialog;
-    ReportMemo: TMemo;
     PageControl: TPageControl;
-    Panel1: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
     CloseBtn: TButton;
-    SaveDialog: TSaveDialog;
     SpecsPanel: TPanel;
     ButtonPanel: TPanel;
     SpecsSplitter: TSplitter;
@@ -38,10 +34,6 @@ type
     MeasOutBtn: TSpeedButton;
     GroupInBtn: TSpeedButton;
     GroupOutBtn: TSpeedButton;
-    tbPrintReport: TToolButton;
-    tbSaveReport: TToolButton;
-    ReportToolBar: TToolBar;
-    tbCopyReport: TToolButton;
     VarList: TListBox;
     VarListLabel: TLabel;
     procedure CloseBtnClick(Sender: TObject);
@@ -55,15 +47,11 @@ type
     procedure MeasInBtnClick(Sender: TObject);
     procedure MeasOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure tbCopyReportClick(Sender: TObject);
-    procedure tbPrintReportClick(Sender: TObject);
-    procedure tbSaveReportClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
     FNoGroupsAllowed: Boolean;
 
   protected
-    FPrintY: Integer;
     GrpVar: Integer;
     MeasVar: Integer;
     procedure Compute; virtual;
@@ -72,12 +60,12 @@ type
     procedure PlotMeans(ATitle, AXTitle, AYTitle, ADataTitle, AGrandMeanTitle: String;
       const Groups: StrDyneVec; const Means: DblDyneVec;
       UCL, LCL, GrandMean, TargetSpec, LowerSpec, UpperSpec: double); virtual;
-    procedure PrintText; virtual;
     procedure Reset; virtual;
     procedure UpdateBtnStates; virtual;
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean; virtual;
 
   public
+    FReportFrame: TReportFrame;
     FChartFrame: TChartFrame;
     property NoGroupsAllowed: Boolean read FNoGroupsAllowed write FNoGroupsAllowed;
 
@@ -93,16 +81,10 @@ implementation
 
 uses
   Math,
-  Printers, OSPrinters,
   TAChartUtils, TALegend, TAChartAxisUtils, TASources, TACustomSeries, TASeries,
   Utils, DataProcs;
 
 const
-  LEFT_MARGIN = 200;
-  RIGHT_MARGIN = 200;
-  TOP_MARGIN = 150;
-  BOTTOM_MARGIN = 200;
-
   FORMAT_MASK = '0.000';
 
 
@@ -181,10 +163,14 @@ end;
 procedure TBasicSPCForm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
+
+  FReportFrame := TReportFrame.Create(self);
+  FReportFrame.Parent := ReportPage;
+  FReportFrame.Align := alClient;
+
   FChartFrame := TChartFrame.Create(self);
   FChartFrame.Parent := ChartPage;
   FChartFrame.Align := alClient;
-  FChartFrame.BorderSpacing.Top := Scale96ToFont(6);
   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
   FChartFrame.Chart.Legend.Alignment := laBottomCenter;
   FChartFrame.Chart.Legend.ColumnCount := 3;
@@ -372,54 +358,6 @@ begin
 end;
 
 
-procedure TBasicSPCForm.PrintText;
-var
-  i: Integer;
-  x: Integer;
-  xmax, ymax: Integer;
-  pageNo: Integer;
-  oldFontSize: Integer;
-  h: Integer;
-begin
-  with Printer do
-  begin
-    x := LEFT_MARGIN;
-    FPrintY := TOP_MARGIN;
-    xMax := PaperSize.Width - RIGHT_MARGIN;
-    yMax := PaperSize.Height - BOTTOM_MARGIN;
-    pageNo := 1;
-    try
-      Canvas.Brush.Style := bsClear;  // no text background color
-      Canvas.Font.Assign(ReportMemo.Font);
-      if Canvas.Font.Size < 10 then
-        Canvas.Font.Size := 10;
-      oldFontSize := Canvas.Font.Size;
-      for i:=0 to ReportMemo.Lines.Count-1 do begin
-        // Print page number
-        if FPrintY = TOP_MARGIN then begin
-          Canvas.Font.Size := 10;
-          h := Canvas.TextHeight('Page 9') + 4;
-          Canvas.TextOut(x+1, FPrintY, 'Page ' + IntToStr(PageNo));
-          Canvas.Pen.Width := 3;
-          Canvas.Line(LEFT_MARGIN, FPrintY+h, xmax, FPrintY+h);
-          inc(FPrintY, 2*h);
-          Canvas.Font.Size := oldFontSize;
-        end;
-        Canvas.TextOut(x, FPrintY, ReportMemo.Lines[i]);
-        inc(FPrintY, Canvas.TextHeight('Tg'));
-        if FPrintY > yMax then begin
-          NewPage;
-          FPrintY := TOP_MARGIN;
-          inc(PageNo);
-        end;
-      end;
-    except
-      on E: EPrinter do ShowMessage('Printer Error: ' +  E.Message);
-      on E: Exception do showMessage('Unexpected error when printing.');
-    end;
-  end;
-end;
-
 procedure TBasicSPCForm.Reset;
 var
   i : integer;
@@ -429,6 +367,8 @@ begin
   MeasEdit.Text := '';
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+
+  FReportFrame.Clear;
   FChartFrame.Clear;
   (FChartFrame.Chart.AxisList[2].Marks.Source as TListChartSource).Clear;
   UpdateBtnStates;
@@ -441,41 +381,6 @@ begin
 end;
 
 
-procedure TBasicSPCForm.tbCopyReportClick(Sender: TObject);
-begin
-  with ReportMemo do
-  begin
-    SelectAll;
-    CopyToClipboard;
-    SelLength := 0;
-  end;
-end;
-
-
-procedure TBasicSPCForm.tbPrintReportClick(Sender: TObject);
-begin
-  if PrintDialog.Execute then
-  begin
-    Printer.BeginDoc;
-    try
-      PrintText;
-    finally
-      Printer.EndDoc;
-    end;
-  end;
-end;
-
-
-procedure TBasicSPCForm.tbSaveReportClick(Sender: TObject);
-begin
-  SaveDialog.Filter := 'LazStats text files (*.txt)|*.txt;*.TXT|All files (*.*)|*.*';
-  SaveDialog.FilterIndex := 1; {text file}
-  SaveDialog.Title := 'Save to File';
-  if SaveDialog.Execute then
-    ReportMemo.Lines.SaveToFile(SaveDialog.FileName);
-end;
-
-
 procedure TBasicSPCForm.UpdateBtnStates;
 begin
   MeasInBtn.Enabled := (VarList.ItemIndex <> -1) and (MeasEdit.Text = '');
@@ -483,11 +388,8 @@ begin
   GroupInBtn.Enabled := (VarList.ItemIndex <> -1) and (GroupEdit.Text = '');
   GroupOutBtn.Enabled := (GroupEdit.Text <> '');
 
-  tbSaveReport.Enabled := ReportMemo.Lines.Count > 0;
-  tbPrintReport.Enabled := ReportMemo.Lines.Count > 0;
-  tbCopyReport.Enabled := ReportMemo.Lines.Count > 0;
-
-  FChartFrame.UpdateButtons;
+  FReportFrame.UpdateBtnStates;
+  FChartFrame.UpdateBtnStates;
 end;
 
 
@@ -512,21 +414,8 @@ end;
 
 
 procedure TBasicSPCForm.VarListClick(Sender: TObject);
-//var
-//  index: integer;
 begin
   UpdateBtnStates;
-  {
-  index := VarList.ItemIndex;
-  if index > -1 then
-  begin
-    if GroupEdit.Visible and (GroupEdit.Text = '') then
-      GroupEdit.Text := VarList.Items[index]
-    else
-      MeasEdit.Text := VarList.Items[index];
-    VarList.Items.Delete(index);
-  end;
-  }
 end;
 
 end.

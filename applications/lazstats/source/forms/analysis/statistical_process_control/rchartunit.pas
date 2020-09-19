@@ -158,7 +158,7 @@ begin
     for i := 0 to numGrps-1 do
       lReport.Add('%7d  %4d  %8.2f  %8.2f  %8.2f', [i+1, count[i], means[i], stddev[i], ranges[i]]);
 
-    ReportMemo.Lines.Assign(lReport);
+    FReportFrame.DisplayReport(lReport);
   finally
     lReport.Free;
   end;

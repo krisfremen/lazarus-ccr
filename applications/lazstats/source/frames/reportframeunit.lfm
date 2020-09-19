@@ -1,0 +1,86 @@
+object ReportFrame: TReportFrame
+  Left = 0
+  Height = 240
+  Top = 0
+  Width = 310
+  ClientHeight = 240
+  ClientWidth = 310
+  TabOrder = 0
+  DesignLeft = 998
+  DesignTop = 330
+  object ReportToolBar: TToolBar
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 306
+    AutoSize = True
+    BorderSpacing.Right = 4
+    BorderSpacing.Bottom = 6
+    ButtonHeight = 22
+    ButtonWidth = 25
+    Caption = 'ReportToolBar'
+    EdgeBorders = [ebBottom]
+    Images = MainDataModule.ImageList
+    TabOrder = 0
+    Transparent = True
+    object tbSaveReport: TToolButton
+      Left = 1
+      Hint = 'Save report to file'
+      Top = 0
+      Caption = 'Save'
+      ImageIndex = 4
+      OnClick = tbSaveReportClick
+    end
+    object tbPrintReport: TToolButton
+      Left = 26
+      Hint = 'Print report'
+      Top = 0
+      Caption = 'Print'
+      ImageIndex = 5
+      OnClick = tbPrintReportClick
+    end
+    object tbCopyReport: TToolButton
+      Left = 51
+      Hint = 'Copy report to clipboard'
+      Top = 0
+      Caption = 'Copy'
+      ImageIndex = 7
+      OnClick = tbCopyReportClick
+    end
+  end
+  object ReportPanel: TPanel
+    Left = 6
+    Height = 204
+    Top = 30
+    Width = 298
+    Align = alClient
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    BorderStyle = bsSingle
+    ClientHeight = 200
+    ClientWidth = 294
+    TabOrder = 1
+    object ReportMemo: TMemo
+      Left = 4
+      Height = 192
+      Top = 4
+      Width = 286
+      Align = alClient
+      BorderSpacing.Around = 4
+      BorderStyle = bsNone
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ScrollBars = ssAutoBoth
+      TabOrder = 0
+    end
+  end
+  object SaveDialog: TSaveDialog
+    Left = 48
+    Top = 56
+  end
+  object PrintDialog: TPrintDialog
+    Left = 48
+    Top = 114
+  end
+end

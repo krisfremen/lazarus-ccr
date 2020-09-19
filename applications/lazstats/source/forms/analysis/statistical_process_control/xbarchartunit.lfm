@@ -236,26 +236,4 @@ inherited XBarChartForm: TXBarChartForm
     Left = 390
     Height = 476
   end
-  inherited PageControl: TPageControl
-    Left = 398
-    Height = 464
-    Width = 523
-    inherited ReportPage: TTabSheet
-      ClientHeight = 436
-      ClientWidth = 515
-      inherited Panel1: TPanel
-        Height = 396
-        Width = 503
-        ClientHeight = 392
-        ClientWidth = 499
-        inherited ReportMemo: TMemo
-          Height = 384
-          Width = 491
-        end
-      end
-      inherited ReportToolBar: TToolBar
-        Width = 511
-      end
-    end
-  end
 end

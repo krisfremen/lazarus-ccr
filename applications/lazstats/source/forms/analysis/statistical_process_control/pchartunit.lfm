@@ -175,30 +175,4 @@ inherited PChartForm: TPChartForm
       end
     end
   end
-  inherited SpecsSplitter: TSplitter
-    Left = 459
-  end
-  inherited PageControl: TPageControl
-    Left = 467
-    Width = 454
-    inherited ReportPage: TTabSheet
-      ClientWidth = 446
-      inherited Panel1: TPanel
-        Width = 434
-        ClientWidth = 430
-        inherited ReportMemo: TMemo
-          Width = 422
-        end
-      end
-      inherited ReportToolBar: TToolBar
-        Width = 442
-      end
-    end
-  end
-  inherited SaveDialog: TSaveDialog
-    Left = 544
-  end
-  inherited PrintDialog: TPrintDialog
-    Left = 544
-  end
 end
