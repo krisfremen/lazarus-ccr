@@ -26,6 +26,8 @@ type
     procedure tbSaveReportClick(Sender: TObject);
   private
     FPrintY: Integer;
+    FMaxLen: Integer;
+    function LongestLine(AReport: TStrings): Integer;
 
   protected
     procedure PrintText; virtual;
@@ -33,7 +35,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure Clear; virtual;
-    procedure DisplayReport(AReport: TStrings); virtual;
+    procedure DisplayReport(AReport: TStrings; Add: Boolean = false); virtual;
     procedure UpdateBtnStates; virtual;
 
   end;
@@ -43,8 +45,9 @@ implementation
 {$R *.lfm}
 
 uses
-  Graphics,
-  Printers, OSPrinters;
+  Graphics, StrUtils,
+  Printers, OSPrinters,
+  Globals;
 
 const
   LEFT_MARGIN = 200;
@@ -56,6 +59,7 @@ const
 constructor TReportFrame.Create(AOwner: TComponent);
 begin
   inherited;
+  ReportPanel.Color := ReportMemo.Color;
   UpdateBtnStates;
 end;
 
@@ -67,10 +71,34 @@ begin
 end;
 
 
-procedure TReportFrame.DisplayReport(AReport: TStrings);
+procedure TReportFrame.DisplayReport(AReport: TStrings; Add: Boolean = false);
+var
+  maxLen: Integer;
+  s: String;
 begin
-  ReportMemo.Lines.AddStrings(AReport);
+  if not Add then
+    ReportMemo.Clear;
+
+  maxLen := Longestline(AReport);
+  for s in AReport do
+    if s = DIVIDER_AUTO then
+      ReportMemo.Lines.Add(AddChar('-', '', maxLen))
+    else
+      ReportMemo.Lines.Add(s);
+
   UpdateBtnStates;
+end;
+
+
+function TReportFrame.LongestLine(AReport: TStrings): Integer;
+var
+  len: Integer;
+  s: String;
+begin
+  len := 0;
+  for s in AReport do
+    if Length(s) > len then len := Length(s);
+  Result := len;
 end;
 
 

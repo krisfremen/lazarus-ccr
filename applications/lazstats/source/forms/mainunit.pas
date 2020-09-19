@@ -879,7 +879,7 @@ procedure TOS3MainFrm.MultXvsYClick(Sender: TObject);
 begin
   if MultXvsYFrm = nil then
     Application.CreateForm(TMultXvsYFrm, MultXvsYFrm);
-  MultXvsYFrm.ShowModal;
+  MultXvsYFrm.Show;
 end;
 
 // Menu "Analysis" > "Comparisons" > "ABC ANOVA with B Nested in A"
@@ -1051,7 +1051,7 @@ procedure TOS3MainFrm.DistributionsClick(Sender: TObject);
 begin
   if DescriptiveFrm = nil then
     Application.CreateForm(TDescriptiveFrm, DescriptiveFrm);
-  DescriptiveFrm.ShowModal;
+  DescriptiveFrm.Show;
 end;
 
 

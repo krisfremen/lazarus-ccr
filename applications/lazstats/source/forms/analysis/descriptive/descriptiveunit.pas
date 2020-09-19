@@ -5,9 +5,9 @@ unit DescriptiveUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   StdCtrls, ExtCtrls, Buttons,
-  MainUnit, Globals, FunctionsLib, OutputUnit, DataProcs, DictionaryUnit, ContextHelpUnit;
+  MainUnit, Globals, FunctionsLib, ReportFrameUnit, DataProcs, DictionaryUnit, ContextHelpUnit;
 
 
 type
@@ -18,13 +18,15 @@ type
     Bevel1: TBevel;
     ComputeBtn: TButton;
     CaseChk: TCheckBox;
-    CheckBox1: TCheckBox;
-    AltQrtilesChk: TCheckBox;
+    ZScoresToGridChk: TCheckBox;
+    AllQrtilesChk: TCheckBox;
     HelpBtn: TButton;
     Label2: TLabel;
     Label3: TLabel;
+    ReportPanel: TPanel;
+    ParamsPanel: TPanel;
     PcntileChk: TCheckBox;
-    GroupBox1: TGroupBox;
+    OptionsGroup: TGroupBox;
     InBtn: TBitBtn;
     OutBtn: TBitBtn;
     AllBtn: TBitBtn;
@@ -32,6 +34,7 @@ type
     CloseBtn: TButton;
     CIEdit: TEdit;
     Label1: TLabel;
+    Splitter1: TSplitter;
     VarList: TListBox;
     SelList: TListBox;
     procedure AllBtnClick(Sender: TObject);
@@ -47,14 +50,10 @@ type
 
   private
     { private declarations }
+    FReportFrame: TReportFrame;
     FAutoSized: Boolean;
     sum, variance, stddev, value, mean, min, max, range, skew, prob, df, CI : double;
     kurtosis, z, semean, seskew, sekurtosis, deviation, devsqr, M2, M3, M4 : double;
-    Q1, Q2, Q3, Q12, Q13, Q14, Q15, Q16, Q17, Q18, Q22, Q23, Q24, Q25, Q26 : double;
-    Q27, Q28, Q32, Q33, Q34, Q35, Q36, Q37, Q38, IQrange : double;
-    ncases, noselected : integer;
-    cellstring, gridstring: string;
-    selected : IntDyneVec;
     procedure UpdateBtnStates;
 
   public
@@ -64,25 +63,26 @@ type
 var
   DescriptiveFrm: TDescriptiveFrm;
 
+
 implementation
+
+{$R *.lfm}
 
 uses
   Math;
 
 { TDescriptiveFrm }
 
-procedure TDescriptiveFrm.ResetBtnClick(Sender: TObject);
+procedure TDescriptiveFrm.AllBtnClick(Sender: TObject);
 var
-  i: integer;
+  i : integer;
 begin
-  CIEdit.Text := FormatFloat('0.0', DEFAULT_CONFIDENCE_LEVEL_PERCENT);
+  for i := 0 to VarList.Items.Count-1 do
+    SelList.Items.Add(VarList.Items.Strings[i]);
   VarList.Clear;
-  SelList.Clear;
-  for i := 1 to NoVariables do
-    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
-  Selected := nil;
   UpdateBtnStates;
 end;
+
 
 procedure TDescriptiveFrm.FormActivate(Sender: TObject);
 var
@@ -91,69 +91,65 @@ begin
   if FAutoSized then
     exit;
 
+  ParamsPanel.AutoSize := true;
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
+  ParamsPanel.Constraints.MinHeight := AllBtn.Top + AllBtn.Height + OptionsGroup.Height +
+    CIEdit.Height + Bevel1.Height + CloseBtn.Height + VarList.BorderSpacing.Bottom +
+    OptionsGroup.BorderSpacing.Bottom + CloseBtn.BorderSpacing.Top;
+  ParamsPanel.Constraints.MinWidth := OptionsGroup.Width;
+  ParamsPanel.AutoSize := false;
 
-  Constraints.MinWidth := Width;
-  Constraints.MinHeight := Height;
+  Constraints.MinHeight := ParamsPanel.Constraints.MinHeight + ParamsPanel.BorderSpacing.Around*2;
+  Constraints.MinWidth := ParamsPanel.Constraints.MinWidth + ParamsPanel.BorderSpacing.Around*2;
 
   FAutoSized := true;
 end;
+
 
 procedure TDescriptiveFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if DictionaryFrm = nil then Application.CreateForm(TDictionaryFrm, DictionaryFrm);
+
+  FReportFrame := TReportFrame.Create(self);
+  FReportFrame.Parent := ReportPanel;
+  FReportFrame.Align := alClient;
+  FReportFrame.ReportToolBar.Align := alRight;
+  FReportFrame.ReportToolbar.EdgeBorders := [];
 end;
+
 
 procedure TDescriptiveFrm.FormShow(Sender: TObject);
 begin
   ResetBtnClick(self);
 end;
 
-procedure TDescriptiveFrm.HelpBtnClick(Sender: TObject);
-begin
-  if ContextHelpForm = nil then
-    Application.CreateForm(TContextHelpForm, ContextHelpForm);
-  ContextHelpForm.HelpMessage((Sender as TButton).tag);
-end;
-
-procedure TDescriptiveFrm.InBtnClick(Sender: TObject);
-var
-  i: integer;
-begin
-  i := 0;
-  while i < VarList.Items.Count do
-  begin
-    if VarList.Selected[i] then
-    begin
-      SelList.Items.Add(VarList.Items[i]);
-      VarList.Items.Delete(i);
-      i := 0;
-    end else
-      inc(i);
-  end;
-  UpdateBtnStates;
-end;
 
 procedure TDescriptiveFrm.ComputeBtnClick(Sender: TObject);
 var
   i, j, k, m: integer;
+  nCases, noSelected: integer;
+  Q1, Q2, Q3, Q12, Q13, Q14, Q15, Q16, Q17, Q18, Q22, Q23, Q24, Q25, Q26: double;
+  Q27, Q28, Q32, Q33, Q34, Q35, Q36, Q37, Q38, IQrange: double;
   num, den, cases: double;
-  values, pcntrank: DblDyneVec;
+  values: DblDyneVec = nil;
+  pcntRank: DblDyneVec = nil;
+  selected: IntDyneVec = nil;
+  cellString: String;
   lReport: TStrings;
 begin
-  noselected := SelList.Items.Count;
+  NoSelected := SelList.Items.Count;
   if noSelected = 0 then
   begin
     MessageDlg('No variables selected.', mtError, [mbOK], 0);
     exit;
   end;
 
-  SetLength(Selected, noselected);
+  SetLength(selected, noSelected);
 
   // Get selected variables
   for i := 1 to noselected do
@@ -169,9 +165,9 @@ begin
     lReport.Add('');
 
     SetLength(Values, NoCases);
-    SetLength(pcntrank, NoCases);
+    SetLength(pcntRank, NoCases);
 
-    for j := 1 to noselected do
+    for j := 1 to noSelected do
     begin
       deviation := 0.0;
       devsqr := 0.0;
@@ -195,13 +191,12 @@ begin
       CI := (1.0 - CI) / 2.0;
       CI := 1.0 - CI;
 
-      if CheckBox1.Checked then // add a new column to the grid
+      if ZScoresToGridChk.Checked then // add a new column to the grid
       begin
-        gridstring := OS3MainFrm.DataGrid.Cells[k,0];
-        gridstring := Gridstring + 'z';
-        DictionaryFrm.NewVar(NoVariables+1);
-        DictionaryFrm.DictGrid.Cells[1,NoVariables] := gridstring;
-        OS3MainFrm.DataGrid.Cells[NoVariables,0] := gridstring;
+        cellstring := OS3MainFrm.DataGrid.Cells[k,0] + 'z';
+        DictionaryFrm.NewVar(NoVariables + 1);
+        DictionaryFrm.DictGrid.Cells[1, NoVariables] := cellstring;
+        OS3MainFrm.DataGrid.Cells[NoVariables, 0] := cellstring;
       end;
 
       // Accumulate sums of squares, sums, etc. for variable j
@@ -209,15 +204,15 @@ begin
       max := -1.0e308;
       for i := 1 to NoCases do
       begin
-        if not GoodRecord(i,noselected,selected) then
+        if not GoodRecord(i, noSelected, selected) then
           continue;
 
         if CaseChk.Checked then
         begin
-          if not ValidValue(i,selected[j-1]) then
+          if not ValidValue(i, selected[j-1]) then
             continue;
         end
-        else if not GoodRecord(i,noselected,selected) then
+        else if not GoodRecord(i, noselected, selected) then
           continue;
 
         value := StrToFloat(OS3MainFrm.DataGrid.Cells[k,i]);
@@ -261,9 +256,9 @@ begin
         begin
           if CaseChk.Checked then
           begin
-            if not ValidValue(i,selected[j-1]) then continue;
+            if not ValidValue(i, selected[j-1]) then continue;
           end else
-            if not GoodRecord(i,noselected,selected) then continue;
+            if not GoodRecord(i, noselected, selected) then continue;
 
           value := StrToFloat(OS3MainFrm.DataGrid.Cells[k,i]);
           if stddev > 0.0 then
@@ -274,7 +269,7 @@ begin
             M3 := M3 + (deviation * devsqr);
             M4 := M4 + (devsqr * devsqr);
             z := (value - mean) / stddev;
-            if CheckBox1.Checked then
+            if ZScoresToGridChk.Checked then
             begin
               cellstring := format('%8.5f',[z]);
               OS3MainFrm.DataGrid.Cells[NoVariables,i] := cellstring;
@@ -349,7 +344,7 @@ begin
         lReport.Add('');
       end;
 
-      if (AltQrtilesChk.Checked) then
+      if (AllQrtilesChk.Checked) then
       begin
         lReport.Add('Alternative Methods for Obtaining Quartiles');
         lReport.Add('    Method 1    2       3       4       5       6       7       8');
@@ -381,8 +376,10 @@ begin
         Q37 := Quartiles(7,0.75,ncases,values);
         Q38 := Quartiles(8,0.75,ncases,values);
         lReport.Add('Q3   %8.3f%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f', [Q3,Q32,Q33,Q34,Q35,Q36,Q37,Q38]);
+        lReport.Add('');
         lReport.Add('NOTES:');
-        lReport.Add('Method 1 is the weighted average at X[np] where n is no. of cases, p is percentile / 100');
+        lReport.Add('Method 1 is the weighted average at X[np] where ');
+        lReport.Add('  n is no. of cases, p is percentile / 100');
         lReport.Add('Method 2 is the weighted average at X[(n+1)p] This is used in this program.');
         lReport.Add('Method 3 is the empirical distribution function.');
         lReport.Add('Method 4 is called the empirical distribution function - averaging.');
@@ -393,10 +390,10 @@ begin
         lReport.Add('See the internet site http://www.xycoon.com/ for the above.');
         lReport.Add('');
       end;  // end of experimental alternatives
-      lReport.Add('--------------------------------------------------------------');
+      lReport.Add(DIVIDER_AUTO);
     end; // next j variable
 
-    DisplayReport(lReport);
+    FReportFrame.DisplayReport(lReport);
 
   finally
     lReport.Free;
@@ -405,6 +402,34 @@ begin
     pcntrank := nil;
   end;
 end;
+
+
+procedure TDescriptiveFrm.HelpBtnClick(Sender: TObject);
+begin
+  if ContextHelpForm = nil then
+    Application.CreateForm(TContextHelpForm, ContextHelpForm);
+  ContextHelpForm.HelpMessage((Sender as TButton).tag);
+end;
+
+
+procedure TDescriptiveFrm.InBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  i := 0;
+  while i < VarList.Items.Count do
+  begin
+    if VarList.Selected[i] then
+    begin
+      SelList.Items.Add(VarList.Items[i]);
+      VarList.Items.Delete(i);
+      i := 0;
+    end else
+      inc(i);
+  end;
+  UpdateBtnStates;
+end;
+
 
 procedure TDescriptiveFrm.OutBtnClick(Sender: TObject);
 var
@@ -424,14 +449,17 @@ begin
   UpdateBtnStates;
 end;
 
-procedure TDescriptiveFrm.AllBtnClick(Sender: TObject);
+procedure TDescriptiveFrm.ResetBtnClick(Sender: TObject);
 var
-  i : integer;
+  i: integer;
 begin
-  for i := 0 to VarList.Items.Count-1 do
-    SelList.Items.Add(VarList.Items.Strings[i]);
+  CIEdit.Text := FormatFloat('0.0', DEFAULT_CONFIDENCE_LEVEL_PERCENT);
   VarList.Clear;
+  SelList.Clear;
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   UpdateBtnStates;
+  FReportFrame.Clear;
 end;
 
 procedure TDescriptiveFrm.UpdateBtnStates;
@@ -460,14 +488,12 @@ begin
   AllBtn.Enabled := VarList.Count > 0;
 end;
 
+
 procedure TDescriptiveFrm.VarListSelectionChange(Sender: TObject; User: boolean);
 begin
   UpdateBtnStates;
 end;
 
-
-initialization
-  {$I descriptiveunit.lrs}
 
 end.
 
