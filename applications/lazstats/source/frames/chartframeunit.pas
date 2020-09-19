@@ -5,9 +5,9 @@ unit ChartFrameUnit;
 interface
 
 uses
-  Classes, SysUtils, LCLVersion, Forms, Controls, Graphics, ExtDlgs, PrintersDlgs,
-  TAGraph, TATypes, TACustomSource, TACustomSeries, TASeries, TATools,
-  Globals;
+  Classes, SysUtils, LCLVersion, Forms, Controls, Graphics, ExtDlgs, ComCtrls,
+  PrintersDlgs, TAGraph, TATypes, TACustomSource, TACustomSeries, TASeries,
+  TATools, Globals;
 
 type
   TPlotType = (ptLines, ptSymbols, ptLinesAndSymbols, ptHorBars, ptVertBars,
@@ -17,11 +17,18 @@ type
 
   TChartFrame = class(TFrame)
     Chart: TChart;
+    ChartToolBar: TToolBar;
     ChartToolset: TChartToolset;
     PanDragTool: TPanDragTool;
     PrintDialog: TPrintDialog;
     SavePictureDialog: TSavePictureDialog;
+    tbCopyChart: TToolButton;
+    tbPrintChart: TToolButton;
+    tbSaveChart: TToolButton;
     ZoomDragTool: TZoomDragTool;
+    procedure tbCopyChartClick(Sender: TObject);
+    procedure tbPrintChartClick(Sender: TObject);
+    procedure tbSaveChartClick(Sender: TObject);
 
   protected
     function Constline(xy: Double; ADirection: TLineStyle; AColor: TColor;
@@ -43,6 +50,7 @@ type
     procedure SetTitle(const ATitle: String; Alignment: TAlignment = taCenter);
     procedure SetXTitle(const ATitle: String);
     procedure SetYTitle(const ATitle: String);
+    procedure UpdateButtons; virtual;
     function VertLine(x: Double; AColor: TColor; ALineStyle: TPenStyle;
       ALegendTitle: String): TConstantLine;
   end;
@@ -63,6 +71,7 @@ begin
   ZoomDragTool.LimitToExtent := [zdDown];
   PanDragTool.LimitToExtent := [pdDown];
   {$IFEND}
+  UpdateButtons;
 end;
 
 
@@ -76,7 +85,6 @@ begin
   Chart.Legend.Visible := false;
 end;
 
-
 function TChartFrame.Constline(xy: Double; ADirection: TLineStyle;
   AColor: TColor; ALineStyle: TPenStyle; ALegendTitle: String): TConstantLine;
 begin
@@ -88,6 +96,7 @@ begin
   Result.Title := ALegendTitle;
   Result.Legend.Visible := ALegendTitle <> '';
   Chart.AddSeries(Result);
+  UpdateButtons;
 end;
 
 
@@ -186,6 +195,7 @@ begin
   Result.Title := LegendTitle;
   Chart.AddSeries(Result);
   Chart.Legend.Visible := Chart.SeriesCount > 0;
+  UpdateButtons;
 end;
 
 
@@ -261,6 +271,32 @@ procedure TChartFrame.SetYTitle(const ATitle: String);
 begin
   Chart.LeftAxis.Title.Caption := ATitle;
   Chart.LeftAxis.Title.Visible := ATitle <> '';
+end;
+
+
+procedure TChartFrame.UpdateButtons;
+begin
+  tbSaveChart.Enabled :=  Chart.SeriesCount > 0;
+  tbPrintChart.Enabled :=  Chart.SeriesCount > 0;
+  tbCopyChart.Enabled :=  Chart.SeriesCount > 0;
+end;
+
+
+procedure TChartFrame.tbSaveChartClick(Sender: TObject);
+begin
+  Save;
+end;
+
+
+procedure TChartFrame.tbPrintChartClick(Sender: TObject);
+begin
+  Print;
+end;
+
+
+procedure TChartFrame.tbCopyChartClick(Sender: TObject);
+begin
+  Chart.CopyToClipboardBitmap;
 end;
 
 

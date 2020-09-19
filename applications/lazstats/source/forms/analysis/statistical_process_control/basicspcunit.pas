@@ -38,14 +38,10 @@ type
     MeasOutBtn: TSpeedButton;
     GroupInBtn: TSpeedButton;
     GroupOutBtn: TSpeedButton;
-    tbPrintChart: TToolButton;
     tbPrintReport: TToolButton;
-    tbSaveChart: TToolButton;
     tbSaveReport: TToolButton;
-    ChartToolBar: TToolBar;
     ReportToolBar: TToolBar;
     tbCopyReport: TToolButton;
-    tbCopyChart: TToolButton;
     VarList: TListBox;
     VarListLabel: TLabel;
     procedure CloseBtnClick(Sender: TObject);
@@ -59,11 +55,8 @@ type
     procedure MeasInBtnClick(Sender: TObject);
     procedure MeasOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure tbCopyChartClick(Sender: TObject);
     procedure tbCopyReportClick(Sender: TObject);
-    procedure tbPrintChartClick(Sender: TObject);
     procedure tbPrintReportClick(Sender: TObject);
-    procedure tbSaveChartClick(Sender: TObject);
     procedure tbSaveReportClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
@@ -191,7 +184,7 @@ begin
   FChartFrame := TChartFrame.Create(self);
   FChartFrame.Parent := ChartPage;
   FChartFrame.Align := alClient;
-  FChartFrame.BorderSpacing.Around := Scale96ToFont(8);
+  FChartFrame.BorderSpacing.Top := Scale96ToFont(6);
   FChartFrame.Chart.Legend.SymbolWidth := Scale96ToFont(30);
   FChartFrame.Chart.Legend.Alignment := laBottomCenter;
   FChartFrame.Chart.Legend.ColumnCount := 3;
@@ -448,12 +441,6 @@ begin
 end;
 
 
-procedure TBasicSPCForm.tbCopyChartClick(Sender: TObject);
-begin
-  FChartFrame.Chart.CopyToClipboardBitmap;
-end;
-
-
 procedure TBasicSPCForm.tbCopyReportClick(Sender: TObject);
 begin
   with ReportMemo do
@@ -462,12 +449,6 @@ begin
     CopyToClipboard;
     SelLength := 0;
   end;
-end;
-
-
-procedure TBasicSPCForm.tbPrintChartClick(Sender: TObject);
-begin
-  FChartFrame.Print;
 end;
 
 
@@ -482,12 +463,6 @@ begin
       Printer.EndDoc;
     end;
   end;
-end;
-
-
-procedure TBasicSPCForm.tbSaveChartClick(Sender: TObject);
-begin
-  FChartFrame.Save;
 end;
 
 
@@ -512,9 +487,7 @@ begin
   tbPrintReport.Enabled := ReportMemo.Lines.Count > 0;
   tbCopyReport.Enabled := ReportMemo.Lines.Count > 0;
 
-  tbSaveChart.Enabled :=  FChartFrame.Chart.SeriesCount > 0;
-  tbPrintChart.Enabled :=  FChartFrame.Chart.SeriesCount > 0;
-  tbCopyChart.Enabled :=  FChartFrame.Chart.SeriesCount > 0;
+  FChartFrame.UpdateButtons;
 end;
 
 

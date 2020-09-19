@@ -319,10 +319,9 @@ object BasicSPCForm: TBasicSPCForm
         Left = 0
         Height = 22
         Top = 6
-        Width = 533
+        Width = 537
         AutoSize = True
         BorderSpacing.Top = 6
-        BorderSpacing.Right = 4
         BorderSpacing.Bottom = 6
         Caption = 'ReportToolBar'
         EdgeBorders = []
@@ -357,47 +356,6 @@ object BasicSPCForm: TBasicSPCForm
     end
     object ChartPage: TTabSheet
       Caption = 'Chart'
-      ClientHeight = 398
-      ClientWidth = 537
-      object ChartToolBar: TToolBar
-        Left = 0
-        Height = 22
-        Top = 6
-        Width = 533
-        AutoSize = True
-        BorderSpacing.Top = 6
-        BorderSpacing.Right = 4
-        BorderSpacing.Bottom = 6
-        Caption = 'ChartToolBar'
-        EdgeBorders = []
-        Images = MainDataModule.ImageList
-        TabOrder = 0
-        Transparent = True
-        object tbSaveChart: TToolButton
-          Left = 1
-          Hint = 'Save chart to file'
-          Top = 0
-          Caption = 'Save'
-          ImageIndex = 4
-          OnClick = tbSaveChartClick
-        end
-        object tbPrintChart: TToolButton
-          Left = 24
-          Hint = 'Print chart'
-          Top = 0
-          Caption = 'Print'
-          ImageIndex = 5
-          OnClick = tbPrintChartClick
-        end
-        object tbCopyChart: TToolButton
-          Left = 47
-          Hint = 'Copy chart to clipboard'
-          Top = 0
-          Caption = 'Copy'
-          ImageIndex = 7
-          OnClick = tbCopyChartClick
-        end
-      end
     end
   end
   object SaveDialog: TSaveDialog

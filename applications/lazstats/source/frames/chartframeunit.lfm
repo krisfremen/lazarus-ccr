@@ -9,10 +9,10 @@ object ChartFrame: TChartFrame
   DesignLeft = 518
   DesignTop = 150
   object Chart: TChart
-    Left = 0
-    Height = 403
-    Top = 0
-    Width = 620
+    Left = 6
+    Height = 367
+    Top = 30
+    Width = 608
     AxisList = <    
       item
         Grid.Color = clSilver
@@ -45,7 +45,50 @@ object ChartFrame: TChartFrame
     )
     Toolset = ChartToolset
     Align = alClient
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
     Color = clWhite
+  end
+  object ChartToolBar: TToolBar
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 616
+    AutoSize = True
+    BorderSpacing.Right = 4
+    BorderSpacing.Bottom = 6
+    ButtonHeight = 22
+    ButtonWidth = 25
+    Caption = 'ChartToolBar'
+    EdgeBorders = [ebBottom]
+    Images = MainDataModule.ImageList
+    TabOrder = 1
+    Transparent = True
+    object tbSaveChart: TToolButton
+      Left = 1
+      Hint = 'Save chart to file'
+      Top = 0
+      Caption = 'Save'
+      ImageIndex = 4
+      OnClick = tbSaveChartClick
+    end
+    object tbPrintChart: TToolButton
+      Left = 26
+      Hint = 'Print chart'
+      Top = 0
+      Caption = 'Print'
+      ImageIndex = 5
+      OnClick = tbPrintChartClick
+    end
+    object tbCopyChart: TToolButton
+      Left = 51
+      Hint = 'Copy chart to clipboard'
+      Top = 0
+      Caption = 'Copy'
+      ImageIndex = 7
+      OnClick = tbCopyChartClick
+    end
   end
   object PrintDialog: TPrintDialog
     Left = 279
