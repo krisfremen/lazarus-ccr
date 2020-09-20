@@ -29,7 +29,7 @@ inherited PChartForm: TPChartForm
       end
     end
     inherited VarList: TListBox
-      Width = 200
+      Width = 208
     end
     inherited GroupLabel: TLabel
       Left = 248
@@ -174,5 +174,12 @@ inherited PChartForm: TPChartForm
         Text = 'XSigmaEdit'
       end
     end
+  end
+  inherited SpecsSplitter: TSplitter
+    Left = 467
+  end
+  inherited PageControl: TPageControl
+    Left = 475
+    Width = 446
   end
 end

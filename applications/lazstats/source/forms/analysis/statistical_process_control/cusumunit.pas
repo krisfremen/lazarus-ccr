@@ -350,6 +350,9 @@ procedure TCUSUMChartForm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
+  if FAutoSized then
+    exit;
+
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
@@ -375,6 +378,9 @@ begin
   finally
     EnableAutoSizing;
   end;
+
+  Position := poDesigned;
+  FAutoSized := true;
 end;
 
 

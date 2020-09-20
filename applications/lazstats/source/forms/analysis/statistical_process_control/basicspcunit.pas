@@ -51,6 +51,7 @@ type
     FGroupsNeeded: Boolean;
 
   protected
+    FAutoSized: Boolean;
     GrpVar: Integer;
     MeasVar: Integer;
     procedure Compute; virtual;
@@ -145,6 +146,9 @@ procedure TBasicSPCForm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
+  if FAutoSized then
+    exit;
+
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
@@ -156,6 +160,9 @@ begin
     CloseBtn.Left + CloseBtn.Width - HelpBtn.Left + HelpBtn.BorderSpacing.Around
   );
   Constraints.MinHeight := MeasEdit.Top + MeasEdit.Height + MeasEdit.BorderSpacing.Bottom + ButtonPanel.Height;
+
+  Position := poDesigned;
+  FAutoSized := true;
 end;
 
 

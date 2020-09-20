@@ -23,7 +23,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  ExtCtrls, StdCtrls, Buttons, PrintersDlgs,
+  ExtCtrls, StdCtrls, Buttons,
   Globals, BasicSPCUnit;
 
 type
@@ -61,7 +61,7 @@ implementation
 
 uses
   Math,
-  Utils, MathUnit, MainUnit, DataProcs;
+  Utils, MainUnit, DataProcs;
 
 {$R *.lfm}
 
@@ -69,6 +69,9 @@ procedure TXBarChartForm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
+  if FAutoSized then
+    exit;
+
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
@@ -93,6 +96,9 @@ begin
   finally
     EnableAutoSizing;
   end;
+
+  Position := poDesigned;
+  FAutoSized := true;
 end;
 
 

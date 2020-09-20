@@ -33,7 +33,7 @@ inherited CChartForm: TCChartForm
     end
     inherited VarList: TListBox
       Height = 345
-      Width = 192
+      Width = 200
     end
     inherited GroupLabel: TLabel
       Left = 240
@@ -121,5 +121,14 @@ inherited CChartForm: TCChartForm
         Text = 'XSigmaEdit'
       end
     end
+  end
+  inherited SpecsSplitter: TSplitter
+    Left = 451
+    Height = 420
+  end
+  inherited PageControl: TPageControl
+    Left = 459
+    Height = 408
+    Width = 462
   end
 end
