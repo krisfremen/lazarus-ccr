@@ -1,7 +1,7 @@
 object BubbleForm: TBubbleForm
-  Left = 473
+  Left = 476
   Height = 454
-  Top = 253
+  Top = 224
   Width = 500
   HelpType = htKeyword
   HelpKeyword = 'html/RepeatedMeasuresBubblePlot.htm'
@@ -11,7 +11,6 @@ object BubbleForm: TBubbleForm
   ClientWidth = 500
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object Label6: TLabel
@@ -398,32 +397,33 @@ object BubbleForm: TBubbleForm
       Text = 'SizeEdit'
     end
   end
-  object ReturnBtn: TButton
+  object CloseBtn: TButton
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 427
+    Left = 433
     Height = 25
     Top = 421
-    Width = 61
+    Width = 55
     Anchors = [akRight, akBottom]
     AutoSize = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 8
-    Caption = 'Return'
-    ModalResult = 1
+    Caption = 'Close'
+    ModalResult = 11
+    OnClick = CloseBtnClick
     TabOrder = 8
   end
   object ComputeBtn: TButton
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = ReturnBtn
+    AnchorSideRight.Control = CloseBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 343
+    Left = 349
     Height = 25
     Top = 421
     Width = 76
@@ -441,7 +441,7 @@ object BubbleForm: TBubbleForm
     AnchorSideRight.Control = ComputeBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 281
+    Left = 287
     Height = 25
     Top = 421
     Width = 54
@@ -459,7 +459,7 @@ object BubbleForm: TBubbleForm
     AnchorSideRight.Control = ResetBtn
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 222
+    Left = 228
     Height = 25
     Top = 421
     Width = 51
@@ -477,7 +477,7 @@ object BubbleForm: TBubbleForm
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = ReturnBtn
+    AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
     Top = 405

@@ -12,7 +12,6 @@ object MultXvsYFrm: TMultXvsYFrm
   ClientWidth = 395
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object Bevel1: TBevel
@@ -358,6 +357,7 @@ object MultXvsYFrm: TMultXvsYFrm
       BorderSpacing.Bottom = 8
       Caption = 'Close'
       ModalResult = 11
+      OnClick = CloseBtnClick
       TabOrder = 3
     end
     object HelpBtn: TButton

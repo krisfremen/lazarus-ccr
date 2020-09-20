@@ -38,6 +38,7 @@ type
     VarList: TListBox;
     SelList: TListBox;
     procedure AllBtnClick(Sender: TObject);
+    procedure CloseBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -84,6 +85,12 @@ begin
 end;
 
 
+procedure TDescriptiveFrm.CloseBtnClick(Sender: TObject);
+begin
+  Close;
+end;
+
+
 procedure TDescriptiveFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
@@ -100,12 +107,16 @@ begin
   ParamsPanel.Constraints.MinHeight := AllBtn.Top + AllBtn.Height + OptionsGroup.Height +
     CIEdit.Height + Bevel1.Height + CloseBtn.Height + VarList.BorderSpacing.Bottom +
     OptionsGroup.BorderSpacing.Bottom + CloseBtn.BorderSpacing.Top;
-  ParamsPanel.Constraints.MinWidth := OptionsGroup.Width;
+  ParamsPanel.Constraints.MinWidth := Math.Max(
+    4*w + 3*HelpBtn.BorderSpacing.Right,
+    OptionsGroup.Width
+  );
   ParamsPanel.AutoSize := false;
 
   Constraints.MinHeight := ParamsPanel.Constraints.MinHeight + ParamsPanel.BorderSpacing.Around*2;
   Constraints.MinWidth := ParamsPanel.Constraints.MinWidth + ParamsPanel.BorderSpacing.Around*2;
 
+  Position := poDesigned;
   FAutoSized := true;
 end;
 

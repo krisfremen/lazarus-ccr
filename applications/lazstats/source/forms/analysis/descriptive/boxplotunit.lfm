@@ -29,6 +29,7 @@ object BoxPlotFrm: TBoxPlotFrm
     BorderSpacing.Bottom = 8
     Caption = 'Close'
     ModalResult = 11
+    OnClick = CloseBtnClick
     TabOrder = 7
   end
   object ComputeBtn: TButton

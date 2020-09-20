@@ -30,7 +30,7 @@ type
     Label6: TLabel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
-    ReturnBtn: TButton;
+    CloseBtn: TButton;
     IDInBtn: TBitBtn;
     IDOutBtn: TBitBtn;
     XInBtn: TBitBtn;
@@ -56,6 +56,7 @@ type
     procedure IDInBtnClick(Sender: TObject);
     procedure IDOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure CloseBtnClick(Sender: TObject);
     procedure SizeInBtnClick(Sender: TObject);
     procedure SizeOutBtnClick(Sender: TObject);
     procedure VarListSelectionChange(Sender: TObject; {%H-}User: boolean);
@@ -372,11 +373,11 @@ begin
   if FAutoSized then
     exit;
 
-  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, ReturnBtn.Width]);
+  w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
-  ReturnBtn.Constraints.MinWidth := w;
+  CloseBtn.Constraints.MinWidth := w;
 
   Panel1.Constraints.MinHeight := SizeOutBtn.Top + SizeOutBtn.Height;
   Panel1.Constraints.MinWidth := 2*Label2.Width + IDInBtn.Width + 2*VarList.BorderSpacing.Right;
@@ -384,6 +385,7 @@ begin
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
 
+  Position := poDesigned;
   FAutoSized := True;
 end;
 
@@ -632,6 +634,11 @@ end;
 procedure TBubbleForm.ResetBtnClick(Sender: TObject);
 begin
   Reset;
+end;
+
+procedure TBubbleForm.CloseBtnClick(Sender: TObject);
+begin
+  Close;
 end;
 
 

@@ -153,6 +153,7 @@ object DescriptiveFrm: TDescriptiveFrm
       BorderSpacing.Top = 8
       Caption = 'Close'
       ModalResult = 11
+      OnClick = CloseBtnClick
       TabOrder = 9
     end
     object HelpBtn: TButton
@@ -166,7 +167,6 @@ object DescriptiveFrm: TDescriptiveFrm
       Width = 51
       Anchors = [akRight, akBottom]
       AutoSize = True
-      BorderSpacing.Left = 8
       BorderSpacing.Top = 8
       BorderSpacing.Right = 8
       Caption = 'Help'

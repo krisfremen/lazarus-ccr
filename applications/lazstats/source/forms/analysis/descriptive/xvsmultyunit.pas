@@ -39,6 +39,7 @@ type
     XOutBtn: TBitBtn;
     YOutBtn: TBitBtn;
     VarList: TListBox;
+    procedure CloseBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -253,6 +254,12 @@ begin
 end;
 
 
+procedure TXvsMultYForm.CloseBtnClick(Sender: TObject);
+begin
+  Close;
+end;
+
+
 procedure TXvsMultYForm.FormActivate(Sender: TObject);
 var
   w: Integer;
@@ -268,6 +275,7 @@ begin
   Constraints.MinWidth := Width;
   Constraints.MinHeight := Height;
 
+  Position := poDesigned;
   FAutoSized := true;
 end;
 

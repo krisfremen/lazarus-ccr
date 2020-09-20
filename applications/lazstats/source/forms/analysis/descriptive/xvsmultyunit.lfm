@@ -306,6 +306,7 @@ object XvsMultYForm: TXvsMultYForm
     BorderSpacing.Bottom = 8
     Caption = 'Close'
     ModalResult = 11
+    OnClick = CloseBtnClick
     TabOrder = 3
   end
   object ComputeBtn: TButton

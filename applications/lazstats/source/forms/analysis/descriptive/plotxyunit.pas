@@ -38,6 +38,7 @@ type
     YOutBtn: TBitBtn;
     Label1: TLabel;
     VarList: TListBox;
+    procedure CloseBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -318,6 +319,12 @@ begin
 end;
 
 
+procedure TPlotXYFrm.CloseBtnClick(Sender: TObject);
+begin
+  Close;
+end;
+
+
 procedure TPlotXYFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
@@ -336,6 +343,7 @@ begin
   Constraints.MinWidth := GroupBox1.Width * 2 + XInBtn.Width + 4 * VarList.BorderSpacing.Left;
   Constraints.MinHeight := Height;
 
+  Position := poDesigned;
   FAutoSized := True;
 end;
 

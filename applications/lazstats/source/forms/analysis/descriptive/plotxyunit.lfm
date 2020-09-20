@@ -1,13 +1,13 @@
 object PlotXYFrm: TPlotXYFrm
   Left = 433
-  Height = 367
+  Height = 374
   Top = 262
   Width = 490
   HelpType = htKeyword
   HelpKeyword = 'html/XVersusYPlot.htm'
   AutoSize = True
   Caption = 'Plot X versus Y'
-  ClientHeight = 367
+  ClientHeight = 374
   ClientWidth = 490
   OnActivate = FormActivate
   OnCreate = FormCreate
@@ -58,7 +58,7 @@ object PlotXYFrm: TPlotXYFrm
     AnchorSideBottom.Control = Bevel1
     AnchorSideBottom.Side = asrBottom
     Left = 8
-    Height = 293
+    Height = 300
     Top = 25
     Width = 215
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -175,17 +175,18 @@ object PlotXYFrm: TPlotXYFrm
     Text = 'YEdit'
   end
   object GroupBox1: TGroupBox
-    AnchorSideLeft.Control = YEdit
+    AnchorSideLeft.Control = XinBtn
     AnchorSideTop.Control = YEdit
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Side = asrBottom
-    Left = 267
+    Left = 231
     Height = 141
     Top = 181
     Width = 191
     AutoSize = True
     BorderSpacing.Top = 24
     BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'Options'
     ChildSizing.LeftRightSpacing = 12
     ClientHeight = 121
@@ -278,7 +279,7 @@ object PlotXYFrm: TPlotXYFrm
     AnchorSideBottom.Side = asrBottom
     Left = 416
     Height = 25
-    Top = 334
+    Top = 341
     Width = 62
     Anchors = [akRight, akBottom]
     BorderSpacing.Left = 8
@@ -287,6 +288,7 @@ object PlotXYFrm: TPlotXYFrm
     BorderSpacing.Bottom = 8
     Caption = 'Close'
     ModalResult = 11
+    OnClick = CloseBtnClick
     TabOrder = 8
   end
   object ComputeBtn: TButton
@@ -295,7 +297,7 @@ object PlotXYFrm: TPlotXYFrm
     AnchorSideBottom.Side = asrBottom
     Left = 332
     Height = 25
-    Top = 334
+    Top = 341
     Width = 76
     Anchors = [akRight, akBottom]
     BorderSpacing.Left = 8
@@ -312,7 +314,7 @@ object PlotXYFrm: TPlotXYFrm
     AnchorSideBottom.Side = asrBottom
     Left = 270
     Height = 25
-    Top = 334
+    Top = 341
     Width = 54
     Anchors = [akRight, akBottom]
     BorderSpacing.Left = 12
@@ -330,7 +332,7 @@ object PlotXYFrm: TPlotXYFrm
     AnchorSideBottom.Control = CloseBtn
     Left = 0
     Height = 8
-    Top = 318
+    Top = 325
     Width = 490
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
