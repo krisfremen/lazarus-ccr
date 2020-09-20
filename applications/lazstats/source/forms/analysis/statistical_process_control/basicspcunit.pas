@@ -49,7 +49,7 @@ type
     procedure ResetBtnClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
   private
-    FNoGroupsAllowed: Boolean;
+    FGroupsNeeded: Boolean;
 
   protected
     GrpVar: Integer;
@@ -67,7 +67,7 @@ type
   public
     FReportFrame: TReportFrame;
     FChartFrame: TChartFrame;
-    property NoGroupsAllowed: Boolean read FNoGroupsAllowed write FNoGroupsAllowed;
+    property GroupsNeeded: Boolean read FgroupsNeeded write FGroupsNeeded;
 
   end;
 
@@ -124,7 +124,7 @@ begin
     if GroupEdit.Visible and (cellstring = GroupEdit.Text) then GrpVar := i;
     if MeasEdit.Visible and (cellstring = MeasEdit.Text) then MeasVar := i;
   end;
-  if not NoGroupsAllowed and GroupEdit.Visible and (GrpVar = -1) then
+  if GroupsNeeded and GroupEdit.Visible and (GrpVar = -1) then
   begin
     GroupEdit.SetFocus;
     ErrorMsg('Group variable not found.');

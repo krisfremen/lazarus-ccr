@@ -9,6 +9,9 @@ uses
   BasicSPCUnit;
 
 type
+
+  { TRChartForm }
+
   TRChartForm = class(TBasicSPCForm)
   protected
     procedure Compute; override;

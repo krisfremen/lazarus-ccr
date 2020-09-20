@@ -98,24 +98,25 @@ begin
         grandMean := grandMean + X;
       end;
     end; // next case
-    stddev[j] := stddev[j] - sqr(means[j]) / count[j];
-    stddev[j] := stddev[j] / (count[j] - 1);
-    stddev[j] := sqrt(stddev[j]);
-    means[j] := means[j] / count[j];
-    grandSigma := grandSigma + stddev[j];
+
     grpSize := count[j];
+    if (grpSize < 2) then
+    begin
+      ErrorMsg('Groups with at least two values required.');
+      exit;
+    end;
     if j = 0 then oldGrpSize := grpSize;
     if oldGrpSize <> grpSize then
     begin
       ErrorMsg('All groups must have the same size.');
       exit;
     end;
-  end;
 
-  if (grpSize < 2) then
-  begin
-    ErrorMsg('Groups with at least two values required.');
-    exit;
+    stddev[j] := stddev[j] - sqr(means[j]) / count[j];
+    stddev[j] := stddev[j] / (count[j] - 1);
+    stddev[j] := sqrt(stddev[j]);
+    means[j] := means[j] / count[j];
+    grandSigma := grandSigma + stddev[j];
   end;
 
   seMean := seMean - sqr(grandMean)/numValues;

@@ -74,13 +74,13 @@ var
   target, stdDev, diff, grandMean, grandSD, aveSD: Double;
   delta, alpha, beta: double;
   grp: String;
-  individuals: Boolean;
+  individuals: Boolean;    // Signals that there is no "Groups" column
   UCL: Double = NaN;
   LCL: Double = NaN;
   groups: StrDyneVec = nil;
   means: DblDyneVec = nil;
   stdDevs: DblDyneVec = nil;
-  count: IntDyneVec = nil;
+//  count: Integer; //: IntDyneVec = nil;
   ColNoSelected: IntDyneVec = nil;
   lReport: TStrings;
 
@@ -104,19 +104,46 @@ begin
   grpSize := 0;
   oldGrpSize := 0;
 
-  SetLength(count, numGrps);
   SetLength(means, numGrps);
   SetLength(stdDevs, numGrps);
   grandMean := 0.0;
   grandSD := 0.0;
 
-  // Count "good" data points
+  // Count "good" data points (for grand mean and grand std dev).
   numValues := 0;
   for i := 1 to NoCases do
     if GoodRecord(i, Length(ColNoSelected), ColNoSelected) then inc(numValues);
 
-  // calculate group ranges, grand mean, group sd's, semeans
+  // Get group size
   if individuals then
+    grpSize := 1
+  else
+  begin
+    for j := 0 to numGrps - 1 do // groups
+    begin
+      grpSize := 0;
+      for i := 1 to NoCases do
+      begin
+        if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
+        grp := Trim(OS3MainFrm.DataGrid.Cells[GrpVar, i]);
+        grpIndex := IndexOfString(groups, grp);
+        if grpIndex = j then
+          inc(grpSize);
+      end; // next case
+
+      if j = 0 then
+        oldgrpSize := grpSize
+      else
+        if (oldGrpSize <> grpSize) then
+        begin
+          ErrorMsg('All groups must have the same size.');
+          exit;
+        end;
+    end; // next group
+  end;
+
+  // Calculate group ranges, grand mean, group sd's, SEMeans
+  if individuals or (grpSize < 2) then
   begin
     // x-bar chart of individual measurements, no groups
     grpIndex := 0;
@@ -126,7 +153,6 @@ begin
       if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
       X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
       Xsq := X*X;
-      count[i] := 1;
       groups[grpIndex] := IntToStr(i);
       means[grpIndex] := means[grpIndex] + X;
       if not IsNaN(prevX) then
@@ -151,21 +177,12 @@ begin
         begin
           X := StrToFloat(Trim(OS3MainFrm.DataGrid.Cells[MeasVar, i]));
           Xsq := X * X;
-          inc(count[grpIndex]);
           means[grpIndex] := means[grpIndex] + X;
           stdDevs[grpIndex] := stdDevs[grpIndex] + Xsq;
           grandMean := grandMean + X;
           grandSD := grandSD + Xsq;
         end;
       end; // next case
-
-      grpSize := count[j];
-      if j = 0 then oldgrpSize := grpSize;
-      if (oldGrpSize <> grpSize) then
-      begin
-        ErrorMsg('All groups must have the same size.');
-        exit;
-      end;
 
       stdDevs[j] := stdDevs[j] - sqr(means[j]) / grpSize;
       stdDevs[j] := stdDevs[j] / (grpSize - 1);
@@ -175,9 +192,9 @@ begin
   end;
 
   grandSD := grandSD - sqr(grandMean) / numValues;
-  grandSD := sqrt(grandSD / (numValues - 1));
-  SEMean := grandSD / sqrt(numValues);
-  grandMean := grandMean/numValues; // mean of all observations
+  grandSD := sqrt(grandSD / (numValues - 1));  // std dev of all (ungrouped) values
+  SEMean := grandSD / sqrt(numValues);         // std error of grand mean
+  grandMean := grandMean/numValues;            // grand mean of all observations
   if individuals then
   begin
     aveSD := 0;
@@ -234,7 +251,7 @@ begin
     CUSumsUpper[0] := 0; //Max(0, diff);
     SetLength(CUSumsLower, numGrps);
     FillChar(CUSumsLower[0], numGrps*SizeOf(Double), 0);
-    CUSumsLower[0] := 0; //Max(0, diff);
+    CUSumsLower[0] := 0; //Min(0, diff);
   end;
   for j := 1 to numGrps-1 do
   begin
@@ -255,7 +272,7 @@ begin
     lReport.Clear;
     lReport.Add    ('CUSUM Chart Results');
     lReport.Add    ('');
-    lReport.Add    ('Number of Values:          %8d',   [numValues]);
+    lReport.Add    ('Number of values:          %8d',   [numValues]);
     lReport.Add    ('Number of groups:          %8d',   [numGrps]);
     lReport.Add    ('Group size:                %8d',   [grpSize]);
     lReport.Add    ('');
@@ -264,10 +281,12 @@ begin
     lReport.Add    ('Standard error of Mean:    %8.3f', [SEMean]);
     lReport.Add    ('Target specification:      %8.3f', [target]);
     lReport.Add    ('Average group std dev:     %8.3f', [aveSD]);
-    lReport.Add    ('');
 
     if rbTabular.Checked then
     begin
+      lReport.Add  ('UCL:                       %8.3f', [h]);
+      lReport.Add  ('LCL:                       %8.3f', [-h]);
+      lReport.Add  ('');
       lReport.Add  ('Tabular CUSUM parameters:');
       lReport.Add  ('  k:                       %8.3f (%s sigma)', [k, kEdit.Text]);
       lReport.Add  ('  h:                       %8.3f (%s sigma)', [h, hEdit.Text]);
@@ -279,7 +298,7 @@ begin
       for i := 0 to numGrps - 1 do
       begin
         lReport.Add('%5s  %4d  %8.3f  %8.3f  %9.3f  %9.3f', [
-          groups[i], count[i], means[i], means[i]-target, CUSumsUpper[i], CUSumsLower[i]
+          groups[i], grpSize, means[i], means[i]-target, CUSumsUpper[i], CUSumsLower[i]
         ]);
       end;
     end;
@@ -288,6 +307,7 @@ begin
     begin
       if DeltaEdit.Text <> '' then
       begin
+        lReport.Add    ('');
         lReport.Add('V-Mask parameters:');
         lReport.Add('  Alpha (Type I error)     %8.3f', [alpha]);
         lReport.Add('  Beta (Type II error)     %8.3f', [beta]);
@@ -301,7 +321,7 @@ begin
       for i := 0 to numGrps - 1 do
       begin
         lReport.Add('%5s  %4d  %8.3f  %8.3f  %10.3f', [
-          groups[i], count[i], means[i], means[i]-target, cusums[i]
+          groups[i], grpSize, means[i], means[i]-target, cusums[i]
         ]);
       end;
     end;
@@ -330,8 +350,6 @@ procedure TCUSUMChartForm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  NoGroupsAllowed := true;
-
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;

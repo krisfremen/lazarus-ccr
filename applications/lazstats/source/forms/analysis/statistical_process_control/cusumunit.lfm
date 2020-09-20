@@ -433,4 +433,13 @@ inherited CUSUMChartForm: TCUSUMChartForm
       end
     end
   end
+  inherited SpecsSplitter: TSplitter
+    Left = 443
+    Height = 503
+  end
+  inherited PageControl: TPageControl
+    Left = 451
+    Height = 491
+    Width = 543
+  end
 end

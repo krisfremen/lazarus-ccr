@@ -69,8 +69,6 @@ procedure TXBarChartForm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
-  NoGroupsAllowed := true;
-
   w := MaxValue([HelpBtn.Width, ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   HelpBtn.Constraints.MinWidth := w;
   ResetBtn.Constraints.MinWidth := w;
