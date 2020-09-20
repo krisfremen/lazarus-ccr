@@ -316,14 +316,15 @@ type
     FUpdatingItems: Boolean;
     FOnClick: TNotifyEvent;
     FOnGetImageIndex: TGetImageIndexEvent;
+    FOnItemEnter: TNotifyEvent;
+    FOnItemExit: TNotifyEvent;
     FOnSelectionChanged: TNotifyEvent;
-    procedure ItemEnter(Sender: TObject);
-    procedure ItemExit(Sender: TObject);
+    procedure ItemEnter(Sender: TObject); virtual;
+    procedure ItemExit(Sender: TObject); virtual;
     procedure ItemKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); virtual;
     procedure ItemKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState); virtual;
     procedure ItemKeyPress(Sender: TObject; var Key: Char); virtual;
     procedure ItemUTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char); virtual;
-    procedure ItemResize(Sender: TObject);
     procedure SetAutoFill(const AValue: Boolean);
     procedure SetColumnLayout(const AValue: TColumnLayout);
     procedure SetColumns(const AValue: integer);
@@ -347,6 +348,8 @@ type
     property ReadOnly: Boolean read FReadOnly write SetReadOnly default false;
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
     property OnGetImageIndex: TGetImageIndexEvent read FOnGetImageIndex write SetOnGetImageIndex;
+    property OnItemEnter: TNotifyEvent read FOnItemEnter write FOnItemEnter;
+    property OnItemExit: TNotifyEvent read FOnItemExit write FOnItemExit;
     property OnSelectionChanged: TNotifyEvent read FOnSelectionChanged write FOnSelectionChanged;
   public
     constructor Create(AOwner: TComponent); override;
@@ -438,6 +441,8 @@ type
     property OnEnter;
     property OnExit;
     property OnGetImageIndex;
+    property OnItemEnter;
+    property OnItemExit;
     property OnKeyDown;
     property OnKeyPress;
     property OnKeyUp;
@@ -531,6 +536,8 @@ type
     property OnExit;
     property OnGetImageIndex;
     property OnItemClick;
+    property OnItemEnter;
+    property OnItemExit;
     property OnKeyDown;
     property OnKeyPress;
     property OnKeyUp;
@@ -1405,12 +1412,12 @@ end;
 
 procedure TCustomCheckControlGroupEx.ItemEnter(Sender: TObject);
 begin
-  DoEnter;
+  if Assigned(FOnItemEnter) then FOnItemEnter(Sender);
 end;
 
 procedure TCustomCheckControlGroupEx.ItemExit(Sender: TObject);
 begin
-  DoExit;
+  if Assigned(FOnItemExit) then FOnItemExit(Sender);
 end;
 
 procedure TCustomCheckControlGroupEx.ItemKeyDown(Sender: TObject;
@@ -1437,11 +1444,6 @@ procedure TCustomCheckControlGroupEx.ItemUTF8KeyPress(Sender: TObject;
   var UTF8Key: TUTF8Char);
 begin
   UTF8KeyPress(UTF8Key);
-end;
-
-procedure TCustomCheckControlGroupEx.ItemResize(Sender: TObject);
-begin
-  //
 end;
 
 function TCustomCheckControlGroupEx.Rows: integer;
@@ -1853,7 +1855,6 @@ begin
         OnKeyUp := @Self.ItemKeyUp;
         OnKeyPress := @Self.ItemKeyPress;
         OnUTF8KeyPress := @Self.ItemUTF8KeyPress;
-        OnResize := @Self.ItemResize;
         ParentFont := True;
         ReadOnly := Self.ReadOnly;
         BorderSpacing.CellAlignHorizontal := ccaLeftTop;
