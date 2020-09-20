@@ -12,11 +12,9 @@ unit DistribUnit;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LCLVersion, TAFuncSeries, //TAGraph, TAFuncSeries, TASeries,
-  //PrintersDlgs, LResources,
-  Forms, Controls, Graphics, Dialogs, StdCtrls,
-  //Printers,
-  ExtCtrls, ExtDlgs, ComCtrls, Math,
+  Classes, SysUtils, FileUtil, LCLVersion,
+  Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, ComCtrls, Math,
+  TAFuncSeries,
   Globals, FunctionsLib, ChartFrameUnit;
 
 type
@@ -29,10 +27,6 @@ type
     ShowCriticalValuesChk: TCheckBox;
     CumulativeChk: TCheckBox;
     tChk: TRadioButton;
-    ToolBar1: TToolBar;
-    tbSave: TToolButton;
-    tbPrint: TToolButton;
-    tbErase: TToolButton;
     ParameterPanel: TPanel;
     ChiChk: TRadioButton;
     DF1Edit: TEdit;
@@ -48,6 +42,7 @@ type
     DF1Label: TLabel;
     DF2Label: TLabel;
     GroupBox1: TGroupBox;
+    procedure CloseBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -60,19 +55,18 @@ type
     procedure CalcT(const AX: Double; out AY: Double);
     procedure CalcT_Cumulative(const AX: Double; out AY: Double);
     procedure DistributionClick(Sender: TObject);
-    procedure PrintBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure ShowCriticalValuesChkChange(Sender: TObject);
     procedure tbEraseClick(Sender: TObject);
-    procedure tbPrintClick(Sender: TObject);
-    procedure tbSaveClick(Sender: TObject);
 
   private
     { private declarations }
-    ChartFrame: TChartFrame;
+    FAutoSized: Boolean;
+    FChartFrame: TChartFrame;
     Alpha: Double;
     DF1: Integer;
     DF2: Integer;
+    tbErase: TToolButton;
     procedure AddSeries(ATitle: string; XMin, XMax: Double;
       xCrit, yCrit: Double; Cumulative: Boolean; ACalcFunc: TFuncCalculateEvent);
     procedure NormalDistPlot;
@@ -95,10 +89,11 @@ implementation
 
 uses
   TAChartUtils, TALegend, TASeries,
-  MathUnit;
+  MathUnit, Utils;
 
 const
   P_LIMIT = 0.9999;
+
 
 { TDistribFrm }
 
@@ -112,14 +107,14 @@ var
   allCumulative: Boolean;
   allDensity: Boolean;
 begin
-  funcSer := TFuncSeries.Create(ChartFrame);
+  funcSer := TFuncSeries.Create(FChartFrame);
   funcSer.OnCalculate := ACalcFunc;
   funcSer.ExtentAutoY := true;
   funcSer.Extent.XMin := XMin;
   funcSer.Extent.XMax := XMax;
   funcSer.Extent.UseXMin := true;
   funcSer.Extent.UseXMax := true;
-  funcSer.Pen.Color := DATA_COLORS[(ChartFrame.Chart.SeriesCount div 3) mod Length(DATA_COLORS)];
+  funcSer.Pen.Color := DATA_COLORS[(FChartFrame.Chart.SeriesCount div 3) mod Length(DATA_COLORS)];
   funcSer.Title := ATitle;
   if Cumulative then funcSer.Tag := 1;
   if XMin = 0 then
@@ -127,13 +122,13 @@ begin
       -Infinity, 0
       {$IF LCL_FullVersion >= 2010000}, [ioOpenEnd] {$IFEND}
     );
-  ChartFrame.Chart.AddSeries(funcSer);
+  FChartFrame.Chart.AddSeries(funcSer);
 
   if Cumulative then
     yCrit := 1.0 - Alpha;
 
   // vertical indicator
-  vertSer := TLineSeries.Create(ChartFrame);
+  vertSer := TLineSeries.Create(FChartFrame);
   vertSer.LinePen.Color := funcSer.Pen.Color;
   vertSer.LinePen.Style := psDot;
   vertser.Legend.Visible := false;
@@ -141,10 +136,10 @@ begin
   vertSer.AddXY(xCrit, 0);
   if Cumulative then vertSer.Tag := 1;
   vertSer.Active := ShowCriticalValuesChk.Checked;
-  ChartFrame.Chart.AddSeries(vertSer);
+  FChartFrame.Chart.AddSeries(vertSer);
 
   // horizontal indicator
-  horSer := TLineSeries.Create(ChartFrame);
+  horSer := TLineSeries.Create(FChartFrame);
   horSer.LinePen.Color := funcSer.Pen.Color;
   horSer.LinePen.Style := psDot;
   horSer.Legend.Visible := false;
@@ -152,36 +147,39 @@ begin
   horSer.AddXY(xCrit, yCrit);
   if Cumulative then horSer.Tag := 1;
   horSer.Active := ShowCriticalValuesChk.Checked and Cumulative;
-  ChartFrame.Chart.AddSeries(horSer);
+  FChartFrame.Chart.AddSeries(horSer);
 
-  ext := ChartFrame.Chart.GetFullExtent();
+  ext := FChartFrame.Chart.GetFullExtent();
   i := 2;
-  while i < ChartFrame.Chart.SeriesCount do
+  while i < FChartFrame.Chart.SeriesCount do
   begin
-    (ChartFrame.Chart.Series[i] as TLineSeries).XValue[0] := ext.a.x;
+    (FChartFrame.Chart.Series[i] as TLineSeries).XValue[0] := ext.a.x;
     inc(i, 3);
   end;
 
   allCumulative := true;
   allDensity := true;
   i := 0;
-  while i < ChartFrame.Chart.SeriesCount-1 do
+  while i < FChartFrame.Chart.SeriesCount-1 do
   begin
-    case ChartFrame.Chart.Series[i].Tag of
+    case FChartFrame.Chart.Series[i].Tag of
       0: allCumulative := false;
       1: allDensity := false;
     end;
     inc(i);
   end;
   if allCumulative then
-    ChartFrame.SetYTitle('Cumulative Probability')
+    FChartFrame.SetYTitle('Cumulative Probability')
   else
   if allDensity then
-    ChartFrame.SetYTitle('Probability Density')
+    FChartFrame.SetYTitle('Probability Density')
   else
-    ChartFrame.SetYTitle('Probability Density, Cumulative Probability');
-  ChartFrame.SetXTitle('x Value');
-  ChartFrame.Chart.Legend.Visible := true;
+    FChartFrame.SetYTitle('Probability Density, Cumulative Probability');
+  FChartFrame.SetXTitle('x Value');
+  FChartFrame.Chart.Legend.Visible := true;
+
+  FChartFrame.UpdateBtnStates;
+  tbErase.Enabled := true;
 end;
 
 
@@ -195,7 +193,8 @@ begin
   DF1Edit.Text := '';
   DF2Edit.Text := '';
   GroupBox2.Enabled := false;
-  ChartFrame.Clear;
+  FChartFrame.Clear;
+  tbErase.Enabled := false;
 end;
 
 
@@ -209,33 +208,37 @@ var
   i: Integer;
 begin
   i := 1;
-  while i < ChartFrame.Chart.SeriesCount do
+  while i < FChartFrame.Chart.SeriesCount do
   begin
-    ChartFrame.Chart.Series[i].Active := ShowCriticalValuesChk.Checked;
-    ChartFrame.Chart.Series[i+1].Active := ShowCriticalValuesChk.Checked;
+    FChartFrame.Chart.Series[i].Active := ShowCriticalValuesChk.Checked;
+    FChartFrame.Chart.Series[i+1].Active := ShowCriticalValuesChk.Checked;
     inc(i, 3);
   end;
 end;
 
 
+// Calculates a value of the F distribution density
 procedure TDistribFrm.CalcF(const AX: Double; out AY: Double);
 begin
   AY := FDensity(AX, DF1, DF2);
 end;
 
 
+// Calculates a value of the cumulative F distribution
 procedure TDistribFrm.CalcF_Cumulative(const AX: Double; out AY: Double);
 begin
   AY := 1.0 - ProbF(AX, DF1, DF2);
 end;
 
 
+// Calculates a value of the normal distribution density
 procedure TDistribFrm.CalcND(const AX: Double; out AY: Double);
 begin
   AY := 1.0 / sqrt(TWO_PI) * exp(-sqr(AX)/ 2.0);
 end;
 
 
+// Calculates a value of the cumulative normal distribution
 procedure TDistribFrm.CalcND_Cumulative(const AX: Double; out AY: Double);
 begin
   // AY := ProbZ(AX);  -- very slow
@@ -243,24 +246,28 @@ begin
 end;
 
 
+// Calculates a value of the chi2 t distribution density
 procedure TDistribFrm.CalcChi2(const AX: Double; out AY: Double);
 begin
   AY := Chi2Density(AX, DF1);
 end;
 
 
+// Calculates a value of the cumulative chi2 distribution
 procedure TDistribFrm.CalcChi2_Cumulative(const AX: Double; out AY: Double);
 begin
   AY := ChiSquaredProb(AX, DF1);
 end;
 
 
+// Calculates a value of the t distribution density
 procedure TDistribFrm.Calct(const AX: Double; out AY: Double);
 begin
   AY := tDensity(AX, DF1);
 end;
 
 
+// Calculates a value of the cumulative t distribution
 procedure TDistribFrm.CalcT_Cumulative(const AX: Double; out AY: Double);
 const
   ONE_SIDED = true;
@@ -288,12 +295,6 @@ begin
 
   DF2Edit.Enabled := (rb = FChk) and rb.Checked;
   DF2Label.Enabled := DF2Edit.Enabled;
-end;
-
-
-procedure TDistribFrm.PrintBtnClick(Sender: TObject);
-begin
-  ChartFrame.Print;
 end;
 
 
@@ -340,6 +341,13 @@ begin
 end;
 
 
+procedure TDistribFrm.CloseBtnClick(Sender: TObject);
+begin
+  Close;
+end;
+
+
+// Plots the normal distribution
 procedure TDistribFrm.NormalDistPlot;
 var
   zMax, zMin, zCrit, pCrit: Double;
@@ -360,6 +368,7 @@ begin
 end;
 
 
+// Plots the Chi2 distribution
 procedure TDistribFrm.Chi2Plot;
 var
   chi2Max, chi2Crit, pCrit: Double;
@@ -379,6 +388,7 @@ begin
 end;
 
 
+// Plots the F distribution
 procedure TDistribFrm.FPlot;
 var
   FMax, FCrit, pCrit: Double;
@@ -398,6 +408,7 @@ begin
 end;
 
 
+// Plots Student's t disbribution
 procedure TDistribFrm.tPlot;
 var
   tMin, tMax, tCrit, pCrit: Double;
@@ -422,6 +433,9 @@ procedure TDistribFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
 begin
+  if FAutoSized then
+    exit;
+
   w := MaxValue([ResetBtn.Width, ComputeBtn.Width, CloseBtn.Width]);
   ResetBtn.Constraints.MinWidth := w;
   ComputeBtn.Constraints.MinWidth := w;
@@ -431,18 +445,30 @@ begin
     ShowCriticalValuesChk.Top + ShowCriticalValuesChk.Height + 16 +
     CloseBtn.Height + CloseBtn.BorderSpacing.Bottom;
   Constraints.MinWidth := ParameterPanel.Width * 2;
+
+  Position := poDefault;
+  FAutoSized := true;
 end;
 
 procedure TDistribFrm.FormCreate(Sender: TObject);
 begin
-  ChartFrame := TChartFrame.Create(self);
-  ChartFrame.Parent := ChartPanel;
-  ChartFrame.Align := alClient;
-  ChartFrame.Chart.Legend.Alignment := laBottomCenter;
-  ChartFrame.Chart.Legend.ColumnCount := 3;
-  ChartFrame.Chart.Legend.TextFormat := tfHTML;
-  ChartFrame.Chart.BottomAxis.Intervals.MaxLength := 80;
-  ChartFrame.Chart.BottomAxis.Intervals.MinLength := 30;
+  FChartFrame := TChartFrame.Create(self);
+  FChartFrame.Parent := ChartPanel;
+  FChartFrame.Align := alClient;
+  FChartFrame.Chart.Legend.Alignment := laBottomCenter;
+  FChartFrame.Chart.Legend.ColumnCount := 3;
+  FChartFrame.Chart.Legend.TextFormat := tfHTML;
+  FChartFrame.Chart.BottomAxis.Intervals.MaxLength := 80;
+  FChartFrame.Chart.BottomAxis.Intervals.MinLength := 30;
+  FChartFrame.ChartToolbar.Transparent := false;
+  FChartFrame.ChartToolbar.Color := clForm;
+
+  tbErase := TToolButton.Create(self);
+  tbErase.ImageIndex := 6;
+  tbErase.Caption := 'Erase';
+  tbErase.Hint := 'Clear chart';
+  tbErase.OnClick := @tbEraseClick;
+  AddButtonToToolbar(tbErase, FChartFrame.ChartToolBar);
 
   Reset;
 end;
@@ -450,19 +476,8 @@ end;
 
 procedure TDistribFrm.tbEraseClick(Sender: TObject);
 begin
-  ChartFrame.Clear;
-end;
-
-
-procedure TDistribFrm.tbPrintClick(Sender: TObject);
-begin
-  ChartFrame.Print;
-end;
-
-
-procedure TDistribFrm.tbSaveClick(Sender: TObject);
-begin
-  ChartFrame.Save;
+  FChartFrame.Clear;
+  tbErase.Enabled := false;
 end;
 
 

@@ -1,7 +1,7 @@
 object DistribFrm: TDistribFrm
-  Left = 338
+  Left = 398
   Height = 428
-  Top = 215
+  Top = 241
   Width = 948
   HelpType = htKeyword
   HelpKeyword = 'html/DistributionPlotsandCriticalValu.htm'
@@ -17,17 +17,18 @@ object DistribFrm: TDistribFrm
     AnchorSideLeft.Control = ParameterPanel
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = ToolBar1
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 235
     Height = 411
     Top = 8
-    Width = 677
+    Width = 705
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    BorderSpacing.Right = 6
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 9
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -267,6 +268,7 @@ object DistribFrm: TDistribFrm
       BorderSpacing.Bottom = 8
       Caption = 'Close'
       ModalResult = 11
+      OnClick = CloseBtnClick
       TabOrder = 3
     end
     object ComputeBtn: TButton
@@ -301,50 +303,6 @@ object DistribFrm: TDistribFrm
       Caption = 'Reset'
       OnClick = ResetBtnClick
       TabOrder = 5
-    end
-  end
-  object ToolBar1: TToolBar
-    AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 918
-    Height = 420
-    Top = 8
-    Width = 24
-    Align = alNone
-    Anchors = [akTop, akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 6
-    Caption = 'ToolBar1'
-    EdgeBorders = []
-    Images = MainDataModule.ImageList
-    TabOrder = 2
-    object tbSave: TToolButton
-      Left = 1
-      Hint = 'Save chart to file'
-      Top = 0
-      Caption = 'tbSave'
-      ImageIndex = 4
-      OnClick = tbSaveClick
-    end
-    object tbPrint: TToolButton
-      Left = 1
-      Hint = 'Print chart'
-      Top = 22
-      Caption = 'tbPrint'
-      ImageIndex = 5
-      OnClick = tbPrintClick
-    end
-    object tbErase: TToolButton
-      Left = 1
-      Hint = 'Erase chart'
-      Top = 44
-      Caption = 'tbErase'
-      ImageIndex = 6
-      OnClick = tbEraseClick
     end
   end
 end

@@ -5,8 +5,10 @@ unit Utils;
 interface
 
 uses
-  Classes, SysUtils, StdCtrls, Dialogs,
+  Classes, SysUtils, StdCtrls, ComCtrls, Dialogs,
   Globals;
+
+procedure AddButtonToToolbar(AToolButton: TToolButton; AToolBar: TToolBar);
 
 function AnySelected(AListbox: TListBox): Boolean;
 
@@ -24,6 +26,20 @@ function IndexOfString(L: StrDyneVec; s: String): Integer;
 
 
 implementation
+
+// https://stackoverflow.com/questions/4093595/create-ttoolbutton-runtime
+procedure AddButtonToToolbar(AToolButton: TToolButton; AToolBar: TToolBar);
+var
+  lastBtnIdx: integer;
+begin
+  lastBtnIdx := AToolBar.ButtonCount - 1;
+  if lastBtnIdx > -1 then
+    AToolButton.Left := AToolBar.Buttons[lastBtnIdx].Left + AToolBar.Buttons[lastBtnIdx].Width
+  else
+    AToolButton.Left := 0;
+  AToolButton.Parent := AToolBar;
+end;
+
 
 function AnySelected(AListBox: TListBox): Boolean;
 var
