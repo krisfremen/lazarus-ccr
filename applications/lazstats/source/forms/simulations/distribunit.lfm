@@ -10,7 +10,6 @@ object DistribFrm: TDistribFrm
   ClientWidth = 948
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poMainFormCenter
   ShowHint = True
   LCLVersion = '2.1.0.0'

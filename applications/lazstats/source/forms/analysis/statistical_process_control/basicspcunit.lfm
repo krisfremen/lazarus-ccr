@@ -8,7 +8,7 @@ object BasicSPCForm: TBasicSPCForm
   ClientWidth = 927
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
+  Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object SpecsPanel: TPanel
     Left = 8

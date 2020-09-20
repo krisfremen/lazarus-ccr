@@ -35,7 +35,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
@@ -53,6 +52,7 @@ type
 
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -77,7 +77,7 @@ const
 
 { TBoxPlotFrm }
 
-procedure TBoxPlotFrm.ResetBtnClick(Sender: TObject);
+procedure TBoxPlotFrm.Reset;
 var
   i: integer;
 begin
@@ -88,6 +88,11 @@ begin
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
 end;
 
+
+procedure TBoxPlotFrm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
+end;
 
 procedure TBoxPlotFrm.VarListClick(Sender: TObject);
 var
@@ -365,12 +370,7 @@ end;
 procedure TBoxPlotFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
-end;
-
-
-procedure TBoxPlotFrm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
+  Reset;
 end;
 
 

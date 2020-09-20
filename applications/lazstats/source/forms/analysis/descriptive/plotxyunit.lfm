@@ -11,7 +11,6 @@ object PlotXYFrm: TPlotXYFrm
   ClientWidth = 490
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object Label1: TLabel

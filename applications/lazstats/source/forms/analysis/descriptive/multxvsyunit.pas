@@ -48,7 +48,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure GroupInBtnClick(Sender: TObject);
     procedure GroupOutBtnClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
@@ -71,6 +70,7 @@ type
 
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -92,7 +92,7 @@ uses
 
 { TMultXvsYFrm }
 
-procedure TMultXvsYFrm.ResetBtnClick(Sender: TObject);
+procedure TMultXvsYFrm.Reset;
 var
   i : integer;
 begin
@@ -105,6 +105,12 @@ begin
   DescChk.Checked := false;
   LinesChk.Checked := false;
   UpdateBtnStates;
+end;
+
+
+procedure TMultXvsYFrm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
 end;
 
 
@@ -293,12 +299,7 @@ procedure TMultXvsYFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if DictionaryFrm = nil then Application.CreateForm(TDictionaryFrm, DictionaryFrm);
-end;
-
-
-procedure TMultXvsYFrm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
+  Reset;
 end;
 
 

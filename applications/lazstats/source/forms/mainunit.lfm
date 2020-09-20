@@ -444,75 +444,75 @@ object OS3MainFrm: TOS3MainFrm
     end
     object mnuAnalysis: TMenuItem
       Caption = 'Analyses'
-      object MenuItem32: TMenuItem
+      object mnuAnalysisDescr: TMenuItem
         Caption = 'Descriptive'
-        object Distributions: TMenuItem
+        object mnuAnalysisDescr_DistribStats: TMenuItem
           Caption = 'Distribution Statistics'
-          OnClick = DistributionsClick
+          OnClick = mnuAnalysisDescr_DistribStatsClick
         end
-        object FreqAnal: TMenuItem
+        object mnuAnalysisDescr_Freq: TMenuItem
           Caption = 'Frequency Analysis'
-          OnClick = FreqAnalClick
+          OnClick = mnuAnalysisDescr_FreqClick
         end
-        object GrpFreq: TMenuItem
+        object mnuAnalysisDescr_GrpFreq: TMenuItem
           Caption = 'Plot Group Frequencies'
-          OnClick = GrpFreqClick
+          OnClick = mnuAnalysisDescr_GrpFreqClick
         end
-        object CrossTabs: TMenuItem
+        object mnuAnalysisDescr_CrossTabs: TMenuItem
           Caption = 'Cross Tabulation'
-          OnClick = CrossTabsClick
+          OnClick = mnuAnalysisDescr_CrossTabsClick
         end
-        object Breakdown: TMenuItem
-          Caption = 'Breakdown'
-          OnClick = BreakdownClick
+        object mnuAnalysisDescr_Breakdown: TMenuItem
+          Caption = 'mnuAnalysisDescr_Breakdown'
+          OnClick = mnuAnalysisDescr_BreakdownClick
         end
-        object BoxPlot: TMenuItem
+        object mnuAnalysisDescr_BoxPlot: TMenuItem
           Caption = 'Box Plot'
-          OnClick = BoxPlotClick
+          OnClick = mnuAnalysisDescr_BoxPlotClick
         end
-        object NormalityTests: TMenuItem
+        object mnuAnalysisDescr_Normality: TMenuItem
           Caption = 'Normality Tests'
-          OnClick = NormalityTestsClick
+          OnClick = mnuAnalysisDescr_NormalityClick
         end
-        object ThreeDRotate: TMenuItem
+        object mnuAnalysisDescr_ThreeDRotate: TMenuItem
           Caption = '3-D Variable Rotation'
-          OnClick = ThreeDRotateClick
+          OnClick = mnuAnalysisDescr_ThreeDRotateClick
         end
-        object PlotXvsY: TMenuItem
+        object mnuAnalysisDescr_PlotXvsY: TMenuItem
           Caption = 'Plot X vs Y'
-          OnClick = PlotXvsYClick
+          OnClick = mnuAnalysisDescr_PlotXvsYClick
         end
-        object BubblePlot: TMenuItem
+        object mnuAnalysisDescr_BubblePlot: TMenuItem
           Caption = 'Repeated Measures Bubble Plot'
-          OnClick = BubblePlotClick
+          OnClick = mnuAnalysisDescr_BubblePlotClick
         end
-        object StemLeaf: TMenuItem
+        object mnuAnalysisDescr_StemLeaf: TMenuItem
           Caption = 'Stem and Leaf Plot'
-          OnClick = StemLeafClick
+          OnClick = mnuAnalysisDescr_StemLeafClick
         end
-        object MultXvsY: TMenuItem
+        object mnuAnalysisDescr_MultXvsY: TMenuItem
           Caption = 'Multiple Group X vs Y Plot'
-          OnClick = MultXvsYClick
+          OnClick = mnuAnalysisDescr_MultXvsYClick
         end
-        object XvsMultY: TMenuItem
+        object mnuAnalysisDescr_XvsMultY: TMenuItem
           Caption = 'X versus Multiple Y Plot'
-          OnClick = XvsMultYClick
+          OnClick = mnuAnalysisDescr_XvsMultYClick
         end
-        object CompareDists: TMenuItem
+        object mnuAnalysisDescr_CompareDists: TMenuItem
           Caption = 'Compare Distributions'
-          OnClick = CompareDistsClick
+          OnClick = mnuAnalysisDescr_CompareDistsClick
         end
-        object ResistanceLine: TMenuItem
+        object mnuAnalysisDescr_ResistanceLine: TMenuItem
           Caption = 'Resistant Line for Bivariate Data'
-          OnClick = ResistanceLineClick
+          OnClick = mnuAnalysisDescr_ResistanceLineClick
         end
-        object DataSmooth: TMenuItem
+        object mnuAnalysisDescr_DataSmooth: TMenuItem
           Caption = 'Data Smoothing'
-          OnClick = DataSmoothClick
+          OnClick = mnuAnalysisDescr_DataSmoothClick
         end
-        object homotest: TMenuItem
+        object mnuAnalysisDescr_HomogeneityTest: TMenuItem
           Caption = 'Brown-Forsythe Test for Homogeneity of Variance'
-          OnClick = homotestClick
+          OnClick = mnuAnalysisDescr_HomogeneityTestClick
         end
       end
       object OneSampTests: TMenuItem

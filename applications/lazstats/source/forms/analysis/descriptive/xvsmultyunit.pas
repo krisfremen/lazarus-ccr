@@ -61,6 +61,7 @@ type
     procedure UpdateBtnStates;
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -81,7 +82,7 @@ uses
 
 { TXvsMultYForm }
 
-procedure TXvsMultYForm.ResetBtnClick(Sender: TObject);
+procedure TXvsMultYForm.Reset;
 var
   i: integer;
 begin
@@ -95,6 +96,11 @@ begin
   PlotTitleEdit.Text := '';
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+end;
+
+procedure TXvsMultYForm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
 end;
 
 procedure TXvsMultYForm.VarListSelectionChange(Sender: TObject; User: boolean);
@@ -269,6 +275,7 @@ end;
 procedure TXvsMultYForm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
+  Reset;
 end;
 
 

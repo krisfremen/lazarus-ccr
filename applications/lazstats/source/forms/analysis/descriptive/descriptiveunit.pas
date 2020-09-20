@@ -41,7 +41,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure InBtnClick(Sender: TObject);
     procedure OutBtnClick(Sender: TObject);
@@ -58,6 +57,7 @@ type
 
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -120,12 +120,8 @@ begin
   FReportFrame.Align := alClient;
   FReportFrame.ReportToolBar.Align := alRight;
   FReportFrame.ReportToolbar.EdgeBorders := [];
-end;
 
-
-procedure TDescriptiveFrm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
+  Reset;
 end;
 
 
@@ -449,7 +445,7 @@ begin
   UpdateBtnStates;
 end;
 
-procedure TDescriptiveFrm.ResetBtnClick(Sender: TObject);
+procedure TDescriptiveFrm.Reset;
 var
   i: integer;
 begin
@@ -460,6 +456,11 @@ begin
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   UpdateBtnStates;
   FReportFrame.Clear;
+end;
+
+procedure TDescriptiveFrm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
 end;
 
 procedure TDescriptiveFrm.UpdateBtnStates;

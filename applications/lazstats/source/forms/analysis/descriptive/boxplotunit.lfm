@@ -11,7 +11,6 @@ object BoxPlotFrm: TBoxPlotFrm
   ClientWidth = 361
   OnActivate = FormActivate
   OnCreate = FormCreate
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object CloseBtn: TButton

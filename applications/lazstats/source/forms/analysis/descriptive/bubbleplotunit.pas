@@ -52,7 +52,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
     procedure IDInBtnClick(Sender: TObject);
     procedure IDOutBtnClick(Sender: TObject);
@@ -74,6 +73,7 @@ type
     procedure UpdateBtnStates;
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -392,12 +392,7 @@ procedure TBubbleForm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
   if DictionaryFrm = nil then Application.CreateForm(TDictionaryFrm, DictionaryFrm);
-end;
-
-
-procedure TBubbleForm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
+  Reset;
 end;
 
 
@@ -619,7 +614,7 @@ end;
 {$ENDIF}
 
 
-procedure TBubbleForm.ResetBtnClick(Sender: TObject);
+procedure TBubbleForm.Reset;
 var
   i: integer;
 begin
@@ -631,6 +626,12 @@ begin
   for i := 1 to NoVariables do
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   UpdateBtnStates;
+end;
+
+
+procedure TBubbleForm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
 end;
 
 

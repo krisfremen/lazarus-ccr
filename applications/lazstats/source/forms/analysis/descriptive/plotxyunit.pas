@@ -41,7 +41,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure VarListSelectionChange(Sender: TObject; User: boolean);
     procedure XinBtnClick(Sender: TObject);
@@ -64,6 +63,7 @@ type
       Xcol,Ycol: Integer): Boolean;
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -85,7 +85,7 @@ uses
 
 { TPlotXYFrm }
 
-procedure TPlotXYFrm.ResetBtnClick(Sender: TObject);
+procedure TPlotXYfrm.Reset;
 var
   i: integer;
 begin
@@ -101,6 +101,13 @@ begin
     VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
   UpdateBtnStates;
 end;
+
+
+procedure TPlotXYFrm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
+end;
+
 
 procedure TPlotXYFrm.XinBtnClick(Sender: TObject);
 var
@@ -146,11 +153,6 @@ begin
     YEdit.Text := '';
     UpdateBtnStates;
   end;
-end;
-
-procedure TPlotXYFrm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
 end;
 
 procedure TPlotXYFrm.ComputeBtnClick(Sender: TObject);
@@ -341,6 +343,7 @@ end;
 procedure TPlotXYFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
+  Reset;
 end;
 
 

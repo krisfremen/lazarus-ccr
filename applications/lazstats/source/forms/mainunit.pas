@@ -164,18 +164,14 @@ type
     MenuItem31: TMenuItem;
     MenuItem33: TMenuItem;
     GenKappa: TMenuItem;
-    CompareDists: TMenuItem;
     MatManMnu: TMenuItem;
     GrdBkMnu: TMenuItem;
     BinA: TMenuItem;
     BartlettTest: TMenuItem;
-    GrpFreq: TMenuItem;
     Correspondence: TMenuItem;
     KSTest: TMenuItem;
     MedianPolish: TMenuItem;
-    DataSmooth: TMenuItem;
     ItemBankMenuItem: TMenuItem;
-    homotest: TMenuItem;
     lifetable: TMenuItem;
     LSMRitem: TMenuItem;
     MenuItem42: TMenuItem;
@@ -189,9 +185,7 @@ type
     SimpChiSqr: TMenuItem;
     SRHItem: TMenuItem;
     OneCaseAnova: TMenuItem;
-    ResistanceLine: TMenuItem;
     Sens: TMenuItem;
-    XvsMultY: TMenuItem;
     RunsTest: TMenuItem;
     NestedABC: TMenuItem;
     PicView: TMenuItem;
@@ -242,7 +236,6 @@ type
     Label1: TLabel;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
-    MenuItem32: TMenuItem;
     OneSampTests: TMenuItem;
     MenuItem34: TMenuItem;
     MenuItem35: TMenuItem;
@@ -251,17 +244,26 @@ type
     MenuItem38: TMenuItem;
     MenuItem39: TMenuItem;
     MenuItem40: TMenuItem;
-    Distributions: TMenuItem;
-    FreqAnal: TMenuItem;
-    CrossTabs: TMenuItem;
-    Breakdown: TMenuItem;
-    BoxPlot: TMenuItem;
-    NormalityTests: TMenuItem;
-    ThreeDRotate: TMenuItem;
-    PlotXvsY: TMenuItem;
-    BubblePlot: TMenuItem;
-    StemLeaf: TMenuItem;
-    MultXvsY: TMenuItem;
+
+    mnuAnalysisDescr: TMenuItem;
+    mnuAnalysisDescr_Breakdown: TMenuItem;
+    mnuAnalysisDescr_BoxPlot: TMenuItem;
+    mnuAnalysisDescr_BubblePlot: TMenuItem;
+    mnuAnalysisDescr_CompareDists: TMenuItem;
+    mnuAnalysisDescr_CrossTabs: TMenuItem;
+    mnuAnalysisDescr_DataSmooth: TMenuItem;
+    mnuAnalysisDescr_DistribStats: TMenuItem;
+    mnuAnalysisDescr_Freq: TMenuItem;
+    mnuAnalysisDescr_GrpFreq: TMenuItem;
+    mnuAnalysisDescr_HomogeneityTest: TMenuItem;
+    mnuAnalysisDescr_MultXvsY: TMenuItem;
+    mnuAnalysisDescr_Normality: TMenuItem;
+    mnuAnalysisDescr_PlotXvsY: TMenuItem;
+    mnuAnalysisDescr_ResistanceLine: TMenuItem;
+    mnuAnalysisDescr_StemLeaf: TMenuItem;
+    mnuAnalysisDescr_ThreeDRotate: TMenuItem;
+    mnuAnalysisDescr_XvsMultY: TMenuItem;
+
     PropDiff: TMenuItem;
     CorrDiff: TMenuItem;
     ttests: TMenuItem;
@@ -283,6 +285,25 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
+
+    // Menu "Analysis" / "Descriptive"
+    procedure mnuAnalysisDescr_BoxPlotClick(Sender: TObject);
+    procedure mnuAnalysisDescr_BreakdownClick(Sender: TObject);
+    procedure mnuAnalysisDescr_BubblePlotClick(Sender: TObject);
+    procedure mnuAnalysisDescr_CompareDistsClick(Sender: TObject);
+    procedure mnuAnalysisDescr_CrossTabsClick(Sender: TObject);
+    procedure mnuAnalysisDescr_DataSmoothClick(Sender: TObject);
+    procedure mnuAnalysisDescr_DistribStatsClick(Sender: TObject);
+    procedure mnuAnalysisDescr_FreqClick(Sender: TObject);
+    procedure mnuAnalysisDescr_GrpFreqClick(Sender: TObject);
+    procedure mnuAnalysisDescr_HomogeneityTestClick(Sender: TObject);
+    procedure mnuAnalysisDescr_MultXvsYClick(Sender: TObject);
+    procedure mnuAnalysisDescr_NormalityClick(Sender: TObject);
+    procedure mnuAnalysisDescr_PlotXvsYClick(Sender: TObject);
+    procedure mnuAnalysisDescr_ResistanceLineClick(Sender: TObject);
+    procedure mnuAnalysisDescr_StemLeafClick(Sender: TObject);
+    procedure mnuAnalysisDescr_ThreeDRotateClick(Sender: TObject);
+    procedure mnuAnalysisDescr_XvsMultYClick(Sender: TObject);
 
     // Menu 'Analysis" / "Statistical Process Control"
     procedure mnuAnalysisSPC_CChartClick(Sender: TObject);
@@ -373,26 +394,16 @@ type
     procedure AxSAnovaClick(Sender: TObject);
     procedure BartlettTestClick(Sender: TObject);
     procedure BinAClick(Sender: TObject);
-    procedure BoxPlotClick(Sender: TObject);
-    procedure BreakdownClick(Sender: TObject);
-    procedure BubblePlotClick(Sender: TObject);
-    procedure CompareDistsClick(Sender: TObject);
     procedure CorrDiffClick(Sender: TObject);
     procedure CorrespondenceClick(Sender: TObject);
-    procedure CrossTabsClick(Sender: TObject);
     procedure DataGridClick(Sender: TObject);
     procedure DataGridKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     procedure DataGridKeyPress(Sender: TObject; var Key: char);
     procedure DataGridPrepareCanvas(sender: TObject; aCol, {%H-}aRow: Integer; {%H-}aState: TGridDrawState);
-    procedure DataSmoothClick(Sender: TObject);
-    procedure DistributionsClick(Sender: TObject);
-    procedure FreqAnalClick(Sender: TObject);
     procedure GenKappaClick(Sender: TObject);
     procedure GLMClick(Sender: TObject);
     procedure GrdBkMnuClick(Sender: TObject);
-    procedure GrpFreqClick(Sender: TObject);
     //procedure HelpContentsClick(Sender: TObject);
-    procedure homotestClick(Sender: TObject);
     procedure ItemBankMenuItemClick(Sender: TObject);
     procedure KSTestClick(Sender: TObject);
     procedure LatinSquaresClick(Sender: TObject);
@@ -452,28 +463,21 @@ type
     procedure MenuItem97Click(Sender: TObject);
     procedure MenuItem98Click(Sender: TObject);
     procedure MenuItem99Click(Sender: TObject);
-    procedure MultXvsYClick(Sender: TObject);
     procedure NestedABCClick(Sender: TObject);
-    procedure NormalityTestsClick(Sender: TObject);
     procedure OneCaseAnovaClick(Sender: TObject);
     procedure OneSampTestsClick(Sender: TObject);
 //    procedure PicViewClick(Sender: TObject);
-    procedure PlotXvsYClick(Sender: TObject);
     procedure PropDiffClick(Sender: TObject);
-    procedure ResistanceLineClick(Sender: TObject);
     procedure RiditAnalysisClick(Sender: TObject);
     procedure RunsTestClick(Sender: TObject);
     procedure SensClick(Sender: TObject);
     procedure SimpChiSqrClick(Sender: TObject);
     procedure SRHItemClick(Sender: TObject);
-    procedure StemLeafClick(Sender: TObject);
-    procedure ThreeDRotateClick(Sender: TObject);
     procedure TTestsClick(Sender: TObject);
     procedure TwoSLSRegClick(Sender: TObject);
     procedure WghtedKappaClick(Sender: TObject);
     procedure WithinAnovaClick(Sender: TObject);
     procedure WLSRegClick(Sender: TObject);
-    procedure XvsMultYClick(Sender: TObject);
   private
     { private declarations }
    {$IFDEF USE_EXTERNAL_HELP_VIEWER}
@@ -874,28 +878,12 @@ begin
   SpBrFrm.ShowModal;
 end;
 
-//Menu "Analysis" > "Descriptive" > "Multiple Group X vs Y Plot"
-procedure TOS3MainFrm.MultXvsYClick(Sender: TObject);
-begin
-  if MultXvsYFrm = nil then
-    Application.CreateForm(TMultXvsYFrm, MultXvsYFrm);
-  MultXvsYFrm.Show;
-end;
-
 // Menu "Analysis" > "Comparisons" > "ABC ANOVA with B Nested in A"
 procedure TOS3MainFrm.NestedABCClick(Sender: TObject);
 begin
   if ABCNestedForm = nil then
     Application.CreateForm(TABCNestedForm, ABCNestedForm);
   ABCNestedForm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "Normality Tests"
-procedure TOS3MainFrm.NormalityTestsClick(Sender: TObject);
-begin
-  if NormalityFrm = nil then
-    Application.CreateForm(TNormalityFrm, NormalityFrm);
-  NormalityFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Comparisons" > "2 or 3 Way ANOVA with One Case Per Cell"
@@ -915,28 +903,12 @@ begin
 end;
 
 
-// Menu "Analysis" > "Descriptive" > "Plot X vs Y"
-procedure TOS3MainFrm.PlotXvsYClick(Sender: TObject);
-begin
-  if PlotXYFrm = nil then
-    Application.CreateForm(TPlotXYFrm, PlotXYFrm);
-  PlotXYFrm.ShowModal;
-end;
-
-
 // Menu "Analysis" > "Comparisons" > "Difference beween Proportions"
 procedure TOS3MainFrm.PropDiffClick(Sender: TObject);
 begin
   if TwoPropFrm = nil then
     Application.CreateForm(TTwoPropFrm, TwoPropFrm);
   TwoPropFrm.ShowModal;
-end;
-
-procedure TOS3MainFrm.ResistanceLineClick(Sender: TObject);
-begin
-  if ResistanceLineForm = nil then
-    Application.CreateForm(TResistanceLineForm, ResistanceLineForm);
-  ResistanceLineForm.ShowModal;
 end;
 
 // Menu "Analysis" > "Nonparametric" > "RIDIT Analysis"
@@ -980,24 +952,6 @@ begin
   SRHTest.ShowModal;
 end;
 
-// Menu "Analysis" > "Descriptive" > "Stem and Leaf Plot"
-procedure TOS3MainFrm.StemLeafClick(Sender: TObject);
-begin
-  if StemLeafFrm = nil then
-    Application.CreateForm(TStemLeafFrm, StemLeafFrm);
-  StemLeafFrm.ShowModal;
-end;
-
-
-// Menu "Analysis" > "Descriptive" > "3-D Variable Rotation"
-procedure TOS3MainFrm.ThreeDRotateClick(Sender: TObject);
-begin
-  if Rot3DFrm = nil then
-    Application.CreateForm(TRot3DFrm, Rot3DFrm);
-  Rot3DFrm.ShowModal;
-end;
-
-
 // Menu "Analysis" > "Comparisons" > "t-tests"
 procedure TOS3MainFrm.TTestsClick(Sender: TObject);
 begin
@@ -1036,22 +990,6 @@ begin
   if WLSFrm = nil then
     Application.CreateForm(TWLSFrm, WLSFrm);
   WLSFrm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "X versus Multiple Y Plot"
-procedure TOS3MainFrm.XvsMultYClick(Sender: TObject);
-begin
-  if XvsMultYForm = nil then
-    Application.CreateForm(TXvsMultYForm, XvsMultYForm);
-  XvsMultYForm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "Distribution Statistics"
-procedure TOS3MainFrm.DistributionsClick(Sender: TObject);
-begin
-  if DescriptiveFrm = nil then
-    Application.CreateForm(TDescriptiveFrm, DescriptiveFrm);
-  DescriptiveFrm.Show;
 end;
 
 
@@ -1119,14 +1057,6 @@ begin
   DataGrid.Canvas.Textstyle := ts;
 end;
 
-// Menu "Analysis" > "Descriptive" > "Data Smoothing"
-procedure TOS3MainFrm.DataSmoothClick(Sender: TObject);
-begin
-  if DataSmoothingForm = nil then
-    Application.CreateForm(TDataSmoothingForm, DataSmoothingForm);
-  DataSmoothingForm.ShowModal;
-end;
-
 procedure TOS3MainFrm.DataGridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
@@ -1160,38 +1090,6 @@ begin
      ColEdit.Text := IntToStr(DataGrid.ColCount - 1);
      if ((PrevCol <> y) or (PrevRow <> x)) then
           if DataGrid.Cells[PrevCol,PrevRow] <> '' then FormatCell(PrevCol,PrevRow);
-end;
-
-// Menu "Analysis" > "Descriptive" > "Compare Distributions"
-procedure TOS3MainFrm.CompareDistsClick(Sender: TObject);
-begin
-  if CompareDistFrm = nil then
-    Application.CreateForm(TCompareDistFrm, CompareDistFrm);
-  CompareDistFrm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "Breakdown"
-procedure TOS3MainFrm.BreakdownClick(Sender: TObject);
-begin
-  if BreakDownFrm = nil then
-    Application.CreateForm(TBreakDownFrm, BreakDownFrm);
-  BreakDownFrm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "Repeated Measures Bubble Plot"
-procedure TOS3MainFrm.BubblePlotClick(Sender: TObject);
-begin
-  if BubbleForm = nil then
-    Application.CreateForm(TBubbleForm, BubbleForm);
-  BubbleForm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "Box Plot"
-procedure TOS3MainFrm.BoxPlotClick(Sender: TObject);
-begin
-  if BoxPlotFrm = nil then
-    Application.CreateForm(TBoxPlotFrm, BoxPlotFrm);
-  BoxPlotFrm.ShowModal;
 end;
 
 // Menu "Analysis" > "Comparisons" > "1,2 or 3 Way ANOVAs"
@@ -1256,14 +1154,6 @@ begin
   if CorrespondenceForm = nil then
     Application.CreateForm(TCorrespondenceForm, CorrespondenceForm);
   CorrespondenceForm.ShowModal;
-end;
-
-// Menu "Analysis" > "Descriptive" > "Cross tabulation"
-procedure TOS3MainFrm.CrossTabsClick(Sender: TObject);
-begin
-  if CrossTabFrm = nil then
-    Application.CreateForm(TCrossTabFrm, CrossTabFrm);
-  CrossTabFrm.ShowModal;
 end;
 
 procedure TOS3MainFrm.DataGridClick(Sender: TObject);
@@ -1584,7 +1474,7 @@ procedure TOS3MainFrm.mnuSimDistPlotsClick(Sender: TObject);
 begin
   if DistribFrm = nil then
     Application.CreateForm(TDistribFrm, DistribFrm);
-  DistribFrm.ShowModal;
+  DistribFrm.Show;
 end;
 
 // Menu "Simulations" > "F probability"
@@ -1848,14 +1738,6 @@ end;
 
 
 
-// Menu "Analysis" > "Descriptive" > "Frequency Analysis"
-procedure TOS3MainFrm.FreqAnalClick(Sender: TObject);
-begin
-  if FreqFrm = nil then
-    Application.CreateForm(TFreqFrm, FreqFrm);
-  FreqFrm.ShowModal;
-end;
-
 // Menu "Analysis" > "Nonparametric" > "Generalized Kappa"
 procedure TOS3MainFrm.GenKappaClick(Sender: TObject);
 begin
@@ -1880,14 +1762,6 @@ begin
   GradebookFrm.ShowModal;
 end;
 
-// Menu "Analysis" > "Descriptive" > "Plot Group Frequencies"
-procedure TOS3MainFrm.GrpFreqClick(Sender: TObject);
-begin
-  if GroupFreqForm = nil then
-    Application.CreateForm(TGroupFreqForm, GroupFreqForm);
-  GroupFreqForm.ShowModal;
-end;
-
 (*  replaced by ShowTOC
 // Menu "Help" > "General Help"
 procedure TOS3MainFrm.HelpContentsClick(Sender: TObject);
@@ -1897,36 +1771,6 @@ begin
   HelpFrm.ShowModal;
 end;
 *)
-// Menu "Analyses" > "Brown-Forsythe test for homogeneity of variance"
-procedure TOS3MainFrm.homotestClick(Sender: TObject);
-Var
-  response: string;
-  GroupCol, VarCol, NoCases: integer;
-begin
-  response := '1';
-  repeat
-    if not InputQuery('Column of group codes', 'Column index', response) then
-      exit;
-    if TryStrToInt(response, GroupCol) and (GroupCol > 0) then
-      break
-    else
-      ErrorMsg('Illegal value entered for index of group column.');
-  until false;
-
-  response := '2';
-  repeat
-    if not InputQuery('Column of dependent variable', 'Column index', response) then
-      exit;
-    if TryStrToInt(response, VarCol) then
-      break
-    else
-      ErrorMsg('Illegal value entered for index of variable column.');
-  until false;
-
-  NoCases := StrToInt(NoCasesEdit.text);
-  HomogeneityTest(GroupCol, VarCol, NoCases);
-end;
-
 // Menu "Analysis" > "Measurement Programs" > "Item Banking"
 procedure TOS3MainFrm.ItemBankMenuItemClick(Sender: TObject);
 begin
@@ -2117,6 +1961,181 @@ begin
   KaplanMeierFrm.ShowModal;
 end;
 
+
+{ Descriptive statistics commands }
+
+// Menu "Analysis" > "Descriptive" > "Box Plot"
+procedure TOS3MainFrm.mnuAnalysisDescr_BoxPlotClick(Sender: TObject);
+begin
+  if BoxPlotFrm = nil then
+  begin
+    Application.CreateForm(TBoxPlotFrm, BoxPlotFrm);
+    BoxPlotFrm.Position := poMainFormCenter;
+  end;
+  BoxPlotFrm.Show;
+end;
+
+// Menu "Analysis" > "Descriptive" > "mnuAnalysisDescr_Breakdown"
+procedure TOS3MainFrm.mnuAnalysisDescr_BreakdownClick(Sender: TObject);
+begin
+  if BreakDownFrm = nil then
+    Application.CreateForm(TBreakDownFrm, BreakDownFrm);
+  BreakDownFrm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Repeated Measures Bubble Plot"
+procedure TOS3MainFrm.mnuAnalysisDescr_BubblePlotClick(Sender: TObject);
+begin
+  if BubbleForm = nil then
+  begin
+    Application.CreateForm(TBubbleForm, BubbleForm);
+    BubbleForm.Position := poMainFormCenter;
+  end;
+  BubbleForm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Compare mnuAnalysisDescr_DistribStats"
+procedure TOS3MainFrm.mnuAnalysisDescr_CompareDistsClick(Sender: TObject);
+begin
+  if CompareDistFrm = nil then
+    Application.CreateForm(TCompareDistFrm, CompareDistFrm);
+  CompareDistFrm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Cross tabulation"
+procedure TOS3MainFrm.mnuAnalysisDescr_CrossTabsClick(Sender: TObject);
+begin
+  if CrossTabFrm = nil then
+    Application.CreateForm(TCrossTabFrm, CrossTabFrm);
+  CrossTabFrm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Data Smoothing"
+procedure TOS3MainFrm.mnuAnalysisDescr_DataSmoothClick(Sender: TObject);
+begin
+  if DataSmoothingForm = nil then
+    Application.CreateForm(TDataSmoothingForm, DataSmoothingForm);
+  DataSmoothingForm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Distribution Statistics"
+procedure TOS3MainFrm.mnuAnalysisDescr_DistribStatsClick(Sender: TObject);
+begin
+  if DescriptiveFrm = nil then
+  begin
+    Application.CreateForm(TDescriptiveFrm, DescriptiveFrm);
+    DescriptiveFrm.Position := poMainFormCenter;
+  end;
+  DescriptiveFrm.Show;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Frequency Analysis"
+procedure TOS3MainFrm.mnuAnalysisDescr_FreqClick(Sender: TObject);
+begin
+  if FreqFrm = nil then
+    Application.CreateForm(TFreqFrm, FreqFrm);
+  FreqFrm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Plot Group Frequencies"
+procedure TOS3MainFrm.mnuAnalysisDescr_GrpFreqClick(Sender: TObject);
+begin
+  if GroupFreqForm = nil then
+    Application.CreateForm(TGroupFreqForm, GroupFreqForm);
+  GroupFreqForm.ShowModal;
+end;
+
+// Menu "Analyses" > "Brown-Forsythe test for homogeneity of variance"
+procedure TOS3MainFrm.mnuAnalysisDescr_HomogeneityTestClick(Sender: TObject);
+Var
+  response: string;
+  GroupCol, VarCol, NoCases: integer;
+begin
+  response := '1';
+  repeat
+    if not InputQuery('Column of group codes', 'Column index', response) then
+      exit;
+    if TryStrToInt(response, GroupCol) and (GroupCol > 0) then
+      break
+    else
+      ErrorMsg('Illegal value entered for index of group column.');
+  until false;
+
+  response := '2';
+  repeat
+    if not InputQuery('Column of dependent variable', 'Column index', response) then
+      exit;
+    if TryStrToInt(response, VarCol) then
+      break
+    else
+      ErrorMsg('Illegal value entered for index of variable column.');
+  until false;
+
+  NoCases := StrToInt(NoCasesEdit.text);
+  HomogeneityTest(GroupCol, VarCol, NoCases);
+end;
+
+//Menu "Analysis" > "Descriptive" > "Multiple Group X vs Y Plot"
+procedure TOS3MainFrm.mnuAnalysisDescr_MultXvsYClick(Sender: TObject);
+begin
+  if MultXvsYFrm = nil then
+    Application.CreateForm(TMultXvsYFrm, MultXvsYFrm);
+  MultXvsYFrm.Show;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Normality Tests"
+procedure TOS3MainFrm.mnuAnalysisDescr_NormalityClick(Sender: TObject);
+begin
+  if NormalityFrm = nil then
+    Application.CreateForm(TNormalityFrm, NormalityFrm);
+  NormalityFrm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Plot X vs Y"
+procedure TOS3MainFrm.mnuAnalysisDescr_PlotXvsYClick(Sender: TObject);
+begin
+  if PlotXYFrm = nil then
+  begin
+    Application.CreateForm(TPlotXYFrm, PlotXYFrm);
+    PlotXYFrm.Position := poMainFormCenter;
+  end;
+  PlotXYFrm.ShowModal;
+end;
+
+procedure TOS3MainFrm.mnuAnalysisDescr_ResistanceLineClick(Sender: TObject);
+begin
+  if ResistanceLineForm = nil then
+    Application.CreateForm(TResistanceLineForm, ResistanceLineForm);
+  ResistanceLineForm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "Stem and Leaf Plot"
+procedure TOS3MainFrm.mnuAnalysisDescr_StemLeafClick(Sender: TObject);
+begin
+  if StemLeafFrm = nil then
+    Application.CreateForm(TStemLeafFrm, StemLeafFrm);
+  StemLeafFrm.ShowModal;
+end;
+
+
+// Menu "Analysis" > "Descriptive" > "3-D Variable Rotation"
+procedure TOS3MainFrm.mnuAnalysisDescr_ThreeDRotateClick(Sender: TObject);
+begin
+  if Rot3DFrm = nil then
+    Application.CreateForm(TRot3DFrm, Rot3DFrm);
+  Rot3DFrm.ShowModal;
+end;
+
+// Menu "Analysis" > "Descriptive" > "X versus Multiple Y Plot"
+procedure TOS3MainFrm.mnuAnalysisDescr_XvsMultYClick(Sender: TObject);
+begin
+  if XvsMultYForm = nil then
+    Application.CreateForm(TXvsMultYForm, XvsMultYForm);
+  XvsMultYForm.ShowModal;
+end;
+
+
+{ SPC commands }
 
 // Menu "Analysis" > "Statistical Process Control" > "Defect (nonconformity) c Chart"
 procedure TOS3MainFrm.mnuAnalysisSPC_CChartClick(Sender: TObject);

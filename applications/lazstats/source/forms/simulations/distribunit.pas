@@ -51,7 +51,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure CalcChi2(const AX: Double; out AY: Double);
     procedure CalcChi2_Cumulative(const AX: Double; out AY: Double);
     procedure CalcF(const AX: Double; out AY: Double);
@@ -67,6 +66,7 @@ type
     procedure tbEraseClick(Sender: TObject);
     procedure tbPrintClick(Sender: TObject);
     procedure tbSaveClick(Sender: TObject);
+
   private
     { private declarations }
     ChartFrame: TChartFrame;
@@ -79,10 +79,11 @@ type
     procedure Chi2Plot;
     procedure FPlot;
     procedure tPlot;
-
     function Validate(out AMsg: String; out AControl: TWinControl): Boolean;
+
   public
     { public declarations }
+    procedure Reset;
   end; 
 
 var
@@ -184,7 +185,7 @@ begin
 end;
 
 
-procedure TDistribFrm.ResetBtnClick(Sender: TObject);
+procedure TDistribFrm.Reset;
 begin
   NDChk.Checked := false;
   tChk.Checked := false;
@@ -198,6 +199,11 @@ begin
 end;
 
 
+procedure TDistribFrm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
+end;
+
 procedure TDistribFrm.ShowCriticalValuesChkChange(Sender: TObject);
 var
   i: Integer;
@@ -209,12 +215,6 @@ begin
     ChartFrame.Chart.Series[i+1].Active := ShowCriticalValuesChk.Checked;
     inc(i, 3);
   end;
-end;
-
-
-procedure TDistribFrm.FormShow(Sender: TObject);
-begin
-  ResetBtnClick(self);
 end;
 
 
@@ -443,6 +443,8 @@ begin
   ChartFrame.Chart.Legend.TextFormat := tfHTML;
   ChartFrame.Chart.BottomAxis.Intervals.MaxLength := 80;
   ChartFrame.Chart.BottomAxis.Intervals.MinLength := 30;
+
+  Reset;
 end;
 
 

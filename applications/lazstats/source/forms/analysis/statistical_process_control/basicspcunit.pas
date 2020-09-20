@@ -40,7 +40,6 @@ type
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure GroupInBtnClick(Sender: TObject);
     procedure GroupOutBtnClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
@@ -181,11 +180,7 @@ begin
     Marks.Source := TListChartSource.Create(self);
     Marks.Style := smsLabel;
   end;
-end;
 
-
-procedure TBasicSPCForm.FormShow(Sender: TObject);
-begin
   Reset;
 end;
 
