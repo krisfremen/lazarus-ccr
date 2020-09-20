@@ -46,7 +46,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure VarListSelectionChange(Sender: TObject; User: boolean);
+    procedure VarListSelectionChange(Sender: TObject; {%H-}User: boolean);
     procedure XinBtnClick(Sender: TObject);
     procedure XOutBtnClick(Sender: TObject);
     procedure YInBtnClick(Sender: TObject);
@@ -56,8 +56,8 @@ type
     FAutoSized: Boolean;
     FReportFrame: TReportFrame;
     FChartFrame: TChartFrame;
-    function PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
-      XMean, YMean, R, Slope, Intercept: Double): Boolean;
+    procedure PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
+      XMean, YMean, R, Slope, Intercept: Double);
     procedure UpdateBtnStates;
     function Validate(out AMsg: String; out AControl: TWinControl;
       Xcol,Ycol: Integer): Boolean;
@@ -155,8 +155,8 @@ procedure TPlotXYFrm.ComputeBtnClick(Sender: TObject);
 var
   Xmin, Xmax, Ymin, Ymax, SSx, SSY, t, DF: double;
   Xmean, Ymean, Xvariance, Yvariance, Xstddev, Ystddev, ConfBand: double;
-  X, Y, R, temp, SEPred, Slope, Intercept, predicted, sedata: double;
-  i, j: integer;
+  X, Y, R, SEPred, Slope, Intercept, predicted, sedata: double;
+  i: integer;
   Xcol, Ycol, N, NoSelected: integer;
   Xpoints: DblDyneVec = nil;
   Ypoints: DblDyneVec = nil;
@@ -204,6 +204,8 @@ begin
   Ymean := 0.0;
   XVariance := 0.0;
   YVariance := 0.0;
+  SSX := 0.0;
+  SSY := 0.0;
   R := 0.0;
 
   N := 0;
@@ -384,8 +386,8 @@ begin
 end;
 
 
-function TPlotXYFrm.PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
-  XMean, YMean, R, Slope, Intercept: Double): boolean;
+procedure TPlotXYFrm.PlotXY(XPoints, YPoints, UpConf, LowConf: DblDyneVec;
+  XMean, YMean, R, Slope, Intercept: Double);
 var
   tmpX, tmpY: array[0..1] of Double;
   xmin, xmax, ymin, ymax: Double;
@@ -397,7 +399,6 @@ begin
   rightLabels.Clear;
   topLabels := FChartFrame.Chart.AxisList[3].Marks.Source as TListChartSource;
   topLabels.Clear;
-
   FChartFrame.Clear;
 
   // Titles
@@ -433,9 +434,9 @@ begin
   if MeansChk.Checked then
   begin
     FChartFrame.VertLine(XMean, clGreen, psDashDot, 'Mean ' + XEdit.Text);
-    topLabels.Add(XMean, XMean, Format('Mean(%s)', [XEdit.Text]));
+    topLabels.Add(XMean, XMean, 'Mean ' + XEdit.Text);
     FChartFrame.HorLine(YMean, clGreen, psDash, 'Mean ' + YEdit.Text);
-    rightLabels.Add(YMean, YMean, Format('Mean(%s)', [YEdit.Text]));
+    rightLabels.Add(YMean, YMean, 'Mean ' + YEdit.Text);
   end;
 
   // Draw regression line
