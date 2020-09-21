@@ -234,6 +234,12 @@ begin
     exit;
   end;
 
+  // Trim array lengths
+  SetLength(Xpoints, NoCases);
+  SetLength(Ypoints, NoCases);
+  SetLength(UpConf, NoCases);
+  SetLength(lowConf, NoCases);
+
   // sort on X
   SortOnX(XPoints, YPoints);
 
