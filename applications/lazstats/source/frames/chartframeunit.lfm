@@ -9,10 +9,10 @@ object ChartFrame: TChartFrame
   DesignLeft = 518
   DesignTop = 150
   object Chart: TChart
-    Left = 6
-    Height = 367
-    Top = 30
-    Width = 608
+    Left = 0
+    Height = 379
+    Top = 24
+    Width = 620
     AxisList = <    
       item
         Grid.Color = clSilver
@@ -36,6 +36,8 @@ object ChartFrame: TChartFrame
     Foot.Brush.Color = clBtnFace
     Foot.Brush.Style = bsClear
     Foot.Font.Color = clBlue
+    MarginsExternal.Top = 8
+    MarginsExternal.Right = 8
     Title.Brush.Color = clBtnFace
     Title.Brush.Style = bsClear
     Title.Font.Color = clBlue
@@ -45,9 +47,6 @@ object ChartFrame: TChartFrame
     )
     Toolset = ChartToolset
     Align = alClient
-    BorderSpacing.Left = 6
-    BorderSpacing.Right = 6
-    BorderSpacing.Bottom = 6
     Color = clWhite
   end
   object ChartToolBar: TToolBar
@@ -56,7 +55,6 @@ object ChartFrame: TChartFrame
     Top = 0
     Width = 620
     AutoSize = True
-    BorderSpacing.Bottom = 6
     ButtonHeight = 22
     ButtonWidth = 25
     Caption = 'ChartToolBar'

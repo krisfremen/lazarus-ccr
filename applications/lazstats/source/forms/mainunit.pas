@@ -1987,11 +1987,8 @@ end;
 procedure TOS3MainFrm.mnuAnalysisDescr_BubblePlotClick(Sender: TObject);
 begin
   if BubbleForm = nil then
-  begin
     Application.CreateForm(TBubbleForm, BubbleForm);
-    BubbleForm.Position := poMainFormCenter;
-  end;
-  BubbleForm.ShowModal;
+  BubbleForm.Show;
 end;
 
 // Menu "Analysis" > "Descriptive" > "Compare mnuAnalysisDescr_DistribStats"
@@ -2022,10 +2019,7 @@ end;
 procedure TOS3MainFrm.mnuAnalysisDescr_DistribStatsClick(Sender: TObject);
 begin
   if DescriptiveFrm = nil then
-  begin
     Application.CreateForm(TDescriptiveFrm, DescriptiveFrm);
-    DescriptiveFrm.Position := poMainFormCenter;
-  end;
   DescriptiveFrm.Show;
 end;
 
@@ -2095,11 +2089,8 @@ end;
 procedure TOS3MainFrm.mnuAnalysisDescr_PlotXvsYClick(Sender: TObject);
 begin
   if PlotXYFrm = nil then
-  begin
     Application.CreateForm(TPlotXYFrm, PlotXYFrm);
-    PlotXYFrm.Position := poMainFormCenter;
-  end;
-  PlotXYFrm.ShowModal;
+  PlotXYFrm.Show;
 end;
 
 procedure TOS3MainFrm.mnuAnalysisDescr_ResistanceLineClick(Sender: TObject);

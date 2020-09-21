@@ -26,7 +26,6 @@ type
     procedure tbSaveReportClick(Sender: TObject);
   private
     FPrintY: Integer;
-    FMaxLen: Integer;
     function LongestLine(AReport: TStrings): Integer;
 
   protected
@@ -76,15 +75,20 @@ var
   maxLen: Integer;
   s: String;
 begin
-  if not Add then
-    ReportMemo.Clear;
+  ReportMemo.Lines.BeginUpdate;
+  try
+    if not Add then
+      ReportMemo.Clear;
 
-  maxLen := Longestline(AReport);
-  for s in AReport do
-    if s = DIVIDER_AUTO then
-      ReportMemo.Lines.Add(AddChar('-', '', maxLen))
-    else
-      ReportMemo.Lines.Add(s);
+    maxLen := Longestline(AReport);
+    for s in AReport do
+      if s = DIVIDER_AUTO then
+        ReportMemo.Lines.Add(AddChar('-', '', maxLen))
+      else
+        ReportMemo.Lines.Add(s);
+  finally
+    Reportmemo.Lines.EndUpdate;
+  end;
 
   UpdateBtnStates;
 end;

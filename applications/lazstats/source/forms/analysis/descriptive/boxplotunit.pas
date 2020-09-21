@@ -3,14 +3,13 @@
 unit BoxPlotUnit;
 
 {$mode objfpc}{$H+}
-{$I ../../../LazStats.inc}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, Printers,
-  MainUnit, Globals, DataProcs, OutputUnit, ContextHelpUnit;
+  StdCtrls, ExtCtrls, Printers, ComCtrls, Buttons,
+  MainUnit, Globals, DataProcs, ContextHelpUnit, ReportFrameUnit, ChartFrameUnit;
 
 
 type
@@ -18,38 +17,48 @@ type
   { TBoxPlotFrm }
 
   TBoxPlotFrm = class(TForm)
-    HorCenterBevel: TBevel;
     Bevel2: TBevel;
     HelpBtn: TButton;
+    PageControl1: TPageControl;
+    ParamsPanel: TPanel;
     ResetBtn: TButton;
     ComputeBtn: TButton;
     CloseBtn: TButton;
-    ShowChk: TCheckBox;
-    GroupBox1: TGroupBox;
     MeasEdit: TEdit;
     GroupEdit: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
+    ParamsSplitter: TSplitter;
+    ReportPage: TTabSheet;
+    ChartPage: TTabSheet;
     VarList: TListBox;
+    GrpInBtn: TBitBtn;
+    GrpOutBtn: TBitBtn;
+    MeasInBtn: TBitBtn;
+    MeasOutBtn: TBitBtn;
     procedure CloseBtnClick(Sender: TObject);
     procedure ComputeBtnClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure GrpOutBtnClick(Sender: TObject);
+    procedure GrpInBtnClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
+    procedure MeasInBtnClick(Sender: TObject);
+    procedure MeasOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure VarListClick(Sender: TObject);
+    procedure VarListDblClick(Sender: TObject);
+    procedure VarListSelectionChange(Sender: TObject; User: boolean);
+
   private
     { private declarations }
     FAutoSized: Boolean;
-    function Percentile(nScoreGrps: integer; APercentile: Double;
-      const Freq, CumFreq, Scores: DblDyneVec) : double;
-    {$IFDEF USE_TACHART}
+    FReportFrame: TReportFrame;
+    FChartFrame: TChartFrame;
     procedure BoxPlot(const LowQrtl, HiQrtl, TenPcnt, NinetyPcnt, Medians: DblDyneVec);
-    {$ELSE}
-    procedure BoxPlot(NBars: integer; AMax, AMin: double;
-      const LowQrtl, HiQrtl, TenPcnt, NinetyPcnt, Means, Median: DblDyneVec);
-    {$ENDIF}
+    function Percentile(nScoreGrps: integer; APercentile: Double;
+      const Freq, CumFreq, Scores: DblDyneVec): double;
+    procedure UpdateBtnStates;
 
   public
     { public declarations }
@@ -64,12 +73,7 @@ implementation
 {$R *.lfm}
 
 uses
-  {$IFDEF USE_TACHART}
-  TAChartUtils, TAMultiSeries,
-  ChartUnit,
-  {$ELSE}
-  BlankFrmUnit,
-  {$ENDIF}
+  TAChartUtils, TALegend, TAMultiSeries,
   Math, Utils;
 
 const
@@ -78,43 +82,46 @@ const
 
 { TBoxPlotFrm }
 
-procedure TBoxPlotFrm.Reset;
+procedure TBoxPlotFrm.BoxPlot(const LowQrtl, HiQrtl, TenPcnt, NinetyPcnt, Medians: DblDyneVec);
 var
-  i: integer;
+  i: Integer;
+  ser: TBoxAndWhiskerSeries;
+  clr: TColor;
+  nBars: Integer;
 begin
-  VarList.Clear;
-  GroupEdit.Text := '';
-  MeasEdit.Text := '';
-  for i := 1 to NoVariables do
-    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
-end;
-
-
-procedure TBoxPlotFrm.ResetBtnClick(Sender: TObject);
-begin
-  Reset;
-end;
-
-procedure TBoxPlotFrm.VarListClick(Sender: TObject);
-var
-  index: integer;
-begin
-  index := VarList.ItemIndex;
-  if index > -1 then
+  nBars := Length(LowQrtl);
+  if (nBars <> Length(HiQrtl)) or (nBars <> Length(TenPcnt)) or
+     (nBars <> Length(NinetyPcnt)) or (nBars <> Length(Medians)) then
   begin
-    if (GroupEdit.Text = '') then
-      GroupEdit.Text := VarList.Items[index]
-    else
-      MeasEdit.Text := VarList.Items[index];
+    ErrorMsg('Box-Plot: all data arrays must have the same lengths.');
+    exit;
   end;
+
+  FChartFrame.Clear;
+
+  // Titles
+  FChartFrame.SetTitle('Box-and-Whisker Plot for ' + OS3MainFrm.FileNameEdit.Text);
+  FChartFrame.SetFooter('BLACK: median, BOX: 25th to 75th percentile, WHISKERS: 10th and 90th percentile');
+  FChartFrame.SetXTitle(GroupEdit.Text);
+  FChartFrame.SetYTitle(MeasEdit.Text);
+
+  ser := TBoxAndWhiskerSeries.create(FChartFrame);
+  for i := 0 to nBars-1 do
+  begin
+    clr := BOX_COLORS[i mod Length(BOX_COLORS)];
+    ser.AddXY(i+1, TenPcnt[i], LowQrtl[i], Medians[i], HiQrtl[i], NinetyPcnt[i], '', clr);
+  end;
+  FChartFrame.Chart.BottomAxis.Marks.Source := ser.ListSource;
+  FChartFrame.Chart.BottomAxis.Marks.Style := smsXValue;
+  FChartFrame.Chart.AddSeries(ser);
+
+  FChartFrame.UpdateBtnStates;
 end;
 
 
-procedure TBoxPlotFrm.HelpBtnClick(Sender: TObject);
+procedure TBoxPlotFrm.CloseBtnClick(Sender: TObject);
 begin
-  if ContextHelpForm = nil then
-    Application.CreateForm(TContextHelpForm, ContextHelpForm);
-  ContextHelpForm.HelpMessage((Sender as TButton).tag);
+  Close;
 end;
 
 
@@ -122,13 +129,11 @@ procedure TBoxPlotFrm.ComputeBtnClick(Sender: TObject);
 var
   lReport: TStrings;
   i, j, k, GrpVar, MeasVar, mingrp, maxgrp, G, NoGrps, cnt: integer;
-  nScoreGrps: integer;
-  X, tmp: Double;
-//  X, tenpcnt, ninepcnt, qrtile1, qrtile2, qrtile3: double;
+  nScoreGrps, numValues: integer;
+  X: Double;
   MinScore, MaxScore, IntervalSize, lastX: double;
   cellstring: string;
   done: boolean;
-  NoSelected: integer;
   Freq: DblDyneVec = nil;
   Scores: DblDyneVec = nil;
   CumFreq: DblDyneVec = nil;
@@ -140,7 +145,7 @@ var
   TenPcntile: DblDyneVec = nil;
   NinetyPcntile: DblDyneVec = nil;
   Median: DblDyneVec = nil;
-  ColNoSelected: IntDyneVec = nil;
+  ColNoSelected: IntDyneVec;
 begin
   lReport := TStringList.Create;
   try
@@ -166,8 +171,7 @@ begin
       exit;
     end;
 
-    NoSelected := 2;
-    SetLength(ColNoSelected, NoSelected);
+    SetLength(ColNoSelected, 2);
     ColNoSelected[0] := GrpVar;
     ColNoSelected[1] := MeasVar;
 
@@ -176,7 +180,7 @@ begin
     maxGrp := -MaxInt;
     for i := 1 to NoCases do
     begin
-      if not GoodRecord(i, NoSelected, ColNoSelected) then continue;
+      if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
       G := round(StrToFloat(OS3MainFrm.DataGrid.Cells[GrpVar, i]));
       minGrp := Min(G, minGrp);
       maxGrp := Max(G, maxGrp);
@@ -194,9 +198,11 @@ begin
     X := StrToFloat(OS3MainFrm.DataGrid.Cells[MeasVar, 1]);
     MinScore := X;
     MaxScore := X;
+    numValues := 0;
     for i := 1 to NoCases do
     begin
-      if not GoodRecord(i, NoSelected ,ColNoSelected) then continue;
+      if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
+      inc(numValues);
       X := StrToFloat(OS3MainFrm.DataGrid.Cells[MeasVar, i]);
       MaxScore := Max(MaxScore, X);
       MinScore := Min(MinScore, X);
@@ -209,12 +215,12 @@ begin
         lastX := X;
     end;
 
-    SetLength(Scores, 2*NoCases + 1);  // over-dimensioned, will be trimmed later.
+    SetLength(Scores, 2*numValues + 1);  // over-dimensioned, will be trimmed later.
 
     //  check for excess no. of intervals and reset if needed
     nScoreGrps := round((MaxScore - MinScore) / IntervalSize);
-    if nScoreGrps > 2 * NoCases then
-      Intervalsize := (MaxScore - MinScore) / NoCases;
+    if nScoreGrps > 2 * numValues then
+      Intervalsize := (MaxScore - MinScore) / numValues;
 
     // setup score groups
     done := false;
@@ -260,7 +266,7 @@ begin
       cnt := 0;
       for i := 1 to NoCases do
       begin // get scores for this group j
-        if not GoodRecord(i,NoSelected, ColNoSelected) then continue;
+        if not GoodRecord(i, Length(ColNoSelected), ColNoSelected) then continue;
         G := round(StrToFloat(OS3MainFrm.DataGrid.Cells[GrpVar, i]));
         G := G - minGrp + 1;
         if G = j+1 then // subject in this group
@@ -274,8 +280,16 @@ begin
               Freq[k] := Freq[k] + 1.0;
         end;
       end;
+
       GrpSize[j] := cnt;
-      if GrpSize[j] > 0 then Means[j] := Means[j] / GrpSize[j];
+      if GrpSize[j] = 0 then
+      begin
+        Means[j] := NaN;
+        Median[j] := NaN;
+        Continue;
+      end;
+
+      Means[j] := Means[j] / GrpSize[j];
 
       // accumulate frequencies
       CumFreq[0] := Freq[0];
@@ -295,40 +309,31 @@ begin
       Median[j] := Percentile(nScoreGrps, 0.50 * GrpSize[j], Freq, CumFreq, Scores);
       HiQrtl[j] := Percentile(nScoreGrps, 0.75 * GrpSize[j], Freq, CumFreq, Scores);
 
-      if ShowChk.Checked then
-      begin
-        if j > 0 then lReport.Add('');
-        lReport.Add('RESULTS FOR GROUP %d, MEAN = %.3f', [j+1, Means[j]]);
-        lReport.Add('');
-        lReport.Add('Centile       Value');
-        lReport.Add('------------ ------');
-        lReport.Add('Ten          %6.3f', [TenPcntile[j]]);
-        lReport.Add('Twenty five  %6.3f', [LowQrtl[j]]);
-        lReport.Add('Median       %6.3f', [Median[j]]);
-        lReport.Add('Seventy five %6.3f', [HiQrtl[j]]);
-        lReport.Add('Ninety       %6.3f', [NinetyPcntile[j]]);
-        lReport.Add('');
-        lReport.Add('Score Range     Frequency Cum.Freq. Percentile Rank');
-        lReport.Add('--------------- --------- --------- ---------------');
-        for i := 0 to nScoreGrps-1 do
-          lReport.Add('%6.2f - %6.2f    %6.2f    %6.2f     %6.2f', [
-            Scores[i], Scores[i+1], Freq[i], CumFreq[i], pRank[i]
-          ]);
-        lReport.Add('');
-      end;
+      if j > 0 then lReport.Add('');
+      lReport.Add('RESULTS FOR GROUP %d, MEAN %.3f', [j+1, Means[j]]);
+      lReport.Add('');
+      lReport.Add('Centile        Value');
+      lReport.Add('------------  -------');
+      lReport.Add('Ten           %6.3f', [TenPcntile[j]]);
+      lReport.Add('Twenty five   %6.3f', [LowQrtl[j]]);
+      lReport.Add('Median        %6.3f', [Median[j]]);
+      lReport.Add('Seventy five  %6.3f', [HiQrtl[j]]);
+      lReport.Add('Ninety        %6.3f', [NinetyPcntile[j]]);
+      lReport.Add('');
+      lReport.Add('Score Range     Frequency Cum.Freq. Percentile Rank');
+      lReport.Add('--------------- --------- --------- ---------------');
+      for i := 0 to nScoreGrps-1 do
+        lReport.Add('%6.2f - %6.2f    %6.2f    %6.2f     %6.2f', [
+          Scores[i], Scores[i+1], Freq[i], CumFreq[i], pRank[i]
+        ]);
+      lReport.Add('');
     end; // get values for next group
 
     // Show the report with the frequencies
-    if ShowChk.Checked then
-      DisplayReport(lReport);
+    FReportFrame.DisplayReport(lReport);
 
     // Plot the boxes
-    {$IFDEF USE_TACHART}
     BoxPlot(LowQrtl, HiQrtl, TenPcntile, NinetyPcntile, Median);
-    {$ELSE}
-    BoxPlot(NoGrps, MaxScore, MinScore, LowQrtl, HiQrtl, TenPcntile, NinetyPcntile, Means, Median);
-    {$ENDIF}
-
   finally
     lReport.Free;
 
@@ -348,12 +353,6 @@ begin
 end;
 
 
-procedure TBoxPlotFrm.CloseBtnClick(Sender: TObject);
-begin
-  Close;
-end;
-
-
 procedure TBoxPlotFrm.FormActivate(Sender: TObject);
 var
   w: Integer;
@@ -367,8 +366,17 @@ begin
   ComputeBtn.Constraints.MinWidth := w;
   CloseBtn.Constraints.MinWidth := w;
 
-  Constraints.MinWidth := Width;
-  Constraints.MinHeight := Height;
+  ParamsPanel.Constraints.MinWidth := Max(
+    4*w + 3*HelpBtn.BorderSpacing.Right,
+    Max(Label1.Width, Label3.Width) * 2 + MeasInBtn.Width + 2 * MeasInBtn.BorderSpacing.Left
+  );
+  ParamsPanel.Constraints.MinHeight := VarList.Top + VarList.Constraints.MinHeight +
+    Bevel2.Height + CloseBtn.Height + CloseBtn.BorderSpacing.Top;
+
+  Constraints.MinHeight := ParamsPanel.Constraints.MinHeight + ParamsPanel.BorderSpacing.Around*2;
+  Constraints.MinWidth := ParamsPanel.Constraints.MinWidth + 200;
+  if Height < Constraints.MinHeight then Height := 1;  // Enforce autosizing
+  if Width < Constraints.MinWidth then Width := 1;
 
   Position := poDesigned;
   FAutoSized := true;
@@ -378,12 +386,84 @@ end;
 procedure TBoxPlotFrm.FormCreate(Sender: TObject);
 begin
   Assert(OS3MainFrm <> nil);
+
+  FReportFrame := TReportFrame.Create(self);
+  FReportFrame.Parent := ReportPage;
+  FReportFrame.Align := alClient;
+
+  FChartFrame := TChartFrame.Create(self);
+  FChartFrame.Parent := ChartPage;
+  FChartFrame.Align := alClient;
+  FChartFrame.Chart.Legend.Alignment := laBottomCenter;
+  FChartFrame.Chart.Legend.ColumnCount := 3;
+  FChartFrame.Chart.Legend.TextFormat := tfHTML;
+  FChartFrame.Chart.BottomAxis.Intervals.MaxLength := 80;
+  FChartFrame.Chart.BottomAxis.Intervals.MinLength := 30;
+  InitToolbar(FChartFrame.ChartToolbar, tpTop);
+
   Reset;
 end;
 
 
+procedure TBoxPlotFrm.GrpInBtnClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (GroupEdit.Text = '') then
+  begin
+    GroupEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+
+procedure TBoxPlotFrm.GrpOutBtnClick(Sender: TObject);
+begin
+  if GroupEdit.Text <> '' then
+  begin
+    VarList.Items.Add(GroupEdit.Text);
+    GroupEdit.Text := '';
+    UpdateBtnStates;
+  end;
+end;
+
+
+procedure TBoxPlotFrm.HelpBtnClick(Sender: TObject);
+begin
+  if ContextHelpForm = nil then
+    Application.CreateForm(TContextHelpForm, ContextHelpForm);
+  ContextHelpForm.HelpMessage((Sender as TButton).tag);
+end;
+
+
+procedure TBoxPlotFrm.MeasInBtnClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if (index > -1) and (MeasEdit.Text = '') then
+  begin
+    MeasEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+procedure TBoxPlotFrm.MeasOutBtnClick(Sender: TObject);
+begin
+  if MeasEdit.Text <> '' then
+  begin
+    VarList.Items.Add(MeasEdit.Text);
+    MeasEdit.Text := '';
+    UpdateBtnStates;
+  end;
+end;
+
+
 function TBoxPlotFrm.Percentile(nScoreGrps: integer;
-  APercentile: double; const Freq, CumFreq, Scores: DblDyneVec) : double;
+  APercentile: double; const Freq, CumFreq, Scores: DblDyneVec): double;
 var
   i, interval: integer;
   LLimit, ULimit, cumLower, intervalFreq: double;
@@ -404,8 +484,7 @@ begin
     ULimit := Scores[interval+1];
     cumLower := CumFreq[interval-1];
     intervalFreq := Freq[interval];
-  end
-  else
+  end else
   begin // Percentile in first interval
     LLimit := Scores[0];
     ULimit := Scores[1];
@@ -420,180 +499,59 @@ begin
 end;
 
 
-{$IFDEF USE_TACHART}
-procedure TBoxPlotFrm.BoxPlot(const LowQrtl, HiQrtl, TenPcnt, NinetyPcnt, Medians: DblDyneVec);
+procedure TBoxPlotFrm.Reset;
 var
-  i: Integer;
-  ser: TBoxAndWhiskerSeries;
-  clr: TColor;
-  nBars: Integer;
+  i: integer;
 begin
-  nBars := Length(LowQrtl);
-  if (nBars <> Length(HiQrtl)) or (nBars <> Length(TenPcnt)) or
-     (nBars <> Length(NinetyPcnt)) or (nBars <> Length(Medians)) then
-  begin
-    ErrorMsg('Box-Plot: all data arrays must have the same lengths.');
-    exit;
-  end;
-
-  if ChartForm = nil then
-    ChartForm := TChartForm.Create(Application)
-  else
-    ChartForm.Clear;
-
-  // Titles
-  ChartForm.SetTitle('Box-and-Whisker Plot for ' + OS3MainFrm.FileNameEdit.Text);
-  ChartForm.SetFooter('BLACK: median, BOX: 25th to 75th percentile, WHISKERS: 10th and 90th percentile');
-  ChartForm.SetXTitle(GroupEdit.Text);
-  ChartForm.SetYTitle(MeasEdit.Text);
-
-  ser := TBoxAndWhiskerSeries.create(ChartForm);
-  for i := 0 to nBars-1 do
-  begin
-    clr := BOX_COLORS[i mod Length(BOX_COLORS)];
-    ser.AddXY(i+1, TenPcnt[i], LowQrtl[i], Medians[i], HiQrtl[i], NinetyPcnt[i], '', clr);
-  end;
-  ChartForm.ChartFrame.Chart.BottomAxis.Marks.Source := ser.ListSource;
-  ChartForm.ChartFrame.Chart.BottomAxis.Marks.Style := smsXValue;
-  ChartForm.ChartFrame.Chart.AddSeries(ser);
-
-  ChartForm.Show;
+  VarList.Clear;
+  GroupEdit.Text := '';
+  MeasEdit.Text := '';
+  for i := 1 to NoVariables do
+    VarList.Items.Add(OS3MainFrm.DataGrid.Cells[i,0]);
+  UpdateBtnStates;
 end;
-{$ELSE}
-procedure TBoxPlotFrm.BoxPlot(NBars: integer; AMax, AMin: double;
-  const LowQrtl, HiQrtl, TenPcnt, NinetyPcnt, Means, Median: DblDyneVec);
+
+
+procedure TBoxPlotFrm.ResetBtnClick(Sender: TObject);
+begin
+  Reset;
+end;
+
+
+procedure TBoxPlotFrm.UpdateBtnStates;
+begin
+  MeasinBtn.Enabled := (VarList.ItemIndex > -1) and (MeasEdit.Text = '');
+  MeasoutBtn.Enabled := (MeasEdit.Text <> '');
+
+  GrpinBtn.Enabled := (VarList.ItemIndex > -1) and (GroupEdit.Text = '');
+  grpoutBtn.Enabled := (GroupEdit.Text <> '');
+
+  FReportFrame.UpdateBtnStates;
+  FChartFrame.UpdateBtnStates;
+end;
+
+
+procedure TBoxPlotFrm.VarListDblClick(Sender: TObject);
 var
-  i, HTickSpace, imagewide, imagehi, vtop, vbottom, offset: integer;
-  vhi, hleft, hright, hwide, barwidth, Xpos, Ypos, strhi: integer;
-  XOffset, YOffset: integer;
-  X, Y: integer;
-  X1, X2, X3, X9, X10: integer; // X coordinates for box and lines
-  Y1, Y2, Y3, Y4, Y9: integer; // Y coordinates for box and lines
-  Title: string;
-  valincr, Yvalue: double;
+  index: integer;
 begin
-  if BlankFrm = nil then Application.CreateForm(TBlankFrm, BlankFrm);
-  BlankFrm.Show;
-
-  imagewide := BlankFrm.Image1.width;
-  imagehi := BlankFrm.Image1.Height;
-  XOffset := imagewide div 10;
-  YOffset := imagehi div 10;
-
-  vtop := YOffset;
-  vbottom := imagehi - YOffset;
-  vhi := vbottom - vtop;
-  hleft := XOffset;
-  hright := imagewide - hleft - XOffset;
-  hwide := hright - hleft;
-  HTickSpace := hwide div nbars;
-  barwidth := HTickSpace div 2;
-
-  // Show title
-  Title := 'BOXPLOT FOR : ' + OS3MainFrm.FileNameEdit.Text;
-  BlankFrm.Caption := Title;
-(*
-  // show legend
-  Y := BlankFrm.Image1.Canvas.TextHeight(Title) * 2;
-  Y := Y + vtop;
-  Title := 'RED: mean, BLACK: median, BOX: 25th to 75th percentile, WISKERS: 10th and 90th percentile';
-  X := imagewide div 2 - BlankFrm.Canvas.TextWidth(Title) div 2;
-  BlankFrm.Image1.Canvas.TextOut(X,Y,Title);
-  *)
-
-  // Draw chart background and border
-  BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-  BlankFrm.Image1.Canvas.Brush.Color := clWhite;
-  BlankFrm.Image1.Canvas.Rectangle(0,0,imagewide,imagehi);
-
-  // show legend
-  Y := 2;
-  Title := 'RED: mean, BLACK: median, BOX: 25th to 75th percentile, WISKERS: 10th and 90th percentile';
-  X := imagewide div 2 - BlankFrm.Canvas.TextWidth(Title) div 2;
-  BlankFrm.Image1.Canvas.TextOut(X,Y,Title);
-
-  // Draw vertical axis
-  valincr := (AMax - AMin) / 20.0;
-  for i := 1 to 21 do
+  index := VarList.ItemIndex;
+  if index > -1 then
   begin
-    Title := format('%8.2f',[AMax - ((i-1)*valincr)]);
-    strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-    xpos := XOffset;
-    Yvalue := AMax - (valincr * (i-1));
-    ypos := round(vhi * ( (AMax - Yvalue) / (AMax - AMin)));
-    ypos := ypos + vtop - strhi div 2;
-    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
+    if MeasEdit.Text = '' then
+      MeasEdit.Text := VarList.Items[index]
+    else
+      GroupEdit.Text := VarList.Items[index];
   end;
-  BlankFrm.Image1.Canvas.MoveTo(hleft,vtop);
-  BlankFrm.Image1.Canvas.LineTo(hleft,vbottom);
-
-  // draw horizontal axis
-  BlankFrm.Image1.Canvas.MoveTo(hleft,vbottom + 10 );
-  BlankFrm.Image1.Canvas.LineTo(hright,vbottom + 10);
-  for i := 1 to nbars do
-  begin
-    ypos := vbottom + 10;
-    xpos := round((hwide / nbars)* i + hleft);
-    BlankFrm.Image1.Canvas.MoveTo(xpos,ypos);
-    ypos := ypos + 10;
-    BlankFrm.Image1.Canvas.LineTo(xpos,ypos);
-    Title := format('%d',[i]);
-    offset := BlankFrm.Image1.Canvas.TextWidth(Title) div 2;
-    strhi := BlankFrm.Image1.Canvas.TextHeight(Title);
-    xpos := xpos - offset;
-    ypos := ypos + strhi - 2;
-    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,Title);
-    xpos := 20;
-    BlankFrm.Image1.Canvas.TextOut(xpos,ypos,'GROUPS:');
-  end;
-
-  for i := 0 to NBars - 1 do
-  begin
-    BlankFrm.Image1.Canvas.Brush.Color := BOX_COLORS[i mod Length(BOX_COLORS)];
-
-    // plot the box front face
-    X9 := round(hleft + ((i+1) * HTickSpace) - (barwidth / 2));
-    X10 := X9 + barwidth;
-    X1 := X9;
-    X2 := X10;
-    Y1 := round((((AMax - HiQrtl[i]) / (AMax - AMin)) * vhi) + vtop);
-    Y2 := round((((AMax - LowQrtl[i]) / (AMax - AMin)) * vhi) + vtop);
-    BlankFrm.Image1.Canvas.Rectangle(X1,Y1,X2,Y2);
-
-    // draw upper 90th percentile line and end
-    X3 := round(X1 + barwidth / 2);
-    BlankFrm.Image1.Canvas.MoveTo(X3,Y1);
-    Y3 := round((((AMax - NinetyPcnt[i]) / (AMax - AMin)) * vhi) + vtop);
-    BlankFrm.Image1.Canvas.LineTo(X3,Y3);
-    BlankFrm.Image1.Canvas.MoveTo(X1,Y3);
-    BlankFrm.Image1.Canvas.LineTo(X2,Y3);
-
-    // draw lower 10th percentile line and end
-    BlankFrm.Image1.Canvas.MoveTo(X3,Y2);
-    Y4 := round((((AMax - TenPcnt[i]) / (AMax - AMin)) * vhi) + vtop);
-    BlankFrm.Image1.Canvas.LineTo(X3,Y4);
-    BlankFrm.Image1.Canvas.MoveTo(X1,Y4);
-    BlankFrm.Image1.Canvas.LineTo(X2,Y4);
-
-    //plot the means line
-    BlankFrm.Image1.Canvas.Pen.Color := clRed;
-    BlankFrm.Image1.Canvas.Pen.Style := psDot;
-    Y9 := round((((AMax - Means[i]) / (AMax - AMin)) * vhi) + vtop);
-    BlankFrm.Image1.Canvas.MoveTo(X9,Y9);
-    BlankFrm.Image1.Canvas.LineTo(X10,Y9);
-    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-    BlankFrm.Image1.Canvas.Pen.Style := psSolid;
-
-    //plot the median line
-    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-    Y9 := round((((AMax - Median[i]) / (AMax - AMin)) * vhi) + vtop);
-    BlankFrm.Image1.Canvas.MoveTo(X9,Y9);
-    BlankFrm.Image1.Canvas.LineTo(X10,Y9);
-    BlankFrm.Image1.Canvas.Pen.Color := clBlack;
-  end;
+  VarList.Items.Delete(index);
+  UpdateBtnStates;
 end;
-{$ENDIF}
+
+
+procedure TBoxPlotFrm.VarListSelectionChange(Sender: TObject; User: boolean);
+begin
+  UpdateBtnStates;
+end;
 
 
 end.

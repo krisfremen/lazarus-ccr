@@ -59,6 +59,7 @@ object DescriptiveFrm: TDescriptiveFrm
       BorderSpacing.Bottom = 8
       ItemHeight = 0
       MultiSelect = True
+      OnDblClick = VarListDblClick
       OnSelectionChange = VarListSelectionChange
       TabOrder = 0
     end
@@ -89,6 +90,7 @@ object DescriptiveFrm: TDescriptiveFrm
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
       ItemHeight = 0
+      OnDblClick = SelListDblClick
       OnSelectionChange = VarListSelectionChange
       TabOrder = 4
     end

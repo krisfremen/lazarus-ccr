@@ -46,6 +46,8 @@ type
     procedure InBtnClick(Sender: TObject);
     procedure OutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure SelListDblClick(Sender: TObject);
+    procedure VarListDblClick(Sender: TObject);
     procedure VarListSelectionChange(Sender: TObject; User: boolean);
 
   private
@@ -469,10 +471,40 @@ begin
   FReportFrame.Clear;
 end;
 
+
 procedure TDescriptiveFrm.ResetBtnClick(Sender: TObject);
 begin
   Reset;
 end;
+
+
+procedure TDescriptiveFrm.SelListDblClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := SelList.ItemIndex;
+  if index > -1 then
+  begin
+    VarList.Items.Add(SelList.Items[index]);
+    SelList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
+
+procedure TDescriptiveFrm.VarListDblClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    SelList.Items.Add(VarList.Items[index]);
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
+end;
+
 
 procedure TDescriptiveFrm.UpdateBtnStates;
 var

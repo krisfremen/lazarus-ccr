@@ -46,6 +46,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
+    procedure VarListDblClick(Sender: TObject);
     procedure VarListSelectionChange(Sender: TObject; {%H-}User: boolean);
     procedure XinBtnClick(Sender: TObject);
     procedure XOutBtnClick(Sender: TObject);
@@ -102,6 +103,23 @@ end;
 procedure TPlotXYFrm.ResetBtnClick(Sender: TObject);
 begin
   Reset;
+end;
+
+
+procedure TPlotXYFrm.VarListDblClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    if XEdit.Text = '' then
+      XEdit.Text := VarList.Items[index]
+    else
+      YEdit.Text := VarList.Items[index];
+    VarList.Items.Delete(index);
+    UpdateBtnStates;
+  end;
 end;
 
 
@@ -385,8 +403,7 @@ begin
     Marks.Style := smsLabel;
     Grid.Visible := false;
   end;
-  FChartFrame.ChartToolbar.Transparent := false;
-  FChartFrame.ChartToolbar.Color := clForm;
+  InitToolbar(FChartFrame.ChartToolbar, tpTop);
 
   Reset;
 end;
@@ -462,8 +479,12 @@ procedure TPlotXYFrm.UpdateBtnStates;
 begin
   XinBtn.Enabled := (VarList.ItemIndex > -1) and (XEdit.Text = '');
   XoutBtn.Enabled := (XEdit.Text <> '');
+
   YinBtn.Enabled := (VarList.ItemIndex > -1) and (YEdit.Text = '');
   YoutBtn.Enabled := (YEdit.Text <> '');
+
+  FReportFrame.UpdateBtnStates;
+  FChartFrame.UpdateBtnStates;
 end;
 
 

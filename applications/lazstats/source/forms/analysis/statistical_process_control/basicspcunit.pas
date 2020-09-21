@@ -47,6 +47,7 @@ type
     procedure MeasOutBtnClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
     procedure VarListClick(Sender: TObject);
+    procedure VarListDblClick(Sender: TObject);
   private
     FGroupsNeeded: Boolean;
 
@@ -187,6 +188,7 @@ begin
     Marks.Source := TListChartSource.Create(self);
     Marks.Style := smsLabel;
   end;
+  InitToolbar(FChartFrame.ChartToolbar, tpTop);
 
   Reset;
 end;
@@ -417,6 +419,22 @@ end;
 
 procedure TBasicSPCForm.VarListClick(Sender: TObject);
 begin
+  UpdateBtnStates;
+end;
+
+procedure TBasicSPCForm.VarListDblClick(Sender: TObject);
+var
+  index: integer;
+begin
+  index := VarList.ItemIndex;
+  if index > -1 then
+  begin
+    if MeasEdit.Text = '' then
+      MeasEdit.Text := VarList.Items[index]
+    else
+      GroupEdit.Text := VarList.Items[index];
+  end;
+  VarList.Items.Delete(index);
   UpdateBtnStates;
 end;
 

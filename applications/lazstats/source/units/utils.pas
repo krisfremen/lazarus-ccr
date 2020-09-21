@@ -5,10 +5,14 @@ unit Utils;
 interface
 
 uses
-  Classes, SysUtils, StdCtrls, ComCtrls, Dialogs,
+  Classes, SysUtils, Graphics, Controls, StdCtrls, ComCtrls, Dialogs,
   Globals;
 
+type
+  TToolbarPosition = (tpTop, tpLeft, tpRight);
+
 procedure AddButtonToToolbar(AToolButton: TToolButton; AToolBar: TToolBar);
+procedure InitToolbar(AToolbar: TToolbar; APosition: TToolbarPosition);
 
 function AnySelected(AListbox: TListBox): Boolean;
 
@@ -27,6 +31,9 @@ function IndexOfString(L: StrDyneVec; s: String): Integer;
 
 implementation
 
+uses
+  ToolWin;
+
 // https://stackoverflow.com/questions/4093595/create-ttoolbutton-runtime
 procedure AddButtonToToolbar(AToolButton: TToolButton; AToolBar: TToolBar);
 var
@@ -38,6 +45,30 @@ begin
   else
     AToolButton.Left := 0;
   AToolButton.Parent := AToolBar;
+end;
+
+
+procedure InitToolbar(AToolbar: TToolbar; APosition: TToolbarPosition);
+begin
+//  AToolbar.Transparent := false;
+//  AToolbar.Color := clForm;
+  case APosition of
+    tpTop:
+      begin
+        AToolbar.Align := alTop;
+        AToolbar.EdgeBorders := [ebBottom];
+      end;
+    tpLeft:
+      begin
+        AToolbar.Align := alLeft;
+        AToolbar.EdgeBorders := [ebRight];
+      end;
+    tpRight:
+      begin
+        AToolbar.Align := alRight;
+        AToolbar.EdgeBorders := [ebLeft];
+      end;
+  end;
 end;
 
 
